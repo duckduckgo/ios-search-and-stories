@@ -91,7 +91,7 @@
         
         urlString = [UtilityCHS fixupURL:urlString];
         
-        wvc.url = [NSURL URLWithString:urlString];
+        wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:[NSURL URLWithString:urlString], @"url", nil];
         
         [self.navigationController pushViewController:wvc animated:YES];
 	}
@@ -135,9 +135,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
-    
-    [self.navigationController pushViewController:wvc animated:YES];
 }
 
 @end

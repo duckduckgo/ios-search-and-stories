@@ -12,7 +12,7 @@
 
 @synthesize searchController;
 @synthesize www;
-@synthesize url;
+@synthesize params;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -52,15 +52,16 @@
     searchController.state = eViewStateWebResults;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
 	
+	NSURL *url = [params objectForKey:@"url"];
     if (!url)
-        self.url = [NSURL URLWithString:@"https://duckduckgo.com"];
-
+        url = [NSURL URLWithString:@"https://duckduckgo.com"];
+	
 	[www loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
 - (void)dealloc
 {
-    self.url = nil;
+    self.params = nil;
 	self.searchController = nil;
 	[super dealloc];
 }
