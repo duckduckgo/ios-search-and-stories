@@ -87,7 +87,7 @@
 	{
         DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
         
-        NSString *urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@", [action objectForKey:@"searchTerm"]];
+        NSString *urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [action objectForKey:@"searchTerm"]];
         
         urlString = [UtilityCHS fixupURL:urlString];
         
