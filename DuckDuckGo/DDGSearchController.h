@@ -33,14 +33,15 @@ enum eSearchState
 
 @property (nonatomic, retain) IBOutlet		UITableViewCell	*loadedCell;
 @property (nonatomic, readonly) IBOutlet	UITextField		*search;
-@property (nonatomic, assign) IBOutlet		UIButton		*searchButton;;
+@property (nonatomic, assign) IBOutlet		UIButton		*searchButton;
+
+@property (nonatomic, assign) enum eSearchState			state;
 
 @property (nonatomic, assign) id<DDGSearchProtocol>		searchHandler;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 
 - (IBAction)searchButtonAction:(UIButton*)sender;
-- (void)switchModeTo:(enum eSearchState)state;
 
 - (void)autoCompleteReveal:(BOOL)reveal;
 

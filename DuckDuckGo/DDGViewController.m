@@ -7,6 +7,8 @@
 //
 
 #import "DDGViewController.h"
+#import "DDGWebViewController.h"
+#import "UtilityCHS.h"
 
 @implementation DDGViewController
 
@@ -30,6 +32,7 @@
 	
 	self.searchController = [[[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view] autorelease];
 	searchController.searchHandler = self;
+    searchController.state = eViewStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"gear40x37.png"] forState:UIControlStateNormal];
 }
 
@@ -80,9 +83,17 @@
 
 - (void)actionTaken:(NSDictionary*)action
 {
-	if ([[action objectForKey:@"action"] isEqualToString:@"web"])
+	if ([[action objectForKey:@"action"] isEqualToString:@"web"] && [action objectForKey:@"searchTerm"])
 	{
-		
+        DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
+        
+        NSString *urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@", [action objectForKey:@"searchTerm"]];
+        
+        urlString = [UtilityCHS fixupURL:urlString];
+        
+        wvc.url = [NSURL URLWithString:urlString];
+        
+        [self.navigationController pushViewController:wvc animated:YES];
 	}
 }
 
@@ -124,7 +135,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	[self.navigationController performSegueWithIdentifier:@"PresentWebView" sender:self];
+    DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
+    
+    [self.navigationController pushViewController:wvc animated:YES];
 }
 
 @end

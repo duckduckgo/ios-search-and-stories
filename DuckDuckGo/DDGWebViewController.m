@@ -12,6 +12,7 @@
 
 @synthesize searchController;
 @synthesize www;
+@synthesize url;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -48,13 +49,18 @@
 	
 	self.searchController = [[[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view] autorelease];
 	searchController.searchHandler = self;
+    searchController.state = eViewStateWebResults;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
 	
-	[www loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]]];
+    if (!url)
+        self.url = [NSURL URLWithString:@"https://duckduckgo.com"];
+
+	[www loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
 - (void)dealloc
 {
+    self.url = nil;
 	self.searchController = nil;
 	[super dealloc];
 }
@@ -86,7 +92,7 @@
 {
 	if ([[action objectForKey:@"action"] isEqualToString:@"home"])
 	{
-		
+		[self.navigationController popViewControllerAnimated:YES];
 	}
 }
 

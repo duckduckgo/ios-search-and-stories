@@ -14,6 +14,7 @@
 @synthesize search;
 @synthesize searchHandler;
 @synthesize searchButton;
+@synthesize state;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
 {
@@ -188,7 +189,7 @@
 	[textField resignFirstResponder];
 	[self autoCompleteReveal:NO];
 	
-	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:@"web", @"action", nil]];
+	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:@"web", @"action", [search.text length] ? search.text : nil, @"searchTerm", nil]];
 	
 	return YES;
 }

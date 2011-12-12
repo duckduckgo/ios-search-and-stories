@@ -57,6 +57,7 @@
 		83F3229A1492AF4A00A61BC5 /* CurrentTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83F322991492AF4A00A61BC5 /* CurrentTopicCell.xib */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
 		83F3229F1492EE1B00A61BC5 /* DDGSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83F3229D1492EE1B00A61BC5 /* DDGSearchController.xib */; };
+		83FCA91114966EC000AEDAC6 /* buttonLightGrey40x37.png in Resources */ = {isa = PBXBuildFile; fileRef = 83FCA91014966EC000AEDAC6 /* buttonLightGrey40x37.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,7 @@
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
 		83F3229D1492EE1B00A61BC5 /* DDGSearchController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGSearchController.xib; sourceTree = "<group>"; };
+		83FCA91014966EC000AEDAC6 /* buttonLightGrey40x37.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonLightGrey40x37.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -283,6 +285,7 @@
 				839819471493E7F90017A892 /* gear40x37.png */,
 				83F322881492934B00A61BC5 /* home40x37.png */,
 				83F322891492934B00A61BC5 /* spacer8x16.png */,
+				83FCA91014966EC000AEDAC6 /* buttonLightGrey40x37.png */,
 			);
 			name = images;
 			sourceTree = "<group>";
@@ -393,6 +396,7 @@
 				83F3229A1492AF4A00A61BC5 /* CurrentTopicCell.xib in Resources */,
 				83F3229F1492EE1B00A61BC5 /* DDGSearchController.xib in Resources */,
 				839819481493E7F90017A892 /* gear40x37.png in Resources */,
+				83FCA91114966EC000AEDAC6 /* buttonLightGrey40x37.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,10 +546,12 @@
 		83F3227A149290EF00A61BC5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -553,10 +559,12 @@
 		83F3227B149290EF00A61BC5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

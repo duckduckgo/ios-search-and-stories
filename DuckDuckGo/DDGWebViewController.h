@@ -14,9 +14,13 @@
 {
 	IBOutlet UIWebView				*www;
 	IBOutlet DDGSearchController	*searchController;
+    
+    NSURL                           *url;
 }
 
 @property (nonatomic, retain) IBOutlet UIWebView			*www;
 @property (nonatomic, retain) IBOutlet DDGSearchController	*searchController;
+
+@property (nonatomic, retain) NSURL                         *url;
 
 @end

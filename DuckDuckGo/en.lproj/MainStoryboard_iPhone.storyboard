@@ -68,40 +68,12 @@
                     </navigationBar>
                     <connections>
                         <segue destination="2" kind="relationship" relationship="rootViewController" id="ZHU-D7-Ul6"/>
-                        <segue destination="a3V-vr-kNM" kind="push" identifier="PresentWebView" id="EhM-dQ-VgZ"/>
                     </connections>
                 </navigationController>
             </objects>
             <point key="canvasLocation" x="-490" y="-338"/>
         </scene>
     </scenes>
-    <classes>
-        <class className="DDGSearchController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DDGSearchController.h"/>
-            <relationships>
-                <relationship kind="action" name="searchButtonAction:" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="loadedCell" candidateClass="UITableViewCell"/>
-                <relationship kind="outlet" name="search" candidateClass="UITextField"/>
-                <relationship kind="outlet" name="searchButton" candidateClass="UIButton"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="DDGViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DDGViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="loadedCell" candidateClass="UITableViewCell"/>
-                <relationship kind="outlet" name="searchController" candidateClass="DDGSearchController"/>
-                <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
-            </relationships>
-        </class>
-        <class className="DDGWebViewController" superclassName="UIViewController">
-            <source key="sourceIdentifier" type="project" relativePath="./Classes/DDGWebViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="searchController" candidateClass="DDGSearchController"/>
-                <relationship kind="outlet" name="www" candidateClass="UIWebView"/>
-            </relationships>
-        </class>
-    </classes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
