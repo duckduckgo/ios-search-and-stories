@@ -50,11 +50,12 @@
 	self.searchController = [[[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view] autorelease];
 	searchController.searchHandler = self;
     searchController.state = eViewStateWebResults;
+	searchController.search.text = [params objectForKey:@"searchTerm"];
 	[searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
 	
 	NSURL *url = [params objectForKey:@"url"];
     if (!url)
-        url = [NSURL URLWithString:@"https://duckduckgo.com"];
+        url = [NSURL URLWithString:@"https://duckduckgo.com/?ko=-1"];
 	
 	[www loadRequest:[NSURLRequest requestWithURL:url]];
 }

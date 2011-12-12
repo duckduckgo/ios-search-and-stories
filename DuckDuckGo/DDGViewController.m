@@ -91,7 +91,10 @@
         
         urlString = [UtilityCHS fixupURL:urlString];
         
-        wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:[NSURL URLWithString:urlString], @"url", nil];
+        wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
+					  [action objectForKey:@"searchTerm"], @"searchTerm",
+					  [NSURL URLWithString:urlString], @"url", 
+					  nil];
         
         [self.navigationController pushViewController:wvc animated:YES];
 	}
