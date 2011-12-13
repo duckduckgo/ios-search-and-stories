@@ -9,12 +9,14 @@
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
 #import "UtilityCHS.h"
+#import "JSON.h"
 
 @implementation DDGViewController
 
 @synthesize loadedCell;
 @synthesize tableView;
 @synthesize searchController;
+@synthesize entries;
 
 - (void)didReceiveMemoryWarning
 {
@@ -34,6 +36,8 @@
 	searchController.searchHandler = self;
     searchController.state = eViewStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"gear40x37.png"] forState:UIControlStateNormal];
+	
+	[self loadEntries];
 }
 
 - (void)viewDidUnload
@@ -131,13 +135,36 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return 15;
+	return [entries count];
 }
 
 #pragma  mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+//	DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
+//	
+//	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
+//	NSString *urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [entry objectForKey:@"phrase"]];
+//	
+//	urlString = [UtilityCHS fixupURL:urlString];
+//	
+//	wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
+//				  [entry objectForKey:@"phrase"], @"searchTerm",
+//				  [NSURL URLWithString:urlString], @"url", 
+//				  nil];
+//	
+//	[self.navigationController pushViewController:wvc animated:YES];
+}
+
+#pragma - load up entries for  home screen
+
+- (void)loadEntries
+{
+//    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Temporary/feedHomeScreen" ofType:@"json"];
+//	NSError *error = nil;
+//	NSString *json = [NSString stringWithContentsOfFile:bundlePath encoding:NSUTF8StringEncoding error:&error];
+//	self.entries = [json JSONValue];
 }
 
 @end

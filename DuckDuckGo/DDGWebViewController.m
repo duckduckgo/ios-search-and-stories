@@ -47,6 +47,9 @@
 {
     [super viewDidLoad];
 	
+	www.delegate = self;
+	callDepth = 0;
+
 	self.searchController = [[[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view] autorelease];
 	searchController.searchHandler = self;
     searchController.state = eViewStateWebResults;
@@ -62,6 +65,7 @@
 
 - (void)dealloc
 {
+	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
     self.params = nil;
 	self.searchController = nil;
 	[super dealloc];
@@ -107,17 +111,26 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView
 {
-	
+	if (++callDepth == 1)
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-	
+	if (--callDepth <= 0)
+	{
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+		callDepth = 0;
+	}
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-	
+	if (--callDepth <= 0)
+	{
+		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+		callDepth = 0;
+	}
 }
 
 @end

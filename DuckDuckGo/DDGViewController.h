@@ -15,10 +15,16 @@
 	IBOutlet UITableViewCell		*loadedCell;
 	IBOutlet UITableView			*tableView;
 	IBOutlet DDGSearchController	*searchController;
+	
+	id								entries;
 }
 
 @property (nonatomic, retain) IBOutlet UITableViewCell		*loadedCell;
 @property (nonatomic, retain) IBOutlet UITableView			*tableView;
 @property (nonatomic, retain) IBOutlet DDGSearchController	*searchController;
+
+@property (nonatomic, retain) id							entries;
+
+- (void)loadEntries;
 
 @end

@@ -16,6 +16,7 @@
 	IBOutlet DDGSearchController	*searchController;
     
     NSDictionary					*params;
+	NSInteger						callDepth;
 }
 
 @property (nonatomic, retain) IBOutlet UIWebView			*www;

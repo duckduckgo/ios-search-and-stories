@@ -8,6 +8,36 @@
 
 #import "DDGAppDelegate.h"
 #import "UtilityCHS.h"
+#import "CacheControl.h"
+#import "DataHelper.h"
+
+@implementation DataHelper(Initialize)
+
++ (NSDictionary*)headerItemsForAllHTTPRequests
+{
+	return [[NSDictionary dictionaryWithObjectsAndKeys:
+			 [@"DDG iOS App v" stringByAppendingString:[UtilityCHS versionOfSoftware]],	@"User-Agent", 
+			 @"http://duckduckgo.com",													@"Referer",
+			 nil] retain];
+}
+
+@end
+
+@implementation CacheControl(Initialize)
+
++ (NSArray*)userInitializePaths
+{
+	return [[NSArray arrayWithObjects:@"transient", @"images",	nil] retain];
+}
+
++ (NSArray*)userInitializeDays
+{
+	return [[NSArray arrayWithObjects:	[NSNumber numberWithInt:0],
+			 [NSNumber numberWithInt:86400*31],
+			 nil] retain];
+}
+
+@end
 
 @implementation DDGAppDelegate
 
@@ -21,10 +51,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    if ([UtilityCHS isIpad])
-    {
-        
-    }
+	// turn off completely standard URL cacheing -- we use our own cacheing
+	NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
+	[NSURLCache setSharedURLCache:sharedCache];
+	[sharedCache release];
+	
+    // Override point for customization after app launch    
+	// create any caches needed -- only realy does anything first time through
+	[CacheControl setupCaches];
+	
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
+	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:bundlePath];
+	[[NSUserDefaults standardUserDefaults] registerDefaults:dict];
+    
     // Override point for customization after application launch.
     return YES;
 }
