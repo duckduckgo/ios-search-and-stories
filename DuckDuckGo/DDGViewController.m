@@ -135,7 +135,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [entries count];
+	return 15; //[entries count];
 }
 
 #pragma  mark - UITableViewDelegate
