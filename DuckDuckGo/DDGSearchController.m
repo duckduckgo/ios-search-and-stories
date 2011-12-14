@@ -35,6 +35,11 @@
 		self.serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
 													 cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
 												 timeoutInterval:30.0];
+		
+		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
+		[serverRequest setValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
+		
+		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
 		self.serverCache = [NSMutableDictionary dictionaryWithCapacity:8];
 
 		dataHelper = [[DataHelper alloc] initWithDelegate:self];
@@ -246,6 +251,7 @@
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
 	[self autoCompleteReveal:NO];
+	[serverCache removeAllObjects];
 	return YES;
 }
 
@@ -256,7 +262,6 @@
 
 - (void)textFieldDidEndEditing:(UITextField *)textField
 {
-	
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
@@ -336,10 +341,12 @@
 	return 44.0;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSArray *items = [self currentResultForItem:[serverCache count]];
 	NSDictionary *item = [items objectAtIndex:indexPath.row];
+	
+	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	
 	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:@"web", @"action",  [item objectForKey:@"phrase"], @"searchTerm", nil]];
 }

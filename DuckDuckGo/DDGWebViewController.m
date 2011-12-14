@@ -66,6 +66,8 @@
 - (void)dealloc
 {
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+	www.delegate = nil;
+	self.www = nil;
     self.params = nil;
 	self.searchController = nil;
 	[super dealloc];
