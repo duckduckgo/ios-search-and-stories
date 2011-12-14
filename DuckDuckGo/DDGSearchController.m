@@ -36,12 +36,15 @@
 													 cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
 												 timeoutInterval:30.0];
 		self.serverCache = [NSMutableDictionary dictionaryWithCapacity:8];
+
+		dataHelper = [[DataHelper alloc] initWithDelegate:self];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
+	[dataHelper release];
 	self.serverData = nil;
 	self.serverRequest = nil;
 	if (serverConnection)
@@ -292,12 +295,21 @@
     static NSString *CellIdentifier = @"Cell";
     
     UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
+	UIImageView *iv;
     if (cell == nil)
 	{
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
 		cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
 		cell.textLabel.textColor = [UIColor darkGrayColor];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
+		cell.imageView.image = [UIImage imageNamed:@"spacer44x44.png"];
+		
+		iv = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+		iv.tag = 100;
+		iv.contentMode = UIViewContentModeScaleAspectFit;
+		iv.backgroundColor = [UIColor whiteColor];
+		[cell.contentView addSubview:iv];
+		[iv release];
     }
     NSArray *items = [self currentResultForItem:[serverCache count]];
 	NSDictionary *item = [items objectAtIndex:indexPath.row];
@@ -305,7 +317,15 @@
     // Configure the cell...
 	cell.textLabel.text = [item objectForKey:@"phrase"];
 	cell.detailTextLabel.text = [item objectForKey:@"snippet"];
-    
+
+	iv = (UIImageView *)[cell.contentView viewWithTag:100];
+	
+	iv.backgroundColor = [UIColor whiteColor];
+	iv.image = [UIImage imageWithData:[dataHelper retrieve:[item objectForKey:@"image"] 
+													 store:kCacheStoreIndexImages 
+													  name:[NSString stringWithFormat:@"%08x", [[item objectForKey:@"image"] hash]]
+												returnData:YES
+												identifier:0]];    
     return cell;
 }
 
@@ -318,14 +338,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     [detailViewController release];
-     */
+    NSArray *items = [self currentResultForItem:[serverCache count]];
+	NSDictionary *item = [items objectAtIndex:indexPath.row];
+	
+	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:@"web", @"action",  [item objectForKey:@"phrase"], @"searchTerm", nil]];
 }
 
 #pragma mark - auto completion server connection delegate
@@ -352,7 +368,7 @@
 	if (serverData.length)
 	{
 		NSString *query = [[[connection.originalRequest.URL.query componentsSeparatedByString:@"="] objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-		NSLog(@"QUERY:[%@]", query);
+//		NSLog(@"QUERY:[%@]", query);
 		NSString *json = [[NSString alloc] initWithData:serverData encoding:NSUTF8StringEncoding];
 		NSArray *result = [json JSONValue];
 		[self cacheCurrentResult:result forItem:[query length]];
@@ -361,5 +377,26 @@
 	}
 	self.serverConnection = nil;
 }
+
+#pragma - DataHelper delegate
+
+- (void)dataReceivedWith:(NSInteger)identifier andData:(NSData*)data andStatus:(NSInteger)status
+{
+}
+
+- (void)dataReceived:(NSInteger)identifier withStatus:(NSInteger)status
+{
+	// no matter what is coming back, we need a refesh
+	[tableView reloadData];
+}
+
+- (void)redirectReceived:(NSInteger)identifier withURL:(NSString*)url
+{
+}
+
+- (void)errorReceived:(NSInteger)identifier withError:(NSError*)error
+{
+}
+
 
 @end

@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "DataHelper.h"
+#import "CacheControl.h"
 #import "DDGSearchProtocol.h"
 
 enum eSearchState
@@ -17,7 +19,7 @@ enum eSearchState
 	
 };
 
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate>
+@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate, DataHelperDelegate>
 {
 	IBOutlet UITableView		*tableView;
 
@@ -36,6 +38,8 @@ enum eSearchState
 	NSURLConnection				*serverConnection;
 
 	NSMutableDictionary			*serverCache;
+	
+	DataHelper					*dataHelper;
 }
 
 @property (nonatomic, retain) NSMutableURLRequest			*serverRequest;
