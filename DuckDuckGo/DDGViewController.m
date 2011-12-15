@@ -87,17 +87,17 @@
 
 - (void)actionTaken:(NSDictionary*)action
 {
-	if ([[action objectForKey:@"action"] isEqualToString:@"web"] && [action objectForKey:@"searchTerm"])
+	if ([[action objectForKey:ksDDGSearchControllerAction] isEqualToString:ksDDGSearchControllerActionWeb] && [action objectForKey:ksDDGSearchControllerSearchTerm])
 	{
         DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
         
-        NSString *urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [action objectForKey:@"searchTerm"]];
+        NSString *urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [action objectForKey:ksDDGSearchControllerSearchTerm]];
         
         urlString = [UtilityCHS fixupURL:urlString];
         
         wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
-					  [action objectForKey:@"searchTerm"], @"searchTerm",
-					  [NSURL URLWithString:urlString], @"url", 
+					  [action objectForKey:ksDDGSearchControllerSearchTerm], ksDDGSearchControllerSearchTerm,
+					  [NSURL URLWithString:urlString], ksDDGSearchControllerSearchURL, 
 					  nil];
         
         [self.navigationController pushViewController:wvc animated:YES];
@@ -142,19 +142,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-//	DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
-//	
-//	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
-//	NSString *urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [entry objectForKey:@"phrase"]];
-//	
-//	urlString = [UtilityCHS fixupURL:urlString];
-//	
-//	wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
-//				  [entry objectForKey:@"phrase"], @"searchTerm",
-//				  [NSURL URLWithString:urlString], @"url", 
-//				  nil];
-//	
-//	[self.navigationController pushViewController:wvc animated:YES];
 }
 
 #pragma - load up entries for  home screen

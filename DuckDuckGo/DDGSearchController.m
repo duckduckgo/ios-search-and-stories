@@ -18,7 +18,6 @@
 @synthesize state;
 
 @synthesize serverRequest;
-@synthesize serverData;
 
 @synthesize serverCache;
 
@@ -30,10 +29,9 @@
 		[parent addSubview:self.view];
 		kbRect = CGRectZero;
 		
-		self.serverData = [NSMutableData dataWithCapacity:8192];
 		self.serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
 													 cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
-												 timeoutInterval:30.0];
+												 timeoutInterval:10.0];
 		
 		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
 		[serverRequest setValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
@@ -44,6 +42,8 @@
 		self.serverCache = [NSMutableDictionary dictionaryWithCapacity:8];
 
 		dataHelper = [[DataHelper alloc] initWithDelegate:self];
+		
+		search.placeholder = NSLocalizedString (@"SearchPlaceholder", @"A comment");
 	}
 	return self;
 }
@@ -51,7 +51,6 @@
 - (void)dealloc
 {
 	[dataHelper release];
-	self.serverData = nil;
 	self.serverRequest = nil;
 	self.serverCache = nil;
 	
@@ -156,7 +155,7 @@
 {
 	[search resignFirstResponder];
 	
-	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:@"home", @"action", nil]];
+	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:ksDDGSearchControllerActionHome, ksDDGSearchControllerAction, nil]];
 }
 
 - (void)switchModeTo:(enum eSearchState)searchState
@@ -271,7 +270,7 @@
 	[textField resignFirstResponder];
 	[self autoCompleteReveal:NO];
 	
-	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:@"web", @"action", [search.text length] ? search.text : nil, @"searchTerm", nil]];
+	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:ksDDGSearchControllerActionWeb, ksDDGSearchControllerAction, [search.text length] ? search.text : nil, ksDDGSearchControllerSearchTerm, nil]];
 	
 	return YES;
 }
@@ -315,15 +314,15 @@
 	NSDictionary *item = [items objectAtIndex:indexPath.row];
 	
     // Configure the cell...
-	cell.textLabel.text = [item objectForKey:@"phrase"];
-	cell.detailTextLabel.text = [item objectForKey:@"snippet"];
+	cell.textLabel.text = [item objectForKey:ksDDGSearchControllerServerKeyPhrase];
+	cell.detailTextLabel.text = [item objectForKey:ksDDGSearchControllerServerKeySnippet];
 
 	iv = (UIImageView *)[cell.contentView viewWithTag:100];
 	
 	iv.backgroundColor = [UIColor whiteColor];
-	iv.image = [UIImage imageWithData:[dataHelper retrieve:[item objectForKey:@"image"] 
+	iv.image = [UIImage imageWithData:[dataHelper retrieve:[item objectForKey:ksDDGSearchControllerServerKeyImage] 
 													 store:kCacheStoreIndexImages 
-													  name:[NSString stringWithFormat:@"%08x", [[item objectForKey:@"image"] hash]]
+													  name:[NSString stringWithFormat:@"%08x", [[item objectForKey:ksDDGSearchControllerServerKeyImage] hash]]
 												returnData:YES
 												identifier:0]];    
     return cell;
@@ -343,7 +342,10 @@
 	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	
-	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:@"web", @"action",  [item objectForKey:@"phrase"], @"searchTerm", nil]];
+	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:
+								ksDDGSearchControllerActionWeb, ksDDGSearchControllerAction,
+								[item objectForKey:ksDDGSearchControllerServerKeyPhrase], ksDDGSearchControllerSearchTerm,
+								nil]];
 }
 
 #pragma - DataHelper delegate
@@ -376,3 +378,15 @@
 
 
 @end
+
+NSString *const ksDDGSearchControllerAction = @"action"; 
+NSString *const ksDDGSearchControllerActionHome = @"home"; 
+NSString *const ksDDGSearchControllerActionWeb = @"web"; 
+
+NSString *const ksDDGSearchControllerSearchTerm = @"searchTerm"; 
+NSString *const ksDDGSearchControllerSearchURL = @"url"; 
+
+NSString *const ksDDGSearchControllerServerKeySnippet = @"snippet"; 
+NSString *const ksDDGSearchControllerServerKeyPhrase = @"phrase"; 
+NSString *const ksDDGSearchControllerServerKeyImage = @"image"; 
+

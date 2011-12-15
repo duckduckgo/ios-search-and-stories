@@ -33,7 +33,6 @@ enum eSearchState
 	id<DDGSearchProtocol>		searchHandler;
 	
 	NSMutableURLRequest			*serverRequest;
-	NSMutableData				*serverData;
 
 	NSMutableDictionary			*serverCache;
 	
@@ -41,7 +40,6 @@ enum eSearchState
 }
 
 @property (nonatomic, retain) NSMutableURLRequest			*serverRequest;
-@property (nonatomic, retain) NSMutableData					*serverData;
 
 @property (nonatomic, retain) NSMutableDictionary			*serverCache;
 
@@ -63,3 +61,16 @@ enum eSearchState
 - (void)cacheCurrentResult:(NSArray*)result forItem:(NSUInteger)item;
 
 @end
+
+
+UIKIT_EXTERN NSString *const ksDDGSearchControllerAction; 
+UIKIT_EXTERN NSString *const ksDDGSearchControllerActionHome; 
+UIKIT_EXTERN NSString *const ksDDGSearchControllerActionWeb; 
+
+UIKIT_EXTERN NSString *const ksDDGSearchControllerSearchTerm; 
+UIKIT_EXTERN NSString *const ksDDGSearchControllerSearchURL; 
+
+UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeySnippet; 
+UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyPhrase; 
+UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyImage; 
+

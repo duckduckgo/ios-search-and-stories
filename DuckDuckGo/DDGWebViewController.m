@@ -53,10 +53,10 @@
 	self.searchController = [[[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view] autorelease];
 	searchController.searchHandler = self;
     searchController.state = eViewStateWebResults;
-	searchController.search.text = [params objectForKey:@"searchTerm"];
+	searchController.search.text = [params objectForKey:ksDDGSearchControllerSearchTerm];
 	[searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
 	
-	NSURL *url = [params objectForKey:@"url"];
+	NSURL *url = [params objectForKey:ksDDGSearchControllerSearchURL];
     if (!url)
         url = [NSURL URLWithString:@"https://duckduckgo.com/?ko=-1"];
 	
@@ -98,7 +98,7 @@
 
 - (void)actionTaken:(NSDictionary*)action
 {
-	if ([[action objectForKey:@"action"] isEqualToString:@"home"])
+	if ([[action objectForKey:ksDDGSearchControllerAction] isEqualToString:ksDDGSearchControllerActionHome])
 	{
 		[self.navigationController popViewControllerAnimated:YES];
 	}
