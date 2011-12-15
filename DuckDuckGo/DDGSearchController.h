@@ -35,8 +35,6 @@ enum eSearchState
 	NSMutableURLRequest			*serverRequest;
 	NSMutableData				*serverData;
 
-	NSURLConnection				*serverConnection;
-
 	NSMutableDictionary			*serverCache;
 	
 	DataHelper					*dataHelper;
@@ -44,7 +42,6 @@ enum eSearchState
 
 @property (nonatomic, retain) NSMutableURLRequest			*serverRequest;
 @property (nonatomic, retain) NSMutableData					*serverData;
-@property (nonatomic, retain) NSURLConnection				*serverConnection;
 
 @property (nonatomic, retain) NSMutableDictionary			*serverCache;
 

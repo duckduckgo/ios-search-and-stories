@@ -19,7 +19,6 @@
 
 @synthesize serverRequest;
 @synthesize serverData;
-@synthesize serverConnection;
 
 @synthesize serverCache;
 
@@ -38,6 +37,8 @@
 		
 		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
 		[serverRequest setValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
+		[serverRequest setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
+		[serverRequest setValue:@"text/plain; charset=UTF-8" forHTTPHeaderField:@"Accept"];
 		
 		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
 		self.serverCache = [NSMutableDictionary dictionaryWithCapacity:8];
@@ -52,9 +53,6 @@
 	[dataHelper release];
 	self.serverData = nil;
 	self.serverRequest = nil;
-	if (serverConnection)
-		[serverConnection cancel];
-	self.serverConnection = nil;
 	self.serverCache = nil;
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -189,12 +187,6 @@
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-	if (serverConnection)
-	{
-		[serverConnection cancel];
-		self.serverConnection = nil;
-	}
-
 	NSUInteger lengthLeft = [textField.text length] - range.length + [string length];
 	
 	if (!lengthLeft)
@@ -236,13 +228,16 @@
 		willBecome = [willBecome stringByAppendingString:string ? string : @""];
 		NSString *surl = [@"http://va-l3.duckduckgo.com:6767/face/suggest/?q=" stringByAppendingString:willBecome];
 		serverRequest.URL = [NSURL URLWithString:[surl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-		self.serverConnection = [NSURLConnection connectionWithRequest:serverRequest delegate:self];
-//		NSLog (@"URL: %@", surl);
+
+		[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:1000+[willBecome length]];
+
+		NSLog (@"URL: %@", surl);
 	}
 	else if (!lengthLeft)
 	{
 		// stay slim and trim in memory :)
 		[serverCache removeAllObjects];
+		[tableView reloadData];
 	}
 	
 	return YES;
@@ -351,44 +346,18 @@
 	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:@"web", @"action",  [item objectForKey:@"phrase"], @"searchTerm", nil]];
 }
 
-#pragma mark - auto completion server connection delegate
-
-- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response
-{
-	[serverData setLength:0]; 
-}
-
-- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
-{
-	[serverData appendData:data];
-}
-
-- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
-{
-	[serverData setLength:0]; 
-	self.serverConnection = nil;
-}
-
-- (void)connectionDidFinishLoading:(NSURLConnection *)connection
-{
-	// we have a complete data file for cacheing
-	if (serverData.length)
-	{
-		NSString *query = [[[connection.originalRequest.URL.query componentsSeparatedByString:@"="] objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//		NSLog(@"QUERY:[%@]", query);
-		NSString *json = [[NSString alloc] initWithData:serverData encoding:NSUTF8StringEncoding];
-		NSArray *result = [json JSONValue];
-		[self cacheCurrentResult:result forItem:[query length]];
-		[json release];
-		[tableView reloadData];
-	}
-	self.serverConnection = nil;
-}
-
 #pragma - DataHelper delegate
 
 - (void)dataReceivedWith:(NSInteger)identifier andData:(NSData*)data andStatus:(NSInteger)status
 {
+	if (identifier > 1000 && data.length)
+	{
+		NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		NSArray *result = [json JSONValue];
+		[self cacheCurrentResult:result forItem:identifier-1000];
+		[json release];
+		[tableView reloadData];
+	}
 }
 
 - (void)dataReceived:(NSInteger)identifier withStatus:(NSInteger)status
