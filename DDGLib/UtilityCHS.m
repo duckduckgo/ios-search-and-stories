@@ -1,9 +1,9 @@
 //
 //  UtilityCHS.m
-//  CHS Systems
+//  DuckDuckGo, Inc
 //
 //  Created by Chris Heimark on 9/17/09.
-//  Copyright 2009 CHS Systems. All rights reserved.
+//  Copyright 2009 DuckDuckGo, Inc. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>

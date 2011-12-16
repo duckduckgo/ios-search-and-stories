@@ -2,7 +2,7 @@
 //  DataHelper.m
 //
 //  Created by Chris Heimark on 10/13/09.
-//  Copyright 2009 CHS Systems. All rights reserved.
+//  Copyright 2009 DuckDuckGo, Inc. All rights reserved.
 //
 
 #import "DataHelper.h"

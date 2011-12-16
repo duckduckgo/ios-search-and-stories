@@ -1,11 +1,11 @@
 //
 //  CacheControl.m
 //
-//  Created by Chris Heimark of CHS Systems on 12/12/08.
-//  Copyright 2008 © CHS Systems. All rights reserved.
+//  Created by Chris Heimark on 12/12/08.
+//  Copyright 2008 © DuckDuckGo, Inc. All rights reserved.
 //
 
-//hurl://www.CHS Systems.com/qWebServices/HomePage.aspx
+//hurl://www.DuckDuckGo, Inc.com/qWebServices/HomePage.aspx
 //Request Headers
 // Accept:application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
 // Cache-Control:max-age=0

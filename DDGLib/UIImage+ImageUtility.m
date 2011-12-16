@@ -3,7 +3,7 @@
 //  ChessyLib
 //
 //  Created by Chris Heimark on 11/17/11.
-//  Copyright (c) 2011 CHS Systems. All rights reserved.
+//  Copyright (c) 2011 DuckDuckGo, Inc. All rights reserved.
 //
 
 #import "UIImage+ImageUtility.h"

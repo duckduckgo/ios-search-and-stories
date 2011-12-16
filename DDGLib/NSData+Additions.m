@@ -3,7 +3,7 @@
 //  ChessyLib
 //
 //  Created by Chris Heimark on 2/10/11.
-//  Copyright 2011 CHS Systems. All rights reserved.
+//  Copyright 2011 DuckDuckGo, Inc. All rights reserved.
 //
 
 #import "NSData+Additions.h"

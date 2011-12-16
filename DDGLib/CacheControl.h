@@ -1,8 +1,8 @@
 //
 //  CacheControl.h
 //
-//  Created by Chris Heimark of CHS Systems on 12/12/08.
-//  Copyright 2008 © CHS Systems. All rights reserved.
+//  Created by Chris Heimark on 12/12/08.
+//  Copyright 2008 © DuckDuckGo, Inc. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

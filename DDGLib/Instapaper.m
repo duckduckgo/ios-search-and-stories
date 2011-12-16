@@ -3,7 +3,7 @@
 //  ChessyLib
 //
 //  Created by Chris Heimark on 1/28/11.
-//  Copyright 2011 CHS Systems. All rights reserved.
+//  Copyright 2011 DuckDuckGo, Inc. All rights reserved.
 //
 
 /*
