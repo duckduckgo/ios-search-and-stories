@@ -10,6 +10,7 @@
 #import "DDGWebViewController.h"
 #import "UtilityCHS.h"
 #import "JSON.h"
+#import "NSString+SBJSON.h"
 
 @implementation DDGViewController
 
@@ -32,6 +33,8 @@
 	// Do any additional setup after loading the view, typically from a nib.
 	// Do any additional setup after loading the view, typically from a nib.
 	
+	dataHelper = [[DataHelper alloc] initWithDelegate:self];
+	
 	self.searchController = [[[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view] autorelease];
 	searchController.searchHandler = self;
     searchController.state = eViewStateHome;
@@ -49,6 +52,7 @@
 
 - (void)dealloc
 {
+	[dataHelper release];
 	self.searchController = nil;
 	[super dealloc];
 }
@@ -124,6 +128,10 @@
 	UIImageView *iv = (UIImageView *)[cell.contentView viewWithTag:100];
 	
 	iv.image = [UIImage imageNamed:[NSString stringWithFormat:@"Temporary/mm%d.png", (indexPath.row % 5) + 1]];
+
+	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
+	
+	cell.textLabel.text = [entry objectForKey:@"y:title"];
 	
 	return cell;
 }
@@ -135,7 +143,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return 15; //[entries count];
+	return [entries count];
 }
 
 #pragma  mark - UITableViewDelegate
@@ -146,12 +154,43 @@
 
 #pragma - load up entries for  home screen
 
+#define anURL 
+
 - (void)loadEntries
 {
-//    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Temporary/feedHomeScreen" ofType:@"json"];
-//	NSError *error = nil;
-//	NSString *json = [NSString stringWithContentsOfFile:bundlePath encoding:NSUTF8StringEncoding error:&error];
-//	self.entries = [json JSONValue];
+	[dataHelper retrieve:@"http://pipes.yahoo.com/pipes/pipe.run?_id=96061e78ec401aa340a1193b6a7e7d65&_render=json&url=http://opensesamelabs.posterous.com/rss.xml"
+				   store:kCacheStoreIndexNoFileCache
+					name:nil
+			  returnData:NO
+			  identifier:1000
+			  bufferSize:8192];
+}
+
+#pragma mark - DataHelper delegate
+
+- (void)dataReceivedWith:(NSInteger)identifier andData:(NSData*)data andStatus:(NSInteger)status
+{
+	if (identifier == 1000 && data.length)
+	{
+		NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+		self.entries = [[[json JSONValue] objectForKey:@"value"] objectForKey:@"items"];
+		[json release];
+		[tableView reloadData];
+	}
+}
+
+- (void)dataReceived:(NSInteger)identifier withStatus:(NSInteger)status
+{
+	// no matter what is coming back, we need a refesh
+	[tableView reloadData];
+}
+
+- (void)redirectReceived:(NSInteger)identifier withURL:(NSString*)url
+{
+}
+
+- (void)errorReceived:(NSInteger)identifier withError:(NSError*)error
+{
 }
 
 @end

@@ -9,14 +9,16 @@
 #import <UIKit/UIKit.h>
 
 #import "DDGSearchController.h"
+#import "DataHelper.h"
 
-@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchProtocol>
+@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchProtocol, DataHelperDelegate>
 {
 	IBOutlet UITableViewCell		*loadedCell;
 	IBOutlet UITableView			*tableView;
 	IBOutlet DDGSearchController	*searchController;
 	
 	id								entries;
+	DataHelper						*dataHelper;
 }
 
 @property (nonatomic, retain) IBOutlet UITableViewCell		*loadedCell;
