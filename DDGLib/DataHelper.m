@@ -27,7 +27,7 @@
 @property (nonatomic, retain) NSString		*name;
 @property (nonatomic, assign) NSInteger		identifier;
 
-- (id)initWithDelegate:(id<DataHelperDelegate>)delegate andControlSet:(id)control;
+- (id)initWithDelegate:(id<DataHelperDelegate>)delegate andControlSet:(id)control bufferSize:(NSUInteger)capacity;
 
 - (id)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName identifier:(NSInteger)ID;
 
@@ -62,7 +62,7 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
     return self;
 }
 
-- (NSData*)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName returnData:(BOOL)returnData identifier:(NSInteger)ID
+- (NSData*)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName returnData:(BOOL)returnData identifier:(NSInteger)ID  bufferSize:(NSUInteger)capacity
 {
 	// ignore any redundant requests for the same items
 	if ([self isRequestOutstandingForStore:cacheStore name:cacheName identifier:ID])
@@ -90,7 +90,7 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 	}
 	
 	// create a file fetch object
-	FileFetch *fetchItem = [[[FileFetch alloc] initWithDelegate:delegate andControlSet:connections] autorelease];
+	FileFetch *fetchItem = [[[FileFetch alloc] initWithDelegate:delegate andControlSet:connections bufferSize:capacity] autorelease];
 	
 	if (fetchItem)
 	{
@@ -168,12 +168,12 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 @synthesize store;
 @synthesize name;
 
-- (id)initWithDelegate:(id<DataHelperDelegate>)receiptDelegate  andControlSet:(id)control
+- (id)initWithDelegate:(id<DataHelperDelegate>)receiptDelegate  andControlSet:(id)control bufferSize:(NSUInteger)capacity
 {
     if ((self = [super init]))
 	{
         // data comes in here
-		receivedData = [[[NSMutableData alloc] initWithCapacity:4096] retain];
+		receivedData = [[[NSMutableData alloc] initWithCapacity:capacity] retain];
 		delegate = receiptDelegate;
 		controlSet = control;
     }

@@ -31,7 +31,7 @@
 
 - (id)initWithDelegate:(id<DataHelperDelegate>)delegate;
 
-- (NSData*)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName returnData:(BOOL)returnData identifier:(NSInteger)ID;
+- (NSData*)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName returnData:(BOOL)returnData identifier:(NSInteger)ID bufferSize:(NSUInteger)capacity;
 
 -(void)flushAllIO;
 -(void)flushIdentifierIO:(NSInteger)ID;

@@ -9,6 +9,12 @@
 #import "DDGSearchController.h"
 #import "NSString+SBJSON.h"
 
+static NSString *const sBaseSuggestionServerURL = @"http://va-l3.duckduckgo.com:6767/face/suggest/?q=";
+
+static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
+static NSUInteger kSuggestionServerProbeResponseBufferCapacity = 32;
+static NSTimeInterval kProbeIntervalTime = 3.0;
+
 @implementation DDGSearchController
 
 @synthesize loadedCell;
@@ -30,7 +36,7 @@
 		kbRect = CGRectZero;
 		
 		self.serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
-													 cachePolicy:NSURLRequestReloadIgnoringLocalCacheData
+													 cachePolicy:NSURLRequestUseProtocolCachePolicy
 												 timeoutInterval:10.0];
 		
 		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
@@ -44,12 +50,15 @@
 		dataHelper = [[DataHelper alloc] initWithDelegate:self];
 		
 		search.placeholder = NSLocalizedString (@"SearchPlaceholder", @"A comment");
+		
+		probeTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(probeTime:) userInfo:nil repeats:YES];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
+	[probeTimer invalidate];
 	[dataHelper release];
 	self.serverRequest = nil;
 	self.serverCache = nil;
@@ -165,10 +174,14 @@
 
 #pragma  mark - Handle the text field input
 
-//- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-//{
-//	[search resignFirstResponder];
-//}
+- (void)probeTime:(NSTimer*)timer
+{
+	// prime the pump to start up a connection
+	serverRequest.URL = [NSURL URLWithString:sBaseSuggestionServerURL];
+	[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:666  bufferSize:kSuggestionServerProbeResponseBufferCapacity];
+	
+	[timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
+}
 
 //
 // SAMPLE URL -- http://va-l3.duckduckgo.com:6767/face/suggest/?q=
@@ -192,8 +205,10 @@
 		// going to NO characters
 		[self autoCompleteReveal:NO];
 	else if (![textField.text length] && lengthLeft)
+	{
 		// going from NO characters to something
 		[self autoCompleteReveal:YES];
+	}
 	
 	if (lengthLeft && lengthLeft < [textField.text length])
 	{
@@ -225,11 +240,14 @@
 		if (![willBecome length])
 			willBecome = @"";
 		willBecome = [willBecome stringByAppendingString:string ? string : @""];
-		NSString *surl = [@"http://va-l3.duckduckgo.com:6767/face/suggest/?q=" stringByAppendingString:willBecome];
+		NSString *surl = [sBaseSuggestionServerURL stringByAppendingString:willBecome];
 		serverRequest.URL = [NSURL URLWithString:[surl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-		[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:1000+[willBecome length]];
-
+		[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:1000+[willBecome length] bufferSize:kSuggestionServerResponseBufferCapacity];
+		
+		// don't need to probe for a while
+		[probeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
+		
 		NSLog (@"URL: %@", surl);
 	}
 	else if (!lengthLeft)
@@ -246,6 +264,11 @@
 {
 	[self autoCompleteReveal:NO];
 	[serverCache removeAllObjects];
+	return YES;
+}
+
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
+{
 	return YES;
 }
 
@@ -324,7 +347,8 @@
 													 store:kCacheStoreIndexImages 
 													  name:[NSString stringWithFormat:@"%08x", [[item objectForKey:ksDDGSearchControllerServerKeyImage] hash]]
 												returnData:YES
-												identifier:0]];    
+												identifier:0
+												bufferSize:4096]];    
     return cell;
 }
 
@@ -348,7 +372,7 @@
 								nil]];
 }
 
-#pragma - DataHelper delegate
+#pragma mark - DataHelper delegate
 
 - (void)dataReceivedWith:(NSInteger)identifier andData:(NSData*)data andStatus:(NSInteger)status
 {
@@ -375,7 +399,6 @@
 - (void)errorReceived:(NSInteger)identifier withError:(NSError*)error
 {
 }
-
 
 @end
 

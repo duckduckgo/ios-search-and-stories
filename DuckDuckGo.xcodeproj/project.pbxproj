@@ -44,6 +44,7 @@
 		838E906A149A76D400C11E41 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838E906C149A76D400C11E41 /* Localizable.strings */; };
 		839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839819421493C1DB0017A892 /* DDGWebViewController.m */; };
 		839819481493E7F90017A892 /* gear40x37.png in Resources */ = {isa = PBXBuildFile; fileRef = 839819471493E7F90017A892 /* gear40x37.png */; };
+		83BAB004149B8313006E528D /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83BAB003149B8313006E528D /* CFNetwork.framework */; };
 		83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
 		83F3225F149290EF00A61BC5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225E149290EF00A61BC5 /* Foundation.framework */; };
 		83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F32260149290EF00A61BC5 /* CoreGraphics.framework */; };
@@ -117,6 +118,9 @@
 		839819421493C1DB0017A892 /* DDGWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebViewController.m; sourceTree = "<group>"; };
 		839819441493D2290017A892 /* DDGSearchProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchProtocol.h; sourceTree = "<group>"; };
 		839819471493E7F90017A892 /* gear40x37.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear40x37.png; sourceTree = "<group>"; };
+		83BAB000149B7EA9006E528D /* PersistentFetch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentFetch.h; sourceTree = "<group>"; };
+		83BAB001149B7EA9006E528D /* PersistentFetch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentFetch.m; sourceTree = "<group>"; };
+		83BAB003149B8313006E528D /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		83F32258149290EF00A61BC5 /* DuckDuckGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuckDuckGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83F3225C149290EF00A61BC5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		83F3225E149290EF00A61BC5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -160,6 +164,7 @@
 				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				83F3225F149290EF00A61BC5 /* Foundation.framework in Frameworks */,
 				83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */,
+				83BAB004149B8313006E528D /* CFNetwork.framework in Frameworks */,
 				834E4FF6149417EC00EABD6E /* libDDGLib.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -219,6 +224,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		8355A13B149B977E003C74F8 /* To Be Shown The Door Very Soon */ = {
+			isa = PBXGroup;
+			children = (
+				83BAB000149B7EA9006E528D /* PersistentFetch.h */,
+				83BAB001149B7EA9006E528D /* PersistentFetch.m */,
+			);
+			name = "To Be Shown The Door Very Soon";
+			path = DuckDuckGo;
+			sourceTree = "<group>";
+		};
 		838E906D149A794F00C11E41 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -234,11 +249,13 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
+				83BAB003149B8313006E528D /* CFNetwork.framework */,
 				8303A583149A2FBC0060EEF1 /* Default@2x.png */,
 				8303A581149A2ED50060EEF1 /* Default.png */,
 				83F3227E1492910700A61BC5 /* icon57x@2x.png */,
 				83F3227C1492910000A61BC5 /* icon57x.png */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
+				8355A13B149B977E003C74F8 /* To Be Shown The Door Very Soon */,
 				83F322931492A9C100A61BC5 /* Temporary */,
 				833DB53F1494164F00509F2E /* DDGLib */,
 				833DB53C1494164F00509F2E /* Frameworks */,
