@@ -124,14 +124,31 @@
 		
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
 	}
+	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
+	
 	// Configure the cell...
 	UIImageView *iv = (UIImageView *)[cell.contentView viewWithTag:100];
 	
-	iv.image = [UIImage imageNamed:[NSString stringWithFormat:@"Temporary/mm%d.png", (indexPath.row % 5) + 1]];
-
-	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
+	id mc = [entry objectForKey:@"media:content"];
 	
-	cell.textLabel.text = [entry objectForKey:@"y:title"];
+	NSString *iurl = nil;
+	
+	if ([mc isKindOfClass:[NSArray class]] && [mc count])
+	{
+		iurl = [[mc objectAtIndex:0] objectForKey:@"url"];
+		iv.image = [self loadImage:iurl];
+	}
+	else if ([mc isKindOfClass:[NSDictionary class]])
+	{
+		iurl = [mc objectForKey:@"url"];
+		iv.image = [self loadImage:iurl];
+	}
+	else
+		iv.image = [UIImage imageNamed:@"duckPlaceholder314x73.png"];
+
+	UILabel *lbl = (UILabel *)[cell.contentView viewWithTag:200];
+	
+	lbl.text = [entry objectForKey:@"title"];
 	
 	return cell;
 }
@@ -155,6 +172,19 @@
 #pragma - load up entries for  home screen
 
 #define anURL 
+
+- (UIImage*)loadImage:(NSString*)url
+{
+	NSData *img = [dataHelper retrieve:url
+								 store:kCacheStoreIndexImages
+								  name:[NSString stringWithFormat:@"%08x", [url hash]]
+							returnData:YES
+							identifier:2000
+							bufferSize:8192];
+	if (img)
+		return [UIImage imageWithData:img];
+	return nil;
+}
 
 - (void)loadEntries
 {
@@ -181,7 +211,7 @@
 
 - (void)dataReceived:(NSInteger)identifier withStatus:(NSInteger)status
 {
-	// no matter what is coming back, we need a refesh
+	// MUST be images we need a refesh
 	[tableView reloadData];
 }
 

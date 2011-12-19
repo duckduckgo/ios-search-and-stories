@@ -28,5 +28,6 @@
 @property (nonatomic, retain) id							entries;
 
 - (void)loadEntries;
+- (UIImage*)loadImage:(NSString*)url;
 
 @end

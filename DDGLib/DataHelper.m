@@ -311,14 +311,14 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 
 - (NSURLRequest *)connection:(NSURLConnection *)connection willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse
 {
-	if (redirectResponse)
-	{
-//		NSLog(@"REDIRECT: %@", [[redirectResponse URL] absoluteString]);
-//		NSLog(@"REQUEST: %@", [request allHTTPHeaderFields]);
-		return nil;
-	}
-//	NSLog(@"REQUEST URL: %@", [[request URL] absoluteString]);
-//	NSLog(@"REQUEST: %@", [request allHTTPHeaderFields]);
+//	if (redirectResponse)
+//	{
+////		NSLog(@"REDIRECT: %@", [[redirectResponse URL] absoluteString]);
+////		NSLog(@"REQUEST: %@", [request allHTTPHeaderFields]);
+//		return nil;
+//	}
+////	NSLog(@"REQUEST URL: %@", [[request URL] absoluteString]);
+////	NSLog(@"REQUEST: %@", [request allHTTPHeaderFields]);
 	return request;
 }
 
