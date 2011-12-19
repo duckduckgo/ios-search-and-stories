@@ -25,4 +25,5 @@ scalar(<STDIN>);
     system("git", "commit", "--amend") and die "git commit --amend fail\n";
 }
 
+#Updated URL to reflect DuckDuckGo review server.
 exec("git", "push", "ssh://$ENV{USER}\@review.duckduckgo.com:29418/mobile/ios", "HEAD:refs/for/master");
