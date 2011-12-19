@@ -113,6 +113,8 @@
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell;
+	UIImageView		*iv;
+	
 	static NSString *CellIdentifier = @"CurrentTopicCell";
 	
 	cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -123,13 +125,14 @@
         self.loadedCell = nil;
 		
 		cell.selectionStyle = UITableViewCellSelectionStyleNone;
+		iv = (UIImageView *)[cell.contentView viewWithTag:100];
+		iv.contentMode = UIViewContentModeScaleAspectFill;
+		iv.clipsToBounds = YES;
 	}
 	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
-	
-	// Configure the cell...
-	UIImageView *iv = (UIImageView *)[cell.contentView viewWithTag:100];
-	
 	id mc = [entry objectForKey:@"media:content"];
+	
+	iv = (UIImageView *)[cell.contentView viewWithTag:100];
 	
 	NSString *iurl = nil;
 	
@@ -167,6 +170,22 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
+	
+	NSString *urlString = [entry objectForKey:@"link"];
+	
+	if (urlString)
+	{
+		DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
+		
+		urlString = [UtilityCHS fixupURL:urlString];
+		
+		wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
+					  [NSURL URLWithString:urlString], @"homeScreenLink", 
+					  nil];
+		
+		[self.navigationController pushViewController:wvc animated:YES];
+	}
 }
 
 #pragma - load up entries for  home screen

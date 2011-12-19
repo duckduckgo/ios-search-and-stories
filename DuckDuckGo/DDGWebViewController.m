@@ -56,9 +56,12 @@
 	searchController.search.text = [params objectForKey:ksDDGSearchControllerSearchTerm];
 	[searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
 	
-	NSURL *url = [params objectForKey:ksDDGSearchControllerSearchURL];
+	NSURL *url= [params objectForKey:ksDDGSearchControllerSearchURL];
     if (!url)
-        url = [NSURL URLWithString:@"https://duckduckgo.com/?ko=-1"];
+        url = [params objectForKey:@"homeScreenLink"];
+	
+	if (!url)
+		url = [NSURL URLWithString:@"https://duckduckgo.com/?ko=-1"];
 	
 	[www loadRequest:[NSURLRequest requestWithURL:url]];
 }
