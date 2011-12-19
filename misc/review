@@ -26,4 +26,4 @@ scalar(<STDIN>);
 }
 
 #Updated URL to reflect DuckDuckGo review server.
-exec("git", "push", "ssh://$ENV{USER}\@review.duckduckgo.com:29418/mobile/ios", "HEAD:refs/for/master");
+exec("git", "push", "--receive-pack='git receive-pack --reviewer=caine@duckduckgo.com'", "ssh://$ENV{USER}\@review.duckduckgo.com:29418/mobile/ios", "HEAD:refs/for/master");
