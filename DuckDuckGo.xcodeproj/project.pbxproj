@@ -11,6 +11,7 @@
 		8303A584149A2FBC0060EEF1 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8303A583149A2FBC0060EEF1 /* Default@2x.png */; };
 		8303A585149A30520060EEF1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 8303A581149A2ED50060EEF1 /* Default.png */; };
 		8329AE05149F883300C6ECB2 /* duckPlaceholder314x73.png in Resources */ = {isa = PBXBuildFile; fileRef = 8329AE04149F883300C6ECB2 /* duckPlaceholder314x73.png */; };
+		832F8A59149FBD2900EAFADB /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 832F8A58149FBD2900EAFADB /* Default@2x.png */; };
 		833DB53E1494164F00509F2E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53D1494164F00509F2E /* Foundation.framework */; };
 		833DB5561494168900509F2E /* CacheControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB5481494168900509F2E /* CacheControl.h */; };
 		833DB5571494168900509F2E /* DataHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB5491494168900509F2E /* DataHelper.h */; };
@@ -80,6 +81,7 @@
 		8303A581149A2ED50060EEF1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		8303A583149A2FBC0060EEF1 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		8329AE04149F883300C6ECB2 /* duckPlaceholder314x73.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = duckPlaceholder314x73.png; sourceTree = "<group>"; };
+		832F8A58149FBD2900EAFADB /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = SOURCE_ROOT; };
 		833DB53B1494164F00509F2E /* libDDGLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDDGLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		833DB53D1494164F00509F2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		833DB5411494164F00509F2E /* DDGLib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DDGLib-Prefix.pch"; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 		838E906D149A794F00C11E41 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				832F8A58149FBD2900EAFADB /* Default@2x.png */,
 				83F3226E149290EF00A61BC5 /* MainStoryboard_iPhone.storyboard */,
 				83F32271149290EF00A61BC5 /* MainStoryboard_iPad.storyboard */,
 				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
@@ -436,6 +439,7 @@
 				8303A585149A30520060EEF1 /* Default.png in Resources */,
 				838E906A149A76D400C11E41 /* Localizable.strings in Resources */,
 				8329AE05149F883300C6ECB2 /* duckPlaceholder314x73.png in Resources */,
+				832F8A59149FBD2900EAFADB /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
