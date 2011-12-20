@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		60E04A5D14A0EA9000F8BD23 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 60E04A5C14A0EA9000F8BD23 /* Reachability.m */; };
 		8303A4F014992F1900D34412 /* spacer44x44.png in Resources */ = {isa = PBXBuildFile; fileRef = 8303A4EF14992F1900D34412 /* spacer44x44.png */; };
 		8303A584149A2FBC0060EEF1 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8303A583149A2FBC0060EEF1 /* Default@2x.png */; };
 		8303A585149A30520060EEF1 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 8303A581149A2ED50060EEF1 /* Default.png */; };
@@ -77,6 +78,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		60E04A5C14A0EA9000F8BD23 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		60E04A5F14A0EA9900F8BD23 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		8303A4EF14992F1900D34412 /* spacer44x44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spacer44x44.png; sourceTree = "<group>"; };
 		8303A581149A2ED50060EEF1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
@@ -303,6 +306,8 @@
 				839819441493D2290017A892 /* DDGSearchProtocol.h */,
 				83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */,
 				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
+				60E04A5F14A0EA9900F8BD23 /* Reachability.h */,
+				60E04A5C14A0EA9000F8BD23 /* Reachability.m */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
 				83F322841492932D00A61BC5 /* images */,
 				838E906D149A794F00C11E41 /* Resources */,
@@ -486,6 +491,7 @@
 				83F32276149290EF00A61BC5 /* DDGViewController.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
+				60E04A5D14A0EA9000F8BD23 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
