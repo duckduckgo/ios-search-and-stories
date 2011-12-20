@@ -8,6 +8,7 @@
 
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
+#import "DDGTopicsTrendsPick.h"
 #import "UtilityCHS.h"
 #import "JSON.h"
 #import "NSString+SBJSON.h"
@@ -86,6 +87,17 @@
 	}
 	return YES;
 }
+
+#pragma - user actions
+
+- (IBAction)customize:(id)sender
+{
+	DDGTopicsTrendsPick *ttp = [self.storyboard instantiateViewControllerWithIdentifier:@"TopicsTrendsPick"];
+	
+	
+	[self.navigationController pushViewController:ttp animated:YES];
+}
+
 
 #pragma - search handler action happening
 
