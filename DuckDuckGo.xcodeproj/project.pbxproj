@@ -41,6 +41,7 @@
 		834E4FFF149418B000EABD6E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 834E4FFA149418B000EABD6E /* SBJsonParser.m */; };
 		834E5000149418B000EABD6E /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 834E4FFB149418B000EABD6E /* SBJsonWriter.m */; };
 		834E5002149418D400EABD6E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834E5001149418D400EABD6E /* Twitter.framework */; };
+		8350486914A0F12800732292 /* blackBar4x44.png in Resources */ = {isa = PBXBuildFile; fileRef = 8350486814A0F12800732292 /* blackBar4x44.png */; };
 		838195D014A0CB0E001C5EBC /* customizeButton300x46.psd in Resources */ = {isa = PBXBuildFile; fileRef = 838195CF14A0CB0E001C5EBC /* customizeButton300x46.psd */; };
 		838195D314A0CB2C001C5EBC /* customizeButton300x46.png in Resources */ = {isa = PBXBuildFile; fileRef = 838195D214A0CB2C001C5EBC /* customizeButton300x46.png */; };
 		838195D614A0CCDF001C5EBC /* DDGTopicsTrendsPick.m in Sources */ = {isa = PBXBuildFile; fileRef = 838195D514A0CCDF001C5EBC /* DDGTopicsTrendsPick.m */; };
@@ -118,6 +119,7 @@
 		834E4FFA149418B000EABD6E /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
 		834E4FFB149418B000EABD6E /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
 		834E5001149418D400EABD6E /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
+		8350486814A0F12800732292 /* blackBar4x44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackBar4x44.png; sourceTree = "<group>"; };
 		838195CF14A0CB0E001C5EBC /* customizeButton300x46.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = customizeButton300x46.psd; sourceTree = "<group>"; };
 		838195D214A0CB2C001C5EBC /* customizeButton300x46.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = customizeButton300x46.png; sourceTree = "<group>"; };
 		838195D414A0CCDF001C5EBC /* DDGTopicsTrendsPick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTopicsTrendsPick.h; sourceTree = "<group>"; };
@@ -338,6 +340,7 @@
 		83F322841492932D00A61BC5 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				8350486814A0F12800732292 /* blackBar4x44.png */,
 				838195D214A0CB2C001C5EBC /* customizeButton300x46.png */,
 				838195D714A0D483001C5EBC /* addCustomTopics320x44.png */,
 				8329AE04149F883300C6ECB2 /* duckPlaceholder314x73.png */,
@@ -467,6 +470,7 @@
 				838195D014A0CB0E001C5EBC /* customizeButton300x46.psd in Resources */,
 				838195D314A0CB2C001C5EBC /* customizeButton300x46.png in Resources */,
 				838195D814A0D483001C5EBC /* addCustomTopics320x44.png in Resources */,
+				8350486914A0F12800732292 /* blackBar4x44.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

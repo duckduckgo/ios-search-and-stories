@@ -32,6 +32,9 @@
 	// Do any additional setup after loading the view, typically from a nib.
 	
 	dataHelper = [[DataHelper alloc] initWithDelegate:self];
+
+//	[tableView registerNib:[UINib nibWithNibName:@"" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@""];
+	
 }
 
 - (void)viewDidUnload
@@ -50,6 +53,14 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+
+	UIToolbar *tb = (UIToolbar*)[self.view viewWithTag:100];
+	
+	tb.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"blackBar4x44.png"]];
+	
+	UIBarButtonItem *bbi = [tb.items objectAtIndex:3];
+	
+	bbi.tintColor = [UIColor whiteColor];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -90,9 +101,23 @@
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell = nil;
-//	UIImageView		*iv;
-//	
-//	static NSString *CellIdentifier = @"CurrentTopicCell";
+
+	if (!indexPath.section)
+	{
+		static NSString *CellIdentifier = @"Cell";
+		
+		cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+		
+		if (!cell)
+		{
+			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
+			[cell.contentView addSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"addCustomTopics320x44.png"]]];
+		}
+	}
+	else
+	{
+		
+	}
 	
 	return cell;
 }
