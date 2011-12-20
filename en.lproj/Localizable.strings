@@ -6,4 +6,5 @@
   Copyright (c) 2011 DuckDuckGo, Inc. All rights reserved.
 */
 
-"SearchPlaceholder" = "Search DuckDuckGo...";
+"SearchPlaceholder"			= "Search DuckDuckGo...";
+"Pick Topics + Sources"		= "Pick Topics + Sources";

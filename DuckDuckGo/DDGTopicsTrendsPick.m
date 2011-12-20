@@ -35,6 +35,25 @@
 
 //	[tableView registerNib:[UINib nibWithNibName:@"" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@""];
 	
+	self.navigationController.navigationBar.tintColor = [UIColor colorWithWhite:12.0/255.0 alpha:1.0]; //[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackBar4x44.png"]];
+	
+	UILabel *lbl = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
+	lbl.text = NSLocalizedString (@"Pick Topics + Sources", @"A comment");
+	lbl.textColor = [UIColor lightGrayColor];
+	lbl.backgroundColor = [UIColor clearColor];
+	lbl.font = [UIFont boldSystemFontOfSize:21.0];
+	[lbl sizeToFit];
+	self.navigationItem.titleView = lbl;
+	
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+	
+	[button setImage:[UIImage imageNamed:@"doneButton51x31.png"] forState:UIControlStateNormal];
+	[button addTarget:self action:@selector(done:) forControlEvents:UIControlEventTouchUpInside];
+	button.frame = CGRectMake(0, 0, 51, 31);
+
+	UIBarButtonItem *bbi = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
+	self.navigationItem.rightBarButtonItem = bbi;
+	self.navigationItem.hidesBackButton = YES;
 }
 
 - (void)viewDidUnload
@@ -53,14 +72,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-
-	UIToolbar *tb = (UIToolbar*)[self.view viewWithTag:100];
-	
-	tb.tintColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"blackBar4x44.png"]];
-	
-	UIBarButtonItem *bbi = [tb.items objectAtIndex:3];
-	
-	bbi.tintColor = [UIColor whiteColor];
+	self.navigationController.navigationBarHidden = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -71,6 +83,7 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+	self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -111,7 +124,7 @@
 		if (!cell)
 		{
 			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-			[cell.contentView addSubview:[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"addCustomTopics320x44.png"]]];
+			[cell.contentView addSubview:[[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"addCustomTopics320x44.png"]] autorelease]];
 		}
 	}
 	else

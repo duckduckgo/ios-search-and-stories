@@ -35,6 +35,8 @@
 		833DB571149416B100509F2E /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB569149416B100509F2E /* NSDate-Utilities.m */; };
 		833DB572149416B100509F2E /* UIImage+ImageUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB56A149416B100509F2E /* UIImage+ImageUtility.m */; };
 		833DB573149416B100509F2E /* UtilityCHS.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB56B149416B100509F2E /* UtilityCHS.m */; };
+		834CD86814A0F9D7006240F1 /* doneButton51x31.png in Resources */ = {isa = PBXBuildFile; fileRef = 834CD86714A0F9D7006240F1 /* doneButton51x31.png */; };
+		834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */; };
 		834E4FF6149417EC00EABD6E /* libDDGLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53B1494164F00509F2E /* libDDGLib.a */; };
 		834E4FFC149418B000EABD6E /* NSObject+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 834E4FF7149418B000EABD6E /* NSObject+SBJSON.m */; };
 		834E4FFD149418B000EABD6E /* NSString+SBJSON.m in Sources */ = {isa = PBXBuildFile; fileRef = 834E4FF8149418B000EABD6E /* NSString+SBJSON.m */; };
@@ -116,6 +118,8 @@
 		833DB569149416B100509F2E /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-Utilities.m"; sourceTree = "<group>"; };
 		833DB56A149416B100509F2E /* UIImage+ImageUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageUtility.m"; sourceTree = "<group>"; };
 		833DB56B149416B100509F2E /* UtilityCHS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityCHS.m; sourceTree = "<group>"; };
+		834CD86714A0F9D7006240F1 /* doneButton51x31.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = doneButton51x31.png; sourceTree = "<group>"; };
+		834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		834E4FF7149418B000EABD6E /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
 		834E4FF8149418B000EABD6E /* NSString+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SBJSON.m"; sourceTree = "<group>"; };
 		834E4FF9149418B000EABD6E /* SBJsonBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonBase.m; sourceTree = "<group>"; };
@@ -175,6 +179,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */,
 				834E5002149418D400EABD6E /* Twitter.framework in Frameworks */,
 				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				83F3225F149290EF00A61BC5 /* Foundation.framework in Frameworks */,
@@ -273,6 +278,7 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
+				834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */,
 				8303A583149A2FBC0060EEF1 /* Default@2x.png */,
 				8303A581149A2ED50060EEF1 /* Default.png */,
 				83F3227E1492910700A61BC5 /* icon57x@2x.png */,
@@ -345,6 +351,7 @@
 		83F322841492932D00A61BC5 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				834CD86714A0F9D7006240F1 /* doneButton51x31.png */,
 				8350486814A0F12800732292 /* blackBar4x44.png */,
 				838195D214A0CB2C001C5EBC /* customizeButton300x46.png */,
 				838195D714A0D483001C5EBC /* addCustomTopics320x44.png */,
@@ -476,6 +483,7 @@
 				838195D314A0CB2C001C5EBC /* customizeButton300x46.png in Resources */,
 				838195D814A0D483001C5EBC /* addCustomTopics320x44.png in Resources */,
 				8350486914A0F12800732292 /* blackBar4x44.png in Resources */,
+				834CD86814A0F9D7006240F1 /* doneButton51x31.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
