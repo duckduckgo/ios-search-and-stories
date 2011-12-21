@@ -49,7 +49,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 
 		dataHelper = [[DataHelper alloc] initWithDelegate:self];
 		
-		search.placeholder = NSLocalizedString (@"SearchPlaceholder", @"A comment");
+		search.placeholder = NSLocalizedString (@"SearchPlaceholder", nil);
 		
 		probeTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(probeTime:) userInfo:nil repeats:YES];
 	}

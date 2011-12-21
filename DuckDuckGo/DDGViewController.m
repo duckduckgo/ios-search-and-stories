@@ -41,6 +41,9 @@
     searchController.state = eViewStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"gear40x37.png"] forState:UIControlStateNormal];
 	
+	UILabel *lbl = (UILabel*)[self.view viewWithTag:100];
+	lbl.text = NSLocalizedString (@"Customize", nil);
+
 	[self loadEntries];
 }
 
@@ -201,8 +204,6 @@
 }
 
 #pragma - load up entries for  home screen
-
-#define anURL 
 
 - (UIImage*)loadImage:(NSString*)url
 {

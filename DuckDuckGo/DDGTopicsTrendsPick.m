@@ -11,6 +11,10 @@
 #import "JSON.h"
 #import "NSString+SBJSON.h"
 
+#define kElementsInCellPortrait	3
+
+static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
+
 @implementation DDGTopicsTrendsPick
 
 @synthesize loadedCell;
@@ -33,27 +37,21 @@
 	
 	dataHelper = [[DataHelper alloc] initWithDelegate:self];
 
-//	[tableView registerNib:[UINib nibWithNibName:@"" bundle:[NSBundle mainBundle]] forCellReuseIdentifier:@""];
+	[tableView registerNib:[UINib nibWithNibName:TopicsTrendsPickCellIdentifier bundle:[NSBundle mainBundle]] forCellReuseIdentifier:TopicsTrendsPickCellIdentifier];
 	
 	self.navigationController.navigationBar.tintColor = [UIColor colorWithWhite:12.0/255.0 alpha:1.0]; //[UIColor colorWithPatternImage:[UIImage imageNamed:@"blackBar4x44.png"]];
 	
-	UILabel *lbl = [[[UILabel alloc] initWithFrame:CGRectZero] autorelease];
-	lbl.text = NSLocalizedString (@"Pick Topics + Sources", @"A comment");
-	lbl.textColor = [UIColor lightGrayColor];
-	lbl.backgroundColor = [UIColor clearColor];
-	lbl.font = [UIFont boldSystemFontOfSize:21.0];
-	[lbl sizeToFit];
-	self.navigationItem.titleView = lbl;
+	UILabel *lbl = (UILabel*)[self.view viewWithTag:100];
+	lbl.text = NSLocalizedString (@"Pick Topics + Sources", nil);
 	
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-	
-	[button setImage:[UIImage imageNamed:@"doneButton51x31.png"] forState:UIControlStateNormal];
-	[button addTarget:self action:@selector(done:) forControlEvents:UIControlEventTouchUpInside];
-	button.frame = CGRectMake(0, 0, 51, 31);
+	UIButton *button = (UIButton*)[self.view viewWithTag:200];
+	[button setTitle: NSLocalizedString (@"Add Custom Topics", nil) forState:UIControlStateNormal];
 
-	UIBarButtonItem *bbi = [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
-	self.navigationItem.rightBarButtonItem = bbi;
-	self.navigationItem.hidesBackButton = YES;
+    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Temporary/topics" ofType:@"plist"];
+	
+	self.entries = [[NSDictionary dictionaryWithContentsOfFile:bundlePath] objectForKey:@"entries"];
+	
+	[self loadEntries];
 }
 
 - (void)viewDidUnload
@@ -65,6 +63,7 @@
 
 - (void)dealloc
 {
+	self.entries = nil;
 	[dataHelper release];
 	[super dealloc];
 }
@@ -72,7 +71,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-	self.navigationController.navigationBarHidden = NO;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -83,7 +81,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
-	self.navigationController.navigationBarHidden = YES;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -101,6 +98,11 @@
 	return YES;
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+	[tableView reloadData];
+}
+
 #pragma - user actions
 
 - (IBAction)done:(id)sender
@@ -108,28 +110,53 @@
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
+// 65, 43; 158, 43; 251, 43
 
 #pragma  mark - UITableViewDataSource
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	CGPoint pt = CGPointMake ([UtilityCHS portrait:self.navigationController.interfaceOrientation] ? 65.0 : 65.0+93.0, 43.0);
+	
+	for (NSInteger t = 100; t <= (100 * kElementsInCellPortrait); t += 100, pt.x += 93.0)
+		[cell.contentView viewWithTag:t].center = pt;
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell = nil;
 
-	if (!indexPath.section)
+	cell = [tableView dequeueReusableCellWithIdentifier:TopicsTrendsPickCellIdentifier];
+	
+	if (!cell) return nil;
+
+	NSInteger dataIndex = indexPath.row * kElementsInCellPortrait;
+	
+	for (NSInteger t = 100; t <= (100 * kElementsInCellPortrait); t += 100, ++dataIndex)
 	{
-		static NSString *CellIdentifier = @"Cell";
+		UIImageView *iv	= (UIImageView *)[cell.contentView viewWithTag:t+1];
+		UILabel *lbl	= (UILabel *)    [cell.contentView viewWithTag:t+2];
 		
-		cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-		
-		if (!cell)
+		if (dataIndex < [entries count])
 		{
-			cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
-			[cell.contentView addSubview:[[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"addCustomTopics320x44.png"]] autorelease]];
+			NSDictionary *entry = [entries objectAtIndex:dataIndex];
+			
+			NSDictionary *media = [entry objectForKey:@"target"];
+			
+			if ([[media objectForKey:@"mytype"] isEqual:@"image"] && [media objectForKey:@"medium_thumbnail"])
+				iv.image = [self loadImage:[media objectForKey:@"medium_thumbnail"]];
+			else
+				iv.image = nil;
+			
+			lbl.text = [entry objectForKey:@"content"];
+			[cell.contentView viewWithTag:t].hidden = NO;
 		}
-	}
-	else
-	{
-		
+		else
+		{
+			iv.image = nil;
+			lbl.text = nil;
+			[cell.contentView viewWithTag:t].hidden = YES;
+		}
 	}
 	
 	return cell;
@@ -137,17 +164,23 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-	return 2;
+	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return !section ? 1 : 0;
+	if (![entries count])
+		return 0;
+
+	if (!([entries count] % kElementsInCellPortrait))
+		return [entries count] / kElementsInCellPortrait;
+
+	return ([entries count] / kElementsInCellPortrait) + 1;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	return !indexPath.section ? 44.0 : 200.0;
+	return 90.0;
 }
 
 #pragma  mark - UITableViewDelegate
@@ -156,7 +189,31 @@
 {
 }
 
-#pragma - load up entries for  home screen
+#pragma - load up entries
+
+- (UIImage*)loadImage:(NSString*)url
+{
+	NSData *img = [dataHelper retrieve:url
+								 store:kCacheStoreIndexImages
+								  name:[NSString stringWithFormat:@"%08x", [url hash]]
+							returnData:YES
+							identifier:2000
+							bufferSize:8192];
+	if (img)
+		return [UIImage imageWithData:img];
+	return nil;
+}
+
+- (void)loadEntries
+{
+	[dataHelper retrieve:@"http://otter.topsy.com/top.json?thresh=top100&type=image&locale=en&family_filter=1"
+				   store:kCacheStoreIndexNoFileCache
+					name:nil
+			  returnData:NO
+			  identifier:1000
+			  bufferSize:8192];
+}
+
 
 #pragma mark - DataHelper delegate
 
@@ -165,7 +222,7 @@
 	if (identifier == 1000 && data.length)
 	{
 		NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-		self.entries = [[[json JSONValue] objectForKey:@"value"] objectForKey:@"items"];
+		self.entries = [[[json JSONValue] objectForKey:@"response"] objectForKey:@"list"];
 		[json release];
 		[tableView reloadData];
 	}

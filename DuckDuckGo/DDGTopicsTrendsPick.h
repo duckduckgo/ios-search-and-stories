@@ -15,15 +15,17 @@
 	IBOutlet UITableViewCell		*loadedCell;
 	IBOutlet UITableView			*tableView;
 	
-	id								entries;
+	NSArray							*entries;
 	DataHelper						*dataHelper;
 }
 
 @property (nonatomic, retain) IBOutlet UITableViewCell		*loadedCell;
 @property (nonatomic, retain) IBOutlet UITableView			*tableView;
 
-@property (nonatomic, retain) id							entries;
+@property (nonatomic, retain) NSArray						*entries;
 
+- (UIImage*)loadImage:(NSString*)url;
+- (void)loadEntries;
 - (IBAction)done:(id)sender;
 
 @end
