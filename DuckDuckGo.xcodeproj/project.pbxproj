@@ -244,7 +244,8 @@
 				834E4FFB149418B000EABD6E /* SBJsonWriter.m */,
 				833DB5401494164F00509F2E /* Supporting Files */,
 			);
-			path = DDGLib;
+			name = DDGLib;
+			path = ../DDGLib;
 			sourceTree = "<group>";
 		};
 		833DB5401494164F00509F2E /* Supporting Files */ = {
@@ -288,7 +289,6 @@
 				83F3227C1492910000A61BC5 /* icon57x.png */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				8355A13B149B977E003C74F8 /* To Be Shown The Door Very Soon */,
-				833DB53F1494164F00509F2E /* DDGLib */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
 			);
@@ -331,6 +331,7 @@
 				60E04A5F14A0EA9900F8BD23 /* Reachability.h */,
 				60E04A5C14A0EA9000F8BD23 /* Reachability.m */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
+				833DB53F1494164F00509F2E /* DDGLib */,
 				83F322841492932D00A61BC5 /* images */,
 				83E46A9414A2210700A2D4FC /* Temporary */,
 				838E906D149A794F00C11E41 /* Resources */,

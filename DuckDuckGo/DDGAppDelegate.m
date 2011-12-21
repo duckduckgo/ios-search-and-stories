@@ -27,13 +27,15 @@
 
 + (NSArray*)userInitializePaths
 {
-	return [[NSArray arrayWithObjects:@"transient", @"images",	nil] retain];
+	return [[NSArray arrayWithObjects:@"transient", @"images",	@"topics", nil] retain];
 }
 
 + (NSArray*)userInitializeDays
 {
-	return [[NSArray arrayWithObjects:	[NSNumber numberWithInt:0],
+	return [[NSArray arrayWithObjects:
+			 [NSNumber numberWithInt:0],
 			 [NSNumber numberWithInt:86400*31],
+			 [NSNumber numberWithInt:86400*1],
 			 nil] retain];
 }
 

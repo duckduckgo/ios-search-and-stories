@@ -47,10 +47,6 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 	UIButton *button = (UIButton*)[self.view viewWithTag:200];
 	[button setTitle: NSLocalizedString (@"Add Custom Topics", nil) forState:UIControlStateNormal];
 
-    NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Temporary/topics" ofType:@"plist"];
-	
-	self.entries = [[NSDictionary dictionaryWithContentsOfFile:bundlePath] objectForKey:@"entries"];
-	
 	[self loadEntries];
 }
 
@@ -129,6 +125,8 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 	cell = [tableView dequeueReusableCellWithIdentifier:TopicsTrendsPickCellIdentifier];
 	
 	if (!cell) return nil;
+	
+	cell.selectionStyle = UITableViewCellSelectionStyleNone;
 
 	NSInteger dataIndex = indexPath.row * kElementsInCellPortrait;
 	
