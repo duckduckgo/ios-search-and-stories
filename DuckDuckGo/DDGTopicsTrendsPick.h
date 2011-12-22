@@ -27,5 +27,6 @@
 - (UIImage*)loadImage:(NSString*)url;
 - (void)loadEntries;
 - (IBAction)done:(id)sender;
+- (IBAction)topicChosen:(id)sender;
 
 @end

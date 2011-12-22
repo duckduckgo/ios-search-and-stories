@@ -7,6 +7,7 @@
 //
 
 #import "DDGTopicsTrendsPick.h"
+#import "DDGWebViewController.h"
 #import "UtilityCHS.h"
 #import "JSON.h"
 #import "NSString+SBJSON.h"
@@ -106,6 +107,30 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 	[self.navigationController popViewControllerAnimated:YES];
 }
 
+- (IBAction)topicChosen:(id)sender
+{
+	NSInteger dataIndex = ((UIButton*)sender).tag;
+	
+	NSDictionary *entry = [entries objectAtIndex:dataIndex];
+	
+	NSLog(@"topicChosen: %@", entry);
+	
+//	NSString *urlString = [[entry objectForKey:@"target"] objectForKey:@"url"];
+//	if (urlString)
+//	{
+//		DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
+//		
+//		urlString = [UtilityCHS fixupURL:urlString];
+//		
+//		wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
+//					  [NSURL URLWithString:urlString], @"homeScreenLink", 
+//					  nil];
+//		
+//		[self.navigationController pushViewController:wvc animated:YES];
+//	}
+}
+
+
 // 65, 43; 158, 43; 251, 43
 
 #pragma  mark - UITableViewDataSource
@@ -114,8 +139,8 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 {
 	CGPoint pt = CGPointMake ([UtilityCHS portrait:self.navigationController.interfaceOrientation] ? 65.0 : 65.0+93.0, 43.0);
 	
-	for (NSInteger t = 100; t <= (100 * kElementsInCellPortrait); t += 100, pt.x += 93.0)
-		[cell.contentView viewWithTag:t].center = pt;
+	for (NSInteger tagIndex = 100; tagIndex <= (100 * kElementsInCellPortrait); tagIndex += 100, pt.x += 93.0)
+		[cell.contentView viewWithTag:tagIndex].center = pt;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -130,10 +155,10 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 
 	NSInteger dataIndex = indexPath.row * kElementsInCellPortrait;
 	
-	for (NSInteger t = 100; t <= (100 * kElementsInCellPortrait); t += 100, ++dataIndex)
+	for (NSInteger tagIndex = 100; tagIndex <= (100 * kElementsInCellPortrait); tagIndex += 100, ++dataIndex)
 	{
-		UIImageView *iv	= (UIImageView *)[cell.contentView viewWithTag:t+1];
-		UILabel *lbl	= (UILabel *)    [cell.contentView viewWithTag:t+2];
+		UIImageView *iv	= (UIImageView *)[cell.contentView viewWithTag:tagIndex+1];
+		UILabel *lbl	= (UILabel *)    [cell.contentView viewWithTag:tagIndex+2];
 		
 		if (dataIndex < [entries count])
 		{
@@ -147,13 +172,23 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 				iv.image = nil;
 			
 			lbl.text = [entry objectForKey:@"content"];
-			[cell.contentView viewWithTag:t].hidden = NO;
+			
+			// third element IS ALWAYS the button
+			UIButton *button = (UIButton*)[[[cell.contentView viewWithTag:tagIndex] subviews] objectAtIndex:2];
+			// mark the data index this button maps to
+			button.tag = dataIndex;
+			
+			if (![button actionsForTarget:self forControlEvent:UIControlEventTouchUpInside])
+				// this guy does have a control target setup yet
+				[button addTarget:self action:@selector(topicChosen:) forControlEvents:UIControlEventTouchUpInside];
+			
+			[cell.contentView viewWithTag:tagIndex].hidden = NO;
 		}
 		else
 		{
 			iv.image = nil;
 			lbl.text = nil;
-			[cell.contentView viewWithTag:t].hidden = YES;
+			[cell.contentView viewWithTag:tagIndex].hidden = YES;
 		}
 	}
 	
