@@ -42,8 +42,7 @@
                                 <rect key="frame" x="285" y="418" width="15" height="27"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="100" contentMode="left" text="Customize your trending
-sources and topics." lineBreakMode="tailTruncation" numberOfLines="2" adjustsFontSizeToFit="NO" minimumFontSize="10" id="6eN-xT-KAe">
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="100" contentMode="left" text="Customize your trending sources and topics." lineBreakMode="tailTruncation" numberOfLines="2" adjustsFontSizeToFit="NO" minimumFontSize="10" id="6eN-xT-KAe">
                                 <rect key="frame" x="12" y="409" width="165" height="46"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
@@ -110,7 +109,7 @@ sources and topics." lineBreakMode="tailTruncation" numberOfLines="2" adjustsFon
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="78" sectionHeaderHeight="22" sectionFooterHeight="22" id="7X7-TD-Bb8">
-                                <rect key="frame" x="0.0" y="88" width="320" height="416"/>
+                                <rect key="frame" x="0.0" y="88" width="320" height="372"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.37254901960784315" green="0.37254901960784315" blue="0.37254901960784315" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
@@ -189,6 +188,7 @@ sources and topics." lineBreakMode="tailTruncation" numberOfLines="2" adjustsFon
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DDGTopicsTrendsPick.h"/>
             <relationships>
                 <relationship kind="action" name="done:"/>
+                <relationship kind="action" name="topicChosen:"/>
                 <relationship kind="outlet" name="loadedCell" candidateClass="UITableViewCell"/>
                 <relationship kind="outlet" name="tableView" candidateClass="UITableView"/>
             </relationships>

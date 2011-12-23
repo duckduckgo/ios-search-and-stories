@@ -21,6 +21,7 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 @synthesize loadedCell;
 @synthesize tableView;
 @synthesize entries;
+@synthesize selectedTrendsTopics;
 
 - (void)didReceiveMemoryWarning
 {
@@ -49,6 +50,13 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 	[button setTitle: NSLocalizedString (@"Add Custom Topics", nil) forState:UIControlStateNormal];
 
 	[self loadEntries];
+	
+	self.selectedTrendsTopics = [NSMutableArray arrayWithArray:[[NSUserDefaults standardUserDefaults] objectForKey:@"selectedTrendsTopics"]];
+	
+	if (!selectedTrendsTopics)
+	{
+		self.selectedTrendsTopics = [NSMutableArray arrayWithCapacity:8];
+	}
 }
 
 - (void)viewDidUnload
@@ -60,6 +68,7 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 
 - (void)dealloc
 {
+	self.selectedTrendsTopics = nil;
 	self.entries = nil;
 	[dataHelper release];
 	[super dealloc];
@@ -78,6 +87,8 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 - (void)viewWillDisappear:(BOOL)animated
 {
 	[super viewWillDisappear:animated];
+	// make sure the next screen/previous screen knows latest set of selectedTrendsTopics
+	[[NSUserDefaults standardUserDefaults] setObject:selectedTrendsTopics forKey:@"selectedTrendsTopics"];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -113,21 +124,24 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 	
 	NSDictionary *entry = [entries objectAtIndex:dataIndex];
 	
-	NSLog(@"topicChosen: %@", entry);
-	
-//	NSString *urlString = [[entry objectForKey:@"target"] objectForKey:@"url"];
-//	if (urlString)
-//	{
-//		DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
-//		
-//		urlString = [UtilityCHS fixupURL:urlString];
-//		
-//		wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
-//					  [NSURL URLWithString:urlString], @"homeScreenLink", 
-//					  nil];
-//		
-//		[self.navigationController pushViewController:wvc animated:YES];
-//	}
+	NSString *selectedItem = [[entry objectForKey:@"target"] objectForKey:@"url"];
+
+	// toggle selection to new state
+	((UIButton*)sender).selected = !((UIButton*)sender).selected;
+
+	if (((UIButton*)sender).selected && ![selectedTrendsTopics containsObject:selectedItem])
+	{
+		// one unique entry for each user chosen trend or topic
+		[selectedTrendsTopics addObject:selectedItem];
+		
+		// debugging
+		NSLog(@"topicChosen: %@", entry);
+	}
+	else if (!((UIButton*)sender).selected)
+	{
+		// one unique entry for each user chosen trend or topic
+		[selectedTrendsTopics removeObject:selectedItem];
+	}
 }
 
 
@@ -139,8 +153,8 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 {
 	CGPoint pt = CGPointMake ([UtilityCHS portrait:self.navigationController.interfaceOrientation] ? 65.0 : 65.0+93.0, 43.0);
 	
-	for (NSInteger tagIndex = 100; tagIndex <= (100 * kElementsInCellPortrait); tagIndex += 100, pt.x += 93.0)
-		[cell.contentView viewWithTag:tagIndex].center = pt;
+	for (NSInteger itemViewTag = 100; itemViewTag <= (100 * kElementsInCellPortrait); itemViewTag += 100, pt.x += 93.0)
+		[cell.contentView viewWithTag:itemViewTag].center = pt;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -155,10 +169,10 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 
 	NSInteger dataIndex = indexPath.row * kElementsInCellPortrait;
 	
-	for (NSInteger tagIndex = 100; tagIndex <= (100 * kElementsInCellPortrait); tagIndex += 100, ++dataIndex)
+	for (NSInteger itemViewTag = 100; itemViewTag <= (100 * kElementsInCellPortrait); itemViewTag += 100, ++dataIndex)
 	{
-		UIImageView *iv	= (UIImageView *)[cell.contentView viewWithTag:tagIndex+1];
-		UILabel *lbl	= (UILabel *)    [cell.contentView viewWithTag:tagIndex+2];
+		UIImageView *iv	= (UIImageView *)[cell.contentView viewWithTag:itemViewTag+1];
+		UILabel *lbl	= (UILabel *)    [cell.contentView viewWithTag:itemViewTag+2];
 		
 		if (dataIndex < [entries count])
 		{
@@ -174,7 +188,7 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 			lbl.text = [entry objectForKey:@"content"];
 			
 			// third element IS ALWAYS the button
-			UIButton *button = (UIButton*)[[[cell.contentView viewWithTag:tagIndex] subviews] objectAtIndex:2];
+			UIButton *button = (UIButton*)[[[cell.contentView viewWithTag:itemViewTag] subviews] objectAtIndex:2];
 			// mark the data index this button maps to
 			button.tag = dataIndex;
 			
@@ -182,13 +196,18 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 				// this guy does have a control target setup yet
 				[button addTarget:self action:@selector(topicChosen:) forControlEvents:UIControlEventTouchUpInside];
 			
-			[cell.contentView viewWithTag:tagIndex].hidden = NO;
+			[cell.contentView viewWithTag:itemViewTag].hidden = NO;
+
+			NSString *selectedItem = [[entry objectForKey:@"target"] objectForKey:@"url"];
+			
+			// toggle selection to new state
+			button.selected = [selectedTrendsTopics containsObject:selectedItem];
 		}
 		else
 		{
 			iv.image = nil;
 			lbl.text = nil;
-			[cell.contentView viewWithTag:tagIndex].hidden = YES;
+			[cell.contentView viewWithTag:itemViewTag].hidden = YES;
 		}
 	}
 	
