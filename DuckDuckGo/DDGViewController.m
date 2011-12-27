@@ -91,7 +91,7 @@
 	return YES;
 }
 
-#pragma - user actions
+#pragma mark - user actions
 
 - (IBAction)customize:(id)sender
 {
@@ -102,7 +102,7 @@
 }
 
 
-#pragma - search handler action happening
+#pragma mark - search handler action happening
 
 - (void)actionTaken:(NSDictionary*)action
 {

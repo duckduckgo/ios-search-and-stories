@@ -51,6 +51,7 @@
 		838E906A149A76D400C11E41 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838E906C149A76D400C11E41 /* Localizable.strings */; };
 		839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839819421493C1DB0017A892 /* DDGWebViewController.m */; };
 		839819481493E7F90017A892 /* gear40x37.png in Resources */ = {isa = PBXBuildFile; fileRef = 839819471493E7F90017A892 /* gear40x37.png */; };
+		839CB4B014AA37500054297C /* DDGSearchSuggestionCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 839CB4AF14AA37500054297C /* DDGSearchSuggestionCache.m */; };
 		83E03E8214A4CA5D0098F328 /* topicChosen37x36.png in Resources */ = {isa = PBXBuildFile; fileRef = 83E03E8114A4CA5C0098F328 /* topicChosen37x36.png */; };
 		83E46A9514A2210700A2D4FC /* Temporary in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9414A2210700A2D4FC /* Temporary */; };
 		83E46A9A14A22DEE00A2D4FC /* chevron15x27.png in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9914A22DEE00A2D4FC /* chevron15x27.png */; };
@@ -137,6 +138,9 @@
 		839819421493C1DB0017A892 /* DDGWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebViewController.m; sourceTree = "<group>"; };
 		839819441493D2290017A892 /* DDGSearchProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchProtocol.h; sourceTree = "<group>"; };
 		839819471493E7F90017A892 /* gear40x37.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = gear40x37.png; sourceTree = "<group>"; };
+		839CB4AE14AA37500054297C /* DDGSearchSuggestionCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchSuggestionCache.h; sourceTree = "<group>"; };
+		839CB4AF14AA37500054297C /* DDGSearchSuggestionCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchSuggestionCache.m; sourceTree = "<group>"; };
+		839CB4B414AA3AEA0054297C /* Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Singleton.h; sourceTree = "<group>"; };
 		83BAB000149B7EA9006E528D /* PersistentFetch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PersistentFetch.h; sourceTree = "<group>"; };
 		83BAB001149B7EA9006E528D /* PersistentFetch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PersistentFetch.m; sourceTree = "<group>"; };
 		83E03E8114A4CA5C0098F328 /* topicChosen37x36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topicChosen37x36.png; sourceTree = "<group>"; };
@@ -328,6 +332,8 @@
 				839819441493D2290017A892 /* DDGSearchProtocol.h */,
 				83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */,
 				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
+				839CB4AE14AA37500054297C /* DDGSearchSuggestionCache.h */,
+				839CB4AF14AA37500054297C /* DDGSearchSuggestionCache.m */,
 				60E04A5F14A0EA9900F8BD23 /* Reachability.h */,
 				60E04A5C14A0EA9000F8BD23 /* Reachability.m */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
@@ -349,6 +355,7 @@
 				83F32268149290EF00A61BC5 /* main.m */,
 				83F3226A149290EF00A61BC5 /* DuckDuckGo-Prefix.pch */,
 				8303A4E71499287B00D34412 /* Always.h */,
+				839CB4B414AA3AEA0054297C /* Singleton.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -527,6 +534,7 @@
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				838195D614A0CCDF001C5EBC /* DDGTopicsTrendsPick.m in Sources */,
 				60E04A5D14A0EA9000F8BD23 /* Reachability.m in Sources */,
+				839CB4B014AA37500054297C /* DDGSearchSuggestionCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

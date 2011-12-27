@@ -34,15 +34,11 @@ enum eSearchState
 	
 	NSMutableURLRequest			*serverRequest;
 
-	NSMutableDictionary			*serverCache;
-	
 	DataHelper					*dataHelper;
 	NSTimer						*probeTimer;
 }
 
 @property (nonatomic, retain) NSMutableURLRequest			*serverRequest;
-
-@property (nonatomic, retain) NSMutableDictionary			*serverCache;
 
 @property (nonatomic, retain) IBOutlet		UITableViewCell	*loadedCell;
 @property (nonatomic, readonly) IBOutlet	UITextField		*search;
