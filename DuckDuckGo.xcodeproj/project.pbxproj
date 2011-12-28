@@ -35,6 +35,8 @@
 		833DB571149416B100509F2E /* NSDate-Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB569149416B100509F2E /* NSDate-Utilities.m */; };
 		833DB572149416B100509F2E /* UIImage+ImageUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB56A149416B100509F2E /* UIImage+ImageUtility.m */; };
 		833DB573149416B100509F2E /* UtilityCHS.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB56B149416B100509F2E /* UtilityCHS.m */; };
+		8345080514AB8A1B0093C2A1 /* icon72x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8345080414AB8A1B0093C2A1 /* icon72x.png */; };
+		8345080614AB8D520093C2A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53D1494164F00509F2E /* Foundation.framework */; };
 		834CD86814A0F9D7006240F1 /* doneButton51x31.png in Resources */ = {isa = PBXBuildFile; fileRef = 834CD86714A0F9D7006240F1 /* doneButton51x31.png */; };
 		834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */; };
 		834E4FF6149417EC00EABD6E /* libDDGLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53B1494164F00509F2E /* libDDGLib.a */; };
@@ -58,7 +60,6 @@
 		83E46A9C14A2391700A2D4FC /* arrowRight18x18.png in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9B14A2391700A2D4FC /* arrowRight18x18.png */; };
 		83E46A9E14A2401C00A2D4FC /* TopicsTrendsPickCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9D14A2401C00A2D4FC /* TopicsTrendsPickCell.xib */; };
 		83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
-		83F3225F149290EF00A61BC5 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225E149290EF00A61BC5 /* Foundation.framework */; };
 		83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F32260149290EF00A61BC5 /* CoreGraphics.framework */; };
 		83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 83F32265149290EF00A61BC5 /* InfoPlist.strings */; };
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
@@ -120,6 +121,7 @@
 		833DB569149416B100509F2E /* NSDate-Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate-Utilities.m"; sourceTree = "<group>"; };
 		833DB56A149416B100509F2E /* UIImage+ImageUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageUtility.m"; sourceTree = "<group>"; };
 		833DB56B149416B100509F2E /* UtilityCHS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UtilityCHS.m; sourceTree = "<group>"; };
+		8345080414AB8A1B0093C2A1 /* icon72x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon72x.png; sourceTree = "<group>"; };
 		834CD86714A0F9D7006240F1 /* doneButton51x31.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = doneButton51x31.png; sourceTree = "<group>"; };
 		834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		834E4FF7149418B000EABD6E /* NSObject+SBJSON.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJSON.m"; sourceTree = "<group>"; };
@@ -150,7 +152,6 @@
 		83E46A9D14A2401C00A2D4FC /* TopicsTrendsPickCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopicsTrendsPickCell.xib; sourceTree = "<group>"; };
 		83F32258149290EF00A61BC5 /* DuckDuckGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuckDuckGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83F3225C149290EF00A61BC5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		83F3225E149290EF00A61BC5 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		83F32260149290EF00A61BC5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		83F32264149290EF00A61BC5 /* DuckDuckGo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "DuckDuckGo-Info.plist"; sourceTree = "<group>"; };
 		83F32266149290EF00A61BC5 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -186,10 +187,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8345080614AB8D520093C2A1 /* Foundation.framework in Frameworks */,
+				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */,
 				834E5002149418D400EABD6E /* Twitter.framework in Frameworks */,
-				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
-				83F3225F149290EF00A61BC5 /* Foundation.framework in Frameworks */,
 				83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */,
 				834E4FF6149417EC00EABD6E /* libDDGLib.a in Frameworks */,
 			);
@@ -210,6 +211,8 @@
 		833DB53C1494164F00509F2E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				83F3225C149290EF00A61BC5 /* UIKit.framework */,
+				83F32260149290EF00A61BC5 /* CoreGraphics.framework */,
 				834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */,
 				834E5001149418D400EABD6E /* Twitter.framework */,
 				833DB53D1494164F00509F2E /* Foundation.framework */,
@@ -291,6 +294,7 @@
 				8303A581149A2ED50060EEF1 /* Default.png */,
 				83F3227E1492910700A61BC5 /* icon57x@2x.png */,
 				83F3227C1492910000A61BC5 /* icon57x.png */,
+				8345080414AB8A1B0093C2A1 /* icon72x.png */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				8355A13B149B977E003C74F8 /* To Be Shown The Door Very Soon */,
 				833DB53C1494164F00509F2E /* Frameworks */,
@@ -305,17 +309,6 @@
 				833DB53B1494164F00509F2E /* libDDGLib.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		83F3225B149290EF00A61BC5 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				83F3225C149290EF00A61BC5 /* UIKit.framework */,
-				83F3225E149290EF00A61BC5 /* Foundation.framework */,
-				83F32260149290EF00A61BC5 /* CoreGraphics.framework */,
-			);
-			name = Frameworks;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		83F32262149290EF00A61BC5 /* DuckDuckGo */ = {
@@ -349,7 +342,6 @@
 		83F32263149290EF00A61BC5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				83F3225B149290EF00A61BC5 /* Frameworks */,
 				83F32264149290EF00A61BC5 /* DuckDuckGo-Info.plist */,
 				83F32265149290EF00A61BC5 /* InfoPlist.strings */,
 				83F32268149290EF00A61BC5 /* main.m */,
@@ -498,6 +490,7 @@
 				83E46A9C14A2391700A2D4FC /* arrowRight18x18.png in Resources */,
 				83E46A9E14A2401C00A2D4FC /* TopicsTrendsPickCell.xib in Resources */,
 				83E03E8214A4CA5D0098F328 /* topicChosen37x36.png in Resources */,
+				8345080514AB8A1B0093C2A1 /* icon72x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -656,7 +649,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Chris Heimark (XGXZZEPN5Y)";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Duck Duck Go, Inc.";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Duck Duck Go, Inc.";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -665,7 +659,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "FAB11FEA-45C2-4971-B76B-F3E9043BD3C2";
+				PROVISIONING_PROFILE = "4D42040A-FD44-4F05-A983-3EEE1760A249";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "4D42040A-FD44-4F05-A983-3EEE1760A249";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -692,7 +687,6 @@
 		83F3227B149290EF00A61BC5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
@@ -701,7 +695,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
