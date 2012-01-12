@@ -83,17 +83,15 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-    return (interfaceOrientation == UIInterfaceOrientationPortrait);
+	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
+	{
+	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+	}
+	return YES;
 }
 
-#pragma - segue going down
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-	
-}
-
-#pragma - search handler action happening
+#pragma mark - search handler action happening
 
 - (void)actionTaken:(NSDictionary*)action
 {
@@ -101,9 +99,17 @@
 	{
 		[self.navigationController popViewControllerAnimated:YES];
 	}
+	else if ([[action objectForKey:ksDDGSearchControllerAction] isEqualToString:ksDDGSearchControllerActionWeb] && [action objectForKey:ksDDGSearchControllerSearchTerm])
+	{
+		NSString *url = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [action objectForKey:ksDDGSearchControllerSearchTerm]];
+		
+		url = [UtilityCHS fixupURL:url];
+		
+		[www loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+	}
 }
 
-#pragma - web view deleagte
+#pragma mark - web view deleagte
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {

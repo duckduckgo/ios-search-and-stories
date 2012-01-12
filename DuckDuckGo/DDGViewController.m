@@ -8,6 +8,7 @@
 
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
+#import "DDGTopicsTrendsPick.h"
 #import "UtilityCHS.h"
 #import "SBJson.h"
 
@@ -39,6 +40,9 @@
     searchController.state = eViewStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"gear40x37.png"] forState:UIControlStateNormal];
 	
+	UILabel *lbl = (UILabel*)[self.view viewWithTag:100];
+	lbl.text = NSLocalizedString (@"Customize", nil);
+
 	[self loadEntries];
 }
 
@@ -80,7 +84,18 @@
 	return YES;
 }
 
-#pragma - search handler action happening
+#pragma mark - user actions
+
+- (IBAction)customize:(id)sender
+{
+	DDGTopicsTrendsPick *ttp = [self.storyboard instantiateViewControllerWithIdentifier:@"TopicsTrendsPick"];
+	
+	
+	[self.navigationController pushViewController:ttp animated:YES];
+}
+
+
+#pragma mark - search handler action happening
 
 - (void)actionTaken:(NSDictionary*)action
 {
@@ -182,8 +197,6 @@
 }
 
 #pragma - load up entries for  home screen
-
-#define anURL 
 
 - (UIImage*)loadImage:(NSString*)url
 {

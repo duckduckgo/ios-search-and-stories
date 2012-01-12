@@ -12,6 +12,7 @@
 	<array>
 		<string>icon57x.png</string>
 		<string>icon57x@2x.png</string>
+		<string>icon72x.png</string>
 	</array>
 	<key>CFBundleIcons</key>
 	<dict>
@@ -21,9 +22,10 @@
 			<array>
 				<string>icon57x.png</string>
 				<string>icon57x@2x.png</string>
+				<string>icon72x.png</string>
 			</array>
 			<key>UIPrerenderedIcon</key>
-			<false/>
+			<true/>
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
@@ -43,13 +45,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2011 DuckDuckGo, Inc. All Rights Reserved.</string>
+	<string>© 2011-2012 DuckDuckGo, Inc. All Rights Reserved.</string>
 	<key>UIMainStoryboardFile</key>
 	<string>MainStoryboard_iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
 	<string>MainStoryboard_iPad</string>
-	<key>UIPrerenderedIcon</key>
-	<true/>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>armv7</string>

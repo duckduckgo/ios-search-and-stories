@@ -34,8 +34,6 @@ enum eSearchState
 	
 	NSMutableURLRequest			*serverRequest;
 
-	NSMutableDictionary			*serverCache;
-	
 	DataHelper					*dataHelper;
 	NSTimer						*probeTimer;
 }

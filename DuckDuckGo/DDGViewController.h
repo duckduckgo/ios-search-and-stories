@@ -27,6 +27,8 @@
 
 @property (nonatomic, strong) id							entries;
 
+- (IBAction)customize:(id)sender;
+
 - (void)loadEntries;
 - (UIImage*)loadImage:(NSString*)url;
 

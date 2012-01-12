@@ -15,6 +15,7 @@ enum
 	kCacheStoreIndexNoFileCache = -1,	// this must be defined as -1
 	kCacheStoreIndexTransient = 0,
 	kCacheStoreIndexImages,
+	kCacheStoreIndexTopics,
 	
 	kCacheStoreCacheCount
 };

@@ -8,6 +8,7 @@
 
 #import "DDGSearchController.h"
 #import "SBJson.h"
+#import "DDGSearchSuggestionCache.h"
 
 static NSString *const sBaseSuggestionServerURL = @"http://va-l3.duckduckgo.com:6767/face/suggest/?q=";
 
@@ -24,8 +25,6 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 @synthesize state;
 
 @synthesize serverRequest;
-
-@synthesize serverCache;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
 {
@@ -45,11 +44,10 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 		[serverRequest setValue:@"text/plain; charset=UTF-8" forHTTPHeaderField:@"Accept"];
 		
 		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
-		self.serverCache = [NSMutableDictionary dictionaryWithCapacity:8];
 
 		dataHelper = [[DataHelper alloc] initWithDelegate:self];
 		
-		search.placeholder = NSLocalizedString (@"SearchPlaceholder", @"A comment");
+		search.placeholder = NSLocalizedString (@"SearchPlaceholder", nil);
 		
 		probeTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(probeTime:) userInfo:nil repeats:YES];
 	}
@@ -59,6 +57,8 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 - (void)dealloc
 {
 	[probeTimer invalidate];
+	[dataHelper release];
+	self.serverRequest = nil;
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self.view removeFromSuperview];
@@ -185,12 +185,12 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 
 - (NSArray*)currentResultForItem:(NSUInteger)item
 {
-	return [serverCache objectForKey:[NSNumber numberWithUnsignedInteger:item]];
+	return [[DDGSearchSuggestionCache sharedInstance].serverCache objectForKey:[NSNumber numberWithUnsignedInteger:item]];
 }
 
 - (void)cacheCurrentResult:(NSArray*)result forItem:(NSUInteger)item
 {
-	[serverCache setObject:result forKey:[NSNumber numberWithUnsignedInteger:item]];
+	[[DDGSearchSuggestionCache sharedInstance].serverCache setObject:result forKey:[NSNumber numberWithUnsignedInteger:item]];
 }
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -210,15 +210,15 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 	{
 		// destroying characters
 		// this means we use a cached result
-		if (lengthLeft < [serverCache count])
+		if (lengthLeft < [[DDGSearchSuggestionCache sharedInstance].serverCache count])
 		{
 			// keep the cache trimmed to a max of number of characters
-			NSUInteger maxLen = [serverCache count];
+			NSUInteger maxLen = [[DDGSearchSuggestionCache sharedInstance].serverCache count];
 			for (NSUInteger l = lengthLeft + 1; l <= maxLen; ++l)
 			{
 				NSNumber *n = [NSNumber numberWithUnsignedInteger:l];
-				if ([serverCache objectForKey:n])
-					[serverCache removeObjectForKey:n];
+				if ([[DDGSearchSuggestionCache sharedInstance].serverCache objectForKey:n])
+					[[DDGSearchSuggestionCache sharedInstance].serverCache removeObjectForKey:n];
 			}
 		}
 		[tableView reloadData];
@@ -227,19 +227,19 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 	{
 		// we have replaced or added characters
 		// time to server up
-		NSString *willBecome;
+		NSString *searchStringWillBecome;
 		if (!range.length)
-			willBecome = textField.text;
+			searchStringWillBecome = textField.text;
 		else
-			willBecome = [textField.text substringWithRange:range];
+			searchStringWillBecome = [textField.text substringWithRange:range];
 		
-		if (![willBecome length])
-			willBecome = @"";
-		willBecome = [willBecome stringByAppendingString:string ? string : @""];
-		NSString *surl = [sBaseSuggestionServerURL stringByAppendingString:willBecome];
+		if (![searchStringWillBecome length])
+			searchStringWillBecome = @"";
+		searchStringWillBecome = [searchStringWillBecome stringByAppendingString:string ? string : @""];
+		NSString *surl = [sBaseSuggestionServerURL stringByAppendingString:searchStringWillBecome];
 		serverRequest.URL = [NSURL URLWithString:[surl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-		[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:1000+[willBecome length] bufferSize:kSuggestionServerResponseBufferCapacity];
+		[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:1000+[searchStringWillBecome length] bufferSize:kSuggestionServerResponseBufferCapacity];
 		
 		// don't need to probe for a while
 		[probeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
@@ -249,7 +249,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 	else if (!lengthLeft)
 	{
 		// stay slim and trim in memory :)
-		[serverCache removeAllObjects];
+		[[DDGSearchSuggestionCache sharedInstance].serverCache removeAllObjects];
 		[tableView reloadData];
 	}
 	
@@ -259,13 +259,32 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
 	[self autoCompleteReveal:NO];
-	[serverCache removeAllObjects];
+	[[DDGSearchSuggestionCache sharedInstance].serverCache removeAllObjects];
 	return YES;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
 	return YES;
+}
+
+- (void)textFieldDidBeginEditing:(UITextField *)textField
+{
+	if ([textField.text length])
+	{
+		// user wants to edit the search term for another query
+		[self autoCompleteReveal:YES];
+
+		NSString *surl = [sBaseSuggestionServerURL stringByAppendingString:textField.text];
+		serverRequest.URL = [NSURL URLWithString:[surl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+		
+		[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:1000+[textField.text length] bufferSize:kSuggestionServerResponseBufferCapacity];
+		
+		// don't need to probe for a while
+		[probeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
+		
+		NSLog (@"URL: %@", surl);
+	}
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
@@ -305,7 +324,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [[self currentResultForItem:[serverCache count]] count];
+	return [[self currentResultForItem:[[DDGSearchSuggestionCache sharedInstance].serverCache count]] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -328,7 +347,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 		iv.backgroundColor = [UIColor whiteColor];
 		[cell.contentView addSubview:iv];
     }
-    NSArray *items = [self currentResultForItem:[serverCache count]];
+    NSArray *items = [self currentResultForItem:[[DDGSearchSuggestionCache sharedInstance].serverCache count]];
 	NSDictionary *item = [items objectAtIndex:indexPath.row];
 	
     // Configure the cell...
@@ -356,10 +375,13 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *items = [self currentResultForItem:[serverCache count]];
+    NSArray *items = [self currentResultForItem:[[DDGSearchSuggestionCache sharedInstance].serverCache count]];
 	NSDictionary *item = [items objectAtIndex:indexPath.row];
 	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
+	
+	[search resignFirstResponder];
+	[self autoCompleteReveal:NO];
 	
 	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:
 								ksDDGSearchControllerActionWeb, ksDDGSearchControllerAction,
