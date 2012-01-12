@@ -11,10 +11,8 @@
 
 @implementation NetworkActivityStatus
 
-static NetworkActivityStatus	*sharedNetworkActivityManager = nil;
-
-// count activity
-static NSInteger				activityCount = 0;
+static NetworkActivityStatus *sharedNetworkActivityManager = nil;
+static NSInteger activityCount = 0; // count activity
 
 + (NetworkActivityStatus*)sharedManager
 {
@@ -22,24 +20,10 @@ static NSInteger				activityCount = 0;
 	{
         if (!sharedNetworkActivityManager)
 		{
-			// assignment not done here
-            [[self alloc] init]; 
+			sharedNetworkActivityManager = [[self alloc] init];
         }
     }
     return sharedNetworkActivityManager;
-}
-
-+ (id)allocWithZone:(NSZone *)zone
-{
-	@synchronized(self)
-	{
-        if (!sharedNetworkActivityManager)
-		{
-            sharedNetworkActivityManager = [super allocWithZone:zone];
-            return sharedNetworkActivityManager;  // assignment and return on first allocation
-        }
-    }
-    return nil; //on subsequent allocation attempts return nil
 }
 
 - (void)activityStarted:(BOOL)started
