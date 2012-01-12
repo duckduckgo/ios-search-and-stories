@@ -59,13 +59,9 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 - (void)dealloc
 {
 	[probeTimer invalidate];
-	[dataHelper release];
-	self.serverRequest = nil;
-	self.serverCache = nil;
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self.view removeFromSuperview];
-	[super dealloc];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -88,7 +84,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	search.rightViewMode = UITextFieldViewModeAlways;
 	search.leftViewMode = UITextFieldViewModeAlways;
-	search.leftView = [[[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]] autorelease];
+	search.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kbShowing:) name:UIKeyboardDidShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kbHiding:) name:UIKeyboardWillHideNotification object:nil];
@@ -320,7 +316,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 	UIImageView *iv;
     if (cell == nil)
 	{
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
 		cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
 		cell.textLabel.textColor = [UIColor darkGrayColor];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
@@ -331,7 +327,6 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 		iv.contentMode = UIViewContentModeScaleAspectFit;
 		iv.backgroundColor = [UIColor whiteColor];
 		[cell.contentView addSubview:iv];
-		[iv release];
     }
     NSArray *items = [self currentResultForItem:[serverCache count]];
 	NSDictionary *item = [items objectAtIndex:indexPath.row];
@@ -381,7 +376,6 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 		NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		NSArray *result = [json JSONValue];
 		[self cacheCurrentResult:result forItem:identifier-1000];
-		[json release];
 		[tableView reloadData];
 	}
 }

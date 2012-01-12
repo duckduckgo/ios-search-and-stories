@@ -21,11 +21,11 @@
 	DataHelper						*dataHelper;
 }
 
-@property (nonatomic, retain) IBOutlet UITableViewCell		*loadedCell;
-@property (nonatomic, retain) IBOutlet UITableView			*tableView;
-@property (nonatomic, retain) IBOutlet DDGSearchController	*searchController;
+@property (nonatomic, strong) IBOutlet UITableViewCell		*loadedCell;
+@property (nonatomic, strong) IBOutlet UITableView			*tableView;
+@property (nonatomic, strong) IBOutlet DDGSearchController	*searchController;
 
-@property (nonatomic, retain) id							entries;
+@property (nonatomic, strong) id							entries;
 
 - (void)loadEntries;
 - (UIImage*)loadImage:(NSString*)url;

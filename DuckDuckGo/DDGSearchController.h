@@ -24,13 +24,13 @@ enum eSearchState
 	IBOutlet UITableView		*tableView;
 
 	IBOutlet UITableViewCell	*loadedCell;
-	IBOutlet UITextField		*search;
-	IBOutlet UIButton			*searchButton;
+	IBOutlet UITextField		*__weak search;
+	IBOutlet UIButton			*__weak searchButton;
 	
 	enum eSearchState			state;
 	CGRect						kbRect;
 	
-	id<DDGSearchProtocol>		searchHandler;
+	id<DDGSearchProtocol>		__unsafe_unretained searchHandler;
 	
 	NSMutableURLRequest			*serverRequest;
 
@@ -40,17 +40,17 @@ enum eSearchState
 	NSTimer						*probeTimer;
 }
 
-@property (nonatomic, retain) NSMutableURLRequest			*serverRequest;
+@property (nonatomic, strong) NSMutableURLRequest			*serverRequest;
 
-@property (nonatomic, retain) NSMutableDictionary			*serverCache;
+@property (nonatomic, strong) NSMutableDictionary			*serverCache;
 
-@property (nonatomic, retain) IBOutlet		UITableViewCell	*loadedCell;
+@property (nonatomic, strong) IBOutlet		UITableViewCell	*loadedCell;
 @property (nonatomic, readonly) IBOutlet	UITextField		*search;
-@property (nonatomic, assign) IBOutlet		UIButton		*searchButton;
+@property (nonatomic, weak) IBOutlet		UIButton		*searchButton;
 
 @property (nonatomic, assign) enum eSearchState			state;
 
-@property (nonatomic, assign) id<DDGSearchProtocol>		searchHandler;
+@property (nonatomic, unsafe_unretained) id<DDGSearchProtocol>		searchHandler;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 

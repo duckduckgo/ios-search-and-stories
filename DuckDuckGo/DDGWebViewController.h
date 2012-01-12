@@ -19,9 +19,9 @@
 	NSInteger						callDepth;
 }
 
-@property (nonatomic, retain) IBOutlet UIWebView			*www;
-@property (nonatomic, retain) IBOutlet DDGSearchController	*searchController;
+@property (nonatomic, strong) IBOutlet UIWebView			*www;
+@property (nonatomic, strong) IBOutlet DDGSearchController	*searchController;
 
-@property (nonatomic, retain) NSDictionary					*params;
+@property (nonatomic, strong) NSDictionary					*params;
 
 @end

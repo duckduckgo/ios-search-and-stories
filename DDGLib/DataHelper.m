@@ -24,7 +24,7 @@
 }
 
 @property (nonatomic, assign) NSUInteger	store;
-@property (nonatomic, retain) NSString		*name;
+@property (nonatomic, strong) NSString		*name;
 @property (nonatomic, assign) NSInteger		identifier;
 
 - (id)initWithDelegate:(id<DataHelperDelegate>)delegate andControlSet:(id)control bufferSize:(NSUInteger)capacity;
@@ -90,7 +90,7 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 	}
 	
 	// create a file fetch object
-	FileFetch *fetchItem = [[[FileFetch alloc] initWithDelegate:delegate andControlSet:connections bufferSize:capacity] autorelease];
+	FileFetch *fetchItem = [[FileFetch alloc] initWithDelegate:delegate andControlSet:connections bufferSize:capacity];
 	
 	if (fetchItem)
 	{
@@ -152,9 +152,7 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 	// remove any pending/incomplete requests
 	[self flushAllIO];
 	// and the entire control set
-	[connections release];
 	// and everything else
-    [super dealloc];
 }
 
 @end
@@ -173,21 +171,13 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
     if ((self = [super init]))
 	{
         // data comes in here
-		receivedData = [[[NSMutableData alloc] initWithCapacity:capacity] retain];
+		receivedData = [[NSMutableData alloc] initWithCapacity:capacity];
 		delegate = receiptDelegate;
 		controlSet = control;
     }
     return self;
 }
 
-- (void)dealloc
-{
-	// and cleanup
-	[receivedData release];
-	self.name = nil;
-	// and finally kill self off the roster
-	[super dealloc];
-}
 
 - (id)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName identifier:(NSInteger)ID
 {
@@ -210,7 +200,7 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 	else if ([urlOrRequest isMemberOfClass:[NSURLRequest class]])
 	{
 		// your basic fundamental request
-		request = (NSMutableURLRequest*)[[urlOrRequest mutableCopyWithZone:nil] autorelease];
+		request = (NSMutableURLRequest*)[urlOrRequest mutableCopyWithZone:nil];
 	}
 	else
 		// ignore ignorance

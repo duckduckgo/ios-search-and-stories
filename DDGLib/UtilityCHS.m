@@ -61,7 +61,7 @@ static BOOL sIsIpad = NO;
 	[button addTarget:target action:selector forControlEvents:UIControlEventTouchUpInside];
 	button.tag = tag;
 	
-	return [[[UIBarButtonItem alloc] initWithCustomView:button] autorelease];
+	return [[UIBarButtonItem alloc] initWithCustomView:button];
 }
 
 +(void)bubbleWithMessage:(NSString*)msg andResponse:(NSInteger)responseCode orWithError:(NSError*)error
@@ -103,7 +103,6 @@ static BOOL sIsIpad = NO;
 										  cancelButtonTitle:@"OK" 
 										  otherButtonTitles:nil]; 
 	[alert show];
-	[alert release];
 }
 
 + (id)followPath:(NSArray*)keyPath pathIndex:(NSInteger)index inDictionary:(NSDictionary*)dictionary
@@ -185,7 +184,7 @@ static BOOL sIsIpad = NO;
 	else if (w && onOrOff)
 	{
 		// we need to add the activity indicator to window
-		activity = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+		activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 		
 		activity.tag = kUIActivityIndicatorTagID;
 		activity.center = w.center;
@@ -239,7 +238,7 @@ static BOOL sIsIpad = NO;
 	else if (w && onOrOff)
 	{
 		// we need to make a nice little window in which we show the activity indicator
-		activityView = [[[UIView alloc] initWithFrame:CGRectMake(0, 0, 140, 140)] autorelease];
+		activityView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 140, 140)];
 		activityView.tag = kUIActivityIndicatorTagID;
 		activityView.backgroundColor = [UIColor blackColor];
 		activityView.alpha = 0.8;
@@ -250,13 +249,13 @@ static BOOL sIsIpad = NO;
 		activityView.center = CGPointMake (160, 240);
 		
 		// we need to add the activity indicator to window
-		activity = [[[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge] autorelease];
+		activity = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
 		activity.tag = kUIActivityIndicatorTagID+1;
 		activity.center = CGPointMake (70, 70);
 		activity.hidesWhenStopped = YES;
 		[activityView addSubview:activity];
 		
-		UILabel *messageLabel = [[[UILabel alloc] initWithFrame:CGRectMake(10, 95, 120, 35)] autorelease];
+		UILabel *messageLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 95, 120, 35)];
 		messageLabel.numberOfLines = 3;
 		messageLabel.tag = kUIActivityIndicatorTagID+2;
 		messageLabel.textColor = [UIColor whiteColor];
@@ -294,7 +293,7 @@ static BOOL sIsIpad = NO;
 + (NSDate*)dateFromInternetdDateString:(NSString*)dateString
 {
 	// 2001-03-24 10:45:32 +0600 ==>> NSDate
-	NSDateFormatter* dateFormatter = [[[NSDateFormatter alloc] init] autorelease];
+	NSDateFormatter* dateFormatter = [[NSDateFormatter alloc] init];
 	dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss ZZZ";
 	
 	return [dateFormatter dateFromString:dateString];
@@ -302,7 +301,7 @@ static BOOL sIsIpad = NO;
 
 + (NSString*)versionOfSoftware
 {
-	return (NSString*)CFBundleGetValueForInfoDictionaryKey (CFBundleGetMainBundle(), kCFBundleVersionKey);
+	return (__bridge NSString*)CFBundleGetValueForInfoDictionaryKey (CFBundleGetMainBundle(), kCFBundleVersionKey);
 }
 
 + (BOOL)isIpad
@@ -458,9 +457,9 @@ static BOOL sIsIpad = NO;
 + (id)makeObjectFromJSON:(NSString*)dataJSON
 {
 	// so there is data to display
-	SBJsonParser *parser = [[[SBJsonParser alloc] init] autorelease];
+	SBJsonParser *parser = [[SBJsonParser alloc] init];
 	
-	return [[parser objectWithString:dataJSON] retain];
+	return [parser objectWithString:dataJSON];
 }
 
 + (BOOL)isPhone
@@ -493,7 +492,7 @@ static BOOL sIsIpad = NO;
 	if (!s) 
 		return nil;
 	
-	NSMutableString *fixed = [[[NSMutableString alloc] initWithString:s] autorelease];
+	NSMutableString *fixed = [[NSMutableString alloc] initWithString:s];
 	
 	// remove various kinds of ugliness
 	[fixed replaceOccurrencesOfString:@"&amp;" withString:@" " options:NSLiteralSearch range: NSMakeRange(0, [fixed length])];

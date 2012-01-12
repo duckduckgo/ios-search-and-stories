@@ -60,7 +60,6 @@
 	// turn off activity indication
 	[UtilityCHS activityIndication:NO];
 	
-	[self release];
 }
 
 - (void)connectionDidFinishLoading:(NSURLConnection *)connection
@@ -68,7 +67,6 @@
 	// turn off activity indication
 	[UtilityCHS activityIndication:NO];
 	
-	[self release];
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge

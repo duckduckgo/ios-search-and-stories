@@ -50,7 +50,7 @@
 	www.delegate = self;
 	callDepth = 0;
 
-	self.searchController = [[[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view] autorelease];
+	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
     searchController.state = eViewStateWebResults;
 	searchController.search.text = [params objectForKey:ksDDGSearchControllerSearchTerm];
@@ -69,11 +69,7 @@
 - (void)dealloc
 {
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-	www.delegate = nil;
-	self.www = nil;
-    self.params = nil;
-	self.searchController = nil;
-	[super dealloc];
+    www.delegate = nil; // iOS 4 doesn't support zeroing weak references, so this can't be removed (yet)
 }
 
 

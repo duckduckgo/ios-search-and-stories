@@ -15,10 +15,10 @@
 
 + (NSDictionary*)headerItemsForAllHTTPRequests
 {
-	return [[NSDictionary dictionaryWithObjectsAndKeys:
+	return [NSDictionary dictionaryWithObjectsAndKeys:
 			 [@"DDG iOS App v" stringByAppendingString:[UtilityCHS versionOfSoftware]],	@"User-Agent", 
 			 @"http://duckduckgo.com",													@"Referer",
-			 nil] retain];
+			 nil];
 }
 
 @end
@@ -27,14 +27,14 @@
 
 + (NSArray*)userInitializePaths
 {
-	return [[NSArray arrayWithObjects:@"transient", @"images",	nil] retain];
+	return [NSArray arrayWithObjects:@"transient", @"images",	nil];
 }
 
 + (NSArray*)userInitializeDays
 {
-	return [[NSArray arrayWithObjects:	[NSNumber numberWithInt:0],
+	return [NSArray arrayWithObjects:	[NSNumber numberWithInt:0],
 			 [NSNumber numberWithInt:86400*31],
-			 nil] retain];
+			 nil];
 }
 
 @end
@@ -43,18 +43,12 @@
 
 @synthesize window = _window;
 
-- (void)dealloc
-{
-	[_window release];
-    [super dealloc];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	// turn off completely standard URL cacheing -- we use our own cacheing
 	NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
 	[NSURLCache setSharedURLCache:sharedCache];
-	[sharedCache release];
 	
     // Override point for customization after app launch    
 	// create any caches needed -- only realy does anything first time through

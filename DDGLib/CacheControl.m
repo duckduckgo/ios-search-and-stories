@@ -36,7 +36,7 @@ NSArray *sCacheStoreLifetimeDays = nil;
 
 + (void)initialize
 {
-	sCacheBasePath = [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] retain];
+	sCacheBasePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	
 	sCacheStorePaths = [CacheControl userInitializePaths];
 	sCacheStoreLifetimeDays = [CacheControl userInitializeDays];

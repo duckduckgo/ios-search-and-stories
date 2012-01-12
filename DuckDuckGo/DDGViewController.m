@@ -34,7 +34,7 @@
 	
 	dataHelper = [[DataHelper alloc] initWithDelegate:self];
 	
-	self.searchController = [[[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view] autorelease];
+	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
     searchController.state = eViewStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"gear40x37.png"] forState:UIControlStateNormal];
@@ -49,12 +49,6 @@
     // e.g. self.myOutlet = nil;
 }
 
-- (void)dealloc
-{
-	[dataHelper release];
-	self.searchController = nil;
-	[super dealloc];
-}
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -222,7 +216,6 @@
 	{
 		NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		self.entries = [[[json JSONValue] objectForKey:@"value"] objectForKey:@"items"];
-		[json release];
 		[tableView reloadData];
 	}
 }
