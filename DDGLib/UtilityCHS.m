@@ -11,7 +11,7 @@
 #import <Twitter/TWTweetComposeViewController.h>
 
 #import "UtilityCHS.h"
-#import "JSON.h"
+#import "SBJson.h"
 
 static BOOL sIsIpad = NO;
 

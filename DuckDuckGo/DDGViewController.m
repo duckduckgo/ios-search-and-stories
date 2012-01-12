@@ -9,8 +9,7 @@
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
 #import "UtilityCHS.h"
-#import "JSON.h"
-#import "NSString+SBJSON.h"
+#import "SBJson.h"
 
 @implementation DDGViewController
 
