@@ -57,7 +57,6 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 - (void)dealloc
 {
 	[probeTimer invalidate];
-	[dataHelper release];
 	self.serverRequest = nil;
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];

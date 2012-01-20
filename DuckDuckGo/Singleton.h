@@ -46,41 +46,14 @@ static SINGLETON_CLASS_NAME * SINGLETON_REF = nil;
 + (SINGLETON_CLASS_NAME *)sharedInstance {
 	@synchronized(self) {
 		if (SINGLETON_REF == nil) {
-			[[self alloc] SINGLETON_INIT_SELECTOR]; // assignment done in alloc below, not here
+			SINGLETON_REF = [[self alloc] SINGLETON_INIT_SELECTOR];
 		}
 	}
 	return SINGLETON_REF;
 }
 
-
-+ (id)allocWithZone:(NSZone *)zone {
-	@synchronized(self) {
-		if (SINGLETON_REF == nil) {
-			SINGLETON_REF = [super allocWithZone:zone];
-			return SINGLETON_REF;  // assignment and return on first allocation
-		}
-	}
-	return nil; // on subsequent allocation attempts return nil
-}
-
 - (id)copyWithZone:(NSZone *)zone
 {
-	return self;
-}
-
-- (id)retain {
-	return self;
-}
-
-- (unsigned)retainCount {
-	return UINT_MAX;  // denotes an object that cannot be released
-}
-
-- (oneway void)release {
-	//do nothing
-}
-
-- (id)autorelease {
 	return self;
 }
 

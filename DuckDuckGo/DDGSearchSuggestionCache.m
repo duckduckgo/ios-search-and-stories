@@ -22,13 +22,6 @@
 	return self;
 }
 
-- (void)dealloc
-{
-	[serverCache release];
-	[super dealloc];
-}
-
-
 #define SINGLETON_CLASS_NAME		DDGSearchSuggestionCache
 #define SINGLETON_INIT_SELECTOR		init
 #import "Singleton.h"

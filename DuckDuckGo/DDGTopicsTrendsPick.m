@@ -9,8 +9,7 @@
 #import "DDGTopicsTrendsPick.h"
 #import "DDGWebViewController.h"
 #import "UtilityCHS.h"
-#import "JSON.h"
-#import "NSString+SBJSON.h"
+#import "SBJson.h"
 
 #define kElementsInCellPortrait	3
 
@@ -64,14 +63,6 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
-}
-
-- (void)dealloc
-{
-	self.selectedTrendsTopics = nil;
-	self.entries = nil;
-	[dataHelper release];
-	[super dealloc];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -275,7 +266,6 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 	{
 		NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 		self.entries = [[[json JSONValue] objectForKey:@"response"] objectForKey:@"list"];
-		[json release];
 		[tableView reloadData];
 	}
 }
