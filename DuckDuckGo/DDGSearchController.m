@@ -25,6 +25,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 @synthesize state;
 
 @synthesize serverRequest;
+@synthesize serverCache;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
 {
