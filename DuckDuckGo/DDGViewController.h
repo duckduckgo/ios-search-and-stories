@@ -13,19 +13,19 @@
 
 @interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchProtocol, DataHelperDelegate>
 {
-	IBOutlet UITableViewCell		*loadedCell;
-	IBOutlet UITableView			*tableView;
-	IBOutlet DDGSearchController	*searchController;
+	IBOutlet UITableViewCell *loadedCell;
+	IBOutlet UITableView *tableView;
+	IBOutlet DDGSearchController *searchController;
 	
-	id								entries;
-	DataHelper						*dataHelper;
+	id entries;
+	DataHelper *dataHelper;
 }
 
-@property (nonatomic, strong) IBOutlet UITableViewCell		*loadedCell;
-@property (nonatomic, strong) IBOutlet UITableView			*tableView;
-@property (nonatomic, strong) IBOutlet DDGSearchController	*searchController;
+@property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
+@property (nonatomic, strong) IBOutlet UITableView	*tableView;
+@property (nonatomic, strong) IBOutlet DDGSearchController *searchController;
 
-@property (nonatomic, strong) id							entries;
+@property (nonatomic, strong) id entries;
 
 - (IBAction)customize:(id)sender;
 

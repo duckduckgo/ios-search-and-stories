@@ -136,8 +136,6 @@
 		60E04A5F14A0EA9900F8BD23 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		8303A4EF14992F1900D34412 /* spacer44x44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spacer44x44.png; sourceTree = "<group>"; };
-		8303A581149A2ED50060EEF1 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = /Volumes/DDG/Default.png; sourceTree = "<absolute>"; };
-		8303A583149A2FBC0060EEF1 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "/Volumes/DDG/Default@2x.png"; sourceTree = "<absolute>"; };
 		8329AE04149F883300C6ECB2 /* duckPlaceholder314x73.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = duckPlaceholder314x73.png; sourceTree = "<group>"; };
 		832F8A5C149FBF4600EAFADB /* duckPlaceholder314x73.psd */ = {isa = PBXFileReference; lastKnownFileType = file; path = duckPlaceholder314x73.psd; sourceTree = "<group>"; };
 		833DB53B1494164F00509F2E /* libDDGLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDDGLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -195,8 +193,6 @@
 		83F32272149290EF00A61BC5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		83F32274149290EF00A61BC5 /* DDGViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGViewController.h; sourceTree = "<group>"; };
 		83F32275149290EF00A61BC5 /* DDGViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGViewController.m; sourceTree = "<group>"; };
-		83F3227C1492910000A61BC5 /* icon57x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = icon57x.png; path = /Volumes/DDG/icon57x.png; sourceTree = "<absolute>"; };
-		83F3227E1492910700A61BC5 /* icon57x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon57x@2x.png"; path = "/Volumes/DDG/icon57x@2x.png"; sourceTree = "<absolute>"; };
 		83F322851492934B00A61BC5 /* action34x29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = action34x29.png; sourceTree = "<group>"; };
 		83F322861492934B00A61BC5 /* bbg40x37.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bbg40x37.png; sourceTree = "<group>"; };
 		83F322881492934B00A61BC5 /* home40x37.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home40x37.png; sourceTree = "<group>"; };
@@ -331,10 +327,6 @@
 		838E906D149A794F00C11E41 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				8303A583149A2FBC0060EEF1 /* Default@2x.png */,
-				8303A581149A2ED50060EEF1 /* Default.png */,
-				83F3227E1492910700A61BC5 /* icon57x@2x.png */,
-				83F3227C1492910000A61BC5 /* icon57x.png */,
 				83F3226E149290EF00A61BC5 /* MainStoryboard_iPhone.storyboard */,
 				83F32271149290EF00A61BC5 /* MainStoryboard_iPad.storyboard */,
 				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
@@ -396,11 +388,6 @@
 		83F32263149290EF00A61BC5 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				4C1E3A0F14C9F50B00A0E143 /* icon57x.png */,
-				4C1E3A1014C9F50B00A0E143 /* icon57x@2x.png */,
-				4C1E3A1114C9F50B00A0E143 /* icon72x.png */,
-				4C1E3A0A14C9F44600A0E143 /* Default.png */,
-				4C1E3A0B14C9F44600A0E143 /* Default@2x.png */,
 				83F32264149290EF00A61BC5 /* DuckDuckGo-Info.plist */,
 				83F32265149290EF00A61BC5 /* InfoPlist.strings */,
 				83F32268149290EF00A61BC5 /* main.m */,
@@ -414,6 +401,11 @@
 		83F322841492932D00A61BC5 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4C1E3A0F14C9F50B00A0E143 /* icon57x.png */,
+				4C1E3A1014C9F50B00A0E143 /* icon57x@2x.png */,
+				4C1E3A1114C9F50B00A0E143 /* icon72x.png */,
+				4C1E3A0A14C9F44600A0E143 /* Default.png */,
+				4C1E3A0B14C9F44600A0E143 /* Default@2x.png */,
 				83E03E8114A4CA5C0098F328 /* topicChosen37x36.png */,
 				83E46A9B14A2391700A2D4FC /* arrowRight18x18.png */,
 				83E46A9914A22DEE00A2D4FC /* chevron15x27.png */,
