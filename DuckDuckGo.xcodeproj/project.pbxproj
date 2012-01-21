@@ -12,6 +12,7 @@
 		4C1E3A1214C9F50B00A0E143 /* icon57x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1E3A0F14C9F50B00A0E143 /* icon57x.png */; };
 		4C1E3A1314C9F50B00A0E143 /* icon57x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1E3A1014C9F50B00A0E143 /* icon57x@2x.png */; };
 		4C1E3A1414C9F50B00A0E143 /* icon72x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1E3A1114C9F50B00A0E143 /* icon72x.png */; };
+		4C1E3A1C14CB26DA00A0E143 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 60E04A5C14A0EA9000F8BD23 /* Reachability.m */; };
 		4C8D7AF114BE7EE100F6E604 /* NSObject+SBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C8D7AD814BE7EE100F6E604 /* NSObject+SBJson.h */; };
 		4C8D7AF214BE7EE100F6E604 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8D7AD914BE7EE100F6E604 /* NSObject+SBJson.m */; };
 		4C8D7AF314BE7EE100F6E604 /* SBJson.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C8D7ADA14BE7EE100F6E604 /* SBJson.h */; };
@@ -37,7 +38,6 @@
 		4C8D7B0714BE7EE100F6E604 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8D7AEE14BE7EE100F6E604 /* SBJsonUTF8Stream.m */; };
 		4C8D7B0814BE7EE100F6E604 /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C8D7AEF14BE7EE100F6E604 /* SBJsonWriter.h */; };
 		4C8D7B0914BE7EE100F6E604 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8D7AF014BE7EE100F6E604 /* SBJsonWriter.m */; };
-		60E04A5D14A0EA9000F8BD23 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 60E04A5C14A0EA9000F8BD23 /* Reachability.m */; };
 		8303A4F014992F1900D34412 /* spacer44x44.png in Resources */ = {isa = PBXBuildFile; fileRef = 8303A4EF14992F1900D34412 /* spacer44x44.png */; };
 		8329AE05149F883300C6ECB2 /* duckPlaceholder314x73.png in Resources */ = {isa = PBXBuildFile; fileRef = 8329AE04149F883300C6ECB2 /* duckPlaceholder314x73.png */; };
 		832F8A5D149FBF4600EAFADB /* duckPlaceholder314x73.psd in Resources */ = {isa = PBXBuildFile; fileRef = 832F8A5C149FBF4600EAFADB /* duckPlaceholder314x73.psd */; };
@@ -132,8 +132,8 @@
 		4C8D7AEE14BE7EE100F6E604 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		4C8D7AEF14BE7EE100F6E604 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		4C8D7AF014BE7EE100F6E604 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
-		60E04A5C14A0EA9000F8BD23 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
-		60E04A5F14A0EA9900F8BD23 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		60E04A5C14A0EA9000F8BD23 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../DuckDuckGo/Reachability.m; sourceTree = "<group>"; };
+		60E04A5F14A0EA9900F8BD23 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../DuckDuckGo/Reachability.h; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		8303A4EF14992F1900D34412 /* spacer44x44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spacer44x44.png; sourceTree = "<group>"; };
 		8329AE04149F883300C6ECB2 /* duckPlaceholder314x73.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = duckPlaceholder314x73.png; sourceTree = "<group>"; };
@@ -227,6 +227,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4C1E3A1B14CB26C600A0E143 /* Reachability */ = {
+			isa = PBXGroup;
+			children = (
+				60E04A5F14A0EA9900F8BD23 /* Reachability.h */,
+				60E04A5C14A0EA9000F8BD23 /* Reachability.m */,
+			);
+			name = Reachability;
+			sourceTree = "<group>";
+		};
+		4C1E3A1D14CB26E500A0E143 /* ASIHTTPRequest */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = ASIHTTPRequest;
+			sourceTree = "<group>";
+		};
 		4C8D7AD714BE7EE100F6E604 /* SBJson */ = {
 			isa = PBXGroup;
 			children = (
@@ -283,6 +299,8 @@
 		833DB53F1494164F00509F2E /* DDGLib */ = {
 			isa = PBXGroup;
 			children = (
+				4C1E3A1D14CB26E500A0E143 /* ASIHTTPRequest */,
+				4C1E3A1B14CB26C600A0E143 /* Reachability */,
 				4C8D7AD714BE7EE100F6E604 /* SBJson */,
 				833DB5481494168900509F2E /* CacheControl.h */,
 				833DB5491494168900509F2E /* DataHelper.h */,
@@ -372,8 +390,6 @@
 				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
 				839CB4AE14AA37500054297C /* DDGSearchSuggestionCache.h */,
 				839CB4AF14AA37500054297C /* DDGSearchSuggestionCache.m */,
-				60E04A5F14A0EA9900F8BD23 /* Reachability.h */,
-				60E04A5C14A0EA9000F8BD23 /* Reachability.m */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
 				83F322841492932D00A61BC5 /* Images */,
 				833DB53F1494164F00509F2E /* DDGLib */,
@@ -578,6 +594,7 @@
 				4C8D7B0514BE7EE100F6E604 /* SBJsonTokeniser.m in Sources */,
 				4C8D7B0714BE7EE100F6E604 /* SBJsonUTF8Stream.m in Sources */,
 				4C8D7B0914BE7EE100F6E604 /* SBJsonWriter.m in Sources */,
+				4C1E3A1C14CB26DA00A0E143 /* Reachability.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,7 +608,6 @@
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				838195D614A0CCDF001C5EBC /* DDGTopicsTrendsPick.m in Sources */,
-				60E04A5D14A0EA9000F8BD23 /* Reachability.m in Sources */,
 				839CB4B014AA37500054297C /* DDGSearchSuggestionCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

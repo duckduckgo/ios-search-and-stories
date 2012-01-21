@@ -5,7 +5,7 @@
 //  Copyright 2008 © DuckDuckGo, Inc. All rights reserved.
 //
 
-//hurl://www.DuckDuckGo, Inc.com/qWebServices/HomePage.aspx
+//hurl://www.duckduckgo.com/qWebServices/HomePage.aspx
 //Request Headers
 // Accept:application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
 // Cache-Control:max-age=0
@@ -36,7 +36,7 @@ NSArray *sCacheStoreLifetimeDays = nil;
 
 + (void)initialize
 {
-	sCacheBasePath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+	sCacheBasePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 	
 	sCacheStorePaths = [CacheControl userInitializePaths];
 	sCacheStoreLifetimeDays = [CacheControl userInitializeDays];

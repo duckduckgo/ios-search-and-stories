@@ -47,16 +47,17 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	// turn off completely standard URL cacheing -- we use our own caching
+	// turn off completely standard URL caching -- we use our own caching
 	NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
 	[NSURLCache setSharedURLCache:sharedCache];
 	
-	// create any caches needed -- only realy does anything first time through
+	// create cache directories if they don't already exist
 	[CacheControl setupCaches];
 
+    // load default settings from Defaults.plist (as of now, though, we have neither settings nor Defaults.plist)
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
-	NSDictionary *dict = [NSDictionary dictionaryWithContentsOfFile:bundlePath];
-	[[NSUserDefaults standardUserDefaults] registerDefaults:dict];
+	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:bundlePath];
+	[[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
     
     return YES;
 }
