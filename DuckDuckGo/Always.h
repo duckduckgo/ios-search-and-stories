@@ -10,15 +10,18 @@
 #define DuckDuckGo_Always_h
 
 // cache control indices
-enum
-{ 
-	kCacheStoreIndexNoFileCache = -1,	// this must be defined as -1
-	kCacheStoreIndexTransient = 0,
-	kCacheStoreIndexImages,
-	kCacheStoreIndexTopics,
-	
-	kCacheStoreCacheCount
-};
+//enum
+//{ 
+//	kCacheStoreIndexNoFileCache = -1,	// this must be defined as -1
+//	kCacheStoreIndexTransient = 0,
+//	kCacheStoreIndexImages,
+//	kCacheStoreIndexTopics,
+//	
+//	kCacheStoreCacheCount
+//};
+#define kCacheIDNoFileCache @"NoFileCache"
+#define kCacheIDTransient @"transient"
+#define kCacheIDImages @"images"
 
 
 #endif

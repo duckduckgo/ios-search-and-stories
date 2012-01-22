@@ -23,23 +23,6 @@
 
 @end
 
-@implementation CacheControl(Initialize)
-
-+ (NSArray*)userInitializePaths
-{
-	return [NSArray arrayWithObjects:@"transient", @"images", nil];
-}
-
-+ (NSArray*)userInitializeDays
-{
-	return [NSArray arrayWithObjects:
-            [NSNumber numberWithInt:0],
-            [NSNumber numberWithInt:86400*31],
-            nil];
-}
-
-@end
-
 @implementation DDGAppDelegate
 
 @synthesize window = _window;
@@ -51,8 +34,11 @@
 	NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
 	[NSURLCache setSharedURLCache:sharedCache];
 	
+    // define caches
+    [CacheControl addCache:kCacheIDTransient lifetimeSeconds:0];
+    [CacheControl addCache:kCacheIDImages lifetimeSeconds:60*60*24*31];
 	// create cache directories if they don't already exist
-	[CacheControl setupCaches];
+	[CacheControl initializeCaches];
 
     // load default settings from Defaults.plist (as of now, though, we have neither settings nor Defaults.plist)
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];

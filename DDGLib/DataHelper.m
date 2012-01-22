@@ -6,30 +6,31 @@
 //
 
 #import "DataHelper.h"
+#include "CacheControl.h"
 
 #pragma mark Private implementation definition
 
 @interface FileFetch : NSObject 
 {
-	NSMutableData				*receivedData;
-	NSString					*name;
+	NSMutableData *receivedData;
+	NSString *name;
 	
-	NSUInteger					store;
+	NSString *cache;
 	
-	id<DataHelperDelegate>		delegate;
-	NSURLConnection				*urlConnection;
-	id							controlSet;
-	NSInteger					identifier;
-	NSInteger					statusCode;
+	id<DataHelperDelegate> delegate;
+	NSURLConnection *urlConnection;
+	id controlSet;
+	NSInteger identifier;
+	NSInteger statusCode;
 }
 
-@property (nonatomic, assign) NSUInteger	store;
-@property (nonatomic, strong) NSString		*name;
-@property (nonatomic, assign) NSInteger		identifier;
+@property (nonatomic, strong) NSString *cache;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, assign) NSInteger identifier;
 
 - (id)initWithDelegate:(id<DataHelperDelegate>)delegate andControlSet:(id)control bufferSize:(NSUInteger)capacity;
 
-- (id)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName identifier:(NSInteger)ID;
+- (id)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)theName identifier:(NSInteger)ID;
 
 -(void)cleanup;
 
@@ -40,15 +41,18 @@
 
 @implementation DataHelper
 
-NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
+NSDictionary *HTTPHeaders = nil;
 
 #pragma mark -
 #pragma mark Cache control class methods
 
 + (void)initialize
 {
-	// user application MUST implement this class callback
-	sHeaderItemsForAllHTTPRequests = [DataHelper headerItemsForAllHTTPRequests];
+    HTTPHeaders = [[NSDictionary alloc] init];
+}
+
++(void)setHTTPHeaders:(NSDictionary *)headers {
+    HTTPHeaders = [headers copy];
 }
 
 - (id)initWithDelegate:(id<DataHelperDelegate>)receiptDelegate
@@ -62,26 +66,26 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
     return self;
 }
 
-- (NSData*)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName returnData:(BOOL)returnData identifier:(NSInteger)ID  bufferSize:(NSUInteger)capacity
+- (NSData*)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)name returnData:(BOOL)returnData identifier:(NSInteger)ID  bufferSize:(NSUInteger)capacity
 {
 	// ignore any redundant requests for the same items
-	if ([self isRequestOutstandingForStore:cacheStore name:cacheName identifier:ID])
+	if ([self isRequestOutstandingForCache:cacheID name:name identifier:ID])
 		return nil;
 	
-	if (cacheStore == kCacheStoreIndexNoFileCache)
+	if ([cacheID isEqualToString:kCacheIDNoFileCache])
 		// no cache case -- always GET
 		;
-	else if ([CacheControl cacheSeconds:cacheStore] || !urlOrRequest)
+	else if ([CacheControl lifetimeSecondsForCache:cacheID] || !urlOrRequest)
 	{
 		// if this isn't a transient file, look at the cache store first
-		NSString *cacheFileName = [CacheControl cachePathForStore:cacheStore name:cacheName];
+		NSString *cacheFilePath = [CacheControl pathForCache:cacheID entry:name];
 		
 		// see if the file is already in the cache
-		if ([[NSFileManager defaultManager] fileExistsAtPath:cacheFileName])
+		if ([[NSFileManager defaultManager] fileExistsAtPath:cacheFilePath])
 		{
 			if (returnData)
 				// yup - go fetch the data
-				return [NSData dataWithContentsOfFile:cacheFileName];
+				return [NSData dataWithContentsOfFile:cacheFilePath];
 			else
 				return nil;
 		}
@@ -98,7 +102,7 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 		[connections addObject:fetchItem];
 		
 		// and make the request
-		[fetchItem retrieve:urlOrRequest store:cacheStore name:cacheName identifier:ID];
+		[fetchItem retrieve:urlOrRequest cache:cacheID name:name identifier:ID];
 	}
 	return nil;
 }
@@ -136,11 +140,11 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 	return NO;
 }
 
-- (BOOL)isRequestOutstandingForStore:(NSUInteger)cacheStore name:(NSString*)cacheName identifier:(NSInteger)ID
+- (BOOL)isRequestOutstandingForCache:(NSString *)cacheID name:(NSString*)name identifier:(NSInteger)ID
 {
 	NSSet *snapshot = (NSSet*)[connections allObjects];
 	for (FileFetch *outstanding in snapshot)
-		if (outstanding.store == cacheStore && outstanding.identifier == ID && [outstanding.name isEqualToString:cacheName])
+		if ([outstanding.cache isEqualToString:cacheID] && outstanding.identifier == ID && [outstanding.name isEqualToString:name])
 			return YES;
 	
 	return NO;
@@ -149,10 +153,8 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 
 - (void)dealloc
 {
-	// remove any pending/incomplete requests
+    // close any open connections; everything else takes care of itself.
 	[self flushAllIO];
-	// and the entire control set
-	// and everything else
 }
 
 @end
@@ -163,7 +165,7 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 @implementation FileFetch
 
 @synthesize identifier;
-@synthesize store;
+@synthesize cache;
 @synthesize name;
 
 - (id)initWithDelegate:(id<DataHelperDelegate>)receiptDelegate  andControlSet:(id)control bufferSize:(NSUInteger)capacity
@@ -179,42 +181,32 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 }
 
 
-- (id)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName identifier:(NSInteger)ID
+- (id)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString *)theName identifier:(NSInteger)ID
 {
-	self.store = cacheStore;
+	self.cache = cacheID;
 	self.identifier = ID;
-	self.name = cacheName;
+	self.name = theName;
 	
 	NSMutableURLRequest *request;
-	if ([urlOrRequest isKindOfClass:[NSString class]])
-	{
-		// make up a request
+	if ([urlOrRequest isKindOfClass:[NSString class]]) {
 		request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlOrRequest] cachePolicy:NSURLRequestUseProtocolCachePolicy timeoutInterval:30.0];
-//		NSLog(urlOrRequest);
 	}
-	else if ([urlOrRequest isMemberOfClass:[NSMutableURLRequest class]])
-	{
-		// your basic fundamental request
-		request = (NSMutableURLRequest*)urlOrRequest;
+	else if ([urlOrRequest isKindOfClass:[NSURLRequest class]]) {
+        // let's make a copy regardless of whether or not it's mutable to avoid other people changing it beneath our feet
+        request = (NSMutableURLRequest*)[urlOrRequest mutableCopyWithZone:nil];
 	}
-	else if ([urlOrRequest isMemberOfClass:[NSURLRequest class]])
-	{
-		// your basic fundamental request
-		request = (NSMutableURLRequest*)[urlOrRequest mutableCopyWithZone:nil];
-	}
-	else
-		// ignore ignorance
-		return nil;
 	
-	[sHeaderItemsForAllHTTPRequests enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) { [request setValue:obj forHTTPHeaderField:key]; }];
+    // apply global HTTP header options to the request
+	[HTTPHeaders enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
+        [request setValue:obj forHTTPHeaderField:key];
+    }];
 	
 	urlConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
 	
+    // turn on network activity spinner
 	if (urlConnection)
-	{
-		// turn ON activity indication
 		[[NetworkActivityStatus sharedManager] activityStarted:YES];
-	}
+	
 	return urlConnection;
 }
 
@@ -281,14 +273,14 @@ NSDictionary *sHeaderItemsForAllHTTPRequests = nil;
 	// we have a complete data file for cacheing
 	if (receivedData.length)
 	{
-		if (store == kCacheStoreIndexNoFileCache)
+		if ([cache isEqualToString:kCacheIDNoFileCache])
 		{
 			// let our delegate know that data has been received and pass it back directly
 			[delegate dataReceivedWith:identifier andData:receivedData andStatus:statusCode];
 		}
 		else
 		{
-			NSString *cacheFileName = [CacheControl cachePathForStore:store name:name];
+			NSString *cacheFileName = [CacheControl pathForCache:cache entry:name];
 		
 			[receivedData writeToFile:cacheFileName atomically:YES];
 

@@ -237,7 +237,7 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 - (UIImage*)loadImage:(NSString*)url
 {
 	NSData *img = [dataHelper retrieve:url
-								 store:kCacheStoreIndexImages
+								 cache:kCacheIDImages
 								  name:[NSString stringWithFormat:@"%08x", [url hash]]
 							returnData:YES
 							identifier:2000
@@ -250,7 +250,7 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 - (void)loadEntries
 {
 	[dataHelper retrieve:@"http://otter.topsy.com/top.json?thresh=top100&type=image&locale=en&family_filter=1"
-				   store:kCacheStoreIndexNoFileCache
+				   cache:kCacheIDNoFileCache
 					name:nil
 			  returnData:NO
 			  identifier:1000

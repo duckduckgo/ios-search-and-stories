@@ -199,7 +199,7 @@
 - (UIImage*)loadImage:(NSString*)url
 {
 	NSData *img = [dataHelper retrieve:url
-								 store:kCacheStoreIndexImages
+								 cache:kCacheIDImages
 								  name:[NSString stringWithFormat:@"%08x", [url hash]]
 							returnData:YES
 							identifier:2000
@@ -212,7 +212,7 @@
 - (void)loadEntries
 {
 	[dataHelper retrieve:@"http://pipes.yahoo.com/pipes/pipe.run?_id=96061e78ec401aa340a1193b6a7e7d65&_render=json&url=http://opensesamelabs.posterous.com/rss.xml"
-				   store:kCacheStoreIndexNoFileCache
+				   cache:kCacheIDNoFileCache
 					name:nil
 			  returnData:NO
 			  identifier:1000

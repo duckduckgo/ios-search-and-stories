@@ -174,7 +174,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 {
 	// prime the pump to start up a connection
 	serverRequest.URL = [NSURL URLWithString:sBaseSuggestionServerURL];
-	[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:666  bufferSize:kSuggestionServerProbeResponseBufferCapacity];
+	[dataHelper retrieve:serverRequest cache:kCacheIDNoFileCache name:nil returnData:NO identifier:666  bufferSize:kSuggestionServerProbeResponseBufferCapacity];
 	
 	[timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
 }
@@ -239,7 +239,12 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 		NSString *surl = [sBaseSuggestionServerURL stringByAppendingString:searchStringWillBecome];
 		serverRequest.URL = [NSURL URLWithString:[surl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-		[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:1000+[searchStringWillBecome length] bufferSize:kSuggestionServerResponseBufferCapacity];
+		[dataHelper retrieve:serverRequest 
+                       cache:kCacheIDNoFileCache 
+                        name:nil 
+                  returnData:NO 
+                  identifier:1000+[searchStringWillBecome length] 
+                  bufferSize:kSuggestionServerResponseBufferCapacity];
 		
 		// don't need to probe for a while
 		[probeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
@@ -278,7 +283,12 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 		NSString *surl = [sBaseSuggestionServerURL stringByAppendingString:textField.text];
 		serverRequest.URL = [NSURL URLWithString:[surl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 		
-		[dataHelper retrieve:serverRequest store:kCacheStoreIndexNoFileCache name:nil returnData:NO identifier:1000+[textField.text length] bufferSize:kSuggestionServerResponseBufferCapacity];
+		[dataHelper retrieve:serverRequest 
+                       cache:kCacheIDNoFileCache 
+                        name:nil 
+                  returnData:NO 
+                  identifier:1000+[textField.text length] 
+                  bufferSize:kSuggestionServerResponseBufferCapacity];
 		
 		// don't need to probe for a while
 		[probeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
@@ -358,7 +368,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 	
 	iv.backgroundColor = [UIColor whiteColor];
 	iv.image = [UIImage imageWithData:[dataHelper retrieve:[item objectForKey:ksDDGSearchControllerServerKeyImage] 
-													 store:kCacheStoreIndexImages 
+													 cache:kCacheIDImages 
 													  name:[NSString stringWithFormat:@"%08x", [[item objectForKey:ksDDGSearchControllerServerKeyImage] hash]]
 												returnData:YES
 												identifier:0

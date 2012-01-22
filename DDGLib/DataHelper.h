@@ -8,7 +8,6 @@
 #import <Foundation/Foundation.h>
 
 #include "NetworkActivityStatus.h"
-#include "CacheControl.h"
 #include "UtilityCHS.h"
 
 
@@ -29,21 +28,14 @@
 	NSMutableSet				*connections;
 }
 
++(void)setHTTPHeaders:(NSDictionary *)headers;
 - (id)initWithDelegate:(id<DataHelperDelegate>)delegate;
 
-- (NSData*)retrieve:(id)urlOrRequest store:(NSUInteger)cacheStore name:(NSString*)cacheName returnData:(BOOL)returnData identifier:(NSInteger)ID bufferSize:(NSUInteger)capacity;
+- (NSData*)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)name returnData:(BOOL)returnData identifier:(NSInteger)ID bufferSize:(NSUInteger)capacity;
 
 -(void)flushAllIO;
 -(void)flushIdentifierIO:(NSInteger)ID;
 -(BOOL)isIdentifierPendingIO:(NSInteger)ID;
--(BOOL)isRequestOutstandingForStore:(NSUInteger)cacheStore name:(NSString*)cacheName identifier:(NSInteger)ID;
+-(BOOL)isRequestOutstandingForCache:(NSString *)cacheID name:(NSString*)name identifier:(NSInteger)ID;
 
 @end
-
-@interface DataHelper(Initialize)
-
-+ (NSDictionary*)headerItemsForAllHTTPRequests;
-
-@end
-
-#define kCacheStoreIndexNoFileCache -1

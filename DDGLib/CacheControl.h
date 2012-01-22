@@ -11,20 +11,14 @@
 {
 }
 
-+ (void)setupCaches;
-+ (void)purgeCache:(NSInteger)cacheID flushAll:(BOOL)flushAll;
-+ (void)purgeCaches;
++ (void)addCache:(NSString *)cacheID lifetimeSeconds:(NSInteger)lifetimeSeconds;
++ (void)initializeCaches;
 
-+ (NSString *)cacheName:(NSInteger)cacheID;
-+ (NSInteger)cacheSeconds:(NSInteger)cacheID;
-+ (NSString *)cacheRootPathForStore:(NSUInteger)cacheStore;
-+ (NSString *)cachePathForStore:(NSUInteger)cacheStore name:(NSString*)cacheEntry;
++ (void)purgeCache:(NSString *)cacheID flushAll:(BOOL)flushAll;
++ (void)purgeAllCaches;
 
-@end
-
-@interface CacheControl(Initialize)
-
-+ (NSArray*)userInitializePaths;
-+ (NSArray*)userInitializeDays;
++ (NSInteger)lifetimeSecondsForCache:(NSString *)cacheID;
++ (NSString *)pathForCache:(NSString *)cacheID;
++ (NSString *)pathForCache:(NSString *)cacheID entry:(NSString *)cacheEntry;
 
 @end
