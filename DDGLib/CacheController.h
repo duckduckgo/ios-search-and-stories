@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface CacheControl : NSObject 
+@interface CacheController : NSObject 
 {
 }
 

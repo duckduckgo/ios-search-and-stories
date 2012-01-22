@@ -8,7 +8,7 @@
 
 #import "DDGAppDelegate.h"
 #import "UtilityCHS.h"
-#import "CacheControl.h"
+#import "CacheController.h"
 #import "DataHelper.h"
 
 @implementation DataHelper(Initialize)
@@ -35,10 +35,10 @@
 	[NSURLCache setSharedURLCache:sharedCache];
 	
     // define caches
-    [CacheControl addCache:kCacheIDTransient lifetimeSeconds:0];
-    [CacheControl addCache:kCacheIDImages lifetimeSeconds:60*60*24*31];
+    [CacheController addCache:kCacheIDTransient lifetimeSeconds:0];
+    [CacheController addCache:kCacheIDImages lifetimeSeconds:60*60*24*31];
 	// create cache directories if they don't already exist
-	[CacheControl initializeCaches];
+	[CacheController initializeCaches];
 
     // load default settings from Defaults.plist (as of now, though, we have neither settings nor Defaults.plist)
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "DataHelper.h"
-#import "CacheControl.h"
+#import "CacheController.h"
 #import "DDGSearchProtocol.h"
 
 enum eSearchState

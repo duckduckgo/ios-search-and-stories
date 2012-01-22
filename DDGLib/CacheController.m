@@ -5,10 +5,10 @@
 //  Copyright 2008 © DuckDuckGo, Inc. All rights reserved.
 // 
  
-#import "CacheControl.h"
+#import "CacheController.h"
 #import "NetworkActivityStatus.h" 
 
-@implementation CacheControl
+@implementation CacheController
 
 NSString *cacheBasePath = nil;
 NSMutableDictionary *caches = nil;
@@ -81,7 +81,7 @@ NSMutableDictionary *caches = nil;
 	// purge all the caches except the first one which is always emptied completely
 	for(NSString *cacheID in caches) {
         // if lifetimeSeconds == 0, everything will be flushed anyway, so there's no need to set flushAll here
-        [CacheControl purgeCache:cacheID flushAll:NO];
+        [CacheController purgeCache:cacheID flushAll:NO];
     }
 }
 
@@ -97,7 +97,7 @@ NSMutableDictionary *caches = nil;
 }
 
 + (NSString *)pathForCache:(NSString *)cacheID entry:(NSString*)cacheEntry {
-	return [[CacheControl pathForCache:cacheID] stringByAppendingPathComponent:cacheEntry];
+	return [[CacheController pathForCache:cacheID] stringByAppendingPathComponent:cacheEntry];
 }
 
 @end

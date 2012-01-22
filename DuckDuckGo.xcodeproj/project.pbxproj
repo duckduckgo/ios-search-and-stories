@@ -42,7 +42,7 @@
 		8329AE05149F883300C6ECB2 /* duckPlaceholder314x73.png in Resources */ = {isa = PBXBuildFile; fileRef = 8329AE04149F883300C6ECB2 /* duckPlaceholder314x73.png */; };
 		832F8A5D149FBF4600EAFADB /* duckPlaceholder314x73.psd in Resources */ = {isa = PBXBuildFile; fileRef = 832F8A5C149FBF4600EAFADB /* duckPlaceholder314x73.psd */; };
 		833DB53E1494164F00509F2E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53D1494164F00509F2E /* Foundation.framework */; };
-		833DB5561494168900509F2E /* CacheControl.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB5481494168900509F2E /* CacheControl.h */; };
+		833DB5561494168900509F2E /* CacheController.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB5481494168900509F2E /* CacheController.h */; };
 		833DB5571494168900509F2E /* DataHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB5491494168900509F2E /* DataHelper.h */; };
 		833DB5581494168900509F2E /* Instapaper.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB54A1494168900509F2E /* Instapaper.h */; };
 		833DB55A1494168900509F2E /* NetworkActivityStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB54C1494168900509F2E /* NetworkActivityStatus.h */; };
@@ -50,7 +50,7 @@
 		833DB55C1494168900509F2E /* NSDate-Utilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB54E1494168900509F2E /* NSDate-Utilities.h */; };
 		833DB5621494168900509F2E /* UIImage+ImageUtility.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB5541494168900509F2E /* UIImage+ImageUtility.h */; };
 		833DB5631494168900509F2E /* UtilityCHS.h in Headers */ = {isa = PBXBuildFile; fileRef = 833DB5551494168900509F2E /* UtilityCHS.h */; };
-		833DB56C149416B100509F2E /* CacheControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB564149416B100509F2E /* CacheControl.m */; };
+		833DB56C149416B100509F2E /* CacheController.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB564149416B100509F2E /* CacheController.m */; };
 		833DB56D149416B100509F2E /* DataHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB565149416B100509F2E /* DataHelper.m */; };
 		833DB56E149416B100509F2E /* Instapaper.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB566149416B100509F2E /* Instapaper.m */; };
 		833DB56F149416B100509F2E /* NetworkActivityStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 833DB567149416B100509F2E /* NetworkActivityStatus.m */; };
@@ -141,7 +141,7 @@
 		833DB53B1494164F00509F2E /* libDDGLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDDGLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		833DB53D1494164F00509F2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		833DB5411494164F00509F2E /* DDGLib-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DDGLib-Prefix.pch"; sourceTree = "<group>"; };
-		833DB5481494168900509F2E /* CacheControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheControl.h; sourceTree = "<group>"; };
+		833DB5481494168900509F2E /* CacheController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CacheController.h; sourceTree = "<group>"; };
 		833DB5491494168900509F2E /* DataHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataHelper.h; sourceTree = "<group>"; };
 		833DB54A1494168900509F2E /* Instapaper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Instapaper.h; sourceTree = "<group>"; };
 		833DB54C1494168900509F2E /* NetworkActivityStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkActivityStatus.h; sourceTree = "<group>"; };
@@ -149,7 +149,7 @@
 		833DB54E1494168900509F2E /* NSDate-Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate-Utilities.h"; sourceTree = "<group>"; };
 		833DB5541494168900509F2E /* UIImage+ImageUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageUtility.h"; sourceTree = "<group>"; };
 		833DB5551494168900509F2E /* UtilityCHS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UtilityCHS.h; sourceTree = "<group>"; };
-		833DB564149416B100509F2E /* CacheControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheControl.m; sourceTree = "<group>"; };
+		833DB564149416B100509F2E /* CacheController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CacheController.m; sourceTree = "<group>"; };
 		833DB565149416B100509F2E /* DataHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataHelper.m; sourceTree = "<group>"; };
 		833DB566149416B100509F2E /* Instapaper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Instapaper.m; sourceTree = "<group>"; };
 		833DB567149416B100509F2E /* NetworkActivityStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkActivityStatus.m; sourceTree = "<group>"; };
@@ -302,7 +302,7 @@
 				4C1E3A1D14CB26E500A0E143 /* ASIHTTPRequest */,
 				4C1E3A1B14CB26C600A0E143 /* Reachability */,
 				4C8D7AD714BE7EE100F6E604 /* SBJson */,
-				833DB5481494168900509F2E /* CacheControl.h */,
+				833DB5481494168900509F2E /* CacheController.h */,
 				833DB5491494168900509F2E /* DataHelper.h */,
 				833DB54A1494168900509F2E /* Instapaper.h */,
 				833DB54C1494168900509F2E /* NetworkActivityStatus.h */,
@@ -310,7 +310,7 @@
 				833DB54E1494168900509F2E /* NSDate-Utilities.h */,
 				833DB5541494168900509F2E /* UIImage+ImageUtility.h */,
 				833DB5551494168900509F2E /* UtilityCHS.h */,
-				833DB564149416B100509F2E /* CacheControl.m */,
+				833DB564149416B100509F2E /* CacheController.m */,
 				833DB565149416B100509F2E /* DataHelper.m */,
 				833DB566149416B100509F2E /* Instapaper.m */,
 				833DB567149416B100509F2E /* NetworkActivityStatus.m */,
@@ -445,7 +445,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				833DB5561494168900509F2E /* CacheControl.h in Headers */,
+				833DB5561494168900509F2E /* CacheController.h in Headers */,
 				833DB5571494168900509F2E /* DataHelper.h in Headers */,
 				833DB5581494168900509F2E /* Instapaper.h in Headers */,
 				833DB55A1494168900509F2E /* NetworkActivityStatus.h in Headers */,
@@ -575,7 +575,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				833DB56C149416B100509F2E /* CacheControl.m in Sources */,
+				833DB56C149416B100509F2E /* CacheController.m in Sources */,
 				833DB56D149416B100509F2E /* DataHelper.m in Sources */,
 				833DB56E149416B100509F2E /* Instapaper.m in Sources */,
 				833DB56F149416B100509F2E /* NetworkActivityStatus.m in Sources */,

@@ -6,7 +6,7 @@
 //
 
 #import "DataHelper.h"
-#include "CacheControl.h"
+#include "CacheController.h"
 
 #pragma mark Private implementation definition
 
@@ -75,10 +75,10 @@ NSDictionary *HTTPHeaders = nil;
 	if ([cacheID isEqualToString:kCacheIDNoFileCache])
 		// no cache case -- always GET
 		;
-	else if ([CacheControl lifetimeSecondsForCache:cacheID] || !urlOrRequest)
+	else if ([CacheController lifetimeSecondsForCache:cacheID] || !urlOrRequest)
 	{
 		// if this isn't a transient file, look at the cache store first
-		NSString *cacheFilePath = [CacheControl pathForCache:cacheID entry:name];
+		NSString *cacheFilePath = [CacheController pathForCache:cacheID entry:name];
 		
 		// see if the file is already in the cache
 		if ([[NSFileManager defaultManager] fileExistsAtPath:cacheFilePath])
@@ -280,7 +280,7 @@ NSDictionary *HTTPHeaders = nil;
 		}
 		else
 		{
-			NSString *cacheFileName = [CacheControl pathForCache:cache entry:name];
+			NSString *cacheFileName = [CacheController pathForCache:cache entry:name];
 		
 			[receivedData writeToFile:cacheFileName atomically:YES];
 
