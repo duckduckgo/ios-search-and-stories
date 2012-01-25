@@ -62,6 +62,12 @@ NSDictionary *HTTPHeaders = nil;
     return self;
 }
 
+- (void)dealloc
+{
+    // close any open connections; everything else takes care of itself.
+	[self flushAllIO];
+}
+
 #pragma mark Handling data requests
 
 
@@ -110,39 +116,13 @@ NSDictionary *HTTPHeaders = nil;
 
 #pragma mark IO management
 
-// methods to manually cleanup stuff
+//// methods to manually clean up stuff
 -(void)flushAllIO
 {
 	NSSet *snapshot = (NSSet*)[connections allObjects];
 	// manually flush all standing IO
 	for (FileFetch *outstanding in snapshot)
 		[outstanding cleanup];
-}
-
-// TODO: [ishaan] is this method ever used anywhere?
--(void)flushIOWithIdentifier:(NSInteger)ID
-{
-	NSSet *snapshot = (NSSet*)[connections allObjects];
-	// manually flush specific IO
-	for (FileFetch *outstanding in snapshot)
-		if (outstanding.identifier == ID)
-		{
-			// this assumes only one marked with that ID
-			[outstanding cleanup];
-			break;
-		}
-}
-
-// TODO: [ishaan] is this method ever used anywhere?
--(BOOL)isIdentifierPendingIO:(NSInteger)ID
-{
-	NSSet *snapshot = (NSSet*)[connections allObjects];
-	// manually flush specific IO
-	for (FileFetch *outstanding in snapshot)
-		if (outstanding.identifier == ID)
-			return YES;
-
-	return NO;
 }
 
 - (BOOL)isRequestOutstandingForCache:(NSString *)cacheID name:(NSString*)name identifier:(NSInteger)ID
@@ -153,13 +133,6 @@ NSDictionary *HTTPHeaders = nil;
 			return YES;
 	
 	return NO;
-}
-
-
-- (void)dealloc
-{
-    // close any open connections; everything else takes care of itself.
-	[self flushAllIO];
 }
 
 @end

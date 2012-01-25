@@ -34,8 +34,6 @@
 -(NSData*)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)name returnData:(BOOL)returnData identifier:(NSInteger)ID bufferSize:(NSUInteger)capacity;
 
 -(void)flushAllIO;
--(void)flushIOWithIdentifier:(NSInteger)ID;
--(BOOL)isIdentifierPendingIO:(NSInteger)ID;
 -(BOOL)isRequestOutstandingForCache:(NSString *)cacheID name:(NSString*)name identifier:(NSInteger)ID;
 
 @end
