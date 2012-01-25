@@ -11,18 +11,6 @@
 #import "CacheController.h"
 #import "DataHelper.h"
 
-@implementation DataHelper(Initialize)
-
-+ (NSDictionary*)headerItemsForAllHTTPRequests
-{
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-			 [@"DDG iOS App v" stringByAppendingString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]], @"User-Agent", 
-			 @"http://duckduckgo.com", @"Referer",
-			 nil];
-}
-
-@end
-
 @implementation DDGAppDelegate
 
 @synthesize window = _window;
@@ -40,6 +28,13 @@
 	// create cache directories if they don't already exist
 	[CacheController initializeCaches];
 
+    // set HTTP headers for all requests
+    [DataHelper setHTTPHeaders:[NSDictionary dictionaryWithObjectsAndKeys:
+                                [@"DDG iOS App v" stringByAppendingString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]], @"User-Agent", 
+                                @"http://duckduckgo.com", @"Referer",
+                                nil]];
+    
+    
     // load default settings from Defaults.plist (as of now, though, we have neither settings nor Defaults.plist)
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
 	NSDictionary *defaults = [NSDictionary dictionaryWithContentsOfFile:bundlePath];

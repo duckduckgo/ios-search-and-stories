@@ -29,12 +29,12 @@
 }
 
 +(void)setHTTPHeaders:(NSDictionary *)headers;
-- (id)initWithDelegate:(id<DataHelperDelegate>)delegate;
+-(id)initWithDelegate:(id<DataHelperDelegate>)delegate;
 
-- (NSData*)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)name returnData:(BOOL)returnData identifier:(NSInteger)ID bufferSize:(NSUInteger)capacity;
+-(NSData*)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)name returnData:(BOOL)returnData identifier:(NSInteger)ID bufferSize:(NSUInteger)capacity;
 
 -(void)flushAllIO;
--(void)flushIdentifierIO:(NSInteger)ID;
+-(void)flushIOWithIdentifier:(NSInteger)ID;
 -(BOOL)isIdentifierPendingIO:(NSInteger)ID;
 -(BOOL)isRequestOutstandingForCache:(NSString *)cacheID name:(NSString*)name identifier:(NSInteger)ID;
 

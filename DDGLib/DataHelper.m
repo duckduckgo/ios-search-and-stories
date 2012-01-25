@@ -8,7 +8,7 @@
 #import "DataHelper.h"
 #include "CacheController.h"
 
-#pragma mark Private implementation definition
+#pragma mark - Private FileFetch interface
 
 @interface FileFetch : NSObject 
 {
@@ -28,23 +28,19 @@
 @property (nonatomic, strong) NSString *name;
 @property (nonatomic, assign) NSInteger identifier;
 
-- (id)initWithDelegate:(id<DataHelperDelegate>)delegate andControlSet:(id)control bufferSize:(NSUInteger)capacity;
-
-- (id)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)theName identifier:(NSInteger)ID;
-
+-(id)initWithDelegate:(id<DataHelperDelegate>)delegate andControlSet:(id)control bufferSize:(NSUInteger)capacity;
+-(id)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)theName identifier:(NSInteger)ID;
 -(void)cleanup;
 
 @end
 
-#pragma mark -
-#pragma mark Public implementation of the Data Helper class
+#pragma mark - Data Helper
 
 @implementation DataHelper
 
 NSDictionary *HTTPHeaders = nil;
 
-#pragma mark -
-#pragma mark Cache control class methods
+#pragma mark Class management
 
 + (void)initialize
 {
@@ -66,8 +62,13 @@ NSDictionary *HTTPHeaders = nil;
     return self;
 }
 
+#pragma mark Handling data requests
+
+
+// TODO: [ishaan] see if this can be modified to use blocks
 - (NSData*)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)name returnData:(BOOL)returnData identifier:(NSInteger)ID  bufferSize:(NSUInteger)capacity
 {
+    NSLog(@"retrieve: called");
 	// ignore any redundant requests for the same items
 	if ([self isRequestOutstandingForCache:cacheID name:name identifier:ID])
 		return nil;
@@ -77,7 +78,9 @@ NSDictionary *HTTPHeaders = nil;
 		;
 	else if ([CacheController lifetimeSecondsForCache:cacheID] || !urlOrRequest)
 	{
-		// if this isn't a transient file, look at the cache store first
+        //TODO: [ishaan] see if the actual file access should be moved into CacheController
+		
+        // if this isn't a transient file, look at the cache store first
 		NSString *cacheFilePath = [CacheController pathForCache:cacheID entry:name];
 		
 		// see if the file is already in the cache
@@ -95,17 +98,17 @@ NSDictionary *HTTPHeaders = nil;
 	
 	// create a file fetch object
 	FileFetch *fetchItem = [[FileFetch alloc] initWithDelegate:delegate andControlSet:connections bufferSize:capacity];
-	
 	if (fetchItem)
 	{
 		// remember this outstanding request
 		[connections addObject:fetchItem];
-		
 		// and make the request
 		[fetchItem retrieve:urlOrRequest cache:cacheID name:name identifier:ID];
 	}
 	return nil;
 }
+
+#pragma mark IO management
 
 // methods to manually cleanup stuff
 -(void)flushAllIO
@@ -116,7 +119,8 @@ NSDictionary *HTTPHeaders = nil;
 		[outstanding cleanup];
 }
 
--(void)flushIdentifierIO:(NSInteger)ID
+// TODO: [ishaan] is this method ever used anywhere?
+-(void)flushIOWithIdentifier:(NSInteger)ID
 {
 	NSSet *snapshot = (NSSet*)[connections allObjects];
 	// manually flush specific IO
@@ -129,6 +133,7 @@ NSDictionary *HTTPHeaders = nil;
 		}
 }
 
+// TODO: [ishaan] is this method ever used anywhere?
 -(BOOL)isIdentifierPendingIO:(NSInteger)ID
 {
 	NSSet *snapshot = (NSSet*)[connections allObjects];
@@ -159,8 +164,7 @@ NSDictionary *HTTPHeaders = nil;
 
 @end
 
-#pragma mark -
-#pragma mark Private implementation of the File Fetch object
+#pragma mark - FileFetch
 
 @implementation FileFetch
 
@@ -227,8 +231,7 @@ NSDictionary *HTTPHeaders = nil;
 	[controlSet removeObject:self];
 }
 
-#pragma mark -
-#pragma mark Private NSURLConnection delegate protocol callbacks
+#pragma mark NSURLConnection delegate methods
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSHTTPURLResponse *)response
 {
