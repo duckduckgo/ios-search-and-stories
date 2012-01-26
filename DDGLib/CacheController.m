@@ -8,6 +8,13 @@
 #import "CacheController.h"
 #import "NetworkActivityStatus.h" 
 
+@interface CacheController (PrivateMethods)
+
++(NSString *)pathForCache:(NSString *)cacheID;
++(NSString *)pathForCache:(NSString *)cacheID entry:(NSString *)cacheEntry;
+
+@end
+
 @implementation CacheController
 
 NSString *cacheBasePath = nil;
@@ -96,8 +103,27 @@ NSMutableDictionary *caches = nil;
 	return [cacheBasePath stringByAppendingPathComponent:cacheID];
 }
 
-+ (NSString *)pathForCache:(NSString *)cacheID entry:(NSString*)cacheEntry {
++ (NSString *)pathForCache:(NSString *)cacheID entry:(NSString *)cacheEntry {
 	return [[CacheController pathForCache:cacheID] stringByAppendingPathComponent:cacheEntry];
+}
+
++(BOOL)entryExistsForCache:(NSString *)cacheID entry:(NSString *)cacheEntry {
+    NSString *path = [self pathForCache:cacheID entry:cacheEntry];
+    return [[NSFileManager defaultManager] fileExistsAtPath:path];
+}
+
++(NSData *)dataForCache:(NSString *)cacheID entry:(NSString *)cacheEntry {
+    NSString *path = [self pathForCache:cacheID entry:cacheEntry];
+
+    if ([self entryExistsForCache:cacheID entry:cacheEntry])
+        return [NSData dataWithContentsOfFile:path];
+    else
+        return nil;
+}
+
++(BOOL)writeData:(NSData *)data toCache:(NSString *)cacheID entry:(NSString *)cacheEntry {
+    NSString *path = [self pathForCache:cacheID entry:cacheEntry];
+    return [data writeToFile:path atomically:YES];
 }
 
 @end

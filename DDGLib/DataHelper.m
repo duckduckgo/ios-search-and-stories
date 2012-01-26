@@ -83,26 +83,21 @@ NSDictionary *HTTPHeaders = nil;
 		// no cache case -- always GET
 		;
 	else if ([CacheController lifetimeSecondsForCache:cacheID] || !urlOrRequest)
-	{
-        //TODO: [ishaan] see if the actual file access should be moved into CacheController
-		
-        // if this isn't a transient file, look at the cache store first
-		NSString *cacheFilePath = [CacheController pathForCache:cacheID entry:name];
-		
-		// see if the file is already in the cache
-		if ([[NSFileManager defaultManager] fileExistsAtPath:cacheFilePath])
-		{
-			if (returnData)
-				// yup - go fetch the data
-				return [NSData dataWithContentsOfFile:cacheFilePath];
-			else
-				return nil;
-		}
-		else if (!urlOrRequest)
-			return nil;
+	{		
+        if([CacheController entryExistsForCache:cacheID entry:name]) {
+            if(returnData)
+                return [CacheController dataForCache:cacheID entry:name];
+            else
+                return nil;
+        }
+        
+        if(!urlOrRequest) {
+            // we weren't given any resource URL to fall back on, so we can't attempt to fetch the file.
+            return nil;
+        }
 	}
 	
-	// create a file fetch object
+	// attempt to actually fetch the file here
 	FileFetch *fetchItem = [[FileFetch alloc] initWithDelegate:delegate andControlSet:connections bufferSize:capacity];
 	if (fetchItem)
 	{
@@ -256,9 +251,7 @@ NSDictionary *HTTPHeaders = nil;
 		}
 		else
 		{
-			NSString *cacheFileName = [CacheController pathForCache:cache entry:name];
-		
-			[receivedData writeToFile:cacheFileName atomically:YES];
+            [CacheController writeData:receivedData toCache:cache entry:name];
 
 			// let our delegate know that data has been received
 			[delegate dataReceived:identifier withStatus:statusCode];

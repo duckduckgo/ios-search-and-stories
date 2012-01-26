@@ -17,8 +17,11 @@
 + (void)purgeCache:(NSString *)cacheID flushAll:(BOOL)flushAll;
 + (void)purgeAllCaches;
 
+// accessing cache properties
 + (NSInteger)lifetimeSecondsForCache:(NSString *)cacheID;
-+ (NSString *)pathForCache:(NSString *)cacheID;
-+ (NSString *)pathForCache:(NSString *)cacheID entry:(NSString *)cacheEntry;
++ (BOOL)entryExistsForCache:(NSString *)cacheID entry:(NSString *)cacheEntry;
+
++(NSData *)dataForCache:(NSString *)cacheID entry:(NSString *)cacheEntry;
++(BOOL)writeData:(NSData *)data toCache:(NSString *)cacheID entry:(NSString *)cacheEntry;
 
 @end
