@@ -160,7 +160,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 {
 	[search resignFirstResponder];
 	
-	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:ksDDGSearchControllerActionHome, ksDDGSearchControllerAction, nil]];
+	[searchHandler loadHome];
 }
 
 - (void)switchModeTo:(enum eSearchState)searchState
@@ -318,7 +318,7 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 	[textField resignFirstResponder];
 	[self autoCompleteReveal:NO];
 	
-	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:ksDDGSearchControllerActionWeb, ksDDGSearchControllerAction, [search.text length] ? search.text : nil, ksDDGSearchControllerSearchTerm, nil]];
+	[searchHandler loadQuery:([search.text length] ? search.text : nil)];
 	
 	return YES;
 }
@@ -392,11 +392,8 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 	
 	[search resignFirstResponder];
 	[self autoCompleteReveal:NO];
-	
-	[searchHandler actionTaken:[NSDictionary dictionaryWithObjectsAndKeys:
-								ksDDGSearchControllerActionWeb, ksDDGSearchControllerAction,
-								[item objectForKey:ksDDGSearchControllerServerKeyPhrase], ksDDGSearchControllerSearchTerm,
-								nil]];
+    
+    [searchHandler loadQuery:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
 }
 
 #pragma mark - DataHelper delegate

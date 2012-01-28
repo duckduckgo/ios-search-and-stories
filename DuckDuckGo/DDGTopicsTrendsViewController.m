@@ -106,7 +106,7 @@ static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 
 - (IBAction)done:(id)sender
 {
-	[self.navigationController popViewControllerAnimated:YES];
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (IBAction)topicChosen:(id)sender

@@ -10,18 +10,23 @@
 
 #import "DDGSearchController.h"
 
-@interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchProtocol>
+@interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler>
 {
-	IBOutlet UIWebView				*www;
-	IBOutlet DDGSearchController	*searchController;
+	IBOutlet UIWebView *webView;
+	IBOutlet DDGSearchController *searchController;
     
-    NSDictionary					*params;
-	NSInteger						callDepth;
+    NSDictionary *params;
+	NSInteger callDepth;
+    
+    NSString *webQuery;
+    NSString *webURL;
 }
 
-@property (nonatomic, strong) IBOutlet UIWebView			*www;
+@property (nonatomic, strong) IBOutlet UIWebView			*webView;
 @property (nonatomic, strong) IBOutlet DDGSearchController	*searchController;
 
 @property (nonatomic, strong) NSDictionary					*params;
+
+-(void)loadURL:(NSString *)url;
 
 @end

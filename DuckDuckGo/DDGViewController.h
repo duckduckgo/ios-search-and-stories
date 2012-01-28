@@ -11,7 +11,7 @@
 #import "DDGSearchController.h"
 #import "DataHelper.h"
 
-@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchProtocol, DataHelperDelegate>
+@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, DataHelperDelegate>
 {
 	IBOutlet UITableViewCell *loadedCell;
 	IBOutlet UITableView *tableView;
@@ -19,6 +19,9 @@
 	
 	id entries;
 	DataHelper *dataHelper;
+
+    NSString *webQuery;
+    NSString *webURL;
 }
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
@@ -26,8 +29,6 @@
 @property (nonatomic, strong) IBOutlet DDGSearchController *searchController;
 
 @property (nonatomic, strong) id entries;
-
-- (IBAction)customize:(id)sender;
 
 - (void)loadEntries;
 - (UIImage*)loadImage:(NSString*)url;

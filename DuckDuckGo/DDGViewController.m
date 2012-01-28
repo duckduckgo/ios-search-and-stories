@@ -55,6 +55,8 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    searchController.search.text = @""; // reset omnibar text
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -82,36 +84,26 @@
 	return YES;
 }
 
-#pragma mark - user actions
+#pragma mark - Search handler
 
-- (IBAction)customize:(id)sender
-{
-	DDGTopicsTrendsViewController *ttp = [self.storyboard instantiateViewControllerWithIdentifier:@"TopicsTrendsPick"];
-	
-	
-	[self.navigationController pushViewController:ttp animated:YES];
+- (void)loadQuery:(NSString *)query {
+    webQuery = query;
+    webURL = nil;
+    [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
+// i'll put this here for now because it's closely related to loadSearch:
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 
-#pragma mark - search handler action happening
+    if([segue.identifier isEqualToString:@"WebViewSegue"])
+        if(webQuery)
+            [segue.destinationViewController loadQuery:webQuery];
+        else if(webURL)
+            [segue.destinationViewController loadURL:webURL];
+}
 
-- (void)actionTaken:(NSDictionary*)action
-{
-	if ([[action objectForKey:ksDDGSearchControllerAction] isEqualToString:ksDDGSearchControllerActionWeb] && [action objectForKey:ksDDGSearchControllerSearchTerm])
-	{
-        DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
-        
-        NSString *urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [action objectForKey:ksDDGSearchControllerSearchTerm]];
-        
-        urlString = [UtilityCHS fixupURL:urlString];
-        
-        wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
-					  [action objectForKey:ksDDGSearchControllerSearchTerm], ksDDGSearchControllerSearchTerm,
-					  [NSURL URLWithString:urlString], ksDDGSearchControllerSearchURL, 
-					  nil];
-        
-        [self.navigationController pushViewController:wvc animated:YES];
-	}
+-(void)loadHome {
+    // this is home; don't do anything.
 }
 
 #pragma  mark - UITableViewDataSource
@@ -176,22 +168,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
-	
-	NSString *urlString = [entry objectForKey:@"link"];
-	
-	if (urlString)
-	{
-		DDGWebViewController *wvc = [self.storyboard instantiateViewControllerWithIdentifier:@"WebView"];
-		
-		urlString = [UtilityCHS fixupURL:urlString];
-		
-		wvc.params = [NSDictionary dictionaryWithObjectsAndKeys:
-					  [NSURL URLWithString:urlString], @"homeScreenLink", 
-					  nil];
-		
-		[self.navigationController pushViewController:wvc animated:YES];
-	}
+    webQuery = nil;
+    webURL = [[entries objectAtIndex:indexPath.row] objectForKey:@"link"];
+    [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
 #pragma - load up entries for  home screen

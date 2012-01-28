@@ -10,7 +10,7 @@
 
 #import "DataHelper.h"
 #import "CacheController.h"
-#import "DDGSearchProtocol.h"
+#import "DDGSearchHandler.h"
 
 enum eSearchState
 {
@@ -30,7 +30,7 @@ enum eSearchState
 	enum eSearchState			state;
 	CGRect						kbRect;
 	
-	id<DDGSearchProtocol>		__unsafe_unretained searchHandler;
+	id<DDGSearchHandler>		__unsafe_unretained searchHandler;
 	
 	NSMutableURLRequest			*serverRequest;
 
@@ -48,7 +48,7 @@ enum eSearchState
 
 @property (nonatomic, assign) enum eSearchState			state;
 
-@property (nonatomic, unsafe_unretained) id<DDGSearchProtocol>		searchHandler;
+@property (nonatomic, unsafe_unretained) id<DDGSearchHandler>		searchHandler;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 
