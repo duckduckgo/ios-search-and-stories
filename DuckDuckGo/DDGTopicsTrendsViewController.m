@@ -6,7 +6,7 @@
 //  Copyright (c) 2011 DuckDuckGo, Inc. All rights reserved.
 //
 
-#import "DDGTopicsTrendsPick.h"
+#import "DDGTopicsTrendsViewController.h"
 #import "DDGWebViewController.h"
 #import "UtilityCHS.h"
 #import "SBJson.h"
@@ -15,7 +15,7 @@
 
 static NSString *TopicsTrendsPickCellIdentifier = @"TopicsTrendsPickCell";
 
-@implementation DDGTopicsTrendsPick
+@implementation DDGTopicsTrendsViewController
 
 @synthesize loadedCell;
 @synthesize tableView;

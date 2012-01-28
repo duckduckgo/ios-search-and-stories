@@ -61,7 +61,7 @@
 		834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */; };
 		834E4FF6149417EC00EABD6E /* libDDGLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53B1494164F00509F2E /* libDDGLib.a */; };
 		834E5002149418D400EABD6E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834E5001149418D400EABD6E /* Twitter.framework */; };
-		838195D614A0CCDF001C5EBC /* DDGTopicsTrendsPick.m in Sources */ = {isa = PBXBuildFile; fileRef = 838195D514A0CCDF001C5EBC /* DDGTopicsTrendsPick.m */; };
+		838195D614A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 838195D514A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m */; };
 		838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9063149A75D700C11E41 /* DDGSearchController.xib */; };
 		838E9065149A763200C11E41 /* CurrentTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9067149A763200C11E41 /* CurrentTopicCell.xib */; };
 		838E906A149A76D400C11E41 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838E906C149A76D400C11E41 /* Localizable.strings */; };
@@ -157,8 +157,8 @@
 		834CD86714A0F9D7006240F1 /* doneButton51x31.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = doneButton51x31.png; sourceTree = "<group>"; };
 		834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		834E5001149418D400EABD6E /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
-		838195D414A0CCDF001C5EBC /* DDGTopicsTrendsPick.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTopicsTrendsPick.h; sourceTree = "<group>"; };
-		838195D514A0CCDF001C5EBC /* DDGTopicsTrendsPick.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTopicsTrendsPick.m; sourceTree = "<group>"; };
+		838195D414A0CCDF001C5EBC /* DDGTopicsTrendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; path = DDGTopicsTrendsViewController.h; sourceTree = "<group>"; };
+		838195D514A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTopicsTrendsViewController.m; sourceTree = "<group>"; };
 		838E9062149A75D700C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DDGSearchController.xib; sourceTree = "<group>"; };
 		838E9066149A763200C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CurrentTopicCell.xib; sourceTree = "<group>"; };
 		838E906B149A76D400C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -355,8 +355,8 @@
 				83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */,
 				83F32274149290EF00A61BC5 /* DDGViewController.h */,
 				83F32275149290EF00A61BC5 /* DDGViewController.m */,
-				838195D414A0CCDF001C5EBC /* DDGTopicsTrendsPick.h */,
-				838195D514A0CCDF001C5EBC /* DDGTopicsTrendsPick.m */,
+				838195D414A0CCDF001C5EBC /* DDGTopicsTrendsViewController.h */,
+				838195D514A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				839819441493D2290017A892 /* DDGSearchProtocol.h */,
@@ -578,7 +578,7 @@
 				83F32276149290EF00A61BC5 /* DDGViewController.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
-				838195D614A0CCDF001C5EBC /* DDGTopicsTrendsPick.m in Sources */,
+				838195D614A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m in Sources */,
 				839CB4B014AA37500054297C /* DDGSearchSuggestionCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

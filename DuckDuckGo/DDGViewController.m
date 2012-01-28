@@ -8,7 +8,7 @@
 
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
-#import "DDGTopicsTrendsPick.h"
+#import "DDGTopicsTrendsViewController.h"
 #import "UtilityCHS.h"
 #import "SBJson.h"
 
@@ -86,7 +86,7 @@
 
 - (IBAction)customize:(id)sender
 {
-	DDGTopicsTrendsPick *ttp = [self.storyboard instantiateViewControllerWithIdentifier:@"TopicsTrendsPick"];
+	DDGTopicsTrendsViewController *ttp = [self.storyboard instantiateViewControllerWithIdentifier:@"TopicsTrendsPick"];
 	
 	
 	[self.navigationController pushViewController:ttp animated:YES];

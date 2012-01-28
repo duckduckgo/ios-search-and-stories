@@ -10,7 +10,7 @@
 
 #import "DataHelper.h"
 
-@interface DDGTopicsTrendsPick : UIViewController<UITableViewDataSource, UITableViewDelegate, DataHelperDelegate>
+@interface DDGTopicsTrendsViewController : UIViewController<UITableViewDataSource, UITableViewDelegate, DataHelperDelegate>
 {
 	IBOutlet UITableViewCell		*loadedCell;
 	IBOutlet UITableView			*tableView;
