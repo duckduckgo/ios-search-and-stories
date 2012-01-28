@@ -74,7 +74,6 @@ NSDictionary *HTTPHeaders = nil;
 // TODO: [ishaan] see if this can be modified to use blocks
 - (NSData*)retrieve:(id)urlOrRequest cache:(NSString *)cacheID name:(NSString*)name returnData:(BOOL)returnData identifier:(NSInteger)ID  bufferSize:(NSUInteger)capacity
 {
-    NSLog(@"retrieve: called");
 	// ignore any redundant requests for the same items
 	if ([self isRequestOutstandingForCache:cacheID name:name identifier:ID])
 		return nil;
