@@ -10,7 +10,7 @@
 #import "SBJson.h"
 #import "DDGSearchSuggestionCache.h"
 
-static NSString *const sBaseSuggestionServerURL = @"http://va-l3.duckduckgo.com:6767/face/suggest/?q=";
+static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
 static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 
 @implementation DDGSearchController
@@ -163,10 +163,6 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 }
 
 #pragma  mark - Handle the text field input
-
-//
-// SAMPLE URL -- http://va-l3.duckduckgo.com:6767/face/suggest/?q=
-//
 
 - (NSArray*)currentResultForItem:(NSUInteger)item
 {
