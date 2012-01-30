@@ -41,13 +41,16 @@
 }
 */
 
-/**/
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	
+    // TODO (caine): do these belong here?
+    // scalesPageToFit seems like it could be in a better place!
 	www.delegate = self;
+    www.scalesPageToFit = YES;
+
 	callDepth = 0;
 
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
@@ -61,7 +64,7 @@
         url = [params objectForKey:@"homeScreenLink"];
 	
 	if (!url)
-		url = [NSURL URLWithString:@"https://duckduckgo.com/?ko=-1"];
+		url = [NSURL URLWithString:@"https://duckduckgo.com/"];
 	
 	[www loadRequest:[NSURLRequest requestWithURL:url]];
 }
@@ -97,7 +100,10 @@
 {
 	if ([[action objectForKey:ksDDGSearchControllerAction] isEqualToString:ksDDGSearchControllerActionHome])
 	{
-		[self.navigationController popViewControllerAnimated:YES];
+        if (www.canGoBack)
+            [www goBack];
+        else
+            [self.navigationController popViewControllerAnimated:YES];
 	}
 	else if ([[action objectForKey:ksDDGSearchControllerAction] isEqualToString:ksDDGSearchControllerActionWeb] && [action objectForKey:ksDDGSearchControllerSearchTerm])
 	{
