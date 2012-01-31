@@ -35,7 +35,6 @@ enum eSearchState
 	NSMutableURLRequest			*serverRequest;
 
 	DataHelper					*dataHelper;
-	NSTimer						*probeTimer;
 }
 
 @property (nonatomic, strong) NSMutableURLRequest			*serverRequest;

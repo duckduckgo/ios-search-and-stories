@@ -41,22 +41,22 @@
 }
 */
 
-/**/
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	
+
 	webView.delegate = self;
+	webView.scalesPageToFit = YES;
 	callDepth = 0;
 
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
     searchController.state = eViewStateWebResults;
 	searchController.search.text = webQuery;
-    [searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
+	[searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
 
-    [self loadURL:webURL];
+	[self loadURL:webURL];
 }
 
 - (void)dealloc
@@ -86,7 +86,10 @@
 #pragma mark - Search handler
 
 -(void)loadHome {
-    [self.navigationController popViewControllerAnimated:NO];
+	if(webView.canGoBack)
+		[webView goBack];
+	else
+	    [self.navigationController popViewControllerAnimated:NO];
 }
 
 -(void)loadQuery:(NSString *)query {

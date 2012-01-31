@@ -10,11 +10,8 @@
 #import "SBJson.h"
 #import "DDGSearchSuggestionCache.h"
 
-static NSString *const sBaseSuggestionServerURL = @"http://va-l3.duckduckgo.com:6767/face/suggest/?q=";
-
+static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
 static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
-static NSUInteger kSuggestionServerProbeResponseBufferCapacity = 32;
-static NSTimeInterval kProbeIntervalTime = 3.0;
 
 @implementation DDGSearchController
 
@@ -49,15 +46,12 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 		dataHelper = [[DataHelper alloc] initWithDelegate:self];
 		
 		search.placeholder = NSLocalizedString (@"SearchPlaceholder", nil);
-		
-		probeTimer = [NSTimer scheduledTimerWithTimeInterval:0.0 target:self selector:@selector(probeTime:) userInfo:nil repeats:YES];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
-	[probeTimer invalidate];
 	self.serverRequest = nil;
 	
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -170,19 +164,6 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
 
 #pragma  mark - Handle the text field input
 
-- (void)probeTime:(NSTimer*)timer
-{
-	// prime the pump to start up a connection
-	serverRequest.URL = [NSURL URLWithString:sBaseSuggestionServerURL];
-	[dataHelper retrieve:serverRequest cache:kCacheIDNoFileCache name:nil returnData:NO identifier:666  bufferSize:kSuggestionServerProbeResponseBufferCapacity];
-	
-	[timer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
-}
-
-//
-// SAMPLE URL -- http://va-l3.duckduckgo.com:6767/face/suggest/?q=
-//
-
 - (NSArray*)currentResultForItem:(NSUInteger)item
 {
 	return [[DDGSearchSuggestionCache sharedInstance].serverCache objectForKey:[NSNumber numberWithUnsignedInteger:item]];
@@ -246,9 +227,6 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
                   identifier:1000+[searchStringWillBecome length] 
                   bufferSize:kSuggestionServerResponseBufferCapacity];
 		
-		// don't need to probe for a while
-		[probeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
-		
 		NSLog (@"URL: %@", surl);
 	}
 	else if (!lengthLeft)
@@ -289,9 +267,6 @@ static NSTimeInterval kProbeIntervalTime = 3.0;
                   returnData:NO 
                   identifier:1000+[textField.text length] 
                   bufferSize:kSuggestionServerResponseBufferCapacity];
-		
-		// don't need to probe for a while
-		[probeTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:kProbeIntervalTime]];
 		
 		NSLog (@"URL: %@", surl);
 	}

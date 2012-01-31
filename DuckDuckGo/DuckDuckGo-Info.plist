@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>DDG 5.0</string>
+	<string>prototype</string>
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
@@ -45,7 +45,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2011-2012 DuckDuckGo, Inc. All Rights Reserved.</string>
+	<string>© 2012 DuckDuckGo, Inc. All Rights Reserved.</string>
 	<key>UIMainStoryboardFile</key>
 	<string>iPhone</string>
 	<key>UIMainStoryboardFile~ipad</key>
