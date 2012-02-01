@@ -116,13 +116,16 @@
 	return YES;
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView
+- (void)webViewDidStartLoad:(UIWebView *)theWebView
 {
 	if (++callDepth == 1)
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+
+    if(theWebView.request.URL)
+        [searchController updateBarWithURL:theWebView.request.URL];
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
+- (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {
 	if (--callDepth <= 0)
 	{

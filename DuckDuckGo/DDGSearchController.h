@@ -58,6 +58,8 @@ enum eSearchState
 - (NSArray*)currentResultForItem:(NSUInteger)item;
 - (void)cacheCurrentResult:(NSArray*)result forItem:(NSUInteger)item;
 
+-(void)updateBarWithURL:(NSURL *)url;
+
 @end
 
 UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeySnippet; 

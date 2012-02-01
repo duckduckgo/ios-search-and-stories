@@ -162,6 +162,30 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 	state = searchState;
 }
 
+-(void)updateBarWithURL:(NSURL *)url {
+    
+    // parse URL query components
+    NSArray *queryComponentsArray = [[url query] componentsSeparatedByString:@"&"];
+    NSMutableDictionary *queryComponents = [[NSMutableDictionary alloc] init];
+    for(NSString *queryComponent in queryComponentsArray) {
+        NSArray *parameter = [queryComponent componentsSeparatedByString:@"="];
+        [queryComponents setObject:[parameter objectAtIndex:1] forKey:[parameter objectAtIndex:0]];
+    }
+
+    // check whether we have a DDG search URL
+    if([[url host] isEqualToString:@"duckduckgo.com"] && [[url path] isEqualToString:@"/"] && [queryComponents objectForKey:@"q"]) {
+        // yep! extract the search query...
+        NSString *query = [queryComponents objectForKey:@"q"];
+        query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
+        query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        
+        search.text = query;
+    } else {
+        // no, just a plain old URL.
+        search.text = [url absoluteString];
+    }
+}
+
 #pragma  mark - Handle the text field input
 
 - (NSArray*)currentResultForItem:(NSUInteger)item

@@ -22,10 +22,10 @@
     NSString *webURL;
 }
 
-@property (nonatomic, strong) IBOutlet UIWebView			*webView;
-@property (nonatomic, strong) IBOutlet DDGSearchController	*searchController;
+@property (nonatomic, strong) IBOutlet UIWebView *webView;
+@property (nonatomic, strong) IBOutlet DDGSearchController *searchController;
 
-@property (nonatomic, strong) NSDictionary					*params;
+@property (nonatomic, strong) NSDictionary *params;
 
 -(void)loadURL:(NSString *)url;
 
