@@ -60,14 +60,6 @@ enum eSearchState
 
 @end
 
-
-UIKIT_EXTERN NSString *const ksDDGSearchControllerAction; 
-UIKIT_EXTERN NSString *const ksDDGSearchControllerActionHome; 
-UIKIT_EXTERN NSString *const ksDDGSearchControllerActionWeb; 
-
-UIKIT_EXTERN NSString *const ksDDGSearchControllerSearchTerm; 
-UIKIT_EXTERN NSString *const ksDDGSearchControllerSearchURL; 
-
 UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeySnippet; 
 UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyPhrase; 
 UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyImage; 

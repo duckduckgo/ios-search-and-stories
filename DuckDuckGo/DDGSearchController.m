@@ -400,13 +400,6 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 
 @end
 
-NSString *const ksDDGSearchControllerAction = @"action"; 
-NSString *const ksDDGSearchControllerActionHome = @"home"; 
-NSString *const ksDDGSearchControllerActionWeb = @"web"; 
-
-NSString *const ksDDGSearchControllerSearchTerm = @"searchTerm"; 
-NSString *const ksDDGSearchControllerSearchURL = @"url"; 
-
 NSString *const ksDDGSearchControllerServerKeySnippet = @"snippet"; 
 NSString *const ksDDGSearchControllerServerKeyPhrase = @"phrase"; 
 NSString *const ksDDGSearchControllerServerKeyImage = @"image"; 
