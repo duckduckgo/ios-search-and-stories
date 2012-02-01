@@ -200,26 +200,26 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-	NSUInteger lengthLeft = [textField.text length] - range.length + [string length];
+	NSUInteger newLength = [textField.text length] - range.length + [string length];
 	
-	if (!lengthLeft)
+	if (!newLength)
 		// going to NO characters
 		[self autoCompleteReveal:NO];
-	else if (![textField.text length] && lengthLeft)
+	else if (![textField.text length] && newLength)
 	{
 		// going from NO characters to something
 		[self autoCompleteReveal:YES];
 	}
 	
-	if (lengthLeft && lengthLeft < [textField.text length])
+	if (newLength && newLength < [textField.text length])
 	{
 		// destroying characters
 		// this means we use a cached result
-		if (lengthLeft < [[DDGSearchSuggestionCache sharedInstance].serverCache count])
+		if (newLength < [[DDGSearchSuggestionCache sharedInstance].serverCache count])
 		{
 			// keep the cache trimmed to a max of number of characters
 			NSUInteger maxLen = [[DDGSearchSuggestionCache sharedInstance].serverCache count];
-			for (NSUInteger l = lengthLeft + 1; l <= maxLen; ++l)
+			for (NSUInteger l = newLength + 1; l <= maxLen; ++l)
 			{
 				NSNumber *n = [NSNumber numberWithUnsignedInteger:l];
 				if ([[DDGSearchSuggestionCache sharedInstance].serverCache objectForKey:n])
@@ -228,7 +228,7 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 		}
 		[tableView reloadData];
 	}
-	else if (lengthLeft)
+	else if (newLength)
 	{
 		// we have replaced or added characters
 		// time to server up
@@ -253,7 +253,7 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 		
 		NSLog (@"URL: %@", surl);
 	}
-	else if (!lengthLeft)
+	else if (!newLength)
 	{
 		// stay slim and trim in memory :)
 		[[DDGSearchSuggestionCache sharedInstance].serverCache removeAllObjects];
@@ -317,8 +317,25 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 	[textField resignFirstResponder];
 	[self autoCompleteReveal:NO];
 	
-	[searchHandler loadQuery:([search.text length] ? search.text : nil)];
-	
+    // check whether the entered text is a URL or a search query
+    NSURL *url = [NSURL URLWithString:search.text];
+    if(url && url.scheme) {
+        // it has a scheme, so it's probably a URL
+        [searchHandler loadURL:search.text];
+    } else {
+        // check whether adding a scheme makes it a valid URL
+        NSString *urlString = [NSString stringWithFormat:@"http://%@",search.text];
+        url = [NSURL URLWithString:urlString];
+        
+        if(url && url.host && [url.host rangeOfString:@"."].location != NSNotFound) {
+            // it has a host with a dot ("xyz.com"), so it's probably a URL
+            [searchHandler loadURL:urlString];
+        } else {
+            // it's either a search query or nil
+            [searchHandler loadQuery:([search.text length] ? search.text : nil)];
+        }
+    }
+        
 	return YES;
 }
 

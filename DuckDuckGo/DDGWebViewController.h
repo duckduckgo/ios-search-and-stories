@@ -18,6 +18,7 @@
     NSDictionary *params;
 	NSInteger callDepth;
     
+    BOOL loaded;
     NSString *webQuery;
     NSString *webURL;
 }

@@ -12,5 +12,6 @@
 
 -(void)loadHome;
 -(void)loadQuery:(NSString *)query;
+-(void)loadURL:(NSString *)url;
 
 @end

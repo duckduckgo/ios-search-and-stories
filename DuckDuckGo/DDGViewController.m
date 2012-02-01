@@ -86,24 +86,31 @@
 
 #pragma mark - Search handler
 
+-(void)loadHome {
+    // this is home; don't do anything.
+}
+
 - (void)loadQuery:(NSString *)query {
     webQuery = query;
     webURL = nil;
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
-// i'll put this here for now because it's closely related to loadSearch:
+-(void)loadURL:(NSString *)url {
+    webQuery = nil;
+    webURL = url;
+    [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
+}
+
+// i'll put this here for now because it's closely related to loadQuery:
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
 
     if([segue.identifier isEqualToString:@"WebViewSegue"])
         if(webQuery)
             [segue.destinationViewController loadQuery:webQuery];
-        else if(webURL)
+        else if(webURL) {
             [segue.destinationViewController loadURL:webURL];
-}
-
--(void)loadHome {
-    // this is home; don't do anything.
+        }
 }
 
 #pragma  mark - UITableViewDataSource

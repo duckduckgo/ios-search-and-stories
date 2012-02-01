@@ -53,10 +53,14 @@
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
     searchController.state = eViewStateWebResults;
-	searchController.search.text = webQuery;
-	[searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
+    [searchController.searchButton setImage:[UIImage imageNamed:@"home40x37.png"] forState:UIControlStateNormal];
 
-	[self loadURL:webURL];
+    // if we already have a query or URL to load, load it.
+	loaded = YES;
+	if(webQuery)
+        [self loadQuery:webQuery];
+    else if(webURL)
+        [self loadURL:webURL];
 }
 
 - (void)dealloc
@@ -93,19 +97,24 @@
 }
 
 -(void)loadQuery:(NSString *)query {
-    webQuery = query; // if the view hasn't loaded yet, setting search text won't work, so we need to save the query to load it later
-    searchController.search.text = query;
-    
-    if(query) {
-        NSString *url = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *url = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+
+    if(!loaded) {
+        // if the view hasn't loaded yet, setting search text won't work, so we need to save the query to load later
+        webQuery = query;
+    } else if(query) {
         [self loadURL:url];
+        searchController.search.text = query;
     }
 }
 
 -(void)loadURL:(NSString *)url {
-    if(url) {
-        webURL = url; // if the view hasn't loaded yet, loadRequest: won't work, so we need to save the URL to load it later
+    if(!loaded) {
+        // if the view hasn't loaded yet, loading a URL won't work, so we need to save the URL to load later
+        webURL = url;
+    } else if(url) {
         [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
+        searchController.search.text = url;
     }
 }
 
@@ -120,9 +129,6 @@
 {
 	if (++callDepth == 1)
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-
-    if(theWebView.request.URL)
-        [searchController updateBarWithURL:theWebView.request.URL];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
@@ -132,6 +138,9 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 		callDepth = 0;
 	}
+    
+    if(theWebView.request.URL)
+        [searchController updateBarWithURL:theWebView.request.URL];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
