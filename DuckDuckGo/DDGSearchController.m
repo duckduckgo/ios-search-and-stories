@@ -169,7 +169,8 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
     NSMutableDictionary *queryComponents = [[NSMutableDictionary alloc] init];
     for(NSString *queryComponent in queryComponentsArray) {
         NSArray *parameter = [queryComponent componentsSeparatedByString:@"="];
-        [queryComponents setObject:[parameter objectAtIndex:1] forKey:[parameter objectAtIndex:0]];
+        if(parameter.count > 1)
+            [queryComponents setObject:[parameter objectAtIndex:1] forKey:[parameter objectAtIndex:0]];
     }
 
     // check whether we have a DDG search URL
