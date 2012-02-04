@@ -11,6 +11,7 @@
 #import "DataHelper.h"
 #import "CacheController.h"
 #import "DDGSearchHandler.h"
+#import "NDTrie.h"
 
 enum eSearchState
 {
@@ -19,7 +20,7 @@ enum eSearchState
 	
 };
 
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate, DataHelperDelegate>
+@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate>
 {
 	IBOutlet UITableView		*tableView;
 
@@ -33,8 +34,8 @@ enum eSearchState
 	id<DDGSearchHandler>		__unsafe_unretained searchHandler;
 	
 	NSMutableURLRequest			*serverRequest;
-
-	DataHelper					*dataHelper;
+    
+    NSMutableDictionary *suggestionsCache;
 }
 
 @property (nonatomic, strong) NSMutableURLRequest			*serverRequest;
@@ -55,8 +56,8 @@ enum eSearchState
 
 - (void)autoCompleteReveal:(BOOL)reveal;
 
-- (NSArray*)currentResultForItem:(NSUInteger)item;
-- (void)cacheCurrentResult:(NSArray*)result forItem:(NSUInteger)item;
+-(NSArray *)currentSuggestions;
+-(void)downloadSuggestionsForSearchText:(NSString *)searchText;
 
 -(void)updateBarWithURL:(NSURL *)url;
 

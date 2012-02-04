@@ -9,9 +9,9 @@
 #import "DDGSearchController.h"
 #import "SBJson.h"
 #import "DDGSearchSuggestionCache.h"
+#import "AFNetworking.h"
 
 static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
-static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 
 @implementation DDGSearchController
 
@@ -42,10 +42,10 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 		[serverRequest setValue:@"text/plain; charset=UTF-8" forHTTPHeaderField:@"Accept"];
 		
 		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
-
-		dataHelper = [[DataHelper alloc] initWithDelegate:self];
 		
 		search.placeholder = NSLocalizedString (@"SearchPlaceholder", nil);
+        
+        suggestionsCache = [[NSMutableDictionary alloc] init];
 	}
 	return self;
 }
@@ -189,76 +189,42 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 
 #pragma  mark - Handle the text field input
 
-- (NSArray*)currentResultForItem:(NSUInteger)item
-{
-	return [[DDGSearchSuggestionCache sharedInstance].serverCache objectForKey:[NSNumber numberWithUnsignedInteger:item]];
-}
-
-- (void)cacheCurrentResult:(NSArray*)result forItem:(NSUInteger)item
-{
-	[[DDGSearchSuggestionCache sharedInstance].serverCache setObject:result forKey:[NSNumber numberWithUnsignedInteger:item]];
-}
-
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
 	NSUInteger newLength = [textField.text length] - range.length + [string length];
 	
-	if (!newLength)
+    // figure out what the new search string is
+    NSString *newSearchText;
+    if (!range.length)
+        newSearchText = textField.text;
+    else
+        newSearchText = [textField.text substringWithRange:range];
+    
+    if (![newSearchText length])
+        newSearchText = @"";
+
+    newSearchText = [newSearchText stringByAppendingString:string ? string : @""];
+    
+	if (!newLength) {
 		// going to NO characters
 		[self autoCompleteReveal:NO];
-	else if (![textField.text length] && newLength)
-	{
+	} else if (![textField.text length] && newLength) {
 		// going from NO characters to something
 		[self autoCompleteReveal:YES];
 	}
 	
-	if (newLength && newLength < [textField.text length])
-	{
-		// destroying characters
-		// this means we use a cached result
-		if (newLength < [[DDGSearchSuggestionCache sharedInstance].serverCache count])
-		{
-			// keep the cache trimmed to a max of number of characters
-			NSUInteger maxLen = [[DDGSearchSuggestionCache sharedInstance].serverCache count];
-			for (NSUInteger l = newLength + 1; l <= maxLen; ++l)
-			{
-				NSNumber *n = [NSNumber numberWithUnsignedInteger:l];
-				if ([[DDGSearchSuggestionCache sharedInstance].serverCache objectForKey:n])
-					[[DDGSearchSuggestionCache sharedInstance].serverCache removeObjectForKey:n];
-			}
-		}
+    
+	if (newLength && newLength < [textField.text length] && [textField.text hasPrefix:newSearchText]) {
+        // deleting characters from the end; we can definitely use a cached result here.
 		[tableView reloadData];
-	}
-	else if (newLength)
-	{
-		// we have replaced or added characters
-		// time to server up
-		NSString *searchStringWillBecome;
-		if (!range.length)
-			searchStringWillBecome = textField.text;
-		else
-			searchStringWillBecome = [textField.text substringWithRange:range];
-		
-		if (![searchStringWillBecome length])
-			searchStringWillBecome = @"";
-		searchStringWillBecome = [searchStringWillBecome stringByAppendingString:string ? string : @""];
-		NSString *surl = [sBaseSuggestionServerURL stringByAppendingString:searchStringWillBecome];
-		serverRequest.URL = [NSURL URLWithString:[surl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-
-		[dataHelper retrieve:serverRequest 
-                       cache:kCacheIDNoFileCache 
-                        name:nil 
-                  returnData:NO 
-                  identifier:1000+[searchStringWillBecome length] 
-                  bufferSize:kSuggestionServerResponseBufferCapacity];
-		
-		NSLog (@"URL: %@", surl);
-	}
-	else if (!newLength)
-	{
-		// stay slim and trim in memory :)
-		[[DDGSearchSuggestionCache sharedInstance].serverCache removeAllObjects];
-		[tableView reloadData];
+	} else if (newLength) {
+		// we have replaced or added characters: time to server up.
+        [self downloadSuggestionsForSearchText:newSearchText];
+        [tableView reloadData]; // we might have changed something in the middle, in which case the old suggestions are invalid
+	} else {
+        // newLength==0; clear the suggestions cache and reload
+        [suggestionsCache removeAllObjects];
+        [tableView reloadData];
 	}
 	
 	return YES;
@@ -283,17 +249,7 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 		// user wants to edit the search term for another query
 		[self autoCompleteReveal:YES];
 
-		NSString *surl = [sBaseSuggestionServerURL stringByAppendingString:textField.text];
-		serverRequest.URL = [NSURL URLWithString:[surl stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-		
-		[dataHelper retrieve:serverRequest 
-                       cache:kCacheIDNoFileCache 
-                        name:nil 
-                  returnData:NO 
-                  identifier:1000+[textField.text length] 
-                  bufferSize:kSuggestionServerResponseBufferCapacity];
-		
-		NSLog (@"URL: %@", surl);
+        [self downloadSuggestionsForSearchText:textField.text];
 	}
 }
 
@@ -341,6 +297,39 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 }
 
 
+#pragma mark - Suggestion cache management
+
+-(NSArray *)currentSuggestions {
+    NSString *searchText = search.text;
+    NSString *bestMatch = nil;
+    
+    for(NSString *suggestionText in suggestionsCache) {
+        if([searchText hasPrefix:suggestionText] && suggestionText.length > bestMatch.length)
+            bestMatch = searchText;
+    }
+    
+    return (bestMatch ? [suggestionsCache objectForKey:bestMatch] : [NSArray array]);
+}
+
+-(void)downloadSuggestionsForSearchText:(NSString *)searchText {
+    NSLog(@"downloading: %@",searchText);
+    
+    NSString *urlString = [sBaseSuggestionServerURL stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    serverRequest.URL = [NSURL URLWithString:urlString];
+    
+    
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        NSLog(@"downloaded: %@",searchText);
+        
+        [suggestionsCache setObject:JSON forKey:searchText];
+        [tableView reloadData];
+    } failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"error: %@",[error userInfo]);
+    }];
+    [operation start];
+
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -351,7 +340,7 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [[self currentResultForItem:[[DDGSearchSuggestionCache sharedInstance].serverCache count]] count];
+    return [[self currentSuggestions] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -374,8 +363,8 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 		iv.backgroundColor = [UIColor whiteColor];
 		[cell.contentView addSubview:iv];
     }
-    NSArray *items = [self currentResultForItem:[[DDGSearchSuggestionCache sharedInstance].serverCache count]];
-	NSDictionary *item = [items objectAtIndex:indexPath.row];
+
+	NSDictionary *item = [[self currentSuggestions] objectAtIndex:indexPath.row];
 	
     // Configure the cell...
 	cell.textLabel.text = [item objectForKey:ksDDGSearchControllerServerKeyPhrase];
@@ -384,12 +373,8 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 	iv = (UIImageView *)[cell.contentView viewWithTag:100];
 	
 	iv.backgroundColor = [UIColor whiteColor];
-	iv.image = [UIImage imageWithData:[dataHelper retrieve:[item objectForKey:ksDDGSearchControllerServerKeyImage] 
-													 cache:kCacheIDImages 
-													  name:[NSString stringWithFormat:@"%08x", [[item objectForKey:ksDDGSearchControllerServerKeyImage] hash]]
-												returnData:YES
-												identifier:0
-												bufferSize:4096]];    
+    [iv setImageWithURL:[NSURL URLWithString:[item objectForKey:ksDDGSearchControllerServerKeyImage]]];
+
     return cell;
 }
 
@@ -402,8 +387,7 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *items = [self currentResultForItem:[[DDGSearchSuggestionCache sharedInstance].serverCache count]];
-	NSDictionary *item = [items objectAtIndex:indexPath.row];
+	NSDictionary *item = [[self currentSuggestions] objectAtIndex:indexPath.row];
 	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	
@@ -411,33 +395,6 @@ static NSUInteger kSuggestionServerResponseBufferCapacity = 6 * 1024;
 	[self autoCompleteReveal:NO];
     
     [searchHandler loadQuery:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
-}
-
-#pragma mark - DataHelper delegate
-
-- (void)dataReceivedWith:(NSInteger)identifier andData:(NSData*)data andStatus:(NSInteger)status
-{
-	if (identifier > 1000 && data.length)
-	{
-		NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-		NSArray *result = [json JSONValue];
-		[self cacheCurrentResult:result forItem:identifier-1000];
-		[tableView reloadData];
-	}
-}
-
-- (void)dataReceived:(NSInteger)identifier withStatus:(NSInteger)status
-{
-	// no matter what is coming back, we need a refesh
-	[tableView reloadData];
-}
-
-- (void)redirectReceived:(NSInteger)identifier withURL:(NSString*)url
-{
-}
-
-- (void)errorReceived:(NSInteger)identifier withError:(NSError*)error
-{
 }
 
 @end

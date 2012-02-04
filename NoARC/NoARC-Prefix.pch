@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'NoARC' target in the 'NoARC' project
+//
+
+#ifdef __OBJC__
+    #import <Foundation/Foundation.h>
+#endif
