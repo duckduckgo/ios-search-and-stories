@@ -39,6 +39,10 @@
 		4C8D7B0814BE7EE100F6E604 /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C8D7AEF14BE7EE100F6E604 /* SBJsonWriter.h */; };
 		4C8D7B0914BE7EE100F6E604 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8D7AF014BE7EE100F6E604 /* SBJsonWriter.m */; };
 		4CA7ED3714D3B48200A83E77 /* DDGNonAnimatedPushSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA7ED3614D3B48200A83E77 /* DDGNonAnimatedPushSegue.m */; };
+		4CFA1A7E14DDB13200DF52FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53D1494164F00509F2E /* Foundation.framework */; };
+		4CFA1A8814DDB18500DF52FE /* libNDTrie.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CFA1A7D14DDB13200DF52FE /* libNDTrie.a */; };
+		4CFA1A8914DDB1FE00DF52FE /* NDTrie.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6AC4A014DDABDF00A1ACA1 /* NDTrie.m */; };
+		4CFA1A8A14DDB20600DF52FE /* NDTrie.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C6AC49F14DDABDF00A1ACA1 /* NDTrie.h */; };
 		8303A4F014992F1900D34412 /* spacer44x44.png in Resources */ = {isa = PBXBuildFile; fileRef = 8303A4EF14992F1900D34412 /* spacer44x44.png */; };
 		8329AE05149F883300C6ECB2 /* duckPlaceholder314x73.png in Resources */ = {isa = PBXBuildFile; fileRef = 8329AE04149F883300C6ECB2 /* duckPlaceholder314x73.png */; };
 		833DB53E1494164F00509F2E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53D1494164F00509F2E /* Foundation.framework */; };
@@ -106,6 +110,8 @@
 		4C1E3A0F14C9F50B00A0E143 /* icon57x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon57x.png; sourceTree = "<group>"; };
 		4C1E3A1014C9F50B00A0E143 /* icon57x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon57x@2x.png"; sourceTree = "<group>"; };
 		4C1E3A1114C9F50B00A0E143 /* icon72x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon72x.png; sourceTree = "<group>"; };
+		4C6AC49F14DDABDF00A1ACA1 /* NDTrie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NDTrie.h; path = ../DuckDuckGo/NDTrie.h; sourceTree = "<group>"; };
+		4C6AC4A014DDABDF00A1ACA1 /* NDTrie.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NDTrie.m; path = ../DuckDuckGo/NDTrie.m; sourceTree = "<group>"; };
 		4C8D7AD814BE7EE100F6E604 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
 		4C8D7AD914BE7EE100F6E604 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
 		4C8D7ADA14BE7EE100F6E604 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
@@ -134,6 +140,8 @@
 		4CA7ED3514D3B48200A83E77 /* DDGNonAnimatedPushSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGNonAnimatedPushSegue.h; sourceTree = "<group>"; };
 		4CA7ED3614D3B48200A83E77 /* DDGNonAnimatedPushSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNonAnimatedPushSegue.m; sourceTree = "<group>"; };
 		4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchHandler.h; sourceTree = "<group>"; };
+		4CFA1A7D14DDB13200DF52FE /* libNDTrie.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libNDTrie.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		4CFA1A8114DDB13200DF52FE /* NDTrie-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NDTrie-Prefix.pch"; sourceTree = "<group>"; };
 		60E04A5C14A0EA9000F8BD23 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Reachability.m; path = ../DuckDuckGo/Reachability.m; sourceTree = "<group>"; };
 		60E04A5F14A0EA9900F8BD23 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../DuckDuckGo/Reachability.h; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
@@ -200,6 +208,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4CFA1A7A14DDB13200DF52FE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CFA1A7E14DDB13200DF52FE /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		833DB5381494164F00509F2E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -212,6 +228,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CFA1A8814DDB18500DF52FE /* libNDTrie.a in Frameworks */,
 				8345080614AB8D520093C2A1 /* Foundation.framework in Frameworks */,
 				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */,
@@ -238,6 +255,13 @@
 			children = (
 			);
 			name = ASIHTTPRequest;
+			sourceTree = "<group>";
+		};
+		4C6AC43514DDA95500A1ACA1 /* 3rd Party */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "3rd Party";
 			sourceTree = "<group>";
 		};
 		4C8D7AD714BE7EE100F6E604 /* SBJson */ = {
@@ -270,6 +294,24 @@
 				4C8D7AF014BE7EE100F6E604 /* SBJsonWriter.m */,
 			);
 			path = SBJson;
+			sourceTree = "<group>";
+		};
+		4CFA1A7F14DDB13200DF52FE /* NDTrie */ = {
+			isa = PBXGroup;
+			children = (
+				4C6AC49F14DDABDF00A1ACA1 /* NDTrie.h */,
+				4C6AC4A014DDABDF00A1ACA1 /* NDTrie.m */,
+				4CFA1A8014DDB13200DF52FE /* Supporting Files */,
+			);
+			path = NDTrie;
+			sourceTree = "<group>";
+		};
+		4CFA1A8014DDB13200DF52FE /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				4CFA1A8114DDB13200DF52FE /* NDTrie-Prefix.pch */,
+			);
+			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		833DB53C1494164F00509F2E /* Frameworks */ = {
@@ -337,6 +379,7 @@
 			isa = PBXGroup;
 			children = (
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
+				4CFA1A7F14DDB13200DF52FE /* NDTrie */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
 			);
@@ -347,6 +390,7 @@
 			children = (
 				83F32258149290EF00A61BC5 /* DuckDuckGo.app */,
 				833DB53B1494164F00509F2E /* libDDGLib.a */,
+				4CFA1A7D14DDB13200DF52FE /* libNDTrie.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -354,6 +398,7 @@
 		83F32262149290EF00A61BC5 /* DuckDuckGo */ = {
 			isa = PBXGroup;
 			children = (
+				4C6AC43514DDA95500A1ACA1 /* 3rd Party */,
 				83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */,
 				83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */,
 				83F32274149290EF00A61BC5 /* DDGViewController.h */,
@@ -419,6 +464,14 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		4CFA1A7B14DDB13200DF52FE /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CFA1A8A14DDB20600DF52FE /* NDTrie.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		833DB5391494164F00509F2E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -450,6 +503,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4CFA1A7C14DDB13200DF52FE /* NDTrie */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4CFA1A8514DDB13200DF52FE /* Build configuration list for PBXNativeTarget "NDTrie" */;
+			buildPhases = (
+				4CFA1A7914DDB13200DF52FE /* Sources */,
+				4CFA1A7A14DDB13200DF52FE /* Frameworks */,
+				4CFA1A7B14DDB13200DF52FE /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = NDTrie;
+			productName = NDTrie;
+			productReference = 4CFA1A7D14DDB13200DF52FE /* libNDTrie.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		833DB53A1494164F00509F2E /* DDGLib */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 833DB5451494164F00509F2E /* Build configuration list for PBXNativeTarget "DDGLib" */;
@@ -507,6 +577,7 @@
 			targets = (
 				83F32257149290EF00A61BC5 /* DuckDuckGo */,
 				833DB53A1494164F00509F2E /* DDGLib */,
+				4CFA1A7C14DDB13200DF52FE /* NDTrie */,
 			);
 		};
 /* End PBXProject section */
@@ -547,6 +618,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4CFA1A7914DDB13200DF52FE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4CFA1A8914DDB1FE00DF52FE /* NDTrie.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		833DB5371494164F00509F2E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -652,6 +731,30 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		4CFA1A8614DDB13200DF52FE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/NDTrie.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NDTrie/NDTrie-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		4CFA1A8714DDB13200DF52FE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/NDTrie.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "NDTrie/NDTrie-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		833DB5461494164F00509F2E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -765,6 +868,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4CFA1A8514DDB13200DF52FE /* Build configuration list for PBXNativeTarget "NDTrie" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4CFA1A8614DDB13200DF52FE /* Debug */,
+				4CFA1A8714DDB13200DF52FE /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		833DB5451494164F00509F2E /* Build configuration list for PBXNativeTarget "DDGLib" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
