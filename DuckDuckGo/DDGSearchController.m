@@ -304,23 +304,20 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     NSString *bestMatch = nil;
     
     for(NSString *suggestionText in suggestionsCache) {
-        if([searchText hasPrefix:suggestionText] && suggestionText.length > bestMatch.length)
-            bestMatch = searchText;
+        if([searchText hasPrefix:suggestionText] && (suggestionText.length > bestMatch.length))
+            bestMatch = suggestionText;
     }
     
     return (bestMatch ? [suggestionsCache objectForKey:bestMatch] : [NSArray array]);
 }
 
 -(void)downloadSuggestionsForSearchText:(NSString *)searchText {
-    NSLog(@"downloading: %@",searchText);
     
     NSString *urlString = [sBaseSuggestionServerURL stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     serverRequest.URL = [NSURL URLWithString:urlString];
     
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        NSLog(@"downloaded: %@",searchText);
-        
         [suggestionsCache setObject:JSON forKey:searchText];
         [tableView reloadData];
     } failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
