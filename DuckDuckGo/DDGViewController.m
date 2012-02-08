@@ -36,7 +36,7 @@
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
     searchController.state = eViewStateHome;
-	[searchController.searchButton setImage:[UIImage imageNamed:@"gear40x37.png"] forState:UIControlStateNormal];
+	[searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
 	
 	UILabel *lbl = (UILabel*)[self.view viewWithTag:100];
 	lbl.text = NSLocalizedString (@"Customize", nil);
