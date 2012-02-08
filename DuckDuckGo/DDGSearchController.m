@@ -216,19 +216,15 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-	NSUInteger newLength = [textField.text length] - range.length + [string length];
-	
-    // figure out what the new search string is
-    NSString *newSearchText;
-    if (!range.length)
-        newSearchText = textField.text;
-    else
-        newSearchText = [textField.text substringWithRange:range];
+    if([textField.text isEqualToString:[self validURLStringFromString:textField.text]]) {
+        // we're definitely editing a URL, don't bother with autocomplete.
+        [self autoCompleteReveal:NO];
+        return YES;
+    }
     
-    if (![newSearchText length])
-        newSearchText = @"";
-
-    newSearchText = [newSearchText stringByAppendingString:string ? string : @""];
+    // figure out what the new search string is
+    NSString *newSearchText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    NSUInteger newLength = newSearchText.length;
     
 	if (!newLength) {
 		// going to NO characters
@@ -237,15 +233,11 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 		// going from NO characters to something
 		[self autoCompleteReveal:YES];
 	}
-	
     
-	if (newLength && newLength < [textField.text length] && [textField.text hasPrefix:newSearchText]) {
-        // deleting characters from the end; we can definitely use a cached result here.
-		[tableView reloadData];
-	} else if (newLength) {
-		// we have replaced or added characters: time to server up.
+	if (newLength) {
+		// load our new best cached result, and download new autocomplete suggestions.
         [self downloadSuggestionsForSearchText:newSearchText];
-        [tableView reloadData]; // we might have changed something in the middle, in which case the old suggestions are invalid
+        [tableView reloadData];
 	} else {
         // newLength==0; clear the suggestions cache and reload
         [suggestionsCache removeAllObjects];
@@ -271,9 +263,9 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 {
 	if ([textField.text length])
 	{
-		// user wants to edit the search term for another query
-        // TODO: if url...
-		[self autoCompleteReveal:YES];
+		// if in search field mode, then reveal autocomplete.
+        if(![self validURLStringFromString:textField.text])
+            [self autoCompleteReveal:YES];
 
         [self downloadSuggestionsForSearchText:textField.text];
 	}
@@ -327,7 +319,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 }
 
 -(void)downloadSuggestionsForSearchText:(NSString *)searchText {
-    
+        
     NSString *urlString = [sBaseSuggestionServerURL stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     serverRequest.URL = [NSURL URLWithString:urlString];
     
@@ -335,6 +327,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         [suggestionsCache setObject:JSON forKey:searchText];
         [tableView reloadData];
+        
     } failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
         NSLog(@"error: %@",[error userInfo]);
     }];
