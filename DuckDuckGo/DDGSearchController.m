@@ -216,33 +216,27 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    if([textField.text isEqualToString:[self validURLStringFromString:textField.text]]) {
+    // figure out what the new search string is
+    NSString *newSearchText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+    
+    if([newSearchText isEqualToString:[self validURLStringFromString:newSearchText]]) {
+        NSLog(@"%@ is a URL!!!",textField.text);
         // we're definitely editing a URL, don't bother with autocomplete.
         [self autoCompleteReveal:NO];
         return YES;
     }
-    
-    // figure out what the new search string is
-    NSString *newSearchText = [textField.text stringByReplacingCharactersInRange:range withString:string];
-    NSUInteger newLength = newSearchText.length;
-    
-	if (!newLength) {
-		// going to NO characters
-		[self autoCompleteReveal:NO];
-	} else if (![textField.text length] && newLength) {
-		// going from NO characters to something
-		[self autoCompleteReveal:YES];
-	}
-    
-	if (newLength) {
+        
+	if(newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
         [self downloadSuggestionsForSearchText:newSearchText];
-        [tableView reloadData];
+    	[self autoCompleteReveal:YES];
 	} else {
-        // newLength==0; clear the suggestions cache and reload
+        // search text is blank; clear the suggestions cache, reload, and hide the table
         [suggestionsCache removeAllObjects];
-        [tableView reloadData];
-	}
+        [self autoCompleteReveal:NO];
+    }
+    // either way, reload the table view.
+    [tableView reloadData];
 	
 	return YES;
 }
