@@ -382,8 +382,11 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	iv = (UIImageView *)[cell.contentView viewWithTag:100];
 	
 	iv.backgroundColor = [UIColor whiteColor];
-    [iv setImageWithURL:[NSURL URLWithString:[item objectForKey:ksDDGSearchControllerServerKeyImage]]];
-
+    if([item objectForKey:ksDDGSearchControllerServerKeyImage])
+        [iv setImageWithURL:[NSURL URLWithString:[item objectForKey:ksDDGSearchControllerServerKeyImage]]];
+    else
+        [iv setImage:nil]; // wipe out any image that used to be there
+    
     return cell;
 }
 
