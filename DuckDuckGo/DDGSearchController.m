@@ -152,7 +152,10 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 - (IBAction)searchButtonAction:(UIButton*)sender
 {
 	[search resignFirstResponder];
-	
+    
+    // if it's showing, hide it.
+    [self autoCompleteReveal:NO];
+    
 	[searchHandler loadHome];
 }
 
