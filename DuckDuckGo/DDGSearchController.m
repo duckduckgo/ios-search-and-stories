@@ -130,6 +130,23 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 #pragma  mark - Handle user actions
 
+- (IBAction)searchButtonAction:(UIButton*)sender
+{
+	[search resignFirstResponder];
+    
+    // if it's showing, hide it.
+    [self autoCompleteReveal:NO];
+    
+	[searchHandler loadButton];
+}
+
+- (void)switchModeTo:(enum eSearchState)searchState
+{
+	state = searchState;
+}
+
+#pragma mark - Omnibar methods
+
 - (void)autoCompleteReveal:(BOOL)reveal
 {
 	CGSize screenSize = self.view.superview.frame.size;
@@ -144,24 +161,9 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 		rect.size.height = 46.0;
 	}
 	[UIView animateWithDuration:0.25 animations:^
-	{
-		self.view.frame = rect;
-	}];
-}
-
-- (IBAction)searchButtonAction:(UIButton*)sender
-{
-	[search resignFirstResponder];
-    
-    // if it's showing, hide it.
-    [self autoCompleteReveal:NO];
-    
-	[searchHandler loadButton];
-}
-
-- (void)switchModeTo:(enum eSearchState)searchState
-{
-	state = searchState;
+     {
+         self.view.frame = rect;
+     }];
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -186,6 +188,27 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     } else {
         // no, just a plain old URL.
         search.text = [url absoluteString];
+    }
+}
+
+-(NSString *)validURLStringFromString:(NSString *)urlString {
+    // check whether the entered text is a URL or a search query
+    NSURL *url = [NSURL URLWithString:urlString];
+    if(url && url.scheme) {
+        // it has a scheme, so it's probably a valid URL
+        return urlString;
+    } else {
+        // check whether adding a scheme makes it a valid URL
+        NSString *urlStringWithSchema = [NSString stringWithFormat:@"http://%@",urlString];
+        url = [NSURL URLWithString:urlStringWithSchema];
+        
+        if(url && url.host && [url.host rangeOfString:@"."].location != NSNotFound) {
+            // it has a host with a dot ("xyz.com"), so it's probably a URL
+            return urlStringWithSchema;
+        } else {
+            // it can't be made into a valid URL
+            return nil;
+        }
     }
 }
 
@@ -249,6 +272,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	if ([textField.text length])
 	{
 		// user wants to edit the search term for another query
+        // TODO: if url...
 		[self autoCompleteReveal:YES];
 
         [self downloadSuggestionsForSearchText:textField.text];
@@ -276,25 +300,14 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[textField resignFirstResponder];
 	[self autoCompleteReveal:NO];
 	
-    // check whether the entered text is a URL or a search query
-    NSURL *url = [NSURL URLWithString:search.text];
-    if(url && url.scheme) {
-        // it has a scheme, so it's probably a URL
-        [searchHandler loadURL:search.text];
+    NSString *urlString;
+    if((urlString = [self validURLStringFromString:search.text])) {
+        [searchHandler loadURL:urlString];
     } else {
-        // check whether adding a scheme makes it a valid URL
-        NSString *urlString = [NSString stringWithFormat:@"http://%@",search.text];
-        url = [NSURL URLWithString:urlString];
-        
-        if(url && url.host && [url.host rangeOfString:@"."].location != NSNotFound) {
-            // it has a host with a dot ("xyz.com"), so it's probably a URL
-            [searchHandler loadURL:urlString];
-        } else {
-            // it's either a search query or nil
-            [searchHandler loadQuery:([search.text length] ? search.text : nil)];
-        }
+        // it isn't a URL, so treat it as a search query.
+        [searchHandler loadQuery:([search.text length] ? search.text : nil)];
     }
-        
+            
 	return YES;
 }
 

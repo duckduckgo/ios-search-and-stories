@@ -53,12 +53,16 @@ enum eSearchState
 
 - (IBAction)searchButtonAction:(UIButton*)sender;
 
-- (void)autoCompleteReveal:(BOOL)reveal;
 
 -(NSArray *)currentSuggestions;
 -(void)downloadSuggestionsForSearchText:(NSString *)searchText;
 
+
+// TODO (ishaan): make these private?
+-(void)autoCompleteReveal:(BOOL)reveal;
 -(void)updateBarWithURL:(NSURL *)url;
+-(NSString *)validURLStringFromString:(NSString *)urlString;
+
 
 @end
 
