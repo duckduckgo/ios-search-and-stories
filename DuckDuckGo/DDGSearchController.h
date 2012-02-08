@@ -11,7 +11,6 @@
 #import "DataHelper.h"
 #import "CacheController.h"
 #import "DDGSearchHandler.h"
-#import "NDTrie.h"
 
 enum eSearchState
 {

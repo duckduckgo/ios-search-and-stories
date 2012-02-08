@@ -8,7 +8,6 @@
 
 #import "DDGSearchController.h"
 #import "SBJson.h"
-#import "DDGSearchSuggestionCache.h"
 #import "AFNetworking.h"
 
 static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
@@ -232,8 +231,8 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
+    [suggestionsCache removeAllObjects];
 	[self autoCompleteReveal:NO];
-	[[DDGSearchSuggestionCache sharedInstance].serverCache removeAllObjects];
 	return YES;
 }
 
@@ -361,8 +360,12 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 		[cell.contentView addSubview:iv];
     }
 
-	NSDictionary *item = [[self currentSuggestions] objectAtIndex:indexPath.row];
-	
+    NSArray *suggestions = [self currentSuggestions];
+    if(suggestions.count <= indexPath.row)
+        return cell; // this entry no longer exists; return empty cell. the tableview will be reloading very soon anyway.
+    
+	NSDictionary *item = [suggestions objectAtIndex:indexPath.row];
+    
     // Configure the cell...
 	cell.textLabel.text = [item objectForKey:ksDDGSearchControllerServerKeyPhrase];
 	cell.detailTextLabel.text = [item objectForKey:ksDDGSearchControllerServerKeySnippet];
