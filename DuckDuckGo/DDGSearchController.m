@@ -141,7 +141,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	else
 	{
 		// clip to search entry height
-		rect.size.height = 44.0;
+		rect.size.height = 46.0;
 	}
 	[UIView animateWithDuration:0.25 animations:^
 	{
