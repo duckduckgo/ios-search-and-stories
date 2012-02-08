@@ -180,7 +180,7 @@
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
-#pragma - load up entries for  home screen
+#pragma mark - Loading popular stories
 
 - (UIImage*)loadImage:(NSString*)url
 {
