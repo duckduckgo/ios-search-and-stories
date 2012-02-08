@@ -10,7 +10,7 @@
 
 @protocol DDGSearchHandler <NSObject>
 
--(void)loadHome;
+-(void)loadButton;
 -(void)loadQuery:(NSString *)query;
 -(void)loadURL:(NSString *)url;
 

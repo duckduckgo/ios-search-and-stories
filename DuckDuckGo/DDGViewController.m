@@ -86,8 +86,8 @@
 
 #pragma mark - Search handler
 
--(void)loadHome {
-    // this is home; don't do anything.
+-(void)loadButton {
+    // TODO: implement something here.
 }
 
 - (void)loadQuery:(NSString *)query {

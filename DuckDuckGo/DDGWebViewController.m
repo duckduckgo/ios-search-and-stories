@@ -53,7 +53,7 @@
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
     searchController.state = eViewStateWebResults;
-    [searchController.searchButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
+    [searchController.searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
 
     // if we already have a query or URL to load, load it.
 	loaded = YES;
@@ -89,7 +89,7 @@
 
 #pragma mark - Search handler
 
--(void)loadHome {
+-(void)loadButton {
 	if(webView.canGoBack)
 		[webView goBack];
 	else

@@ -156,7 +156,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     // if it's showing, hide it.
     [self autoCompleteReveal:NO];
     
-	[searchHandler loadHome];
+	[searchHandler loadButton];
 }
 
 - (void)switchModeTo:(enum eSearchState)searchState
