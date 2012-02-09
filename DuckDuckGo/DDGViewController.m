@@ -11,6 +11,7 @@
 #import "DDGTopicsTrendsViewController.h"
 #import "UtilityCHS.h"
 #import "SBJson.h"
+#import "AFNetworking.h"
 
 @implementation DDGViewController
 
@@ -30,9 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	
-	dataHelper = [[DataHelper alloc] initWithDelegate:self];
-	
+		
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
     searchController.state = eViewStateHome;
@@ -113,7 +112,7 @@
         }
 }
 
-#pragma  mark - UITableViewDataSource
+#pragma mark - Table view data source
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -123,8 +122,7 @@
 	static NSString *CellIdentifier = @"CurrentTopicCell";
 	
 	cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
-	if (cell == nil)
-	{
+	if (cell == nil) {
         [[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil];
         cell = loadedCell;
         self.loadedCell = nil;
@@ -133,30 +131,17 @@
 		iv = (UIImageView *)[cell.contentView viewWithTag:100];
 		iv.contentMode = UIViewContentModeScaleAspectFill;
 		iv.clipsToBounds = YES;
-	}
-	NSDictionary *entry = [entries objectAtIndex:indexPath.row];
-	id mc = [entry objectForKey:@"media:content"];
+	} else {
+        iv = (UIImageView *)[cell.contentView viewWithTag:100];
+    }
 	
-	iv = (UIImageView *)[cell.contentView viewWithTag:100];
-	
-	NSString *iurl = nil;
-	
-	if ([mc isKindOfClass:[NSArray class]] && [mc count])
-	{
-		iurl = [[mc objectAtIndex:0] objectForKey:@"url"];
-		iv.image = [self loadImage:iurl];
-	}
-	else if ([mc isKindOfClass:[NSDictionary class]])
-	{
-		iurl = [mc objectForKey:@"url"];
-		iv.image = [self loadImage:iurl];
-	}
-	else
-		iv.image = [UIImage imageNamed:@"duckPlaceholder314x73.png"];
+    NSDictionary *entry = [entries objectAtIndex:indexPath.row];
 
-	UILabel *lbl = (UILabel *)[cell.contentView viewWithTag:200];
-	
-	lbl.text = [entry objectForKey:@"title"];
+    // use a placeholder image for now
+    [iv setImageWithURL:[NSURL URLWithString:@"http://lorempixel.com/628/146/"]];
+    
+	UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
+	label.text = [entry objectForKey:@"title"];
 	
 	return cell;
 }
@@ -176,59 +161,23 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     webQuery = nil;
-    webURL = [[entries objectAtIndex:indexPath.row] objectForKey:@"link"];
+    webURL = [[entries objectAtIndex:indexPath.row] objectForKey:@"url"];
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
 #pragma mark - Loading popular stories
 
-- (UIImage*)loadImage:(NSString*)url
-{
-	NSData *img = [dataHelper retrieve:url
-								 cache:kCacheIDImages
-								  name:[NSString stringWithFormat:@"%08x", [url hash]]
-							returnData:YES
-							identifier:2000
-							bufferSize:8192];
-	if (img)
-		return [UIImage imageWithData:img];
-	return nil;
-}
-
 - (void)loadEntries
 {
-	[dataHelper retrieve:@"http://pipes.yahoo.com/pipes/pipe.run?_id=96061e78ec401aa340a1193b6a7e7d65&_render=json&url=http://opensesamelabs.posterous.com/rss.xml"
-				   cache:kCacheIDNoFileCache
-					name:nil
-			  returnData:NO
-			  identifier:1000
-			  bufferSize:8192];
-}
-
-#pragma mark - DataHelper delegate
-
-- (void)dataReceivedWith:(NSInteger)identifier andData:(NSData*)data andStatus:(NSInteger)status
-{
-	if (identifier == 1000 && data.length)
-	{
-		NSString *json = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-		self.entries = [[[json JSONValue] objectForKey:@"value"] objectForKey:@"items"];
-		[tableView reloadData];
-	}
-}
-
-- (void)dataReceived:(NSInteger)identifier withStatus:(NSInteger)status
-{
-	// MUST be images we need a refesh
-	[tableView reloadData];
-}
-
-- (void)redirectReceived:(NSInteger)identifier withURL:(NSString*)url
-{
-}
-
-- (void)errorReceived:(NSInteger)identifier withError:(NSError*)error
-{
+    NSURL *url = [NSURL URLWithString:@"http://ddg.watrcoolr.us/?o=json"];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        self.entries = JSON;
+        [tableView reloadData];
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        NSLog(@"FAILURE: %@",[error userInfo]);
+    }];
+    [operation start];
 }
 
 @end

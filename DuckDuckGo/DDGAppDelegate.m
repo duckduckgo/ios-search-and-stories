@@ -19,8 +19,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
 	// turn off completely standard URL caching -- we use our own caching
-	NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
-    [NSURLCache setSharedURLCache:sharedCache];
+//	NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
+//    [NSURLCache setSharedURLCache:sharedCache];
 	
     // define caches
     [CacheController addCache:kCacheIDTransient lifetimeSeconds:0];

@@ -9,16 +9,14 @@
 #import <UIKit/UIKit.h>
 
 #import "DDGSearchController.h"
-#import "DataHelper.h"
 
-@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, DataHelperDelegate>
+@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler>
 {
 	IBOutlet UITableViewCell *loadedCell;
 	IBOutlet UITableView *tableView;
 	IBOutlet DDGSearchController *searchController;
 	
 	id entries;
-	DataHelper *dataHelper;
 
     NSString *webQuery;
     NSString *webURL;
@@ -31,6 +29,5 @@
 @property (nonatomic, strong) id entries;
 
 - (void)loadEntries;
-- (UIImage*)loadImage:(NSString*)url;
 
 @end

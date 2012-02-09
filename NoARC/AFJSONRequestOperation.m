@@ -63,8 +63,8 @@ static dispatch_queue_t json_request_operation_processing_queue() {
 }
 
 + (NSSet *)defaultAcceptableContentTypes {
-    // Ishaan: I added text/plain here because whoever coded the autocomplete server was sloppy with Content-Type...
-    return [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/plain", nil];
+    // Ishaan: I added text/plain and application/javascript here because everyone is sloppy with Content-Type...
+    return [NSSet setWithObjects:@"application/json", @"text/json", @"text/javascript", @"text/plain", @"application/javascript", nil];
 }
 
 + (NSSet *)defaultAcceptablePathExtensions {
