@@ -35,13 +35,10 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 													 cachePolicy:NSURLRequestUseProtocolCachePolicy
 												 timeoutInterval:10.0];
 		
-		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
 		[serverRequest setValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
 		[serverRequest setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
 		[serverRequest setValue:@"text/plain; charset=UTF-8" forHTTPHeaderField:@"Accept"];
-		
-		NSLog(@"HEADERS: %@", [serverRequest allHTTPHeaderFields]);
-		
+				
 		search.placeholder = NSLocalizedString (@"SearchPlaceholder", nil);
         
         suggestionsCache = [[NSMutableDictionary alloc] init];
