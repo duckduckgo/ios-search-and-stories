@@ -66,6 +66,9 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelInput)];
+    [self.background addGestureRecognizer:gestureRecognizer];
+    
     [self revealBackground:NO animated:NO];
     [self revealAutocomplete:NO];
 }
@@ -187,6 +190,11 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     tableView.hidden = !reveal;
 }
 
+-(void)cancelInput {
+    [search resignFirstResponder];
+    search.text = oldSearchText;
+}
+
 -(void)updateBarWithURL:(NSURL *)url {
     
     // parse URL query components
@@ -274,8 +282,9 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	return YES;
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField
-{
+- (void)textFieldDidBeginEditing:(UITextField *)textField {
+    // save search text in case user cancels input without navigating somewhere
+    oldSearchText = textField.text;
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField

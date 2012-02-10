@@ -35,8 +35,8 @@ enum eSearchState
 	id<DDGSearchHandler>		__unsafe_unretained searchHandler;
 	
 	NSMutableURLRequest			*serverRequest;
-    
     NSMutableDictionary *suggestionsCache;
+    NSString *oldSearchText;
 }
 
 @property (nonatomic, strong) NSMutableURLRequest			*serverRequest;
@@ -64,6 +64,7 @@ enum eSearchState
 // TODO (ishaan): make these private?
 -(void)revealBackground:(BOOL)reveal animated:(BOOL)animated;
 -(void)revealAutocomplete:(BOOL)reveal;
+-(void)cancelInput;
 -(void)updateBarWithURL:(NSURL *)url;
 -(NSString *)validURLStringFromString:(NSString *)urlString;
 
