@@ -59,7 +59,7 @@ enum eSearchState
 
 
 // TODO (ishaan): make these private?
--(void)autoCompleteReveal:(BOOL)reveal;
+-(void)revealAutocomplete:(BOOL)reveal;
 -(void)updateBarWithURL:(NSURL *)url;
 -(NSString *)validURLStringFromString:(NSString *)urlString;
 

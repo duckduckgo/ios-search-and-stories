@@ -67,17 +67,14 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 	search.rightViewMode = UITextFieldViewModeAlways;
 	search.leftViewMode = UITextFieldViewModeAlways;
 	search.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kbShowing:) name:UIKeyboardDidShowNotification object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kbHiding:) name:UIKeyboardWillHideNotification object:nil];
+
+    [self revealAutocomplete:NO];
 }
 
 - (void)viewDidUnload
@@ -132,7 +129,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[search resignFirstResponder];
     
     // if it's showing, hide it.
-    [self autoCompleteReveal:NO];
+    [self revealAutocomplete:NO];
     
 	[searchHandler loadButton];
 }
@@ -144,23 +141,17 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 #pragma mark - Omnibar methods
 
-- (void)autoCompleteReveal:(BOOL)reveal
+- (void)revealAutocomplete:(BOOL)reveal
 {
 	CGSize screenSize = self.view.superview.frame.size;
 	CGRect rect = self.view.frame;
 	if (reveal)
-	{
 		rect.size.height = screenSize.height - kbRect.size.height;
-	}
 	else
-	{
 		// clip to search entry height
 		rect.size.height = 46.0;
-	}
-	[UIView animateWithDuration:0.25 animations:^
-     {
-         self.view.frame = rect;
-     }];
+    
+    self.view.frame = rect;
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -219,18 +210,18 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     if([newSearchText isEqualToString:[self validURLStringFromString:newSearchText]]) {
         NSLog(@"%@ is a URL!!!",textField.text);
         // we're definitely editing a URL, don't bother with autocomplete.
-        [self autoCompleteReveal:NO];
+        [self revealAutocomplete:NO];
         return YES;
     }
         
 	if(newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
         [self downloadSuggestionsForSearchText:newSearchText];
-    	[self autoCompleteReveal:YES];
+    	[self revealAutocomplete:YES];
 	} else {
         // search text is blank; clear the suggestions cache, reload, and hide the table
         [suggestionsCache removeAllObjects];
-        [self autoCompleteReveal:NO];
+        [self revealAutocomplete:NO];
     }
     // either way, reload the table view.
     [tableView reloadData];
@@ -241,7 +232,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
     [suggestionsCache removeAllObjects];
-	[self autoCompleteReveal:NO];
+	[self revealAutocomplete:NO];
 	return YES;
 }
 
@@ -256,7 +247,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	{
 		// if in search field mode, then reveal autocomplete.
         if(![self validURLStringFromString:textField.text])
-            [self autoCompleteReveal:YES];
+            [self revealAutocomplete:YES];
 
         [self downloadSuggestionsForSearchText:textField.text];
 	}
@@ -281,7 +272,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 		return NO;
 	}
 	[textField resignFirstResponder];
-	[self autoCompleteReveal:NO];
+	[self revealAutocomplete:NO];
 	
     NSString *urlString;
     if((urlString = [self validURLStringFromString:search.text])) {
@@ -395,7 +386,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	
 	[search resignFirstResponder];
-	[self autoCompleteReveal:NO];
+	[self revealAutocomplete:NO];
     
     [searchHandler loadQuery:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
 }
