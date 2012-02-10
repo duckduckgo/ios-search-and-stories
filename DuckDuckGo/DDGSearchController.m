@@ -19,6 +19,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 @synthesize searchHandler;
 @synthesize searchButton;
 @synthesize state;
+@synthesize background;
 
 @synthesize serverRequest;
 @synthesize serverCache;
@@ -29,7 +30,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	if (self)
 	{
 		[parent addSubview:self.view];
-		kbRect = CGRectZero;
+		keyboardRect = CGRectZero;
 		
 		self.serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
 													 cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -48,17 +49,8 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (void)dealloc
 {
-	self.serverRequest = nil;
-	
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self.view removeFromSuperview];
-}
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
 }
 
 #pragma mark - View lifecycle
@@ -71,9 +63,10 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	search.leftViewMode = UITextFieldViewModeAlways;
 	search.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kbShowing:) name:UIKeyboardDidShowNotification object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(kbHiding:) name:UIKeyboardWillHideNotification object:nil];
-
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    
+    [self revealBackground:NO animated:NO];
     [self revealAutocomplete:NO];
 }
 
@@ -110,15 +103,32 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-- (void)kbShowing:(NSNotification*)notification
+
+#pragma mark - Updating keyboardRect
+
+- (void)keyboardWillShow:(NSNotification*)notification
 {
-	kbRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-	kbRect = [self.view convertRect:kbRect toView:nil];
+	keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+	keyboardRect = [self.view convertRect:keyboardRect toView:nil];
+    
+    if([search isFirstResponder]) {
+        // user just started editing the search box
+        [self revealBackground:YES animated:YES];
+        
+        if ([search.text length])
+        {
+            // if in search field mode, then reveal autocomplete.
+            if(![self validURLStringFromString:search.text])
+                [self revealAutocomplete:YES];
+            
+            [self downloadSuggestionsForSearchText:search.text];
+        }
+    }
 }
 
-- (void)kbHiding:(NSNotification*)notification
+- (void)keyboardWillHide:(NSNotification*)notification
 {
-	kbRect = CGRectZero;
+	keyboardRect = CGRectZero;
 }
 
 
@@ -141,17 +151,40 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 #pragma mark - Omnibar methods
 
-- (void)revealAutocomplete:(BOOL)reveal
-{
+- (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
 	CGSize screenSize = self.view.superview.frame.size;
 	CGRect rect = self.view.frame;
-	if (reveal)
-		rect.size.height = screenSize.height - kbRect.size.height;
-	else
+	if (reveal) {
+		rect.size.height = screenSize.height - keyboardRect.size.height;
+    } else {
 		// clip to search entry height
 		rect.size.height = 46.0;
+        // if the autocomplete table is showing, we'll want to hide that first.
+        [self revealAutocomplete:NO];
+    }
     
-    self.view.frame = rect;
+    double animationDuration = (animated ? 0.25 : 0.0);
+    
+
+    // expand the frame to fullscreen for a moment so that the background looks like it's behind the keyboard, then adjust it to appropriate size once the animation completes.
+    
+    if(animated)
+        self.view.frame = self.view.superview.bounds;
+    
+    [UIView animateWithDuration:0.0 delay:animationDuration 
+                        options:(unsigned int)0 
+                     animations:^{
+                         self.view.frame = rect;
+                     } 
+                     completion:nil];
+    
+    [UIView animateWithDuration:(animated ? 0.25 : 0.0) animations:^{
+        background.alpha = (reveal ? 1.0 : 0.0);
+    }];
+}
+
+-(void)revealAutocomplete:(BOOL)reveal {
+    tableView.hidden = !reveal;
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -243,14 +276,6 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField
 {
-	if ([textField.text length])
-	{
-		// if in search field mode, then reveal autocomplete.
-        if(![self validURLStringFromString:textField.text])
-            [self revealAutocomplete:YES];
-
-        [self downloadSuggestionsForSearchText:textField.text];
-	}
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
@@ -258,8 +283,8 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	return YES;
 }
 
-- (void)textFieldDidEndEditing:(UITextField *)textField
-{
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [self revealBackground:NO animated:YES];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField

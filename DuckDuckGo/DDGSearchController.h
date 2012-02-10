@@ -21,14 +21,16 @@ enum eSearchState
 
 @interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate>
 {
-	IBOutlet UITableView		*tableView;
-
-	IBOutlet UITableViewCell	*loadedCell;
-	IBOutlet UITextField		*__weak search;
-	IBOutlet UIButton			*__weak searchButton;
 	
+	IBOutlet UITableViewCell	*loadedCell;
+	
+    IBOutlet UITableView		*tableView;
+    IBOutlet UITextField		*__weak search;
+	IBOutlet UIButton			*__weak searchButton;
+    IBOutlet UIView *__weak background;
+    
 	enum eSearchState			state;
-	CGRect						kbRect;
+	CGRect						keyboardRect;
 	
 	id<DDGSearchHandler>		__unsafe_unretained searchHandler;
 	
@@ -44,6 +46,7 @@ enum eSearchState
 @property (nonatomic, strong) IBOutlet		UITableViewCell	*loadedCell;
 @property (nonatomic, readonly) IBOutlet	UITextField		*search;
 @property (nonatomic, weak) IBOutlet		UIButton		*searchButton;
+@property(nonatomic, weak) IBOutlet UIView *background;
 
 @property (nonatomic, assign) enum eSearchState			state;
 
@@ -59,6 +62,7 @@ enum eSearchState
 
 
 // TODO (ishaan): make these private?
+-(void)revealBackground:(BOOL)reveal animated:(BOOL)animated;
 -(void)revealAutocomplete:(BOOL)reveal;
 -(void)updateBarWithURL:(NSURL *)url;
 -(NSString *)validURLStringFromString:(NSString *)urlString;
