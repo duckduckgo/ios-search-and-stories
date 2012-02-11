@@ -16,7 +16,7 @@
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" rowHeight="78" sectionHeaderHeight="22" sectionFooterHeight="22" id="kBF-cc-3WJ">
                                 <rect key="frame" x="0.0" y="43" width="320" height="417"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="0.21713574229999999" green="0.2305924892" blue="0.23467792570000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
                                     <outlet property="dataSource" destination="2" id="eGX-Y9-Nim"/>
                                     <outlet property="delegate" destination="2" id="UD4-7N-rcj"/>
