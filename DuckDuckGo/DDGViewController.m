@@ -36,6 +36,8 @@
     searchController.state = eViewStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
 
+    tableView.separatorColor = [UIColor whiteColor];
+    
 	[self loadEntries];
 }
 
