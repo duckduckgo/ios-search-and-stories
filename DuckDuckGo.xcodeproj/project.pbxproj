@@ -94,7 +94,6 @@
 		834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */; };
 		834E4FF6149417EC00EABD6E /* libDDGLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53B1494164F00509F2E /* libDDGLib.a */; };
 		834E5002149418D400EABD6E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834E5001149418D400EABD6E /* Twitter.framework */; };
-		838195D614A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 838195D514A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m */; };
 		838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9063149A75D700C11E41 /* DDGSearchController.xib */; };
 		838E9065149A763200C11E41 /* CurrentTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9067149A763200C11E41 /* CurrentTopicCell.xib */; };
 		838E906A149A76D400C11E41 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838E906C149A76D400C11E41 /* Localizable.strings */; };
@@ -103,7 +102,6 @@
 		83E46A9514A2210700A2D4FC /* Temporary in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9414A2210700A2D4FC /* Temporary */; };
 		83E46A9A14A22DEE00A2D4FC /* chevron15x27.png in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9914A22DEE00A2D4FC /* chevron15x27.png */; };
 		83E46A9C14A2391700A2D4FC /* arrowRight18x18.png in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9B14A2391700A2D4FC /* arrowRight18x18.png */; };
-		83E46A9E14A2401C00A2D4FC /* TopicsTrendsPickCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9D14A2401C00A2D4FC /* TopicsTrendsPickCell.xib */; };
 		83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
 		83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F32260149290EF00A61BC5 /* CoreGraphics.framework */; };
 		83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 83F32265149290EF00A61BC5 /* InfoPlist.strings */; };
@@ -221,8 +219,6 @@
 		834CD86714A0F9D7006240F1 /* doneButton51x31.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = doneButton51x31.png; sourceTree = "<group>"; };
 		834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		834E5001149418D400EABD6E /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
-		838195D414A0CCDF001C5EBC /* DDGTopicsTrendsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTopicsTrendsViewController.h; sourceTree = "<group>"; };
-		838195D514A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTopicsTrendsViewController.m; sourceTree = "<group>"; };
 		838E9062149A75D700C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DDGSearchController.xib; sourceTree = "<group>"; };
 		838E9066149A763200C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/CurrentTopicCell.xib; sourceTree = "<group>"; };
 		838E906B149A76D400C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -233,7 +229,6 @@
 		83E46A9414A2210700A2D4FC /* Temporary */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Temporary; sourceTree = "<group>"; };
 		83E46A9914A22DEE00A2D4FC /* chevron15x27.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = chevron15x27.png; sourceTree = "<group>"; };
 		83E46A9B14A2391700A2D4FC /* arrowRight18x18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = arrowRight18x18.png; sourceTree = "<group>"; };
-		83E46A9D14A2401C00A2D4FC /* TopicsTrendsPickCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TopicsTrendsPickCell.xib; sourceTree = "<group>"; };
 		83F32258149290EF00A61BC5 /* DuckDuckGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuckDuckGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83F3225C149290EF00A61BC5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		83F32260149290EF00A61BC5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -443,7 +438,6 @@
 				83F32271149290EF00A61BC5 /* iPad.storyboard */,
 				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
 				838E9067149A763200C11E41 /* CurrentTopicCell.xib */,
-				83E46A9D14A2401C00A2D4FC /* TopicsTrendsPickCell.xib */,
 				838E906C149A76D400C11E41 /* Localizable.strings */,
 			);
 			name = Resources;
@@ -479,8 +473,6 @@
 				83F32275149290EF00A61BC5 /* DDGViewController.m */,
 				4CA7ED3514D3B48200A83E77 /* DDGNonAnimatedPushSegue.h */,
 				4CA7ED3614D3B48200A83E77 /* DDGNonAnimatedPushSegue.m */,
-				838195D414A0CCDF001C5EBC /* DDGTopicsTrendsViewController.h */,
-				838195D514A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */,
@@ -689,7 +681,6 @@
 				83E46A9514A2210700A2D4FC /* Temporary in Resources */,
 				83E46A9A14A22DEE00A2D4FC /* chevron15x27.png in Resources */,
 				83E46A9C14A2391700A2D4FC /* arrowRight18x18.png in Resources */,
-				83E46A9E14A2401C00A2D4FC /* TopicsTrendsPickCell.xib in Resources */,
 				83E03E8214A4CA5D0098F328 /* topicChosen37x36.png in Resources */,
 				4C1E3A0C14C9F44600A0E143 /* Default.png in Resources */,
 				4C1E3A0D14C9F44600A0E143 /* Default@2x.png in Resources */,
@@ -765,7 +756,6 @@
 				83F32276149290EF00A61BC5 /* DDGViewController.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
-				838195D614A0CCDF001C5EBC /* DDGTopicsTrendsViewController.m in Sources */,
 				4CA7ED3714D3B48200A83E77 /* DDGNonAnimatedPushSegue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

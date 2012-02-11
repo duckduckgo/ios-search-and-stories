@@ -8,7 +8,6 @@
 
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
-#import "DDGTopicsTrendsViewController.h"
 #import "UtilityCHS.h"
 #import "SBJson.h"
 #import "AFNetworking.h"
@@ -36,9 +35,6 @@
 	searchController.searchHandler = self;
     searchController.state = eViewStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
-	
-	UILabel *lbl = (UILabel*)[self.view viewWithTag:100];
-	lbl.text = NSLocalizedString (@"Customize", nil);
 
 	[self loadEntries];
 }
