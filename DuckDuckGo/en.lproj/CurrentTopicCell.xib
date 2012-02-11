@@ -49,6 +49,10 @@
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="806210434"/>
 								<string key="NSReuseIdentifierKey">_NS:554</string>
+								<object class="NSColor" key="IBUIBackgroundColor">
+									<int key="NSColorSpace">1</int>
+									<bytes key="NSRGB">MC4yMTcxMzU3NDIzIDAuMjMwNTkyNDg5MiAwLjIzNDY3NzkyNTcAA</bytes>
+								</object>
 								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">2</int>
 								<int key="IBUITag">100</int>
