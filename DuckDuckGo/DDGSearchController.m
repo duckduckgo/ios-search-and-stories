@@ -193,6 +193,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 -(void)cancelInput {
     [search resignFirstResponder];
     search.text = oldSearchText;
+    oldSearchText = nil;
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -274,7 +275,12 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 {
     [suggestionsCache removeAllObjects];
 	[self revealAutocomplete:NO];
-	return YES;
+    
+	// save search text in case user cancels input without navigating somewhere
+    if(!oldSearchText)
+        oldSearchText = textField.text;
+    
+    return YES;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
@@ -284,7 +290,8 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     // save search text in case user cancels input without navigating somewhere
-    oldSearchText = textField.text;
+    if(!oldSearchText)
+        oldSearchText = textField.text;
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField
@@ -315,7 +322,8 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
         // it isn't a URL, so treat it as a search query.
         [searchHandler loadQuery:([search.text length] ? search.text : nil)];
     }
-            
+    
+    oldSearchText = nil;
 	return YES;
 }
 
