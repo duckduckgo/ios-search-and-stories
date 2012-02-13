@@ -136,7 +136,7 @@
     NSDictionary *entry = [entries objectAtIndex:indexPath.row];
 
     // use a placeholder image for now, and append the article title to the URL to prevent caching
-    NSString *urlString = [NSString stringWithFormat:@"http://lorempixel.com/628/146/?%@",[[entry objectForKey:@"title"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *urlString = [NSString stringWithFormat:@"http://lorempixel.com/640/156/?%@",[[entry objectForKey:@"title"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     [iv setImageWithURL:[NSURL URLWithString:urlString]];
     
 	UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
