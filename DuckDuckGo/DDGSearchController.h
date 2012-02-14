@@ -31,7 +31,7 @@ typedef enum {
 	DDGSearchControllerState state;
 	CGRect						keyboardRect;
 	
-	id<DDGSearchHandler>		__unsafe_unretained searchHandler;
+	id<DDGSearchHandler>		__weak searchHandler;
 	
 	NSMutableURLRequest			*serverRequest;
     NSMutableDictionary *suggestionsCache;
@@ -49,7 +49,7 @@ typedef enum {
 
 @property (nonatomic, assign) DDGSearchControllerState state;
 
-@property (nonatomic, unsafe_unretained) id<DDGSearchHandler>		searchHandler;
+@property (nonatomic, weak) id<DDGSearchHandler> searchHandler;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 
