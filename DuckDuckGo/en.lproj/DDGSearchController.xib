@@ -35,7 +35,7 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 			<object class="IBUIView" id="398799709">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">290</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIView" id="479174929">
@@ -43,7 +43,6 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{0, 44}, {320, 197}}</string>
 						<reference key="NSSuperview" ref="398799709"/>
-						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:196</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -57,7 +56,6 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{0, 44}, {320, 197}}</string>
 						<reference key="NSSuperview" ref="398799709"/>
-						<reference key="NSWindow"/>
 						<string key="NSReuseIdentifierKey">_NS:397</string>
 						<object class="NSColor" key="IBUIBackgroundColor" id="341541003">
 							<int key="NSColorSpace">3</int>
@@ -78,7 +76,6 @@
 						<int key="NSvFlags">290</int>
 						<string key="NSFrameSize">{320, 46}</string>
 						<reference key="NSSuperview" ref="398799709"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="450705218"/>
 						<string key="NSReuseIdentifierKey">_NS:567</string>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -93,7 +90,6 @@
 						<int key="NSvFlags">290</int>
 						<string key="NSFrame">{{42, 7}, {272, 31}}</string>
 						<reference key="NSSuperview" ref="398799709"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="502605198"/>
 						<string key="NSReuseIdentifierKey">_NS:304</string>
 						<object class="NSColor" key="IBUIBackgroundColor" id="730297726">
@@ -140,7 +136,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrameSize">{43, 45}</string>
 						<reference key="NSSuperview" ref="398799709"/>
-						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="961399238"/>
 						<string key="NSReuseIdentifierKey">_NS:225</string>
 						<reference key="IBUIBackgroundColor" ref="730297726"/>
@@ -169,8 +164,6 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{320, 241}</string>
-				<reference key="NSSuperview"/>
-				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="346300080"/>
 				<string key="NSReuseIdentifierKey">_NS:410</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -243,12 +236,12 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
-						<string key="label">searchButtonAction:</string>
+						<string key="label">leftButtonPressed:</string>
 						<reference key="source" ref="450705218"/>
 						<reference key="destination" ref="372490531"/>
 						<int key="IBEventType">7</int>
 					</object>
-					<int key="connectionID">15</int>
+					<int key="connectionID">25</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
@@ -335,7 +328,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">23</int>
+			<int key="maxID">25</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">

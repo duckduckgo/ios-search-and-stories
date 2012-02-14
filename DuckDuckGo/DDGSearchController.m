@@ -43,6 +43,11 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 		search.placeholder = NSLocalizedString (@"SearchPlaceholder", nil);
         
         suggestionsCache = [[NSMutableDictionary alloc] init];
+        
+        stopOrReloadButton = [[UIButton alloc] init];
+        stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
+        [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+        search.rightView = stopOrReloadButton;
 	}
 	return self;
 }
@@ -137,20 +142,33 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 #pragma  mark - Handle user actions
 
-- (IBAction)searchButtonAction:(UIButton*)sender
-{
+- (IBAction)leftButtonPressed:(UIButton*)sender {
 	[search resignFirstResponder];
     
     // if it's showing, hide it.
     [self revealAutocomplete:NO];
     
-	[searchHandler loadButton];
+	[searchHandler searchControllerLeftButtonPressed];
 }
 
 
 -(void)setState:(DDGSearchControllerState)searchControllerState {
 	state = searchControllerState;
 }
+
+-(void)stopOrReloadButtonPressed {
+    if([searchHandler respondsToSelector:@selector(searchControllerStopOrReloadButtonPressed)])
+        [searchHandler performSelector:@selector(searchControllerStopOrReloadButtonPressed)];
+}
+
+-(void)webViewStartedLoading {
+    [stopOrReloadButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+}
+
+-(void)webViewFinishedLoading {
+    [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
+}
+
 
 #pragma mark - Omnibar methods
 
@@ -292,19 +310,23 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     // save search text in case user cancels input without navigating somewhere
     if(!oldSearchText)
         oldSearchText = textField.text;
+    
+    if(state==DDGSearchControllerStateWeb)
+        textField.rightView = nil;
 }
 
-- (BOOL)textFieldShouldEndEditing:(UITextField *)textField
-{
+- (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
 	return YES;
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self revealBackground:NO animated:YES];
+    
+    if(state==DDGSearchControllerStateWeb)
+        textField.rightView = stopOrReloadButton;
 }
 
-- (BOOL)textFieldShouldReturn:(UITextField *)textField
-{
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	NSString *s = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	
 	if (![s length])

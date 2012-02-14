@@ -33,9 +33,11 @@ typedef enum {
 	
 	id<DDGSearchHandler>		__weak searchHandler;
 	
-	NSMutableURLRequest			*serverRequest;
+	NSMutableURLRequest *serverRequest;
     NSMutableDictionary *suggestionsCache;
     NSString *oldSearchText;
+    
+    UIButton *stopOrReloadButton;
 }
 
 @property (nonatomic, strong) NSMutableURLRequest			*serverRequest;
@@ -53,8 +55,7 @@ typedef enum {
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 
-- (IBAction)searchButtonAction:(UIButton*)sender;
-
+- (IBAction)leftButtonPressed:(UIButton*)sender;
 
 -(NSArray *)currentSuggestions;
 -(void)downloadSuggestionsForSearchText:(NSString *)searchText;
@@ -66,6 +67,8 @@ typedef enum {
 -(void)cancelInput;
 -(void)updateBarWithURL:(NSURL *)url;
 -(NSString *)validURLStringFromString:(NSString *)urlString;
+-(void)webViewStartedLoading;
+-(void)webViewFinishedLoading;
 
 @end
 

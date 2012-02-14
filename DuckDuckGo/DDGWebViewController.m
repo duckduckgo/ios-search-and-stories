@@ -89,11 +89,18 @@
 
 #pragma mark - Search handler
 
--(void)loadButton {
+-(void)searchControllerLeftButtonPressed {
 	if(webView.canGoBack)
 		[webView goBack];
 	else
 	    [self.navigationController popViewControllerAnimated:NO];
+}
+
+-(void)searchControllerStopOrReloadButtonPressed {
+    if(webView.isLoading)
+        [webView stopLoading];
+    else
+        [webView reload];
 }
 
 -(void)loadQuery:(NSString *)query {
@@ -129,6 +136,8 @@
 {
 	if (++callDepth == 1)
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
+    [searchController webViewStartedLoading];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
@@ -141,6 +150,8 @@
     
     if(theWebView.request.URL)
         [searchController updateBarWithURL:theWebView.request.URL];
+    
+    [searchController webViewFinishedLoading];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
@@ -150,6 +161,8 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 		callDepth = 0;
 	}
+    
+    [searchController webViewFinishedLoading];
 }
 
 @end

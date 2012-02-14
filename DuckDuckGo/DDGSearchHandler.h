@@ -10,8 +10,12 @@
 
 @protocol DDGSearchHandler <NSObject>
 
--(void)loadButton;
+-(void)searchControllerLeftButtonPressed;
 -(void)loadQuery:(NSString *)query;
 -(void)loadURL:(NSString *)url;
+
+@optional
+
+-(void)searchControllerStopOrReloadButtonPressed;
 
 @end

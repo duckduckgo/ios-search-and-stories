@@ -83,7 +83,7 @@
 
 #pragma mark - Search handler
 
--(void)loadButton {
+-(void)searchControllerLeftButtonPressed {
     // TODO: implement something here.
 }
 
