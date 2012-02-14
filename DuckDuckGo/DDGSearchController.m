@@ -147,9 +147,9 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[searchHandler loadButton];
 }
 
-- (void)switchModeTo:(enum eSearchState)searchState
-{
-	state = searchState;
+
+-(void)setState:(DDGSearchControllerState)searchControllerState {
+	state = searchControllerState;
 }
 
 #pragma mark - Omnibar methods

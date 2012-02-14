@@ -12,12 +12,11 @@
 #import "CacheController.h"
 #import "DDGSearchHandler.h"
 
-enum eSearchState
-{
-	eViewStateHome = 0,
-	eViewStateWebResults
+typedef enum {
+	DDGSearchControllerStateHome = 0,
+	DDGSearchControllerStateWeb
 	
-};
+} DDGSearchControllerState;
 
 @interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate>
 {
@@ -29,7 +28,7 @@ enum eSearchState
 	IBOutlet UIButton			*__weak searchButton;
     IBOutlet UIView *__weak background;
     
-	enum eSearchState			state;
+	DDGSearchControllerState state;
 	CGRect						keyboardRect;
 	
 	id<DDGSearchHandler>		__unsafe_unretained searchHandler;
@@ -48,7 +47,7 @@ enum eSearchState
 @property (nonatomic, weak) IBOutlet		UIButton		*searchButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
 
-@property (nonatomic, assign) enum eSearchState			state;
+@property (nonatomic, assign) DDGSearchControllerState state;
 
 @property (nonatomic, unsafe_unretained) id<DDGSearchHandler>		searchHandler;
 
@@ -67,7 +66,6 @@ enum eSearchState
 -(void)cancelInput;
 -(void)updateBarWithURL:(NSURL *)url;
 -(NSString *)validURLStringFromString:(NSString *)urlString;
-
 
 @end
 

@@ -52,7 +52,7 @@
 
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
-    searchController.state = eViewStateWebResults;
+    searchController.state = DDGSearchControllerStateWeb;
     [searchController.searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
 
     // if we already have a query or URL to load, load it.
