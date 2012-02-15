@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import "DDGSearchController.h"
 
 @interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler>
@@ -16,11 +15,12 @@
 	IBOutlet DDGSearchController *searchController;
     
     NSDictionary *params;
-	NSInteger callDepth;
     
-    BOOL loaded;
+    BOOL webViewInitialized;
     NSString *webQuery;
     NSString *webURL;
+
+    NSUInteger webViewLoadingDepth;
 }
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;

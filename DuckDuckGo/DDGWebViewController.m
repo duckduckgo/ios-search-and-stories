@@ -48,7 +48,7 @@
 
 	webView.delegate = self;
 	webView.scalesPageToFit = YES;
-	callDepth = 0;
+	webViewLoadingDepth = 0;
 
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	searchController.searchHandler = self;
@@ -56,7 +56,7 @@
     [searchController.searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
 
     // if we already have a query or URL to load, load it.
-	loaded = YES;
+	webViewInitialized = YES;
 	if(webQuery)
         [self loadQuery:webQuery];
     else if(webURL)
@@ -106,7 +106,7 @@
 -(void)loadQuery:(NSString *)query {
     NSString *url = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 
-    if(!loaded) {
+    if(!webViewInitialized) {
         // if the view hasn't loaded yet, setting search text won't work, so we need to save the query to load later
         webQuery = query;
     } else if(query) {
@@ -116,7 +116,7 @@
 }
 
 -(void)loadURL:(NSString *)url {
-    if(!loaded) {
+    if(!webViewInitialized) {
         // if the view hasn't loaded yet, loading a URL won't work, so we need to save the URL to load later
         webURL = url;
     } else if(url) {
@@ -127,42 +127,38 @@
 
 #pragma mark - web view deleagte
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if([request.URL isEqual:request.mainDocumentURL])
+        [searchController updateBarWithURL:request.URL];
+    
+    
 	return YES;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)theWebView
 {
-	if (++callDepth == 1)
+	if (++webViewLoadingDepth == 1) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    
-    [searchController webViewStartedLoading];
+        [searchController webViewStartedLoading];
+    }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {
-	if (--callDepth <= 0)
-	{
+	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-		callDepth = 0;
+        [searchController webViewFinishedLoading];
+		webViewLoadingDepth = 0;
 	}
-    
-    if(theWebView.request.URL)
-        [searchController updateBarWithURL:theWebView.request.URL];
-    
-    [searchController webViewFinishedLoading];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-	if (--callDepth <= 0)
-	{
+	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-		callDepth = 0;
+        [searchController webViewFinishedLoading];
+		webViewLoadingDepth = 0;
 	}
-    
-    [searchController webViewFinishedLoading];
 }
 
 @end
