@@ -29,6 +29,11 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	self = [super initWithNibName:nibNameOrNil bundle:nil];
 	if (self)
 	{
+
+        // expand the view's frame to fill the width of the screen
+        CGRect frame = self.view.frame;
+        frame.size.width = [UIScreen mainScreen].applicationFrame.size.width;
+        self.view.frame = frame;
         
 		[parent addSubview:self.view];
 		keyboardRect = CGRectZero;
