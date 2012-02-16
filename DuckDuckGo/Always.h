@@ -13,4 +13,10 @@
 #define kCacheIDTransient @"transient"
 #define kCacheIDImages @"images"
 
+#define IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? [[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad : NO)
+#define IPHONE ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? [[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone : YES)
+
+#define LANDSCAPE (([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft) || ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight))
+#define PORTRAIT (([UIDevice currentDevice].orientation == UIDeviceOrientationPortrait) || ([UIDevice currentDevice].orientation == UIDeviceOrientationPortraitUpsideDown))
+
 #endif
