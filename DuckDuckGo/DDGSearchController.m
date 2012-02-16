@@ -29,6 +29,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	self = [super initWithNibName:nibNameOrNil bundle:nil];
 	if (self)
 	{
+        
 		[parent addSubview:self.view];
 		keyboardRect = CGRectZero;
 		
