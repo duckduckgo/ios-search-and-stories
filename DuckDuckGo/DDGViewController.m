@@ -142,7 +142,10 @@
 
     // use a placeholder image for now, and append the article title to the URL to prevent caching
     NSString *urlString = [NSString stringWithFormat:@"http://lorempixel.com/640/156/?%@",[[entry objectForKey:@"title"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [iv setImageWithURL:[NSURL URLWithString:urlString]];
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString] 
+                                                  cachePolicy:NSURLRequestReturnCacheDataElseLoad 
+                                              timeoutInterval:20];
+    [iv setImageWithURLRequest:request placeholderImage:nil success:nil failure:nil];
     
 	UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
 	label.text = [entry objectForKey:@"title"];

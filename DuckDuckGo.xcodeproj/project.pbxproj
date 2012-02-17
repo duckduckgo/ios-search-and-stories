@@ -48,6 +48,8 @@
 		4C8D7B0714BE7EE100F6E604 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8D7AEE14BE7EE100F6E604 /* SBJsonUTF8Stream.m */; };
 		4C8D7B0814BE7EE100F6E604 /* SBJsonWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C8D7AEF14BE7EE100F6E604 /* SBJsonWriter.h */; };
 		4C8D7B0914BE7EE100F6E604 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C8D7AF014BE7EE100F6E604 /* SBJsonWriter.m */; };
+		4CA0DC4A14EF1C2900CFC5D2 /* SDURLCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA0DC4814EF1C2900CFC5D2 /* SDURLCache.h */; };
+		4CA0DC4B14EF1C2900CFC5D2 /* SDURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA0DC4914EF1C2900CFC5D2 /* SDURLCache.m */; };
 		4CA7ED3714D3B48200A83E77 /* DDGNonAnimatedPushSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA7ED3614D3B48200A83E77 /* DDGNonAnimatedPushSegue.m */; };
 		4CFA1A9014DDB73C00DF52FE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53D1494164F00509F2E /* Foundation.framework */; };
 		4CFA1A9C14DDB77F00DF52FE /* libNoARC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CFA1A8F14DDB73C00DF52FE /* libNoARC.a */; };
@@ -167,6 +169,8 @@
 		4C8D7AEE14BE7EE100F6E604 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
 		4C8D7AEF14BE7EE100F6E604 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
 		4C8D7AF014BE7EE100F6E604 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		4CA0DC4814EF1C2900CFC5D2 /* SDURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDURLCache.h; sourceTree = "<group>"; };
+		4CA0DC4914EF1C2900CFC5D2 /* SDURLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDURLCache.m; sourceTree = "<group>"; };
 		4CA7ED3514D3B48200A83E77 /* DDGNonAnimatedPushSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGNonAnimatedPushSegue.h; sourceTree = "<group>"; };
 		4CA7ED3614D3B48200A83E77 /* DDGNonAnimatedPushSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNonAnimatedPushSegue.m; sourceTree = "<group>"; };
 		4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchHandler.h; sourceTree = "<group>"; };
@@ -292,13 +296,6 @@
 			name = Reachability;
 			sourceTree = "<group>";
 		};
-		4C1E3A1D14CB26E500A0E143 /* ASIHTTPRequest */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = ASIHTTPRequest;
-			sourceTree = "<group>";
-		};
 		4C6AC43514DDA95500A1ACA1 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
@@ -338,9 +335,19 @@
 			path = SBJson;
 			sourceTree = "<group>";
 		};
+		4CA0DC4714EF1C0800CFC5D2 /* SDURLCache */ = {
+			isa = PBXGroup;
+			children = (
+				4CA0DC4814EF1C2900CFC5D2 /* SDURLCache.h */,
+				4CA0DC4914EF1C2900CFC5D2 /* SDURLCache.m */,
+			);
+			name = SDURLCache;
+			sourceTree = "<group>";
+		};
 		4CFA1A9114DDB73C00DF52FE /* NoARC */ = {
 			isa = PBXGroup;
 			children = (
+				4CA0DC4714EF1C0800CFC5D2 /* SDURLCache */,
 				4CFA1A9D14DDBD2200DF52FE /* AFNetworking */,
 				4CFA1A9214DDB73C00DF52FE /* Supporting Files */,
 			);
@@ -398,7 +405,6 @@
 		833DB53F1494164F00509F2E /* DDGLib */ = {
 			isa = PBXGroup;
 			children = (
-				4C1E3A1D14CB26E500A0E143 /* ASIHTTPRequest */,
 				4C1E3A1B14CB26C600A0E143 /* Reachability */,
 				4C8D7AD714BE7EE100F6E604 /* SBJson */,
 				833DB5481494168900509F2E /* CacheController.h */,
@@ -549,6 +555,7 @@
 				4CFA1AC214DDBD3300DF52FE /* AFURLConnectionOperation.h in Headers */,
 				4CFA1AC414DDBD3300DF52FE /* AFXMLRequestOperation.h in Headers */,
 				4CFA1AC614DDBD3300DF52FE /* UIImageView+AFNetworking.h in Headers */,
+				4CA0DC4A14EF1C2900CFC5D2 /* SDURLCache.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,6 +724,7 @@
 				4CFA1AC314DDBD3300DF52FE /* AFURLConnectionOperation.m in Sources */,
 				4CFA1AC514DDBD3300DF52FE /* AFXMLRequestOperation.m in Sources */,
 				4CFA1AC714DDBD3300DF52FE /* UIImageView+AFNetworking.m in Sources */,
+				4CA0DC4B14EF1C2900CFC5D2 /* SDURLCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

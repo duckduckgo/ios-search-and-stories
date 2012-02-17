@@ -10,6 +10,7 @@
 #import "UtilityCHS.h"
 #import "CacheController.h"
 #import "DataHelper.h"
+#import "SDURLCache.h"
 
 @implementation DDGAppDelegate
 
@@ -25,6 +26,12 @@ static void uncaughtExceptionHandler(NSException *exception) {
 {
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
 
+    // global URL cache
+    SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
+                                                         diskCapacity:1024*1024*5 // 5MB disk cache
+                                                             diskPath:[SDURLCache defaultCachePath]];
+    [NSURLCache setSharedURLCache:urlCache];
+    
     // define caches
     [CacheController addCache:kCacheIDTransient lifetimeSeconds:0];
     [CacheController addCache:kCacheIDImages lifetimeSeconds:60*60*24*31];
