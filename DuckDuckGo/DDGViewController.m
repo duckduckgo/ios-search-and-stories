@@ -17,7 +17,7 @@
 @synthesize loadedCell;
 @synthesize tableView;
 @synthesize searchController;
-@synthesize entries;
+@synthesize stories;
 
 - (void)didReceiveMemoryWarning
 {
@@ -38,7 +38,12 @@
 
     tableView.separatorColor = [UIColor whiteColor];
     
-	[self loadEntries];
+    NSData *storiesData = [NSData dataWithContentsOfFile:[self storiesPath]];
+    if(!storiesData) // NSJSONSerialization complains if it's passed nil, so we give it an empty NSData instead
+        storiesData = [NSData data];
+    self.stories = [NSJSONSerialization JSONObjectWithData:storiesData options:0 error:nil];
+        
+    [self downloadStories];
 }
 
 - (void)viewDidUnload
@@ -133,7 +138,7 @@
         iv = (UIImageView *)[cell.contentView viewWithTag:100];
     }
 	
-    NSDictionary *entry = [entries objectAtIndex:indexPath.row];
+    NSDictionary *entry = [stories objectAtIndex:indexPath.row];
 
     // use a placeholder image for now, and append the article title to the URL to prevent caching
     NSString *urlString = [NSString stringWithFormat:@"http://lorempixel.com/640/156/?%@",[[entry objectForKey:@"title"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -152,7 +157,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-	return [entries count];
+	return [stories count];
 }
 
 #pragma  mark - UITableViewDelegate
@@ -160,23 +165,62 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     webQuery = nil;
-    webURL = [[entries objectAtIndex:indexPath.row] objectForKey:@"url"];
+    webURL = [[stories objectAtIndex:indexPath.row] objectForKey:@"url"];
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
 #pragma mark - Loading popular stories
 
-- (void)loadEntries
+- (void)downloadStories
 {
+    // start downloading new stories
     NSURL *url = [NSURL URLWithString:@"http://ddg.watrcoolr.us/?o=json"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        self.entries = JSON;
-        [tableView reloadData];
+        NSArray *newStories = (NSArray *)JSON;
+        
+        [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:[self indexPathsofStoriesInArray:newStories andNotArray:self.stories] 
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView deleteRowsAtIndexPaths:[self indexPathsofStoriesInArray:self.stories andNotArray:newStories] 
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        
+        self.stories = newStories;
+        [self.tableView endUpdates];
+
+        NSData *data = [NSJSONSerialization dataWithJSONObject:self.stories 
+                                                       options:0 
+                                                         error:nil];
+        [data writeToFile:[self storiesPath] atomically:YES];
+        
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         NSLog(@"FAILURE: %@",[error userInfo]);
     }];
     [operation start];
+}
+
+-(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    
+    for(int i=0;i<newStories.count;i++) {
+        NSString *storyID = [[newStories objectAtIndex:i] objectForKey:@"id"];
+
+        BOOL matchFound = NO;
+        for(NSDictionary *oldStory in oldStories) {
+            if([storyID isEqualToString:[oldStory objectForKey:@"id"]]) {
+                matchFound = YES;
+                break;
+            }
+        }
+        
+        if(!matchFound)
+            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+    return [indexPaths copy];
+}
+
+-(NSString *)storiesPath {
+    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.plist"];
 }
 
 @end

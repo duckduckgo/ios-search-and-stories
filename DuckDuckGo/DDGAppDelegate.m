@@ -24,7 +24,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-    [[NSArray array] performSelector:@selector(quack)];
+
     // define caches
     [CacheController addCache:kCacheIDTransient lifetimeSeconds:0];
     [CacheController addCache:kCacheIDImages lifetimeSeconds:60*60*24*31];

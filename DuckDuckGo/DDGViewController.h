@@ -16,7 +16,7 @@
 	IBOutlet UITableView *tableView;
 	IBOutlet DDGSearchController *searchController;
 	
-	id entries;
+	NSArray *stories;
 
     NSString *webQuery;
     NSString *webURL;
@@ -26,8 +26,10 @@
 @property (nonatomic, strong) IBOutlet UITableView	*tableView;
 @property (nonatomic, strong) IBOutlet DDGSearchController *searchController;
 
-@property (nonatomic, strong) id entries;
+@property (nonatomic, strong) id stories;
 
-- (void)loadEntries;
+- (void)downloadStories;
+-(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories;
+-(NSString *)storiesPath;
 
 @end
