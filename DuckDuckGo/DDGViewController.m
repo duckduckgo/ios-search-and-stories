@@ -8,8 +8,6 @@
 
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
-#import "UtilityCHS.h"
-#import "SBJson.h"
 #import "AFNetworking.h"
 
 @implementation DDGViewController

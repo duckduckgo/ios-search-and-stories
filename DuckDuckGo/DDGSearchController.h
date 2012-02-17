@@ -7,9 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-
-#import "DataHelper.h"
-#import "CacheController.h"
 #import "DDGSearchHandler.h"
 
 typedef enum {

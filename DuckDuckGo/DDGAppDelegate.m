@@ -7,9 +7,6 @@
 //
 
 #import "DDGAppDelegate.h"
-#import "UtilityCHS.h"
-#import "CacheController.h"
-#import "DataHelper.h"
 #import "SDURLCache.h"
 
 @implementation DDGAppDelegate
@@ -31,19 +28,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
                                                          diskCapacity:1024*1024*5 // 5MB disk cache
                                                              diskPath:[SDURLCache defaultCachePath]];
     [NSURLCache setSharedURLCache:urlCache];
-    
-    // define caches
-    [CacheController addCache:kCacheIDTransient lifetimeSeconds:0];
-    [CacheController addCache:kCacheIDImages lifetimeSeconds:60*60*24*31];
-	// create cache directories if they don't already exist
-	[CacheController initializeCaches];
-
-    // set HTTP headers for all requests
-    [DataHelper setHTTPHeaders:[NSDictionary dictionaryWithObjectsAndKeys:
-                                [@"DDG iOS App v" stringByAppendingString:[[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"]], @"User-Agent", 
-                                @"http://duckduckgo.com", @"Referer",
-                                nil]];
-    
     
     // load default settings from Defaults.plist (as of now, though, we have neither settings nor Defaults.plist)
     NSString *bundlePath = [[NSBundle mainBundle] pathForResource:@"Defaults" ofType:@"plist"];
