@@ -15,13 +15,16 @@
 
 @synthesize window = _window;
 
+static void uncaughtExceptionHandler(NSException *exception) {
+    NSLog(@"CRASH: %@", exception);
+    NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
+    // Internal error reporting
+}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-	// turn off completely standard URL caching -- we use our own caching
-//	NSURLCache *sharedCache = [[NSURLCache alloc] initWithMemoryCapacity:0 diskCapacity:0 diskPath:nil];
-//    [NSURLCache setSharedURLCache:sharedCache];
-	
+    NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    [[NSArray array] performSelector:@selector(quack)];
     // define caches
     [CacheController addCache:kCacheIDTransient lifetimeSeconds:0];
     [CacheController addCache:kCacheIDImages lifetimeSeconds:60*60*24*31];
