@@ -166,7 +166,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     webQuery = nil;
-    webURL = [[stories objectAtIndex:indexPath.row] objectForKey:@"url"];
+    webURL = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",[[stories objectAtIndex:indexPath.row] objectForKey:@"url"]];
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
