@@ -42,7 +42,7 @@ typedef enum {
 @property (nonatomic, strong) NSMutableDictionary			*serverCache;
 
 @property (nonatomic, strong) IBOutlet		UITableViewCell	*loadedCell;
-@property (nonatomic, readonly) IBOutlet	UITextField		*search;
+@property (nonatomic, weak) IBOutlet	UITextField		*search;
 @property (nonatomic, weak) IBOutlet		UIButton		*searchButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
 

@@ -167,7 +167,8 @@
 {
     webQuery = nil;
     // TODO (caine): this will be removed sooner or later before launch; they track with cookies.
-    webURL = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",[[stories objectAtIndex:indexPath.row] objectForKey:@"url"]];
+    NSString *escapedStoryURL = [[[stories objectAtIndex:indexPath.row] objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    webURL = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",escapedStoryURL];
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
