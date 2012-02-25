@@ -57,10 +57,8 @@
 
     // if we already have a query or URL to load, load it.
 	webViewInitialized = YES;
-	if(webQuery)
-        [self loadQuery:webQuery];
-    else if(webURL)
-        [self loadURL:webURL];
+    if(urlToLoad)
+        [self loadURL:urlToLoad];
 }
 
 - (void)dealloc
@@ -105,23 +103,17 @@
 
 -(void)loadQuery:(NSString *)query {
     NSString *url = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-
-    if(!webViewInitialized) {
-        // if the view hasn't loaded yet, setting search text won't work, so we need to save the query to load later
-        webQuery = query;
-    } else if(query) {
-        [self loadURL:url];
-        searchController.searchField.text = query;
-    }
+    [self loadURL:url];
 }
 
--(void)loadURL:(NSString *)url {
+-(void)loadURL:(NSString *)urlString {
     if(!webViewInitialized) {
         // if the view hasn't loaded yet, loading a URL won't work, so we need to save the URL to load later
-        webURL = url;
-    } else if(url) {
-        [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
-        searchController.searchField.text = url;
+        webURL = urlString;
+    } else if(urlString) {
+        NSURL *url = [NSURL URLWithString:urlString];
+        [webView loadRequest:[NSURLRequest requestWithURL:url]];
+        [searchController updateBarWithURL:url];
     }
 }
 

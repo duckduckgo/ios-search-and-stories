@@ -12,7 +12,7 @@
 
 -(void)searchControllerLeftButtonPressed;
 -(void)loadQuery:(NSString *)query;
--(void)loadURL:(NSString *)url;
+-(void)loadURL:(NSString *)urlString;
 
 @optional
 
