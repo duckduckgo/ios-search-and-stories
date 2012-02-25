@@ -111,7 +111,7 @@
         webQuery = query;
     } else if(query) {
         [self loadURL:url];
-        searchController.search.text = query;
+        searchController.searchField.text = query;
     }
 }
 
@@ -121,7 +121,7 @@
         webURL = url;
     } else if(url) {
         [webView loadRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:url]]];
-        searchController.search.text = url;
+        searchController.searchField.text = url;
     }
 }
 

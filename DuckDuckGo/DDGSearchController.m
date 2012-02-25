@@ -9,50 +9,54 @@
 #import "DDGSearchController.h"
 #import "AFNetworking.h"
 
-static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
+static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
+
+@interface DDGSearchController (Private)
+
+-(NSArray *)currentSuggestions;
+-(void)downloadSuggestionsForSearchText:(NSString *)searchText;
+
+-(NSString *)validURLStringFromString:(NSString *)urlString;
+-(void)revealBackground:(BOOL)reveal animated:(BOOL)animated;
+-(void)revealAutocomplete:(BOOL)reveal;
+-(void)cancelInput;
+
+@end
 
 @implementation DDGSearchController
 
-@synthesize loadedCell;
-@synthesize search;
-@synthesize searchHandler;
-@synthesize searchButton;
-@synthesize state;
-@synthesize background;
-
-@synthesize serverRequest;
-@synthesize serverCache;
+@synthesize loadedCell, searchField, searchButton, background;
+@synthesize serverRequest, searchHandler, state;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nil];
-	if (self)
-	{
+	if (self) {
 
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
         frame.size.width = [UIScreen mainScreen].applicationFrame.size.width;
         self.view.frame = frame;
-        
+
 		[parent addSubview:self.view];
 		keyboardRect = CGRectZero;
 		
 		self.serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
-													 cachePolicy:NSURLRequestUseProtocolCachePolicy
-												 timeoutInterval:10.0];
+                                                     cachePolicy:NSURLRequestUseProtocolCachePolicy
+                                                 timeoutInterval:10.0];
 		
 		[serverRequest setValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
 		[serverRequest setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
 		[serverRequest setValue:@"text/plain; charset=UTF-8" forHTTPHeaderField:@"Accept"];
-				
-		search.placeholder = NSLocalizedString (@"SearchPlaceholder", nil);
         
         suggestionsCache = [[NSMutableDictionary alloc] init];
         
+        searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
+
         stopOrReloadButton = [[UIButton alloc] init];
         stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
         [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        search.rightView = stopOrReloadButton;
+        searchField.rightView = stopOrReloadButton;
 	}
 	return self;
 }
@@ -69,9 +73,9 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 {
     [super viewDidLoad];
 
-	search.rightViewMode = UITextFieldViewModeAlways;
-	search.leftViewMode = UITextFieldViewModeAlways;
-	search.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
+	searchField.rightViewMode = UITextFieldViewModeAlways;
+	searchField.leftViewMode = UITextFieldViewModeAlways;
+	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
@@ -124,17 +128,17 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	keyboardRect = [self.view convertRect:keyboardRect toView:nil];
     
-    if([search isFirstResponder]) {
+    if([searchField isFirstResponder]) {
         // user just started editing the search box
         [self revealBackground:YES animated:YES];
         
-        if ([search.text length])
+        if ([searchField.text length])
         {
             // if in search field mode, then reveal autocomplete.
-            if(![self validURLStringFromString:search.text])
+            if(![self validURLStringFromString:searchField.text])
                 [self revealAutocomplete:YES];
             
-            [self downloadSuggestionsForSearchText:search.text];
+            [self downloadSuggestionsForSearchText:searchField.text];
         }
     }
 }
@@ -148,7 +152,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 #pragma  mark - Handle user actions
 
 - (IBAction)leftButtonPressed:(UIButton*)sender {
-	[search resignFirstResponder];
+	[searchField resignFirstResponder];
     
     // if it's showing, hide it.
     [self revealAutocomplete:NO];
@@ -214,8 +218,8 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 }
 
 -(void)cancelInput {
-    [search resignFirstResponder];
-    search.text = oldSearchText;
+    [searchField resignFirstResponder];
+    searchField.text = oldSearchText;
     oldSearchText = nil;
 }
 
@@ -237,10 +241,10 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
         query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
         query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         
-        search.text = query;
+        searchField.text = query;
     } else {
         // no, just a plain old URL.
-        search.text = [url absoluteString];
+        searchField.text = [url absoluteString];
     }
 }
 
@@ -343,11 +347,11 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[self revealAutocomplete:NO];
 	
     NSString *urlString;
-    if((urlString = [self validURLStringFromString:search.text])) {
+    if((urlString = [self validURLStringFromString:searchField.text])) {
         [searchHandler loadURL:urlString];
     } else {
         // it isn't a URL, so treat it as a search query.
-        [searchHandler loadQuery:([search.text length] ? search.text : nil)];
+        [searchHandler loadQuery:([searchField.text length] ? searchField.text : nil)];
     }
     
     oldSearchText = nil;
@@ -358,7 +362,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 #pragma mark - Suggestion cache management
 
 -(NSArray *)currentSuggestions {
-    NSString *searchText = search.text;
+    NSString *searchText = searchField.text;
     NSString *bestMatch = nil;
     
     for(NSString *suggestionText in suggestionsCache) {
@@ -454,7 +458,7 @@ static NSString *const sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	
-	[search resignFirstResponder];
+	[searchField resignFirstResponder];
 	[self revealAutocomplete:NO];
     
     [searchHandler loadQuery:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];

@@ -12,24 +12,23 @@
 typedef enum {
 	DDGSearchControllerStateHome = 0,
 	DDGSearchControllerStateWeb
-	
 } DDGSearchControllerState;
 
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, NSURLConnectionDelegate>
+@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
 {
 	
 	IBOutlet UITableViewCell	*loadedCell;
 	
-    IBOutlet UITableView		*tableView;
-    IBOutlet UITextField		*__weak search;
-	IBOutlet UIButton			*__weak searchButton;
+    IBOutlet UITableView	 *tableView;
+    IBOutlet UITextField	 *__weak searchField;
+	IBOutlet UIButton *__weak searchButton;
     IBOutlet UIView *__weak background;
     
 	DDGSearchControllerState state;
-	CGRect						keyboardRect;
+	CGRect keyboardRect;
 	
-	id<DDGSearchHandler>		__weak searchHandler;
-	
+	id<DDGSearchHandler> __weak searchHandler;
+
 	NSMutableURLRequest *serverRequest;
     NSMutableDictionary *suggestionsCache;
     NSString *oldSearchText;
@@ -37,39 +36,26 @@ typedef enum {
     UIButton *stopOrReloadButton;
 }
 
-@property (nonatomic, strong) NSMutableURLRequest			*serverRequest;
-
-@property (nonatomic, strong) NSMutableDictionary			*serverCache;
-
-@property (nonatomic, strong) IBOutlet		UITableViewCell	*loadedCell;
-@property (nonatomic, weak) IBOutlet	UITextField		*search;
-@property (nonatomic, weak) IBOutlet		UIButton		*searchButton;
+@property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
+@property (nonatomic, weak) IBOutlet	UITextField *searchField;
+@property (nonatomic, weak) IBOutlet UIButton *searchButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
 
+@property (nonatomic, strong) NSMutableURLRequest *serverRequest;
 @property (nonatomic, assign) DDGSearchControllerState state;
-
 @property (nonatomic, weak) id<DDGSearchHandler> searchHandler;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
+-(id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 
-- (IBAction)leftButtonPressed:(UIButton*)sender;
-
--(NSArray *)currentSuggestions;
--(void)downloadSuggestionsForSearchText:(NSString *)searchText;
-
-
-// TODO (ishaan): make these private?
--(void)revealBackground:(BOOL)reveal animated:(BOOL)animated;
--(void)revealAutocomplete:(BOOL)reveal;
--(void)cancelInput;
+-(IBAction)leftButtonPressed:(UIButton*)sender;
 -(void)updateBarWithURL:(NSURL *)url;
--(NSString *)validURLStringFromString:(NSString *)urlString;
+
+// the web view needs to call these at the appropriate times to update the stop/reload button
 -(void)webViewStartedLoading;
 -(void)webViewFinishedLoading;
 
 @end
 
-UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeySnippet; 
-UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyPhrase; 
-UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyImage; 
-
+UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeySnippet;
+UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyPhrase;
+UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyImage;
