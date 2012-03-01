@@ -14,32 +14,7 @@
 @synthesize webView;
 @synthesize params;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self)
-	{
-        // Custom initialization
-    }
-    return self;
-}
-
-- (void)didReceiveMemoryWarning
-{
-    // Releases the view if it doesn't have a superview.
-    [super didReceiveMemoryWarning];
-    
-    // Release any cached data, images, etc that aren't in use.
-}
-
 #pragma mark - View lifecycle
-
-/*
-// Implement loadView to create a view hierarchy programmatically, without using a nib.
-- (void)loadView
-{
-}
-*/
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
@@ -70,8 +45,6 @@
 - (void)viewDidUnload
 {
     [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -89,7 +62,7 @@
 
 -(void)searchControllerLeftButtonPressed {
 	if(webView.canGoBack)
-		[webView goBack];
+        [webView goBack];
 	else
 	    [self.navigationController popViewControllerAnimated:NO];
 }
@@ -119,13 +92,13 @@
     }
 }
 
-#pragma mark - web view deleagte
+#pragma mark - Web view deleagte
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    
     if([request.URL isEqual:request.mainDocumentURL])
         [searchController updateBarWithURL:request.URL];
-    
-    
+
 	return YES;
 }
 

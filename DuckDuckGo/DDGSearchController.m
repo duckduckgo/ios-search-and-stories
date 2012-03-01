@@ -87,35 +87,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     [self revealAutocomplete:NO];
 }
 
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
-    // e.g. self.myOutlet = nil;
-}
-
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-    [super viewDidDisappear:animated];
-}
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
@@ -149,7 +121,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 }
 
 
-#pragma  mark - Handle user actions
+#pragma  mark - Interactions with search handler
 
 - (IBAction)leftButtonPressed:(UIButton*)sender {
 	[searchField resignFirstResponder];
@@ -178,8 +150,35 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
 }
 
+#pragma mark - Helpers
 
-#pragma mark - Omnibar methods
+-(NSString *)validURLStringFromString:(NSString *)urlString {
+    // check whether the entered text is a URL or a search query
+    NSURL *url = [NSURL URLWithString:urlString];
+    if(url && url.scheme) {
+        // it has a scheme, so it's probably a valid URL
+        return urlString;
+    } else {
+        // check whether adding a scheme makes it a valid URL
+        NSString *urlStringWithSchema = [NSString stringWithFormat:@"http://%@",urlString];
+        url = [NSURL URLWithString:urlStringWithSchema];
+        
+        if(url && url.host && [url.host rangeOfString:@"."].location != NSNotFound) {
+            // it has a host with a dot ("xyz.com"), so it's probably a URL
+            return urlStringWithSchema;
+        } else {
+            // it can't be made into a valid URL
+            return nil;
+        }
+    }
+}
+
+// mostly for clarity
+-(BOOL)isQuery:(NSString *)queryOrURL {
+    return ![self validURLStringFromString:queryOrURL];
+}
+
+#pragma mark - Omnibar management methods
 
 - (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
 	CGSize screenSize = self.view.superview.frame.size;
@@ -195,7 +194,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     
     double animationDuration = (animated ? 0.25 : 0.0);
     
-
+    
     // expand the frame to fullscreen for a moment so that the background looks like it's behind the keyboard, then adjust it to appropriate size once the animation completes.
     
     if(animated)
@@ -233,48 +232,35 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
         if(parameter.count > 1)
             [queryComponents setObject:[parameter objectAtIndex:1] forKey:[parameter objectAtIndex:0]];
     }
-
+    
     // check whether we have a DDG search URL
-    if([[url host] isEqualToString:@"duckduckgo.com"] && [[url path] isEqualToString:@"/"] && [queryComponents objectForKey:@"q"]) {
-        // yep! extract the search query...
-        NSString *query = [queryComponents objectForKey:@"q"];
-        query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
-        query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        
-        searchField.text = query;
+    if([[url host] isEqualToString:@"duckduckgo.com"]) {
+        if([[url path] isEqualToString:@"/"] && [queryComponents objectForKey:@"q"]) {
+            // yep! extract the search query...
+            NSString *query = [queryComponents objectForKey:@"q"];
+            query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
+            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            searchField.text = query;
+        } else if(![[url pathExtension] isEqualToString:@"html"]) {
+            // article page
+            NSString *query = [url path];
+            query = [query substringFromIndex:1]; // strip the leading '/' in the URL
+            query = [query stringByReplacingOccurrencesOfString:@"_" withString:@"%20"];
+            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            searchField.text = query;
+        } else {
+            // a URL on DDG.com, but not a search query
+            searchField.text = [url absoluteString];
+        }
     } else {
         // no, just a plain old URL.
         searchField.text = [url absoluteString];
     }
 }
 
--(NSString *)validURLStringFromString:(NSString *)urlString {
-    // check whether the entered text is a URL or a search query
-    NSURL *url = [NSURL URLWithString:urlString];
-    if(url && url.scheme) {
-        // it has a scheme, so it's probably a valid URL
-        return urlString;
-    } else {
-        // check whether adding a scheme makes it a valid URL
-        NSString *urlStringWithSchema = [NSString stringWithFormat:@"http://%@",urlString];
-        url = [NSURL URLWithString:urlStringWithSchema];
-        
-        if(url && url.host && [url.host rangeOfString:@"."].location != NSNotFound) {
-            // it has a host with a dot ("xyz.com"), so it's probably a URL
-            return urlStringWithSchema;
-        } else {
-            // it can't be made into a valid URL
-            return nil;
-        }
-    }
-}
-
-// mostly for clarity
--(BOOL)isQuery:(NSString *)queryOrURL {
-    return ![self validURLStringFromString:queryOrURL];
-}
-
-#pragma  mark - Handle the text field input
+#pragma  mark - Text field delegate
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
