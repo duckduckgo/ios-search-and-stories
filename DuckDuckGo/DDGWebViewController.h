@@ -16,8 +16,8 @@
     
     NSDictionary *params;
     
-    BOOL webViewInitialized;
-    NSString *urlToLoad;
+    BOOL viewsInitialized;
+    NSString *queryOrURLToLoad;
 
     NSUInteger webViewLoadingDepth;
 }
@@ -27,6 +27,6 @@
 
 @property (nonatomic, strong) NSDictionary *params;
 
--(void)loadURL:(NSString *)urlString;
+-(void)loadQueryOrURL:(NSString *)queryOrURLString;
 
 @end

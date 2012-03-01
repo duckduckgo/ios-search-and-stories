@@ -16,7 +16,6 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 -(NSArray *)currentSuggestions;
 -(void)downloadSuggestionsForSearchText:(NSString *)searchText;
 
--(NSString *)validURLStringFromString:(NSString *)urlString;
 -(void)revealBackground:(BOOL)reveal animated:(BOOL)animated;
 -(void)revealAutocomplete:(BOOL)reveal;
 -(void)cancelInput;
@@ -25,7 +24,8 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 @implementation DDGSearchController
 
-@synthesize loadedCell, searchField, searchButton, background;
+@synthesize loadedCell;
+@synthesize tableView, searchField, searchButton, background;
 @synthesize serverRequest, searchHandler, state;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
@@ -135,7 +135,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
         if ([searchField.text length])
         {
             // if in search field mode, then reveal autocomplete.
-            if(![self validURLStringFromString:searchField.text])
+            if([self isQuery:searchField.text])
                 [self revealAutocomplete:YES];
             
             [self downloadSuggestionsForSearchText:searchField.text];
@@ -269,6 +269,11 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
     }
 }
 
+// mostly for clarity
+-(BOOL)isQuery:(NSString *)queryOrURL {
+    return ![self validURLStringFromString:queryOrURL];
+}
+
 #pragma  mark - Handle the text field input
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -346,14 +351,8 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[textField resignFirstResponder];
 	[self revealAutocomplete:NO];
 	
-    NSString *urlString;
-    if((urlString = [self validURLStringFromString:searchField.text])) {
-        [searchHandler loadURL:urlString];
-    } else {
-        // it isn't a URL, so treat it as a search query.
-        [searchHandler loadQuery:([searchField.text length] ? searchField.text : nil)];
-    }
-    
+    [searchHandler loadQueryOrURL:([searchField.text length] ? searchField.text : nil)];
+
     oldSearchText = nil;
 	return YES;
 }
@@ -461,7 +460,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[searchField resignFirstResponder];
 	[self revealAutocomplete:NO];
     
-    [searchHandler loadQuery:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
+    [searchHandler loadQueryOrURL:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
 }
 
 @end

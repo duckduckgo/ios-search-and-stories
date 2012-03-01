@@ -90,27 +90,15 @@
     // TODO: implement something here.
 }
 
-- (void)loadQuery:(NSString *)query {
-    webQuery = query;
-    webURL = nil;
-    [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
-}
-
--(void)loadURL:(NSString *)url {
-    webQuery = nil;
-    webURL = url;
+-(void)loadQueryOrURL:(NSString *)queryOrURL {
+    queryOrURLToLoad = queryOrURL;
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
 // i'll put this here for now because it's closely related to loadQuery:
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-
-    if([segue.identifier isEqualToString:@"WebViewSegue"])
-        if(webQuery)
-            [segue.destinationViewController loadQuery:webQuery];
-        else if(webURL) {
-            [segue.destinationViewController loadURL:webURL];
-        }
+    if([segue.identifier isEqualToString:@"WebViewSegue"] && queryOrURLToLoad)
+        [segue.destinationViewController loadQueryOrURL:queryOrURLToLoad];
 }
 
 #pragma mark - Table view data source
@@ -118,7 +106,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	UITableViewCell *cell;
-	UIImageView		*iv;
+	UIImageView *iv;
 	
 	static NSString *CellIdentifier = @"CurrentTopicCell";
 	
@@ -165,10 +153,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    webQuery = nil;
     // TODO (caine): this will be removed sooner or later before launch; they track with cookies.
     NSString *escapedStoryURL = [[[stories objectAtIndex:indexPath.row] objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    webURL = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",escapedStoryURL];
+    queryOrURLToLoad = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",escapedStoryURL];
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 

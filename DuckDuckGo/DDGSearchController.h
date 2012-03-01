@@ -19,10 +19,10 @@ typedef enum {
 	
 	IBOutlet UITableViewCell	*loadedCell;
 	
-    IBOutlet UITableView	 *tableView;
-    IBOutlet UITextField	 *__weak searchField;
-	IBOutlet UIButton *__weak searchButton;
-    IBOutlet UIView *__weak background;
+    __weak IBOutlet UITableView *tableView;
+    __weak IBOutlet UITextField *searchField;
+	__weak IBOutlet UIButton *searchButton;
+    __weak IBOutlet UIView *background;
     
 	DDGSearchControllerState state;
 	CGRect keyboardRect;
@@ -36,19 +36,24 @@ typedef enum {
     UIButton *stopOrReloadButton;
 }
 
-@property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
-@property (nonatomic, weak) IBOutlet	UITextField *searchField;
-@property (nonatomic, weak) IBOutlet UIButton *searchButton;
+@property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
+
+@property(nonatomic, weak) IBOutlet UITableView *tableView;
+@property(nonatomic, weak) IBOutlet UITextField *searchField;
+@property(nonatomic, weak) IBOutlet UIButton *searchButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
 
-@property (nonatomic, strong) NSMutableURLRequest *serverRequest;
-@property (nonatomic, assign) DDGSearchControllerState state;
-@property (nonatomic, weak) id<DDGSearchHandler> searchHandler;
+@property(nonatomic, strong) NSMutableURLRequest *serverRequest;
+@property(nonatomic, assign) DDGSearchControllerState state;
+@property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
 
 -(id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(void)updateBarWithURL:(NSURL *)url;
+
+-(NSString *)validURLStringFromString:(NSString *)urlString;
+-(BOOL)isQuery:(NSString *)queryOrURL;
 
 // the web view needs to call these at the appropriate times to update the stop/reload button
 -(void)webViewStartedLoading;

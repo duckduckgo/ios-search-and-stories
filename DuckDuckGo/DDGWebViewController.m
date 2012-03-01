@@ -56,9 +56,9 @@
     [searchController.searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
 
     // if we already have a query or URL to load, load it.
-	webViewInitialized = YES;
-    if(urlToLoad)
-        [self loadURL:urlToLoad];
+	viewsInitialized = YES;
+    if(queryOrURLToLoad)
+        [self loadQueryOrURL:queryOrURLToLoad];
 }
 
 - (void)dealloc
@@ -101,16 +101,18 @@
         [webView reload];
 }
 
--(void)loadQuery:(NSString *)query {
-    NSString *url = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    [self loadURL:url];
-}
-
--(void)loadURL:(NSString *)urlString {
-    if(!webViewInitialized) {
-        // if the view hasn't loaded yet, loading a URL won't work, so we need to save the URL to load later
-        webURL = urlString;
-    } else if(urlString) {
+-(void)loadQueryOrURL:(NSString *)queryOrURLString {
+    if(!viewsInitialized) {
+        // if views haven't loaded yet, nothing below work, so we need to save the URL/query to load later
+        queryOrURLToLoad = queryOrURLString;
+    } else if(queryOrURLString) {
+        
+        NSString *urlString;
+        if([searchController isQuery:queryOrURLString]) {
+            urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [queryOrURLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        } else
+            urlString = [searchController validURLStringFromString:queryOrURLString];
+        
         NSURL *url = [NSURL URLWithString:urlString];
         [webView loadRequest:[NSURLRequest requestWithURL:url]];
         [searchController updateBarWithURL:url];

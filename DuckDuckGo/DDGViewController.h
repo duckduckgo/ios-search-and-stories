@@ -13,20 +13,20 @@
 @interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler>
 {
 	IBOutlet UITableViewCell *loadedCell;
-	IBOutlet UITableView *tableView;
-	IBOutlet DDGSearchController *searchController;
+    
+	__weak IBOutlet UITableView *tableView;
+    DDGSearchController *searchController;
 	
 	NSArray *stories;
 
-    NSString *webQuery;
-    NSString *webURL;
+    NSString *queryOrURLToLoad;
 }
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
-@property (nonatomic, strong) IBOutlet UITableView	*tableView;
-@property (nonatomic, strong) IBOutlet DDGSearchController *searchController;
+@property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) DDGSearchController *searchController;
 
-@property (nonatomic, strong) id stories;
+@property (nonatomic, strong) NSArray *stories;
 
 - (void)downloadStories;
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories;
