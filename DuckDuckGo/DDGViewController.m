@@ -105,25 +105,17 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	UITableViewCell *cell;
-	UIImageView *iv;
 	
 	static NSString *CellIdentifier = @"CurrentTopicCell";
-	
-	cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
+	UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil) {
         [[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil];
         cell = loadedCell;
         self.loadedCell = nil;
-		
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		iv = (UIImageView *)[cell.contentView viewWithTag:100];
-		iv.contentMode = UIViewContentModeScaleAspectFill;
-		iv.clipsToBounds = YES;
-	} else {
-        iv = (UIImageView *)[cell.contentView viewWithTag:100];
-    }
-	
+	}
+    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
+	UIImageView *favicon = (UIImageView *)[cell.contentView viewWithTag:300];
+    
     NSDictionary *entry = [stories objectAtIndex:indexPath.row];
 
     // use a placeholder image for now, and append the article title to the URL to prevent caching
@@ -131,7 +123,18 @@
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString] 
                                                   cachePolicy:NSURLRequestReturnCacheDataElseLoad 
                                               timeoutInterval:20];
-    [iv setImageWithURLRequest:request placeholderImage:nil success:nil failure:nil];
+    [imageView setImageWithURLRequest:request placeholderImage:nil success:nil failure:nil];
+    
+    // load favicon image
+    // http://i2.duck.co/i/reddit.com.ico
+    NSURL *url = [NSURL URLWithString:[entry objectForKey:@"url"]];
+    NSString *faviconURLString = [NSString stringWithFormat:@"http://i2.duck.co/i/%@.ico",[url host]];
+    NSURLRequest *faviconRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:faviconURLString]
+                                                         cachePolicy:NSURLRequestReturnCacheDataElseLoad 
+                                                     timeoutInterval:20];
+    [favicon setImageWithURLRequest:faviconRequest placeholderImage:nil success:nil failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        NSLog(@"%@",error.userInfo);
+    }];
     
 	UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
 	label.text = [entry objectForKey:@"title"];
