@@ -14,6 +14,7 @@ typedef enum {
 	DDGSearchControllerStateWeb
 } DDGSearchControllerState;
 
+@class DDGSearchSuggestionsProvider;
 @interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
 {
 	
@@ -26,14 +27,11 @@ typedef enum {
     
 	DDGSearchControllerState state;
 	CGRect keyboardRect;
-	
-	id<DDGSearchHandler> __weak searchHandler;
-
-	NSMutableURLRequest *serverRequest;
-    NSMutableDictionary *suggestionsCache;
-    NSString *oldSearchText;
     
     UIButton *stopOrReloadButton;
+	id<DDGSearchHandler> __weak searchHandler;
+    NSString *oldSearchText;
+    DDGSearchSuggestionsProvider *suggestionsProvider;
 }
 
 @property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
@@ -43,7 +41,6 @@ typedef enum {
 @property(nonatomic, weak) IBOutlet UIButton *searchButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
 
-@property(nonatomic, strong) NSMutableURLRequest *serverRequest;
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
 

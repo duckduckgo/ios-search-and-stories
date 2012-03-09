@@ -7,14 +7,10 @@
 //
 
 #import "DDGSearchController.h"
+#import "DDGSearchSuggestionsProvider.h"
 #import "AFNetworking.h"
 
-static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
-
 @interface DDGSearchController (Private)
-
--(NSArray *)currentSuggestions;
--(void)downloadSuggestionsForSearchText:(NSString *)searchText;
 
 -(void)revealBackground:(BOOL)reveal animated:(BOOL)animated;
 -(void)revealAutocomplete:(BOOL)reveal;
@@ -27,7 +23,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 @synthesize loadedCell;
 @synthesize tableView, searchField, searchButton, background;
-@synthesize serverRequest, searchHandler, state;
+@synthesize searchHandler, state;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
 {
@@ -41,23 +37,15 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 		[parent addSubview:self.view];
 		keyboardRect = CGRectZero;
-		
-		self.serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
-                                                     cachePolicy:NSURLRequestUseProtocolCachePolicy
-                                                 timeoutInterval:10.0];
-		
-		[serverRequest setValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
-		[serverRequest setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
-		[serverRequest setValue:@"text/plain; charset=UTF-8" forHTTPHeaderField:@"Accept"];
-        
-        suggestionsCache = [[NSMutableDictionary alloc] init];
-        
+		                
         searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
-
+        
         stopOrReloadButton = [[UIButton alloc] init];
         stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
         [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
         searchField.rightView = stopOrReloadButton;
+        
+        suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
 	}
 	return self;
 }
@@ -112,7 +100,9 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
             if([self isQuery:searchField.text])
                 [self revealAutocomplete:YES];
             
-            [self downloadSuggestionsForSearchText:searchField.text];
+            [suggestionsProvider downloadSuggestionsForSearchText:searchField.text success:^{
+                [tableView reloadData];
+            }];
         }
     }
 }
@@ -283,11 +273,13 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
         
 	if(newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
-        [self downloadSuggestionsForSearchText:newSearchText];
-    	[self revealAutocomplete:YES];
+        [suggestionsProvider downloadSuggestionsForSearchText:newSearchText success:^{
+            [tableView reloadData];
+        }];
+        [self revealAutocomplete:YES];
 	} else {
         // search text is blank; clear the suggestions cache, reload, and hide the table
-        [suggestionsCache removeAllObjects];
+        [suggestionsProvider emptyCache];
         [self revealAutocomplete:NO];
     }
     // either way, reload the table view.
@@ -298,7 +290,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
-    [suggestionsCache removeAllObjects];
+    [suggestionsProvider emptyCache];
 	[self revealAutocomplete:NO];
     
 	// save search text in case user cancels input without navigating somewhere
@@ -350,38 +342,6 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	return YES;
 }
 
-
-#pragma mark - Suggestion cache management
-
--(NSArray *)currentSuggestions {
-    NSString *searchText = searchField.text;
-    NSString *bestMatch = nil;
-    
-    for(NSString *suggestionText in suggestionsCache) {
-        if([searchText hasPrefix:suggestionText] && (suggestionText.length > bestMatch.length))
-            bestMatch = suggestionText;
-    }
-    
-    return (bestMatch ? [suggestionsCache objectForKey:bestMatch] : [NSArray array]);
-}
-
--(void)downloadSuggestionsForSearchText:(NSString *)searchText {
-        
-    NSString *urlString = [sBaseSuggestionServerURL stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    serverRequest.URL = [NSURL URLWithString:urlString];
-    
-    
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        [suggestionsCache setObject:JSON forKey:searchText];
-        [tableView reloadData];
-        
-    } failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"error: %@",[error userInfo]);
-    }];
-    [operation start];
-
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -392,7 +352,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[self currentSuggestions] count];
+    return [[suggestionsProvider suggestionsForSearchText:searchField.text] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -418,7 +378,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 		[cell.contentView addSubview:iv];
     }
 
-    NSArray *suggestions = [self currentSuggestions];
+    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
     if(suggestions.count <= indexPath.row)
         return cell; // this entry no longer exists; return empty cell. the tableview will be reloading very soon anyway.
     
@@ -448,7 +408,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSDictionary *item = [[self currentSuggestions] objectAtIndex:indexPath.row];
+	NSDictionary *item = [[suggestionsProvider suggestionsForSearchText:searchField.text] objectAtIndex:indexPath.row];
 	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	
