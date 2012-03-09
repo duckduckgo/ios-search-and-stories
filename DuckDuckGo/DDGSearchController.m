@@ -18,6 +18,7 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 -(void)revealBackground:(BOOL)reveal animated:(BOOL)animated;
 -(void)revealAutocomplete:(BOOL)reveal;
+-(void)cancelInputAfterDelay;
 -(void)cancelInput;
 
 @end
@@ -80,8 +81,9 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelInput)];
-    [self.background addGestureRecognizer:gestureRecognizer];
+    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelInputAfterDelay)];
+    gestureRecognizer.cancelsTouchesInView = NO;
+    [self.tableView addGestureRecognizer:gestureRecognizer];
     
     [self revealBackground:NO animated:NO];
     [self revealAutocomplete:NO];
@@ -214,6 +216,11 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 
 -(void)revealAutocomplete:(BOOL)reveal {
     tableView.hidden = !reveal;
+}
+
+// cancelInput destroys the table view instantly, which causes issues when a cell is tapped and that needs to be processed before destroying the table view, so we wait for a tiny bit first.
+-(void)cancelInputAfterDelay {
+    [self performSelector:@selector(cancelInput) withObject:nil afterDelay:0.01];
 }
 
 -(void)cancelInput {
@@ -401,7 +408,9 @@ static const NSString *sBaseSuggestionServerURL = @"http://swass.duckduckgo.com:
 		cell.textLabel.textColor = [UIColor darkGrayColor];
 		cell.selectionStyle = UITableViewCellSelectionStyleGray;
 		cell.imageView.image = [UIImage imageNamed:@"spacer44x44.png"];
-		
+		cell.backgroundView = [[UIView alloc] init];
+        [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
+        
 		iv = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 		iv.tag = 100;
 		iv.contentMode = UIViewContentModeScaleAspectFit;
