@@ -312,8 +312,7 @@
     if(!oldSearchText)
         oldSearchText = textField.text;
     
-    if(state==DDGSearchControllerStateWeb)
-        textField.rightView = nil;
+    textField.rightView = nil;
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
