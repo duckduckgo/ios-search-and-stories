@@ -57,7 +57,3 @@ typedef enum {
 -(void)webViewFinishedLoading;
 
 @end
-
-UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeySnippet;
-UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyPhrase;
-UIKIT_EXTERN NSString *const ksDDGSearchControllerServerKeyImage;

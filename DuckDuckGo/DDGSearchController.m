@@ -7,6 +7,7 @@
 //
 
 #import "DDGSearchController.h"
+#import "DDGAutocompleteServerKeys.h"
 #import "DDGSearchSuggestionsProvider.h"
 #import "AFNetworking.h"
 
@@ -419,8 +420,3 @@
 }
 
 @end
-
-NSString *const ksDDGSearchControllerServerKeySnippet = @"snippet"; 
-NSString *const ksDDGSearchControllerServerKeyPhrase = @"phrase"; 
-NSString *const ksDDGSearchControllerServerKeyImage = @"image"; 
-

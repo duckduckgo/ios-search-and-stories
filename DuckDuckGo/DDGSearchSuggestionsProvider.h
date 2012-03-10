@@ -11,6 +11,7 @@
 @interface DDGSearchSuggestionsProvider : NSObject {
     NSMutableDictionary *suggestionsCache;
     NSMutableURLRequest *serverRequest;
+    NSDictionary *bangs; 
 }
 
 -(NSArray *)suggestionsForSearchText:(NSString *)searchText;
