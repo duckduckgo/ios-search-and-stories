@@ -48,7 +48,8 @@ typedef enum {
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(void)updateBarWithURL:(NSURL *)url;
-
+-(void)resetOmnibar;
+  
 -(NSString *)validURLStringFromString:(NSString *)urlString;
 -(BOOL)isQuery:(NSString *)queryOrURL;
 

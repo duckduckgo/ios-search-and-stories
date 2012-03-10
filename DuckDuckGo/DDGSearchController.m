@@ -75,7 +75,6 @@
     [self.tableView addGestureRecognizer:gestureRecognizer];
     
     [self revealBackground:NO animated:NO];
-    [self revealAutocomplete:NO];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -96,11 +95,7 @@
         [self revealBackground:YES animated:YES];
         
         if ([searchField.text length])
-        {
-            // if in search field mode, then reveal autocomplete.
-            if([self isQuery:searchField.text])
-                [self revealAutocomplete:YES];
-            
+        {            
             [suggestionsProvider downloadSuggestionsForSearchText:searchField.text success:^{
                 [tableView reloadData];
             }];
@@ -174,19 +169,17 @@
 #pragma mark - Omnibar management methods
 
 - (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
-	CGSize screenSize = self.view.superview.frame.size;
+    CGSize screenSize = self.view.superview.frame.size;
 	CGRect rect = self.view.frame;
 	if (reveal) {
 		rect.size.height = screenSize.height - keyboardRect.size.height;
     } else {
 		// clip to search entry height
 		rect.size.height = 46.0;
-        // if the autocomplete table is showing, we'll want to hide that first.
-        [self revealAutocomplete:NO];
     }
+    [self revealAutocomplete:NO]; // if we're revealing, we'll show it again after the animation
     
     double animationDuration = (animated ? 0.25 : 0.0);
-    
     
     // expand the frame to fullscreen for a moment so that the background looks like it's behind the keyboard, then adjust it to appropriate size once the animation completes.
     
@@ -199,6 +192,13 @@
                          self.view.frame = rect;
                      } 
                      completion:nil];
+    
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, animationDuration * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        self.view.frame = rect;
+        if(reveal)
+            [self revealAutocomplete:YES];
+    });
     
     [UIView animateWithDuration:(animated ? 0.25 : 0.0) animations:^{
         background.alpha = (reveal ? 1.0 : 0.0);
@@ -258,6 +258,11 @@
     }
 }
 
+-(void)resetOmnibar {
+    searchField.text = @"";
+    [tableView reloadData];
+}
+
 #pragma  mark - Text field delegate
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
@@ -266,9 +271,7 @@
     NSString *newSearchText = [textField.text stringByReplacingCharactersInRange:range withString:string];
     
     if([newSearchText isEqualToString:[self validURLStringFromString:newSearchText]]) {
-        NSLog(@"%@ is a URL!!!",textField.text);
         // we're definitely editing a URL, don't bother with autocomplete.
-        [self revealAutocomplete:NO];
         return YES;
     }
         
@@ -277,11 +280,9 @@
         [suggestionsProvider downloadSuggestionsForSearchText:newSearchText success:^{
             [tableView reloadData];
         }];
-        [self revealAutocomplete:YES];
 	} else {
         // search text is blank; clear the suggestions cache, reload, and hide the table
         [suggestionsProvider emptyCache];
-        [self revealAutocomplete:NO];
     }
     // either way, reload the table view.
     [tableView reloadData];
@@ -292,7 +293,7 @@
 - (BOOL)textFieldShouldClear:(UITextField *)textField
 {
     [suggestionsProvider emptyCache];
-	[self revealAutocomplete:NO];
+    [tableView reloadData];
     
 	// save search text in case user cancels input without navigating somewhere
     if(!oldSearchText)
@@ -335,7 +336,6 @@
 		return NO;
 	}
 	[textField resignFirstResponder];
-	[self revealAutocomplete:NO];
 	
     [searchHandler loadQueryOrURL:([searchField.text length] ? searchField.text : nil)];
 
@@ -414,7 +414,6 @@
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	
 	[searchField resignFirstResponder];
-	[self revealAutocomplete:NO];
     
     [searchHandler loadQueryOrURL:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
 }

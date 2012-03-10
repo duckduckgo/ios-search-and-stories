@@ -60,7 +60,7 @@
 {
     [super viewWillAppear:animated];
     
-    searchController.searchField.text = @""; // reset omnibar text
+    [searchController resetOmnibar];
 }
 
 - (void)viewDidAppear:(BOOL)animated

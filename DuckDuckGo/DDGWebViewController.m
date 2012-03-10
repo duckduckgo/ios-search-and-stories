@@ -41,7 +41,6 @@
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
-
 - (void)viewDidUnload
 {
     [super viewDidUnload];
