@@ -100,6 +100,8 @@ static NSString *bangsURL = @"https://raw.github.com/gist/7a570ffb40cdf74a9796/6
 #pragma -
 #pragma mark Handling bangs
 
+// TODO (ishaan): Bangs are half-working right now. Fix them, eventually...
+
 -(NSString *)stripBangFromSearchText:(NSString *)rawSearchText {
     NSMutableArray *words = [[rawSearchText componentsSeparatedByString:@" "] mutableCopy];
     
