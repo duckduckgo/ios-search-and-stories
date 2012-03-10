@@ -10,6 +10,10 @@
 #import "DDGWebViewController.h"
 #import "AFNetworking.h"
 
+@interface DDGViewController (Private)
+-(NSURL *)faviconURLForURLString:(NSString *)urlString;
+@end
+
 @implementation DDGViewController
 
 @synthesize loadedCell;
@@ -113,26 +117,32 @@
         cell = loadedCell;
         self.loadedCell = nil;
 	}
-    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
-	UIImageView *favicon = (UIImageView *)[cell.contentView viewWithTag:300];
-    
+
     NSDictionary *entry = [stories objectAtIndex:indexPath.row];
 
     // use a placeholder image for now, and append the article title to the URL to prevent caching
+    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
     NSString *urlString = [NSString stringWithFormat:@"http://lorempixel.com/640/156/?%@",[[entry objectForKey:@"title"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString] 
                                                   cachePolicy:NSURLRequestReturnCacheDataElseLoad 
                                               timeoutInterval:20];
     [imageView setImageWithURLRequest:request placeholderImage:nil success:nil failure:nil];
     
-    // load favicon image
-    // http://i2.duck.co/i/reddit.com.ico
-    NSURL *url = [NSURL URLWithString:[entry objectForKey:@"url"]];
-    NSString *faviconURLString = [NSString stringWithFormat:@"http://i2.duck.co/i/%@.ico",[url host]];
-    NSURLRequest *faviconRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:faviconURLString]
+    // load site favicon image
+	UIImageView *siteFavicon = (UIImageView *)[cell.contentView viewWithTag:300];
+    NSURLRequest *siteFaviconRequest = [[NSURLRequest alloc] initWithURL:[self faviconURLForURLString:[entry objectForKey:@"url"]]
                                                          cachePolicy:NSURLRequestReturnCacheDataElseLoad 
                                                      timeoutInterval:20];
-    [favicon setImageWithURLRequest:faviconRequest placeholderImage:nil success:nil failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+    [siteFavicon setImageWithURLRequest:siteFaviconRequest placeholderImage:nil success:nil failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
+        NSLog(@"%@",error.userInfo);
+    }];
+
+    // load feed favicon image
+    UIImageView *feedFavicon = (UIImageView *)[cell.contentView viewWithTag:400];
+    NSURLRequest *feedFaviconRequest = [[NSURLRequest alloc] initWithURL:[self faviconURLForURLString:[entry objectForKey:@"feed"]]
+                                                         cachePolicy:NSURLRequestReturnCacheDataElseLoad 
+                                                     timeoutInterval:20];
+    [feedFavicon setImageWithURLRequest:feedFaviconRequest placeholderImage:nil success:nil failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
         NSLog(@"%@",error.userInfo);
     }];
     
@@ -214,6 +224,15 @@
 
 -(NSString *)storiesPath {
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.plist"];
+}
+
+-(NSURL *)faviconURLForURLString:(NSString *)urlString {
+    if(!urlString || [urlString isEqual:[NSNull null]])
+        return nil;
+    // http://i2.duck.co/i/reddit.com.ico
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSString *faviconURLString = [NSString stringWithFormat:@"http://i2.duck.co/i/%@.ico",[url host]];
+    return [NSURL URLWithString:faviconURLString];
 }
 
 @end
