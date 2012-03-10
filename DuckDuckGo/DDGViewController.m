@@ -44,7 +44,19 @@
     if(!storiesData) // NSJSONSerialization complains if it's passed nil, so we give it an empty NSData instead
         storiesData = [NSData data];
     self.stories = [NSJSONSerialization JSONObjectWithData:storiesData options:0 error:nil];
-        
+    
+    if (refreshHeaderView == nil) {
+		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
+                                                              arrowImageName:@"blackArrow.png"
+                                                                   textColor:[UIColor colorWithWhite:0.0 alpha:1.0]];
+		refreshHeaderView.delegate = self;
+		[self.tableView addSubview:refreshHeaderView];
+        [refreshHeaderView refreshLastUpdatedDate];
+	}
+	
+	//  update the last update date
+	[refreshHeaderView refreshLastUpdatedDate];
+    
     [self downloadStories];
 }
 
@@ -86,6 +98,33 @@
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	}
 	return YES;
+}
+
+#pragma mark - Scroll view delegate
+
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+	[refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+}
+
+- (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+	[refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];	
+}
+
+#pragma mark EGORefreshTableHeaderDelegate Methods
+
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+	NSLog(@"triggerrefresh");
+    [self downloadStories];
+}
+
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+    NSLog(@"isloading");
+	return isRefreshing; // should return if data source model is reloading
+}
+
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
+	NSLog(@"lastupdated");
+    return [NSDate date];
 }
 
 #pragma mark - Search handler
@@ -177,6 +216,8 @@
 - (void)downloadStories
 {
     // start downloading new stories
+    isRefreshing = YES;
+    
     NSURL *url = [NSURL URLWithString:@"http://ddg.watrcoolr.us/?o=json"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -196,6 +237,8 @@
                                                          error:nil];
         [data writeToFile:[self storiesPath] atomically:YES];
         
+        isRefreshing = NO;
+        [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
         NSLog(@"FAILURE: %@",[error userInfo]);
     }];

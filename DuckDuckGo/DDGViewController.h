@@ -7,18 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import "DDGSearchController.h"
+#import "EGORefreshTableHeaderView.h"
 
-@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler>
+@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate>
 {
 	IBOutlet UITableViewCell *loadedCell;
     
 	__weak IBOutlet UITableView *tableView;
     DDGSearchController *searchController;
 	
+    EGORefreshTableHeaderView *refreshHeaderView;
+    BOOL isRefreshing;
+    
 	NSArray *stories;
-
     NSString *queryOrURLToLoad;
 }
 
