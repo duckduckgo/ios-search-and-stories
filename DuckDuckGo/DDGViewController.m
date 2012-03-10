@@ -113,18 +113,18 @@
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-	NSLog(@"triggerrefresh");
     [self downloadStories];
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-    NSLog(@"isloading");
 	return isRefreshing; // should return if data source model is reloading
 }
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-	NSLog(@"lastupdated");
-    return [NSDate date];
+    NSDictionary *properties = [[NSFileManager defaultManager]
+                                attributesOfItemAtPath:[self storiesPath]
+                                error:nil];
+    return [properties objectForKey:@"NSFileModificationDate"];
 }
 
 #pragma mark - Search handler
