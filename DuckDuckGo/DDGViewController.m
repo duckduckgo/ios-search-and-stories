@@ -47,8 +47,8 @@
     
     if (refreshHeaderView == nil) {
 		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
-                                                              arrowImageName:@"blackArrow.png"
-                                                                   textColor:[UIColor colorWithWhite:0.0 alpha:1.0]];
+                                                              arrowImageName:@"refresh_arrow.png"
+                                                                   textColor:[UIColor colorWithWhite:1.0 alpha:0.0]];
 		refreshHeaderView.delegate = self;
 		[self.tableView addSubview:refreshHeaderView];
         [refreshHeaderView refreshLastUpdatedDate];

@@ -15,8 +15,6 @@
 		4C1EF85B150C043D00532858 /* EGORefreshTableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */; };
 		4C1EF85C150C043D00532858 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */; };
 		4C1EF85E150C048B00532858 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C1EF85D150C048A00532858 /* QuartzCore.framework */; };
-		4C1EF865150C111400532858 /* blackArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1EF863150C111400532858 /* blackArrow.png */; };
-		4C1EF866150C111400532858 /* blackArrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1EF864150C111400532858 /* blackArrow@2x.png */; };
 		4C5142A414E1F13100E49892 /* header_tile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5142A314E1F13100E49892 /* header_tile@2x.png */; };
 		4C5142A714E1F25C00E49892 /* header_tile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5142A614E1F25B00E49892 /* header_tile.png */; };
 		4C5DEC5A14E1F32E004C4F9F /* settings_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5DEC5814E1F32E004C4F9F /* settings_button@2x.png */; };
@@ -80,6 +78,7 @@
 		83F3228E1492934B00A61BC5 /* spacer8x16.png in Resources */ = {isa = PBXBuildFile; fileRef = 83F322891492934B00A61BC5 /* spacer8x16.png */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
 		83FCA91114966EC000AEDAC6 /* buttonLightGrey40x37.png in Resources */ = {isa = PBXBuildFile; fileRef = 83FCA91014966EC000AEDAC6 /* buttonLightGrey40x37.png */; };
+		E426BE9E150D82580031EFA1 /* refresh_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = E426BE9D150D82580031EFA1 /* refresh_arrow.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -91,8 +90,6 @@
 		4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		4C1EF85D150C048A00532858 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		4C1EF863150C111400532858 /* blackArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blackArrow.png; sourceTree = "<group>"; };
-		4C1EF864150C111400532858 /* blackArrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blackArrow@2x.png"; sourceTree = "<group>"; };
 		4C5142A314E1F13100E49892 /* header_tile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "header_tile@2x.png"; sourceTree = "<group>"; };
 		4C5142A614E1F25B00E49892 /* header_tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = header_tile.png; sourceTree = "<group>"; };
 		4C5DEC5814E1F32E004C4F9F /* settings_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings_button@2x.png"; sourceTree = "<group>"; };
@@ -169,6 +166,7 @@
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
 		83FCA91014966EC000AEDAC6 /* buttonLightGrey40x37.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = buttonLightGrey40x37.png; sourceTree = "<group>"; };
+		E426BE9D150D82580031EFA1 /* refresh_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = refresh_arrow.png; path = ../refresh_arrow.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -324,8 +322,7 @@
 				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
 				4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */,
 				4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */,
-				4C1EF863150C111400532858 /* blackArrow.png */,
-				4C1EF864150C111400532858 /* blackArrow@2x.png */,
+				E426BE9D150D82580031EFA1 /* refresh_arrow.png */,
 				838E906D149A794F00C11E41 /* Resources */,
 				83F322841492932D00A61BC5 /* Images */,
 				83F322841492932D00A61BC5 /* Images */,
@@ -499,8 +496,7 @@
 				4C5DEC6414E1FE4A004C4F9F /* home_button.png in Resources */,
 				4C5DEC6714E205C8004C4F9F /* back_button@2x.png in Resources */,
 				4C5DEC6814E205C8004C4F9F /* back_button.png in Resources */,
-				4C1EF865150C111400532858 /* blackArrow.png in Resources */,
-				4C1EF866150C111400532858 /* blackArrow@2x.png in Resources */,
+				E426BE9E150D82580031EFA1 /* refresh_arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
