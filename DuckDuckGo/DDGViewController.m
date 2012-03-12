@@ -161,7 +161,6 @@
 
     // use a placeholder image for now, and append the article title to the URL to prevent caching
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    NSLog(@"entry is %@",entry);
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[entry objectForKey:@"image"]] 
                                                   cachePolicy:NSURLRequestReturnCacheDataElseLoad 
                                               timeoutInterval:20];
