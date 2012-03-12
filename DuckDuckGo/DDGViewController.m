@@ -161,8 +161,8 @@
 
     // use a placeholder image for now, and append the article title to the URL to prevent caching
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    NSString *urlString = [NSString stringWithFormat:@"http://lorempixel.com/640/156/?%@",[[entry objectForKey:@"title"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:urlString] 
+    NSLog(@"entry is %@",entry);
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[entry objectForKey:@"image"]] 
                                                   cachePolicy:NSURLRequestReturnCacheDataElseLoad 
                                               timeoutInterval:20];
     [imageView setImageWithURLRequest:request placeholderImage:nil success:nil failure:nil];
@@ -218,11 +218,11 @@
     // start downloading new stories
     isRefreshing = YES;
     
-    NSURL *url = [NSURL URLWithString:@"http://ddg.watrcoolr.us/?o=json"];
+    NSURL *url = [NSURL URLWithString:@"http://nil.duckduckgo.com/watrcoolr.js?o=json"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSArray *newStories = (NSArray *)JSON;
-        
+
         [self.tableView beginUpdates];
         [self.tableView insertRowsAtIndexPaths:[self indexPathsofStoriesInArray:newStories andNotArray:self.stories] 
                               withRowAnimation:UITableViewRowAnimationAutomatic];
