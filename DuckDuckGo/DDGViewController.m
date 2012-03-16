@@ -206,7 +206,8 @@
 {
     // TODO (caine): this will be removed sooner or later before launch; they track with cookies.
     NSString *escapedStoryURL = [[[stories objectAtIndex:indexPath.row] objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    queryOrURLToLoad = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",escapedStoryURL];
+    // queryOrURLToLoad = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",escapedStoryURL];
+    queryOrURLToLoad = escapedStoryURL;
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
 }
 
