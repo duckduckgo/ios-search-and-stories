@@ -40,6 +40,8 @@
 
     tableView.separatorColor = [UIColor whiteColor];
     
+    readStories = [NSMutableDictionary dictionaryWithContentsOfFile:self.readStoriesPath];
+    
     NSData *storiesData = [NSData dataWithContentsOfFile:[self storiesPath]];
     if(!storiesData) // NSJSONSerialization complains if it's passed nil, so we give it an empty NSData instead
         storiesData = [NSData data];
@@ -226,15 +228,20 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSArray *newStories = (NSArray *)JSON;
 
-        [self.tableView beginUpdates];
-        [self.tableView insertRowsAtIndexPaths:[self indexPathsofStoriesInArray:newStories andNotArray:self.stories] 
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self.tableView deleteRowsAtIndexPaths:[self indexPathsofStoriesInArray:self.stories andNotArray:newStories] 
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
+        NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
         
+        // update the stories array
         self.stories = newStories;
+        
+        // update the table view with added and removed stories
+        [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:addedStories 
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView deleteRowsAtIndexPaths:removedStories 
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
-
+        
         NSData *data = [NSJSONSerialization dataWithJSONObject:self.stories 
                                                        options:0 
                                                          error:nil];
@@ -269,9 +276,14 @@
 }
 
 -(NSString *)storiesPath {
-    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.plist"];
+    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.json"];
 }
 
+-(NSString *)readStoriesPath {
+   return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"readStories.plist"];
+}
+
+                   
 -(NSURL *)faviconURLForURLString:(NSString *)urlString {
     if(!urlString || [urlString isEqual:[NSNull null]])
         return nil;

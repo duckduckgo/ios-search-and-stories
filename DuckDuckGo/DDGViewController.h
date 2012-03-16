@@ -21,6 +21,7 @@
     BOOL isRefreshing;
     
 	NSArray *stories;
+    NSMutableDictionary *readStories;
     NSString *queryOrURLToLoad;
 }
 
@@ -33,5 +34,5 @@
 - (void)downloadStories;
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories;
 -(NSString *)storiesPath;
-
+-(NSString *)readStoriesPath;
 @end
