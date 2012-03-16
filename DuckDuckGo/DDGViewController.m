@@ -168,7 +168,8 @@
     
     // load site favicon image
 	UIImageView *siteFavicon = (UIImageView *)[cell.contentView viewWithTag:300];
-    NSURLRequest *siteFaviconRequest = [[NSURLRequest alloc] initWithURL:[self faviconURLForURLString:[entry objectForKey:@"url"]]
+    NSURL *siteFaviconURL = [self faviconURLForURLString:[entry objectForKey:@"url"]];
+    NSURLRequest *siteFaviconRequest = [[NSURLRequest alloc] initWithURL:siteFaviconURL
                                                          cachePolicy:NSURLRequestReturnCacheDataElseLoad 
                                                      timeoutInterval:20];
     [siteFavicon setImageWithURLRequest:siteFaviconRequest placeholderImage:nil success:nil failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
@@ -177,7 +178,10 @@
 
     // load feed favicon image
     UIImageView *feedFavicon = (UIImageView *)[cell.contentView viewWithTag:400];
-    NSURLRequest *feedFaviconRequest = [[NSURLRequest alloc] initWithURL:[self faviconURLForURLString:[entry objectForKey:@"feed"]]
+    NSURL *feedFaviconURL = [self faviconURLForURLString:[entry objectForKey:@"feed"]];
+    if([feedFaviconURL isEqual:siteFaviconURL])
+        feedFaviconURL = nil;
+    NSURLRequest *feedFaviconRequest = [[NSURLRequest alloc] initWithURL:feedFaviconURL
                                                          cachePolicy:NSURLRequestReturnCacheDataElseLoad 
                                                      timeoutInterval:20];
     [feedFavicon setImageWithURLRequest:feedFaviconRequest placeholderImage:nil success:nil failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
@@ -213,8 +217,7 @@
 
 #pragma mark - Loading popular stories
 
-- (void)downloadStories
-{
+- (void)downloadStories {
     // start downloading new stories
     isRefreshing = YES;
     
