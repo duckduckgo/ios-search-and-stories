@@ -44,7 +44,7 @@
 							<object class="IBUIImageView" id="952143328">
 								<reference key="NSNextResponder" ref="873179220"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrameSize">{320, 92}</string>
+								<string key="NSFrameSize">{320, 119}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1015228964"/>
@@ -133,7 +133,7 @@
 										<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 									</object>
 								</array>
-								<string key="NSFrame">{{0, 60}, {320, 32}}</string>
+								<string key="NSFrame">{{0, 87}, {320, 32}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="779277510"/>
@@ -145,7 +145,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
 						</array>
-						<string key="NSFrameSize">{320, 92}</string>
+						<string key="NSFrameSize">{320, 119}</string>
 						<reference key="NSSuperview" ref="712966024"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="952143328"/>
@@ -158,7 +158,7 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</array>
-				<string key="NSFrameSize">{320, 93}</string>
+				<string key="NSFrameSize">{320, 120}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="873179220"/>
@@ -167,7 +167,7 @@
 				<int key="IBUISelectionStyle">0</int>
 				<reference key="IBUIContentView" ref="873179220"/>
 				<string key="IBUIReuseIdentifier">CurrentTopicCell</string>
-				<real value="93" key="IBUIRowHeight"/>
+				<real value="120" key="IBUIRowHeight"/>
 			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
