@@ -13,8 +13,9 @@
 @interface DDGViewController (Private)
 -(NSURL *)faviconURLForDomain:(NSString *)domain;
 -(UIImage *)grayscaleImageFromImage:(UIImage *)image;
--(void)loadFaviconForURLString:(NSString *)urlString intoImageView:(UIImageView *)imageView;
--(void)loadFaviconForDomain:(NSString *)domain intoImageView:(UIImageView *)imageView;
+-(void)loadFaviconForURLString:(NSString *)urlString intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success;
+-(void)loadFaviconForDomain:(NSString *)domain intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success;
+-(BOOL)image:(UIImage *)image1 isEqualToImage:(UIImage *)image2;
 @end
 
 @implementation DDGViewController
@@ -184,13 +185,23 @@
     } failure:nil];
     [operation start];
         
+    UIImageView *siteFaviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
+	UIImageView *feedFaviconImageView = (UIImageView *)[cell.contentView viewWithTag:400];
+
     // load site favicon image
-	UIImageView *siteFaviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    [self loadFaviconForURLString:[entry objectForKey:@"url"] intoImageView:siteFaviconImageView];
+    [self loadFaviconForURLString:[entry objectForKey:@"url"] intoImageView:siteFaviconImageView success:^(UIImage *image) {
+        if([self image:image isEqualToImage:feedFaviconImageView.image]) {
+            feedFaviconImageView.image = nil;
+        }
+    }];
 
     // load feed favicon image
-	UIImageView *feedFaviconImageView = (UIImageView *)[cell.contentView viewWithTag:400];
-    [self loadFaviconForURLString:[entry objectForKey:@"feed"] intoImageView:feedFaviconImageView];
+    [self loadFaviconForURLString:[entry objectForKey:@"feed"] intoImageView:feedFaviconImageView success:^(UIImage *image){
+        if([self image:image isEqualToImage:siteFaviconImageView.image]) {
+            siteFaviconImageView.image = image;
+            feedFaviconImageView.image = nil;
+        }
+    }];
     
 	UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
 	label.text = [entry objectForKey:@"title"];
@@ -329,34 +340,42 @@
     return newImage;
 }
 
--(void)loadFaviconForURLString:(NSString *)urlString intoImageView:(UIImageView *)imageView {
+-(void)loadFaviconForURLString:(NSString *)urlString intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success {
     if(!urlString || [urlString isEqual:[NSNull null]])
         return;
-    [self loadFaviconForDomain:[[NSURL URLWithString:urlString] host]  intoImageView:imageView];
+    [self loadFaviconForDomain:[[NSURL URLWithString:urlString] host] intoImageView:imageView success:(void (^)(UIImage *image))success];
 }
 
--(void)loadFaviconForDomain:(NSString *)domain intoImageView:(UIImageView *)imageView {
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[self faviconURLForDomain:domain]
-                                                  cachePolicy:NSURLRequestReturnCacheDataElseLoad 
-                                              timeoutInterval:20];
-    
+-(void)loadFaviconForDomain:(NSString *)domain intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success {
     NSMutableArray *domainParts = [[domain componentsSeparatedByString:@"."] mutableCopy];
     [domainParts removeObjectAtIndex:0];
     if(domainParts.count == 0)
         return; // we're definitely down to just a TLD by now and still couldn't get a favicon.
     NSString *newDomain = [domainParts componentsJoinedByString:@"."];
 
+    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[self faviconURLForDomain:domain]
+                                                  cachePolicy:NSURLRequestReturnCacheDataElseLoad 
+                                              timeoutInterval:20];
+    
     __block UIImageView *blockImageView = imageView;
 
     [imageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request , NSHTTPURLResponse *response , UIImage *image) {
-        if([image size].width > 1)
-            return; // image loaded successfully; we're done here.
-        [self loadFaviconForDomain:newDomain intoImageView:blockImageView];
+        if([image size].width > 1) {
+            // image loaded successfully; we're done here.
+            success(image);
+            return;
+        }
+        [self loadFaviconForDomain:newDomain intoImageView:blockImageView success:(void (^)(UIImage *image))success];
         blockImageView = nil;
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-        [self loadFaviconForDomain:newDomain intoImageView:blockImageView];
+        [self loadFaviconForDomain:newDomain intoImageView:blockImageView success:(void (^)(UIImage *image))success];
         blockImageView = nil;
     }];
+}
+
+-(BOOL)image:(UIImage *)image1 isEqualToImage:(UIImage *)image2 {
+    // slow, inefficient solution, but it might be fast enough anyway.
+    return [UIImagePNGRepresentation(image1) isEqualToData:UIImagePNGRepresentation(image2)];
 }
 
 @end
