@@ -12,6 +12,7 @@
 
 @interface DDGViewController (Private)
 -(NSURL *)faviconURLForURLString:(NSString *)urlString;
+-(UIImage *)grayscaleImageFromImage:(UIImage *)image;
 @end
 
 @implementation DDGViewController
@@ -39,6 +40,10 @@
 	[searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
 
     tableView.separatorColor = [UIColor whiteColor];
+    
+    readStories = [NSMutableDictionary dictionaryWithContentsOfFile:self.readStoriesPath];
+    if(!readStories)
+        readStories = [[NSMutableDictionary alloc] init];
     
     NSData *storiesData = [NSData dataWithContentsOfFile:[self storiesPath]];
     if(!storiesData) // NSJSONSerialization complains if it's passed nil, so we give it an empty NSData instead
@@ -159,13 +164,25 @@
 
     NSDictionary *entry = [stories objectAtIndex:indexPath.row];
 
-    // use a placeholder image for now, and append the article title to the URL to prevent caching
+    // load article image
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
+    imageView.image = nil; // clear any old image that might have been there
     NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[entry objectForKey:@"image"]] 
                                                   cachePolicy:NSURLRequestReturnCacheDataElseLoad 
                                               timeoutInterval:20];
-    [imageView setImageWithURLRequest:request placeholderImage:nil success:nil failure:nil];
-    
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        UIImage *image = [UIImage imageWithData:responseObject];
+        if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue]) {
+            UIImage *grayscaleImage = [self grayscaleImageFromImage:image];
+            imageView.image = grayscaleImage;
+        } else {
+            imageView.image = image;
+        }
+        
+    } failure:nil];
+    [operation start];
+        
     // load site favicon image
 	UIImageView *siteFavicon = (UIImageView *)[cell.contentView viewWithTag:300];
     NSURL *siteFaviconURL = [self faviconURLForURLString:[entry objectForKey:@"url"]];
@@ -206,10 +223,15 @@
 
 #pragma  mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // TODO (caine): this will be removed sooner or later before launch; they track with cookies.
-    NSString *escapedStoryURL = [[[stories objectAtIndex:indexPath.row] objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary *entry = [stories objectAtIndex:indexPath.row];
+    
+    [readStories setObject:[NSNumber numberWithBool:YES] forKey:[entry objectForKey:@"id"]];
+    [tableView reloadData];
+    [readStories writeToFile:self.readStoriesPath atomically:YES];
+
+    NSString *escapedStoryURL = [[entry objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     // queryOrURLToLoad = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",escapedStoryURL];
     queryOrURLToLoad = escapedStoryURL;
     [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
@@ -226,15 +248,20 @@
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSArray *newStories = (NSArray *)JSON;
 
-        [self.tableView beginUpdates];
-        [self.tableView insertRowsAtIndexPaths:[self indexPathsofStoriesInArray:newStories andNotArray:self.stories] 
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
-        [self.tableView deleteRowsAtIndexPaths:[self indexPathsofStoriesInArray:self.stories andNotArray:newStories] 
-                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
+        NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
         
+        // update the stories array
         self.stories = newStories;
+        
+        // update the table view with added and removed stories
+        [self.tableView beginUpdates];
+        [self.tableView insertRowsAtIndexPaths:addedStories 
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+        [self.tableView deleteRowsAtIndexPaths:removedStories 
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
-
+        
         NSData *data = [NSJSONSerialization dataWithJSONObject:self.stories 
                                                        options:0 
                                                          error:nil];
@@ -269,9 +296,14 @@
 }
 
 -(NSString *)storiesPath {
-    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.plist"];
+    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.json"];
 }
 
+-(NSString *)readStoriesPath {
+   return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"readStories.plist"];
+}
+
+                   
 -(NSURL *)faviconURLForURLString:(NSString *)urlString {
     if(!urlString || [urlString isEqual:[NSNull null]])
         return nil;
@@ -279,6 +311,38 @@
     NSURL *url = [NSURL URLWithString:urlString];
     NSString *faviconURLString = [NSString stringWithFormat:@"http://i2.duck.co/i/%@.ico",[url host]];
     return [NSURL URLWithString:faviconURLString];
+}
+
+- (UIImage *)grayscaleImageFromImage:(UIImage *)image
+{
+    // Code from: iphonedevelopertips.com/graphics/convert-an-image-uiimage-to-grayscale.html
+    
+    // Create image rectangle with current image width/height
+    CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
+    
+    // Grayscale color space
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    
+    // Create bitmap content with current image size and grayscale colorspace
+    CGContextRef context = CGBitmapContextCreate(nil, image.size.width, image.size.height, 8, 0, colorSpace, kCGImageAlphaNone);
+    
+    // Draw image into current context, with specified rectangle
+    // using previously defined context (with grayscale colorspace)
+    CGContextDrawImage(context, imageRect, [image CGImage]);
+    
+    // Create bitmap image info from pixel data in current context
+    CGImageRef imageRef = CGBitmapContextCreateImage(context);
+    
+    // Create a new UIImage object  
+    UIImage *newImage = [UIImage imageWithCGImage:imageRef];
+    
+    // Release colorspace, context and bitmap information
+    CGColorSpaceRelease(colorSpace);
+    CGContextRelease(context);
+    CFRelease(imageRef);
+    
+    // Return the new grayscale image
+    return newImage;
 }
 
 @end
