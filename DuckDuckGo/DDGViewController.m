@@ -166,6 +166,13 @@
 
     NSDictionary *entry = [stories objectAtIndex:indexPath.row];
 
+    UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
+	label.text = [entry objectForKey:@"title"];
+    if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue])
+        label.textColor = [UIColor grayColor];
+    else
+        label.textColor = [UIColor whiteColor];
+    
     // load article image
     UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
     imageView.image = nil; // clear any old image that might have been there
@@ -202,10 +209,7 @@
             feedFaviconImageView.image = nil;
         }
     }];
-    
-	UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
-	label.text = [entry objectForKey:@"title"];
-	
+    	
 	return cell;
 }
 
