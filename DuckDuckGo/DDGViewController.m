@@ -192,23 +192,9 @@
     } failure:nil];
     [operation start];
         
-    UIImageView *siteFaviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-	UIImageView *feedFaviconImageView = (UIImageView *)[cell.contentView viewWithTag:400];
-
     // load site favicon image
-    [self loadFaviconForURLString:[entry objectForKey:@"url"] intoImageView:siteFaviconImageView success:^(UIImage *image) {
-        if([self image:image isEqualToImage:feedFaviconImageView.image]) {
-            feedFaviconImageView.image = nil;
-        }
-    }];
-
-    // load feed favicon image
-    [self loadFaviconForURLString:[entry objectForKey:@"feed"] intoImageView:feedFaviconImageView success:^(UIImage *image){
-        if([self image:image isEqualToImage:siteFaviconImageView.image]) {
-            siteFaviconImageView.image = image;
-            feedFaviconImageView.image = nil;
-        }
-    }];
+    UIImageView *siteFaviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
+    [self loadFaviconForURLString:[entry objectForKey:@"url"] intoImageView:siteFaviconImageView success:nil];
     	
 	return cell;
 }
@@ -366,7 +352,8 @@
     [imageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request , NSHTTPURLResponse *response , UIImage *image) {
         if([image size].width > 1) {
             // image loaded successfully; we're done here.
-            success(image);
+            if(success)
+                success(image);
             return;
         }
         [self loadFaviconForDomain:newDomain intoImageView:blockImageView success:(void (^)(UIImage *image))success];
