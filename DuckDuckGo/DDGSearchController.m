@@ -9,6 +9,7 @@
 #import "DDGSearchController.h"
 #import "DDGAutocompleteServerKeys.h"
 #import "DDGSearchSuggestionsProvider.h"
+#import "DDGSearchHistoryProvider.h"
 #import "AFNetworking.h"
 
 @interface DDGSearchController (Private)
@@ -17,6 +18,7 @@
 -(void)revealAutocomplete:(BOOL)reveal;
 -(void)cancelInputAfterDelay;
 -(void)cancelInput;
+-(void)loadQueryOrURL:(NSString *)queryOrURL;
 
 @end
 
@@ -47,6 +49,7 @@
         searchField.rightView = stopOrReloadButton;
         
         suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
+        historyProvider = [[DDGSearchHistoryProvider alloc] init];
 	}
 	return self;
 }
@@ -136,6 +139,11 @@
 
 -(void)webViewFinishedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
+}
+
+-(void)loadQueryOrURL:(NSString *)queryOrURL {
+    [historyProvider logHistoryItem:queryOrURL];
+    [searchHandler loadQueryOrURL:queryOrURL];
 }
 
 #pragma mark - Helpers
@@ -336,7 +344,7 @@
 	}
 	[textField resignFirstResponder];
 	
-    [searchHandler loadQueryOrURL:([searchField.text length] ? searchField.text : nil)];
+    [self loadQueryOrURL:([searchField.text length] ? searchField.text : nil)];
 
     oldSearchText = nil;
 	return YES;
@@ -352,7 +360,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [[suggestionsProvider suggestionsForSearchText:searchField.text] count];
+    return ([[suggestionsProvider suggestionsForSearchText:searchField.text] count] +
+            [[historyProvider pastSearchesForPrefix:searchField.text] count]);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -378,24 +387,31 @@
 		[cell.contentView addSubview:iv];
     }
 
+    NSArray *history = [historyProvider pastSearchesForPrefix:searchField.text];
     NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
-    if(suggestions.count <= indexPath.row)
+    if((suggestions.count + history.count) <= indexPath.row)
         return cell; // this entry no longer exists; return empty cell. the tableview will be reloading very soon anyway.
-    
-	NSDictionary *item = [suggestions objectAtIndex:indexPath.row];
-    
-    // Configure the cell...
-	cell.textLabel.text = [item objectForKey:ksDDGSearchControllerServerKeyPhrase];
-	cell.detailTextLabel.text = [item objectForKey:ksDDGSearchControllerServerKeySnippet];
 
-	iv = (UIImageView *)[cell.contentView viewWithTag:100];
-	
-	iv.backgroundColor = [UIColor whiteColor];
-    if([item objectForKey:ksDDGSearchControllerServerKeyImage])
-        [iv setImageWithURL:[NSURL URLWithString:[item objectForKey:ksDDGSearchControllerServerKeyImage]]];
-    else
-        [iv setImage:nil]; // wipe out any image that used to be there
-    
+    iv = (UIImageView *)[cell.contentView viewWithTag:100];
+    iv.backgroundColor = [UIColor whiteColor];
+
+    if(indexPath.row < history.count) {
+        NSString *historyItem = [history objectAtIndex:indexPath.row];
+        cell.textLabel.text = historyItem;
+        cell.detailTextLabel.text = @"(history item)";
+        [iv setImage:nil];
+    } else {
+     	NSDictionary *item = [suggestions objectAtIndex:indexPath.row];
+        
+        cell.textLabel.text = [item objectForKey:ksDDGSearchControllerServerKeyPhrase];
+        cell.detailTextLabel.text = [item objectForKey:ksDDGSearchControllerServerKeySnippet];
+        
+        if([item objectForKey:ksDDGSearchControllerServerKeyImage])
+            [iv setImageWithURL:[NSURL URLWithString:[item objectForKey:ksDDGSearchControllerServerKeyImage]]];
+        else
+            [iv setImage:nil]; // wipe out any image that used to be there
+   
+    }    
     return cell;
 }
 
@@ -414,7 +430,7 @@
 	
 	[searchField resignFirstResponder];
     
-    [searchHandler loadQueryOrURL:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
+    [self loadQueryOrURL:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
 }
 
 @end
