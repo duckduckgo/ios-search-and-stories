@@ -14,6 +14,6 @@
 
 -(void)clear;
 -(void)logHistoryItem:(NSString *)historyItem;
--(NSArray *)pastSearchesForPrefix:(NSString *)prefix;
+-(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix;
 
 @end

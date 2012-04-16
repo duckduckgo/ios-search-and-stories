@@ -361,7 +361,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     return ([[suggestionsProvider suggestionsForSearchText:searchField.text] count] +
-            [[historyProvider pastSearchesForPrefix:searchField.text] count]);
+            [[historyProvider pastHistoryItemsForPrefix:searchField.text] count]);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -387,7 +387,7 @@
 		[cell.contentView addSubview:iv];
     }
 
-    NSArray *history = [historyProvider pastSearchesForPrefix:searchField.text];
+    NSArray *history = [historyProvider pastHistoryItemsForPrefix:searchField.text];
     NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
     if((suggestions.count + history.count) <= indexPath.row)
         return cell; // this entry no longer exists; return empty cell. the tableview will be reloading very soon anyway.

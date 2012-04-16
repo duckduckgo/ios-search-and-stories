@@ -10,6 +10,7 @@
 
 @interface DDGSearchHistoryProvider (Private)
 -(NSString *)historyPath;
+-(void)removeOldHistoryItemsWithoutSaving;
 -(void)save;
 @end
 
@@ -31,23 +32,38 @@
 }
 
 -(void)logHistoryItem:(NSString *)historyItem {
-    if([history indexOfObjectIdenticalTo:historyItem]==NSNotFound) {
-        [history addObject:historyItem];
-        [self save];
+    NSDictionary *historyItemDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"text",historyItem,@"date",[NSDate date]];
+    
+    for(int i=0; i<history.count; i++) {
+        if([[[history objectAtIndex:i] objectForKey:@"text"] isEqualToString:historyItem]) {
+            [history replaceObjectAtIndex:i withObject:historyItemDictionary];
+            return;
+        }
     }
+    [history addObject:historyItemDictionary];
+    [self save];
 }
 
--(NSArray *)pastSearchesForPrefix:(NSString *)prefix {
+-(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
     for(NSString *historyItem in history)
-        if([historyItem hasPrefix:prefix])
+        if([[historyItem objectForKey:@"text"] hasPrefix:prefix])
             [results addObject:historyItem];
 
     return [results copy]; // return a non-mutable copy
 }
 
+-(void)removeOldHistoryItemsWithoutSaving {
+    for(int i=history.count-1; i>=0; i--) {
+        // TODO (ishaan): make history interval adjustable? it's currently hard-coded to 30 seconds
+        if([[NSDate date] timeIntervalSinceDate:[history objectForKey:@"date"]] >= 30*24*60*60)
+            [history removeObjectAtIndex:i];
+    }
+}
+
 -(void)save {
+    [self removeOldHistoryItemsWithoutSaving];
     [history writeToFile:self.historyPath atomically:YES];
 }
 
