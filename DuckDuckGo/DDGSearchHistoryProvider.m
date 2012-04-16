@@ -36,7 +36,9 @@
     
     for(int i=0; i<history.count; i++) {
         if([[[history objectAtIndex:i] objectForKey:@"text"] isEqualToString:historyItem]) {
-            [history replaceObjectAtIndex:i withObject:historyItemDictionary];
+            // add the new history item at the end to keep the array ordered
+            [history removeObjectAtIndex:i];
+            [history addObject:historyItemDictionary];
             return;
         }
     }
@@ -50,6 +52,13 @@
     for(NSString *historyItem in history)
         if([[historyItem objectForKey:@"text"] hasPrefix:prefix])
             [results addObject:historyItem];
+
+    // if the array is too large, remove the earliest n-3 items
+    while(results.count > 3)
+        [results removeObjectAtIndex:0];
+
+    // the array is currently in ascending chronological order; reverse it
+    results = [[results reverseObjectEnumerator] allObjects];
 
     return [results copy]; // return a non-mutable copy
 }

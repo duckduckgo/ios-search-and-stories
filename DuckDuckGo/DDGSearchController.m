@@ -397,8 +397,8 @@
 
     if(indexPath.row < history.count) {
         NSString *historyItem = [history objectAtIndex:indexPath.row];
-        cell.textLabel.text = historyItem;
-        cell.detailTextLabel.text = @"(history item)";
+        cell.textLabel.text = [historyItem objectForKey:@"text"];
+        cell.detailTextLabel.text = @"History item";
         [iv setImage:nil];
     } else {
      	NSDictionary *item = [suggestions objectAtIndex:indexPath.row];
