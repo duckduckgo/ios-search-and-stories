@@ -32,7 +32,7 @@
 }
 
 -(void)logHistoryItem:(NSString *)historyItem {
-    NSDictionary *historyItemDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"text",historyItem,@"date",[NSDate date]];
+    NSDictionary *historyItemDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"text",historyItem,@"date",[NSDate date], nil];
     
     for(int i=0; i<history.count; i++) {
         if([[[history objectAtIndex:i] objectForKey:@"text"] isEqualToString:historyItem]) {
@@ -49,7 +49,7 @@
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
-    for(NSString *historyItem in history)
+    for(NSDictionary *historyItem in history)
         if([[historyItem objectForKey:@"text"] hasPrefix:prefix])
             [results addObject:historyItem];
 
@@ -57,16 +57,14 @@
     while(results.count > 3)
         [results removeObjectAtIndex:0];
 
-    // the array is currently in ascending chronological order; reverse it
-    results = [[results reverseObjectEnumerator] allObjects];
-
-    return [results copy]; // return a non-mutable copy
+    // the array is currently in ascending chronological order; reverse it and make it non-mutable
+    return [[results reverseObjectEnumerator] allObjects];
 }
 
 -(void)removeOldHistoryItemsWithoutSaving {
     for(int i=history.count-1; i>=0; i--) {
         // TODO (ishaan): make history interval adjustable? it's currently hard-coded to 30 seconds
-        if([[NSDate date] timeIntervalSinceDate:[history objectForKey:@"date"]] >= 30*24*60*60)
+        if([[NSDate date] timeIntervalSinceDate:[[history objectAtIndex:i] objectForKey:@"date"]] >= 30*24*60*60)
             [history removeObjectAtIndex:i];
     }
 }

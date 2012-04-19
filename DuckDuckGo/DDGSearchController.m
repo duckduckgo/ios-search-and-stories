@@ -396,7 +396,7 @@
     iv.backgroundColor = [UIColor whiteColor];
 
     if(indexPath.row < history.count) {
-        NSString *historyItem = [history objectAtIndex:indexPath.row];
+        NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
         cell.textLabel.text = [historyItem objectForKey:@"text"];
         cell.detailTextLabel.text = @"History item";
         [iv setImage:nil];
