@@ -401,7 +401,7 @@
         cell.detailTextLabel.text = @"History item";
         [iv setImage:nil];
     } else {
-     	NSDictionary *item = [suggestions objectAtIndex:indexPath.row];
+     	NSDictionary *item = [suggestions objectAtIndex:indexPath.row - history.count];
         
         cell.textLabel.text = [item objectForKey:ksDDGSearchControllerServerKeyPhrase];
         cell.detailTextLabel.text = [item objectForKey:ksDDGSearchControllerServerKeySnippet];
@@ -424,13 +424,18 @@
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	NSDictionary *item = [[suggestionsProvider suggestionsForSearchText:searchField.text] objectAtIndex:indexPath.row];
-	
+    NSArray *history = [historyProvider pastHistoryItemsForPrefix:searchField.text];
+    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
+    if(indexPath.row < history.count) {
+        NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
+        [self loadQueryOrURL:[historyItem objectForKey:@"text"]];        
+    } else {
+     	NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
+        [self loadQueryOrURL:[suggestionItem objectForKey:ksDDGSearchControllerServerKeyPhrase]];        
+    }
+    	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
-	
 	[searchField resignFirstResponder];
-    
-    [self loadQueryOrURL:[item objectForKey:ksDDGSearchControllerServerKeyPhrase]];
 }
 
 @end

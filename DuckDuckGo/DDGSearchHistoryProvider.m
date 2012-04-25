@@ -32,31 +32,44 @@
 }
 
 -(void)logHistoryItem:(NSString *)historyItem {
-    NSDictionary *historyItemDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"text",historyItem,@"date",[NSDate date], nil];
+    NSLog(@"logging item %@",historyItem);
+    NSLog(@"old history count %i",history.count);
+    NSDictionary *historyItemDictionary = [NSDictionary dictionaryWithObjectsAndKeys:historyItem,@"text",[NSDate date],@"date",nil];
     
     for(int i=0; i<history.count; i++) {
         if([[[history objectAtIndex:i] objectForKey:@"text"] isEqualToString:historyItem]) {
             // add the new history item at the end to keep the array ordered
             [history removeObjectAtIndex:i];
             [history addObject:historyItemDictionary];
+            NSLog(@"replacement history count %i",history.count);
             return;
         }
     }
     [history addObject:historyItemDictionary];
+    NSLog(@"new history count %i",history.count);
     [self save];
 }
 
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
+    if([prefix isEqualToString:@""])
+        return [NSArray array]; // don't return history items for a blank prefix
+    
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
-    for(NSDictionary *historyItem in history)
+    NSLog(@"prefix %@",prefix);
+    for(NSDictionary *historyItem in history) {
+        
+        NSLog(@"considering history Item %@, text %@",historyItem,[historyItem objectForKey:@"text"]);
         if([[historyItem objectForKey:@"text"] hasPrefix:prefix])
             [results addObject:historyItem];
-
+    }
+    
     // if the array is too large, remove the earliest n-3 items
     while(results.count > 3)
         [results removeObjectAtIndex:0];
 
+    NSLog(@"returning %i past history items",results.count);
+    
     // the array is currently in ascending chronological order; reverse it and make it non-mutable
     return [[results reverseObjectEnumerator] allObjects];
 }
