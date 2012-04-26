@@ -250,9 +250,21 @@
                               withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
         
-        NSData *data = [NSJSONSerialization dataWithJSONObject:self.stories 
-                                                       options:0 
-                                                         error:nil];
+        
+        // TODO: Remove this before public release.git
+        NSData *data;
+        @try {
+            data = [NSJSONSerialization dataWithJSONObject:self.stories 
+                                                           options:0 
+                                                             error:nil];
+        }
+        @catch (NSException *exception) {
+            NSLog(@"Could not update stories, probably watrcoolr's fault.");
+            data = [NSData data];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not update stories, probably watrcoolr's fault." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
+            [alert show];
+        }
+        
         [data writeToFile:[self storiesPath] atomically:YES];
         
         isRefreshing = NO;
