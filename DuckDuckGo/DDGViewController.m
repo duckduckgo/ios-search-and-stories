@@ -251,7 +251,7 @@
         [self.tableView endUpdates];
         
         
-        // TODO: Remove this before public release.git
+        // TODO: Remove this before public release
         NSData *data;
         @try {
             data = [NSJSONSerialization dataWithJSONObject:self.stories 
