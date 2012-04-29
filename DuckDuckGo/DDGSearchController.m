@@ -19,7 +19,7 @@
 -(void)cancelInputAfterDelay;
 -(void)cancelInput;
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
-
+-(void)searchFieldDidChange:(id)sender;
 @end
 
 @implementation DDGSearchController
@@ -42,7 +42,8 @@
 		keyboardRect = CGRectZero;
 		                
         searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
-        
+        [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+
         stopOrReloadButton = [[UIButton alloc] init];
         stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
         [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
@@ -273,14 +274,12 @@
 
 #pragma  mark - Text field delegate
 
-- (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
-{
-    // figure out what the new search string is
-    NSString *newSearchText = [textField.text stringByReplacingCharactersInRange:range withString:string];
+-(void)searchFieldDidChange:(id)sender {
+    NSString *newSearchText = searchField.text;
     
     if([newSearchText isEqualToString:[self validURLStringFromString:newSearchText]]) {
         // we're definitely editing a URL, don't bother with autocomplete.
-        return YES;
+        return;
     }
         
 	if(newSearchText.length) {
@@ -294,15 +293,9 @@
     }
     // either way, reload the table view.
     [tableView reloadData];
-	
-	return YES;
 }
 
-- (BOOL)textFieldShouldClear:(UITextField *)textField
-{
-    [suggestionsProvider emptyCache];
-    [tableView reloadData];
-    
+- (BOOL)textFieldShouldClear:(UITextField *)textField {
 	// save search text in case user cancels input without navigating somewhere
     if(!oldSearchText)
         oldSearchText = textField.text;
