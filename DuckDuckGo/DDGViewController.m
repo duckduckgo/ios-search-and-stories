@@ -137,7 +137,14 @@
 #pragma mark - Search handler
 
 -(void)searchControllerLeftButtonPressed {
-    // TODO: implement something here.
+    // this is the settings button, so let's load the settings controller
+    IASKAppSettingsViewController *settings = [[IASKAppSettingsViewController alloc] initWithNibName:@"IASKAppSettingsView" bundle:nil];
+    settings.delegate = self;
+    settings.showDoneButton = YES;
+    settings.showCreditsFooter = NO; // TODO: make sure to give everyone credit elsewhere in an info page or something
+    
+    UINavigationController *aNavController = [[UINavigationController alloc] initWithRootViewController:settings];
+    [self presentModalViewController:aNavController animated:YES];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
@@ -149,6 +156,12 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if([segue.identifier isEqualToString:@"WebViewSegue"] && queryOrURLToLoad)
         [segue.destinationViewController loadQueryOrURL:queryOrURLToLoad];
+}
+
+#pragma mark - Settings delegate
+
+-(void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - Table view data source
