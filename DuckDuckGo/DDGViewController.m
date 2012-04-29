@@ -231,7 +231,7 @@
     // start downloading new stories
     isRefreshing = YES;
     
-    NSURL *url = [NSURL URLWithString:@"http://nil.duckduckgo.com/watrcoolr.js?o=json"];
+    NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json"];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         NSArray *newStories = (NSArray *)JSON;
