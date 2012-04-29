@@ -376,7 +376,8 @@
 		iv = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
 		iv.tag = 100;
 		iv.contentMode = UIViewContentModeScaleAspectFill;
-		iv.backgroundColor = [UIColor whiteColor];
+		iv.clipsToBounds = YES;
+        iv.backgroundColor = [UIColor whiteColor];
 		[cell.contentView addSubview:iv];
     }
 
