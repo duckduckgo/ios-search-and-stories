@@ -50,7 +50,7 @@
         searchField.rightView = stopOrReloadButton;
         
         suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
-        historyProvider = [[DDGSearchHistoryProvider alloc] init];
+        historyProvider = [DDGSearchHistoryProvider sharedInstance];
 	}
 	return self;
 }

@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 DuckDuckGo, Inc. All rights reserved.
 //
 
+#import "DDGAppDelegate.h"
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
 #import "AFNetworking.h"
@@ -78,7 +79,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
     [searchController resetOmnibar];
 }
 
@@ -162,6 +162,7 @@
 
 -(void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
     [self dismissModalViewControllerAnimated:YES];
+    [DDGAppDelegate processSettingChanges];
 }
 
 #pragma mark - Table view data source

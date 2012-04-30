@@ -12,6 +12,7 @@
     NSMutableArray *history;
 }
 
++(id)sharedInstance;
 -(void)clear;
 -(void)logHistoryItem:(NSString *)historyItem;
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix;

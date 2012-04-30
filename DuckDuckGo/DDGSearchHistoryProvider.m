@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 DuckDuckGo, Inc. All rights reserved.
 //
 
+#import "DDGAppDelegate.h"
 #import "DDGSearchHistoryProvider.h"
 
 @interface DDGSearchHistoryProvider (Private)
@@ -15,6 +16,14 @@
 @end
 
 @implementation DDGSearchHistoryProvider
+
+static DDGSearchHistoryProvider *sharedInstance;
+
++(id)sharedInstance {
+    if(!sharedInstance)
+        sharedInstance = [[self alloc] init];
+    return sharedInstance;
+}
 
 -(id)init {
     self = [super init];
@@ -31,7 +40,10 @@
     [self save];
 }
 
--(void)logHistoryItem:(NSString *)historyItem {
+-(void)logHistoryItem:(NSString *)historyItem {    
+    if(![[DDGAppDelegate retrieveFromUserDefaults:@"history_preference"] boolValue])
+        return;
+    
     NSLog(@"logging item %@",historyItem);
     NSLog(@"old history count %i",history.count);
     NSDictionary *historyItemDictionary = [NSDictionary dictionaryWithObjectsAndKeys:historyItem,@"text",[NSDate date],@"date",nil];
@@ -51,8 +63,9 @@
 }
 
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
-    if([prefix isEqualToString:@""])
-        return [NSArray array]; // don't return history items for a blank prefix
+    // there are certain cases in which we don't want to return any history
+    if([prefix isEqualToString:@""] || ![[DDGAppDelegate retrieveFromUserDefaults:@"history_preference"] boolValue])
+        return [NSArray array];
     
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
@@ -64,7 +77,7 @@
             [results addObject:historyItem];
     }
     
-    // if the array is too large, remove the earliest n-3 items
+    // if the array is too large, remove all but the 3 most recent items
     while(results.count > 3)
         [results removeObjectAtIndex:0];
 
