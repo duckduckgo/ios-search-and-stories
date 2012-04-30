@@ -188,27 +188,34 @@
         label.textColor = [UIColor whiteColor];
     
     // load article image
-    UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    imageView.image = nil; // clear any old image that might have been there
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[entry objectForKey:@"image"]] 
-                                                  cachePolicy:NSURLRequestReturnCacheDataElseLoad 
-                                              timeoutInterval:20];
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+    UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
+    articleImageView.image = nil; // clear any old image that might have been there
+    NSURLRequest *articleImageRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[entry objectForKey:@"image"]] 
+                                                              cachePolicy:NSURLRequestReturnCacheDataElseLoad 
+                                                          timeoutInterval:20];
+    AFHTTPRequestOperation *articleImageOperation = [[AFHTTPRequestOperation alloc] initWithRequest:articleImageRequest];
+    [articleImageOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         UIImage *image = [UIImage imageWithData:responseObject];
         if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue]) {
             UIImage *grayscaleImage = [self grayscaleImageFromImage:image];
-            imageView.image = grayscaleImage;
+            articleImageView.image = grayscaleImage;
         } else {
-            imageView.image = image;
+            articleImageView.image = image;
         }
         
     } failure:nil];
-    [operation start];
+    [articleImageOperation start];
         
     // load site favicon image
-    UIImageView *siteFaviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    [self loadFaviconForURLString:[entry objectForKey:@"url"] intoImageView:siteFaviconImageView success:nil];
+    UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
+    [self loadFaviconForURLString:[entry objectForKey:@"url"] intoImageView:faviconImageView success:^(UIImage *image) {
+        // if this article has been read, load the grayscale version of the favicon...
+        if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue]) {
+            UIImage *grayscaleImage = [self grayscaleImageFromImage:image];
+            faviconImageView.image = grayscaleImage;
+        }
+        // ... if not, don't do anything (the color version has already been loaded)
+    }];
     	
 	return cell;
 }
