@@ -312,7 +312,6 @@
 				4C1FD7E21548FF65006B2511 /* icon57x@2x.png */,
 				4C1FD7E31548FF65006B2511 /* icon72x.png */,
 				4C1FD8061548FF9E006B2511 /* Icon72x@2x.png */,
-				4C1FD7E41548FF65006B2511 /* reload.png */,
 				4C1FD7E51548FF65006B2511 /* search_field.png */,
 				4C1FD7E61548FF65006B2511 /* search_field@2x.png */,
 				4C1FD7E71548FF65006B2511 /* settings_button.png */,
@@ -320,8 +319,9 @@
 				4C1FD7E91548FF65006B2511 /* spacer8x16.png */,
 				4C1FD7EA1548FF65006B2511 /* spacer44x44.png */,
 				4C1FD7EB1548FF65006B2511 /* stop.png */,
-				4C9A9771154DEAED00286619 /* reload@2x.png */,
 				4C9A9772154DEAED00286619 /* stop@2x.png */,
+				4C1FD7E41548FF65006B2511 /* reload.png */,
+				4C9A9771154DEAED00286619 /* reload@2x.png */,
 				4C1FD7EC1548FF65006B2511 /* topicChosen37x36.png */,
 			);
 			name = Images;
