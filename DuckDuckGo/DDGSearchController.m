@@ -290,7 +290,9 @@
 
 -(void)updateBarProgress {
     NSTimeInterval loadingTime = (-1.0)*[loadingBeginTime timeIntervalSinceNow];
-    [searchField setProgress:(loadingTime/10.0)];
+    CGFloat avgLoadingTime = 2; // 80% by 2 seconds
+    CGFloat progress = (1-1/((4.0/avgLoadingTime)*loadingTime+1)); // have the progress asymptotically approach 1 as time goes on
+    [searchField setProgress:progress];
 }
 
 #pragma  mark - Text field delegate
