@@ -31,15 +31,22 @@
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
 {
 	self = [super initWithNibName:nibNameOrNil bundle:nil];
+    // the code below happens after viewDidLoad
+    
 	if (self) {
-
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
-        frame.size.width = [UIScreen mainScreen].applicationFrame.size.width;
+        if(UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
+            frame.size.width = parent.bounds.size.width;
+        else
+            frame.size.width = parent.bounds.size.height;
+        
         self.view.frame = frame;
 
 		[parent addSubview:self.view];
-		keyboardRect = CGRectZero;
+        [self revealBackground:NO animated:NO];
+
+        keyboardRect = CGRectZero;
 		                
         searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
         [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
@@ -77,8 +84,6 @@
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelInputAfterDelay)];
     gestureRecognizer.cancelsTouchesInView = NO;
     [self.tableView addGestureRecognizer:gestureRecognizer];
-    
-    [self revealBackground:NO animated:NO];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
