@@ -33,6 +33,9 @@ typedef enum {
     NSString *oldSearchText;
     DDGSearchSuggestionsProvider *suggestionsProvider;
     DDGSearchHistoryProvider *historyProvider;
+    
+    NSDate *loadingBeginTime;
+    NSTimer *loadingTimer;
 }
 
 @property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;

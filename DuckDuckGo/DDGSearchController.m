@@ -21,6 +21,7 @@
 -(void)cancelInput;
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
 -(void)searchFieldDidChange:(id)sender;
+-(void)updateBarProgress;
 @end
 
 @implementation DDGSearchController
@@ -142,10 +143,19 @@
 
 -(void)webViewStartedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+    // stop the current timer (if there is one), then set a new one to update the progress
+    [loadingTimer invalidate];
+    // target: 60fps
+    loadingBeginTime = [NSDate date];
+    loadingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/60.0) target:self selector:@selector(updateBarProgress) userInfo:nil repeats:YES];
 }
 
 -(void)webViewFinishedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
+    
+    // clear out the search field progress
+    [loadingTimer invalidate];
+    [searchField setProgress:0];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
@@ -276,6 +286,11 @@
 -(void)resetOmnibar {
     searchField.text = @"";
     [tableView reloadData];
+}
+
+-(void)updateBarProgress {
+    NSTimeInterval loadingTime = (-1.0)*[loadingBeginTime timeIntervalSinceNow];
+    [searchField setProgress:(loadingTime/10.0)];
 }
 
 #pragma  mark - Text field delegate
