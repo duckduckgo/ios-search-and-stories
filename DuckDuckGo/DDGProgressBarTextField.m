@@ -11,8 +11,12 @@
 @implementation DDGProgressBarTextField
 
 - (void)setProgress:(CGFloat)progress {
-    if(progress < 0.0 || progress > 1.0)
+    if(progress <= 0.0) {
+        [self setBackground:[UIImage imageNamed:@"search_field.png"]];
         return;
+    } else if(progress > 1.0) {
+        progress = 1.0;
+    }
     
     // TODO: make this work with retina displays eventually
     UIImage *background = [UIImage imageNamed:@"search_field.png"];
