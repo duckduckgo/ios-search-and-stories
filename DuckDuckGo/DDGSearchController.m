@@ -11,6 +11,7 @@
 #import "DDGSearchSuggestionsProvider.h"
 #import "DDGSearchHistoryProvider.h"
 #import "AFNetworking.h"
+#import "DDGProgressBarTextField.h"
 
 @interface DDGSearchController (Private)
 

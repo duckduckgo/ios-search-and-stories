@@ -36,6 +36,8 @@
 		4C1FD8041548FF65006B2511 /* stop.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7EB1548FF65006B2511 /* stop.png */; };
 		4C1FD8051548FF65006B2511 /* topicChosen37x36.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7EC1548FF65006B2511 /* topicChosen37x36.png */; };
 		4C1FD8071548FF9E006B2511 /* Icon72x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD8061548FF9E006B2511 /* Icon72x@2x.png */; };
+		4C2F2C6C15604657005AAA2E /* DDGProgressBarTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6B15604657005AAA2E /* DDGProgressBarTextField.m */; };
+		4C2F2C6F15604A62005AAA2E /* filled_search_field.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6E15604A62005AAA2E /* filled_search_field.png */; };
 		4C9A9773154DEAED00286619 /* reload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9771154DEAED00286619 /* reload@2x.png */; };
 		4C9A9774154DEAED00286619 /* stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9772154DEAED00286619 /* stop@2x.png */; };
 		4C9A9777154DF86400286619 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9776154DF86400286619 /* Settings.bundle */; };
@@ -158,6 +160,9 @@
 		4C1FD7EB1548FF65006B2511 /* stop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stop.png; sourceTree = "<group>"; };
 		4C1FD7EC1548FF65006B2511 /* topicChosen37x36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topicChosen37x36.png; sourceTree = "<group>"; };
 		4C1FD8061548FF9E006B2511 /* Icon72x@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon72x@2x.png"; sourceTree = "<group>"; };
+		4C2F2C6A15604657005AAA2E /* DDGProgressBarTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBarTextField.h; sourceTree = "<group>"; };
+		4C2F2C6B15604657005AAA2E /* DDGProgressBarTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBarTextField.m; sourceTree = "<group>"; };
+		4C2F2C6E15604A62005AAA2E /* filled_search_field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filled_search_field.png; sourceTree = "<group>"; };
 		4C9A9771154DEAED00286619 /* reload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reload@2x.png"; sourceTree = "<group>"; };
 		4C9A9772154DEAED00286619 /* stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop@2x.png"; sourceTree = "<group>"; };
 		4C9A9776154DF86400286619 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
@@ -314,6 +319,7 @@
 				4C1FD8061548FF9E006B2511 /* Icon72x@2x.png */,
 				4C1FD7E51548FF65006B2511 /* search_field.png */,
 				4C1FD7E61548FF65006B2511 /* search_field@2x.png */,
+				4C2F2C6E15604A62005AAA2E /* filled_search_field.png */,
 				4C1FD7E71548FF65006B2511 /* settings_button.png */,
 				4C1FD7E81548FF65006B2511 /* settings_button@2x.png */,
 				4C1FD7E91548FF65006B2511 /* spacer8x16.png */,
@@ -534,6 +540,8 @@
 				4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */,
 				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
 				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
+				4C2F2C6A15604657005AAA2E /* DDGProgressBarTextField.h */,
+				4C2F2C6B15604657005AAA2E /* DDGProgressBarTextField.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
 				838E906D149A794F00C11E41 /* Resources */,
 				83E46A9414A2210700A2D4FC /* Temporary */,
@@ -706,6 +714,7 @@
 				4CF9ED5D154DFD1A0075C23E /* IASKPSTextFieldSpecifierViewCell.xib in Resources */,
 				4CF9ED5E154DFD1E0075C23E /* IASKPSToggleSwitchSpecifierViewCell.xib in Resources */,
 				4CF9ED5F154DFD220075C23E /* IASKSpecifierValuesView.xib in Resources */,
+				4C2F2C6F15604A62005AAA2E /* filled_search_field.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -759,6 +768,7 @@
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
 				4CCEA04D150BBA7F00CCC480 /* DDGAutocompleteServerKeys.m in Sources */,
 				4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */,
+				4C2F2C6C15604657005AAA2E /* DDGProgressBarTextField.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
