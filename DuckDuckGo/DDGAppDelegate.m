@@ -57,7 +57,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
 	// the defaults haven't been copied in yet.  So do so here.  Adds another null check
 	// for every retrieve, but should only trip the first time
 	if (val == nil) { 
-		NSLog(@"user defaults may not have been loaded from Settings.bundle ... doing that now ...");
+		NSLog(@"user defaults may not have been loaded from Settings.bundle (first launch?) ... doing that now ...");
 		//Get the bundle path
 		NSString *bPath = [[NSBundle mainBundle] bundlePath];
 		NSString *settingsPath = [bPath stringByAppendingPathComponent:@"Settings.bundle"];
