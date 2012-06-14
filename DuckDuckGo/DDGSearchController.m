@@ -217,14 +217,7 @@
     
     if(animated)
         self.view.frame = self.view.superview.bounds;
-    
-    [UIView animateWithDuration:0.0 delay:animationDuration 
-                        options:(unsigned int)0 
-                     animations:^{
-                         self.view.frame = rect;
-                     } 
-                     completion:nil];
-    
+        
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, animationDuration * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         self.view.frame = rect;
