@@ -13,6 +13,7 @@
 #import "AFNetworking.h"
 #import "DDGProgressBarTextField.h"
 #import "DDGBangsProvider.h"
+#import "DDGInputAccessoryView.h"
 
 @interface DDGSearchController (Private)
 
@@ -67,7 +68,6 @@
         historyProvider = [DDGSearchHistoryProvider sharedInstance];
         
         [self createInputAccessory];
-        searchField.inputAccessoryView = inputAccessory;
 	}
 	return self;
 }
@@ -208,6 +208,8 @@
     } else {
 		// clip to search entry height
 		rect.size.height = 46.0;
+        inputAccessory.frame = CGRectMake(0, 0, 0, 40);
+        inputAccessory.hidden = YES;
     }
     [self revealAutocomplete:NO]; // if we're revealing, we'll show it again after the animation
     
@@ -217,12 +219,18 @@
     
     if(animated)
         self.view.frame = self.view.superview.bounds;
-        
+
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, animationDuration * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         self.view.frame = rect;
-        if(reveal)
+        if(reveal) {
             [self revealAutocomplete:YES];
+            CGRect bangBarFrame = inputAccessory.frame;
+            bangBarFrame.origin.y = rect.size.height - 40.0;
+            bangBarFrame.size.width = rect.size.width;
+            inputAccessory.frame = bangBarFrame;
+            inputAccessory.hidden = NO;
+        }
     });
     
     [UIView animateWithDuration:(animated ? 0.25 : 0.0) animations:^{
@@ -298,14 +306,16 @@
 #pragma mark - Input accesory
 
 -(void)createInputAccessory {
-    inputAccessory = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
-    inputAccessory.backgroundColor = [UIColor yellowColor];
+    inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, 0, 0, 40)];
+    inputAccessory.hidden = YES;
     
     UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     bangButton.frame = CGRectMake(0, 0, 40, 40);
     [bangButton setTitle:@"!" forState:UIControlStateNormal];
     [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [inputAccessory addSubview:bangButton];
     
+    // get screen width so we can size the scroll view appropriately
     CGRect screenRect = [[UIScreen mainScreen] bounds];
     UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
     CGFloat width;
@@ -313,17 +323,15 @@
         width = screenRect.size.height;
     else
         width = screenRect.size.width;
-    NSLog(@"WIDTH %f",width);
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
-    [inputAccessory addSubview:scrollView];
-    scrollView.backgroundColor = [UIColor purpleColor];
+
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(40, 0, width-40, 40)];
     scrollView.showsHorizontalScrollIndicator = YES;
     scrollView.contentSize = CGSizeMake(0, 40);
     scrollView.tag = 102;
-    scrollView.frame = CGRectMake(40, 0, width-40, 40);
-    NSLog(@"FRAME %@",NSStringFromCGRect(scrollView.frame));
-
-    [inputAccessory addSubview:bangButton];
+    scrollView.hidden = YES;
+    [inputAccessory addSubview:scrollView];
+    
+    [self.view addSubview:inputAccessory];
 }
 
 -(void)bangButtonPressed {
@@ -341,17 +349,19 @@
     scrollView.contentSize = CGSizeMake(0, 40);
     for(UIView *subview in scrollView.subviews) {
         [subview removeFromSuperview];
-        NSLog(@"removing subview");
     }
-
+    scrollView.hidden = YES;
+    
     if([bang isEqualToString:@"!"]) return;
     NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
+    if(suggestions.count > 0)
+        scrollView.hidden = NO;
     
     for(NSString *suggestion in suggestions) {
         NSLog(@"adding %@",suggestion);
         UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [button setTitle:suggestion forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(bangButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
         [button setFrame:CGRectMake(scrollView.contentSize.width, 0, titleSize.width, 40)];
         NSLog(@"frame %@",NSStringFromCGRect(button.frame));

@@ -14,7 +14,7 @@ typedef enum {
 	DDGSearchControllerStateWeb
 } DDGSearchControllerState;
 
-@class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGProgressBarTextField;
+@class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGProgressBarTextField, DDGInputAccessoryView;
 @interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
 {
 	
@@ -35,7 +35,7 @@ typedef enum {
     DDGSearchHistoryProvider *historyProvider;
     
     UIButton *stopOrReloadButton;
-    UIView *inputAccessory;
+    DDGInputAccessoryView *inputAccessory;
     NSRange currentWordRange;
     
     NSDate *loadingBeginTime;
@@ -57,7 +57,7 @@ typedef enum {
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(void)updateBarWithURL:(NSURL *)url;
 -(void)resetOmnibar;
-  
+
 -(NSString *)validURLStringFromString:(NSString *)urlString;
 -(BOOL)isQuery:(NSString *)queryOrURL;
 
