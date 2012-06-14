@@ -25,14 +25,18 @@ typedef enum {
 	__weak IBOutlet UIButton *searchButton;
     __weak IBOutlet UIView *background;
     
-	DDGSearchControllerState state;
+    
+    DDGSearchControllerState state;
 	CGRect keyboardRect;
     
-    UIButton *stopOrReloadButton;
-	id<DDGSearchHandler> __weak searchHandler;
+    id<DDGSearchHandler> __weak searchHandler;
     NSString *oldSearchText;
     DDGSearchSuggestionsProvider *suggestionsProvider;
     DDGSearchHistoryProvider *historyProvider;
+    
+    UIButton *stopOrReloadButton;
+    UIView *inputAccessory;
+    NSRange currentWordRange;
     
     NSDate *loadingBeginTime;
     NSTimer *loadingTimer;

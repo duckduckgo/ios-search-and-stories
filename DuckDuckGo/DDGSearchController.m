@@ -12,6 +12,7 @@
 #import "DDGSearchHistoryProvider.h"
 #import "AFNetworking.h"
 #import "DDGProgressBarTextField.h"
+#import "DDGBangsProvider.h"
 
 @interface DDGSearchController (Private)
 
@@ -22,6 +23,10 @@
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
 -(void)searchFieldDidChange:(id)sender;
 -(void)updateBarProgress;
+-(void)createInputAccessory;
+-(void)bangButtonPressed;
+-(void)loadSuggestionsForBang:(NSString *)bang;
+-(void)bangAutocompleteButtonPressed:(UIButton *)sender;
 @end
 
 @implementation DDGSearchController
@@ -60,6 +65,9 @@
         
         suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
         historyProvider = [DDGSearchHistoryProvider sharedInstance];
+        
+        [self createInputAccessory];
+        searchField.inputAccessoryView = inputAccessory;
 	}
 	return self;
 }
@@ -121,7 +129,6 @@
 
 
 #pragma  mark - Interactions with search handler
-
 - (IBAction)leftButtonPressed:(UIButton*)sender {
 	[searchField resignFirstResponder];
     
@@ -295,6 +302,75 @@
     [searchField setProgress:progress];
 }
 
+#pragma mark - Input accesory
+
+-(void)createInputAccessory {
+    inputAccessory = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 40, 40)];
+    inputAccessory.backgroundColor = [UIColor yellowColor];
+    
+    UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    bangButton.frame = CGRectMake(0, 0, 40, 40);
+    [bangButton setTitle:@"!" forState:UIControlStateNormal];
+    [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    
+    CGRect screenRect = [[UIScreen mainScreen] bounds];
+    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
+    CGFloat width;
+    if(orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight)
+        width = screenRect.size.height;
+    else
+        width = screenRect.size.width;
+    NSLog(@"WIDTH %f",width);
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectZero];
+    [inputAccessory addSubview:scrollView];
+    scrollView.backgroundColor = [UIColor purpleColor];
+    scrollView.showsHorizontalScrollIndicator = YES;
+    scrollView.contentSize = CGSizeMake(0, 40);
+    scrollView.tag = 102;
+    scrollView.frame = CGRectMake(40, 0, width-40, 40);
+    NSLog(@"FRAME %@",NSStringFromCGRect(scrollView.frame));
+
+    [inputAccessory addSubview:bangButton];
+}
+
+-(void)bangButtonPressed {
+    [searchField setText:[NSString stringWithFormat:@"%@!",searchField.text]];
+}
+
+-(void)bangAutocompleteButtonPressed:(UIButton *)sender {
+    [searchField setText:[searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
+}
+
+-(void)loadSuggestionsForBang:(NSString *)bang {
+    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
+    NSLog(@"FRAME %@",NSStringFromCGRect(scrollView.frame));
+
+    scrollView.contentSize = CGSizeMake(0, 40);
+    for(UIView *subview in scrollView.subviews) {
+        [subview removeFromSuperview];
+        NSLog(@"removing subview");
+    }
+
+    if([bang isEqualToString:@"!"]) return;
+    NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
+    
+    for(NSString *suggestion in suggestions) {
+        NSLog(@"adding %@",suggestion);
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [button setTitle:suggestion forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(bangButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
+        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, titleSize.width, 40)];
+        NSLog(@"frame %@",NSStringFromCGRect(button.frame));
+        scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + titleSize.width + 10, 40);
+        [scrollView addSubview:button];
+    }
+
+    NSLog(@"FRAME %@",NSStringFromCGRect(scrollView.superview.frame));
+
+    NSLog(@"FRAME %@",NSStringFromCGRect(scrollView.frame));
+}
+
 #pragma  mark - Text field delegate
 
 -(void)searchFieldDidChange:(id)sender {
@@ -316,6 +392,38 @@
     }
     // either way, reload the table view.
     [tableView reloadData];
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
+
+    if(newString.length == 0) {
+        currentWordRange = NSMakeRange(NSNotFound, 0);
+        return YES; // there's nothing we can do with an empty string
+    }
+    
+    // find word beginning
+    int wordBeginning;
+    for(wordBeginning = range.location;wordBeginning>=0;wordBeginning--) {
+        if(wordBeginning == 0 || [newString characterAtIndex:wordBeginning-1] == ' ')
+            break;
+    }
+
+    // find word end
+    int wordEnd;
+    for(wordEnd = wordBeginning;wordEnd<newString.length;wordEnd++) {
+        if(wordEnd == newString.length-1 || [newString characterAtIndex:wordEnd+1] == ' ')
+            break;
+    }
+    
+    currentWordRange = NSMakeRange(wordBeginning, wordEnd-wordBeginning+1);
+    NSString *currentWord = [newString substringWithRange:currentWordRange];
+
+    if([currentWord characterAtIndex:0]=='!') {
+        [self loadSuggestionsForBang:currentWord];
+    }
+    
+    return YES;
 }
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
