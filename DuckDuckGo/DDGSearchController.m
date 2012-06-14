@@ -101,6 +101,26 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
+    
+    CGRect inputAccessoryFrame = inputAccessory.frame;
+    CGRect scrollViewFrame = [inputAccessory viewWithTag:102].frame;
+    NSLog(@"ROTATING");
+    if(UIInterfaceOrientationIsLandscape(toInterfaceOrientation) && UIInterfaceOrientationIsPortrait(currentOrientation)) {
+        NSLog(@"YES");
+        inputAccessoryFrame.size.width += 160;
+        scrollViewFrame.size.width += 160;
+    } else if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation) && UIInterfaceOrientationIsLandscape(currentOrientation)) {
+        NSLog(@"ORANGE");
+        inputAccessoryFrame.size.width -= 160;
+        scrollViewFrame.size.width -= 160;
+    }
+    
+    inputAccessory.frame = inputAccessoryFrame;
+    [inputAccessory viewWithTag:102].frame = scrollViewFrame;
+}
+
 
 #pragma mark - Updating keyboardRect
 
@@ -308,7 +328,6 @@
 -(void)createInputAccessory {
     inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, 0, 0, 40)];
     inputAccessory.hidden = YES;
-    
     UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     bangButton.frame = CGRectMake(0, 0, 40, 40);
     [bangButton setTitle:@"!" forState:UIControlStateNormal];

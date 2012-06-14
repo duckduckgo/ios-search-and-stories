@@ -107,6 +107,10 @@
 	return YES;
 }
 
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+}
+
 #pragma mark - Scroll view delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
