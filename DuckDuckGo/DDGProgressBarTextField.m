@@ -18,15 +18,22 @@
         progress = 1.0;
     }
     
-    // TODO: make this work with retina displays eventually
-    UIImage *background = [UIImage imageNamed:@"search_field.png"];
-    
+    UIImage *background;
+    UIImage *filled;
+    // if retina display (from http://stackoverflow.com/questions/3504173/detect-retina-display)
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0)) {
+        background = [UIImage imageNamed:@"search_field@2x.png"];
+        filled = [UIImage imageNamed:@"filled_search_field@2x.png"];
+    } else {
+        background = [UIImage imageNamed:@"search_field.png"];
+        filled = [UIImage imageNamed:@"filled_search_field.png"];
+    }
+        
     CGSize backgroundSize = CGSizeMake(background.size.width, background.size.height);
     UIGraphicsBeginImageContext(backgroundSize);
     
     [background drawAtPoint:CGPointZero];
     
-    UIImage *filled = [UIImage imageNamed:@"filled_search_field.png"];
     CGRect filledRect = CGRectMake(0, 0, filled.size.width * progress, filled.size.height);
     CGImageRef filledRef = CGImageCreateWithImageInRect([filled CGImage], filledRect);
     UIImage *croppedFilled = [UIImage imageWithCGImage:filledRef];
