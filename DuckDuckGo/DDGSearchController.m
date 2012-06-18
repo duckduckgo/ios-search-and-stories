@@ -230,7 +230,7 @@
     } else {
 		// clip to search entry height
 		rect.size.height = 46.0;
-        inputAccessory.frame = CGRectMake(0, 0, 0, 40);
+        inputAccessory.frame = CGRectMake(0, 0, 0, 46);
         inputAccessory.hidden = YES;
     }
     [self revealAutocomplete:NO]; // if we're revealing, we'll show it again after the animation
@@ -248,7 +248,7 @@
         if(reveal) {
             [self revealAutocomplete:YES];
             CGRect bangBarFrame = inputAccessory.frame;
-            bangBarFrame.origin.y = rect.size.height - 40.0;
+            bangBarFrame.origin.y = rect.size.height - 46.0;
             bangBarFrame.size.width = rect.size.width;
             inputAccessory.frame = bangBarFrame;
             inputAccessory.hidden = NO;
@@ -331,11 +331,12 @@
 #pragma mark - Input accesory
 
 -(void)createInputAccessory {
-    inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, 0, 0, 40)];
+    inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, 0, 0, 46)];
     inputAccessory.hidden = YES;
-    UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    bangButton.frame = CGRectMake(0, 0, 40, 40);
-    [bangButton setTitle:@"!" forState:UIControlStateNormal];
+    UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
+    bangButton.frame = CGRectMake(0, 0, 46, 46);
+    //[bangButton setTitle:@"!" forState:UIControlStateNormal];
     [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [inputAccessory addSubview:bangButton];
     
@@ -348,9 +349,9 @@
     else
         width = screenRect.size.width;
 
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(40, 0, width-40, 40)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(46, 0, width-46, 46)];
     scrollView.showsHorizontalScrollIndicator = YES;
-    scrollView.contentSize = CGSizeMake(0, 40);
+    scrollView.contentSize = CGSizeMake(0, 46);
     scrollView.tag = 102;
     scrollView.hidden = YES;
     [inputAccessory addSubview:scrollView];
@@ -380,8 +381,8 @@
         [button setTitle:suggestion forState:UIControlStateNormal];
         [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
-        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, titleSize.width, 40)];
-        scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + titleSize.width + 10, 40);
+        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, titleSize.width, 46)];
+        scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + titleSize.width + 10, 46);
         [scrollView addSubview:button];
     }
 }
@@ -389,7 +390,7 @@
 -(void)clearBangSuggestions {
     UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
     
-    scrollView.contentSize = CGSizeMake(0, 40);
+    scrollView.contentSize = CGSizeMake(0, 46);
     for(UIView *subview in scrollView.subviews) {
         [subview removeFromSuperview];
     }
