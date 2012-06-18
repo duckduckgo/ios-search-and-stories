@@ -28,6 +28,8 @@
 -(void)bangButtonPressed;
 -(void)loadSuggestionsForBang:(NSString *)bang;
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender;
+-(void)clearBangSuggestions;
+
 @end
 
 @implementation DDGSearchController
@@ -106,13 +108,11 @@
     
     CGRect inputAccessoryFrame = inputAccessory.frame;
     CGRect scrollViewFrame = [inputAccessory viewWithTag:102].frame;
-    NSLog(@"ROTATING");
+
     if(UIInterfaceOrientationIsLandscape(toInterfaceOrientation) && UIInterfaceOrientationIsPortrait(currentOrientation)) {
-        NSLog(@"YES");
         inputAccessoryFrame.size.width += 160;
         scrollViewFrame.size.width += 160;
     } else if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation) && UIInterfaceOrientationIsLandscape(currentOrientation)) {
-        NSLog(@"ORANGE");
         inputAccessoryFrame.size.width -= 160;
         scrollViewFrame.size.width -= 160;
     }
@@ -363,34 +363,32 @@
 
 -(void)loadSuggestionsForBang:(NSString *)bang {
     UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
-    NSLog(@"FRAME %@",NSStringFromCGRect(scrollView.frame));
-
-    scrollView.contentSize = CGSizeMake(0, 40);
-    for(UIView *subview in scrollView.subviews) {
-        [subview removeFromSuperview];
-    }
-    scrollView.hidden = YES;
     
     if([bang isEqualToString:@"!"]) return;
     NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
     if(suggestions.count > 0)
         scrollView.hidden = NO;
     
-    for(NSString *suggestion in suggestions) {
-        NSLog(@"adding %@",suggestion);
+    for(NSDictionary *suggestionDict in suggestions) {
+        NSString *suggestion = [suggestionDict objectForKey:@"name"];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [button setTitle:suggestion forState:UIControlStateNormal];
         [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
         [button setFrame:CGRectMake(scrollView.contentSize.width, 0, titleSize.width, 40)];
-        NSLog(@"frame %@",NSStringFromCGRect(button.frame));
         scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + titleSize.width + 10, 40);
         [scrollView addSubview:button];
     }
+}
 
-    NSLog(@"FRAME %@",NSStringFromCGRect(scrollView.superview.frame));
-
-    NSLog(@"FRAME %@",NSStringFromCGRect(scrollView.frame));
+-(void)clearBangSuggestions {
+    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
+    
+    scrollView.contentSize = CGSizeMake(0, 40);
+    for(UIView *subview in scrollView.subviews) {
+        [subview removeFromSuperview];
+    }
+    scrollView.hidden = YES;
 }
 
 #pragma  mark - Text field delegate
@@ -421,6 +419,7 @@
 
     if(newString.length == 0) {
         currentWordRange = NSMakeRange(NSNotFound, 0);
+        [self clearBangSuggestions];
         return YES; // there's nothing we can do with an empty string
     }
     
@@ -440,7 +439,8 @@
     
     currentWordRange = NSMakeRange(wordBeginning, wordEnd-wordBeginning+1);
     NSString *currentWord = [newString substringWithRange:currentWordRange];
-
+    
+    [self clearBangSuggestions];
     if([currentWord characterAtIndex:0]=='!') {
         [self loadSuggestionsForBang:currentWord];
     }
