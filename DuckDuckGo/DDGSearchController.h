@@ -30,7 +30,10 @@ typedef enum {
 	CGRect keyboardRect;
     
     id<DDGSearchHandler> __weak searchHandler;
+    
     NSString *oldSearchText;
+    BOOL barUpdated;
+    
     DDGSearchSuggestionsProvider *suggestionsProvider;
     DDGSearchHistoryProvider *historyProvider;
     

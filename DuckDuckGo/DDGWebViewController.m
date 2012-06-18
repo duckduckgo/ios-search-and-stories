@@ -81,7 +81,6 @@
         // if views haven't loaded yet, nothing below work, so we need to save the URL/query to load later
         queryOrURLToLoad = queryOrURLString;
     } else if(queryOrURLString) {
-        
         NSString *urlString;
         if([searchController isQuery:queryOrURLString]) {
             urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [queryOrURLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];

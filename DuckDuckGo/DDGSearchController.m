@@ -93,6 +93,8 @@
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     
+    // TODO (WHEN I GET BACK): MAKE DISCLOSURE BUTTON TAPS NOT TRIGGER CANCELINPUT (see those lines below).
+    
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelInputAfterDelay)];
     gestureRecognizer.cancelsTouchesInView = NO;
     [self.tableView addGestureRecognizer:gestureRecognizer];
@@ -269,11 +271,14 @@
 
 -(void)cancelInput {
     [searchField resignFirstResponder];
-    searchField.text = oldSearchText;
-    oldSearchText = nil;
+    if(!barUpdated) {
+        searchField.text = oldSearchText;
+        oldSearchText = nil;
+    }
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
+    barUpdated = YES;
     
     // parse URL query components
     NSArray *queryComponentsArray = [[url query] componentsSeparatedByString:@"&"];
@@ -465,6 +470,7 @@
     // save search text in case user cancels input without navigating somewhere
     if(!oldSearchText)
         oldSearchText = textField.text;
+    barUpdated = NO;
     
     textField.rightView = nil;
 }
@@ -514,11 +520,17 @@
 {
     static NSString *suggestionCellID = @"SCell";
     static NSString *historyCellID = @"HCell";
+    static NSString *emptyCellID = @"ECell";
     
     NSArray *history = [historyProvider pastHistoryItemsForPrefix:searchField.text];
     NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
-    if((suggestions.count + history.count) <= indexPath.row)
-        return [tv dequeueReusableCellWithIdentifier:suggestionCellID]; // this entry no longer exists; return empty cell. the tableview will be reloading very soon anyway.
+    if((suggestions.count + history.count) <= indexPath.row) {
+        // this entry no longer exists; return empty cell. the tableview will be reloading very soon anyway.
+        UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:emptyCellID];
+        if(cell == nil)
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:emptyCellID];
+        return cell;
+    }
     
     UITableViewCell *cell;
     if(indexPath.row < history.count) {
@@ -539,6 +551,7 @@
         cell.textLabel.text = [historyItem objectForKey:@"text"];
         //cell.detailTextLabel.text = @"History item";
         [iv setImage:nil];
+        cell.accessoryType = UITableViewCellAccessoryNone;
         
     } else {
         // dequeue or initialize a suggestion cell
@@ -573,6 +586,10 @@
         else
             [iv setImage:nil]; // wipe out any image that used to be there
    
+        if([suggestionItem objectForKey:@"officialsite"])
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+        else
+            cell.accessoryType = UITableViewCellAccessoryNone;
     }
     
     return cell;
@@ -599,6 +616,20 @@
     	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	[searchField resignFirstResponder];
+}
+
+- (void)tableView:(UITableView *)tv accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    NSArray *history = [historyProvider pastHistoryItemsForPrefix:searchField.text];
+    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
+    if(indexPath.row < history.count) {
+        // this should never happen
+        NSLog(@"??? Accessory button tapped for a history item");
+    } else {
+     	NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
+        [self loadQueryOrURL:[suggestionItem objectForKey:@"officialsite"]];        
+        [tv deselectRowAtIndexPath:indexPath animated:YES];
+        [searchField resignFirstResponder];
+    }
 }
 
 @end
