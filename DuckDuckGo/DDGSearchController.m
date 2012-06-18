@@ -430,7 +430,7 @@
     
     // find word beginning
     int wordBeginning;
-    for(wordBeginning = range.location;wordBeginning>=0;wordBeginning--) {
+    for(wordBeginning = range.location+string.length;wordBeginning>=0;wordBeginning--) {
         if(wordBeginning == 0 || [newString characterAtIndex:wordBeginning-1] == ' ')
             break;
     }
@@ -438,15 +438,20 @@
     // find word end
     int wordEnd;
     for(wordEnd = wordBeginning;wordEnd<newString.length;wordEnd++) {
-        if(wordEnd == newString.length-1 || [newString characterAtIndex:wordEnd+1] == ' ')
+        if(wordEnd == newString.length || [newString characterAtIndex:wordEnd] == ' ')
             break;
     }
     
-    currentWordRange = NSMakeRange(wordBeginning, wordEnd-wordBeginning+1);
-    NSString *currentWord = [newString substringWithRange:currentWordRange];
+    currentWordRange = NSMakeRange(wordBeginning, wordEnd-wordBeginning);
+    
+    NSString *currentWord;
+    if(currentWordRange.length == 0)
+        currentWord = @"";
+    else
+        currentWord = [newString substringWithRange:currentWordRange];
     
     [self clearBangSuggestions];
-    if([currentWord characterAtIndex:0]=='!') {
+    if(currentWord.length > 0 && [currentWord characterAtIndex:0]=='!') {
         [self loadSuggestionsForBang:currentWord];
     }
     
