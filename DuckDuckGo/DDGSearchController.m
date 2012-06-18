@@ -463,6 +463,10 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
+    // clear out the search field progress
+    [loadingTimer invalidate];
+    [searchField setProgress:0];
+    
 	return YES;
 }
 
