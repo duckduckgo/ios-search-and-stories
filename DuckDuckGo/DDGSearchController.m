@@ -536,7 +536,6 @@
     if(indexPath.row < history.count) {
         // dequeue or initialize a history cell
         cell = [tv dequeueReusableCellWithIdentifier:historyCellID];
-        UIImageView *iv;
         if(cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:historyCellID];
             cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
@@ -550,15 +549,13 @@
         NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
         cell.textLabel.text = [historyItem objectForKey:@"text"];
         //cell.detailTextLabel.text = @"History item";
-        [iv setImage:nil];
-        cell.accessoryType = UITableViewCellAccessoryNone;
         
     } else {
         // dequeue or initialize a suggestion cell
         cell = [tv dequeueReusableCellWithIdentifier:suggestionCellID];
         UIImageView *iv;
         if(cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:historyCellID];
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:suggestionCellID];
             cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
             cell.textLabel.textColor = [UIColor darkGrayColor];
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
