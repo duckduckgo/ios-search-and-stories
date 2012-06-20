@@ -43,7 +43,7 @@
     searchController.state = DDGSearchControllerStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
 
-    tableView.separatorColor = [UIColor whiteColor];
+    tableView.separatorColor = [UIColor clearColor];
     
     readStories = [NSMutableDictionary dictionaryWithContentsOfFile:self.readStoriesPath];
     if(!readStories)
@@ -183,19 +183,35 @@
         self.loadedCell = nil;
         
         // one-time cell setup that can't be done in interface builder:
-        UIView *labelBackground = [cell viewWithTag:400];
-        CALayer *labelBackgroundLayer = [labelBackground layer];
-        [labelBackgroundLayer setMasksToBounds:YES];
-        [labelBackgroundLayer setCornerRadius:8.0];
-        
         UIView *imageView = [cell viewWithTag:100];
-        CALayer *imageViewLayer = [imageView layer];
-        [imageViewLayer setMasksToBounds:YES];
-        [imageViewLayer setCornerRadius:8.0];
-//        imageViewLayer.shadowOffset = CGSizeMake(0, 3);
-//        imageViewLayer.shadowRadius = 5.0;
-//        imageViewLayer.shadowColor = [UIColor blackColor].CGColor;
-//        imageViewLayer.shadowOpacity = 0.8;
+        imageView.layer.masksToBounds = YES;
+        
+        UIBezierPath *topCornersMaskPath = [UIBezierPath bezierPathWithRoundedRect:imageView.bounds 
+                                                       byRoundingCorners:UIRectCornerTopLeft|UIRectCornerTopRight
+                                                             cornerRadii:CGSizeMake(4.0, 4.0)];
+        CAShapeLayer *topCornersMaskLayer = [CAShapeLayer layer];
+        topCornersMaskLayer.frame = imageView.bounds;
+        topCornersMaskLayer.path = topCornersMaskPath.CGPath;
+        imageView.layer.mask = topCornersMaskLayer;
+    
+        UIView *labelBackground = [cell viewWithTag:400];
+        
+        UIBezierPath *bottomCornersMaskPath = [UIBezierPath bezierPathWithRoundedRect:labelBackground.bounds 
+                                                                 byRoundingCorners:UIRectCornerBottomLeft|UIRectCornerBottomRight
+                                                                       cornerRadii:CGSizeMake(4.0, 4.0)];
+        CAShapeLayer *bottomCornersMaskLayer = [CAShapeLayer layer];
+        bottomCornersMaskLayer.frame = labelBackground.bounds;
+        bottomCornersMaskLayer.path = bottomCornersMaskPath.CGPath;
+        labelBackground.layer.mask = bottomCornersMaskLayer;
+        
+        labelBackground.backgroundColor = [UIColor clearColor];
+        CAGradientLayer *gradient = [CAGradientLayer layer]; 
+        gradient.frame = labelBackground.bounds; 
+        gradient.colors = [NSArray arrayWithObjects:
+                           (id)[[UIColor colorWithWhite:0.98 alpha:1.0] CGColor],
+                           (id)[[UIColor colorWithWhite:0.90 alpha:1.0] CGColor],
+                           nil];
+        [labelBackground.layer addSublayer:gradient];
 	}
 
     NSDictionary *entry = [stories objectAtIndex:indexPath.row];
@@ -205,7 +221,7 @@
     if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue])
         label.textColor = [UIColor lightGrayColor];
     else
-        label.textColor = [UIColor blackColor];
+        label.textColor = [UIColor darkGrayColor];
     
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
