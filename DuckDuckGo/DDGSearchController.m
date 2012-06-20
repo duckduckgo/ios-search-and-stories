@@ -334,6 +334,7 @@
     inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, 0, 0, 46)];
     inputAccessory.hidden = YES;
     UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    // TODO: *important* bang_button.png and empty_bang_button.png are currently stolen from the iPhone keyboard images; replace them with custom graphics before release.
     [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
     bangButton.frame = CGRectMake(0, 0, 46, 46);
     [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
