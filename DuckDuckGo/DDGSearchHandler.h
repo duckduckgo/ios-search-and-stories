@@ -11,8 +11,7 @@
 @protocol DDGSearchHandler <NSObject>
 
 -(void)searchControllerLeftButtonPressed;
--(void)loadQueryOrURL:(NSString *)query;
--(void)loadQueryOrURL:(NSString *)urlString;
+-(void)loadQueryOrURL:(NSString *)queryOrURLString;
 
 @optional
 

@@ -7,7 +7,6 @@
 //
 
 #import "DDGSearchSuggestionsProvider.h"
-#import "DDGAutocompleteServerKeys.h"
 #import "AFNetworking.h"
 
 static NSString *suggestionServerBaseURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";

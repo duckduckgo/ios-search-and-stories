@@ -7,7 +7,6 @@
 //
 
 #import "DDGSearchController.h"
-#import "DDGAutocompleteServerKeys.h"
 #import "DDGSearchSuggestionsProvider.h"
 #import "DDGSearchHistoryProvider.h"
 #import "AFNetworking.h"
@@ -587,11 +586,11 @@
         
      	NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
         
-        cell.textLabel.text = [suggestionItem objectForKey:ksDDGSearchControllerServerKeyPhrase];
-        cell.detailTextLabel.text = [suggestionItem objectForKey:ksDDGSearchControllerServerKeySnippet];
+        cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
+        cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
         
-        if([suggestionItem objectForKey:ksDDGSearchControllerServerKeyImage])
-            [iv setImageWithURL:[NSURL URLWithString:[suggestionItem objectForKey:ksDDGSearchControllerServerKeyImage]]];
+        if([suggestionItem objectForKey:@"image"])
+            [iv setImageWithURL:[NSURL URLWithString:[suggestionItem objectForKey:@"image"]]];
         else
             [iv setImage:nil]; // wipe out any image that used to be there
    
@@ -620,7 +619,7 @@
         [self loadQueryOrURL:[historyItem objectForKey:@"text"]];        
     } else {
      	NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
-        [self loadQueryOrURL:[suggestionItem objectForKey:ksDDGSearchControllerServerKeyPhrase]];        
+        [self loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];        
     }
     	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
