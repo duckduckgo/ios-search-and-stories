@@ -14,7 +14,8 @@ static NSString *suggestionServerBaseURL = @"http://swass.duckduckgo.com:6767/fa
 static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
 
 @interface DDGSearchSuggestionsProvider (Private)
--(void)addOfficialSitesToSuggestionsCacheForKey:(NSString *)searchText success:(void (^)(void))success;
+-(void)addOfficialSitesToSuggestionsCacheForSearchText:(NSString *)searchText success:(void (^)(void))success;
+-(NSString *)officialSiteForItem:(NSString *)suggestion;
 @end
 
 @implementation DDGSearchSuggestionsProvider
@@ -62,7 +63,7 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
         success(); // run callback
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-            [self addOfficialSitesToSuggestionsCacheForKey:searchText success:success];        
+            [self addOfficialSitesToSuggestionsCacheForSearchText:searchText success:success];        
         });
         
     } failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
@@ -72,31 +73,44 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
     
 }
 
--(void)addOfficialSitesToSuggestionsCacheForKey:(NSString *)searchText success:(void (^)(void))success {
+#pragma mark - Official sites
+
+-(void)addOfficialSitesToSuggestionsCacheForSearchText:(NSString *)searchText success:(void (^)(void))success {
     NSMutableArray *suggestions = [[suggestionsCache objectForKey:searchText] mutableCopy];
+    
     for(int i=0;i<suggestions.count;i++) {
-        NSDictionary *item = [suggestions objectAtIndex:i];
-        NSString *officialSitesURL = [officialSitesBaseURL stringByAppendingString:AFURLEncodedStringFromStringWithEncoding([item objectForKey:@"phrase"], NSUTF8StringEncoding)];
-        NSData *officialSitesResponse = [NSData dataWithContentsOfURL:[NSURL URLWithString:officialSitesURL]];
-        if(!officialSitesResponse) {
-            NSLog(@"Error: official sites server didn't respond; %@",officialSitesURL);
-            break;
-        }
         
-        NSDictionary *officialSites = [NSJSONSerialization JSONObjectWithData:officialSitesResponse options:0 error:nil];
-        for(NSDictionary *result in [officialSites objectForKey:@"Results"]) {
-            if([[result objectForKey:@"Text"] isEqualToString:@"Official site"]) {
-                NSMutableDictionary *newItem = [item mutableCopy];
-                [newItem setObject:[result objectForKey:@"FirstURL"] forKey:@"officialsite"];
-                [suggestions replaceObjectAtIndex:i withObject:newItem];
-                [suggestionsCache setObject:suggestions forKey:searchText];
-                dispatch_sync(dispatch_get_main_queue(), ^(void) {
-                    success();
-                });
-                break;
-            }
+        NSDictionary *item = [suggestions objectAtIndex:i];
+        NSString *officialSite = [self officialSiteForItem:[item objectForKey:@"phrase"]];        
+        if(officialSite) {
+            NSMutableDictionary *newItem = [item mutableCopy];
+            [newItem setObject:officialSite forKey:@"officialsite"];
+            [suggestions replaceObjectAtIndex:i withObject:newItem];
+            [suggestionsCache setObject:suggestions forKey:searchText];
+            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+                success();
+            });
         }
     }
+}
+
+-(NSString *)officialSiteForItem:(NSString *)suggestion {
+    NSString *requestURL = [officialSitesBaseURL stringByAppendingString:AFURLEncodedStringFromStringWithEncoding(suggestion, NSUTF8StringEncoding)];
+    NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:requestURL]];
+    if(!response) {
+        NSLog(@"Error: official sites server didn't respond; %@",requestURL);
+        return nil;
+    }
+    
+    NSDictionary *officialSites = [NSJSONSerialization JSONObjectWithData:response options:0 error:nil];
+    
+    for(NSDictionary *result in [officialSites objectForKey:@"Results"]) {
+        if([[result objectForKey:@"Text"] isEqualToString:@"Official site"]) {
+            return [result objectForKey:@"FirstURL"];
+        }
+    }
+    
+    return nil;
 }
 
 -(void)emptyCache {
