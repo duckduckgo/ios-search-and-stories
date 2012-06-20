@@ -44,6 +44,7 @@
 		4C5F81F7158FA781007B745A /* filled_search_field@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F6158FA781007B745A /* filled_search_field@2x.png */; };
 		4C5F81FA158FEA94007B745A /* bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F8158FEA94007B745A /* bang_button.png */; };
 		4C5F81FB158FEA94007B745A /* bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F9158FEA94007B745A /* bang_button@2x.png */; };
+		4C660A7915914E73001AB510 /* empty_bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C660A7815914E73001AB510 /* empty_bang_button.png */; };
 		4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */; };
 		4C9A9773154DEAED00286619 /* reload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9771154DEAED00286619 /* reload@2x.png */; };
 		4C9A9774154DEAED00286619 /* stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9772154DEAED00286619 /* stop@2x.png */; };
@@ -176,6 +177,8 @@
 		4C5F81F6158FA781007B745A /* filled_search_field@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "filled_search_field@2x.png"; sourceTree = "<group>"; };
 		4C5F81F8158FEA94007B745A /* bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bang_button.png; sourceTree = "<group>"; };
 		4C5F81F9158FEA94007B745A /* bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button@2x.png"; sourceTree = "<group>"; };
+		4C660A7715914E4B001AB510 /* empty_bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_bang_button@2x.png"; sourceTree = "<group>"; };
+		4C660A7815914E73001AB510 /* empty_bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_bang_button.png; sourceTree = "<group>"; };
 		4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBangsProvider.h; sourceTree = "<group>"; };
 		4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGBangsProvider.m; sourceTree = "<group>"; };
 		4C9A9771154DEAED00286619 /* reload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reload@2x.png"; sourceTree = "<group>"; };
@@ -349,8 +352,31 @@
 				4C1FD7EC1548FF65006B2511 /* topicChosen37x36.png */,
 				4C5F81F8158FEA94007B745A /* bang_button.png */,
 				4C5F81F9158FEA94007B745A /* bang_button@2x.png */,
+				4C660A7815914E73001AB510 /* empty_bang_button.png */,
+				4C660A7715914E4B001AB510 /* empty_bang_button@2x.png */,
 			);
 			name = Images;
+			sourceTree = "<group>";
+		};
+		4C660A741591487C001AB510 /* Search controller */ = {
+			isa = PBXGroup;
+			children = (
+				4CCEA04B150BBA7F00CCC480 /* DDGAutocompleteServerKeys.h */,
+				4CCEA04C150BBA7F00CCC480 /* DDGAutocompleteServerKeys.m */,
+				83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */,
+				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
+				4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */,
+				4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */,
+				4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */,
+				4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */,
+				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
+				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
+				4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */,
+				4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */,
+				4C2F2C6A15604657005AAA2E /* DDGProgressBarTextField.h */,
+				4C2F2C6B15604657005AAA2E /* DDGProgressBarTextField.m */,
+			);
+			name = "Search controller";
 			sourceTree = "<group>";
 		};
 		4C6AC43514DDA95500A1ACA1 /* 3rd Party */ = {
@@ -546,6 +572,7 @@
 				4C6AC43514DDA95500A1ACA1 /* 3rd Party */,
 				83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */,
 				83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */,
+				4C660A741591487C001AB510 /* Search controller */,
 				83F32274149290EF00A61BC5 /* DDGViewController.h */,
 				83F32275149290EF00A61BC5 /* DDGViewController.m */,
 				4CA7ED3514D3B48200A83E77 /* DDGNonAnimatedPushSegue.h */,
@@ -553,20 +580,6 @@
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */,
-				4CCEA04B150BBA7F00CCC480 /* DDGAutocompleteServerKeys.h */,
-				4CCEA04C150BBA7F00CCC480 /* DDGAutocompleteServerKeys.m */,
-				83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */,
-				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
-				4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */,
-				4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */,
-				4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */,
-				4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */,
-				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
-				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
-				4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */,
-				4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */,
-				4C2F2C6A15604657005AAA2E /* DDGProgressBarTextField.h */,
-				4C2F2C6B15604657005AAA2E /* DDGProgressBarTextField.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
 				838E906D149A794F00C11E41 /* Resources */,
 				83E46A9414A2210700A2D4FC /* Temporary */,
@@ -745,6 +758,7 @@
 				4C5F81F7158FA781007B745A /* filled_search_field@2x.png in Resources */,
 				4C5F81FA158FEA94007B745A /* bang_button.png in Resources */,
 				4C5F81FB158FEA94007B745A /* bang_button@2x.png in Resources */,
+				4C660A7915914E73001AB510 /* empty_bang_button.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

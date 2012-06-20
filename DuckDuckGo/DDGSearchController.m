@@ -336,7 +336,6 @@
     UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
     bangButton.frame = CGRectMake(0, 0, 46, 46);
-    //[bangButton setTitle:@"!" forState:UIControlStateNormal];
     [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [inputAccessory addSubview:bangButton];
     
@@ -381,7 +380,9 @@
         [button setTitle:suggestion forState:UIControlStateNormal];
         [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
-        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, titleSize.width, 46)];
+        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, titleSize.width + 10, 46)];
+        UIImage *backgroundImg = [[UIImage imageNamed:@"empty_bang_button.png"] stretchableImageWithLeftCapWidth:6.0 topCapHeight:10.0];
+        [button setBackgroundImage:backgroundImg forState:UIControlStateNormal];
         scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + titleSize.width + 10, 46);
         [scrollView addSubview:button];
     }
