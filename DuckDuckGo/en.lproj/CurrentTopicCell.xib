@@ -44,9 +44,10 @@
 							<object class="IBUIImageView" id="952143328">
 								<reference key="NSNextResponder" ref="873179220"/>
 								<int key="NSvFlags">290</int>
-								<string key="NSFrameSize">{320, 83}</string>
+								<string key="NSFrame">{{10, 10}, {300, 70}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="806210434"/>
 								<string key="NSReuseIdentifierKey">_NS:554</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">3</int>
@@ -64,8 +65,8 @@
 								<array class="NSMutableArray" key="NSSubviews">
 									<object class="IBUIImageView" id="779277510">
 										<reference key="NSNextResponder" ref="806210434"/>
-										<int key="NSvFlags">276</int>
-										<string key="NSFrame">{{7, 7}, {16, 16}}</string>
+										<int key="NSvFlags">300</int>
+										<string key="NSFrame">{{7, 16}, {16, 16}}</string>
 										<reference key="NSSuperview" ref="806210434"/>
 										<reference key="NSWindow"/>
 										<reference key="NSNextKeyView" ref="619246761"/>
@@ -82,9 +83,10 @@
 									<object class="IBUILabel" id="619246761">
 										<reference key="NSNextResponder" ref="806210434"/>
 										<int key="NSvFlags">258</int>
-										<string key="NSFrame">{{30, 0}, {259, 31}}</string>
+										<string key="NSFrame">{{30, 2}, {259, 43}}</string>
 										<reference key="NSSuperview" ref="806210434"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView"/>
 										<string key="NSReuseIdentifierKey">_NS:328</string>
 										<object class="NSColor" key="IBUIBackgroundColor">
 											<int key="NSColorSpace">3</int>
@@ -107,6 +109,8 @@
 										<nil key="IBUIHighlightedColor"/>
 										<int key="IBUIBaselineAdjustment">1</int>
 										<float key="IBUIMinimumFontSize">14</float>
+										<int key="IBUINumberOfLines">2</int>
+										<int key="IBUILineBreakMode">0</int>
 										<object class="IBUIFontDescription" key="IBUIFontDescription">
 											<int key="type">1</int>
 											<double key="pointSize">14</double>
@@ -118,19 +122,20 @@
 										</object>
 									</object>
 								</array>
-								<string key="NSFrame">{{0, 51}, {320, 32}}</string>
+								<string key="NSFrame">{{10, 80}, {300, 48}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="779277510"/>
 								<string key="NSReuseIdentifierKey">_NS:196</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">3</int>
-									<bytes key="NSWhite">MCAwLjcAA</bytes>
+									<bytes key="NSWhite">MQA</bytes>
 								</object>
+								<int key="IBUITag">400</int>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 							</object>
 						</array>
-						<string key="NSFrameSize">{320, 83}</string>
+						<string key="NSFrameSize">{320, 138}</string>
 						<reference key="NSSuperview" ref="712966024"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="952143328"/>
@@ -143,16 +148,20 @@
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 					</object>
 				</array>
-				<string key="NSFrameSize">{320, 84}</string>
+				<string key="NSFrameSize">{320, 139}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="873179220"/>
 				<string key="NSReuseIdentifierKey">_NS:363</string>
+				<object class="NSColor" key="IBUIBackgroundColor">
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MSAwLjk3Njg1MjgzNDIgMC45NTAxODM0NTEyAA</bytes>
+				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<int key="IBUISelectionStyle">0</int>
 				<reference key="IBUIContentView" ref="873179220"/>
 				<string key="IBUIReuseIdentifier">CurrentTopicCell</string>
-				<real value="84" key="IBUIRowHeight"/>
+				<real value="138" key="IBUIRowHeight"/>
 			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">

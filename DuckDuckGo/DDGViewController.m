@@ -10,6 +10,7 @@
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
 #import "AFNetworking.h"
+#import <QuartzCore/QuartzCore.h>
 
 @interface DDGViewController (Private)
 -(NSURL *)faviconURLForDomain:(NSString *)domain;
@@ -180,6 +181,21 @@
         [[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil];
         cell = loadedCell;
         self.loadedCell = nil;
+        
+        // one-time cell setup that can't be done in interface builder:
+        UIView *labelBackground = [cell viewWithTag:400];
+        CALayer *labelBackgroundLayer = [labelBackground layer];
+        [labelBackgroundLayer setMasksToBounds:YES];
+        [labelBackgroundLayer setCornerRadius:8.0];
+        
+        UIView *imageView = [cell viewWithTag:100];
+        CALayer *imageViewLayer = [imageView layer];
+        [imageViewLayer setMasksToBounds:YES];
+        [imageViewLayer setCornerRadius:8.0];
+//        imageViewLayer.shadowOffset = CGSizeMake(0, 3);
+//        imageViewLayer.shadowRadius = 5.0;
+//        imageViewLayer.shadowColor = [UIColor blackColor].CGColor;
+//        imageViewLayer.shadowOpacity = 0.8;
 	}
 
     NSDictionary *entry = [stories objectAtIndex:indexPath.row];
@@ -187,9 +203,9 @@
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
 	label.text = [entry objectForKey:@"title"];
     if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue])
-        label.textColor = [UIColor grayColor];
+        label.textColor = [UIColor lightGrayColor];
     else
-        label.textColor = [UIColor whiteColor];
+        label.textColor = [UIColor blackColor];
     
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
