@@ -3,7 +3,7 @@
 //  DuckDuckGo
 //
 //  Created by Ishaan Gulrajani on 5/13/12.
-//  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
+//  Copyright (c) 2012 DuckDuckGo, Inc. All rights reserved.
 //
 
 #import "DDGProgressBarTextField.h"
