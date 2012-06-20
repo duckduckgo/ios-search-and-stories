@@ -67,7 +67,13 @@ static DDGSearchHistoryProvider *sharedInstance;
     
     for(NSDictionary *historyItem in history) {
         
-        if([[historyItem objectForKey:@"text"] hasPrefix:prefix])
+        NSString *text = [historyItem objectForKey:@"text"];
+        if([text hasPrefix:prefix] ||
+           [text hasPrefix:[@"http://" stringByAppendingString:prefix]] ||
+           [text hasPrefix:[@"https://" stringByAppendingString:prefix]] ||
+           [text hasPrefix:[@"http://www." stringByAppendingString:prefix]] ||
+           [text hasPrefix:[@"https://www." stringByAppendingString:prefix]]
+           )
             [results addObject:historyItem];
     }
     
