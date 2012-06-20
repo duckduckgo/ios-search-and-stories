@@ -95,22 +95,36 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
 }
 
 -(NSString *)officialSiteForItem:(NSString *)suggestion {
+    // in the cache, @"" means the server returned no official sites, and nil means there's just no cached response. But this method is always and only supposed to return nil when there's no official site.
+    NSString *cachedOfficialSite = [officialSitesCache objectForKey:suggestion];
+    if([cachedOfficialSite isEqualToString:@""])
+        return nil;
+    else if(cachedOfficialSite)
+        return cachedOfficialSite;
+    
     NSString *requestURL = [officialSitesBaseURL stringByAppendingString:AFURLEncodedStringFromStringWithEncoding(suggestion, NSUTF8StringEncoding)];
     NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:requestURL]];
     if(!response) {
         NSLog(@"Error: official sites server didn't respond; %@",requestURL);
         return nil;
     }
-    
+
     NSDictionary *officialSites = [NSJSONSerialization JSONObjectWithData:response options:0 error:nil];
     
+    NSString *officialSite;
     for(NSDictionary *result in [officialSites objectForKey:@"Results"]) {
         if([[result objectForKey:@"Text"] isEqualToString:@"Official site"]) {
-            return [result objectForKey:@"FirstURL"];
+            officialSite = [result objectForKey:@"FirstURL"];
+            break;
         }
     }
     
-    return nil;
+    if(officialSite)
+        [officialSitesCache setObject:officialSite forKey:suggestion];
+    else
+        [officialSitesCache setObject:@"" forKey:suggestion];
+    
+    return officialSite;
 }
 
 -(void)emptyCache {

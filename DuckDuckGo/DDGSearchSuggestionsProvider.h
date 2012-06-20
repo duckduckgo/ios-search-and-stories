@@ -10,6 +10,7 @@
 
 @interface DDGSearchSuggestionsProvider : NSObject {
     NSMutableDictionary *suggestionsCache;
+    NSMutableDictionary *officialSitesCache;
     NSMutableURLRequest *serverRequest;
     NSDictionary *bangs; 
 }
