@@ -374,17 +374,17 @@
     NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
     if(suggestions.count > 0)
         scrollView.hidden = NO;
-    
+    UIImage *backgroundImg = [[UIImage imageNamed:@"empty_bang_button.png"] stretchableImageWithLeftCapWidth:7.0 topCapHeight:0];
+
     for(NSDictionary *suggestionDict in suggestions) {
         NSString *suggestion = [suggestionDict objectForKey:@"name"];
         UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         [button setTitle:suggestion forState:UIControlStateNormal];
         [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
-        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, titleSize.width + 10, 46)];
-        UIImage *backgroundImg = [[UIImage imageNamed:@"empty_bang_button.png"] stretchableImageWithLeftCapWidth:6.0 topCapHeight:10.0];
+        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, (titleSize.width > 30 ? titleSize.width + 20 : 50), 46)];
         [button setBackgroundImage:backgroundImg forState:UIControlStateNormal];
-        scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + titleSize.width + 10, 46);
+        scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + button.frame.size.width, 46);
         [scrollView addSubview:button];
     }
 }

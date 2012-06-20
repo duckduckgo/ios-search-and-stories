@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C15911D1592208C00D207DF /* empty_bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C660A7715914E4B001AB510 /* empty_bang_button@2x.png */; };
 		4C1EF85B150C043D00532858 /* EGORefreshTableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */; };
 		4C1EF85C150C043D00532858 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */; };
 		4C1EF85E150C048B00532858 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C1EF85D150C048A00532858 /* QuartzCore.framework */; };
@@ -759,6 +760,7 @@
 				4C5F81FA158FEA94007B745A /* bang_button.png in Resources */,
 				4C5F81FB158FEA94007B745A /* bang_button@2x.png in Resources */,
 				4C660A7915914E73001AB510 /* empty_bang_button.png in Resources */,
+				4C15911D1592208C00D207DF /* empty_bang_button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
