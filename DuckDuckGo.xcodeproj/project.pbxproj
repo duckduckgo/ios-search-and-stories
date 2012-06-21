@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C15911D1592208C00D207DF /* empty_bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C660A7715914E4B001AB510 /* empty_bang_button@2x.png */; };
+		4C19FFD71593B617003AC03F /* DDGCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C19FFD61593B617003AC03F /* DDGCache.m */; };
 		4C1EF85B150C043D00532858 /* EGORefreshTableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */; };
 		4C1EF85C150C043D00532858 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */; };
 		4C1EF85E150C048B00532858 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C1EF85D150C048A00532858 /* QuartzCore.framework */; };
@@ -143,6 +144,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C19FFD51593B617003AC03F /* DDGCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGCache.h; sourceTree = "<group>"; };
+		4C19FFD61593B617003AC03F /* DDGCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGCache.m; sourceTree = "<group>"; };
 		4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		4C1EF85D150C048A00532858 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -586,6 +589,8 @@
 				83F32275149290EF00A61BC5 /* DDGViewController.m */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
+				4C19FFD51593B617003AC03F /* DDGCache.h */,
+				4C19FFD61593B617003AC03F /* DDGCache.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
 				838E906D149A794F00C11E41 /* Resources */,
 				83E46A9414A2210700A2D4FC /* Temporary */,
@@ -825,6 +830,7 @@
 				4C2F2C6C15604657005AAA2E /* DDGProgressBarTextField.m in Sources */,
 				4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */,
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
+				4C19FFD71593B617003AC03F /* DDGCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
