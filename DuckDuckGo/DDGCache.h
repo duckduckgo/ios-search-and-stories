@@ -6,11 +6,13 @@
 //  Copyright (c) 2012 DuckDuckGo, Inc. All rights reserved.
 //
 
+
+//TODO: implement a clearing mechanism
 #import <Foundation/Foundation.h>
 
 @interface DDGCache : NSObject
 
-+(void)storeObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName;
-+(id)object:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName;
++(void)setObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName;
++(id)objectForKey:(NSString *)key inCache:(NSString *)cacheName;
 
 @end

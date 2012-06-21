@@ -8,8 +8,8 @@
 
 #import "DDGCache.h"
 @interface DDGCache (Private)
-+(void)load;
-+(void)save;
++(void)loadCache;
++(void)saveCache;
 +(NSString *)cachePath;
 @end
 
@@ -17,8 +17,8 @@
 
 static NSMutableDictionary *globalCache;
 
-+(void)storeObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName {
-    [self load];
++(void)setObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName {
+    [self loadCache];
     
     NSMutableDictionary *cache = [globalCache objectForKey:cacheName];
     if(!cache) {
@@ -27,29 +27,31 @@ static NSMutableDictionary *globalCache;
     }
     [cache setObject:object forKey:key];
     
-    [self save];
+    [self saveCache];
 }
 
-+(id)object:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName {
-    [self load];
++(id)objectForKey:(NSString *)key inCache:(NSString *)cacheName {
+    [self loadCache];
     
     return [[globalCache objectForKey:cacheName] objectForKey:key];
 }
 
-+(void)load {
+#pragma mark - Global cache management
+
++(void)loadCache {
     if(globalCache)
         return; // already loaded
     
-    globalCache = [NSMutableDictionary dictionaryWithContentsOfFile:[self cachePath]];
+    globalCache = [[NSMutableDictionary alloc] initWithContentsOfFile:[self cachePath]];
     if(!globalCache)
         globalCache = [[NSMutableDictionary alloc] init];
 }
 
-+(void)save {
++(void)saveCache {
     [globalCache writeToFile:[self cachePath] atomically:YES];
 }
 
--(NSString *)cachePath {
++(NSString *)cachePath {
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"cache.plist"];
 }
 

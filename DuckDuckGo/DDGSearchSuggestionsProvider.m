@@ -8,6 +8,7 @@
 
 #import "DDGSearchSuggestionsProvider.h"
 #import "AFNetworking.h"
+#import "DDGCache.h"
 
 static NSString *suggestionServerBaseURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
 static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
@@ -15,7 +16,6 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
 @interface DDGSearchSuggestionsProvider (Private)
 -(void)addOfficialSitesToSuggestionsCacheForSearchText:(NSString *)searchText success:(void (^)(void))success;
 -(NSString *)officialSiteForItem:(NSString *)suggestion;
--(NSString *)officialSitesCachePath;
 @end
 
 @implementation DDGSearchSuggestionsProvider
@@ -24,9 +24,6 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
     self = [super init];
     if(self) {
         suggestionsCache = [[NSMutableDictionary alloc] init];
-        officialSitesCache = [NSMutableDictionary dictionaryWithContentsOfFile:self.officialSitesCachePath];
-        if(!officialSitesCache)
-            officialSitesCache = [[NSMutableDictionary alloc] init];
         
         serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
                                                 cachePolicy:NSURLRequestUseProtocolCachePolicy
@@ -97,11 +94,10 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
     }
 }
 
--(NSString *)officialSiteForItem:(NSString *)suggestion {
-    // TODO: there needs to be some way of clearing this cache
-    
+-(NSString *)officialSiteForItem:(NSString *)suggestion {    
     // in the cache, @"" means the server returned no official sites, and nil means there's just no cached response. But this method is always and only supposed to return nil when there's no official site.
-    NSString *cachedOfficialSite = [officialSitesCache objectForKey:suggestion];
+    NSString *cachedOfficialSite = [DDGCache objectForKey:suggestion inCache:@"officialSites"];
+    
     if([cachedOfficialSite isEqualToString:@""])
         return nil;
     else if(cachedOfficialSite)
@@ -125,12 +121,10 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
     }
     
     if(officialSite)
-        [officialSitesCache setObject:officialSite forKey:suggestion];
+        [DDGCache setObject:officialSite forKey:suggestion inCache:@"officialSites"];
     else
-        [officialSitesCache setObject:@"" forKey:suggestion];
-    [officialSites writeToFile:[self officialSitesCachePath] atomically:YES];
-    
-    
+        [DDGCache setObject:@"" forKey:suggestion inCache:@"officialSites"];
+        
     return officialSite;
 }
 

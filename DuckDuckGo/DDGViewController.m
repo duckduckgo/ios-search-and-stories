@@ -10,6 +10,7 @@
 #import "DDGViewController.h"
 #import "DDGWebViewController.h"
 #import "AFNetworking.h"
+#import "DDGCache.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface DDGViewController (Private)
@@ -44,11 +45,7 @@
 	[searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
     
     tableView.separatorColor = [UIColor clearColor];
-    
-    readStories = [NSMutableDictionary dictionaryWithContentsOfFile:self.readStoriesPath];
-    if(!readStories)
-        readStories = [[NSMutableDictionary alloc] init];
-    
+        
     NSData *storiesData = [NSData dataWithContentsOfFile:[self storiesPath]];
     if(!storiesData) // NSJSONSerialization complains if it's passed nil, so we give it an empty NSData instead
         storiesData = [NSData data];
@@ -238,7 +235,7 @@
 
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
 	label.text = [entry objectForKey:@"title"];
-    if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue])
+    if([[DDGCache objectForKey:[entry objectForKey:@"id"] inCache:@"readStories"] boolValue])
         label.textColor = [UIColor lightGrayColor];
     else
         label.textColor = [UIColor darkGrayColor];
@@ -252,7 +249,7 @@
     AFHTTPRequestOperation *articleImageOperation = [[AFHTTPRequestOperation alloc] initWithRequest:articleImageRequest];
     [articleImageOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         UIImage *image = [UIImage imageWithData:responseObject];
-        if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue]) {
+        if([[DDGCache objectForKey:[entry objectForKey:@"id"] inCache:@"readStories"] boolValue]) {
             UIImage *grayscaleImage = [self grayscaleImageFromImage:image];
             articleImageView.image = grayscaleImage;
         } else {
@@ -266,7 +263,7 @@
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
     [self loadFaviconForURLString:[entry objectForKey:@"url"] intoImageView:faviconImageView success:^(UIImage *image) {
         // if this article has been read, load the grayscale version of the favicon...
-        if([[readStories objectForKey:[entry objectForKey:@"id"]] boolValue]) {
+        if([[DDGCache objectForKey:[entry objectForKey:@"id"] inCache:@"readStories"] boolValue]) {
             UIImage *grayscaleImage = [self grayscaleImageFromImage:image];
             faviconImageView.image = grayscaleImage;
         }
@@ -292,9 +289,8 @@
 {
     NSDictionary *entry = [stories objectAtIndex:indexPath.row];
     
-    [readStories setObject:[NSNumber numberWithBool:YES] forKey:[entry objectForKey:@"id"]];
+    [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:[entry objectForKey:@"id"] inCache:@"readStories"];
     [tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete
-    [readStories writeToFile:self.readStoriesPath atomically:YES];
 
     NSString *escapedStoryURL = [[entry objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
@@ -374,11 +370,6 @@
 -(NSString *)storiesPath {
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.json"];
 }
-
--(NSString *)readStoriesPath {
-   return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"readStories.plist"];
-}
-
                    
 -(NSURL *)faviconURLForDomain:(NSString *)domain {
     // http://i2.duck.co/i/reddit.com.ico

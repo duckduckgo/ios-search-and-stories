@@ -21,7 +21,6 @@
     BOOL isRefreshing;
     
 	NSArray *stories;
-    NSMutableDictionary *readStories;
 }
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
@@ -33,5 +32,5 @@
 - (void)downloadStories;
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories;
 -(NSString *)storiesPath;
--(NSString *)readStoriesPath;
+
 @end
