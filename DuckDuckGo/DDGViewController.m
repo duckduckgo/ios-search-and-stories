@@ -157,28 +157,19 @@
     [webVC loadQueryOrURL:queryOrURL];
     
     // because we want the search bar to stay in place, we need to do custom animation here.
-    // to avoid flickering/lag, draw the table view into an image, animate the image, then put the table view back in place.
-    
-    UIGraphicsBeginImageContext(tableView.frame.size);
-	[tableView.layer renderInContext:UIGraphicsGetCurrentContext()];
-	UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
-	UIGraphicsEndImageContext();
-    
     UIImageView *imageView = [[UIImageView alloc] initWithImage:viewImage];
     imageView.frame = tableView.frame;
-    [self.view addSubview:imageView];
-    [self.view bringSubviewToFront:searchController.view];
-    
-    tableView.hidden = YES;
     
     [UIView animateWithDuration:0.3 animations:^{
-        CGRect frame = imageView.frame;
+        CGRect frame = tableView.frame;
         frame.origin.x -= frame.size.width;
-        imageView.frame = frame;
+        tableView.frame = frame;
     } completion:^(BOOL finished) {
-        [imageView removeFromSuperview];
-        tableView.hidden = NO;
-        [self.navigationController pushViewController:webVC animated:NO];        
+        CGRect frame = tableView.frame;
+        frame.origin.x += frame.size.width;
+        tableView.frame = frame;
+
+        [self.navigationController pushViewController:webVC animated:NO];
     }];
 }
 
