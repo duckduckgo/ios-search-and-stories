@@ -157,9 +157,6 @@
     [webVC loadQueryOrURL:queryOrURL];
     
     // because we want the search bar to stay in place, we need to do custom animation here.
-    UIImageView *imageView = [[UIImageView alloc] initWithImage:viewImage];
-    imageView.frame = tableView.frame;
-    
     [UIView animateWithDuration:0.3 animations:^{
         CGRect frame = tableView.frame;
         frame.origin.x -= frame.size.width;
