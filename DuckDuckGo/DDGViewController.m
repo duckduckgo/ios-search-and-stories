@@ -42,7 +42,7 @@
 	searchController.searchHandler = self;
     searchController.state = DDGSearchControllerStateHome;
 	[searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
-
+    
     tableView.separatorColor = [UIColor clearColor];
     
     readStories = [NSMutableDictionary dictionaryWithContentsOfFile:self.readStoriesPath];
@@ -149,18 +149,37 @@
     settings.showCreditsFooter = NO; // TODO: make sure to give everyone credit elsewhere in an info page or something
     
     UINavigationController *aNavController = [[UINavigationController alloc] initWithRootViewController:settings];
-    [self presentModalViewController:aNavController animated:YES];
+    [self presentModalViewController:aNavController animated:NO];
 }
 
--(void)loadQueryOrURL:(NSString *)queryOrURL {
-    queryOrURLToLoad = queryOrURL;
-    [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
-}
-
-// i'll put this here for now because it's closely related to loadQuery:
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if([segue.identifier isEqualToString:@"WebViewSegue"] && queryOrURLToLoad)
-        [segue.destinationViewController loadQueryOrURL:queryOrURLToLoad];
+-(void)loadQueryOrURL:(NSString *)queryOrURL {    
+    DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+    [webVC loadQueryOrURL:queryOrURL];
+    
+    // because we want the search bar to stay in place, we need to do custom animation here.
+    // to avoid flickering/lag, draw the table view into an image, animate the image, then put the table view back in place.
+    
+    UIGraphicsBeginImageContext(tableView.frame.size);
+	[tableView.layer renderInContext:UIGraphicsGetCurrentContext()];
+	UIImage *viewImage = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+    
+    UIImageView *imageView = [[UIImageView alloc] initWithImage:viewImage];
+    imageView.frame = tableView.frame;
+    [self.view addSubview:imageView];
+    [self.view bringSubviewToFront:searchController.view];
+    
+    tableView.hidden = YES;
+    
+    [UIView animateWithDuration:0.3 animations:^{
+        CGRect frame = imageView.frame;
+        frame.origin.x -= frame.size.width;
+        imageView.frame = frame;
+    } completion:^(BOOL finished) {
+        [imageView removeFromSuperview];
+        tableView.hidden = NO;
+        [self.navigationController pushViewController:webVC animated:NO];        
+    }];
 }
 
 #pragma mark - Settings delegate
@@ -277,9 +296,8 @@
     [readStories writeToFile:self.readStoriesPath atomically:YES];
 
     NSString *escapedStoryURL = [[entry objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    // queryOrURLToLoad = [NSString stringWithFormat:@"http://www.readability.com/m?url=%@",escapedStoryURL];
-    queryOrURLToLoad = escapedStoryURL;
-    [self performSegueWithIdentifier:@"WebViewSegue" sender:self];
+    
+    [self loadQueryOrURL:escapedStoryURL];
 }
 
 #pragma mark - Loading popular stories

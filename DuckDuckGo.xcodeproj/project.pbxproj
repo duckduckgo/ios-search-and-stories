@@ -52,11 +52,11 @@
 		4C9A9777154DF86400286619 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9776154DF86400286619 /* Settings.bundle */; };
 		4CA0DC4A14EF1C2900CFC5D2 /* SDURLCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA0DC4814EF1C2900CFC5D2 /* SDURLCache.h */; };
 		4CA0DC4B14EF1C2900CFC5D2 /* SDURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA0DC4914EF1C2900CFC5D2 /* SDURLCache.m */; };
-		4CA7ED3714D3B48200A83E77 /* DDGNonAnimatedPushSegue.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA7ED3614D3B48200A83E77 /* DDGNonAnimatedPushSegue.m */; };
 		4CA8C57215924B7E0011665C /* label_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA8C56E15924B7E0011665C /* label_shadow.png */; };
 		4CA8C57315924B7E0011665C /* label_shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA8C56F15924B7E0011665C /* label_shadow@2x.png */; };
 		4CA8C57415924B7E0011665C /* image_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA8C57015924B7E0011665C /* image_shadow.png */; };
 		4CA8C57515924B7E0011665C /* image_shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA8C57115924B7E0011665C /* image_shadow@2x.png */; };
+		4CA8C5821592914D0011665C /* DDGWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA8C5811592914D0011665C /* DDGWebViewController.xib */; };
 		4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */; };
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
 		4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */; };
@@ -190,13 +190,12 @@
 		4C9A9776154DF86400286619 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		4CA0DC4814EF1C2900CFC5D2 /* SDURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDURLCache.h; sourceTree = "<group>"; };
 		4CA0DC4914EF1C2900CFC5D2 /* SDURLCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SDURLCache.m; sourceTree = "<group>"; };
-		4CA7ED3514D3B48200A83E77 /* DDGNonAnimatedPushSegue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGNonAnimatedPushSegue.h; sourceTree = "<group>"; };
-		4CA7ED3614D3B48200A83E77 /* DDGNonAnimatedPushSegue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNonAnimatedPushSegue.m; sourceTree = "<group>"; };
 		4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchHandler.h; sourceTree = "<group>"; };
 		4CA8C56E15924B7E0011665C /* label_shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = label_shadow.png; sourceTree = "<group>"; };
 		4CA8C56F15924B7E0011665C /* label_shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "label_shadow@2x.png"; sourceTree = "<group>"; };
 		4CA8C57015924B7E0011665C /* image_shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = image_shadow.png; sourceTree = "<group>"; };
 		4CA8C57115924B7E0011665C /* image_shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "image_shadow@2x.png"; sourceTree = "<group>"; };
+		4CA8C5811592914D0011665C /* DDGWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGWebViewController.xib; sourceTree = "<group>"; };
 		4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchHistoryProvider.h; sourceTree = "<group>"; };
 		4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchHistoryProvider.m; sourceTree = "<group>"; };
 		4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchSuggestionsProvider.h; sourceTree = "<group>"; };
@@ -549,6 +548,7 @@
 				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
 				838E9067149A763200C11E41 /* CurrentTopicCell.xib */,
 				838E906C149A76D400C11E41 /* Localizable.strings */,
+				4CA8C5811592914D0011665C /* DDGWebViewController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -584,8 +584,6 @@
 				4C660A741591487C001AB510 /* Search controller */,
 				83F32274149290EF00A61BC5 /* DDGViewController.h */,
 				83F32275149290EF00A61BC5 /* DDGViewController.m */,
-				4CA7ED3514D3B48200A83E77 /* DDGNonAnimatedPushSegue.h */,
-				4CA7ED3614D3B48200A83E77 /* DDGNonAnimatedPushSegue.m */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
@@ -772,6 +770,7 @@
 				4CA8C57315924B7E0011665C /* label_shadow@2x.png in Resources */,
 				4CA8C57415924B7E0011665C /* image_shadow.png in Resources */,
 				4CA8C57515924B7E0011665C /* image_shadow@2x.png in Resources */,
+				4CA8C5821592914D0011665C /* DDGWebViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,7 +820,6 @@
 				83F32276149290EF00A61BC5 /* DDGViewController.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
-				4CA7ED3714D3B48200A83E77 /* DDGNonAnimatedPushSegue.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
 				4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */,
 				4C2F2C6C15604657005AAA2E /* DDGProgressBarTextField.m in Sources */,

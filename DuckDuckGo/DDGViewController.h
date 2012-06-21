@@ -22,7 +22,6 @@
     
 	NSArray *stories;
     NSMutableDictionary *readStories;
-    NSString *queryOrURLToLoad;
 }
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
