@@ -25,7 +25,10 @@ static NSMutableDictionary *globalCache;
         cache = [[NSMutableDictionary alloc] init];
         [globalCache setObject:cache forKey:cacheName];
     }
-    [cache setObject:object forKey:key];
+    if(!object)
+        [cache removeObjectForKey:key];
+    else
+        [cache setObject:object forKey:key];
     
     [self saveCache];
 }

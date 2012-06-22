@@ -22,9 +22,8 @@
 
 -(NSURL *)faviconURLForDomain:(NSString *)domain;
 -(UIImage *)grayscaleImageFromImage:(UIImage *)image;
--(void)loadFaviconForURLString:(NSString *)urlString intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success;
--(void)loadFaviconForDomain:(NSString *)domain intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success;
--(BOOL)image:(UIImage *)image1 isEqualToImage:(UIImage *)image2;
+-(void)loadFaviconForURLString:(NSString *)urlString storyID:(NSString *)storyID;
+
 @end
 
 @implementation DDGViewController
@@ -243,14 +242,7 @@
         
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    [self loadFaviconForURLString:[story objectForKey:@"url"] intoImageView:faviconImageView success:^(UIImage *image) {
-        // if this article has been read, load the grayscale version of the favicon...
-        if([[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"readStories"] boolValue]) {
-            UIImage *grayscaleImage = [self grayscaleImageFromImage:image];
-            faviconImageView.image = grayscaleImage;
-        }
-        // ... if not, don't do anything (the color version has already been loaded)
-    }];
+    faviconImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"faviconImages"]];
     	
 	return cell;
 }
@@ -271,12 +263,14 @@
 {
     NSDictionary *story = [stories objectAtIndex:indexPath.row];
     
-    // mark the story as read and make its image grayscale
+    // mark the story as read and make its image and favicon grayscale
     [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:[story objectForKey:@"id"] inCache:@"readStories"];
-    NSData *imageData = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"];
-    UIImage *grayscaleImage = [self grayscaleImageFromImage:[UIImage imageWithData:imageData]];
-    NSData *grayscaleData = UIImagePNGRepresentation(grayscaleImage);
-    [DDGCache setObject:grayscaleData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+    for(NSString *cache in [NSArray arrayWithObjects:@"storyImages", @"faviconImages", nil]) {
+        NSData *imageData = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:cache];
+        UIImage *grayscaleImage = [self grayscaleImageFromImage:[UIImage imageWithData:imageData]];
+        NSData *grayscaleData = UIImagePNGRepresentation(grayscaleImage);
+        [DDGCache setObject:grayscaleData forKey:[story objectForKey:@"id"] inCache:cache];
+    }
     
     [tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete
 
@@ -309,12 +303,17 @@
     // download story images
     for(NSIndexPath *storyIndexPath in addedStories) {
         NSDictionary *story = [newStories objectAtIndex:storyIndexPath.row];
-        NSLog(@"DOWNLOADING %@",story);
+
+        // main image
         NSString *imageURL = [story objectForKey:@"image"];
         NSData *image = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
         if(!image)
             image = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
         [DDGCache setObject:image forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+        
+        // favicon
+        NSString *storyURL = [story objectForKey:@"url"];
+        [self loadFaviconForURLString:storyURL storyID:[story objectForKey:@"id"]];
     }
     
     
@@ -362,12 +361,6 @@
 -(NSString *)storiesPath {
     return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.json"];
 }
-                   
--(NSURL *)faviconURLForDomain:(NSString *)domain {
-    // http://i2.duck.co/i/reddit.com.ico
-    NSString *faviconURLString = [NSString stringWithFormat:@"http://i2.duck.co/i/%@.ico",domain];
-    return [NSURL URLWithString:faviconURLString];
-}
 
 - (UIImage *)grayscaleImageFromImage:(UIImage *)image
 {
@@ -401,43 +394,28 @@
     return newImage;
 }
 
--(void)loadFaviconForURLString:(NSString *)urlString intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success {
+-(NSURL *)faviconURLForDomain:(NSString *)domain {
+    // http://i2.duck.co/i/reddit.com.ico
+    NSString *faviconURLString = [NSString stringWithFormat:@"http://i2.duck.co/i/%@.ico",domain];
+    return [NSURL URLWithString:faviconURLString];
+}
+
+-(void)loadFaviconForURLString:(NSString *)urlString storyID:(NSString *)storyID {
     if(!urlString || [urlString isEqual:[NSNull null]])
         return;
-    [self loadFaviconForDomain:[[NSURL URLWithString:urlString] host] intoImageView:imageView success:(void (^)(UIImage *image))success];
-}
 
--(void)loadFaviconForDomain:(NSString *)domain intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success {
-    NSMutableArray *domainParts = [[domain componentsSeparatedByString:@"."] mutableCopy];
-    [domainParts removeObjectAtIndex:0];
-    if(domainParts.count == 0)
-        return; // we're definitely down to just a TLD by now and still couldn't get a favicon.
-    NSString *newDomain = [domainParts componentsJoinedByString:@"."];
-
-    NSURLRequest *request = [[NSURLRequest alloc] initWithURL:[self faviconURLForDomain:domain]
-                                                  cachePolicy:NSURLRequestReturnCacheDataElseLoad 
-                                              timeoutInterval:20];
+    NSString *domain = [[NSURL URLWithString:urlString] host];
     
-    __block UIImageView *blockImageView = imageView;
-
-    [imageView setImageWithURLRequest:request placeholderImage:nil success:^(NSURLRequest *request , NSHTTPURLResponse *response , UIImage *image) {
-        if([image size].width > 1) {
-            // image loaded successfully; we're done here.
-            if(success)
-                success(image);
-            return;
-        }
-        [self loadFaviconForDomain:newDomain intoImageView:blockImageView success:(void (^)(UIImage *image))success];
-        blockImageView = nil;
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error) {
-        [self loadFaviconForDomain:newDomain intoImageView:blockImageView success:(void (^)(UIImage *image))success];
-        blockImageView = nil;
-    }];
-}
-
--(BOOL)image:(UIImage *)image1 isEqualToImage:(UIImage *)image2 {
-    // slow, inefficient solution, but it might be fast enough anyway.
-    return [UIImagePNGRepresentation(image1) isEqualToData:UIImagePNGRepresentation(image2)];
+    while(![DDGCache objectForKey:storyID inCache:@"faviconImages"]) {
+        NSData *response = [NSData dataWithContentsOfURL:[self faviconURLForDomain:domain]];
+        [DDGCache setObject:response forKey:storyID inCache:@"faviconImages"];
+        
+        NSMutableArray *domainParts = [[domain componentsSeparatedByString:@"."] mutableCopy];
+        if(domainParts.count == 1)
+            return; // we're definitely down to just a TLD by now and still couldn't get a favicon.
+        [domainParts removeObjectAtIndex:0];
+        domain = [domainParts componentsJoinedByString:@"."];
+    }
 }
 
 @end
