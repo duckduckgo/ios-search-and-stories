@@ -28,6 +28,7 @@
 -(void)loadSuggestionsForBang:(NSString *)bang;
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender;
 -(void)clearBangSuggestions;
+-(void)reloadSuggestions;
 
 @end
 
@@ -133,13 +134,7 @@
     if([searchField isFirstResponder]) {
         // user just started editing the search box
         [self revealBackground:YES animated:YES];
-        
-        if ([searchField.text length])
-        {            
-            [suggestionsProvider downloadSuggestionsForSearchText:searchField.text success:^{
-                [tableView reloadData];
-            }];
-        }
+        [self reloadSuggestions];
     }
 }
 
@@ -398,16 +393,16 @@
     scrollView.hidden = YES;
 }
 
-#pragma  mark - Text field delegate
+#pragma mark - Search suggestions
 
--(void)searchFieldDidChange:(id)sender {
+- (void)reloadSuggestions {
     NSString *newSearchText = searchField.text;
     
     if([newSearchText isEqualToString:[self validURLStringFromString:newSearchText]]) {
         // we're definitely editing a URL, don't bother with autocomplete.
         return;
     }
-        
+    
 	if(newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
         [suggestionsProvider downloadSuggestionsForSearchText:newSearchText success:^{
@@ -419,6 +414,12 @@
     }
     // either way, reload the table view.
     [tableView reloadData];
+}
+
+#pragma mark - Text field delegate
+
+-(void)searchFieldDidChange:(id)sender {
+    [self reloadSuggestions];
 }
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -484,6 +485,7 @@
     barUpdated = NO;
     
     textField.rightView = nil;
+    [self reloadSuggestions];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
