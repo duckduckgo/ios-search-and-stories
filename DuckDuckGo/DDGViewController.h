@@ -29,8 +29,4 @@
 
 @property (nonatomic, strong) NSArray *stories;
 
-- (void)downloadStories;
--(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories;
--(NSString *)storiesPath;
-
 @end

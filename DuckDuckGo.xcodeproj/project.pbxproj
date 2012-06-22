@@ -40,6 +40,7 @@
 		4C1FD8071548FF9E006B2511 /* Icon72x@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD8061548FF9E006B2511 /* Icon72x@2x.png */; };
 		4C2F2C6C15604657005AAA2E /* DDGProgressBarTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6B15604657005AAA2E /* DDGProgressBarTextField.m */; };
 		4C2F2C6F15604A62005AAA2E /* filled_search_field.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6E15604A62005AAA2E /* filled_search_field.png */; };
+		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
 		4C57C10F158A8D6500E4C6BF /* refresh_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */; };
 		4C57C112158A8F5400E4C6BF /* refresh_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */; };
 		4C5F81F4158F96D6007B745A /* bangs.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F3158F96D6007B745A /* bangs.json */; };
@@ -178,6 +179,7 @@
 		4C2F2C6A15604657005AAA2E /* DDGProgressBarTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBarTextField.h; sourceTree = "<group>"; };
 		4C2F2C6B15604657005AAA2E /* DDGProgressBarTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBarTextField.m; sourceTree = "<group>"; };
 		4C2F2C6E15604A62005AAA2E /* filled_search_field.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = filled_search_field.png; sourceTree = "<group>"; };
+		4C5381451595045500490B9C /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
 		4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh_arrow.png; sourceTree = "<group>"; };
 		4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh_arrow@2x.png"; sourceTree = "<group>"; };
 		4C5F81F3158F96D6007B745A /* bangs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bangs.json; sourceTree = "<group>"; };
@@ -326,6 +328,7 @@
 		4C1FD7D31548FF5B006B2511 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4C5381451595045500490B9C /* noimage.png */,
 				4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */,
 				4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */,
 				4C1FD7D41548FF65006B2511 /* action34x29.png */,
@@ -776,6 +779,7 @@
 				4CA8C57415924B7E0011665C /* image_shadow.png in Resources */,
 				4CA8C57515924B7E0011665C /* image_shadow@2x.png in Resources */,
 				4CA8C5821592914D0011665C /* DDGWebViewController.xib in Resources */,
+				4C5381461595045500490B9C /* noimage.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

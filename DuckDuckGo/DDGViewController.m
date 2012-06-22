@@ -14,6 +14,12 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface DDGViewController (Private)
+-(void)beginDownloadingStories;
+-(void)downloadStoriesSuccess:(void (^)())success;
+-(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories;
+-(NSString *)storiesPath;
+
+
 -(NSURL *)faviconURLForDomain:(NSString *)domain;
 -(UIImage *)grayscaleImageFromImage:(UIImage *)image;
 -(void)loadFaviconForURLString:(NSString *)urlString intoImageView:(UIImageView *)imageView success:(void (^)(UIImage *image))success;
@@ -63,7 +69,7 @@
 	//  update the last update date
 	[refreshHeaderView refreshLastUpdatedDate];
     
-    [self downloadStories];
+    [self beginDownloadingStories];
 }
 
 - (void)viewDidUnload
@@ -130,11 +136,11 @@
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
-    [self downloadStories];
+    [self beginDownloadingStories];
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
-	return isRefreshing; // should return if data source model is reloading
+	return isRefreshing;
 }
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
@@ -166,16 +172,7 @@
     [UIView animateWithDuration:0.3 animations:^{
         tableView.transform = CGAffineTransformMakeScale(2, 2);
         tableView.alpha = 0;
-        
-//        CGRect frame = tableView.frame;
-//        frame.origin.x -= frame.size.width;
-//        tableView.frame = frame;
     } completion:^(BOOL finished) {
-
-//        CGRect frame = tableView.frame;
-//        frame.origin.x += frame.size.width;
-//        tableView.frame = frame;
-
         [self.navigationController pushViewController:webVC animated:NO];
     }];
 }
@@ -231,39 +228,24 @@
         [labelBackground.layer addSublayer:gradient];
 	}
 
-    NSDictionary *entry = [stories objectAtIndex:indexPath.row];
+    NSDictionary *story = [stories objectAtIndex:indexPath.row];
 
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
-	label.text = [entry objectForKey:@"title"];
-    if([[DDGCache objectForKey:[entry objectForKey:@"id"] inCache:@"readStories"] boolValue])
+	label.text = [story objectForKey:@"title"];
+    if([[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"readStories"] boolValue])
         label.textColor = [UIColor lightGrayColor];
     else
         label.textColor = [UIColor darkGrayColor];
     
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    articleImageView.image = nil; // clear any old image that might have been there
-    NSURLRequest *articleImageRequest = [[NSURLRequest alloc] initWithURL:[NSURL URLWithString:[entry objectForKey:@"image"]] 
-                                                              cachePolicy:NSURLRequestReturnCacheDataElseLoad 
-                                                          timeoutInterval:20];
-    AFHTTPRequestOperation *articleImageOperation = [[AFHTTPRequestOperation alloc] initWithRequest:articleImageRequest];
-    [articleImageOperation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        UIImage *image = [UIImage imageWithData:responseObject];
-        if([[DDGCache objectForKey:[entry objectForKey:@"id"] inCache:@"readStories"] boolValue]) {
-            UIImage *grayscaleImage = [self grayscaleImageFromImage:image];
-            articleImageView.image = grayscaleImage;
-        } else {
-            articleImageView.image = image;
-        }
-        
-    } failure:nil];
-    [articleImageOperation start];
+    articleImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]];
         
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    [self loadFaviconForURLString:[entry objectForKey:@"url"] intoImageView:faviconImageView success:^(UIImage *image) {
+    [self loadFaviconForURLString:[story objectForKey:@"url"] intoImageView:faviconImageView success:^(UIImage *image) {
         // if this article has been read, load the grayscale version of the favicon...
-        if([[DDGCache objectForKey:[entry objectForKey:@"id"] inCache:@"readStories"] boolValue]) {
+        if([[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"readStories"] boolValue]) {
             UIImage *grayscaleImage = [self grayscaleImageFromImage:image];
             faviconImageView.image = grayscaleImage;
         }
@@ -287,33 +269,59 @@
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *entry = [stories objectAtIndex:indexPath.row];
+    NSDictionary *story = [stories objectAtIndex:indexPath.row];
     
-    [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:[entry objectForKey:@"id"] inCache:@"readStories"];
+    // mark the story as read and make its image grayscale
+    [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:[story objectForKey:@"id"] inCache:@"readStories"];
+    NSData *imageData = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+    UIImage *grayscaleImage = [self grayscaleImageFromImage:[UIImage imageWithData:imageData]];
+    NSData *grayscaleData = UIImagePNGRepresentation(grayscaleImage);
+    [DDGCache setObject:grayscaleData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+    
     [tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete
 
-    NSString *escapedStoryURL = [[entry objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *escapedStoryURL = [[story objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
     [self loadQueryOrURL:escapedStoryURL];
 }
 
 #pragma mark - Loading popular stories
 
-- (void)downloadStories {
-    // start downloading new stories
+// downloads stories asynchronously
+-(void)beginDownloadingStories {
     isRefreshing = YES;
-    
-    NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json"];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        NSArray *newStories = (NSArray *)JSON;
+    [self performSelectorInBackground:@selector(downloadStoriesSuccess:) withObject:^{
+        isRefreshing = NO;
+        [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+    }];
+}
 
-        NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
-        NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
-        
+-(void)downloadStoriesSuccess:(void (^)())success {
+    NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json"];
+    NSData *response = [NSData dataWithContentsOfURL:url];
+    NSArray *newStories = [NSJSONSerialization JSONObjectWithData:response 
+                                                          options:0 
+                                                            error:nil];
+    
+    NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
+    NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
+    
+    // download story images
+    for(NSIndexPath *storyIndexPath in addedStories) {
+        NSDictionary *story = [newStories objectAtIndex:storyIndexPath.row];
+        NSLog(@"DOWNLOADING %@",story);
+        NSString *imageURL = [story objectForKey:@"image"];
+        NSData *image = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
+        if(!image)
+            image = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
+        [DDGCache setObject:image forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+    }
+    
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
         // update the stories array
         self.stories = newStories;
-        
+
         // update the table view with added and removed stories
         [self.tableView beginUpdates];
         [self.tableView insertRowsAtIndexPaths:addedStories 
@@ -321,30 +329,14 @@
         [self.tableView deleteRowsAtIndexPaths:removedStories 
                               withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
+
+        // save the new stories
+        [response writeToFile:[self storiesPath] atomically:YES];
         
-        
-        // TODO: Remove this before public release
-        NSData *data;
-        @try {
-            data = [NSJSONSerialization dataWithJSONObject:self.stories 
-                                                           options:0 
-                                                             error:nil];
-        }
-        @catch (NSException *exception) {
-            NSLog(@"Could not update stories, probably watrcoolr's fault.");
-            data = [NSData data];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"Could not update stories, probably watrcoolr's fault." delegate:nil cancelButtonTitle:@"Dismiss" otherButtonTitles:nil];
-            [alert show];
-        }
-        
-        [data writeToFile:[self storiesPath] atomically:YES];
-        
-        isRefreshing = NO;
-        [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
-    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"FAILURE: %@",[error userInfo]);
-    }];
-    [operation start];
+        // execute the given callback
+        success();
+    });
+
 }
 
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
