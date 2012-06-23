@@ -10,7 +10,7 @@
 #import "DDGSearchSuggestionsProvider.h"
 #import "DDGSearchHistoryProvider.h"
 #import "AFNetworking.h"
-#import "DDGProgressBarTextField.h"
+#import "DDGAddressBarTextField.h"
 #import "DDGBangsProvider.h"
 #import "DDGInputAccessoryView.h"
 
@@ -168,9 +168,10 @@
     [stopOrReloadButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
     // stop the current timer (if there is one), then set a new one to update the progress
     [loadingTimer invalidate];
-    // target: 60fps
+    // target: 40fps
+    // TODO: figure out what the optimal framerate for this animation is (and tune it for speed, if necessary)
     loadingBeginTime = [NSDate date];
-    loadingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/60.0) target:self selector:@selector(updateBarProgress) userInfo:nil repeats:YES];
+    loadingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/40.0) target:self selector:@selector(updateBarProgress) userInfo:nil repeats:YES];
 }
 
 -(void)webViewFinishedLoading {

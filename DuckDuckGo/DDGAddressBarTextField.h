@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGProgressBarTextField : UITextField
+@interface DDGAddressBarTextField : UITextField
 
 - (void)setProgress:(CGFloat)progress;
 

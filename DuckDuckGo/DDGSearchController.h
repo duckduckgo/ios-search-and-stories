@@ -14,14 +14,14 @@ typedef enum {
 	DDGSearchControllerStateWeb
 } DDGSearchControllerState;
 
-@class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGProgressBarTextField, DDGInputAccessoryView;
+@class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
 @interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
 {
 	
 	IBOutlet UITableViewCell	*loadedCell;
 	
     __weak IBOutlet UITableView *tableView;
-    __weak IBOutlet DDGProgressBarTextField *searchField;
+    __weak IBOutlet DDGAddressBarTextField *searchField;
 	__weak IBOutlet UIButton *searchButton;
     __weak IBOutlet UIView *background;
     
@@ -48,7 +48,7 @@ typedef enum {
 @property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 
 @property(nonatomic, weak) IBOutlet UITableView *tableView;
-@property(nonatomic, weak) IBOutlet DDGProgressBarTextField *searchField;
+@property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
 @property(nonatomic, weak) IBOutlet UIButton *searchButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
 
