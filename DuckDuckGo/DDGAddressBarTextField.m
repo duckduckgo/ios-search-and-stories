@@ -18,7 +18,8 @@
     UIImage *rightPartial;
     UIImage *rightCap;
     // if retina display (from http://stackoverflow.com/questions/3504173/detect-retina-display)
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0)) {
+    //if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0)) {
+    if(true) { // we're forcing retina graphics right now because we don't have the required 1x graphics. TODO: get some 1x graphics and uncomment the line above!
         background = [UIImage imageNamed:@"search_field@2x.png"];
         leftCap = [UIImage imageNamed:@"load_bar_left@2x.png"];
         center = [UIImage imageNamed:@"load_bar_center@2x.png"];
@@ -26,12 +27,10 @@
         rightCap = [UIImage imageNamed:@"load_bar_right@2x.png"];
     } else {
         background = [UIImage imageNamed:@"search_field.png"];
-
-        // TODO: we need 1x graphics here!
-        leftCap = [UIImage imageNamed:@"load_bar_left@2x.png"];
-        center = [UIImage imageNamed:@"load_bar_center@2x.png"];
-        rightPartial = [UIImage imageNamed:@"load_bar_right_partial@2x.png"];
-        rightCap = [UIImage imageNamed:@"load_bar_right@2x.png"];
+        leftCap = [UIImage imageNamed:@"load_bar_left.png"];
+        center = [UIImage imageNamed:@"load_bar_center.png"];
+        rightPartial = [UIImage imageNamed:@"load_bar_right_partial.png"];
+        rightCap = [UIImage imageNamed:@"load_bar_right.png"];
     }
 
     CGFloat inset = floor((background.size.height - leftCap.size.height)/2);
