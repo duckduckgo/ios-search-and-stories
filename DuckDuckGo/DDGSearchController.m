@@ -168,10 +168,10 @@
     [stopOrReloadButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
     // stop the current timer (if there is one), then set a new one to update the progress
     [loadingTimer invalidate];
-    // target: 40fps
+    // target: 60fps
     // TODO: figure out what the optimal framerate for this animation is (and tune it for speed, if necessary)
     loadingBeginTime = [NSDate date];
-    loadingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/40.0) target:self selector:@selector(updateBarProgress) userInfo:nil repeats:YES];
+    loadingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/60.0) target:self selector:@selector(updateBarProgress) userInfo:nil repeats:YES];
 }
 
 -(void)webViewFinishedLoading {

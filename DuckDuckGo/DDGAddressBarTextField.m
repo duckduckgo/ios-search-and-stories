@@ -49,6 +49,7 @@
     [leftCap drawAtPoint:CGPointMake(inset, inset)];
     
     CGFloat centerWidth = (background.size.width * progress) - leftCap.size.width - rightCap.size.width - 2*inset;
+    centerWidth = floor(centerWidth);
     [center drawInRect:CGRectMake(leftCap.size.width+inset,
                                   inset,
                                   centerWidth,
@@ -74,8 +75,11 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSaveGState(context);
     
-    CGColorRef shadowColor = [[UIColor colorWithWhite:1.0 alpha:0.75] CGColor];
+    float components[4] = {1, 1, 1, 0.75};
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGColorRef shadowColor = CGColorCreate( colorSpace, components);
     CGContextSetShadowWithColor(context, shadowOffset, shadowBlur, shadowColor);
+    CGColorRelease(shadowColor);
     
     [super drawTextInRect:rect];
     
