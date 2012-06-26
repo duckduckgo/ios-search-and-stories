@@ -38,10 +38,9 @@
 					<object class="IBUIWebView" id="472327289">
 						<reference key="NSNextResponder" ref="137592535"/>
 						<int key="NSvFlags">274</int>
-						<string key="NSFrame">{{0, 44}, {320, 416}}</string>
+						<string key="NSFrameSize">{320, 460}</string>
 						<reference key="NSSuperview" ref="137592535"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -137,11 +136,11 @@
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
-					<string key="className">DDGProgressBarTextField</string>
+					<string key="className">DDGAddressBarTextField</string>
 					<string key="superclassName">UITextField</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/DDGProgressBarTextField.h</string>
+						<string key="minorKey">./Classes/DDGAddressBarTextField.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -162,7 +161,7 @@
 						<string key="background">UIView</string>
 						<string key="loadedCell">UITableViewCell</string>
 						<string key="searchButton">UIButton</string>
-						<string key="searchField">DDGProgressBarTextField</string>
+						<string key="searchField">DDGAddressBarTextField</string>
 						<string key="tableView">UITableView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -180,7 +179,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="searchField">
 							<string key="name">searchField</string>
-							<string key="candidateClassName">DDGProgressBarTextField</string>
+							<string key="candidateClassName">DDGAddressBarTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="tableView">
 							<string key="name">tableView</string>

@@ -26,7 +26,23 @@
 	webViewLoadingDepth = 0;
     webView.backgroundColor = [UIColor colorWithRed:0.216 green:0.231 blue:0.235 alpha:1.000];
     
-	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
+    // insert the search controller view into the webview's scrollview (a la Safari header)
+    // find the largest (tallest) subview
+    UIView *mainSubview;
+    for(int i=0; i < webView.scrollView.subviews.count; i++) {
+        UIView *subview = [[webView.scrollView subviews] objectAtIndex:i];
+        if(!mainSubview || subview.frame.size.height > mainSubview.frame.size.height)
+            mainSubview = subview;
+    }
+    // push the main subview down to accomodate the header
+    CGRect f = mainSubview.frame;
+    f.origin.y = searchController.view.frame.size.height;
+    mainSubview.frame = f;
+    
+    // and now actually add the search controller in
+	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:webView.scrollView];
+    [webView.scrollView bringSubviewToFront:self.searchController.view];
+    
 	searchController.searchHandler = self;
     searchController.state = DDGSearchControllerStateWeb;
     [searchController.searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
