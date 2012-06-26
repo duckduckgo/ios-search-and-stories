@@ -263,16 +263,20 @@
 {
     NSDictionary *story = [stories objectAtIndex:indexPath.row];
     
-    // mark the story as read and make its image and favicon grayscale
-    [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:[story objectForKey:@"id"] inCache:@"readStories"];
-    for(NSString *cache in [NSArray arrayWithObjects:@"storyImages", @"faviconImages", nil]) {
-        NSData *imageData = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:cache];
-        UIImage *grayscaleImage = [self grayscaleImageFromImage:[UIImage imageWithData:imageData]];
-        NSData *grayscaleData = UIImagePNGRepresentation(grayscaleImage);
-        [DDGCache setObject:grayscaleData forKey:[story objectForKey:@"id"] inCache:cache];
-    }
-    
-    [tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        // mark the story as read and make its image and favicon grayscale
+        [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:[story objectForKey:@"id"] inCache:@"readStories"];
+        for(NSString *cache in [NSArray arrayWithObjects:@"storyImages", @"faviconImages", nil]) {
+            NSData *imageData = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:cache];
+            UIImage *grayscaleImage = [self grayscaleImageFromImage:[UIImage imageWithData:imageData]];
+            NSData *grayscaleData = UIImagePNGRepresentation(grayscaleImage);
+            [DDGCache setObject:grayscaleData forKey:[story objectForKey:@"id"] inCache:cache];
+        }
+        
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete            
+        });
+    });
 
     NSString *escapedStoryURL = [[story objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     
