@@ -8,6 +8,10 @@
 
 #import "DDGWebViewController.h"
 
+@interface DDGWebViewController (Private)
+-(void)moveAddressBarIntoWebView:(BOOL)inside animated:(BOOL)animated;
+@end
+
 @implementation DDGWebViewController
 
 @synthesize searchController;
@@ -26,22 +30,8 @@
 	webViewLoadingDepth = 0;
     webView.backgroundColor = [UIColor colorWithRed:0.216 green:0.231 blue:0.235 alpha:1.000];
     
-    // insert the search controller view into the webview's scrollview (a la Safari header)
-    // find the largest (tallest) subview
-    UIView *mainSubview;
-    for(int i=0; i < webView.scrollView.subviews.count; i++) {
-        UIView *subview = [[webView.scrollView subviews] objectAtIndex:i];
-        if(!mainSubview || subview.frame.size.height > mainSubview.frame.size.height)
-            mainSubview = subview;
-    }
-    // push the main subview down to accomodate the header
-    CGRect f = mainSubview.frame;
-    f.origin.y = searchController.view.frame.size.height;
-    mainSubview.frame = f;
-    
-    // and now actually add the search controller in
-	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:webView.scrollView];
-    [webView.scrollView bringSubviewToFront:self.searchController.view];
+	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
+    [self moveAddressBarIntoWebView:YES animated:NO];
     
 	searchController.searchHandler = self;
     searchController.state = DDGSearchControllerStateWeb;
@@ -75,6 +65,41 @@
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+}
+
+#pragma mark - Address bar positioning
+
+-(void)moveAddressBarIntoWebView:(BOOL)inside animated:(BOOL)animated {
+    static CGFloat headerHeight = 44.0;
+    
+    // move the webview itself up/down to accomodate the header
+    CGRect f = webView.frame;
+    CGFloat offset = (inside ? -1.0 : 1.0)*headerHeight;
+    f.origin.y += offset;
+    f.size.height -= offset;
+    webView.frame = f;
+    
+    // find the largest (tallest) subview
+    UIView *mainSubview;
+    for(int i=0; i < webView.scrollView.subviews.count; i++) {
+        UIView *subview = [[webView.scrollView subviews] objectAtIndex:i];
+        if(!mainSubview || subview.frame.size.height > mainSubview.frame.size.height)
+            mainSubview = subview;
+    }
+    
+    // push the main subview up/down to accomodate the header
+    f = mainSubview.frame;
+    f.origin.y += (inside ? 1.0 : -1.0)*headerHeight;
+    mainSubview.frame = f;
+    
+    // and now actually add the search controller in
+    [searchController.view removeFromSuperview];
+    if(inside) {
+        [webView.scrollView addSubview:searchController.view];
+        [webView.scrollView bringSubviewToFront:searchController.view];
+    } else {
+        [self.view addSubview:searchController.view];
+    }
 }
 
 #pragma mark - Search handler
@@ -125,6 +150,7 @@
 	if (++webViewLoadingDepth == 1) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         [searchController webViewStartedLoading];
+        [self moveAddressBarIntoWebView:NO animated:YES];
     }
 }
 
@@ -134,6 +160,7 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
+        [self moveAddressBarIntoWebView:YES animated:YES];
 	}
 }
 
@@ -143,6 +170,7 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
+        [self moveAddressBarIntoWebView:YES animated:YES];
 	}
 }
 
