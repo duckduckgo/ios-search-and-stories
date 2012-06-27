@@ -9,7 +9,8 @@
 #import "DDGWebViewController.h"
 
 @interface DDGWebViewController (Private)
--(void)moveAddressBarIntoWebView:(BOOL)inside animated:(BOOL)animated;
+-(void)moveAddressBarIntoWebViewAnimated:(BOOL)animated;
+-(void)moveAddressBarOutOfWebViewAnimated:(BOOL)animated;
 @end
 
 @implementation DDGWebViewController
@@ -31,7 +32,7 @@
     webView.backgroundColor = [UIColor colorWithRed:0.216 green:0.231 blue:0.235 alpha:1.000];
     
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
-    [self moveAddressBarIntoWebView:YES animated:NO];
+    [self moveAddressBarIntoWebViewAnimated:NO];
     
 	searchController.searchHandler = self;
     searchController.state = DDGSearchControllerStateWeb;
@@ -68,18 +69,12 @@
 }
 
 #pragma mark - Address bar positioning
-
--(void)moveAddressBarIntoWebView:(BOOL)inside animated:(BOOL)animated {
+// TODO: clean up these methods
+-(void)moveAddressBarOutOfWebViewAnimated:(BOOL)animated {
     static CGFloat headerHeight = 44.0;
+    CGRect f;
     
-    // move the webview itself up/down to accomodate the header
-    CGRect f = webView.frame;
-    CGFloat offset = (inside ? -1.0 : 1.0)*headerHeight;
-    f.origin.y += offset;
-    f.size.height -= offset;
-    webView.frame = f;
-    
-    // find the largest (tallest) subview
+    // find the largest (tallest) subview in webview's scrollview
     UIView *mainSubview;
     for(int i=0; i < webView.scrollView.subviews.count; i++) {
         UIView *subview = [[webView.scrollView subviews] objectAtIndex:i];
@@ -87,24 +82,156 @@
             mainSubview = subview;
     }
     
-    // push the main subview up/down to accomodate the header
-    f = mainSubview.frame;
-    f.origin.y += (inside ? 1.0 : -1.0)*headerHeight;
-    mainSubview.frame = f;
-    
-    // and now actually add the search controller in
+    // actually add the search controller into the view heirarchy
     [searchController.view removeFromSuperview];
-    if(inside) {
+    [self.view addSubview:searchController.view];
+    
+    if(animated) {        
+        // push the main subview up/down to accomodate the header
+//        f = mainSubview.frame;
+//        f.origin.y += -1*headerHeight;
+//        mainSubview.frame = f;
+
+        CGFloat headerOffset = -1*webView.scrollView.contentOffset.y;
+        if(headerOffset < -1*headerHeight)
+            headerOffset = -1*headerHeight;
+
+        // move the address bar up to where it used to be
+        f = searchController.view.frame;
+        f.origin.y += headerOffset;
+        searchController.view.frame = f;
+
+
+        f = webView.frame;
+        CGFloat offset = headerHeight + headerOffset;
+        f.origin.y += offset;
+        f.size.height -= offset;
+        webView.frame = f;
+        
+        f = mainSubview.frame;
+        f.origin.y -= offset;
+        mainSubview.frame = f;
+
+        
+        // move both the webView and the address bar down to where they should be
+        
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            CGRect f = searchController.view.frame;
+            f.origin.y += -1*headerOffset;
+            searchController.view.frame = f;
+            
+            f = webView.frame;
+            CGFloat offset = -1*headerOffset;
+            f.origin.y += offset;
+            f.size.height -= offset;
+            webView.frame = f;
+            
+            f = mainSubview.frame;
+            f.origin.y -= offset;
+            mainSubview.frame = f;
+
+//            
+//            // move the webView down to fit the address bar
+//        f = webView.frame;
+//        CGFloat offset = headerHeight;
+//        f.origin.y += offset;
+//        f.size.height -= offset;
+//        webView.frame = f;
+
+        }];
+        
+    } else {
+        // push the main subview up/down to accomodate the header
+        f = mainSubview.frame;
+        f.origin.y += -1*headerHeight;
+        mainSubview.frame = f;
+
+        // move the webView down to fit the address bar
+        f = webView.frame;
+        CGFloat offset = headerHeight;
+        f.origin.y += offset;
+        f.size.height -= offset;
+        webView.frame = f;
+    }
+}
+
+-(void)moveAddressBarIntoWebViewAnimated:(BOOL)animated {
+    static CGFloat headerHeight = 44.0;
+    CGRect f;
+        
+    // find the largest (tallest) subview in webview's scrollviews
+    UIView *mainSubview;
+    for(int i=0; i < webView.scrollView.subviews.count; i++) {
+        UIView *subview = [[webView.scrollView subviews] objectAtIndex:i];
+        if(!mainSubview || subview.frame.size.height > mainSubview.frame.size.height)
+            mainSubview = subview;
+    }
+
+    if(animated) {
+
+        CGFloat headerOffset = -1*webView.scrollView.contentOffset.y;
+        if(headerOffset < -1*headerHeight)
+            headerOffset = -1*headerHeight;
+
+        [UIView animateWithDuration:0.3 animations:^{
+            
+            CGRect f = searchController.view.frame;
+            f.origin.y += headerOffset;
+            searchController.view.frame = f;
+            
+            f = webView.frame;
+            f.origin.y += headerOffset;
+            f.size.height -= headerOffset;
+            webView.frame = f;
+            
+            f = mainSubview.frame;
+            f.origin.y += -1*headerOffset;
+            mainSubview.frame = f;
+            
+        } completion:^(BOOL finished){
+            // actually add the search controller into the view heirarchy
+            [searchController.view removeFromSuperview];
+            [webView.scrollView addSubview:searchController.view];
+            [webView.scrollView bringSubviewToFront:searchController.view];
+            
+            CGRect f = searchController.view.frame;
+            f.origin.y = 0;
+            searchController.view.frame = f;
+            
+            f = webView.frame;
+            CGFloat offset = headerHeight + headerOffset;
+            f.origin.y -= offset;
+            f.size.height += offset;
+            webView.frame = f;
+            
+            f = mainSubview.frame;
+            f.origin.y += offset;
+            mainSubview.frame = f;
+
+        }];
+    } else {
+        // actually add the search controller into the view heirarchy
+        [searchController.view removeFromSuperview];
         [webView.scrollView addSubview:searchController.view];
         [webView.scrollView bringSubviewToFront:searchController.view];
-    } else {
-        [self.view addSubview:searchController.view];
+        
+        f = mainSubview.frame;
+        f.origin.y += headerHeight;
+        mainSubview.frame = f;
+        
+        f = webView.frame;
+        CGFloat offset = -1*headerHeight;
+        f.origin.y += offset;
+        f.size.height -= offset;
+        webView.frame = f;
     }
 }
 
 #pragma mark - Search handler
 
 -(void)searchControllerLeftButtonPressed {
+    
 	if(webView.canGoBack)
         [webView goBack];
 	else
@@ -150,7 +277,7 @@
 	if (++webViewLoadingDepth == 1) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         [searchController webViewStartedLoading];
-        [self moveAddressBarIntoWebView:NO animated:YES];
+        [self moveAddressBarOutOfWebViewAnimated:YES];
     }
 }
 
@@ -160,7 +287,7 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
-        [self moveAddressBarIntoWebView:YES animated:YES];
+        [self moveAddressBarIntoWebViewAnimated:YES];
 	}
 }
 
@@ -170,7 +297,7 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
-        [self moveAddressBarIntoWebView:YES animated:YES];
+        [self moveAddressBarIntoWebViewAnimated:YES];
 	}
 }
 
