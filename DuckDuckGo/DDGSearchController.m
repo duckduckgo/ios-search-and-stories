@@ -69,6 +69,7 @@
         suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
         historyProvider = [DDGSearchHistoryProvider sharedInstance];
         
+        unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];
         [self createInputAccessory];
 	}
 	return self;
@@ -330,7 +331,10 @@
 -(void)createInputAccessory {
     inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, 0, 0, 46)];
     inputAccessory.hidden = YES;
+    
+    
     UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    
     // TODO: *important* bang_button.png and empty_bang_button.png are currently stolen from the iPhone keyboard images; replace them with custom graphics before release.
     [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
     bangButton.frame = CGRectMake(0, 0, 46, 46);
@@ -357,7 +361,13 @@
 }
 
 -(void)bangButtonPressed {
-    [searchField setText:[NSString stringWithFormat:@"%@!",searchField.text]];
+    // to simulate the user typing a key, we save the pasteboard contents, replace it with an exclamation mark, paste that into the current text field, then restore the old pasteboard contents
+    
+    UIPasteboard* pasteBoard = [UIPasteboard generalPasteboard];
+    NSArray* pasteBoardItems = [pasteBoard.items copy];
+    pasteBoard.string = @"!";
+    [searchField paste:self];
+    pasteBoard.items = pasteBoardItems;
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
@@ -367,18 +377,28 @@
 -(void)loadSuggestionsForBang:(NSString *)bang {
     UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
     
-    if([bang isEqualToString:@"!"]) return;
     NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
     if(suggestions.count > 0)
         scrollView.hidden = NO;
+    
     UIImage *backgroundImg = [[UIImage imageNamed:@"empty_bang_button.png"] stretchableImageWithLeftCapWidth:7.0 topCapHeight:0];
 
     for(NSDictionary *suggestionDict in suggestions) {
         NSString *suggestion = [suggestionDict objectForKey:@"name"];
-        UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+
+        UIButton *button;
+        if([unusedBangButtons count] > 0) {
+            button = [unusedBangButtons lastObject];
+            [unusedBangButtons removeLastObject];
+        } else {
+            button = [UIButton buttonWithType:UIButtonTypeRoundedRect];   
+        }
+
+        
         [button setTitle:suggestion forState:UIControlStateNormal];
         [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
+        
         [button setFrame:CGRectMake(scrollView.contentSize.width, 0, (titleSize.width > 30 ? titleSize.width + 20 : 50), 46)];
         [button setBackgroundImage:backgroundImg forState:UIControlStateNormal];
         scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + button.frame.size.width, 46);
@@ -392,6 +412,7 @@
     scrollView.contentSize = CGSizeMake(0, 46);
     for(UIView *subview in scrollView.subviews) {
         [subview removeFromSuperview];
+        [unusedBangButtons addObject:subview];
     }
     scrollView.hidden = YES;
 }

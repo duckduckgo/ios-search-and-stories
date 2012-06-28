@@ -22,7 +22,9 @@ static NSArray *bangs;
 
 +(NSArray *)bangsWithPrefix:(NSString *)prefix {
     NSMutableArray *result = [[NSMutableArray alloc] init];
-    for(NSDictionary *bang in self.bangs)
+    
+    NSArray *bangsArray = self.bangs;
+    for(NSDictionary *bang in bangsArray)
         if([[bang objectForKey:@"name"] hasPrefix:prefix])
             [result addObject:bang];
     
@@ -30,7 +32,10 @@ static NSArray *bangs;
                                                                     ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:firstDescriptor, nil];
     NSArray *sortedResult = [result sortedArrayUsingDescriptors:sortDescriptors];
-    return sortedResult;
+    if(sortedResult.count > 50)
+        return [sortedResult subarrayWithRange:NSMakeRange(0, 50)];
+    else
+        return sortedResult;
 }
 
 +(NSArray *)bangs {

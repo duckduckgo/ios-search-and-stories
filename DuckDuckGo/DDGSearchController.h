@@ -41,6 +41,8 @@ typedef enum {
     DDGInputAccessoryView *inputAccessory;
     NSRange currentWordRange;
     
+    NSMutableArray *unusedBangButtons;
+    
     NSDate *loadingBeginTime;
     NSTimer *loadingTimer;
 }
