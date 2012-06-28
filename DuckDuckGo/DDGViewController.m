@@ -292,13 +292,20 @@
 
         // main image: download it and resize it as needed
         NSString *imageURL = [story objectForKey:@"image"];
-        NSData *image = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
-        if(!image)
-            image = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
-        // 600x140: scrolling will be fastest in portrait mode on retina devices (by far the most common scenario) but it'll still work fine at other sizes
-        image = UIImagePNGRepresentation([[UIImage imageWithData:image] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(600, 140) interpolationQuality:kCGInterpolationHigh]);
+        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
+        if(!imageData)
+            imageData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
 
-        [DDGCache setObject:image forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+        UIImage *image = [UIImage imageWithData:imageData];
+        if(image.size.width * image.size.height > 600*140) {
+            image = [image thumbnailImage:CGSizeMake(600, 140) 
+                        transparentBorder:0 
+                             cornerRadius:0 
+                     interpolationQuality:kCGInterpolationHigh];
+            imageData = UIImagePNGRepresentation(image);
+        }
+        
+        [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
         
         // favicon
         NSString *storyURL = [story objectForKey:@"url"];
