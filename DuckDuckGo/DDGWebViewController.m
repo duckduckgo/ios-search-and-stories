@@ -74,9 +74,9 @@
     static CGFloat headerHeight = 44.0;
     CGRect f;
     
-    addressBarIsInside = NO;
-    if(addressBarIsAnimating)
+    if(addressBarIsAnimating || !addressBarIsInside)
         return;
+    addressBarIsInside = NO;
     addressBarIsAnimating = animated;
 
     
@@ -170,9 +170,9 @@
     static CGFloat headerHeight = 44.0;
     CGRect f;
     
-    addressBarIsInside = YES;
-    if(addressBarIsAnimating)
+    if(addressBarIsAnimating || addressBarIsInside)
         return;
+    addressBarIsInside = YES;
     addressBarIsAnimating = animated;
         
     // find the largest (tallest) subview in webview's scrollviews
@@ -279,6 +279,14 @@
         [webView loadRequest:[NSURLRequest requestWithURL:url]];
         [searchController updateBarWithURL:url];
     }
+}
+
+-(void)searchControllerAddressBarWillOpen {
+    [self moveAddressBarOutOfWebViewAnimated:NO];
+}
+
+-(void)searchControllerAddressBarWillCancel {
+    [self moveAddressBarIntoWebViewAnimated:NO];
 }
 
 #pragma mark - Web view deleagte

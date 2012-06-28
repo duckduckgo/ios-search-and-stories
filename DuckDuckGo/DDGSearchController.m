@@ -270,6 +270,8 @@
         searchField.text = oldSearchText;
         oldSearchText = nil;
     }
+    if([searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
+        [searchHandler searchControllerAddressBarWillCancel];
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -476,6 +478,9 @@
     [loadingTimer invalidate];
     [searchField setProgress:0];
     
+    if([searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
+        [searchHandler searchControllerAddressBarWillOpen];
+
 	return YES;
 }
 
@@ -487,6 +492,7 @@
     
     textField.rightView = nil;
     [self reloadSuggestions];
+    
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
