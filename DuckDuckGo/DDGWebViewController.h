@@ -20,6 +20,9 @@
     NSString *queryOrURLToLoad;
 
     NSUInteger webViewLoadingDepth;
+    
+    BOOL addressBarIsAnimating;
+    BOOL addressBarIsInside;
 }
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;

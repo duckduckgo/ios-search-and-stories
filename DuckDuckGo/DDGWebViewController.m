@@ -74,6 +74,12 @@
     static CGFloat headerHeight = 44.0;
     CGRect f;
     
+    addressBarIsInside = NO;
+    if(addressBarIsAnimating)
+        return;
+    addressBarIsAnimating = animated;
+
+    
     // find the largest (tallest) subview in webview's scrollview
     UIView *mainSubview;
     for(int i=0; i < webView.scrollView.subviews.count; i++) {
@@ -139,6 +145,10 @@
 //        f.size.height -= offset;
 //        webView.frame = f;
 
+        } completion:^(BOOL finished) {
+            addressBarIsAnimating = NO;
+            if(addressBarIsInside)
+                [self moveAddressBarIntoWebViewAnimated:YES];
         }];
         
     } else {
@@ -159,6 +169,11 @@
 -(void)moveAddressBarIntoWebViewAnimated:(BOOL)animated {
     static CGFloat headerHeight = 44.0;
     CGRect f;
+    
+    addressBarIsInside = YES;
+    if(addressBarIsAnimating)
+        return;
+    addressBarIsAnimating = animated;
         
     // find the largest (tallest) subview in webview's scrollviews
     UIView *mainSubview;
@@ -208,6 +223,10 @@
             f = mainSubview.frame;
             f.origin.y += offset;
             mainSubview.frame = f;
+            
+            addressBarIsAnimating = NO;
+            if(!addressBarIsInside)
+                [self moveAddressBarOutOfWebViewAnimated:YES];
 
         }];
     } else {
