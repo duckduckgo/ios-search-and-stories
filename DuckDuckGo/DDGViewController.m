@@ -11,6 +11,7 @@
 #import "DDGWebViewController.h"
 #import "AFNetworking.h"
 #import "DDGCache.h"
+#import "UIImage+Resize.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface DDGViewController (Private)
@@ -206,29 +207,10 @@
         topCornersMaskLayer.frame = imageView.bounds;
         topCornersMaskLayer.path = topCornersMaskPath.CGPath;
         imageView.layer.mask = topCornersMaskLayer;
-    
-        UIView *labelBackground = [cell viewWithTag:400];
-        
-        UIBezierPath *bottomCornersMaskPath = [UIBezierPath bezierPathWithRoundedRect:labelBackground.bounds 
-                                                                 byRoundingCorners:UIRectCornerBottomLeft|UIRectCornerBottomRight
-                                                                       cornerRadii:CGSizeMake(4.0, 4.0)];
-        CAShapeLayer *bottomCornersMaskLayer = [CAShapeLayer layer];
-        bottomCornersMaskLayer.frame = labelBackground.bounds;
-        bottomCornersMaskLayer.path = bottomCornersMaskPath.CGPath;
-        labelBackground.layer.mask = bottomCornersMaskLayer;
-        
-        labelBackground.backgroundColor = [UIColor clearColor];
-        CAGradientLayer *gradient = [CAGradientLayer layer]; 
-        gradient.frame = labelBackground.bounds; 
-        gradient.colors = [NSArray arrayWithObjects:
-                           (id)[[UIColor colorWithWhite:0.98 alpha:1.0] CGColor],
-                           (id)[[UIColor colorWithWhite:0.90 alpha:1.0] CGColor],
-                           nil];
-        [labelBackground.layer addSublayer:gradient];
 	}
 
     NSDictionary *story = [stories objectAtIndex:indexPath.row];
-
+    
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
 	label.text = [story objectForKey:@"title"];
     if([[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"readStories"] boolValue])
@@ -239,7 +221,7 @@
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
     articleImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]];
-        
+    [articleImageView setContentMode:UIViewContentModeScaleAspectFill];
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
     faviconImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"faviconImages"]];
@@ -308,11 +290,14 @@
     for(NSIndexPath *storyIndexPath in addedStories) {
         NSDictionary *story = [newStories objectAtIndex:storyIndexPath.row];
 
-        // main image
+        // main image: download it and resize it as needed
         NSString *imageURL = [story objectForKey:@"image"];
         NSData *image = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
         if(!image)
             image = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
+        // 600x140: scrolling will be fastest in portrait mode on retina devices (by far the most common scenario) but it'll still work fine at other sizes
+        image = UIImagePNGRepresentation([[UIImage imageWithData:image] resizedImageWithContentMode:UIViewContentModeScaleAspectFill bounds:CGSizeMake(600, 140) interpolationQuality:kCGInterpolationHigh]);
+
         [DDGCache setObject:image forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
         
         // favicon
