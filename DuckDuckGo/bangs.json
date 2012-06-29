@@ -1,5 +1,525 @@
  [
   {
+  "score": 62873,
+  "name": "!g"
+  },
+  {
+  "score": 24848,
+  "name": "!gi"
+  },
+  {
+  "score": 2,
+  "name": "!safeoff"
+  },
+  {
+  "score": 7963,
+  "name": "!yt"
+  },
+  {
+  "score": 6388,
+  "name": "!w"
+  },
+  {
+  "score": 5697,
+  "name": "!google"
+  },
+  {
+  "score": 4681,
+  "name": "!bi"
+  },
+  {
+  "score": 3958,
+  "name": "!i"
+  },
+  {
+  "score": 3923,
+  "name": "!wiki"
+  },
+  {
+  "score": 2489,
+  "name": "!images"
+  },
+  {
+  "score": 2390,
+  "name": "!m"
+  },
+  {
+  "score": 1924,
+  "name": "!n"
+  },
+  {
+  "score": 1902,
+  "name": "!b"
+  },
+  {
+  "score": 1655,
+  "name": "!youtube"
+  },
+  {
+  "score": 1197,
+  "name": "!imdb"
+  },
+  {
+  "score": 1084,
+  "name": "!a"
+  },
+  {
+  "score": 929,
+  "name": "!gm"
+  },
+  {
+  "score": 893,
+  "name": "!amazon"
+  },
+  {
+  "score": 879,
+  "name": "!image"
+  },
+  {
+  "score": 723,
+  "name": "!date"
+  },
+  {
+  "score": 721,
+  "name": "!maps"
+  },
+  {
+  "score": 646,
+  "name": "!torrent"
+  },
+  {
+  "score": 603,
+  "name": "!php"
+  },
+  {
+  "score": 590,
+  "name": "!bang"
+  },
+  {
+  "score": 555,
+  "name": "!tpb"
+  },
+  {
+  "score": 554,
+  "name": "!v"
+  },
+  {
+  "score": 514,
+  "name": "!news"
+  },
+  {
+  "score": 512,
+  "name": "!map"
+  },
+  {
+  "score": 498,
+  "name": "!img"
+  },
+  {
+  "score": 463,
+  "name": "!wikipedia"
+  },
+  {
+  "score": 400,
+  "name": "!so"
+  },
+  {
+  "score": 393,
+  "name": "!gfr"
+  },
+  {
+  "score": 385,
+  "name": "!d"
+  },
+  {
+  "score": 385,
+  "name": "!python"
+  },
+  {
+  "score": 381,
+  "name": "!translate"
+  },
+  {
+  "score": 363,
+  "name": "!twitter"
+  },
+  {
+  "score": 350,
+  "name": "!gde"
+  },
+  {
+  "score": 345,
+  "name": "!video"
+  },
+  {
+  "score": 327,
+  "name": "!wa"
+  },
+  {
+  "score": 319,
+  "name": "!wde"
+  },
+  {
+  "score": 307,
+  "name": "!tr"
+  },
+  {
+  "score": 299,
+  "name": "!fb"
+  },
+  {
+  "score": 298,
+  "name": "!gn"
+  },
+  {
+  "score": 275,
+  "name": "!define"
+  },
+  {
+  "score": 262,
+  "name": "!github"
+  },
+  {
+  "score": 254,
+  "name": "!ebay"
+  },
+  {
+  "score": 254,
+  "name": "!wfr"
+  },
+  {
+  "score": 250,
+  "name": "!pictures"
+  },
+  {
+  "score": 234,
+  "name": "!jquery"
+  },
+  {
+  "score": 233,
+  "name": "!gt"
+  },
+  {
+  "score": 224,
+  "name": "!gv"
+  },
+  {
+  "score": 207,
+  "name": "!ruby"
+  },
+  {
+  "score": 202,
+  "name": "!java"
+  },
+  {
+  "score": 194,
+  "name": "!cpan"
+  },
+  {
+  "score": 193,
+  "name": "!leo"
+  },
+  {
+  "score": 187,
+  "name": "!torrentz"
+  },
+  {
+  "score": 184,
+  "name": "!msdn"
+  },
+  {
+  "score": 178,
+  "name": "!archwiki"
+  },
+  {
+  "score": 178,
+  "name": "!guk"
+  },
+  {
+  "score": 162,
+  "name": "!reddit"
+  },
+  {
+  "score": 155,
+  "name": "!man"
+  },
+  {
+  "score": 150,
+  "name": "!bing"
+  },
+  {
+  "score": 147,
+  "name": "!y"
+  },
+  {
+  "score": 147,
+  "name": "!gimages"
+  },
+  {
+  "score": 139,
+  "name": "!gh"
+  },
+  {
+  "score": 138,
+  "name": "!gmaps"
+  },
+  {
+  "score": 133,
+  "name": "!sp"
+  },
+  {
+  "score": 130,
+  "name": "!dictionary"
+  },
+  {
+  "score": 126,
+  "name": "!scholar"
+  },
+  {
+  "score": 125,
+  "name": "!facebook"
+  },
+  {
+  "score": 124,
+  "name": "!aur"
+  },
+  {
+  "score": 120,
+  "name": "!whois"
+  },
+  {
+  "score": 120,
+  "name": "!ddg"
+  },
+  {
+  "score": 118,
+  "name": "!mdn"
+  },
+  {
+  "score": 117,
+  "name": "!ud"
+  },
+  {
+  "score": 115,
+  "name": "!android"
+  },
+  {
+  "score": 111,
+  "name": "!wen"
+  },
+  {
+  "score": 110,
+  "name": "!gs"
+  },
+  {
+  "score": 108,
+  "name": "!gyear"
+  },
+  {
+  "score": 104,
+  "name": "!mysql"
+  },
+  {
+  "score": 103,
+  "name": "!js"
+  },
+  {
+  "score": 102,
+  "name": "!wolfram"
+  },
+  {
+  "score": 102,
+  "name": "!hoogle"
+  },
+  {
+  "score": 98,
+  "name": "!gsc"
+  },
+  {
+  "score": 96,
+  "name": "!gmail"
+  },
+  {
+  "score": 94,
+  "name": "!lyrics"
+  },
+  {
+  "score": 94,
+  "name": "!stackoverflow"
+  },
+  {
+  "score": 93,
+  "name": "!tw"
+  },
+  {
+  "score": 91,
+  "name": "!hn"
+  },
+  {
+  "score": 89,
+  "name": "!perl"
+  },
+  {
+  "score": 85,
+  "name": "!django"
+  },
+  {
+  "score": 84,
+  "name": "!piratebay"
+  },
+  {
+  "score": 84,
+  "name": "!rails"
+  },
+  {
+  "score": 83,
+  "name": "!proxy"
+  },
+  {
+  "score": 82,
+  "name": "!dcc"
+  },
+  {
+  "score": 82,
+  "name": "!archlinux"
+  },
+  {
+  "score": 81,
+  "name": "!ip"
+  },
+  {
+  "score": 78,
+  "name": "!t"
+  },
+  {
+  "score": 78,
+  "name": "!allmusic"
+  },
+  {
+  "score": 77,
+  "name": "!ghk"
+  },
+  {
+  "score": 77,
+  "name": "!auk"
+  },
+  {
+  "score": 76,
+  "name": "!tumblr"
+  },
+  {
+  "score": 76,
+  "name": "!rt"
+  },
+  {
+  "score": 73,
+  "name": "!r"
+  },
+  {
+  "score": 73,
+  "name": "!newegg"
+  },
+  {
+  "score": 70,
+  "name": "!shopping"
+  },
+  {
+  "score": 68,
+  "name": "!kat"
+  },
+  {
+  "score": 67,
+  "name": "!wiktionary"
+  },
+  {
+  "score": 66,
+  "name": "!dpkg"
+  },
+  {
+  "score": 64,
+  "name": "!lastfm"
+  },
+  {
+  "score": 63,
+  "name": "!discogs"
+  },
+  {
+  "score": 62,
+  "name": "!cpp"
+  },
+  {
+  "score": 62,
+  "name": "!isohunt"
+  },
+  {
+  "score": 62,
+  "name": "!wt"
+  },
+  {
+  "score": 60,
+  "name": "!chords"
+  },
+  {
+  "score": 60,
+  "name": "!gnl"
+  },
+  {
+  "score": 58,
+  "name": "!e"
+  },
+  {
+  "score": 57,
+  "name": "!yelp"
+  },
+  {
+  "score": 57,
+  "name": "!wikt"
+  },
+  {
+  "score": 56,
+  "name": "!gf"
+  },
+  {
+  "score": 56,
+  "name": "!filestube"
+  },
+  {
+  "score": 55,
+  "name": "!thesaurus"
+  },
+  {
+  "score": 54,
+  "name": "!py"
+  },
+  {
+  "score": 54,
+  "name": "!da"
+  },
+  {
+  "score": 53,
+  "name": "!drupal"
+  },
+  {
+  "score": 53,
+  "name": "!c"
+  },
+  {
+  "score": 53,
+  "name": "!gim"
+  },
+  {
+  "score": 53,
+  "name": "!tabs"
+  },
+  {
+  "score": 51,
+  "name": "!tvtropes"
+  },
+  {
+  "score": 51,
+  "name": "!flickr"
+  },
+  {
   "name": "!013",
   "score": 1
   },

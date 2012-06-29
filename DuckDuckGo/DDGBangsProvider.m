@@ -39,19 +39,22 @@ static NSArray *bangs;
 }
 
 +(NSArray *)bangs {
-    @synchronized(self) {
-        if(!bangs) {
-            NSData *bangsJSON = [NSData dataWithContentsOfFile:[self bangsFilePath]];
-            if(!bangsJSON) {
-                [self downloadBangsJSON];
-                bangsJSON = [NSData dataWithContentsOfFile:[self bangsFilePath]];
-            } else {
-                [self performSelectorInBackground:@selector(downloadBangsJSON) withObject:nil];
-            }
-            bangs = [NSJSONSerialization JSONObjectWithData:bangsJSON options:0 error:nil];
+    if(!bangs) {
+        NSData *bangsJSON = [NSData dataWithContentsOfFile:[self bangsFilePath]];
+        if(!bangsJSON) {
+            [self downloadBangsJSON];
+            bangsJSON = [NSData dataWithContentsOfFile:[self bangsFilePath]];
+        } else {
+            [self performSelectorInBackground:@selector(downloadBangsJSON) withObject:nil];
         }
-        return bangs;
+        NSArray *unsortedBangs = [NSJSONSerialization JSONObjectWithData:bangsJSON options:0 error:nil];
+        
+        bangs = [unsortedBangs sortedArrayUsingComparator:^(id obj1, id obj2) {
+            return [(NSNumber *)[(NSDictionary *)obj1 objectForKey:@"score"] compare:[(NSDictionary *)obj2 objectForKey:@"score"]];
+        }];
+
     }
+    return bangs;
 }
 
 +(void)downloadBangsJSON {
