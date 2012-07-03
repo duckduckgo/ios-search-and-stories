@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4C15911D1592208C00D207DF /* empty_bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C660A7715914E4B001AB510 /* empty_bang_button@2x.png */; };
+		4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */; };
 		4C19FFD71593B617003AC03F /* DDGCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C19FFD61593B617003AC03F /* DDGCache.m */; };
 		4C1EF85B150C043D00532858 /* EGORefreshTableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */; };
 		4C1EF85C150C043D00532858 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */; };
@@ -146,6 +147,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C184D0C15A3742A003AAD5E /* NSArray+ConcurrentIteration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+ConcurrentIteration.h"; sourceTree = "<group>"; };
+		4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+ConcurrentIteration.m"; sourceTree = "<group>"; };
 		4C19FFD51593B617003AC03F /* DDGCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGCache.h; sourceTree = "<group>"; };
 		4C19FFD61593B617003AC03F /* DDGCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGCache.m; sourceTree = "<group>"; };
 		4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
@@ -593,6 +596,8 @@
 		83F32262149290EF00A61BC5 /* DuckDuckGo */ = {
 			isa = PBXGroup;
 			children = (
+				4C184D0C15A3742A003AAD5E /* NSArray+ConcurrentIteration.h */,
+				4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */,
 				4CE458FC15963729009225F5 /* DuckDuckGo.entitlements */,
 				4C5F81F3158F96D6007B745A /* bangs.json */,
 				4C6AC43514DDA95500A1ACA1 /* 3rd Party */,
@@ -847,6 +852,7 @@
 				4C2DD66D159CD7CE00A74526 /* UIImage+RoundedCorner.m in Sources */,
 				4C2DD66E159CD7D200A74526 /* UIImage+Resize.m in Sources */,
 				4C2DD66F159CD7D600A74526 /* UIImage+Alpha.m in Sources */,
+				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

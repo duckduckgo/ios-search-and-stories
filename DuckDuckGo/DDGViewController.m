@@ -13,6 +13,7 @@
 #import "DDGCache.h"
 #import "UIImage+Resize.h"
 #import <QuartzCore/QuartzCore.h>
+#import "NSArray+ConcurrentIteration.h"
 
 @interface DDGViewController (Private)
 -(void)beginDownloadingStories;
@@ -255,7 +256,7 @@
             [DDGCache setObject:grayscaleData forKey:[story objectForKey:@"id"] inCache:cache];
         }
         
-        dispatch_sync(dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete            
         });
     });
@@ -285,17 +286,21 @@
     
     NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
     NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
+    __block int threads = 0;
+    // download story images    
     
-    // download story images
-    for(NSIndexPath *storyIndexPath in addedStories) {
+    [addedStories iterateConcurrentlyWithThreads:20 block:^(id obj) {
+        threads++;
+        NSLog(@"DOWNLOADING: %i",threads);
+        NSIndexPath *storyIndexPath = (NSIndexPath *)obj;
         NSDictionary *story = [newStories objectAtIndex:storyIndexPath.row];
-
+        
         // main image: download it and resize it as needed
         NSString *imageURL = [story objectForKey:@"image"];
         NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
         if(!imageData)
             imageData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
-
+        
         UIImage *image = [UIImage imageWithData:imageData];
         if(image.size.width * image.size.height > 600*140) {
             image = [image thumbnailImage:CGSizeMake(600, 140) 
@@ -310,7 +315,38 @@
         // favicon
         NSString *storyURL = [story objectForKey:@"url"];
         [self loadFaviconForURLString:storyURL storyID:[story objectForKey:@"id"]];
-    }
+        
+        NSLog(@"DONE: %i",threads);
+        threads--;        
+    }];
+    
+    dispatch_apply(addedStories.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i){
+    });
+    
+//    for(NSIndexPath *storyIndexPath in addedStories) {
+//        NSDictionary *story = [newStories objectAtIndex:storyIndexPath.row];
+//
+//        // main image: download it and resize it as needed
+//        NSString *imageURL = [story objectForKey:@"image"];
+//        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
+//        if(!imageData)
+//            imageData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
+//
+//        UIImage *image = [UIImage imageWithData:imageData];
+//        if(image.size.width * image.size.height > 600*140) {
+//            image = [image thumbnailImage:CGSizeMake(600, 140) 
+//                        transparentBorder:0 
+//                             cornerRadius:0 
+//                     interpolationQuality:kCGInterpolationHigh];
+//            imageData = UIImagePNGRepresentation(image);
+//        }
+//        
+//        [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+//        
+//        // favicon
+//        NSString *storyURL = [story objectForKey:@"url"];
+//        [self loadFaviconForURLString:storyURL storyID:[story objectForKey:@"id"]];
+//    }
     
     
     dispatch_async(dispatch_get_main_queue(), ^{
