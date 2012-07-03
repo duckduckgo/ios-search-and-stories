@@ -8,10 +8,73 @@
 
 #import "DDGAddressBarTextField.h"
 
+@interface DDGAddressBarTextField (Private)
+-(void)updateBackgroundWithProgress:(CGFloat)newProgress;
+@end
+
 @implementation DDGAddressBarTextField
 
-- (void)setProgress:(CGFloat)progress {
-    
+-(id)initWithFrame:(CGRect)frame {
+    NSLog(@"HELLO");
+    self = [super initWithFrame:frame];
+    if(self)
+        [super setDelegate:self];
+    return self;
+}
+
+-(id)initWithCoder:(NSCoder *)aDecoder {
+    NSLog(@"HELLO2");
+    self = [super initWithCoder:aDecoder];
+    if(self)
+        [super setDelegate:self];
+    return self;
+}
+
+#pragma mark - Delegate
+
+-(void)setDelegate:(id<UITextFieldDelegate>)delegate {
+    actualDelegate = delegate;
+}
+
+-(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    return [actualDelegate textFieldShouldBeginEditing:textField];
+}
+
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
+    [actualDelegate textFieldDidBeginEditing:textField];
+    [self updateBackgroundWithProgress:0.0];
+}
+
+-(BOOL)textFieldShouldEndEditing:(UITextField *)textField {
+    return [actualDelegate textFieldShouldEndEditing:textField];
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+    [self updateBackgroundWithProgress:progress];
+    [actualDelegate textFieldDidEndEditing:textField];
+}
+
+-(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    return [actualDelegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
+}
+
+-(BOOL)textFieldShouldClear:(UITextField *)textField {
+    return [actualDelegate textFieldShouldClear:textField];
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    return [actualDelegate textFieldShouldReturn:textField];
+}
+
+#pragma mark - Progress bar
+
+-(void)setProgress:(CGFloat)newProgress {
+    progress = newProgress;
+    if(!self.isEditing)
+        [self updateBackgroundWithProgress:newProgress];
+}
+
+- (void)updateBackgroundWithProgress:(CGFloat)newProgress {    
     UIImage *background;
     UIImage *leftCap;
     UIImage *center;

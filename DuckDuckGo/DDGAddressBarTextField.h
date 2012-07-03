@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGAddressBarTextField : UITextField
+@interface DDGAddressBarTextField : UITextField <UITextFieldDelegate> {
+    id<UITextFieldDelegate> actualDelegate;
+    CGFloat progress;
+}
 
-- (void)setProgress:(CGFloat)progress;
+-(void)setProgress:(CGFloat)newProgress;
 
 @end

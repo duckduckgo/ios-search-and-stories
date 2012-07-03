@@ -482,10 +482,7 @@
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{
-    // clear out the search field progress
-    [searchField setProgress:0];
-    
+{    
     if([searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
         [searchHandler searchControllerAddressBarWillOpen];
 
