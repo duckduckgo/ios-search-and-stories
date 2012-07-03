@@ -31,7 +31,7 @@
     
     // wait until no remaining open threads, then return
     while (openThreads)
-        usleep(10000);
+        usleep(100000);
     return;
 }
 
