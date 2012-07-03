@@ -42,9 +42,6 @@ typedef enum {
     NSRange currentWordRange;
     
     NSMutableArray *unusedBangButtons;
-    
-    NSDate *loadingBeginTime;
-    NSTimer *loadingTimer;
 }
 
 @property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
@@ -69,5 +66,6 @@ typedef enum {
 // the web view needs to call these at the appropriate times to update the stop/reload button
 -(void)webViewStartedLoading;
 -(void)webViewFinishedLoading;
+-(void)setProgress:(CGFloat)progress;
 
 @end

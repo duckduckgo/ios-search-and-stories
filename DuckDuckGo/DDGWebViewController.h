@@ -20,6 +20,7 @@
     NSString *queryOrURLToLoad;
 
     NSUInteger webViewLoadingDepth;
+    NSUInteger webViewFinishedLoads;
     
     BOOL addressBarIsAnimating;
     BOOL addressBarIsInside;

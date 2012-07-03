@@ -167,20 +167,15 @@
 
 -(void)webViewStartedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
-    // stop the current timer (if there is one), then set a new one to update the progress
-    [loadingTimer invalidate];
-    // target: 60fps
-    // TODO: figure out what the optimal framerate for this animation is (and tune it for speed, if necessary)
-    loadingBeginTime = [NSDate date];
-    loadingTimer = [NSTimer scheduledTimerWithTimeInterval:(1.0/60.0) target:self selector:@selector(updateBarProgress) userInfo:nil repeats:YES];
 }
 
 -(void)webViewFinishedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
-    
-    // clear out the search field progress
-    [loadingTimer invalidate];
     [searchField setProgress:0];
+}
+
+-(void)setProgress:(CGFloat)progress {
+    [searchField setProgress:progress];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
@@ -317,13 +312,6 @@
 -(void)resetOmnibar {
     searchField.text = @"";
     [tableView reloadData];
-}
-
--(void)updateBarProgress {
-    NSTimeInterval loadingTime = (-1.0)*[loadingBeginTime timeIntervalSinceNow];
-    CGFloat avgLoadingTime = 2; // 80% by 2 seconds
-    CGFloat progress = (1-1/((4.0/avgLoadingTime)*loadingTime+1)); // have the progress asymptotically approach 1 as time goes on
-    [searchField setProgress:progress];
 }
 
 #pragma mark - Input accesory
@@ -496,7 +484,6 @@
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
     // clear out the search field progress
-    [loadingTimer invalidate];
     [searchField setProgress:0];
     
     if([searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])

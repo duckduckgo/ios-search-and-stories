@@ -295,8 +295,8 @@
     
     if([request.URL isEqual:request.mainDocumentURL])
         [searchController updateBarWithURL:request.URL];
-
-	return YES;
+    
+    return YES;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)theWebView
@@ -304,26 +304,41 @@
 	if (++webViewLoadingDepth == 1) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         [searchController webViewStartedLoading];
+        [searchController setProgress:0.05];
         [self moveAddressBarOutOfWebViewAnimated:YES];
     }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {
+    webViewFinishedLoads++;
+    if(webViewFinishedLoads<2)
+        [searchController setProgress:0.05+0.15*webViewFinishedLoads];
+    else
+        [searchController setProgress:2*(1-pow(0.5, (double)webViewFinishedLoads))-1.1];
+    
 	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
+        webViewFinishedLoads = 0;
         [self moveAddressBarIntoWebViewAnimated:YES];
 	}
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
+    webViewFinishedLoads++;
+    if(webViewFinishedLoads<2)
+        [searchController setProgress:0.05+0.15*webViewFinishedLoads];
+    else
+        [searchController setProgress:2*(1-pow(0.5, (double)webViewFinishedLoads))-1.1];
+
 	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
+        webViewFinishedLoads = 0;
         [self moveAddressBarIntoWebViewAnimated:YES];
 	}
 }
