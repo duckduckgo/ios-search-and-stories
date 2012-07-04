@@ -10,60 +10,38 @@
 
 @interface DDGAddressBarTextField (Private)
 -(void)updateBackgroundWithProgress:(CGFloat)newProgress;
+-(void)hideProgress;
+-(void)showProgress;
 @end
 
 @implementation DDGAddressBarTextField
 
 -(id)initWithFrame:(CGRect)frame {
-    NSLog(@"HELLO");
     self = [super initWithFrame:frame];
-    if(self)
-        [super setDelegate:self];
+    if(self) {
+        [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
+        [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
+    }
     return self;
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
-    NSLog(@"HELLO2");
     self = [super initWithCoder:aDecoder];
-    if(self)
-        [super setDelegate:self];
+    if(self) {
+        [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
+        [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
+    }
     return self;
 }
 
-#pragma mark - Delegate
+#pragma mark - Showing and hiding progress
 
--(void)setDelegate:(id<UITextFieldDelegate>)delegate {
-    actualDelegate = delegate;
-}
-
--(BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    return [actualDelegate textFieldShouldBeginEditing:textField];
-}
-
--(void)textFieldDidBeginEditing:(UITextField *)textField {
-    [actualDelegate textFieldDidBeginEditing:textField];
+-(void)hideProgress {
     [self updateBackgroundWithProgress:0.0];
 }
 
--(BOOL)textFieldShouldEndEditing:(UITextField *)textField {
-    return [actualDelegate textFieldShouldEndEditing:textField];
-}
-
--(void)textFieldDidEndEditing:(UITextField *)textField {
+-(void)showProgress {
     [self updateBackgroundWithProgress:progress];
-    [actualDelegate textFieldDidEndEditing:textField];
-}
-
--(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
-    return [actualDelegate textField:textField shouldChangeCharactersInRange:range replacementString:string];
-}
-
--(BOOL)textFieldShouldClear:(UITextField *)textField {
-    return [actualDelegate textFieldShouldClear:textField];
-}
-
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    return [actualDelegate textFieldShouldReturn:textField];
 }
 
 #pragma mark - Progress bar
@@ -97,13 +75,13 @@
     }
 
     CGFloat inset = floor((background.size.height - leftCap.size.height)/2);
-    
+
     // if there isn't enough progress to display the caps, don't even bother.
-    if(progress <= (leftCap.size.width + rightCap.size.width + (2*inset)) / background.size.width) {
+    if(newProgress <= (leftCap.size.width + rightCap.size.width + (2*inset)) / background.size.width) {
         [self setBackground:background];
         return;
-    } else if(progress > 1.0) {
-        progress = 1.0;
+    } else if(newProgress > 1.0) {
+        newProgress = 1.0;
     }
 
     UIGraphicsBeginImageContext(background.size);
@@ -111,7 +89,7 @@
     [background drawAtPoint:CGPointZero];
     [leftCap drawAtPoint:CGPointMake(inset, inset)];
     
-    CGFloat centerWidth = (background.size.width * progress) - leftCap.size.width - rightCap.size.width - 2*inset;
+    CGFloat centerWidth = (background.size.width * newProgress) - leftCap.size.width - rightCap.size.width - 2*inset;
     centerWidth = floor(centerWidth);
     [center drawInRect:CGRectMake(leftCap.size.width+inset,
                                   inset,
@@ -120,7 +98,7 @@
                                   )];
     
     // start using the right cap image when we're 2px away from completion
-    UIImage *right = (progress <= 1.0 - (2.0/background.size.width) ? rightPartial : rightCap);
+    UIImage *right = (newProgress <= 1.0 - (2.0/background.size.width) ? rightPartial : rightCap);
     [right drawAtPoint:CGPointMake(leftCap.size.width + centerWidth + inset, inset)];
     
     UIImage *result = UIGraphicsGetImageFromCurrentImageContext();

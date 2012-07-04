@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface DDGAddressBarTextField : UITextField <UITextFieldDelegate> {
-    id<UITextFieldDelegate> actualDelegate;
     CGFloat progress;
 }
 
