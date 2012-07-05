@@ -10,7 +10,7 @@
 
 @implementation NSArray (ConcurrentIteration)
 
--(void)iterateConcurrentlyWithThreads:(int)threads block:(void (^)(id obj))block {
+-(void)iterateConcurrentlyWithThreads:(int)threads block:(void (^)(int i, id obj))block {
     int count = self.count;
     threads = MIN(threads, count); // no point making 10 threads for 5 objects
     __block int openThreads = 0;
@@ -21,7 +21,7 @@
         }
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             for(int i=thread;i<count;i+=threads) {
-                block([self objectAtIndex:i]);
+                block(i, [self objectAtIndex:i]);
             }
             @synchronized(self) {
                 openThreads--;

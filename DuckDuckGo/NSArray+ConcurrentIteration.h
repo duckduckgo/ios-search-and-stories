@@ -10,6 +10,6 @@
 
 @interface NSArray (ConcurrentIteration)
 
--(void)iterateConcurrentlyWithThreads:(int)threads block:(void (^)(id obj))block;
+-(void)iterateConcurrentlyWithThreads:(int)threads block:(void (^)(int i, id obj))block;
 
 @end

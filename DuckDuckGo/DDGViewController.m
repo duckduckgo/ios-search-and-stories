@@ -289,70 +289,10 @@
     __block int threads = 0;
     // download story images    
     
-    [addedStories iterateConcurrentlyWithThreads:20 block:^(id obj) {
-        threads++;
-        NSLog(@"DOWNLOADING: %i",threads);
-        NSIndexPath *storyIndexPath = (NSIndexPath *)obj;
-        NSDictionary *story = [newStories objectAtIndex:storyIndexPath.row];
-        
-        // main image: download it and resize it as needed
-        NSString *imageURL = [story objectForKey:@"image"];
-        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
-        if(!imageData)
-            imageData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
-        
-        UIImage *image = [UIImage imageWithData:imageData];
-        if(image.size.width * image.size.height > 600*140) {
-            image = [image thumbnailImage:CGSizeMake(600, 140) 
-                        transparentBorder:0 
-                             cornerRadius:0 
-                     interpolationQuality:kCGInterpolationHigh];
-            imageData = UIImagePNGRepresentation(image);
-        }
-        
-        [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
-        
-        // favicon
-        NSString *storyURL = [story objectForKey:@"url"];
-        [self loadFaviconForURLString:storyURL storyID:[story objectForKey:@"id"]];
-        
-        NSLog(@"DONE: %i",threads);
-        threads--;        
-    }];
-    
-    dispatch_apply(addedStories.count, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(size_t i){
-    });
-    
-//    for(NSIndexPath *storyIndexPath in addedStories) {
-//        NSDictionary *story = [newStories objectAtIndex:storyIndexPath.row];
-//
-//        // main image: download it and resize it as needed
-//        NSString *imageURL = [story objectForKey:@"image"];
-//        NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
-//        if(!imageData)
-//            imageData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
-//
-//        UIImage *image = [UIImage imageWithData:imageData];
-//        if(image.size.width * image.size.height > 600*140) {
-//            image = [image thumbnailImage:CGSizeMake(600, 140) 
-//                        transparentBorder:0 
-//                             cornerRadius:0 
-//                     interpolationQuality:kCGInterpolationHigh];
-//            imageData = UIImagePNGRepresentation(image);
-//        }
-//        
-//        [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
-//        
-//        // favicon
-//        NSString *storyURL = [story objectForKey:@"url"];
-//        [self loadFaviconForURLString:storyURL storyID:[story objectForKey:@"id"]];
-//    }
-    
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         // update the stories array
         self.stories = newStories;
-
+        
         // update the table view with added and removed stories
         [self.tableView beginUpdates];
         [self.tableView insertRowsAtIndexPaths:addedStories 
@@ -360,10 +300,59 @@
         [self.tableView deleteRowsAtIndexPaths:removedStories 
                               withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView endUpdates];
-
+        
         // save the new stories
         [response writeToFile:[self storiesPath] atomically:YES];
         
+        // execute the given callback
+        success();
+    });
+    
+    [newStories iterateConcurrentlyWithThreads:20 block:^(int i, id obj) {
+        threads++;
+        NSLog(@"DOWNLOADING: %i",threads);
+        NSDictionary *story = (NSDictionary *)obj;
+        BOOL reload = NO;
+        
+        if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]) {
+        
+            // main image: download it and resize it as needed
+            NSString *imageURL = [story objectForKey:@"image"];
+            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
+            if(!imageData)
+                imageData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
+            
+            UIImage *image = [UIImage imageWithData:imageData];
+            if(image.size.width * image.size.height > 600*140) {
+                image = [image thumbnailImage:CGSizeMake(600, 140) 
+                            transparentBorder:0 
+                                 cornerRadius:0 
+                         interpolationQuality:kCGInterpolationHigh];
+                imageData = UIImagePNGRepresentation(image);
+            }
+            
+            [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+            reload = YES;
+        }
+        
+        if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"faviconImages"]) {
+            // favicon
+            NSString *storyURL = [story objectForKey:@"url"];
+            [self loadFaviconForURLString:storyURL storyID:[story objectForKey:@"id"]];
+            reload = YES;
+        }
+        
+        if(reload) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self.tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+            });
+        }
+        
+        NSLog(@"DONE: %i",threads);
+        threads--;        
+    }];
+            
+    dispatch_async(dispatch_get_main_queue(), ^{
         // execute the given callback
         success();
     });
