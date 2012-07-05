@@ -7,6 +7,7 @@
 //
 
 #import "DDGWebViewController.h"
+#import "DDGAddressBarTextField.h"
 
 @interface DDGWebViewController (Private)
 -(void)moveAddressBarIntoWebViewAnimated:(BOOL)animated;
@@ -42,6 +43,16 @@
 	viewsInitialized = YES;
     if(queryOrURLToLoad)
         [self loadQueryOrURL:queryOrURLToLoad];
+}
+
+-(void)viewDidAppear:(BOOL)animated {
+    UIMenuItem *searchMenuItem = [[UIMenuItem alloc] initWithTitle:@"Search"
+                                                            action:@selector(search:)];
+    [UIMenuController sharedMenuController].menuItems = [NSArray arrayWithObject:searchMenuItem];
+}
+
+-(void)viewWillDisappear:(BOOL)animated {
+    [UIMenuController sharedMenuController].menuItems = nil;
 }
 
 - (void)dealloc
@@ -287,6 +298,20 @@
 
 -(void)searchControllerAddressBarWillCancel {
     [self moveAddressBarIntoWebViewAnimated:NO];
+}
+
+#pragma mark - Searching for selected text
+
+-(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
+    if(action == @selector(search:))
+        return ![searchController.searchField isFirstResponder];
+    else
+        return [super canPerformAction:action withSender:sender];
+}
+
+-(void)search:(id)sender {
+    NSString *selection = [self.webView stringByEvaluatingJavaScriptFromString:@"window.getSelection().toString()"];
+    [self loadQueryOrURL:selection];
 }
 
 #pragma mark - Web view deleagte

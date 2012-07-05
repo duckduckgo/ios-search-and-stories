@@ -17,26 +17,31 @@
 
 static NSMutableDictionary *globalCache;
 
+// TODO: if performance ever becomes an issue, make the locking finer-grained
 +(void)setObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName {
-    [self loadCache:cacheName];
-    
-    NSMutableDictionary *cache = [globalCache objectForKey:cacheName];
-    if(!cache) {
-        cache = [[NSMutableDictionary alloc] init];
-        [globalCache setObject:cache forKey:cacheName];
+    @synchronized(globalCache) {
+        [self loadCache:cacheName];
+        
+        NSMutableDictionary *cache = [globalCache objectForKey:cacheName];
+        if(!cache) {
+            cache = [[NSMutableDictionary alloc] init];
+            [globalCache setObject:cache forKey:cacheName];
+        }
+        if(!object)
+            [cache removeObjectForKey:key];
+        else
+            [cache setObject:object forKey:key];
+        
+        [self saveCache:cacheName];
     }
-    if(!object)
-        [cache removeObjectForKey:key];
-    else
-        [cache setObject:object forKey:key];
-    
-    [self saveCache:cacheName];
 }
 
 +(id)objectForKey:(NSString *)key inCache:(NSString *)cacheName {
-    [self loadCache:cacheName];
-    
-    return [[globalCache objectForKey:cacheName] objectForKey:key];
+    @synchronized(globalCache) {
+        [self loadCache:cacheName];
+        
+        return [[globalCache objectForKey:cacheName] objectForKey:key];
+    }
 }
 
 #pragma mark - Global cache management
