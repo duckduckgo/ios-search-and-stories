@@ -495,6 +495,10 @@
         oldSearchText = textField.text;
     barUpdated = NO;
     
+    if(![self isQuery:textField.text]) {
+        textField.text = @"";
+    }
+    
     textField.rightView = nil;
     [self reloadSuggestions];
     
