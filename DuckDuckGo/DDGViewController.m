@@ -307,7 +307,8 @@
     });
 
     // download story images (this method doesn't return until all story images are downloaded)
-    [newStories iterateConcurrentlyWithThreads:20 block:^(int i, id obj) {
+    
+    [newStories iterateConcurrentlyWithThreads:5 block:^(int i, id obj) {
         NSDictionary *story = (NSDictionary *)obj;
         BOOL reload = NO;
         
@@ -315,11 +316,12 @@
         
             // main image: download it and resize it as needed
             NSString *imageURL = [story objectForKey:@"image"];
-            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
-            if(!imageData)
-                imageData = [NSData dataWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"noimage" ofType:@"png"]];
-            
+            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];            
             UIImage *image = [UIImage imageWithData:imageData];
+            
+            if(!image)
+                image = [UIImage imageNamed:@"noimage.png"];
+            
             if(image.size.width * image.size.height > 600*140) {
                 image = [image thumbnailImage:CGSizeMake(600, 140) 
                             transparentBorder:0 
