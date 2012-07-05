@@ -161,7 +161,7 @@
     settings.showCreditsFooter = NO; // TODO: make sure to give everyone credit elsewhere in an info page or something
     
     UINavigationController *aNavController = [[UINavigationController alloc] initWithRootViewController:settings];
-    [self presentModalViewController:aNavController animated:NO];
+    [self presentModalViewController:aNavController animated:YES];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {    
@@ -286,8 +286,6 @@
     
     NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
     NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
-    __block int threads = 0;
-    // download story images    
     
     dispatch_async(dispatch_get_main_queue(), ^{
         // update the stories array
@@ -307,10 +305,9 @@
         // execute the given callback
         success();
     });
-    
+
+    // download story images (this method doesn't return until all story images are downloaded)
     [newStories iterateConcurrentlyWithThreads:20 block:^(int i, id obj) {
-        threads++;
-        NSLog(@"DOWNLOADING: %i",threads);
         NSDictionary *story = (NSDictionary *)obj;
         BOOL reload = NO;
         
@@ -348,8 +345,6 @@
             });
         }
         
-        NSLog(@"DONE: %i",threads);
-        threads--;        
     }];
             
     dispatch_async(dispatch_get_main_queue(), ^{
