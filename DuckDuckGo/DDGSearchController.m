@@ -326,6 +326,7 @@
     // TODO: *important* bang_button.png and empty_bang_button.png are currently stolen from the iPhone keyboard images; replace them with custom graphics before release.
     [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
     bangButton.frame = CGRectMake(0, 0, 46, 46);
+    bangButton.tag = 103;
     [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [inputAccessory addSubview:bangButton];
     
@@ -366,9 +367,11 @@
     UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
     
     NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
-    if(suggestions.count > 0)
+    if(suggestions.count > 0) {
         scrollView.hidden = NO;
-    
+        UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
+        [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button_open.png"] forState:UIControlStateNormal];
+    }
     UIImage *backgroundImg = [[UIImage imageNamed:@"empty_bang_button.png"] stretchableImageWithLeftCapWidth:7.0 topCapHeight:0];
 
     for(NSDictionary *suggestionDict in suggestions) {
@@ -379,10 +382,13 @@
             button = [unusedBangButtons lastObject];
             [unusedBangButtons removeLastObject];
         } else {
-            button = [UIButton buttonWithType:UIButtonTypeRoundedRect];   
+            button = [UIButton buttonWithType:UIButtonTypeCustom];   
+            [button.titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
+            [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [button.titleLabel setShadowOffset:CGSizeMake(0, 1)];
         }
 
-        
         [button setTitle:suggestion forState:UIControlStateNormal];
         [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
@@ -403,6 +409,8 @@
         [unusedBangButtons addObject:subview];
     }
     scrollView.hidden = YES;
+    UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
+    [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
 }
 
 #pragma mark - Search suggestions
