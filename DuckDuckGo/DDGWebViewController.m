@@ -33,7 +33,6 @@
     webView.backgroundColor = [UIColor colorWithRed:0.216 green:0.231 blue:0.235 alpha:1.000];
     
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
-    [self moveAddressBarIntoWebViewAnimated:NO];
     
 	searchController.searchHandler = self;
     searchController.state = DDGSearchControllerStateWeb;
@@ -330,7 +329,6 @@
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         [searchController webViewStartedLoading];
         [searchController setProgress:0.05];
-        [self moveAddressBarOutOfWebViewAnimated:YES];
     }
 }
 
@@ -347,7 +345,6 @@
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
         webViewFinishedLoads = 0;
-        [self moveAddressBarIntoWebViewAnimated:YES];
 	}
 }
 
@@ -364,7 +361,6 @@
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
         webViewFinishedLoads = 0;
-        [self moveAddressBarIntoWebViewAnimated:YES];
 	}
 }
 
