@@ -405,8 +405,10 @@
     
     scrollView.contentSize = CGSizeMake(0, 46);
     for(UIView *subview in scrollView.subviews) {
-        [subview removeFromSuperview];
-        [unusedBangButtons addObject:subview];
+        if([subview isKindOfClass:[UIButton class]]) {
+            [subview removeFromSuperview];
+            [unusedBangButtons addObject:subview];
+        }
     }
     scrollView.hidden = YES;
     UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
