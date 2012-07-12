@@ -9,7 +9,6 @@
 #import "DDGCache.h"
 @interface DDGCache (Private)
 +(void)loadCache:(NSString *)cacheName;
-+(void)saveCache:(NSString *)cacheName;
 +(NSString *)cachePath:(NSString *)cacheName;
 @end
 
@@ -23,16 +22,10 @@ static NSMutableDictionary *globalCache;
         [self loadCache:cacheName];
         
         NSMutableDictionary *cache = [globalCache objectForKey:cacheName];
-        if(!cache) {
-            cache = [[NSMutableDictionary alloc] init];
-            [globalCache setObject:cache forKey:cacheName];
-        }
         if(!object)
             [cache removeObjectForKey:key];
         else
             [cache setObject:object forKey:key];
-        
-        [self saveCache:cacheName];
     }
 }
 
@@ -62,8 +55,9 @@ static NSMutableDictionary *globalCache;
     [globalCache setObject:cache forKey:cacheName];
 }
 
-+(void)saveCache:(NSString *)cacheName {
-    [[globalCache objectForKey:cacheName] writeToFile:[self cachePath:cacheName] atomically:YES];
++(void)saveCaches {
+    for(NSString *cacheName in globalCache)
+        [[globalCache objectForKey:cacheName] writeToFile:[self cachePath:cacheName] atomically:YES];
 }
 
 +(NSString *)cachePath:(NSString *)cacheName {

@@ -9,6 +9,7 @@
 #import "DDGAppDelegate.h"
 #import "DDGSearchHistoryProvider.h"
 #import "SDURLCache.h"
+#import "DDGCache.h"
 
 @implementation DDGAppDelegate
 
@@ -33,6 +34,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     return YES;
 }
 
+-(void)applicationDidEnterBackground:(UIApplication *)application {
+    [DDGCache saveCaches];
+}
 
 -(void)applicationDidBecomeActive:(UIApplication *)application {
     // settings might have changed in Settings.app while the app was closed
