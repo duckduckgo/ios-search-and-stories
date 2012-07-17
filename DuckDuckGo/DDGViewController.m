@@ -196,19 +196,7 @@
         [[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil];
         cell = loadedCell;
         self.loadedCell = nil;
-        
-        // one-time cell setup that can't be done in interface builder:
-        UIView *imageView = [cell viewWithTag:100];
-        imageView.layer.masksToBounds = YES;
-        
-        UIBezierPath *topCornersMaskPath = [UIBezierPath bezierPathWithRoundedRect:imageView.bounds 
-                                                       byRoundingCorners:UIRectCornerTopLeft|UIRectCornerTopRight
-                                                             cornerRadii:CGSizeMake(4.0, 4.0)];
-        CAShapeLayer *topCornersMaskLayer = [CAShapeLayer layer];
-        topCornersMaskLayer.frame = imageView.bounds;
-        topCornersMaskLayer.path = topCornersMaskPath.CGPath;
-        imageView.layer.mask = topCornersMaskLayer;
-	}
+    }
 
     NSDictionary *story = [stories objectAtIndex:indexPath.row];
     
@@ -217,7 +205,7 @@
     if([[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"readStories"] boolValue])
         label.textColor = [UIColor lightGrayColor];
     else
-        label.textColor = [UIColor darkGrayColor];
+        label.textColor = [UIColor whiteColor];
     
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
