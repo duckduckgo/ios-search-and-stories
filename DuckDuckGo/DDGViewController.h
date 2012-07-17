@@ -19,14 +19,10 @@
 	
     EGORefreshTableHeaderView *refreshHeaderView;
     BOOL isRefreshing;
-    
-	NSArray *stories;
 }
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) DDGSearchController *searchController;
-
-@property (nonatomic, strong) NSArray *stories;
 
 @end

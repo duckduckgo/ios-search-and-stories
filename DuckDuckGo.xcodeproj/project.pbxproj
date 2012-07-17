@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4C11C6AF15B5E4C200D046BA /* DDGStoriesProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */; };
 		4C14244E15AF3F8100EFBDE3 /* bang_button_open@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C14244D15AF3F8100EFBDE3 /* bang_button_open@2x.png */; };
 		4C14245015AF3F8E00EFBDE3 /* empty_bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C14244F15AF3F8E00EFBDE3 /* empty_bang_button@2x.png */; };
 		4C14245215AF420800EFBDE3 /* bang_button_open.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C14245115AF420800EFBDE3 /* bang_button_open.png */; };
@@ -149,6 +150,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C11C6AD15B5E4C200D046BA /* DDGStoriesProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoriesProvider.h; sourceTree = "<group>"; };
+		4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoriesProvider.m; sourceTree = "<group>"; };
 		4C14244D15AF3F8100EFBDE3 /* bang_button_open@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button_open@2x.png"; sourceTree = "<group>"; };
 		4C14244F15AF3F8E00EFBDE3 /* empty_bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_bang_button@2x.png"; sourceTree = "<group>"; };
 		4C14245115AF420800EFBDE3 /* bang_button_open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bang_button_open.png; sourceTree = "<group>"; };
@@ -612,6 +615,8 @@
 				4C660A741591487C001AB510 /* Search controller */,
 				83F32274149290EF00A61BC5 /* DDGViewController.h */,
 				83F32275149290EF00A61BC5 /* DDGViewController.m */,
+				4C11C6AD15B5E4C200D046BA /* DDGStoriesProvider.h */,
+				4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				4C19FFD51593B617003AC03F /* DDGCache.h */,
@@ -861,6 +866,7 @@
 				4C2DD66E159CD7D200A74526 /* UIImage+Resize.m in Sources */,
 				4C2DD66F159CD7D600A74526 /* UIImage+Alpha.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
+				4C11C6AF15B5E4C200D046BA /* DDGStoriesProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
