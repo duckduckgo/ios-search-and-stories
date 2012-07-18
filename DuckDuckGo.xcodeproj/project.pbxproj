@@ -99,7 +99,6 @@
 		838E9065149A763200C11E41 /* CurrentTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9067149A763200C11E41 /* CurrentTopicCell.xib */; };
 		838E906A149A76D400C11E41 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838E906C149A76D400C11E41 /* Localizable.strings */; };
 		839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839819421493C1DB0017A892 /* DDGWebViewController.m */; };
-		83E46A9514A2210700A2D4FC /* Temporary in Resources */ = {isa = PBXBuildFile; fileRef = 83E46A9414A2210700A2D4FC /* Temporary */; };
 		83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
 		83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F32260149290EF00A61BC5 /* CoreGraphics.framework */; };
 		83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 83F32265149290EF00A61BC5 /* InfoPlist.strings */; };
@@ -217,8 +216,6 @@
 		838E906B149A76D400C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		839819411493C1DB0017A892 /* DDGWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebViewController.h; sourceTree = "<group>"; };
 		839819421493C1DB0017A892 /* DDGWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebViewController.m; sourceTree = "<group>"; };
-		839CB4B414AA3AEA0054297C /* Singleton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Singleton.h; sourceTree = "<group>"; };
-		83E46A9414A2210700A2D4FC /* Temporary */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Temporary; sourceTree = "<group>"; };
 		83F32258149290EF00A61BC5 /* DuckDuckGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuckDuckGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		83F3225C149290EF00A61BC5 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		83F32260149290EF00A61BC5 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -470,7 +467,6 @@
 				4C19FFD61593B617003AC03F /* DDGCache.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
 				838E906D149A794F00C11E41 /* Resources */,
-				83E46A9414A2210700A2D4FC /* Temporary */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
 			);
 			path = DuckDuckGo;
@@ -484,7 +480,6 @@
 				83F32268149290EF00A61BC5 /* main.m */,
 				83F3226A149290EF00A61BC5 /* DuckDuckGo-Prefix.pch */,
 				8303A4E71499287B00D34412 /* Always.h */,
-				839CB4B414AA3AEA0054297C /* Singleton.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -586,7 +581,6 @@
 				838E9065149A763200C11E41 /* CurrentTopicCell.xib in Resources */,
 				838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */,
 				838E906A149A76D400C11E41 /* Localizable.strings in Resources */,
-				83E46A9514A2210700A2D4FC /* Temporary in Resources */,
 				4C1FD7ED1548FF65006B2511 /* action34x29.png in Resources */,
 				4C1FD7EE1548FF65006B2511 /* arrowRight18x18.png in Resources */,
 				4C1FD7EF1548FF65006B2511 /* back_button.png in Resources */,

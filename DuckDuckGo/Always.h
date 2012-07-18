@@ -9,10 +9,6 @@
 #ifndef DuckDuckGo_Always_h
 #define DuckDuckGo_Always_h
 
-#define kCacheIDNoFileCache @"NoFileCache"
-#define kCacheIDTransient @"transient"
-#define kCacheIDImages @"images"
-
 #define IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? [[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad : NO)
 #define IPHONE ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? [[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone : YES)
 
