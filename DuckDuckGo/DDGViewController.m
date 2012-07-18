@@ -130,19 +130,16 @@
 
 #pragma mark EGORefreshTableHeaderDelegate Methods
 
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view{
+- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
     [self beginDownloadingStories];
 }
 
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view{
+- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
 	return isRefreshing;
 }
 
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view{
-    NSDictionary *properties = [[NSFileManager defaultManager]
-                                attributesOfItemAtPath:[DDGStoriesProvider storiesPath]
-                                error:nil];
-    return [properties objectForKey:@"NSFileModificationDate"];
+- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view {
+    return [DDGCache objectForKey:@"storiesUpdated" inCache:@"misc"];
 }
 
 #pragma mark - Search handler

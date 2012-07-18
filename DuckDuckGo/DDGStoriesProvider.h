@@ -9,11 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface DDGStoriesProvider : NSObject
-@property (nonatomic, strong) NSArray *stories;
 
 +(DDGStoriesProvider *)sharedProvider;
-+(NSString *)storiesPath;
 
+-(NSArray *)stories;
 -(void)downloadStoriesInTableView:(UITableView *)tableView success:(void (^)())success;
 
 @end

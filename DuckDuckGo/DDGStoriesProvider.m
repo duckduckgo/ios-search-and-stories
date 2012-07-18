@@ -25,20 +25,15 @@ static DDGStoriesProvider *sharedProvider;
     }
 }
 
--(id)init {
-    self = [super init];
-    if(self) {
-        NSData *storiesData = [NSData dataWithContentsOfFile:[DDGStoriesProvider storiesPath]];
-        if(!storiesData) // NSJSONSerialization complains if it's passed nil, so we give it an empty NSData instead
-            storiesData = [NSData data];
-        self.stories = [NSJSONSerialization JSONObjectWithData:storiesData
-                                                       options:0
-                                                         error:nil];
-    }
-    return self;
-}
+#pragma mark - Downloading sources
+
+
 
 #pragma mark - Downloading stories
+
+-(NSArray *)stories {
+    return [DDGCache objectForKey:@"stories" inCache:@"misc"];
+}
 
 -(void)downloadStoriesInTableView:(UITableView *)tableView success:(void (^)())success {
     // do everything in the background
@@ -55,7 +50,10 @@ static DDGStoriesProvider *sharedProvider;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             // update the stories array
-            self.stories = newStories;
+            [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
+            
+            // record the last-updated time
+            [DDGCache setObject:[NSDate date] forKey:@"storiesUpdated" inCache:@"misc"];
             
             // update the table view with added and removed stories
             [tableView beginUpdates];
@@ -64,10 +62,7 @@ static DDGStoriesProvider *sharedProvider;
             [tableView deleteRowsAtIndexPaths:removedStories
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView endUpdates];
-            
-            // save the new stories
-            [response writeToFile:[DDGStoriesProvider storiesPath] atomically:YES];
-            
+                        
             // execute the given callback
             success();
         });
@@ -156,10 +151,6 @@ static DDGStoriesProvider *sharedProvider;
         [domainParts removeObjectAtIndex:0];
         domain = [domainParts componentsJoinedByString:@"."];
     }
-}
-
-+(NSString *)storiesPath {
-    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:@"stories.json"];
 }
 
 @end
