@@ -12,6 +12,9 @@
 
 +(DDGStoriesProvider *)sharedProvider;
 
+-(NSArray *)sources;
+-(void)setSourceWithID:(NSString *)sourceID enabled:(BOOL)enabled;
+
 -(NSArray *)stories;
 -(void)downloadStoriesInTableView:(UITableView *)tableView success:(void (^)())success;
 

@@ -27,7 +27,66 @@ static DDGStoriesProvider *sharedProvider;
 
 #pragma mark - Downloading sources
 
+-(void)downloadSources {
+    NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1"];
+    NSData *response = [NSData dataWithContentsOfURL:url];
+    NSArray *newSources = [NSJSONSerialization JSONObjectWithData:response 
+                                                          options:NSJSONReadingMutableContainers 
+                                                            error:nil];
+    for(NSMutableDictionary *source in newSources) {
+        
+        // if not found, oldSource will be nil
+        int oldSourceID = [self indexOfSourceWithID:[source objectForKey:@"id"]];
+        
+        if(oldSourceID != NSNotFound)
+            [source setObject:[[self.sources objectAtIndex:oldSourceID] objectForKey:@"enabled"] forKey:@"enabled"];
+        else
+            [source setObject:[NSNumber numberWithBool:YES] forKey:@"enabled"];
+        
+    }
+    
+    [DDGCache setObject:newSources forKey:@"sources" inCache:@"misc"];
+}
 
+-(NSArray *)sources {
+    return [DDGCache objectForKey:@"sources" inCache:@"misc"];
+}
+
+-(NSArray *)enabledSourceIDs {
+    NSArray *sources = self.sources;
+    NSMutableArray *enabledSources = [[NSMutableArray alloc] initWithCapacity:sources.count];
+    for(NSDictionary *source in sources) {
+        if([[source objectForKey:@"enabled"] boolValue])
+            [enabledSources addObject:[source objectForKey:@"id"]];
+    }
+    return enabledSources;
+}
+
+-(int)indexOfSourceWithID:(NSString *)sourceID {
+    NSArray *oldSources = [DDGCache objectForKey:@"sources" inCache:@"misc"];
+
+    __block int result = NSNotFound;
+    [oldSources enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if([[obj objectForKey:@"id"] isEqualToString:sourceID]) {
+            result = idx;
+        }
+    }];
+
+    return result;
+}
+
+-(void)setSourceWithID:(NSString *)sourceID enabled:(BOOL)enabled {
+    NSMutableArray *sources = [self.sources mutableCopy];
+
+    int sourceIdx = [self indexOfSourceWithID:sourceID];
+    NSMutableDictionary *source = [[sources objectAtIndex:sourceIdx] mutableCopy];
+    [source setObject:[NSNumber numberWithBool:enabled] forKey:@"enabled"];
+    
+    [sources removeObjectAtIndex:sourceIdx];
+    [sources addObject:source];
+    
+    [DDGCache setObject:sources forKey:@"sources" inCache:@"misc"];
+}
 
 #pragma mark - Downloading stories
 
@@ -39,7 +98,12 @@ static DDGStoriesProvider *sharedProvider;
     // do everything in the background
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
         
-        NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json"];
+        [self downloadSources];
+        
+        NSString *urlStr = @"http://caine.duckduckgo.com/watrcoolr.js?o=json&s=";
+        urlStr = [urlStr stringByAppendingString:[[self enabledSourceIDs] componentsJoinedByString:@","]];
+        
+        NSURL *url = [NSURL URLWithString:urlStr];
         NSData *response = [NSData dataWithContentsOfURL:url];
         NSArray *newStories = [NSJSONSerialization JSONObjectWithData:response
                                                               options:0
