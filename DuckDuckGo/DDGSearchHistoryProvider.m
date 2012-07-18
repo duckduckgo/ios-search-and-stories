@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 DuckDuckGo, Inc. All rights reserved.
 //
 
+#import "DDGCache.h"
 #import "DDGAppDelegate.h"
 #import "DDGSearchHistoryProvider.h"
 
@@ -40,8 +41,8 @@ static DDGSearchHistoryProvider *sharedInstance;
     [self save];
 }
 
--(void)logHistoryItem:(NSString *)historyItem {    
-    if(![[DDGAppDelegate retrieveFromUserDefaults:@"history_preference"] boolValue])
+-(void)logHistoryItem:(NSString *)historyItem {
+    if([[DDGCache objectForKey:@"history" inCache:@"settings"] isEqualToNumber:[NSNumber numberWithBool:NO]])
         return;
     
     NSDictionary *historyItemDictionary = [NSDictionary dictionaryWithObjectsAndKeys:historyItem,@"text",[NSDate date],@"date",nil];
@@ -60,7 +61,7 @@ static DDGSearchHistoryProvider *sharedInstance;
 
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
     // there are certain cases in which we don't want to return any history
-    if([prefix isEqualToString:@""] || ![[DDGAppDelegate retrieveFromUserDefaults:@"history_preference"] boolValue])
+    if([prefix isEqualToString:@""] || [[DDGCache objectForKey:@"history" inCache:@"settings"] isEqualToNumber:[NSNumber numberWithBool:NO]])
         return [NSArray array];
     
     NSMutableArray *results = [[NSMutableArray alloc] init];

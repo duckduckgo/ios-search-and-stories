@@ -9,10 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface DDGAppDelegate : UIResponder <UIApplicationDelegate>
-
 @property (strong, nonatomic) UIWindow *window;
-
-+(id)retrieveFromUserDefaults:(NSString *)key;
-+(void)processSettingChanges;
 
 @end
