@@ -12,7 +12,7 @@
 #define IPAD ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? [[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPad : NO)
 #define IPHONE ([[UIDevice currentDevice] respondsToSelector:@selector(userInterfaceIdiom)] ? [[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone : YES)
 
-#define LANDSCAPE (([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeLeft) || ([UIDevice currentDevice].orientation == UIDeviceOrientationLandscapeRight))
-#define PORTRAIT (([UIDevice currentDevice].orientation == UIDeviceOrientationPortrait) || ([UIDevice currentDevice].orientation == UIDeviceOrientationPortraitUpsideDown))
+#define LANDSCAPE (([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeLeft) || ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationLandscapeRight))
+#define PORTRAIT (([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortrait) || ([UIApplication sharedApplication].statusBarOrientation == UIDeviceOrientationPortraitUpsideDown))
 
 #endif

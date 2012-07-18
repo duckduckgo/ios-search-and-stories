@@ -106,14 +106,16 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-	{
+	if (IPHONE)
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-	}
-	return YES;
+	else
+        return YES;
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+        
     [searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 

@@ -46,10 +46,10 @@
 	if (self) {
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
-        if(UIInterfaceOrientationIsPortrait([UIApplication sharedApplication].statusBarOrientation))
-            frame.size.width = parent.bounds.size.width;
+        if(PORTRAIT)
+            frame.size.width = [UIScreen mainScreen].bounds.size.width;
         else
-            frame.size.width = parent.bounds.size.height;
+            frame.size.width = [UIScreen mainScreen].bounds.size.height;
         
         self.view.frame = frame;
 
@@ -107,6 +107,8 @@
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
     UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
     
     CGRect inputAccessoryFrame = inputAccessory.frame;
@@ -123,7 +125,6 @@
     inputAccessory.frame = inputAccessoryFrame;
     [inputAccessory viewWithTag:102].frame = scrollViewFrame;
 }
-
 
 #pragma mark - Updating keyboardRect
 
@@ -261,6 +262,7 @@
 }
 
 -(void)cancelInput {
+    
     [searchField resignFirstResponder];
     if(!barUpdated) {
         searchField.text = oldSearchText;
