@@ -10,4 +10,6 @@
 
 @interface DDGSettingsViewController : IGFormViewController
 
++(void)loadDefaultSettings;
+
 @end

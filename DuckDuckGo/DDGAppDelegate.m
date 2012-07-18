@@ -10,6 +10,7 @@
 #import "DDGSearchHistoryProvider.h"
 #import "SDURLCache.h"
 #import "DDGCache.h"
+#import "DDGSettingsViewController.h"
 
 @implementation DDGAppDelegate
 
@@ -30,6 +31,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
                                                          diskCapacity:1024*1024*5 // 5MB disk cache
                                                              diskPath:[SDURLCache defaultCachePath]];
     [NSURLCache setSharedURLCache:urlCache];
+    
+    // load default settings
+    [DDGSettingsViewController loadDefaultSettings];
     
     return YES;
 }
