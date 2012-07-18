@@ -291,14 +291,6 @@
     }
 }
 
--(void)searchControllerAddressBarWillOpen {
-    [self moveAddressBarOutOfWebViewAnimated:NO];
-}
-
--(void)searchControllerAddressBarWillCancel {
-    [self moveAddressBarIntoWebViewAnimated:NO];
-}
-
 #pragma mark - Searching for selected text
 
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
