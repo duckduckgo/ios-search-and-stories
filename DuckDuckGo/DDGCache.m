@@ -48,16 +48,30 @@ static NSMutableDictionary *globalCache;
     if(!globalCache)
         globalCache = [[NSMutableDictionary alloc] init];
     
-    NSMutableDictionary *cache = [[NSMutableDictionary alloc] initWithContentsOfFile:[self cachePath:cacheName]];
-    if(!cache)
+    NSMutableDictionary *cache;
+    NSData *data = [[NSData alloc] initWithContentsOfFile:[self cachePath:cacheName]];
+    if(data) {
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+        cache = [[unarchiver decodeObjectForKey:@"key"] mutableCopy];
+        [unarchiver finishDecoding];
+    } else {
         cache = [[NSMutableDictionary alloc] init];
+    }
     
     [globalCache setObject:cache forKey:cacheName];
 }
 
 +(void)saveCaches {
-    for(NSString *cacheName in globalCache)
-        [[globalCache objectForKey:cacheName] writeToFile:[self cachePath:cacheName] atomically:YES];
+    for(NSString *cacheName in globalCache) {
+        
+        NSMutableData *data = [[NSMutableData alloc] init];
+        NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+        [archiver encodeObject:[globalCache objectForKey:cacheName] forKey:@"key"];
+        [archiver finishEncoding];
+        
+        [data writeToFile:[self cachePath:cacheName] atomically:YES];
+        
+    }
 }
 
 +(NSString *)cachePath:(NSString *)cacheName {
