@@ -42,9 +42,6 @@
 		4C1FD8051548FF65006B2511 /* topicChosen37x36.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7EC1548FF65006B2511 /* topicChosen37x36.png */; };
 		4C2DD65F159CD14100A74526 /* topic_cell_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2DD65D159CD14100A74526 /* topic_cell_background@2x.png */; };
 		4C2DD660159CD14100A74526 /* topic_cell_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2DD65E159CD14100A74526 /* topic_cell_background.png */; };
-		4C2DD66D159CD7CE00A74526 /* UIImage+RoundedCorner.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2DD666159CD5FD00A74526 /* UIImage+RoundedCorner.m */; };
-		4C2DD66E159CD7D200A74526 /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2DD664159CD5FD00A74526 /* UIImage+Resize.m */; };
-		4C2DD66F159CD7D600A74526 /* UIImage+Alpha.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2DD662159CD5FD00A74526 /* UIImage+Alpha.m */; };
 		4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */; };
 		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
 		4C57C10F158A8D6500E4C6BF /* refresh_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */; };
@@ -149,12 +146,6 @@
 		4C1FD7EC1548FF65006B2511 /* topicChosen37x36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topicChosen37x36.png; sourceTree = "<group>"; };
 		4C2DD65D159CD14100A74526 /* topic_cell_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topic_cell_background@2x.png"; sourceTree = "<group>"; };
 		4C2DD65E159CD14100A74526 /* topic_cell_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topic_cell_background.png; sourceTree = "<group>"; };
-		4C2DD661159CD5FD00A74526 /* UIImage+Alpha.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Alpha.h"; sourceTree = "<group>"; };
-		4C2DD662159CD5FD00A74526 /* UIImage+Alpha.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Alpha.m"; sourceTree = "<group>"; };
-		4C2DD663159CD5FD00A74526 /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+Resize.h"; sourceTree = "<group>"; };
-		4C2DD664159CD5FD00A74526 /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+Resize.m"; sourceTree = "<group>"; };
-		4C2DD665159CD5FD00A74526 /* UIImage+RoundedCorner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+RoundedCorner.h"; sourceTree = "<group>"; };
-		4C2DD666159CD5FD00A74526 /* UIImage+RoundedCorner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+RoundedCorner.m"; sourceTree = "<group>"; };
 		4C2F2C6A15604657005AAA2E /* DDGAddressBarTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddressBarTextField.h; sourceTree = "<group>"; };
 		4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddressBarTextField.m; sourceTree = "<group>"; };
 		4C5381451595045500490B9C /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
@@ -310,11 +301,31 @@
 			name = Images;
 			sourceTree = "<group>";
 		};
+		4C573C1115B7311200790F60 /* Home screen */ = {
+			isa = PBXGroup;
+			children = (
+				83F32274149290EF00A61BC5 /* DDGViewController.h */,
+				83F32275149290EF00A61BC5 /* DDGViewController.m */,
+				838E9067149A763200C11E41 /* CurrentTopicCell.xib */,
+				4C11C6AD15B5E4C200D046BA /* DDGStoriesProvider.h */,
+				4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */,
+			);
+			name = "Home screen";
+			sourceTree = "<group>";
+		};
+		4C573C1215B7313E00790F60 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
 		4C660A741591487C001AB510 /* Search controller */ = {
 			isa = PBXGroup;
 			children = (
 				83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */,
 				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
+				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
 				4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */,
 				4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */,
 				4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */,
@@ -335,12 +346,6 @@
 			children = (
 				4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */,
 				4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */,
-				4C2DD661159CD5FD00A74526 /* UIImage+Alpha.h */,
-				4C2DD662159CD5FD00A74526 /* UIImage+Alpha.m */,
-				4C2DD663159CD5FD00A74526 /* UIImage+Resize.h */,
-				4C2DD664159CD5FD00A74526 /* UIImage+Resize.m */,
-				4C2DD665159CD5FD00A74526 /* UIImage+RoundedCorner.h */,
-				4C2DD666159CD5FD00A74526 /* UIImage+RoundedCorner.m */,
 			);
 			name = "3rd Party";
 			sourceTree = "<group>";
@@ -417,10 +422,7 @@
 			children = (
 				83F3226E149290EF00A61BC5 /* iPhone.storyboard */,
 				83F32271149290EF00A61BC5 /* iPad.storyboard */,
-				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
-				838E9067149A763200C11E41 /* CurrentTopicCell.xib */,
 				838E906C149A76D400C11E41 /* Localizable.strings */,
-				4CA8C5811592914D0011665C /* DDGWebViewController.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -457,12 +459,11 @@
 				83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */,
 				83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */,
 				4C660A741591487C001AB510 /* Search controller */,
-				83F32274149290EF00A61BC5 /* DDGViewController.h */,
-				83F32275149290EF00A61BC5 /* DDGViewController.m */,
-				4C11C6AD15B5E4C200D046BA /* DDGStoriesProvider.h */,
-				4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */,
+				4C573C1115B7311200790F60 /* Home screen */,
+				4C573C1215B7313E00790F60 /* Settings */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
+				4CA8C5811592914D0011665C /* DDGWebViewController.xib */,
 				4C19FFD51593B617003AC03F /* DDGCache.h */,
 				4C19FFD61593B617003AC03F /* DDGCache.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
@@ -664,9 +665,6 @@
 				4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */,
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
 				4C19FFD71593B617003AC03F /* DDGCache.m in Sources */,
-				4C2DD66D159CD7CE00A74526 /* UIImage+RoundedCorner.m in Sources */,
-				4C2DD66E159CD7D200A74526 /* UIImage+Resize.m in Sources */,
-				4C2DD66F159CD7D600A74526 /* UIImage+Alpha.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
 				4C11C6AF15B5E4C200D046BA /* DDGStoriesProvider.m in Sources */,
 			);
