@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
-#import "IASKAppSettingsViewController.h"
-@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, IASKSettingsDelegate>
+
+@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate>
 {
 	IBOutlet UITableViewCell *loadedCell;
     

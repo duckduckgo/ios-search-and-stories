@@ -11,11 +11,10 @@
 #import "DDGWebViewController.h"
 #import "AFNetworking.h"
 #import "DDGCache.h"
-#import "UIImage+Resize.h"
 #import <QuartzCore/QuartzCore.h>
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGStoriesProvider.h"
-
+#import "DDGSettingsViewController.h"
 
 @interface DDGViewController (Private)
 -(void)beginDownloadingStories;
@@ -146,13 +145,10 @@
 
 -(void)searchControllerLeftButtonPressed {
     // this is the settings button, so let's load the settings controller
-    IASKAppSettingsViewController *settings = [[IASKAppSettingsViewController alloc] initWithNibName:@"IASKAppSettingsView" bundle:nil];
-    settings.delegate = self;
-    settings.showDoneButton = YES;
-    settings.showCreditsFooter = NO; // TODO: make sure to give everyone credit elsewhere in an info page or something
+    DDGSettingsViewController *settingsVC = [[DDGSettingsViewController alloc] initWithDefaults];
     
-    UINavigationController *aNavController = [[UINavigationController alloc] initWithRootViewController:settings];
-    [self presentModalViewController:aNavController animated:YES];
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:settingsVC];
+    [self presentModalViewController:navController animated:YES];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {    
@@ -167,13 +163,6 @@
     } completion:^(BOOL finished) {
         [self.navigationController pushViewController:webVC animated:NO];
     }];
-}
-
-#pragma mark - Settings delegate
-
--(void)settingsViewControllerDidEnd:(IASKAppSettingsViewController*)sender {
-    [self dismissModalViewControllerAnimated:YES];
-    [DDGAppDelegate processSettingChanges];
 }
 
 #pragma mark - Table view data source

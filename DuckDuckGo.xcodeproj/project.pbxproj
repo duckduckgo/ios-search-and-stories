@@ -44,6 +44,16 @@
 		4C2DD660159CD14100A74526 /* topic_cell_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2DD65E159CD14100A74526 /* topic_cell_background.png */; };
 		4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */; };
 		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
+		4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CF915B759E100790F60 /* IGFormButton.m */; };
+		4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFB15B759E100790F60 /* IGFormElement.m */; };
+		4C573D0C15B759E100790F60 /* IGFormRadioOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFD15B759E100790F60 /* IGFormRadioOption.m */; };
+		4C573D0D15B759E100790F60 /* IGFormSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFF15B759E100790F60 /* IGFormSection.m */; };
+		4C573D0E15B759E100790F60 /* IGFormSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0115B759E100790F60 /* IGFormSwitch.m */; };
+		4C573D0F15B759E100790F60 /* IGFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0315B759E100790F60 /* IGFormTextField.m */; };
+		4C573D1015B759E100790F60 /* IGFormTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0515B759E100790F60 /* IGFormTextView.m */; };
+		4C573D1115B759E100790F60 /* IGFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0715B759E100790F60 /* IGFormViewController.m */; };
+		4C573D1215B759E100790F60 /* IGHouseAdView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0915B759E100790F60 /* IGHouseAdView.m */; };
+		4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */; };
 		4C57C10F158A8D6500E4C6BF /* refresh_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */; };
 		4C57C112158A8F5400E4C6BF /* refresh_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */; };
 		4C5F81F4158F96D6007B745A /* bangs.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F3158F96D6007B745A /* bangs.json */; };
@@ -149,6 +159,26 @@
 		4C2F2C6A15604657005AAA2E /* DDGAddressBarTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddressBarTextField.h; sourceTree = "<group>"; };
 		4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddressBarTextField.m; sourceTree = "<group>"; };
 		4C5381451595045500490B9C /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
+		4C573CF815B759E100790F60 /* IGFormButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormButton.h; sourceTree = "<group>"; };
+		4C573CF915B759E100790F60 /* IGFormButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormButton.m; sourceTree = "<group>"; };
+		4C573CFA15B759E100790F60 /* IGFormElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormElement.h; sourceTree = "<group>"; };
+		4C573CFB15B759E100790F60 /* IGFormElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormElement.m; sourceTree = "<group>"; };
+		4C573CFC15B759E100790F60 /* IGFormRadioOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormRadioOption.h; sourceTree = "<group>"; };
+		4C573CFD15B759E100790F60 /* IGFormRadioOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormRadioOption.m; sourceTree = "<group>"; };
+		4C573CFE15B759E100790F60 /* IGFormSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormSection.h; sourceTree = "<group>"; };
+		4C573CFF15B759E100790F60 /* IGFormSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormSection.m; sourceTree = "<group>"; };
+		4C573D0015B759E100790F60 /* IGFormSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormSwitch.h; sourceTree = "<group>"; };
+		4C573D0115B759E100790F60 /* IGFormSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormSwitch.m; sourceTree = "<group>"; };
+		4C573D0215B759E100790F60 /* IGFormTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormTextField.h; sourceTree = "<group>"; };
+		4C573D0315B759E100790F60 /* IGFormTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormTextField.m; sourceTree = "<group>"; };
+		4C573D0415B759E100790F60 /* IGFormTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormTextView.h; sourceTree = "<group>"; };
+		4C573D0515B759E100790F60 /* IGFormTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormTextView.m; sourceTree = "<group>"; };
+		4C573D0615B759E100790F60 /* IGFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormViewController.h; sourceTree = "<group>"; };
+		4C573D0715B759E100790F60 /* IGFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormViewController.m; sourceTree = "<group>"; };
+		4C573D0815B759E100790F60 /* IGHouseAdView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGHouseAdView.h; sourceTree = "<group>"; };
+		4C573D0915B759E100790F60 /* IGHouseAdView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGHouseAdView.m; sourceTree = "<group>"; };
+		4C573D1315B75A2900790F60 /* DDGSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSettingsViewController.h; sourceTree = "<group>"; };
+		4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSettingsViewController.m; sourceTree = "<group>"; };
 		4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh_arrow.png; sourceTree = "<group>"; };
 		4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh_arrow@2x.png"; sourceTree = "<group>"; };
 		4C5F81F3158F96D6007B745A /* bangs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bangs.json; sourceTree = "<group>"; };
@@ -316,6 +346,8 @@
 		4C573C1215B7313E00790F60 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				4C573D1315B75A2900790F60 /* DDGSettingsViewController.h */,
+				4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -346,6 +378,24 @@
 			children = (
 				4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */,
 				4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */,
+				4C573CF815B759E100790F60 /* IGFormButton.h */,
+				4C573CF915B759E100790F60 /* IGFormButton.m */,
+				4C573CFA15B759E100790F60 /* IGFormElement.h */,
+				4C573CFB15B759E100790F60 /* IGFormElement.m */,
+				4C573CFC15B759E100790F60 /* IGFormRadioOption.h */,
+				4C573CFD15B759E100790F60 /* IGFormRadioOption.m */,
+				4C573CFE15B759E100790F60 /* IGFormSection.h */,
+				4C573CFF15B759E100790F60 /* IGFormSection.m */,
+				4C573D0015B759E100790F60 /* IGFormSwitch.h */,
+				4C573D0115B759E100790F60 /* IGFormSwitch.m */,
+				4C573D0215B759E100790F60 /* IGFormTextField.h */,
+				4C573D0315B759E100790F60 /* IGFormTextField.m */,
+				4C573D0415B759E100790F60 /* IGFormTextView.h */,
+				4C573D0515B759E100790F60 /* IGFormTextView.m */,
+				4C573D0615B759E100790F60 /* IGFormViewController.h */,
+				4C573D0715B759E100790F60 /* IGFormViewController.m */,
+				4C573D0815B759E100790F60 /* IGHouseAdView.h */,
+				4C573D0915B759E100790F60 /* IGHouseAdView.m */,
 			);
 			name = "3rd Party";
 			sourceTree = "<group>";
@@ -667,6 +717,16 @@
 				4C19FFD71593B617003AC03F /* DDGCache.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
 				4C11C6AF15B5E4C200D046BA /* DDGStoriesProvider.m in Sources */,
+				4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */,
+				4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */,
+				4C573D0C15B759E100790F60 /* IGFormRadioOption.m in Sources */,
+				4C573D0D15B759E100790F60 /* IGFormSection.m in Sources */,
+				4C573D0E15B759E100790F60 /* IGFormSwitch.m in Sources */,
+				4C573D0F15B759E100790F60 /* IGFormTextField.m in Sources */,
+				4C573D1015B759E100790F60 /* IGFormTextView.m in Sources */,
+				4C573D1115B759E100790F60 /* IGFormViewController.m in Sources */,
+				4C573D1215B759E100790F60 /* IGHouseAdView.m in Sources */,
+				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

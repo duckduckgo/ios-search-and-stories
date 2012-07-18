@@ -38,9 +38,4 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [DDGCache saveCaches];
 }
 
--(void)applicationDidBecomeActive:(UIApplication *)application {
-    // settings might have changed in Settings.app while the app was closed
-    [DDGAppDelegate processSettingChanges];
-}
-
 @end
