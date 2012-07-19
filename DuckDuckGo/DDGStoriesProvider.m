@@ -44,8 +44,28 @@ static DDGStoriesProvider *sharedProvider;
             [source setObject:[NSNumber numberWithBool:YES] forKey:@"enabled"];
         
     }
+    [newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+        NSDictionary *source = (NSDictionary *)obj;
+        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
+        [DDGCache setObject:data forKey:[source objectForKey:@"image"] inCache:@"sourceImages"];
+    }];
+    
+    newSources = [self sortSourcesArray:newSources];
     
     [DDGCache setObject:newSources forKey:@"sources" inCache:@"misc"];
+}
+
+-(NSArray *)sortSourcesArray:(NSArray *)sources {
+    return [sources sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+        int a = [[obj1 objectForKey:@"id"] intValue];
+        int b = [[obj2 objectForKey:@"id"] intValue];
+        if(a<b)
+            return NSOrderedAscending;
+        else if(a>b)
+            return NSOrderedDescending;
+        else
+            return NSOrderedSame;
+    }];
 }
 
 -(NSArray *)sources {
@@ -82,8 +102,7 @@ static DDGStoriesProvider *sharedProvider;
     NSMutableDictionary *source = [[sources objectAtIndex:sourceIdx] mutableCopy];
     [source setObject:[NSNumber numberWithBool:enabled] forKey:@"enabled"];
     
-    [sources removeObjectAtIndex:sourceIdx];
-    [sources addObject:source];
+    [sources replaceObjectAtIndex:sourceIdx withObject:source];
     
     [DDGCache setObject:sources forKey:@"sources" inCache:@"misc"];
 }
