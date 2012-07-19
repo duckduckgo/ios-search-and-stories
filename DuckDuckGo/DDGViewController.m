@@ -15,6 +15,7 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGStoriesProvider.h"
 #import "DDGSettingsViewController.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 @interface DDGViewController (Private)
 -(void)beginDownloadingStories;
@@ -134,6 +135,12 @@
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
     [self beginDownloadingStories];
+    
+    SystemSoundID quack;
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
+    NSURL *url = [NSURL URLWithString:path];
+    AudioServicesCreateSystemSoundID((__bridge_retained CFURLRef)url, &quack);
+    AudioServicesPlaySystemSound(quack);
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {

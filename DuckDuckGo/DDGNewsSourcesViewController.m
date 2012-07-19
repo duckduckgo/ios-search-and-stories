@@ -13,10 +13,15 @@
 
 @implementation DDGNewsSourcesViewController
 
+#pragma mark - View controller methods
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.title = @"News Sources";
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
+                                                                                           target:self 
+                                                                                           action:@selector(addButtonPressed)];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -24,17 +29,37 @@
     return IPAD || (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+#pragma mark - Adding custom news sources
+
+-(void)addButtonPressed {
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Add Custom News Source" 
+                                                    message:@"Enter a keyword to see related news topics" 
+                                                   delegate:self 
+                                          cancelButtonTitle:@"Cancel" 
+                                          otherButtonTitles:@"OK", nil];
+    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
+    [alert show];
+}
+
+-(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[DDGStoriesProvider sharedProvider] sources].count;
+    if(section==0)
+        return 0;
+    else // section==1
+        return [[DDGStoriesProvider sharedProvider] sources].count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(!cell) {

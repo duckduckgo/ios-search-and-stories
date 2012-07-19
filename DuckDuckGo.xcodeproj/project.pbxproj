@@ -28,6 +28,8 @@
 		4C0BC92615B892D3008C6FC4 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0BC91115B892D3008C6FC4 /* AFXMLRequestOperation.m */; };
 		4C0BC92715B892D3008C6FC4 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C0BC91215B892D3008C6FC4 /* UIImageView+AFNetworking.h */; };
 		4C0BC92815B892D3008C6FC4 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0BC91315B892D3008C6FC4 /* UIImageView+AFNetworking.m */; };
+		4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BC93515B8C2BE008C6FC4 /* quack.wav */; };
+		4C0BC93A15B8C45B008C6FC4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */; };
 		4C11C6AF15B5E4C200D046BA /* DDGStoriesProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */; };
 		4C14244E15AF3F8100EFBDE3 /* bang_button_open@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C14244D15AF3F8100EFBDE3 /* bang_button_open@2x.png */; };
 		4C14245015AF3F8E00EFBDE3 /* empty_bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C14244F15AF3F8E00EFBDE3 /* empty_bang_button@2x.png */; };
@@ -140,6 +142,9 @@
 		4C0BC91115B892D3008C6FC4 /* AFXMLRequestOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFXMLRequestOperation.m; sourceTree = "<group>"; };
 		4C0BC91215B892D3008C6FC4 /* UIImageView+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+AFNetworking.h"; sourceTree = "<group>"; };
 		4C0BC91315B892D3008C6FC4 /* UIImageView+AFNetworking.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImageView+AFNetworking.m"; sourceTree = "<group>"; };
+		4C0BC93515B8C2BE008C6FC4 /* quack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = quack.wav; sourceTree = "<group>"; };
+		4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		4C11C6AD15B5E4C200D046BA /* DDGStoriesProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoriesProvider.h; sourceTree = "<group>"; };
 		4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoriesProvider.m; sourceTree = "<group>"; };
 		4C14244D15AF3F8100EFBDE3 /* bang_button_open@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button_open@2x.png"; sourceTree = "<group>"; };
@@ -272,6 +277,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C0BC93A15B8C45B008C6FC4 /* AudioToolbox.framework in Frameworks */,
 				4CF9ED59154DFCD80075C23E /* MessageUI.framework in Frameworks */,
 				4C1EF85E150C048B00532858 /* QuartzCore.framework in Frameworks */,
 				4CFA1A9C14DDB77F00DF52FE /* libNoARC.a in Frameworks */,
@@ -475,6 +481,7 @@
 		838E906D149A794F00C11E41 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				4C0BC93515B8C2BE008C6FC4 /* quack.wav */,
 				83F3226E149290EF00A61BC5 /* iPhone.storyboard */,
 				83F32271149290EF00A61BC5 /* iPad.storyboard */,
 				838E906C149A76D400C11E41 /* Localizable.strings */,
@@ -485,6 +492,8 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
+				4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */,
+				4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */,
 				4CF9ED56154DFC460075C23E /* MessageUI.framework */,
 				4C1EF85D150C048A00532858 /* QuartzCore.framework */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
@@ -680,6 +689,7 @@
 				4C14244E15AF3F8100EFBDE3 /* bang_button_open@2x.png in Resources */,
 				4C14245015AF3F8E00EFBDE3 /* empty_bang_button@2x.png in Resources */,
 				4C14245215AF420800EFBDE3 /* bang_button_open.png in Resources */,
+				4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
