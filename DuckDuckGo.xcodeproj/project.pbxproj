@@ -42,6 +42,7 @@
 		4C1FD8051548FF65006B2511 /* topicChosen37x36.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7EC1548FF65006B2511 /* topicChosen37x36.png */; };
 		4C2DD65F159CD14100A74526 /* topic_cell_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2DD65D159CD14100A74526 /* topic_cell_background@2x.png */; };
 		4C2DD660159CD14100A74526 /* topic_cell_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2DD65E159CD14100A74526 /* topic_cell_background.png */; };
+		4C2E001215B87C700096C994 /* DDGNewsSourcesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2E001115B87C700096C994 /* DDGNewsSourcesViewController.m */; };
 		4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */; };
 		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
 		4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CF915B759E100790F60 /* IGFormButton.m */; };
@@ -156,6 +157,8 @@
 		4C1FD7EC1548FF65006B2511 /* topicChosen37x36.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topicChosen37x36.png; sourceTree = "<group>"; };
 		4C2DD65D159CD14100A74526 /* topic_cell_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topic_cell_background@2x.png"; sourceTree = "<group>"; };
 		4C2DD65E159CD14100A74526 /* topic_cell_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topic_cell_background.png; sourceTree = "<group>"; };
+		4C2E001015B87C700096C994 /* DDGNewsSourcesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGNewsSourcesViewController.h; sourceTree = "<group>"; };
+		4C2E001115B87C700096C994 /* DDGNewsSourcesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNewsSourcesViewController.m; sourceTree = "<group>"; };
 		4C2F2C6A15604657005AAA2E /* DDGAddressBarTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddressBarTextField.h; sourceTree = "<group>"; };
 		4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddressBarTextField.m; sourceTree = "<group>"; };
 		4C5381451595045500490B9C /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
@@ -348,6 +351,8 @@
 			children = (
 				4C573D1315B75A2900790F60 /* DDGSettingsViewController.h */,
 				4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */,
+				4C2E001015B87C700096C994 /* DDGNewsSourcesViewController.h */,
+				4C2E001115B87C700096C994 /* DDGNewsSourcesViewController.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -727,6 +732,7 @@
 				4C573D1115B759E100790F60 /* IGFormViewController.m in Sources */,
 				4C573D1215B759E100790F60 /* IGHouseAdView.m in Sources */,
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
+				4C2E001215B87C700096C994 /* DDGNewsSourcesViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -8,6 +8,8 @@
 
 #import "DDGSettingsViewController.h"
 #import "DDGCache.h"
+#import "DDGNewsSourcesViewController.h"
+
 @implementation DDGSettingsViewController
 
 +(void)loadDefaultSettings {
@@ -22,6 +24,18 @@
     
     [self addSectionWithTitle:@"General"];
     [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
+    
+    [self addSectionWithTitle:@"News"];
+    [self addButton:@"Configure news sources" action:^{
+        DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [self.navigationController pushViewController:sourcesVC animated:YES];
+    }];
+}
+
+-(void)saveData:(NSDictionary *)formData {
+    [DDGCache setObject:[formData objectForKey:@"Record history"] 
+                 forKey:@"history" 
+                inCache:@"settings"];
 }
 
 @end
