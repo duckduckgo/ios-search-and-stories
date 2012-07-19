@@ -78,19 +78,21 @@
 {
     [super viewWillAppear:animated];
     [searchController resetOmnibar];
-    
-    // if we animated out, animate back in
-    if(tableView.alpha == 0) {
-        [UIView animateWithDuration:0.3 animations:^{
-            tableView.alpha = 1;
-            tableView.transform = CGAffineTransformMakeScale(1, 1);
-        }];
-    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+
+    // if we animated out, animate back in
+    if(tableView.alpha == 0) {
+        tableView.transform = CGAffineTransformMakeScale(2, 2);
+        [UIView animateWithDuration:0.3 animations:^{
+            tableView.alpha = 1;
+            tableView.transform = CGAffineTransformIdentity;
+        }];
+    }
+
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -163,6 +165,7 @@
         tableView.transform = CGAffineTransformMakeScale(2, 2);
         tableView.alpha = 0;
     } completion:^(BOOL finished) {
+        tableView.transform = CGAffineTransformIdentity;
         [self.navigationController pushViewController:webVC animated:NO];
     }];
 }
