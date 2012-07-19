@@ -24,7 +24,7 @@
     
     [self addSectionWithTitle:@"General"];
     [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
-    
+
     [self addSectionWithTitle:@"News"];
     [self addButton:@"Configure news sources" action:^{
         DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];

@@ -15,7 +15,7 @@
     self = [super initWithTitle:aTitle];
     if(self) {
         self.switchControl = [[UISwitch alloc] initWithFrame:CGRectZero];
-        self.switchControl.enabled = enabled;
+        self.switchControl.on = enabled;
     }
     return self;
 }

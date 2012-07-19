@@ -62,8 +62,6 @@
 	
 	//  update the last update date
 	[refreshHeaderView refreshLastUpdatedDate];
-    
-    [self beginDownloadingStories];
 }
 
 - (void)viewDidUnload
@@ -78,6 +76,7 @@
 {
     [super viewWillAppear:animated];
     [searchController resetOmnibar];
+    [self beginDownloadingStories];
 }
 
 - (void)viewDidAppear:(BOOL)animated
