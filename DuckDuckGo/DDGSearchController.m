@@ -217,33 +217,62 @@
 - (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
     CGSize screenSize = self.view.superview.frame.size;
 	CGRect rect = self.view.frame;
-	if (reveal) {
+    double animationDuration = (animated ? 0.25 : 0.0);
+    
+    if (reveal) {
 		rect.size.height = screenSize.height - keyboardRect.size.height;
+        
+        // animate the bang bar's appearance
+        CGRect bangBarFrame = inputAccessory.frame;
+        bangBarFrame.origin.y = rect.size.height - 46.0;
+        bangBarFrame.size.width = rect.size.width;
+        inputAccessory.frame = bangBarFrame;
+        inputAccessory.hidden = NO;
+        
+        __block CGRect f = inputAccessory.frame;
+        f.origin.y += keyboardRect.size.height;
+        inputAccessory.frame = f;
+        [UIView animateWithDuration:animationDuration
+                              delay:0 
+                            options:UIViewAnimationCurveEaseOut 
+                         animations:^{
+                             f.origin.y -= keyboardRect.size.height;
+                             inputAccessory.frame = f;                                 
+                         } completion:nil];
+        
+        [UIView animateWithDuration:(animated ? 0.25 : 0.0) animations:^{
+            background.alpha = (reveal ? 1.0 : 0.0);
+        }];
+        
     } else {
+        NSLog(@"DOING THINGS");
 		// clip to search entry height
 		rect.size.height = 46.0;
-        inputAccessory.frame = CGRectMake(0, 0, 0, 46);
-        inputAccessory.hidden = YES;
+        
+        // animate the bang bar's disappearance
+        [UIView animateWithDuration:animationDuration 
+                              delay:0 
+                            options:UIViewAnimationCurveEaseOut 
+                         animations:^{
+                             CGRect f = inputAccessory.frame;
+                             f.origin.y = screenSize.height - f.size.height;
+                             inputAccessory.frame = f;
+                         } completion:^(BOOL finished){
+                             //                             inputAccessory.hidden = YES; 
+                         }];
     }
     [self revealAutocomplete:NO]; // if we're revealing, we'll show it again after the animation
-    
-    double animationDuration = (animated ? 0.25 : 0.0);
     
     // expand the frame to fullscreen for a moment so that the background looks like it's behind the keyboard, then adjust it to appropriate size once the animation completes.
     
     if(animated)
         self.view.frame = self.view.superview.bounds;
-
+    
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, animationDuration * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         self.view.frame = rect;
         if(reveal) {
             [self revealAutocomplete:YES];
-            CGRect bangBarFrame = inputAccessory.frame;
-            bangBarFrame.origin.y = rect.size.height - 46.0;
-            bangBarFrame.size.width = rect.size.width;
-            inputAccessory.frame = bangBarFrame;
-            inputAccessory.hidden = NO;
         }
     });
     
@@ -251,6 +280,7 @@
         background.alpha = (reveal ? 1.0 : 0.0);
     }];
 }
+
 
 -(void)revealAutocomplete:(BOOL)reveal {
     tableView.hidden = !reveal;
