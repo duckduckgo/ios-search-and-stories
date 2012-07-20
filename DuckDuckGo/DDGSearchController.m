@@ -352,13 +352,16 @@
 }
 
 -(void)bangButtonPressed {
-    // to simulate the user typing a key, we save the pasteboard contents, replace it with an exclamation mark, paste that into the current text field, then restore the old pasteboard contents
-    
-    UIPasteboard* pasteBoard = [UIPasteboard generalPasteboard];
-    NSArray* pasteBoardItems = [pasteBoard.items copy];
-    pasteBoard.string = @"!";
-    [searchField paste:self];
-    pasteBoard.items = pasteBoardItems;
+    NSString *textToAdd;
+    if(searchField.text.length==0 || [searchField.text characterAtIndex:searchField.text.length-1]==' ')
+        textToAdd = @"!";
+    else
+        textToAdd = @" !";
+
+    [self textField:searchField 
+          shouldChangeCharactersInRange:NSMakeRange(searchField.text.length, 0) 
+          replacementString:textToAdd];
+    searchField.text = [searchField.text stringByAppendingString:textToAdd];
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
