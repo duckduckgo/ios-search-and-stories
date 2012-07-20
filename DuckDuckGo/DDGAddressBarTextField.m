@@ -57,6 +57,8 @@
 }
 
 -(void)setProgress:(CGFloat)newProgress animationDuration:(CGFloat)duration {
+    if(newProgress > 1)
+        newProgress = 1;
     CGRect f = progressView.frame;
     f.size.width = (self.bounds.size.width-4)*newProgress;
     if(newProgress > progress) {

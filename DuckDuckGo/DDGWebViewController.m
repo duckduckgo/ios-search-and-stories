@@ -360,7 +360,7 @@
     if(webViewLoadEvents == 1)
         [searchController setProgress:0.5];
     else if(webViewLoadEvents == 2)
-        [searchController setProgress:0.85];
+        [searchController setProgress:0.70];
 }
 
 @end
