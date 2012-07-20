@@ -53,12 +53,23 @@
 #pragma mark - Progress bar
 
 -(void)setProgress:(CGFloat)newProgress {
+    [self setProgress:newProgress animationDuration:2.0];
+}
+
+-(void)setProgress:(CGFloat)newProgress animationDuration:(CGFloat)duration {
     CGRect f = progressView.frame;
     f.size.width = (self.bounds.size.width-4)*newProgress;
     if(newProgress > progress) {
-        [UIView animateWithDuration:2.0
+        [UIView animateWithDuration:duration
+                              delay:0.0
+                            options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut
                          animations:^{
                              progressView.frame = f;                     
+                         }
+                         completion:^(BOOL finished) {
+                             if(finished)
+                                 [self setProgress:newProgress+0.1 
+                                 animationDuration:duration*3];
                          }];
     } else {
         [progressView.layer removeAllAnimations];

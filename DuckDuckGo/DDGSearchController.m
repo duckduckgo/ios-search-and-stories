@@ -245,7 +245,6 @@
         }];
         
     } else {
-        NSLog(@"DOING THINGS");
 		// clip to search entry height
 		rect.size.height = 46.0;
         
