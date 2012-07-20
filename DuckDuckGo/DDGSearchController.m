@@ -493,6 +493,8 @@
     if(!oldSearchText)
         oldSearchText = textField.text;
     
+    [self clearBangSuggestions];
+    
     return YES;
 }
 
@@ -500,7 +502,7 @@
 {    
     if([searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
         [searchHandler searchControllerAddressBarWillOpen];
-
+    
 	return YES;
 }
 
@@ -517,6 +519,8 @@
     textField.rightView = nil;
     [self reloadSuggestions];
     
+    if([searchField.text isEqualToString:@""])
+        [self loadSuggestionsForBang:@"!"];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
