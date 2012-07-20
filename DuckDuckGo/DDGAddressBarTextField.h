@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface DDGAddressBarTextField : UITextField <UITextFieldDelegate> {
+    UIImageView *progressView;
     CGFloat progress;
 }
 
