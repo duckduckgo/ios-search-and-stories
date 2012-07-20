@@ -136,11 +136,13 @@
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
     [self beginDownloadingStories];
     
-    SystemSoundID quack;
-    NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
-    NSURL *url = [NSURL URLWithString:path];
-    AudioServicesCreateSystemSoundID((__bridge_retained CFURLRef)url, &quack);
-    AudioServicesPlaySystemSound(quack);
+    if([[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]) {
+        SystemSoundID quack;
+        NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
+        NSURL *url = [NSURL URLWithString:path];
+        AudioServicesCreateSystemSoundID((__bridge_retained CFURLRef)url, &quack);
+        AudioServicesPlaySystemSound(quack);
+    }
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {

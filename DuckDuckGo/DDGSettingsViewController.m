@@ -13,10 +13,17 @@
 @implementation DDGSettingsViewController
 
 +(void)loadDefaultSettings {
-    if(![DDGCache objectForKey:@"history" inCache:@"settings"])
-        [DDGCache setObject:[NSNumber numberWithBool:YES] 
-                     forKey:@"history" 
-                    inCache:@"settings"];
+    NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:
+                              [NSNumber numberWithBool:YES], @"history",
+                              [NSNumber numberWithBool:NO], @"quack",
+                              nil];
+    
+    for(NSString *key in defaults) {
+        if(![DDGCache objectForKey:key inCache:@"settings"])
+            [DDGCache setObject:[defaults objectForKey:key] 
+                         forKey:key 
+                        inCache:@"settings"];
+    }
 }
 
 -(void)configure {
@@ -24,6 +31,7 @@
     
     [self addSectionWithTitle:@"General"];
     [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
+    [self addSwitch:@"Enhanced audio effects" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
 
     [self addSectionWithTitle:@"News"];
     [self addButton:@"Configure news sources" action:^{
@@ -35,6 +43,10 @@
 -(void)saveData:(NSDictionary *)formData {
     [DDGCache setObject:[formData objectForKey:@"Record history"] 
                  forKey:@"history" 
+                inCache:@"settings"];
+    
+    [DDGCache setObject:[formData objectForKey:@"Enhanced audio effects"] 
+                 forKey:@"quack" 
                 inCache:@"settings"];
 }
 
