@@ -19,14 +19,21 @@
 {
     [super viewDidLoad];
     self.title = @"News Sources";
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd 
-                                                                                           target:self 
-                                                                                           action:@selector(addButtonPressed)];
+    if(self.navigationController.viewControllers.count == 1) {
+        // we're the only view controller, so there won't be a back button to get out, so we need a different exit button
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                               target:self
+                                                                                               action:@selector(doneButtonPressed)];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return IPAD || (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+-(void)doneButtonPressed {
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 #pragma mark - Adding custom news sources

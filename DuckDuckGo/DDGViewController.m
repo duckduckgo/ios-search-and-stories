@@ -15,6 +15,7 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGStoriesProvider.h"
 #import "DDGSettingsViewController.h"
+#import "DDGNewsSourcesViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 
 @interface DDGViewController (Private)
@@ -92,7 +93,6 @@
             tableView.transform = CGAffineTransformIdentity;
         }];
     }
-
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -256,7 +256,14 @@
     
     [[DDGStoriesProvider sharedProvider] downloadStoriesInTableView:self.tableView success:^ {
         isRefreshing = NO;
-        [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];        
+        [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+        
+        if(![DDGCache objectForKey:@"notFirstLaunch" inCache:@"misc"]) {
+            [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:@"notFirstLaunch" inCache:@"misc"];
+            
+            UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped]];
+            [self presentModalViewController:navC animated:YES];
+        }
     }];
 }
 
