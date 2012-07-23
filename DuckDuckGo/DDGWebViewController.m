@@ -308,7 +308,7 @@
 #pragma mark - Web view deleagte
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
+
     if([request.URL isEqual:request.mainDocumentURL])
         [searchController updateBarWithURL:request.URL];
     
@@ -317,43 +317,50 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)theWebView
 {
+    webViewLoadEvents++;
+    [self updateProgressBar];
+    
 	if (++webViewLoadingDepth == 1) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
         [searchController webViewStartedLoading];
-        [searchController setProgress:0.05];
     }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {
-    webViewFinishedLoads++;
-    if(webViewFinishedLoads<2)
-        [searchController setProgress:0.05+0.15*webViewFinishedLoads];
-    else
-        [searchController setProgress:2*(1-pow(0.5, (double)webViewFinishedLoads))-1.1];
+    webViewLoadEvents++;
+    [self updateProgressBar];
     
 	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
-        webViewFinishedLoads = 0;
+        webViewLoadEvents = 0;
 	}
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    webViewFinishedLoads++;
-    if(webViewFinishedLoads<2)
-        [searchController setProgress:0.05+0.15*webViewFinishedLoads];
-    else
-        [searchController setProgress:2*(1-pow(0.5, (double)webViewFinishedLoads))-1.1];
+    webViewLoadEvents++;
+    [self updateProgressBar];
 
 	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
-        webViewFinishedLoads = 0;
+        webViewLoadEvents = 0;
 	}
+}
+
+-(void)updateProgressBar {
+//    if(webViewLoadEvents < 4)
+//        [searchController setProgress:(0.5/3.0)*webViewLoadEvents];
+//    else
+//        [searchController setProgress:1.0-(1.0/(webViewLoadEvents-1))];
+    if(webViewLoadEvents == 1)
+        [searchController setProgress:0.5];
+    else if(webViewLoadEvents == 2)
+        [searchController setProgress:0.70];
 }
 
 @end

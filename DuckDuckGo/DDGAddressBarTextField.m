@@ -7,20 +7,14 @@
 //
 
 #import "DDGAddressBarTextField.h"
-
-@interface DDGAddressBarTextField (Private)
--(void)updateBackgroundWithProgress:(CGFloat)newProgress;
--(void)hideProgress;
--(void)showProgress;
-@end
+#import <QuartzCore/QuartzCore.h>
 
 @implementation DDGAddressBarTextField
 
 -(id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self) {
-        [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
-        [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
+        [self customInit];
     }
     return self;
 }
@@ -28,85 +22,63 @@
 -(id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if(self) {
-        [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
-        [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
+        [self customInit];
     }
     return self;
+}
+
+-(void)customInit {
+    [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
+    [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
+    
+    self.background = [[UIImage imageNamed:@"search_field.png"] stretchableImageWithLeftCapWidth:20.0 topCapHeight:0];
+    
+    progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"load_bar.png"] stretchableImageWithLeftCapWidth:2 topCapHeight:0]];
+    progressView.frame = CGRectMake(2, 2, 100, 27);
+    [self insertSubview:progressView atIndex:1];
+    
+    [self setProgress:0];
 }
 
 #pragma mark - Showing and hiding progress
 
 -(void)hideProgress {
-    [self updateBackgroundWithProgress:0.0];
+    progressView.hidden = YES;
 }
 
 -(void)showProgress {
-    [self updateBackgroundWithProgress:progress];
+    progressView.hidden = NO;
 }
 
 #pragma mark - Progress bar
 
 -(void)setProgress:(CGFloat)newProgress {
-    progress = newProgress;
-    if(!self.isEditing)
-        [self updateBackgroundWithProgress:newProgress];
+    [self setProgress:newProgress animationDuration:2.0];
 }
 
-- (void)updateBackgroundWithProgress:(CGFloat)newProgress {    
-    UIImage *background;
-    UIImage *leftCap;
-    UIImage *center;
-    UIImage *rightPartial;
-    UIImage *rightCap;
-    // if retina display (from http://stackoverflow.com/questions/3504173/detect-retina-display)
-    //if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] && ([UIScreen mainScreen].scale == 2.0)) {
-    if(true) { // we're forcing retina graphics right now because we don't have the required 1x graphics. TODO: get some 1x graphics and uncomment the line above!
-        background = [UIImage imageNamed:@"search_field@2x.png"];
-        leftCap = [UIImage imageNamed:@"load_bar_left@2x.png"];
-        center = [UIImage imageNamed:@"load_bar_center@2x.png"];
-        rightPartial = [UIImage imageNamed:@"load_bar_right_partial@2x.png"];
-        rightCap = [UIImage imageNamed:@"load_bar_right@2x.png"];
+-(void)setProgress:(CGFloat)newProgress animationDuration:(CGFloat)duration {
+    if(newProgress > 1)
+        newProgress = 1;
+    CGRect f = progressView.frame;
+    f.size.width = (self.bounds.size.width-4)*newProgress;
+    if(newProgress > progress) {
+        [UIView animateWithDuration:duration
+                              delay:0.0
+                            options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut
+                         animations:^{
+                             progressView.frame = f;                     
+                         }
+                         completion:^(BOOL finished) {
+                             if(finished)
+                                 [self setProgress:newProgress+0.1 
+                                 animationDuration:duration*3];
+                         }];
     } else {
-        background = [UIImage imageNamed:@"search_field.png"];
-        leftCap = [UIImage imageNamed:@"load_bar_left.png"];
-        center = [UIImage imageNamed:@"load_bar_center.png"];
-        rightPartial = [UIImage imageNamed:@"load_bar_right_partial.png"];
-        rightCap = [UIImage imageNamed:@"load_bar_right.png"];
+        [progressView.layer removeAllAnimations];
+        progressView.frame = f;
     }
-
-    CGFloat inset = floor((background.size.height - leftCap.size.height)/2);
-
-    // if there isn't enough progress to display the caps, don't even bother.
-    if(newProgress <= (leftCap.size.width + rightCap.size.width + (2*inset)) / background.size.width) {
-        [self setBackground:background];
-        return;
-    } else if(newProgress > 1.0) {
-        newProgress = 1.0;
-    }
-
-    UIGraphicsBeginImageContext(background.size);
-    
-    [background drawAtPoint:CGPointZero];
-    [leftCap drawAtPoint:CGPointMake(inset, inset)];
-    
-    CGFloat centerWidth = (background.size.width * newProgress) - leftCap.size.width - rightCap.size.width - 2*inset;
-    centerWidth = floor(centerWidth);
-    [center drawInRect:CGRectMake(leftCap.size.width+inset,
-                                  inset,
-                                  centerWidth,
-                                  center.size.height
-                                  )];
-    
-    // start using the right cap image when we're 2px away from completion
-    UIImage *right = (newProgress <= 1.0 - (2.0/background.size.width) ? rightPartial : rightCap);
-    [right drawAtPoint:CGPointMake(leftCap.size.width + centerWidth + inset, inset)];
-    
-    UIImage *result = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-
-    [self setBackground:result];
+        progress = newProgress;
 }
-
 
 // this adds a drop shadow under the text which is only visible when the progress bar is visible
 - (void) drawTextInRect:(CGRect)rect {
