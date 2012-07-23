@@ -44,6 +44,8 @@ static DDGStoriesProvider *sharedProvider;
             [source setObject:[NSNumber numberWithBool:YES] forKey:@"enabled"];
         
     }
+    
+    // TODO: uncomment this once image URLs are back in json feed
     /*[newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
         NSDictionary *source = (NSDictionary *)obj;
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
