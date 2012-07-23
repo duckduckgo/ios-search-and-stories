@@ -151,7 +151,7 @@ static DDGStoriesProvider *sharedProvider;
         });
         
         // download story images (this method doesn't return until all story images are downloaded)
-        [newStories iterateConcurrentlyWithThreads:5 block:^(int i, id obj) {
+        [newStories iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
             NSDictionary *story = (NSDictionary *)obj;
             BOOL reload = NO;
             
