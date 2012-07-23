@@ -34,14 +34,14 @@ static DDGStoriesProvider *sharedProvider;
                                                           options:NSJSONReadingMutableContainers 
                                                             error:nil];
     for(NSMutableDictionary *source in newSources) {
-        
+
         // if not found, oldSource will be nil
         int oldSourceID = [self indexOfSourceWithID:[source objectForKey:@"id"]];
         
         if(oldSourceID != NSNotFound)
             [source setObject:[[self.sources objectAtIndex:oldSourceID] objectForKey:@"enabled"] forKey:@"enabled"];
         else
-            [source setObject:[NSNumber numberWithBool:YES] forKey:@"enabled"];
+            [source setObject:[NSNumber numberWithBool:([[source objectForKey:@"default"] intValue] == 1)] forKey:@"enabled"];
         
     }
     
