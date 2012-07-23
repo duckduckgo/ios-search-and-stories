@@ -14,6 +14,7 @@
 
 +(void)setObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName;
 +(id)objectForKey:(NSString *)key inCache:(NSString *)cacheName;
++(NSDictionary *)cacheNamed:(NSString *)cacheName;
 +(void)saveCaches;
 
 @end

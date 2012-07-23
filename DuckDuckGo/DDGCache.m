@@ -14,13 +14,9 @@ static NSMutableDictionary *globalCache;
 
 +(void)setObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName {
     @synchronized(globalCache) {
-        [self loadCache];
+        [self loadCache:cacheName];
         
         NSMutableDictionary *cache = [globalCache objectForKey:cacheName];
-        if(!cache) {
-            cache = [[NSMutableDictionary alloc] init];
-            [globalCache setObject:cache forKey:cacheName];
-        }
         
         if(!object)
             [cache removeObjectForKey:key];
@@ -31,25 +27,34 @@ static NSMutableDictionary *globalCache;
 
 +(id)objectForKey:(NSString *)key inCache:(NSString *)cacheName {
     @synchronized(globalCache) {
-        [self loadCache];
+        [self loadCache:cacheName];
         
         return [[globalCache objectForKey:cacheName] objectForKey:key];
     }
 }
 
++(NSDictionary *)cacheNamed:(NSString *)cacheName {
+    @synchronized(globalCache) {
+        [self loadCache:cacheName];
+        
+        return [globalCache objectForKey:cacheName];
+    }
+}
+
 #pragma mark - Global cache management
 
-+(void)loadCache {
-    if(globalCache)
-        return; // already loaded
-    
-    NSData *data = [[NSData alloc] initWithContentsOfFile:self.cachePath];
-    if(data) {
-        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
-        globalCache = [[unarchiver decodeObjectForKey:@"key"] mutableCopy];
-        [unarchiver finishDecoding];
-    } else {
-        globalCache = [[NSMutableDictionary alloc] init];
++(void)loadCache:(NSString *)cacheName {
+    if(!globalCache) {
+        NSData *data = [[NSData alloc] initWithContentsOfFile:self.cachePath];
+        if(data) {
+            NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+            globalCache = [[unarchiver decodeObjectForKey:@"key"] mutableCopy];
+            [unarchiver finishDecoding];
+        } else {
+            globalCache = [[NSMutableDictionary alloc] init];
+        }
+    } else if(![globalCache objectForKey:cacheName]) {
+        [globalCache setObject:[[NSMutableDictionary alloc] init] forKey:cacheName];
     }
 }
 

@@ -48,14 +48,23 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 1+[[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(section==0)
         return 0;
-    else // section==1
-        return [[DDGStoriesProvider sharedProvider] sources].count;
+    else {
+        NSString *category = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
+        return [[[[DDGStoriesProvider sharedProvider] sources] objectForKey:category] count];
+    }
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if(section==0)
+        return @"";
+    else
+        return [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -69,14 +78,18 @@
         cell.indentationWidth = 10;
     }
     
-    NSDictionary *source = [[[DDGStoriesProvider sharedProvider] sources] objectAtIndex:indexPath.row];
+    NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
+    NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
+    NSDictionary *source = [category objectAtIndex:indexPath.row];
     
     cell.textLabel.text = [source objectForKey:@"title"];
     cell.detailTextLabel.text = [source objectForKey:@"description"];
     cell.imageView.image = [UIImage imageWithData:[DDGCache objectForKey:[source objectForKey:@"image"] inCache:@"sourceImages"]];
     
-    if([[source objectForKey:@"enabled"] boolValue])
+    if([[DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"] boolValue])
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    else
+        cell.accessoryType = UITableViewCellAccessoryNone;
     
     return cell;
 }
@@ -85,7 +98,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *source = [[[DDGStoriesProvider sharedProvider] sources] objectAtIndex:indexPath.row];
+    NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
+    NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
+    NSDictionary *source = [category objectAtIndex:indexPath.row];
 
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if(cell.accessoryType == UITableViewCellAccessoryCheckmark) {

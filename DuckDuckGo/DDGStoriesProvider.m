@@ -33,16 +33,21 @@ static DDGStoriesProvider *sharedProvider;
     NSArray *newSources = [NSJSONSerialization JSONObjectWithData:response 
                                                           options:NSJSONReadingMutableContainers 
                                                             error:nil];
+    NSMutableDictionary *newSourcesDict = [[NSMutableDictionary alloc] init];
+    NSMutableArray *categories = [[NSMutableArray alloc] init];
+    
     for(NSMutableDictionary *source in newSources) {
 
-        // if not found, oldSource will be nil
-        int oldSourceID = [self indexOfSourceWithID:[source objectForKey:@"id"]];
+        NSMutableArray *category = [newSourcesDict objectForKey:[source objectForKey:@"category"]];
+        if(!category) {
+            category = [[NSMutableArray alloc] init];
+            [newSourcesDict setObject:category forKey:[source objectForKey:@"category"]];
+            [categories addObject:[source objectForKey:@"category"]];
+        }
+        [category addObject:source];
         
-        if(oldSourceID != NSNotFound)
-            [source setObject:[[self.sources objectAtIndex:oldSourceID] objectForKey:@"enabled"] forKey:@"enabled"];
-        else
-            [source setObject:[NSNumber numberWithBool:([[source objectForKey:@"default"] intValue] == 1)] forKey:@"enabled"];
-        
+        if(![DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"])
+            [self setSourceWithID:[source objectForKey:@"id"] enabled:([[source objectForKey:@"default"] intValue] == 1)];
     }
     
     // TODO: uncomment this once image URLs are back in json feed
@@ -51,62 +56,27 @@ static DDGStoriesProvider *sharedProvider;
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
         [DDGCache setObject:data forKey:[source objectForKey:@"image"] inCache:@"sourceImages"];
     }];*/
-    
-    newSources = [self sortSourcesArray:newSources];
-    
-    [DDGCache setObject:newSources forKey:@"sources" inCache:@"misc"];
+        
+    [DDGCache setObject:newSourcesDict forKey:@"sources" inCache:@"misc"];
+    [DDGCache setObject:categories forKey:@"sourceCategories" inCache:@"misc"];
 }
 
--(NSArray *)sortSourcesArray:(NSArray *)sources {
-    return [sources sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-        int a = [[obj1 objectForKey:@"id"] intValue];
-        int b = [[obj2 objectForKey:@"id"] intValue];
-        if(a<b)
-            return NSOrderedAscending;
-        else if(a>b)
-            return NSOrderedDescending;
-        else
-            return NSOrderedSame;
-    }];
-}
-
--(NSArray *)sources {
+-(NSDictionary *)sources {
     return [DDGCache objectForKey:@"sources" inCache:@"misc"];
 }
 
 -(NSArray *)enabledSourceIDs {
-    NSArray *sources = self.sources;
+    NSDictionary *sources = [DDGCache cacheNamed:@"enabledSources"];
     NSMutableArray *enabledSources = [[NSMutableArray alloc] initWithCapacity:sources.count];
-    for(NSDictionary *source in sources) {
-        if([[source objectForKey:@"enabled"] boolValue])
-            [enabledSources addObject:[source objectForKey:@"id"]];
+    for(NSString *sourceID in sources) {
+        if([[sources objectForKey:sourceID] boolValue])
+            [enabledSources addObject:sourceID];
     }
     return enabledSources;
 }
 
--(int)indexOfSourceWithID:(NSString *)sourceID {
-    NSArray *oldSources = [DDGCache objectForKey:@"sources" inCache:@"misc"];
-
-    __block int result = NSNotFound;
-    [oldSources enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        if([[obj objectForKey:@"id"] isEqualToString:sourceID]) {
-            result = idx;
-        }
-    }];
-
-    return result;
-}
-
 -(void)setSourceWithID:(NSString *)sourceID enabled:(BOOL)enabled {
-    NSMutableArray *sources = [self.sources mutableCopy];
-
-    int sourceIdx = [self indexOfSourceWithID:sourceID];
-    NSMutableDictionary *source = [[sources objectAtIndex:sourceIdx] mutableCopy];
-    [source setObject:[NSNumber numberWithBool:enabled] forKey:@"enabled"];
-    
-    [sources replaceObjectAtIndex:sourceIdx withObject:source];
-    
-    [DDGCache setObject:sources forKey:@"sources" inCache:@"misc"];
+    [DDGCache setObject:[NSNumber numberWithBool:enabled] forKey:sourceID inCache:@"enabledSources"];
 }
 
 #pragma mark - Downloading stories
