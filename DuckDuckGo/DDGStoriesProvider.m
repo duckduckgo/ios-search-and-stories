@@ -44,11 +44,11 @@ static DDGStoriesProvider *sharedProvider;
             [source setObject:[NSNumber numberWithBool:YES] forKey:@"enabled"];
         
     }
-    [newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+    /*[newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
         NSDictionary *source = (NSDictionary *)obj;
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
         [DDGCache setObject:data forKey:[source objectForKey:@"image"] inCache:@"sourceImages"];
-    }];
+    }];*/
     
     newSources = [self sortSourcesArray:newSources];
     
