@@ -353,14 +353,10 @@
 }
 
 -(void)updateProgressBar {
-//    if(webViewLoadEvents < 4)
-//        [searchController setProgress:(0.5/3.0)*webViewLoadEvents];
-//    else
-//        [searchController setProgress:1.0-(1.0/(webViewLoadEvents-1))];
     if(webViewLoadEvents == 1)
-        [searchController setProgress:0.5];
+        [searchController setProgress:0.15];
     else if(webViewLoadEvents == 2)
-        [searchController setProgress:0.70];
+        [searchController setProgress:0.7];
 }
 
 @end

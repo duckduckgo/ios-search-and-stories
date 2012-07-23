@@ -172,7 +172,7 @@
 
 -(void)webViewFinishedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
-    [searchField setProgress:0];
+    [searchField finish];
 }
 
 -(void)setProgress:(CGFloat)progress {

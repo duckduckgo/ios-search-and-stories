@@ -50,6 +50,17 @@
     progressView.hidden = NO;
 }
 
+-(void)finish {
+    [self setProgress:1.0 animationDuration:0.5];
+    // the fade-out needs to happen before the width animation happens, otherwise the width animation will try to continue itself and render the setProgress:0 below useless
+    [UIView animateWithDuration:0.45 animations:^{
+        progressView.alpha = 0;
+    } completion:^(BOOL finished) {
+        [self setProgress:0];
+        progressView.alpha = 1;
+    }];
+}
+
 #pragma mark - Progress bar
 
 -(void)setProgress:(CGFloat)newProgress {
@@ -71,7 +82,7 @@
                          completion:^(BOOL finished) {
                              if(finished)
                                  [self setProgress:newProgress+0.1 
-                                 animationDuration:duration*3];
+                                 animationDuration:duration*4];
                          }];
     } else {
         [progressView.layer removeAllAnimations];

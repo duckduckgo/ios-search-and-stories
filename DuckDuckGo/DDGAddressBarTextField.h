@@ -14,5 +14,6 @@
 }
 
 -(void)setProgress:(CGFloat)newProgress;
+-(void)finish;
 
 @end
