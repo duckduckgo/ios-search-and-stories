@@ -13,6 +13,7 @@
 +(DDGStoriesProvider *)sharedProvider;
 
 -(NSDictionary *)sources;
+-(NSArray *)enabledSourceIDs;
 -(void)setSourceWithID:(NSString *)sourceID enabled:(BOOL)enabled;
 
 -(NSArray *)stories;

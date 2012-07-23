@@ -101,11 +101,20 @@
     NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
     NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
     NSDictionary *source = [category objectAtIndex:indexPath.row];
-
+    
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     if(cell.accessoryType == UITableViewCellAccessoryCheckmark) {
-        cell.accessoryType = UITableViewCellAccessoryNone;
-        [[DDGStoriesProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:NO];
+        if([[DDGStoriesProvider sharedProvider] enabledSourceIDs].count == 1) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Whoa, there!"
+                                                            message:@"You must select at least one news source."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"OK"
+                                                  otherButtonTitles:nil];
+            [alert show];
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryNone;
+            [[DDGStoriesProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:NO];
+        }
     } else {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
         [[DDGStoriesProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:YES];
