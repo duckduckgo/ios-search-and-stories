@@ -394,7 +394,14 @@
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
-    [searchField setText:[searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
+    if(currentWordRange.location == NSNotFound) {
+        if(searchField.text.length == 0)
+            searchField.text = sender.titleLabel.text;
+        else
+            [searchField setText:[searchField.text stringByAppendingFormat:@" %@",sender.titleLabel.text]];
+    } else {
+        [searchField setText:[searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
+    }
 }
 
 -(void)loadSuggestionsForBang:(NSString *)bang {
@@ -536,6 +543,8 @@
 }
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
+    currentWordRange = NSMakeRange(NSNotFound, 0);
+    
     // save search text in case user cancels input without navigating somewhere
     if(!oldSearchText)
         oldSearchText = textField.text;
