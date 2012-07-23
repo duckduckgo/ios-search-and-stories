@@ -51,11 +51,11 @@ static DDGStoriesProvider *sharedProvider;
     }
     
     // TODO: uncomment this once image URLs are back in json feed
-    /*[newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+    [newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
         NSDictionary *source = (NSDictionary *)obj;
         NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
         [DDGCache setObject:data forKey:[source objectForKey:@"image"] inCache:@"sourceImages"];
-    }];*/
+    }];
         
     [DDGCache setObject:newSourcesDict forKey:@"sources" inCache:@"misc"];
     [DDGCache setObject:categories forKey:@"sourceCategories" inCache:@"misc"];
