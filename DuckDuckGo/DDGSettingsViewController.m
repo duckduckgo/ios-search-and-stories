@@ -45,7 +45,7 @@
                  forKey:@"history" 
                 inCache:@"settings"];
     
-    [DDGCache setObject:[formData objectForKey:@"Enhanced audio effects"] 
+    [DDGCache setObject:[formData objectForKey:@"Quack on refresh"] 
                  forKey:@"quack" 
                 inCache:@"settings"];
 }
