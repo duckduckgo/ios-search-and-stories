@@ -16,6 +16,15 @@ static DDGStoriesProvider *sharedProvider;
 
 #pragma mark - Lifecycle
 
+-(id)init {
+    self = [super init];
+    if(self) {
+        if(![DDGCache objectForKey:@"customSources" inCache:@"misc"])
+            [DDGCache setObject:[[NSArray alloc] init] forKey:@"customSources" inCache:@"misc"];
+    }
+    return self;
+}
+
 +(DDGStoriesProvider *)sharedProvider {
     @synchronized(self) {
         if(!sharedProvider)
@@ -81,6 +90,24 @@ static DDGStoriesProvider *sharedProvider;
 
 -(void)setSourceWithID:(NSString *)sourceID enabled:(BOOL)enabled {
     [DDGCache setObject:[NSNumber numberWithBool:enabled] forKey:sourceID inCache:@"enabledSources"];
+}
+
+#pragma mark - Custom sources
+
+-(NSArray *)customSources {
+    return [DDGCache objectForKey:@"customSources" inCache:@"misc"];
+}
+
+-(void)addCustomSource:(NSString *)customSource {
+    [DDGCache setObject:[self.customSources arrayByAddingObject:customSource]
+                 forKey:@"customSources"
+                inCache:@"misc"];
+}
+
+-(void)deleteCustomSourceAtIndex:(NSUInteger)index {
+    NSMutableArray *customSources = [self.customSources mutableCopy];
+    [customSources removeObjectAtIndex:index];
+    [DDGCache setObject:customSources.copy forKey:@"customSources" inCache:@"misc"];
 }
 
 #pragma mark - Downloading stories

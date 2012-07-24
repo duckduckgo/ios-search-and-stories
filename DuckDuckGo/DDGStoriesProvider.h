@@ -16,6 +16,10 @@
 -(NSArray *)enabledSourceIDs;
 -(void)setSourceWithID:(NSString *)sourceID enabled:(BOOL)enabled;
 
+-(NSArray *)customSources;
+-(void)addCustomSource:(NSString *)customSource;
+-(void)deleteCustomSourceAtIndex:(NSUInteger)index;
+
 -(NSArray *)stories;
 -(void)downloadStoriesInTableView:(UITableView *)tableView success:(void (^)())success;
 
