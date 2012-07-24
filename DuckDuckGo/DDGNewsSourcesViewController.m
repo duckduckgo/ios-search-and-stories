@@ -80,9 +80,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(!cell) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+        
+        // keep using the default imageview for layout/spacing purposes, but use our own one for displaying the image
         cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        cell.indentationLevel = 1;
-        cell.indentationWidth = 10;
+        cell.imageView.alpha = 0;
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 34, 34)];
+        imageView.contentMode = UIViewContentModeScaleAspectFill;
+        imageView.tag = 100;
+        [cell addSubview:imageView];
     }
     
     NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
@@ -91,9 +96,10 @@
     
     cell.textLabel.text = [source objectForKey:@"title"];
     cell.detailTextLabel.text = [source objectForKey:@"description"];
-    cell.imageView.image = [UIImage imageWithData:[DDGCache objectForKey:[source objectForKey:@"image"] inCache:@"sourceImages"]];
-    cell.imageView.frame = CGRectMake(10, 10, 30, 30);
     
+    UIImage *image = [UIImage imageWithData:[DDGCache objectForKey:[source objectForKey:@"image"] inCache:@"sourceImages"]];
+    cell.imageView.image = image;
+    [(UIImageView *)[cell viewWithTag:100] setImage:image];
     
     if([[DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"] boolValue])
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
