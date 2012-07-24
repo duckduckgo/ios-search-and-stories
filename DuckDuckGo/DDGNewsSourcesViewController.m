@@ -92,6 +92,8 @@
     cell.textLabel.text = [source objectForKey:@"title"];
     cell.detailTextLabel.text = [source objectForKey:@"description"];
     cell.imageView.image = [UIImage imageWithData:[DDGCache objectForKey:[source objectForKey:@"image"] inCache:@"sourceImages"]];
+    cell.imageView.frame = CGRectMake(10, 10, 30, 30);
+    
     
     if([[DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"] boolValue])
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
