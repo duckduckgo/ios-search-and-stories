@@ -10,6 +10,7 @@
 #import "DDGStoriesProvider.h"
 #import "DDGCache.h"
 #import "UIImageView+AFNetworking.h"
+#import "DDGAddCustomSourceViewController.h"
 
 @implementation DDGNewsSourcesViewController
 
@@ -60,7 +61,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(section==0)
-        return 0;
+        return 1;
     else {
         NSString *category = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
         return [[[[DDGStoriesProvider sharedProvider] sources] objectForKey:category] count];
@@ -69,70 +70,87 @@
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if(section==0)
-        return @"";
+        return @"Custom sources";
     else
         return [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+    static NSString *SourceCellIdentifier = @"SourceCell";
+    static NSString *ButtonCellIdentifier = @"ButtonCell";
+    
+    if(indexPath.section == 0) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
+        if(!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
+            cell.textLabel.text = @"Add custom source";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        return cell;
+    } else {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
+        if(!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
+            
+            // keep using the default imageview for layout/spacing purposes, but use our own one for displaying the image
+            cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
+            cell.imageView.alpha = 0;
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 34, 34)];
+            imageView.contentMode = UIViewContentModeScaleAspectFill;
+            imageView.tag = 100;
+            [cell addSubview:imageView];
+        }
         
-        // keep using the default imageview for layout/spacing purposes, but use our own one for displaying the image
-        cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        cell.imageView.alpha = 0;
-        UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 34, 34)];
-        imageView.contentMode = UIViewContentModeScaleAspectFill;
-        imageView.tag = 100;
-        [cell addSubview:imageView];
+        NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
+        NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
+        NSDictionary *source = [category objectAtIndex:indexPath.row];
+        
+        cell.textLabel.text = [source objectForKey:@"title"];
+        cell.detailTextLabel.text = [source objectForKey:@"description"];
+        
+        UIImage *image = [UIImage imageWithData:[DDGCache objectForKey:[source objectForKey:@"image"] inCache:@"sourceImages"]];
+        cell.imageView.image = image;
+        [(UIImageView *)[cell viewWithTag:100] setImage:image];
+        
+        if([[DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"] boolValue])
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+        else
+            cell.accessoryType = UITableViewCellAccessoryNone;
+        
+        return cell;
     }
-    
-    NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
-    NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
-    NSDictionary *source = [category objectAtIndex:indexPath.row];
-    
-    cell.textLabel.text = [source objectForKey:@"title"];
-    cell.detailTextLabel.text = [source objectForKey:@"description"];
-    
-    UIImage *image = [UIImage imageWithData:[DDGCache objectForKey:[source objectForKey:@"image"] inCache:@"sourceImages"]];
-    cell.imageView.image = image;
-    [(UIImageView *)[cell viewWithTag:100] setImage:image];
-    
-    if([[DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"] boolValue])
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    else
-        cell.accessoryType = UITableViewCellAccessoryNone;
-    
-    return cell;
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
-    NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
-    NSDictionary *source = [category objectAtIndex:indexPath.row];
-    
-    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    if(cell.accessoryType == UITableViewCellAccessoryCheckmark) {
-        if([[DDGStoriesProvider sharedProvider] enabledSourceIDs].count == 1) {
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Whoa, there!"
-                                                            message:@"You must select at least one news source."
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"OK"
-                                                  otherButtonTitles:nil];
-            [alert show];
-        } else {
-            cell.accessoryType = UITableViewCellAccessoryNone;
-            [[DDGStoriesProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:NO];
-        }
+    if(indexPath.section == 0) {
+        DDGAddCustomSourceViewController *vc = [[DDGAddCustomSourceViewController alloc] initWithDefaults];
+        [self.navigationController pushViewController:vc animated:YES];
     } else {
-        cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        [[DDGStoriesProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:YES];
+        NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
+        NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
+        NSDictionary *source = [category objectAtIndex:indexPath.row];
+        
+        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        if(cell.accessoryType == UITableViewCellAccessoryCheckmark) {
+            if([[DDGStoriesProvider sharedProvider] enabledSourceIDs].count == 1) {
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Whoa, there!"
+                                                                message:@"You must select at least one news source."
+                                                               delegate:nil
+                                                      cancelButtonTitle:@"OK"
+                                                      otherButtonTitles:nil];
+                [alert show];
+            } else {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+                [[DDGStoriesProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:NO];
+            }
+        } else {
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            [[DDGStoriesProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:YES];
+        }
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
