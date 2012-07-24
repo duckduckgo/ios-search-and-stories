@@ -30,6 +30,9 @@ static DDGStoriesProvider *sharedProvider;
 -(void)downloadSources {
     NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1"];
     NSData *response = [NSData dataWithContentsOfURL:url];
+    if(!response)
+        return; // could not fetch data
+    
     NSArray *newSources = [NSJSONSerialization JSONObjectWithData:response 
                                                           options:NSJSONReadingMutableContainers 
                                                             error:nil];
@@ -97,6 +100,10 @@ static DDGStoriesProvider *sharedProvider;
         
         NSURL *url = [NSURL URLWithString:urlStr];
         NSData *response = [NSData dataWithContentsOfURL:url];
+        if(!response) {
+            success();
+            return; // could not download stories
+        }
         NSArray *newStories = [NSJSONSerialization JSONObjectWithData:response
                                                               options:0
                                                                 error:nil];
