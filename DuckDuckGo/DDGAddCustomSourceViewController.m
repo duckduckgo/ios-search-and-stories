@@ -7,6 +7,7 @@
 //
 
 #import "DDGAddCustomSourceViewController.h"
+#import "DDGStoriesProvider.h"
 
 @implementation DDGAddCustomSourceViewController
 
@@ -16,9 +17,15 @@
     [self addTextField:@"News keyword"];
 }
 
+-(NSString *)validateData:(NSDictionary *)formData {
+    if([[[formData objectForKey:@"News keyword"] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] isEqualToString:@""])
+        return @"You must enter a news keyword.";
+    else
+        return nil;
+}
+
 -(void)saveData:(NSDictionary *)formData {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:@"not yet implemented" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-    [alert show];
+    [[DDGStoriesProvider sharedProvider] addCustomSource:[formData objectForKey:@"News keyword"]];
 }
 
 @end

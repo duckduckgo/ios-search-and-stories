@@ -28,6 +28,11 @@
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return IPAD || (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
@@ -61,7 +66,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(section==0)
-        return 1;
+        return 1+[DDGStoriesProvider sharedProvider].customSources.count;
     else {
         NSString *category = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
         return [[[[DDGStoriesProvider sharedProvider] sources] objectForKey:category] count];
@@ -79,15 +84,25 @@
     
     static NSString *SourceCellIdentifier = @"SourceCell";
     static NSString *ButtonCellIdentifier = @"ButtonCell";
+    static NSString *CustomSourceCellIdentifier = @"CustomSourceCell";
     
     if(indexPath.section == 0) {
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
-        if(!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
-            cell.textLabel.text = @"Add custom source";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        if(indexPath.row == 0) {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
+            if(!cell) {
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
+                cell.textLabel.text = @"Add custom source";
+                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            }
+            return cell;
+        } else {
+            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CustomSourceCellIdentifier];
+            if(!cell)
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CustomSourceCellIdentifier];
+            
+            cell.textLabel.text = [[DDGStoriesProvider sharedProvider].customSources objectAtIndex:indexPath.row-1];
+            return cell;
         }
-        return cell;
     } else {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
         if(!cell) {
