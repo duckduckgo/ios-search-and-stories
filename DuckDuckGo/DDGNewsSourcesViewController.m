@@ -20,12 +20,14 @@
 {
     [super viewDidLoad];
     self.title = @"News Sources";
+    self.tableView.allowsSelectionDuringEditing = YES;
     if(self.navigationController.viewControllers.count == 1) {
         // we're the only view controller, so there won't be a back button to get out, so we need a different exit button
-        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                               target:self
-                                                                                               action:@selector(doneButtonPressed)];
+        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                              target:self
+                                                                                              action:@selector(dismissButtonPressed)];
     }
+    self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -38,7 +40,7 @@
     return IPAD || (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
--(void)doneButtonPressed {
+-(void)dismissButtonPressed {
     [self dismissModalViewControllerAnimated:YES];
 }
 
@@ -78,6 +80,21 @@
         return @"Custom sources";
     else
         return [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
+}
+
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return (indexPath.section == 0);
+}
+
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(indexPath.section == 0) {
+        if(indexPath.row == 0)
+            return UITableViewCellEditingStyleInsert;
+        else
+            return UITableViewCellEditingStyleDelete;
+    } else {
+        return UITableViewCellEditingStyleNone;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -169,6 +186,16 @@
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if(editingStyle == UITableViewCellEditingStyleDelete) {
+        [[DDGStoriesProvider sharedProvider] deleteCustomSourceAtIndex:indexPath.row-1];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+    } else if(editingStyle == UITableViewCellEditingStyleInsert) {
+        DDGAddCustomSourceViewController *vc = [[DDGAddCustomSourceViewController alloc] initWithDefaults];
+        [self.navigationController pushViewController:vc animated:YES];
+    }
 }
 
 @end
