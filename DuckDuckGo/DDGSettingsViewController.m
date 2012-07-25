@@ -31,7 +31,7 @@
     
     [self addSectionWithTitle:@"General"];
     [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
-    [self addSwitch:@"Enhanced audio effects" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
+    [self addSwitch:@"Quack on refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
 
     [self addSectionWithTitle:@"News"];
     [self addButton:@"Configure news sources" action:^{
@@ -45,7 +45,7 @@
                  forKey:@"history" 
                 inCache:@"settings"];
     
-    [DDGCache setObject:[formData objectForKey:@"Enhanced audio effects"] 
+    [DDGCache setObject:[formData objectForKey:@"Quack on refresh"] 
                  forKey:@"quack" 
                 inCache:@"settings"];
 }
