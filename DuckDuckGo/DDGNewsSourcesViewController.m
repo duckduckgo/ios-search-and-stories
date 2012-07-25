@@ -35,8 +35,7 @@
     [self.tableView reloadData];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return IPAD || (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 

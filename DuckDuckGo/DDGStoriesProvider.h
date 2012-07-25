@@ -12,6 +12,7 @@
 
 +(DDGStoriesProvider *)sharedProvider;
 
+-(void)downloadSourcesFinished:(void (^)())finished;
 -(NSDictionary *)sources;
 -(NSArray *)enabledSourceIDs;
 -(void)setSourceWithID:(NSString *)sourceID enabled:(BOOL)enabled;
@@ -21,6 +22,6 @@
 -(void)deleteCustomSourceAtIndex:(NSUInteger)index;
 
 -(NSArray *)stories;
--(void)downloadStoriesInTableView:(UITableView *)tableView success:(void (^)())success;
+-(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished;
 
 @end

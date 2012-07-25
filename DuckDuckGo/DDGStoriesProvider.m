@@ -8,7 +8,7 @@
 
 #import "DDGStoriesProvider.h"
 #import "DDGCache.h"
-
+#import <CommonCrypto/CommonDigest.h>
 #import "NSArray+ConcurrentIteration.h"
 
 @implementation DDGStoriesProvider
@@ -36,42 +36,48 @@ static DDGStoriesProvider *sharedProvider;
 
 #pragma mark - Downloading sources
 
--(void)downloadSources {
-    NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1"];
-    NSData *response = [NSData dataWithContentsOfURL:url];
-    if(!response)
-        return; // could not fetch data
-    
-    NSArray *newSources = [NSJSONSerialization JSONObjectWithData:response 
-                                                          options:NSJSONReadingMutableContainers 
-                                                            error:nil];
-    NSMutableDictionary *newSourcesDict = [[NSMutableDictionary alloc] init];
-    NSMutableArray *categories = [[NSMutableArray alloc] init];
-    
-    for(NSMutableDictionary *source in newSources) {
+-(void)downloadSourcesFinished:(void (^)())finished {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1"];
+        NSData *response = [NSData dataWithContentsOfURL:url];
+        if(!response)
+            return; // could not fetch data
+        
+        NSArray *newSources = [NSJSONSerialization JSONObjectWithData:response 
+                                                              options:NSJSONReadingMutableContainers 
+                                                                error:nil];
+        NSMutableDictionary *newSourcesDict = [[NSMutableDictionary alloc] init];
+        NSMutableArray *categories = [[NSMutableArray alloc] init];
+        
+        for(NSMutableDictionary *source in newSources) {
 
-        NSMutableArray *category = [newSourcesDict objectForKey:[source objectForKey:@"category"]];
-        if(!category) {
-            category = [[NSMutableArray alloc] init];
-            [newSourcesDict setObject:category forKey:[source objectForKey:@"category"]];
-            [categories addObject:[source objectForKey:@"category"]];
+            NSMutableArray *category = [newSourcesDict objectForKey:[source objectForKey:@"category"]];
+            if(!category) {
+                category = [[NSMutableArray alloc] init];
+                [newSourcesDict setObject:category forKey:[source objectForKey:@"category"]];
+                [categories addObject:[source objectForKey:@"category"]];
+            }
+            [category addObject:source];
+            
+            if(![DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"])
+                [self setSourceWithID:[source objectForKey:@"id"] enabled:([[source objectForKey:@"default"] intValue] == 1)];
         }
-        [category addObject:source];
         
-        if(![DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"])
-            [self setSourceWithID:[source objectForKey:@"id"] enabled:([[source objectForKey:@"default"] intValue] == 1)];
-    }
-    
-    [newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
-        NSDictionary *source = (NSDictionary *)obj;
-        NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
-        [DDGCache setObject:data forKey:[source objectForKey:@"image"] inCache:@"sourceImages"];
-    }];
+        [newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+            NSDictionary *source = (NSDictionary *)obj;
+            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
+            [DDGCache setObject:data forKey:[source objectForKey:@"image"] inCache:@"sourceImages"];
+        }];
+            
+        NSArray *sortedCategories = [categories sortedArrayUsingSelector:@selector(compare:)];
         
-    NSArray *sortedCategories = [categories sortedArrayUsingSelector:@selector(compare:)];
-    
-    [DDGCache setObject:newSourcesDict forKey:@"sources" inCache:@"misc"];
-    [DDGCache setObject:sortedCategories forKey:@"sourceCategories" inCache:@"misc"];
+        [DDGCache setObject:newSourcesDict forKey:@"sources" inCache:@"misc"];
+        [DDGCache setObject:sortedCategories forKey:@"sourceCategories" inCache:@"misc"];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            finished();
+        });
+    });
 }
 
 -(NSDictionary *)sources {
@@ -92,35 +98,15 @@ static DDGStoriesProvider *sharedProvider;
     [DDGCache setObject:[NSNumber numberWithBool:enabled] forKey:sourceID inCache:@"enabledSources"];
 }
 
-#pragma mark - Custom sources
-
--(NSArray *)customSources {
-    return [DDGCache objectForKey:@"customSources" inCache:@"misc"];
-}
-
--(void)addCustomSource:(NSString *)customSource {
-    [DDGCache setObject:[self.customSources arrayByAddingObject:customSource]
-                 forKey:@"customSources"
-                inCache:@"misc"];
-}
-
--(void)deleteCustomSourceAtIndex:(NSUInteger)index {
-    NSMutableArray *customSources = [self.customSources mutableCopy];
-    [customSources removeObjectAtIndex:index];
-    [DDGCache setObject:customSources.copy forKey:@"customSources" inCache:@"misc"];
-}
-
 #pragma mark - Downloading stories
 
 -(NSArray *)stories {
     return [DDGCache objectForKey:@"stories" inCache:@"misc"];
 }
 
--(void)downloadStoriesInTableView:(UITableView *)tableView success:(void (^)())success {
+-(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished {
     // do everything in the background
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
-        
-        [self downloadSources];
         
         NSString *urlStr = @"http://caine.duckduckgo.com/watrcoolr.js?o=json&s=";
         urlStr = [urlStr stringByAppendingString:[[self enabledSourceIDs] componentsJoinedByString:@","]];
@@ -128,15 +114,25 @@ static DDGStoriesProvider *sharedProvider;
         NSURL *url = [NSURL URLWithString:urlStr];
         NSData *response = [NSData dataWithContentsOfURL:url];
         if(!response) {
-            success();
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [self downloadCustomStoriesInTableView:tableView success:finished];
+            });
             return; // could not download stories
         }
-        NSArray *newStories = [NSJSONSerialization JSONObjectWithData:response
-                                                              options:0
-                                                                error:nil];
+        NSMutableArray *newStories = [NSJSONSerialization JSONObjectWithData:response
+                                                                     options:NSJSONReadingMutableContainers
+                                                                       error:nil];
         
         NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
-        NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
+        NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
+        
+        // loop through removedStories and re-add the ones from custom sources (those get updated later, separately)
+        for(int i=removedStories.count-1;i>=0;i--) {
+            if([[[self.stories objectAtIndex:i] objectForKey:@"id"] hasPrefix:@"CustomSource"]) {
+                [removedStories removeObjectAtIndex:i];
+                [newStories insertObject:[self.stories objectAtIndex:i] atIndex:i];
+            }
+        }
         
         dispatch_async(dispatch_get_main_queue(), ^{
             // update the stories array
@@ -152,9 +148,9 @@ static DDGStoriesProvider *sharedProvider;
             [tableView deleteRowsAtIndexPaths:removedStories
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView endUpdates];
-                        
-            // execute the given callback
-            success();
+            
+            // start downloading custom stories while the images get filled in
+            [self downloadCustomStoriesInTableView:tableView success:finished];
         });
         
         // download story images (this method doesn't return until all story images are downloaded)
@@ -190,15 +186,10 @@ static DDGStoriesProvider *sharedProvider;
             }
             
         }];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            // execute the given callback
-            success();
-        });
-            
     });
 }
 
+// this method ignores stories from custom sources
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     
@@ -243,4 +234,96 @@ static DDGStoriesProvider *sharedProvider;
     }
 }
 
+#pragma mark - Custom sources
+
+-(NSArray *)customSources {
+    return [DDGCache objectForKey:@"customSources" inCache:@"misc"];
+}
+
+-(void)addCustomSource:(NSString *)customSource {
+    [DDGCache setObject:[self.customSources arrayByAddingObject:customSource]
+                 forKey:@"customSources"
+                inCache:@"misc"];
+}
+
+-(void)deleteCustomSourceAtIndex:(NSUInteger)index {
+    NSMutableArray *customSources = [self.customSources mutableCopy];
+    [customSources removeObjectAtIndex:index];
+    [DDGCache setObject:customSources.copy forKey:@"customSources" inCache:@"misc"];
+}
+
+-(void)downloadCustomStoriesInTableView:(UITableView *)tableView  success:(void (^)())success {
+    // do everything in the background
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        NSArray *customSources = self.customSources;
+        for(NSString *newsKeyword in customSources) {
+            NSString *urlString = [@"http://caine.duckduckgo.com/news.js?o=json&t=m&q=" stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            
+            NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
+            if(!response)
+                continue; // can't download data for this source
+            
+            NSArray *news = [NSJSONSerialization JSONObjectWithData:response
+                                                            options:0
+                                                              error:nil];
+            NSMutableArray *stories = [self.stories mutableCopy];
+            for(NSDictionary *newsItem in news) {                
+                NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
+                [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
+                [story setObject:[newsItem objectForKey:@"url"] forKey:@"url"];
+                if([newsItem objectForKey:@"image"])
+                    [story setObject:[newsItem objectForKey:@"image"] forKey:@"image"];
+                NSString *date = [[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]] description];
+                [story setObject:date forKey:@"timestamp"];
+                NSString *storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
+                [story setObject:storyID forKey:@"id"];
+                [stories addObject:story.copy];
+            }
+            [stories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+                NSComparisonResult result = [[obj1 objectForKey:@"timestamp"] compare:[obj2 objectForKey:@"timestamp"]
+                                                                              options:0
+                                                                                range:NSMakeRange(0, 19)];
+
+                return result;
+            }];
+            
+            NSArray *addedStories = [self indexPathsofStoriesInArray:stories andNotArray:self.stories];
+            NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:stories];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [DDGCache setObject:[stories copy] forKey:@"stories" inCache:@"misc"];
+                
+                [tableView beginUpdates];
+                [tableView insertRowsAtIndexPaths:addedStories
+                                 withRowAnimation:UITableViewRowAnimationAutomatic];
+                [tableView deleteRowsAtIndexPaths:removedStories
+                                 withRowAnimation:UITableViewRowAnimationAutomatic];
+                [tableView endUpdates];
+                
+            });
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            success();
+        });
+    });
+}
+
+#pragma mark - Helpers
+
+-(NSString*)sha1:(NSString*)input {
+    const char *cstr = [input cStringUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [NSData dataWithBytes:cstr length:input.length];
+    
+    uint8_t digest[CC_SHA1_DIGEST_LENGTH];
+    
+    CC_SHA1(data.bytes, data.length, digest);
+    
+    NSMutableString* output = [NSMutableString stringWithCapacity:CC_SHA1_DIGEST_LENGTH * 2];
+    
+    for(int i = 0; i < CC_SHA1_DIGEST_LENGTH; i++)
+        [output appendFormat:@"%02x", digest[i]];
+    
+    return output;
+}
 @end
