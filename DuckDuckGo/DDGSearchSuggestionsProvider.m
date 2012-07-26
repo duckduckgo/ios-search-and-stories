@@ -75,6 +75,8 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
 
 #pragma mark - Official sites
 
+
+// TODO: make suggestionsCache threadsafe (esp. here)!
 -(void)addOfficialSitesToSuggestionsCacheForSearchText:(NSString *)searchText success:(void (^)(void))success {
     NSMutableArray *suggestions = [[suggestionsCache objectForKey:searchText] mutableCopy];
     
@@ -87,7 +89,7 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
             [newItem setObject:officialSite forKey:@"officialsite"];
             [suggestions replaceObjectAtIndex:i withObject:newItem];
             [suggestionsCache setObject:suggestions forKey:searchText];
-            dispatch_sync(dispatch_get_main_queue(), ^(void) {
+            dispatch_async(dispatch_get_main_queue(), ^(void) {
                 success();
             });
         }

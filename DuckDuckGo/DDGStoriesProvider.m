@@ -107,6 +107,8 @@ static DDGStoriesProvider *sharedProvider;
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished {
     // do everything in the background
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
+
+        NSLog(@"Downloading stories...");
         
         NSString *urlStr = @"http://caine.duckduckgo.com/watrcoolr.js?o=json&s=";
         urlStr = [urlStr stringByAppendingString:[[self enabledSourceIDs] componentsJoinedByString:@","]];
@@ -114,6 +116,7 @@ static DDGStoriesProvider *sharedProvider;
         NSURL *url = [NSURL URLWithString:urlStr];
         NSData *response = [NSData dataWithContentsOfURL:url];
         if(!response) {
+            NSLog(@"failed!");
             dispatch_async(dispatch_get_main_queue(), ^{
                 finished();
             });
@@ -122,6 +125,7 @@ static DDGStoriesProvider *sharedProvider;
         NSMutableArray *newStories = [NSJSONSerialization JSONObjectWithData:response
                                                                      options:NSJSONReadingMutableContainers
                                                                        error:nil];
+        NSLog(@"Downloaded %i stories.",newStories.count);
         
         [self downloadCustomStoriesToArray:newStories];
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -151,17 +155,18 @@ static DDGStoriesProvider *sharedProvider;
         });
         
         // download story images (this method doesn't return until all story images are downloaded)
+        NSLog(@"Downloading images...");
         [newStories iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
             NSDictionary *story = (NSDictionary *)obj;
             BOOL reload = NO;
             
             if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]) {
-                
+                NSLog(@"Downloading image for %@",[story objectForKey:@"title"]);
                 // main image: download it and resize it as needed
                 NSString *imageURL = [story objectForKey:@"image"];
                 NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
                 UIImage *image = [UIImage imageWithData:imageData];
-                
+                NSLog(@"Got %@",image);
                 if(!image)
                     image = [UIImage imageNamed:@"noimage.png"];
 
@@ -184,6 +189,7 @@ static DDGStoriesProvider *sharedProvider;
             
         }];
         
+        NSLog(@"Finished downloading stories.");
         dispatch_async(dispatch_get_main_queue(), ^{
             finished();
         });
@@ -254,16 +260,21 @@ static DDGStoriesProvider *sharedProvider;
 }
 
 -(void)downloadCustomStoriesToArray:(NSMutableArray *)newStories {
+    NSLog(@"Downloading custom stories...");
+    
     [self.customSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
         NSString *newsKeyword = (NSString *)obj;
+        NSLog(@"Downloading %@",newsKeyword);
         NSString *urlString = [@"http://caine.duckduckgo.com/news.js?o=json&t=m&q=" stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         
         NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
+        if(!response)
+            NSLog(@"failed!");
         if(response) {
             NSArray *news = [NSJSONSerialization JSONObjectWithData:response
                                                             options:0
                                                               error:nil];
-
+            NSLog(@"Processing %i items.",news.count);
             for(NSDictionary *newsItem in news) {
                 NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
                 [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
