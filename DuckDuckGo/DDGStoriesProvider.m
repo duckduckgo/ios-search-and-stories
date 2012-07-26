@@ -254,32 +254,32 @@ static DDGStoriesProvider *sharedProvider;
 }
 
 -(void)downloadCustomStoriesToArray:(NSMutableArray *)newStories {
-    // do everything in the background
-    NSArray *customSources = self.customSources;
-    for(NSString *newsKeyword in customSources) {
+    [self.customSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+        NSString *newsKeyword = (NSString *)obj;
         NSString *urlString = [@"http://caine.duckduckgo.com/news.js?o=json&t=m&q=" stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         
         NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
-        if(!response)
-            continue; // can't download data for this source
-        
-        NSArray *news = [NSJSONSerialization JSONObjectWithData:response
-                                                        options:0
-                                                          error:nil];
+        if(response) {
+            NSArray *news = [NSJSONSerialization JSONObjectWithData:response
+                                                            options:0
+                                                              error:nil];
 
-        for(NSDictionary *newsItem in news) {
-            NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
-            [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
-            [story setObject:[newsItem objectForKey:@"url"] forKey:@"url"];
-            if([newsItem objectForKey:@"image"])
-                [story setObject:[newsItem objectForKey:@"image"] forKey:@"image"];
-            NSString *date = [[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]] description];
-            [story setObject:date forKey:@"timestamp"];
-            NSString *storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
-            [story setObject:storyID forKey:@"id"];
-            [newStories addObject:story.copy];
+            for(NSDictionary *newsItem in news) {
+                NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
+                [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
+                [story setObject:[newsItem objectForKey:@"url"] forKey:@"url"];
+                if([newsItem objectForKey:@"image"])
+                    [story setObject:[newsItem objectForKey:@"image"] forKey:@"image"];
+                NSString *date = [[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]] description];
+                [story setObject:date forKey:@"timestamp"];
+                NSString *storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
+                [story setObject:storyID forKey:@"id"];
+                @synchronized(newStories) {
+                    [newStories addObject:story.copy];
+                }
+            }
         }
-    }
+    }];
 }
 
 #pragma mark - Helpers
