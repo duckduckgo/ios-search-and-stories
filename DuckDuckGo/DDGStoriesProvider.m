@@ -115,7 +115,7 @@ static DDGStoriesProvider *sharedProvider;
         NSData *response = [NSData dataWithContentsOfURL:url];
         if(!response) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self downloadCustomStoriesInTableView:tableView success:finished];
+                finished();
             });
             return; // could not download stories
         }
@@ -123,17 +123,17 @@ static DDGStoriesProvider *sharedProvider;
                                                                      options:NSJSONReadingMutableContainers
                                                                        error:nil];
         
+        [self downloadCustomStoriesToArray:newStories];
+        [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [[obj1 objectForKey:@"timestamp"] compare:[obj2 objectForKey:@"timestamp"]
+                                                     options:0
+                                                       range:NSMakeRange(0, 19)];
+        }];
+        
+        
         NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
         NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
-        
-        // loop through removedStories and re-add the ones from custom sources (those get updated later, separately)
-        for(int i=removedStories.count-1;i>=0;i--) {
-            if([[[self.stories objectAtIndex:i] objectForKey:@"id"] hasPrefix:@"CustomSource"]) {
-                [removedStories removeObjectAtIndex:i];
-                [newStories insertObject:[self.stories objectAtIndex:i] atIndex:i];
-            }
-        }
-        
+                
         dispatch_async(dispatch_get_main_queue(), ^{
             // update the stories array
             [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
@@ -148,9 +148,6 @@ static DDGStoriesProvider *sharedProvider;
             [tableView deleteRowsAtIndexPaths:removedStories
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView endUpdates];
-            
-            // start downloading custom stories while the images get filled in
-            [self downloadCustomStoriesInTableView:tableView success:finished];
         });
         
         // download story images (this method doesn't return until all story images are downloaded)
@@ -186,6 +183,10 @@ static DDGStoriesProvider *sharedProvider;
             }
             
         }];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            finished();
+        });
     });
 }
 
@@ -252,61 +253,33 @@ static DDGStoriesProvider *sharedProvider;
     [DDGCache setObject:customSources.copy forKey:@"customSources" inCache:@"misc"];
 }
 
--(void)downloadCustomStoriesInTableView:(UITableView *)tableView  success:(void (^)())success {
+-(void)downloadCustomStoriesToArray:(NSMutableArray *)newStories {
     // do everything in the background
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        NSArray *customSources = self.customSources;
-        for(NSString *newsKeyword in customSources) {
-            NSString *urlString = [@"http://caine.duckduckgo.com/news.js?o=json&t=m&q=" stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-            
-            NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
-            if(!response)
-                continue; // can't download data for this source
-            
-            NSArray *news = [NSJSONSerialization JSONObjectWithData:response
-                                                            options:0
-                                                              error:nil];
-            NSMutableArray *stories = [self.stories mutableCopy];
-            for(NSDictionary *newsItem in news) {                
-                NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
-                [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
-                [story setObject:[newsItem objectForKey:@"url"] forKey:@"url"];
-                if([newsItem objectForKey:@"image"])
-                    [story setObject:[newsItem objectForKey:@"image"] forKey:@"image"];
-                NSString *date = [[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]] description];
-                [story setObject:date forKey:@"timestamp"];
-                NSString *storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
-                [story setObject:storyID forKey:@"id"];
-                [stories addObject:story.copy];
-            }
-            [stories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-                NSComparisonResult result = [[obj1 objectForKey:@"timestamp"] compare:[obj2 objectForKey:@"timestamp"]
-                                                                              options:0
-                                                                                range:NSMakeRange(0, 19)];
-
-                return result;
-            }];
-            
-            NSArray *addedStories = [self indexPathsofStoriesInArray:stories andNotArray:self.stories];
-            NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:stories];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [DDGCache setObject:[stories copy] forKey:@"stories" inCache:@"misc"];
-                
-                [tableView beginUpdates];
-                [tableView insertRowsAtIndexPaths:addedStories
-                                 withRowAnimation:UITableViewRowAnimationAutomatic];
-                [tableView deleteRowsAtIndexPaths:removedStories
-                                 withRowAnimation:UITableViewRowAnimationAutomatic];
-                [tableView endUpdates];
-                
-            });
-        }
+    NSArray *customSources = self.customSources;
+    for(NSString *newsKeyword in customSources) {
+        NSString *urlString = [@"http://caine.duckduckgo.com/news.js?o=json&t=m&q=" stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            success();
-        });
-    });
+        NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
+        if(!response)
+            continue; // can't download data for this source
+        
+        NSArray *news = [NSJSONSerialization JSONObjectWithData:response
+                                                        options:0
+                                                          error:nil];
+
+        for(NSDictionary *newsItem in news) {
+            NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
+            [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
+            [story setObject:[newsItem objectForKey:@"url"] forKey:@"url"];
+            if([newsItem objectForKey:@"image"])
+                [story setObject:[newsItem objectForKey:@"image"] forKey:@"image"];
+            NSString *date = [[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]] description];
+            [story setObject:date forKey:@"timestamp"];
+            NSString *storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
+            [story setObject:storyID forKey:@"id"];
+            [newStories addObject:story.copy];
+        }
+    }
 }
 
 #pragma mark - Helpers
