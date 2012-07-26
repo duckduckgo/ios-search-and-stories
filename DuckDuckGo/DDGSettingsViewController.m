@@ -15,6 +15,7 @@
 +(void)loadDefaultSettings {
     NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:
                               [NSNumber numberWithBool:YES], @"history",
+                              [NSNumber numberWithBool:YES], @"refresh3g",
                               [NSNumber numberWithBool:NO], @"quack",
                               nil];
     
@@ -31,6 +32,7 @@
     
     [self addSectionWithTitle:@"General"];
     [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
+    [self addSwitch:@"Download stories over 3G" enabled:[[DDGCache objectForKey:@"refresh3g" inCache:@"settings"] boolValue]];
     [self addSwitch:@"Quack on refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
 
     [self addSectionWithTitle:@"News"];
@@ -43,6 +45,10 @@
 -(void)saveData:(NSDictionary *)formData {
     [DDGCache setObject:[formData objectForKey:@"Record history"] 
                  forKey:@"history" 
+                inCache:@"settings"];
+
+    [DDGCache setObject:[formData objectForKey:@"Download stories over 3G"]
+                 forKey:@"refresh3g"
                 inCache:@"settings"];
     
     [DDGCache setObject:[formData objectForKey:@"Quack on refresh"] 

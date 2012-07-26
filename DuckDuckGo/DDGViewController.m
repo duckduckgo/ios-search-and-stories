@@ -17,6 +17,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGNewsSourcesViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
+#import "Reachability.h"
 
 @interface DDGViewController (Private)
 -(void)beginDownloadingStories;
@@ -78,7 +79,11 @@
 {
     [super viewWillAppear:animated];
     [searchController resetOmnibar];
-    [self beginDownloadingStories];
+    
+    Reachability *reachability = [Reachability reachabilityForInternetConnection];
+    NetworkStatus status = [reachability currentReachabilityStatus];
+    if(status==ReachableViaWiFi || (status==ReachableViaWWAN && [[DDGCache objectForKey:@"refresh3g" inCache:@"settings"] boolValue]))
+        [self beginDownloadingStories];
 }
 
 - (void)viewDidAppear:(BOOL)animated
