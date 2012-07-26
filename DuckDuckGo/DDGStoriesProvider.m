@@ -129,7 +129,7 @@ static DDGStoriesProvider *sharedProvider;
         
         [self downloadCustomStoriesToArray:newStories];
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [[obj1 objectForKey:@"timestamp"] compare:[obj2 objectForKey:@"timestamp"]
+            return [[obj2 objectForKey:@"timestamp"] compare:[obj1 objectForKey:@"timestamp"]
                                                      options:0
                                                        range:NSMakeRange(0, 19)];
         }];
