@@ -31,7 +31,6 @@
     self.title = @"Settings";
     
     [self addSectionWithTitle:@"General"];
-    [self addSwitch:@"Download stories over 3G" enabled:[[DDGCache objectForKey:@"refresh3g" inCache:@"settings"] boolValue]];
     [self addSwitch:@"Quack on refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
 
     [self addSectionWithTitle:nil footer:@"History is stored on your phone."];
@@ -39,6 +38,7 @@
 
 
     [self addSectionWithTitle:@"Water Cooler"];
+    [self addSwitch:@"Refresh over 3G" enabled:[[DDGCache objectForKey:@"refresh3g" inCache:@"settings"] boolValue]];
     [self addButton:@"Change sources" action:^{
         DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [self.navigationController pushViewController:sourcesVC animated:YES];
@@ -50,7 +50,7 @@
                  forKey:@"history" 
                 inCache:@"settings"];
 
-    [DDGCache setObject:[formData objectForKey:@"Download stories over 3G"]
+    [DDGCache setObject:[formData objectForKey:@"Refresh over 3G"]
                  forKey:@"refresh3g"
                 inCache:@"settings"];
     
