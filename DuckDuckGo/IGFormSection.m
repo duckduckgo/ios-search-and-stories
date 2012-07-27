@@ -10,5 +10,5 @@
 
 
 @implementation IGFormSection
-
+@synthesize footer;
 @end
