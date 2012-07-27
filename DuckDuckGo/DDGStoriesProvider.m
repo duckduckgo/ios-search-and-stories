@@ -159,9 +159,8 @@ static DDGStoriesProvider *sharedProvider;
         [newStories iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
             NSDictionary *story = (NSDictionary *)obj;
             BOOL reload = NO;
-            
+
             if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]) {
-                NSLog(@"Downloading image for %@",[story objectForKey:@"title"]);
                 // main image: download it and resize it as needed
                 NSString *imageURL = [story objectForKey:@"image"];
                 NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];

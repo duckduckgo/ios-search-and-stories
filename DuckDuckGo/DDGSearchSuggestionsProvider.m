@@ -62,12 +62,11 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
         dispatch_async(dispatch_get_main_queue(), ^{
             [suggestionsCache setObject:JSON forKey:searchText];
             success(); // run callback
+            
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
+                [self addOfficialSitesToSuggestionsCacheForSearchText:searchText success:success];
+            });
         });
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
-            [self addOfficialSitesToSuggestionsCacheForSearchText:searchText success:success];        
-        });
-        
     } failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
         NSLog(@"error: %@",[error userInfo]);
     }];
@@ -84,7 +83,9 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
     for(int i=0;i<suggestions.count;i++) {
         
         NSDictionary *item = [suggestions objectAtIndex:i];
-        NSString *officialSite = [self officialSiteForItem:[item objectForKey:@"phrase"]];        
+        NSLog(@"finding official site for %@",item);
+        NSString *officialSite = [self officialSiteForItem:[item objectForKey:@"phrase"]];
+        NSLog(@"found %@",officialSite);
         if(officialSite) {
             NSMutableDictionary *newItem = [item mutableCopy];
             [newItem setObject:officialSite forKey:@"officialsite"];
