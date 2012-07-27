@@ -31,12 +31,15 @@
     self.title = @"Settings";
     
     [self addSectionWithTitle:@"General"];
-    [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
     [self addSwitch:@"Download stories over 3G" enabled:[[DDGCache objectForKey:@"refresh3g" inCache:@"settings"] boolValue]];
     [self addSwitch:@"Quack on refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
 
-    [self addSectionWithTitle:@"News"];
-    [self addButton:@"Configure news sources" action:^{
+    [self addSectionWithTitle:nil footer:@"History is stored on your phone."];
+    [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
+
+
+    [self addSectionWithTitle:@"Water Cooler"];
+    [self addButton:@"Change sources" action:^{
         DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [self.navigationController pushViewController:sourcesVC animated:YES];
     }];

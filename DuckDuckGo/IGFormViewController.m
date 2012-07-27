@@ -55,11 +55,18 @@
 	NSInteger minHeight = ([self tableViewHeight]<282 ? [self tableViewHeight] : 282);
 	
     self.contentSizeForViewInPopover = CGSizeMake(320, minHeight);		
-    
-	UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave 
-																				target:self 
-																				action:@selector(saveButtonPressed)];
-	self.navigationItem.rightBarButtonItem = saveButton;
+		
+    if([self.navigationController.viewControllers objectAtIndex:0]==self) {
+        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                                    target:self
+                                                                                    action:@selector(saveButtonPressed)];
+        self.navigationItem.rightBarButtonItem = doneButton;
+    } else {
+        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
+                                                                                    target:self
+                                                                                    action:@selector(saveButtonPressed)];
+        self.navigationItem.rightBarButtonItem = saveButton;
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -68,12 +75,12 @@
 
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-    
+	    
     [self.navigationController setToolbarHidden:YES animated:YES];
     
 	if([elements count] >= 2) {
 		NSObject *element = [elements objectAtIndex:1];
-        
+	
 		if([element isKindOfClass:[IGFormTextField class]]) {
 			[[(IGFormTextField *)element textField] becomeFirstResponder];
 		} else if([element isKindOfClass:[IGFormTextView class]]) {
@@ -83,25 +90,25 @@
 }
 
 /*
- - (void)viewWillAppear:(BOOL)animated {
- [super viewWillAppear:animated];
- }
- */
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+}
+*/
 /*
- - (void)viewDidAppear:(BOOL)animated {
- [super viewDidAppear:animated];
- }
- */
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+}
+*/
 /*
- - (void)viewWillDisappear:(BOOL)animated {
- [super viewWillDisappear:animated];
- }
- */
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+}
+*/
 /*
- - (void)viewDidDisappear:(BOOL)animated {
- [super viewDidDisappear:animated];
- }
- */
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+}
+*/
 
 #pragma mark -
 #pragma mark Popover support
@@ -146,6 +153,12 @@
 
 -(void)addSectionWithTitle:(NSString *)aTitle {
 	IGFormSection *section = [[IGFormSection alloc] initWithTitle:aTitle];
+	[elements addObject:section];
+}
+
+-(void)addSectionWithTitle:(NSString *)aTitle footer:(NSString *)footer {
+	IGFormSection *section = [[IGFormSection alloc] initWithTitle:aTitle];
+    section.footer = footer;
 	[elements addObject:section];
 }
 
@@ -259,7 +272,7 @@
 	}
 	
 	NSDictionary *immFormData = [formData copy];
-    
+
 	return immFormData;
 }
 
@@ -278,7 +291,7 @@
 
 -(void)saveButtonPressed {
 	NSDictionary *formData = [self formData];
-    
+
 	NSString *validationResult = [self validateData:formData];
 	if(validationResult==nil) {
 		[self saveAndExit];
@@ -291,7 +304,7 @@
 											  otherButtonTitles:@"OK",nil];
 		[alert show];
 	}
-    
+
 }
 
 #pragma mark -
@@ -299,11 +312,11 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[textField resignFirstResponder];
-    
+
 	if([self validateData:[self formData]]==nil) {
 		[self saveAndExit];
 	}
-    
+
 	return YES;
 }
 
@@ -328,6 +341,21 @@
 			
 			if(section == currentSection)
 				return [(IGFormSection *)element title];
+
+		}
+	}
+	
+	return nil;
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForFooterInSection:(NSInteger)section {
+	NSInteger currentSection = -1;
+	for(NSObject *element in elements) {
+		if([element isKindOfClass:[IGFormSection class]]) {
+			currentSection++;
+			
+			if(section == currentSection)
+				return [(IGFormSection *)element footer];
             
 		}
 	}
@@ -373,9 +401,9 @@
 		textField.textField.frame = CGRectMake(12, 0, 286, 44);
 		textField.textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
 		[cell.contentView addSubview:textField.textField];
-        
+	
 		cell.textLabel.text = @"";
-        
+	
 	} else if([e isKindOfClass:[IGFormRadioOption class]]) {
 		
 		IGFormRadioOption *radioOption = (IGFormRadioOption *)e;
@@ -426,7 +454,7 @@
 	NSObject *e = [self elementAtIndexPath:indexPath];
 	if([e isKindOfClass:[IGFormRadioOption class]]) {
 		IGFormRadioOption *radioOption = (IGFormRadioOption *)e;
-        
+
 		// deselect all in that category
 		for(NSObject *element in elements) {
 			if([element isKindOfClass:[IGFormRadioOption class]] && [[(IGFormRadioOption *)element category] isEqualToString:radioOption.category])

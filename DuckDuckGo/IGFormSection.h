@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "IGFormElement.h"
 
-@interface IGFormSection : IGFormElement {
-
-}
+@interface IGFormSection : IGFormElement
+@property(nonatomic, strong) NSString *footer;
 
 @end

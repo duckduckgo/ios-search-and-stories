@@ -19,7 +19,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"News Sources";
+    self.title = @"Water Cooler";
     self.tableView.allowsSelectionDuringEditing = YES;
     if(self.navigationController.viewControllers.count == 1) {
         // we're the only view controller, so there won't be a back button to get out, so we need a different exit button

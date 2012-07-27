@@ -29,6 +29,9 @@
 // Creates a new section in the form with the given title
 -(void)addSectionWithTitle:(NSString *)title;
 
+// Creates a new section in the form with the given title and footer
+-(void)addSectionWithTitle:(NSString *)title footer:(NSString *)footer;
+
 // Add and return a text field to the form.
 -(void)addTextField:(NSString *)fieldName;
 
