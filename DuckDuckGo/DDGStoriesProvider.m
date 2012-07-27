@@ -65,8 +65,10 @@ static DDGStoriesProvider *sharedProvider;
         
         [newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
             NSDictionary *source = (NSDictionary *)obj;
-            NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
-            [DDGCache setObject:data forKey:[source objectForKey:@"image"] inCache:@"sourceImages"];
+            if(![DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"]) {
+                NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
+                [DDGCache setObject:data forKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
+            }
         }];
             
         NSArray *sortedCategories = [categories sortedArrayUsingSelector:@selector(compare:)];
@@ -173,14 +175,7 @@ static DDGStoriesProvider *sharedProvider;
                 [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
                 reload = YES;
             }
-            
-            if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"faviconImages"]) {
-                // favicon
-                NSString *storyURL = [story objectForKey:@"url"];
-                [self loadFaviconForURLString:storyURL storyID:[story objectForKey:@"id"]];
-                reload = YES;
-            }
-            
+                        
             if(reload) {
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
@@ -215,30 +210,6 @@ static DDGStoriesProvider *sharedProvider;
             [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
     }
     return [indexPaths copy];
-}
-
--(NSURL *)faviconURLForDomain:(NSString *)domain {
-    // http://i2.duck.co/i/reddit.com.ico
-    NSString *faviconURLString = [NSString stringWithFormat:@"http://i2.duck.co/i/%@.ico",domain];
-    return [NSURL URLWithString:faviconURLString];
-}
-
--(void)loadFaviconForURLString:(NSString *)urlString storyID:(NSString *)storyID {
-    if(!urlString || [urlString isEqual:[NSNull null]])
-        return;
-    
-    NSString *domain = [[NSURL URLWithString:urlString] host];
-    
-    while(![DDGCache objectForKey:storyID inCache:@"faviconImages"]) {
-        NSData *response = [NSData dataWithContentsOfURL:[self faviconURLForDomain:domain]];
-        [DDGCache setObject:response forKey:storyID inCache:@"faviconImages"];
-        
-        NSMutableArray *domainParts = [[domain componentsSeparatedByString:@"."] mutableCopy];
-        if(domainParts.count == 1)
-            return; // we're definitely down to just a TLD by now and still couldn't get a favicon.
-        [domainParts removeObjectAtIndex:0];
-        domain = [domainParts componentsJoinedByString:@"."];
-    }
 }
 
 #pragma mark - Custom sources

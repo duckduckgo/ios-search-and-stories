@@ -140,7 +140,7 @@
         cell.textLabel.text = [source objectForKey:@"title"];
         cell.detailTextLabel.text = [source objectForKey:@"description"];
         
-        UIImage *image = [UIImage imageWithData:[DDGCache objectForKey:[source objectForKey:@"image"] inCache:@"sourceImages"]];
+        UIImage *image = [UIImage imageWithData:[DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"]];
         cell.imageView.image = image;
         [(UIImageView *)[cell viewWithTag:100] setImage:image];
         

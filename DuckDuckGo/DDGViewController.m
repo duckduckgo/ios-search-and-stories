@@ -185,8 +185,7 @@
 
 #pragma mark - Table view data source
 
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	static NSString *CellIdentifier = @"CurrentTopicCell";
 	UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -212,7 +211,7 @@
     [articleImageView setContentMode:UIViewContentModeScaleAspectFill];
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    faviconImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"faviconImages"]];
+    faviconImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"feed"] inCache:@"sourceImages"]];
     	
 	return cell;
 }
