@@ -59,8 +59,10 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
     serverRequest.URL = [NSURL URLWithString:urlString];
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        [suggestionsCache setObject:JSON forKey:searchText];
-        success(); // run callback
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [suggestionsCache setObject:JSON forKey:searchText];
+            success(); // run callback
+        });
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^(void) {
             [self addOfficialSitesToSuggestionsCacheForSearchText:searchText success:success];        
