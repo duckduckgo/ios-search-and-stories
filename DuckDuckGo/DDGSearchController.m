@@ -91,7 +91,6 @@
 	searchField.leftViewMode = UITextFieldViewModeAlways;
 	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     
     // TODO (WHEN I GET BACK): MAKE DISCLOSURE BUTTON TAPS NOT TRIGGER CANCELINPUT (see those lines below).
@@ -139,12 +138,6 @@
         [self reloadSuggestions];
     }
 }
-
-- (void)keyboardWillHide:(NSNotification*)notification
-{
-	keyboardRect = CGRectZero;
-}
-
 
 #pragma  mark - Interactions with search handler
 - (IBAction)leftButtonPressed:(UIButton*)sender {
@@ -240,7 +233,7 @@
                              inputAccessory.frame = f;                                 
                          } completion:nil];
         
-        [UIView animateWithDuration:(animated ? 0.25 : 0.0) animations:^{
+        [UIView animateWithDuration:animationDuration animations:^{
             background.alpha = (reveal ? 1.0 : 0.0);
         }];
         
@@ -249,16 +242,28 @@
 		rect.size.height = 46.0;
         
         // animate the bang bar's disappearance
-        [UIView animateWithDuration:animationDuration 
+        [UIView animateWithDuration:animationDuration
                               delay:0 
-                            options:UIViewAnimationCurveEaseOut 
+                            options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
                              CGRect f = inputAccessory.frame;
-                             f.origin.y = screenSize.height - f.size.height;
+                             f.origin.y = screenSize.height-f.size.height;
                              inputAccessory.frame = f;
-                         } completion:^(BOOL finished){
-                             //                             inputAccessory.hidden = YES; 
-                         }];
+                         }
+                         completion:nil];
+        
+        dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 0.5 * animationDuration * NSEC_PER_SEC);
+        dispatch_after(time, dispatch_get_main_queue(), ^{
+            [UIView animateWithDuration:animationDuration*0.5
+                                  delay:0
+                                options:UIViewAnimationOptionCurveEaseOut|UIViewAnimationOptionBeginFromCurrentState
+                             animations:^{
+                                 CGRect f = inputAccessory.frame;
+                                 f.origin.y = screenSize.height;
+                                 inputAccessory.frame = f;
+                             }
+                             completion:nil];
+        });
     }
     [self revealAutocomplete:NO]; // if we're revealing, we'll show it again after the animation
     
@@ -269,13 +274,13 @@
     
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, animationDuration * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        self.view.frame = rect;
+        //self.view.frame = rect;
         if(reveal) {
             [self revealAutocomplete:YES];
         }
     });
     
-    [UIView animateWithDuration:(animated ? 0.25 : 0.0) animations:^{
+    [UIView animateWithDuration:animationDuration animations:^{
         background.alpha = (reveal ? 1.0 : 0.0);
     }];
 }
