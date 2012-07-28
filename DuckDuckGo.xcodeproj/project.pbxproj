@@ -78,6 +78,10 @@
 		4C3BEFAB15C47DBA00EEA7BF /* WEPopoverParentView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C3BEFA215C47DBA00EEA7BF /* WEPopoverParentView.h */; };
 		4C3BEFAC15C47DBA00EEA7BF /* WETouchableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C3BEFA315C47DBA00EEA7BF /* WETouchableView.h */; };
 		4C3BEFAD15C47DBA00EEA7BF /* WETouchableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3BEFA415C47DBA00EEA7BF /* WETouchableView.m */; };
+		4C3BEFAF15C4889D00EEA7BF /* share_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFAE15C4889D00EEA7BF /* share_button@2x.png */; };
+		4C3BEFB115C488E000EEA7BF /* share_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFB015C488E000EEA7BF /* share_button.png */; };
+		4C3BEFB515C48D0100EEA7BF /* DDGPopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3BEFB315C48D0100EEA7BF /* DDGPopoverViewController.m */; };
+		4C3BEFB615C48D0100EEA7BF /* DDGPopoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFB415C48D0100EEA7BF /* DDGPopoverViewController.xib */; };
 		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
 		4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CF915B759E100790F60 /* IGFormButton.m */; };
 		4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFB15B759E100790F60 /* IGFormElement.m */; };
@@ -216,6 +220,11 @@
 		4C3BEFA215C47DBA00EEA7BF /* WEPopoverParentView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WEPopoverParentView.h; sourceTree = "<group>"; };
 		4C3BEFA315C47DBA00EEA7BF /* WETouchableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WETouchableView.h; sourceTree = "<group>"; };
 		4C3BEFA415C47DBA00EEA7BF /* WETouchableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WETouchableView.m; sourceTree = "<group>"; };
+		4C3BEFAE15C4889D00EEA7BF /* share_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share_button@2x.png"; sourceTree = "<group>"; };
+		4C3BEFB015C488E000EEA7BF /* share_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share_button.png; sourceTree = "<group>"; };
+		4C3BEFB215C48D0100EEA7BF /* DDGPopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGPopoverViewController.h; sourceTree = "<group>"; };
+		4C3BEFB315C48D0100EEA7BF /* DDGPopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGPopoverViewController.m; sourceTree = "<group>"; };
+		4C3BEFB415C48D0100EEA7BF /* DDGPopoverViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGPopoverViewController.xib; sourceTree = "<group>"; };
 		4C5381451595045500490B9C /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
 		4C573CF815B759E100790F60 /* IGFormButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormButton.h; sourceTree = "<group>"; };
 		4C573CF915B759E100790F60 /* IGFormButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormButton.m; sourceTree = "<group>"; };
@@ -322,6 +331,8 @@
 		4C1FD7D31548FF5B006B2511 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				4C3BEFB015C488E000EEA7BF /* share_button.png */,
+				4C3BEFAE15C4889D00EEA7BF /* share_button@2x.png */,
 				4C24A75815BA0946003DCB56 /* load_bar.png */,
 				4C24A75915BA0946003DCB56 /* load_bar@2x.png */,
 				4C5381451595045500490B9C /* noimage.png */,
@@ -368,6 +379,9 @@
 		4C3BEF8D15C47D4800EEA7BF /* Popover */ = {
 			isa = PBXGroup;
 			children = (
+				4C3BEFB215C48D0100EEA7BF /* DDGPopoverViewController.h */,
+				4C3BEFB315C48D0100EEA7BF /* DDGPopoverViewController.m */,
+				4C3BEFB415C48D0100EEA7BF /* DDGPopoverViewController.xib */,
 			);
 			name = Popover;
 			sourceTree = "<group>";
@@ -763,6 +777,9 @@
 				4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */,
 				4C24A75A15BA0946003DCB56 /* load_bar.png in Resources */,
 				4C24A75B15BA0946003DCB56 /* load_bar@2x.png in Resources */,
+				4C3BEFAF15C4889D00EEA7BF /* share_button@2x.png in Resources */,
+				4C3BEFB115C488E000EEA7BF /* share_button.png in Resources */,
+				4C3BEFB615C48D0100EEA7BF /* DDGPopoverViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -821,6 +838,7 @@
 				4C2E001215B87C700096C994 /* DDGNewsSourcesViewController.m in Sources */,
 				4CB72E8D15BE7CF300D8541F /* DDGAddCustomSourceViewController.m in Sources */,
 				4CBDCE0115C116A500372237 /* Reachability.m in Sources */,
+				4C3BEFB515C48D0100EEA7BF /* DDGPopoverViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

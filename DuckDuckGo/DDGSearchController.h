@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGSearchHandler.h"
+#import "WEPopoverController.h"
 
 typedef enum {
 	DDGSearchControllerStateHome = 0,
@@ -31,15 +32,17 @@ typedef enum {
     NSMutableArray *unusedBangButtons;
 }
 
-@property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
-
 @property(nonatomic, weak) IBOutlet UITableView *tableView;
 @property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
 @property(nonatomic, weak) IBOutlet UIButton *searchButton;
+@property (weak, nonatomic) IBOutlet UIButton *actionButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
+@property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 
+@property(nonatomic, weak) UIView *parentView;
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
+@property(nonatomic, strong) WEPopoverController *wePopoverController;
 
 -(id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 

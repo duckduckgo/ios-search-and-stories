@@ -13,6 +13,7 @@
 #import "DDGAddressBarTextField.h"
 #import "DDGBangsProvider.h"
 #import "DDGInputAccessoryView.h"
+#import "DDGPopoverViewController.h"
 
 @implementation DDGSearchController
 
@@ -21,6 +22,8 @@
     // the code below happens after viewDidLoad
     
 	if (self) {
+        self.parentView = parent;
+        
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
         if(PORTRAIT)
@@ -126,14 +129,29 @@
 	[_searchHandler searchControllerLeftButtonPressed];
 }
 
+- (IBAction)actionButtonPressed:(id)sender {
+    DDGPopoverViewController *popoverViewController = [[DDGPopoverViewController alloc] initWithNibName:nil bundle:nil];
+    self.wePopoverController = [[WEPopoverController alloc] initWithContentViewController:popoverViewController];
+    [_wePopoverController presentPopoverFromRect:[_parentView convertRect:_actionButton.frame fromView:self.view]
+                                       inView:_parentView
+                     permittedArrowDirections:UIPopoverArrowDirectionUp
+                                     animated:YES];
+}
 
 -(void)setState:(DDGSearchControllerState)searchControllerState {
 	_state = searchControllerState;
     
     if(_state == DDGSearchControllerStateHome)
         [_searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
-    else if (_state == DDGSearchControllerStateWeb)
+    else if (_state == DDGSearchControllerStateWeb) {
         [_searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+        // resize searchField and show action button
+        CGRect f = _searchField.frame;
+        f.size.width -= _actionButton.frame.size.width + 5;
+        _searchField.frame = f;
+        
+        _actionButton.hidden = NO;
+    }
 }
 
 -(void)stopOrReloadButtonPressed {
@@ -701,4 +719,8 @@
     }
 }
 
+- (void)viewDidUnload {
+    [self setActionButton:nil];
+    [super viewDidUnload];
+}
 @end
