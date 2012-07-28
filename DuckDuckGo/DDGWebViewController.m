@@ -68,7 +68,20 @@
     [_searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
-#pragma mark - Address bar positioning
+#pragma mark - Action sheet
+
+-(void)searchControllerActionButtonPressed {
+    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
+                                                             delegate:self
+                                                    cancelButtonTitle:@"Cancel"
+                                               destructiveButtonTitle:nil
+                                                    otherButtonTitles:@"Bookmark", @"Share", nil];
+    [actionSheet showInView:self.view];
+}
+
+-(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+}
 
 
 #pragma mark - Search handler

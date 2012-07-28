@@ -15,7 +15,7 @@ typedef enum {
 } DDGSearchControllerState;
 
 @class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate> {
+@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> {
 	CGRect keyboardRect;
         
     NSString *oldSearchText;
@@ -38,7 +38,6 @@ typedef enum {
 @property(nonatomic, weak) IBOutlet UIView *background;
 @property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 
-@property(nonatomic, weak) UIView *parentView;
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
 

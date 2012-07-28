@@ -20,9 +20,7 @@
 	self = [super initWithNibName:nibNameOrNil bundle:nil];
     // the code below happens after viewDidLoad
     
-	if (self) {
-        self.parentView = parent;
-        
+	if (self) {        
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
         if(PORTRAIT)
@@ -121,12 +119,8 @@
 #pragma mark - Action sheet
 
 - (IBAction)actionButtonPressed:(id)sender {
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                               destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Bookmark", @"Share", nil];
-    [actionSheet showInView:_parentView];
+    if([_searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
+        [_searchHandler searchControllerActionButtonPressed];
 }
 
 #pragma  mark - Interactions with search handler

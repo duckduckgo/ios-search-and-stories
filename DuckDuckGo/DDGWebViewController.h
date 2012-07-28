@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DDGSearchController.h"
 
-@interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler> {    
+@interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate> {
     BOOL viewsInitialized;
     NSString *queryOrURLToLoad;
 
