@@ -82,7 +82,6 @@ static DDGSearchHistoryProvider *sharedInstance;
 
 -(void)removeOldHistoryItemsWithoutSaving {
     for(int i=history.count-1; i>=0; i--) {
-        // TODO (ishaan): make history interval adjustable? it's currently hard-coded to 30 seconds
         if([[NSDate date] timeIntervalSinceDate:[[history objectAtIndex:i] objectForKey:@"date"]] >= 30*24*60*60)
             [history removeObjectAtIndex:i];
     }
