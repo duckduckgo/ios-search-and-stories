@@ -234,7 +234,7 @@
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // mark the story as read and make its image and favicon grayscale
-        [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:[story objectForKey:@"id"] inCache:@"readStories"];
+        [DDGCache setObject:@(YES) forKey:[story objectForKey:@"id"] inCache:@"readStories"];
         // TODO: if we choose not to go with grayscaling, delete the commented lines below and remove the related dead code
 //        for(NSString *cache in [NSArray arrayWithObjects:@"storyImages", @"faviconImages", nil]) {
 //            NSData *imageData = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:cache];
@@ -261,7 +261,7 @@
     
     [[DDGStoriesProvider sharedProvider] downloadSourcesFinished:^{
         if(![DDGCache objectForKey:@"notFirstLaunch" inCache:@"misc"]) {
-            [DDGCache setObject:[NSNumber numberWithBool:YES] forKey:@"notFirstLaunch" inCache:@"misc"];
+            [DDGCache setObject:@(YES) forKey:@"notFirstLaunch" inCache:@"misc"];
             
             UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped]];
             [self presentModalViewController:navC animated:YES];

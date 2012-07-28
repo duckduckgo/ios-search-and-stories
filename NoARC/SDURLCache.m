@@ -729,7 +729,7 @@ static dispatch_queue_t get_disk_io_queue() {
     request = [SDURLCache canonicalRequestForRequest:request];
     
     [super removeCachedResponseForRequest:request];
-    [self removeCachedResponseForCachedKeys:[NSArray arrayWithObject:[SDURLCache cacheKeyForURL:request.URL]]];
+    [self removeCachedResponseForCachedKeys:@[[SDURLCache cacheKeyForURL:request.URL]]];
     [self saveCacheInfo];
 }
 

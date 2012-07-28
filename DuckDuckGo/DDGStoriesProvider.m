@@ -97,7 +97,7 @@ static DDGStoriesProvider *sharedProvider;
 }
 
 -(void)setSourceWithID:(NSString *)sourceID enabled:(BOOL)enabled {
-    [DDGCache setObject:[NSNumber numberWithBool:enabled] forKey:sourceID inCache:@"enabledSources"];
+    [DDGCache setObject:@(enabled) forKey:sourceID inCache:@"enabledSources"];
 }
 
 #pragma mark - Downloading stories
@@ -178,7 +178,7 @@ static DDGStoriesProvider *sharedProvider;
                         
             if(reload) {
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [tableView reloadRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                    [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
                 });
             }
             

@@ -47,7 +47,7 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
             bestMatch = suggestionText;
     }
     
-    return (bestMatch ? [suggestionsCache objectForKey:bestMatch] : [NSArray array]);
+    return (bestMatch ? [suggestionsCache objectForKey:bestMatch] : @[]);
 }
 
 -(void)downloadSuggestionsForSearchText:(NSString *)searchText success:(void (^)(void))success {

@@ -13,11 +13,9 @@
 @implementation DDGSettingsViewController
 
 +(void)loadDefaultSettings {
-    NSDictionary *defaults = [NSDictionary dictionaryWithObjectsAndKeys:
-                              [NSNumber numberWithBool:YES], @"history",
-                              [NSNumber numberWithBool:YES], @"refresh3g",
-                              [NSNumber numberWithBool:NO], @"quack",
-                              nil];
+    NSDictionary *defaults = @{@"history": @(YES),
+                              @"refresh3g": @(YES),
+                              @"quack": @(NO)};
     
     for(NSString *key in defaults) {
         if(![DDGCache objectForKey:key inCache:@"settings"])

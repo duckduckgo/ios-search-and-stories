@@ -47,7 +47,7 @@
 -(void)viewDidAppear:(BOOL)animated {
     UIMenuItem *searchMenuItem = [[UIMenuItem alloc] initWithTitle:@"Search"
                                                             action:@selector(search:)];
-    [UIMenuController sharedMenuController].menuItems = [NSArray arrayWithObject:searchMenuItem];
+    [UIMenuController sharedMenuController].menuItems = @[searchMenuItem];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {

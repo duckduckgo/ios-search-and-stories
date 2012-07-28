@@ -45,7 +45,7 @@ static DDGSearchHistoryProvider *sharedInstance;
     if(![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
         return;
     
-    NSDictionary *historyItemDictionary = [NSDictionary dictionaryWithObjectsAndKeys:historyItem,@"text",[NSDate date],@"date",nil];
+    NSDictionary *historyItemDictionary = @{@"text": historyItem,@"date": [NSDate date]};
     
     for(int i=0; i<history.count; i++) {
         if([[[history objectAtIndex:i] objectForKey:@"text"] isEqualToString:historyItem]) {
@@ -62,7 +62,7 @@ static DDGSearchHistoryProvider *sharedInstance;
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
     // there are certain cases in which we don't want to return any history
     if([prefix isEqualToString:@""] || ![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
-        return [NSArray array];
+        return @[];
     
     NSMutableArray *results = [[NSMutableArray alloc] init];
     

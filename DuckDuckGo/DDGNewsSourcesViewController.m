@@ -190,7 +190,7 @@
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if(editingStyle == UITableViewCellEditingStyleDelete) {
         [[DDGStoriesProvider sharedProvider] deleteCustomSourceAtIndex:indexPath.row-1];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     } else if(editingStyle == UITableViewCellEditingStyleInsert) {
         DDGAddCustomSourceViewController *vc = [[DDGAddCustomSourceViewController alloc] initWithDefaults];
         [self.navigationController pushViewController:vc animated:YES];

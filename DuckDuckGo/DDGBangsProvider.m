@@ -30,7 +30,7 @@ static NSArray *bangs;
     
     NSSortDescriptor *firstDescriptor = [[NSSortDescriptor alloc] initWithKey:@"score"
                                                                     ascending:NO];
-    NSArray *sortDescriptors = [NSArray arrayWithObjects:firstDescriptor, nil];
+    NSArray *sortDescriptors = @[firstDescriptor];
     NSArray *sortedResult = [result sortedArrayUsingDescriptors:sortDescriptors];
     if(sortedResult.count > 50)
         return [sortedResult subarrayWithRange:NSMakeRange(0, 50)];

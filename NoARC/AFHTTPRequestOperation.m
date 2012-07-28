@@ -310,7 +310,7 @@ didReceiveResponse:(NSURLResponse *)response
     long long fileOffset = 0;
     if ([self.response statusCode] != 206) {
         if ([self.outputStream propertyForKey:NSStreamFileCurrentOffsetKey]) {
-            [self.outputStream setProperty:[NSNumber numberWithInteger:0] forKey:NSStreamFileCurrentOffsetKey];
+            [self.outputStream setProperty:@0 forKey:NSStreamFileCurrentOffsetKey];
         } else {
             if ([[self.outputStream propertyForKey:NSStreamDataWrittenToMemoryStreamKey] length] > 0) {
                 self.outputStream = [NSOutputStream outputStreamToMemory];

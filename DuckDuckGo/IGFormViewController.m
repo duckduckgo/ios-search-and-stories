@@ -267,7 +267,7 @@
 		} else if([element isKindOfClass:[IGFormSwitch class]]) {
             IGFormSwitch *formSwitch = (IGFormSwitch *)element;
             
-            [formData setObject:[NSNumber numberWithBool:formSwitch.switchControl.on] forKey:formSwitch.title];
+            [formData setObject:@(formSwitch.switchControl.on) forKey:formSwitch.title];
         }
 	}
 	
