@@ -21,7 +21,6 @@ typedef enum {
 	IBOutlet UITableViewCell	*loadedCell;
 	
     __weak IBOutlet UITableView *tableView;
-    __weak IBOutlet DDGAddressBarTextField *searchField;
 	__weak IBOutlet UIButton *searchButton;
     __weak IBOutlet UIView *background;
     

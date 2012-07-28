@@ -9,5 +9,4 @@
 #import <UIKit/UIKit.h>
 
 @interface DDGInputAccessoryView : UIView
-@property(nonatomic, strong) UIView *background;
 @end

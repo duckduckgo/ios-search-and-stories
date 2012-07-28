@@ -35,7 +35,7 @@
 @implementation DDGSearchController
 
 @synthesize loadedCell;
-@synthesize tableView, searchField, searchButton, background;
+@synthesize tableView, searchButton, background;
 @synthesize searchHandler, state;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
@@ -57,14 +57,14 @@
         [self revealBackground:NO animated:NO];
 
         keyboardRect = CGRectZero;
-		                
-        searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
-        [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+		
+        _searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
+        [_searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
 
         stopOrReloadButton = [[UIButton alloc] init];
         stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
         [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        searchField.rightView = stopOrReloadButton;
+        _searchField.rightView = stopOrReloadButton;
         
         suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
         historyProvider = [DDGSearchHistoryProvider sharedInstance];
@@ -87,9 +87,9 @@
 {
     [super viewDidLoad];
 
-	searchField.rightViewMode = UITextFieldViewModeAlways;
-	searchField.leftViewMode = UITextFieldViewModeAlways;
-	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
+	_searchField.rightViewMode = UITextFieldViewModeAlways;
+	_searchField.leftViewMode = UITextFieldViewModeAlways;
+	_searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     
@@ -132,7 +132,7 @@
 	keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	keyboardRect = [self.view convertRect:keyboardRect toView:nil];
     
-    if([searchField isFirstResponder]) {
+    if([_searchField isFirstResponder]) {
         // user just started editing the search box
         [self revealBackground:YES animated:YES];
         [self reloadSuggestions];
@@ -141,7 +141,7 @@
 
 #pragma  mark - Interactions with search handler
 - (IBAction)leftButtonPressed:(UIButton*)sender {
-	[searchField resignFirstResponder];
+	[_searchField resignFirstResponder];
     
     // if it's showing, hide it.
     [self revealAutocomplete:NO];
@@ -165,11 +165,11 @@
 
 -(void)webViewFinishedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
-    [searchField finish];
+    [_searchField finish];
 }
 
 -(void)setProgress:(CGFloat)progress {
-    [searchField setProgress:progress];
+    [_searchField setProgress:progress];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
@@ -297,9 +297,9 @@
 
 -(void)cancelInput {
     
-    [searchField resignFirstResponder];
+    [_searchField resignFirstResponder];
     if(!barUpdated) {
-        searchField.text = oldSearchText;
+        _searchField.text = oldSearchText;
         oldSearchText = nil;
     }
     if([searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
@@ -326,7 +326,7 @@
             query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
             query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            searchField.text = query;
+            _searchField.text = query;
         } else if(![[url pathExtension] isEqualToString:@"html"]) {
             // article page
             NSString *query = [url path];
@@ -334,19 +334,19 @@
             query = [query stringByReplacingOccurrencesOfString:@"_" withString:@"%20"];
             query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            searchField.text = query;
+            _searchField.text = query;
         } else {
             // a URL on DDG.com, but not a search query
-            searchField.text = [url absoluteString];
+            _searchField.text = [url absoluteString];
         }
     } else {
         // no, just a plain old URL.
-        searchField.text = [url absoluteString];
+        _searchField.text = [url absoluteString];
     }
 }
 
 -(void)resetOmnibar {
-    searchField.text = @"";
+    _searchField.text = @"";
     [tableView reloadData];
 }
 
@@ -387,25 +387,25 @@
 
 -(void)bangButtonPressed {
     NSString *textToAdd;
-    if(searchField.text.length==0 || [searchField.text characterAtIndex:searchField.text.length-1]==' ')
+    if(_searchField.text.length==0 || [_searchField.text characterAtIndex:_searchField.text.length-1]==' ')
         textToAdd = @"!";
     else
         textToAdd = @" !";
 
-    [self textField:searchField 
-          shouldChangeCharactersInRange:NSMakeRange(searchField.text.length, 0) 
+    [self textField:_searchField 
+          shouldChangeCharactersInRange:NSMakeRange(_searchField.text.length, 0) 
           replacementString:textToAdd];
-    searchField.text = [searchField.text stringByAppendingString:textToAdd];
+    _searchField.text = [_searchField.text stringByAppendingString:textToAdd];
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
     if(currentWordRange.location == NSNotFound) {
-        if(searchField.text.length == 0)
-            searchField.text = sender.titleLabel.text;
+        if(_searchField.text.length == 0)
+            _searchField.text = sender.titleLabel.text;
         else
-            [searchField setText:[searchField.text stringByAppendingFormat:@" %@",sender.titleLabel.text]];
+            [_searchField setText:[_searchField.text stringByAppendingFormat:@" %@",sender.titleLabel.text]];
     } else {
-        [searchField setText:[searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
+        [_searchField setText:[_searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
     }
 }
 
@@ -464,7 +464,7 @@
 #pragma mark - Search suggestions
 
 - (void)reloadSuggestions {
-    NSString *newSearchText = searchField.text;
+    NSString *newSearchText = _searchField.text;
     
     if([newSearchText isEqualToString:[self validURLStringFromString:newSearchText]]) {
         // we're definitely editing a URL, don't bother with autocomplete.
@@ -562,7 +562,7 @@
     textField.rightView = nil;
     [self reloadSuggestions];
     
-    if([searchField.text isEqualToString:@""])
+    if([_searchField.text isEqualToString:@""])
         [self loadSuggestionsForBang:@"!"];
 }
 
@@ -587,7 +587,7 @@
 	}
 	[textField resignFirstResponder];
 	
-    [self loadQueryOrURL:([searchField.text length] ? searchField.text : nil)];
+    [self loadQueryOrURL:([_searchField.text length] ? _searchField.text : nil)];
 
     oldSearchText = nil;
 	return YES;
@@ -603,8 +603,8 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return ([[suggestionsProvider suggestionsForSearchText:searchField.text] count] +
-            [[historyProvider pastHistoryItemsForPrefix:searchField.text] count]);
+    return ([[suggestionsProvider suggestionsForSearchText:_searchField.text] count] +
+            [[historyProvider pastHistoryItemsForPrefix:_searchField.text] count]);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -613,8 +613,8 @@
     static NSString *historyCellID = @"HCell";
     static NSString *emptyCellID = @"ECell";
     
-    NSArray *history = [historyProvider pastHistoryItemsForPrefix:searchField.text];
-    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
+    NSArray *history = [historyProvider pastHistoryItemsForPrefix:_searchField.text];
+    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:_searchField.text];
     if((suggestions.count + history.count) <= indexPath.row) {
         // this entry no longer exists; return empty cell. the tableview will be reloading very soon anyway.
         UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:emptyCellID];
@@ -692,8 +692,8 @@
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *history = [historyProvider pastHistoryItemsForPrefix:searchField.text];
-    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
+    NSArray *history = [historyProvider pastHistoryItemsForPrefix:_searchField.text];
+    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:_searchField.text];
     if(indexPath.row < history.count) {
         NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
         [self loadQueryOrURL:[historyItem objectForKey:@"text"]];        
@@ -703,12 +703,12 @@
     }
     	
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
-	[searchField resignFirstResponder];
+	[_searchField resignFirstResponder];
 }
 
 - (void)tableView:(UITableView *)tv accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    NSArray *history = [historyProvider pastHistoryItemsForPrefix:searchField.text];
-    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:searchField.text];
+    NSArray *history = [historyProvider pastHistoryItemsForPrefix:_searchField.text];
+    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:_searchField.text];
     if(indexPath.row < history.count) {
         // this should never happen
         NSLog(@"??? Accessory button tapped for a history item");
@@ -716,7 +716,7 @@
      	NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
         [self loadQueryOrURL:[suggestionItem objectForKey:@"officialsite"]];        
         [tv deselectRowAtIndexPath:indexPath animated:YES];
-        [searchField resignFirstResponder];
+        [_searchField resignFirstResponder];
     }
 }
 

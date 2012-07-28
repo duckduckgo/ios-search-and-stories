@@ -9,7 +9,6 @@
 #import "DDGInputAccessoryView.h"
 
 @implementation DDGInputAccessoryView
-@synthesize background;
 
 // This view ignores touches to itself while allowing touches to its subviews.
 // Taken from http://vectorvector.tumblr.com/post/2130331861/ignore-touches-to-uiview-subclass-but-not-to-its
