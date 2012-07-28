@@ -10,12 +10,6 @@
 #import "DDGAppDelegate.h"
 #import "DDGSearchHistoryProvider.h"
 
-@interface DDGSearchHistoryProvider (Private)
--(NSString *)historyPath;
--(void)removeOldHistoryItemsWithoutSaving;
--(void)save;
-@end
-
 @implementation DDGSearchHistoryProvider
 
 static DDGSearchHistoryProvider *sharedInstance;

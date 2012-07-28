@@ -11,11 +11,6 @@
 // for now this class is a stub; eventually it will handle downloading lists of bangs, custom user-defined bangs, etc.
 // the hard-coded list of bangs was copied from https://duckduckgo.com/bang.html
 
-@interface DDGBangsProvider (Private)
-+(NSString *)bangsFilePath;
-+(void)downloadBangsJSON;
-@end
-
 @implementation DDGBangsProvider
 
 static NSArray *bangs;

@@ -13,11 +13,6 @@
 static NSString *suggestionServerBaseURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
 static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
 
-@interface DDGSearchSuggestionsProvider (Private)
--(void)addOfficialSitesToSuggestionsCacheForSearchText:(NSString *)searchText success:(void (^)(void))success;
--(NSString *)officialSiteForItem:(NSString *)suggestion;
-@end
-
 @implementation DDGSearchSuggestionsProvider
 
 -(id)init {
