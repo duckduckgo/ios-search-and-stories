@@ -19,28 +19,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "Reachability.h"
 
-@interface DDGViewController (Private)
--(void)beginDownloadingStories;
--(void)downloadStoriesSuccess:(void (^)())success;
--(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories;
-
--(NSURL *)faviconURLForDomain:(NSString *)domain;
--(UIImage *)grayscaleImageFromImage:(UIImage *)image;
--(void)loadFaviconForURLString:(NSString *)urlString storyID:(NSString *)storyID;
-
-@end
-
 @implementation DDGViewController
-
-@synthesize loadedCell;
-@synthesize tableView;
-@synthesize searchController;
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Release any cached data, images, etc that aren't in use.
-}
 
 #pragma mark - View lifecycle
 
@@ -48,11 +27,11 @@
     [super viewDidLoad];
 		
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
-	searchController.searchHandler = self;
-    searchController.state = DDGSearchControllerStateHome;
-	[searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
+	_searchController.searchHandler = self;
+    _searchController.state = DDGSearchControllerStateHome;
+	[_searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
     
-    tableView.separatorColor = [UIColor clearColor];
+    _tableView.separatorColor = [UIColor clearColor];
 
     if (refreshHeaderView == nil) {
 		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
@@ -78,7 +57,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [searchController resetOmnibar];
+    [_searchController resetOmnibar];
     
     Reachability *reachability = [Reachability reachabilityForInternetConnection];
     NetworkStatus status = [reachability currentReachabilityStatus];
@@ -91,11 +70,11 @@
     [super viewDidAppear:animated];
 
     // if we animated out, animate back in
-    if(tableView.alpha == 0) {
-        tableView.transform = CGAffineTransformMakeScale(2, 2);
+    if(_tableView.alpha == 0) {
+        _tableView.transform = CGAffineTransformMakeScale(2, 2);
         [UIView animateWithDuration:0.3 animations:^{
-            tableView.alpha = 1;
-            tableView.transform = CGAffineTransformIdentity;
+            _tableView.alpha = 1;
+            _tableView.transform = CGAffineTransformIdentity;
         }];
     }
 }
@@ -123,7 +102,7 @@
     
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
         
-    [searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [_searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
 #pragma mark - Scroll view delegate
@@ -175,10 +154,10 @@
     // because we want the search bar to stay in place, we need to do custom animation here.
    
     [UIView animateWithDuration:0.3 animations:^{
-        tableView.transform = CGAffineTransformMakeScale(2, 2);
-        tableView.alpha = 0;
+        _tableView.transform = CGAffineTransformMakeScale(2, 2);
+        _tableView.alpha = 0;
     } completion:^(BOOL finished) {
-        tableView.transform = CGAffineTransformIdentity;
+        _tableView.transform = CGAffineTransformIdentity;
         [self.navigationController pushViewController:webVC animated:NO];
     }];
 }
@@ -191,7 +170,7 @@
 	UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
 	if (cell == nil) {
         [[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil];
-        cell = loadedCell;
+        cell = _loadedCell;
         self.loadedCell = nil;
     }
 
@@ -244,7 +223,7 @@
 //        }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete            
+            [_tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete
         });
     });
 

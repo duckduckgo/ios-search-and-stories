@@ -9,13 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "DDGSearchController.h"
 
-@interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler>
-{
-	IBOutlet UIWebView *webView;
-	IBOutlet DDGSearchController *searchController;
-    
-    NSDictionary *params;
-    
+@interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler> {    
     BOOL viewsInitialized;
     NSString *queryOrURLToLoad;
 
@@ -28,7 +22,6 @@
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;
 @property (nonatomic, strong) IBOutlet DDGSearchController *searchController;
-
 @property (nonatomic, strong) NSDictionary *params;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString;

@@ -9,16 +9,7 @@
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
 
-@interface DDGWebViewController (Private)
--(void)moveAddressBarIntoWebViewAnimated:(BOOL)animated;
--(void)moveAddressBarOutOfWebViewAnimated:(BOOL)animated;
-@end
-
 @implementation DDGWebViewController
-
-@synthesize searchController;
-@synthesize webView;
-@synthesize params;
 
 #pragma mark - View lifecycle
 
@@ -27,16 +18,16 @@
 {
     [super viewDidLoad];
 
-	webView.delegate = self;
-	webView.scalesPageToFit = YES;
+	_webView.delegate = self;
+	_webView.scalesPageToFit = YES;
 	webViewLoadingDepth = 0;
-    webView.backgroundColor = [UIColor colorWithRed:0.216 green:0.231 blue:0.235 alpha:1.000];
+    _webView.backgroundColor = [UIColor colorWithRed:0.216 green:0.231 blue:0.235 alpha:1.000];
     
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
     
-	searchController.searchHandler = self;
-    searchController.state = DDGSearchControllerStateWeb;
-    [searchController.searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+	_searchController.searchHandler = self;
+    _searchController.state = DDGSearchControllerStateWeb;
+    [_searchController.searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
 
     // if we already have a query or URL to load, load it.
 	viewsInitialized = YES;
@@ -75,7 +66,7 @@
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [_searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
 #pragma mark - Address bar positioning
@@ -92,15 +83,15 @@
     
     // find the largest (tallest) subview in webview's scrollview
     UIView *mainSubview;
-    for(int i=0; i < webView.scrollView.subviews.count; i++) {
-        UIView *subview = [[webView.scrollView subviews] objectAtIndex:i];
+    for(int i=0; i < _webView.scrollView.subviews.count; i++) {
+        UIView *subview = [[_webView.scrollView subviews] objectAtIndex:i];
         if(!mainSubview || subview.frame.size.height > mainSubview.frame.size.height)
             mainSubview = subview;
     }
     
     // actually add the search controller into the view heirarchy
-    [searchController.view removeFromSuperview];
-    [self.view addSubview:searchController.view];
+    [_searchController.view removeFromSuperview];
+    [self.view addSubview:_searchController.view];
     
     if(animated) {        
         // push the main subview up/down to accomodate the header
@@ -108,21 +99,21 @@
 //        f.origin.y += -1*headerHeight;
 //        mainSubview.frame = f;
 
-        CGFloat headerOffset = -1*webView.scrollView.contentOffset.y;
+        CGFloat headerOffset = -1*_webView.scrollView.contentOffset.y;
         if(headerOffset < -1*headerHeight)
             headerOffset = -1*headerHeight;
 
         // move the address bar up to where it used to be
-        f = searchController.view.frame;
+        f = _searchController.view.frame;
         f.origin.y += headerOffset;
-        searchController.view.frame = f;
+        _searchController.view.frame = f;
 
 
-        f = webView.frame;
+        f = _webView.frame;
         CGFloat offset = headerHeight + headerOffset;
         f.origin.y += offset;
         f.size.height -= offset;
-        webView.frame = f;
+        _webView.frame = f;
         
         f = mainSubview.frame;
         f.origin.y -= offset;
@@ -133,15 +124,15 @@
         
         [UIView animateWithDuration:0.3 animations:^{
             
-            CGRect f = searchController.view.frame;
+            CGRect f = _searchController.view.frame;
             f.origin.y += -1*headerOffset;
-            searchController.view.frame = f;
+            _searchController.view.frame = f;
             
-            f = webView.frame;
+            f = _webView.frame;
             CGFloat offset = -1*headerOffset;
             f.origin.y += offset;
             f.size.height -= offset;
-            webView.frame = f;
+            _webView.frame = f;
             
             f = mainSubview.frame;
             f.origin.y -= offset;
@@ -168,11 +159,11 @@
         mainSubview.frame = f;
 
         // move the webView down to fit the address bar
-        f = webView.frame;
+        f = _webView.frame;
         CGFloat offset = headerHeight;
         f.origin.y += offset;
         f.size.height -= offset;
-        webView.frame = f;
+        _webView.frame = f;
     }
 }
 
@@ -187,28 +178,28 @@
         
     // find the largest (tallest) subview in webview's scrollviews
     UIView *mainSubview;
-    for(int i=0; i < webView.scrollView.subviews.count; i++) {
-        UIView *subview = [[webView.scrollView subviews] objectAtIndex:i];
+    for(int i=0; i < _webView.scrollView.subviews.count; i++) {
+        UIView *subview = [[_webView.scrollView subviews] objectAtIndex:i];
         if(!mainSubview || subview.frame.size.height > mainSubview.frame.size.height)
             mainSubview = subview;
     }
 
     if(animated) {
 
-        CGFloat headerOffset = -1*webView.scrollView.contentOffset.y;
+        CGFloat headerOffset = -1*_webView.scrollView.contentOffset.y;
         if(headerOffset < -1*headerHeight)
             headerOffset = -1*headerHeight;
 
         [UIView animateWithDuration:0.3 animations:^{
             
-            CGRect f = searchController.view.frame;
+            CGRect f = _searchController.view.frame;
             f.origin.y += headerOffset;
-            searchController.view.frame = f;
+            _searchController.view.frame = f;
             
-            f = webView.frame;
+            f = _webView.frame;
             f.origin.y += headerOffset;
             f.size.height -= headerOffset;
-            webView.frame = f;
+            _webView.frame = f;
             
             f = mainSubview.frame;
             f.origin.y += -1*headerOffset;
@@ -216,19 +207,19 @@
             
         } completion:^(BOOL finished){
             // actually add the search controller into the view heirarchy
-            [searchController.view removeFromSuperview];
-            [webView.scrollView addSubview:searchController.view];
-            [webView.scrollView bringSubviewToFront:searchController.view];
+            [_searchController.view removeFromSuperview];
+            [_webView.scrollView addSubview:_searchController.view];
+            [_webView.scrollView bringSubviewToFront:_searchController.view];
             
-            CGRect f = searchController.view.frame;
+            CGRect f = _searchController.view.frame;
             f.origin.y = 0;
-            searchController.view.frame = f;
+            _searchController.view.frame = f;
             
-            f = webView.frame;
+            f = _webView.frame;
             CGFloat offset = headerHeight + headerOffset;
             f.origin.y -= offset;
             f.size.height += offset;
-            webView.frame = f;
+            _webView.frame = f;
             
             f = mainSubview.frame;
             f.origin.y += offset;
@@ -241,19 +232,19 @@
         }];
     } else {
         // actually add the search controller into the view heirarchy
-        [searchController.view removeFromSuperview];
-        [webView.scrollView addSubview:searchController.view];
-        [webView.scrollView bringSubviewToFront:searchController.view];
+        [_searchController.view removeFromSuperview];
+        [_webView.scrollView addSubview:_searchController.view];
+        [_webView.scrollView bringSubviewToFront:_searchController.view];
         
         f = mainSubview.frame;
         f.origin.y += headerHeight;
         mainSubview.frame = f;
         
-        f = webView.frame;
+        f = _webView.frame;
         CGFloat offset = -1*headerHeight;
         f.origin.y += offset;
         f.size.height -= offset;
-        webView.frame = f;
+        _webView.frame = f;
     }
 }
 
@@ -261,17 +252,17 @@
 
 -(void)searchControllerLeftButtonPressed {
     
-	if(webView.canGoBack)
-        [webView goBack];
+	if(_webView.canGoBack)
+        [_webView goBack];
 	else
 	    [self.navigationController popViewControllerAnimated:NO];
 }
 
 -(void)searchControllerStopOrReloadButtonPressed {
-    if(webView.isLoading)
-        [webView stopLoading];
+    if(_webView.isLoading)
+        [_webView stopLoading];
     else
-        [webView reload];
+        [_webView reload];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString {
@@ -280,14 +271,14 @@
         queryOrURLToLoad = queryOrURLString;
     } else if(queryOrURLString) {
         NSString *urlString;
-        if([searchController isQuery:queryOrURLString]) {
+        if([_searchController isQuery:queryOrURLString]) {
             urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [queryOrURLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         } else
-            urlString = [searchController validURLStringFromString:queryOrURLString];
+            urlString = [_searchController validURLStringFromString:queryOrURLString];
         
         NSURL *url = [NSURL URLWithString:urlString];
-        [webView loadRequest:[NSURLRequest requestWithURL:url]];
-        [searchController updateBarWithURL:url];
+        [_webView loadRequest:[NSURLRequest requestWithURL:url]];
+        [_searchController updateBarWithURL:url];
     }
 }
 
@@ -295,7 +286,7 @@
 
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     if(action == @selector(search:))
-        return ![searchController.searchField isFirstResponder];
+        return ![_searchController.searchField isFirstResponder];
     else
         return [super canPerformAction:action withSender:sender];
 }
@@ -310,7 +301,7 @@
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 
     if([request.URL isEqual:request.mainDocumentURL])
-        [searchController updateBarWithURL:request.URL];
+        [_searchController updateBarWithURL:request.URL];
     
     return YES;
 }
@@ -322,7 +313,7 @@
     
 	if (++webViewLoadingDepth == 1) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-        [searchController webViewStartedLoading];
+        [_searchController webViewStartedLoading];
     }
 }
 
@@ -333,7 +324,7 @@
     
 	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        [searchController webViewFinishedLoading];
+        [_searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
         webViewLoadEvents = 0;
 	}
@@ -346,7 +337,7 @@
 
 	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        [searchController webViewFinishedLoading];
+        [_searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
         webViewLoadEvents = 0;
 	}
@@ -354,9 +345,9 @@
 
 -(void)updateProgressBar {
     if(webViewLoadEvents == 1)
-        [searchController setProgress:0.15];
+        [_searchController setProgress:0.15];
     else if(webViewLoadEvents == 2)
-        [searchController setProgress:0.7];
+        [_searchController setProgress:0.7];
 }
 
 @end

@@ -10,13 +10,7 @@
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate>
-{
-	IBOutlet UITableViewCell *loadedCell;
-    
-	__weak IBOutlet UITableView *tableView;
-    DDGSearchController *searchController;
-	
+@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate> {
     EGORefreshTableHeaderView *refreshHeaderView;
     BOOL isRefreshing;
 }
