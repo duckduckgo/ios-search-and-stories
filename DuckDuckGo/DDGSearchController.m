@@ -129,6 +129,11 @@
 
 -(void)setState:(DDGSearchControllerState)searchControllerState {
 	_state = searchControllerState;
+    
+    if(_state == DDGSearchControllerStateHome)
+        [_searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
+    else if (_state == DDGSearchControllerStateWeb)
+        [_searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
 }
 
 -(void)stopOrReloadButtonPressed {

@@ -29,7 +29,6 @@
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateHome;
-	[_searchController.searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
     
     _tableView.separatorColor = [UIColor clearColor];
 

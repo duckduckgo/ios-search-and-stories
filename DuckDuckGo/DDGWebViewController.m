@@ -27,7 +27,6 @@
     
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateWeb;
-    [_searchController.searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
 
     // if we already have a query or URL to load, load it.
 	viewsInitialized = YES;
