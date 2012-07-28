@@ -82,6 +82,16 @@
 		4C3BEFB115C488E000EEA7BF /* share_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFB015C488E000EEA7BF /* share_button.png */; };
 		4C3BEFB515C48D0100EEA7BF /* DDGPopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C3BEFB315C48D0100EEA7BF /* DDGPopoverViewController.m */; };
 		4C3BEFB615C48D0100EEA7BF /* DDGPopoverViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFB415C48D0100EEA7BF /* DDGPopoverViewController.xib */; };
+		4C3BEFB715C4943A00EEA7BF /* popoverArrowDown.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9215C47DBA00EEA7BF /* popoverArrowDown.png */; };
+		4C3BEFB815C4943A00EEA7BF /* popoverArrowDown@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9315C47DBA00EEA7BF /* popoverArrowDown@2x.png */; };
+		4C3BEFB915C4943A00EEA7BF /* popoverArrowLeft.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9415C47DBA00EEA7BF /* popoverArrowLeft.png */; };
+		4C3BEFBA15C4943A00EEA7BF /* popoverArrowLeft@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9515C47DBA00EEA7BF /* popoverArrowLeft@2x.png */; };
+		4C3BEFBB15C4943A00EEA7BF /* popoverArrowRight.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9615C47DBA00EEA7BF /* popoverArrowRight.png */; };
+		4C3BEFBC15C4943A00EEA7BF /* popoverArrowRight@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9715C47DBA00EEA7BF /* popoverArrowRight@2x.png */; };
+		4C3BEFBD15C4943A00EEA7BF /* popoverArrowUp.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9815C47DBA00EEA7BF /* popoverArrowUp.png */; };
+		4C3BEFBE15C4943A00EEA7BF /* popoverArrowUp@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9915C47DBA00EEA7BF /* popoverArrowUp@2x.png */; };
+		4C3BEFBF15C4943A00EEA7BF /* popoverBg.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9A15C47DBA00EEA7BF /* popoverBg.png */; };
+		4C3BEFC015C4943A00EEA7BF /* popoverBg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEF9B15C47DBA00EEA7BF /* popoverBg@2x.png */; };
 		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
 		4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CF915B759E100790F60 /* IGFormButton.m */; };
 		4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFB15B759E100790F60 /* IGFormElement.m */; };
@@ -780,6 +790,16 @@
 				4C3BEFAF15C4889D00EEA7BF /* share_button@2x.png in Resources */,
 				4C3BEFB115C488E000EEA7BF /* share_button.png in Resources */,
 				4C3BEFB615C48D0100EEA7BF /* DDGPopoverViewController.xib in Resources */,
+				4C3BEFB715C4943A00EEA7BF /* popoverArrowDown.png in Resources */,
+				4C3BEFB815C4943A00EEA7BF /* popoverArrowDown@2x.png in Resources */,
+				4C3BEFB915C4943A00EEA7BF /* popoverArrowLeft.png in Resources */,
+				4C3BEFBA15C4943A00EEA7BF /* popoverArrowLeft@2x.png in Resources */,
+				4C3BEFBB15C4943A00EEA7BF /* popoverArrowRight.png in Resources */,
+				4C3BEFBC15C4943A00EEA7BF /* popoverArrowRight@2x.png in Resources */,
+				4C3BEFBD15C4943A00EEA7BF /* popoverArrowUp.png in Resources */,
+				4C3BEFBE15C4943A00EEA7BF /* popoverArrowUp@2x.png in Resources */,
+				4C3BEFBF15C4943A00EEA7BF /* popoverBg.png in Resources */,
+				4C3BEFC015C4943A00EEA7BF /* popoverBg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
