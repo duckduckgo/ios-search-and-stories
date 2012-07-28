@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGSearchHandler.h"
-#import "WEPopoverController.h"
 
 typedef enum {
 	DDGSearchControllerStateHome = 0,
@@ -16,7 +15,7 @@ typedef enum {
 } DDGSearchControllerState;
 
 @class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> {
+@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, UIActionSheetDelegate> {
 	CGRect keyboardRect;
         
     NSString *oldSearchText;
@@ -42,7 +41,6 @@ typedef enum {
 @property(nonatomic, weak) UIView *parentView;
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
-@property(nonatomic, strong) WEPopoverController *wePopoverController;
 
 -(id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
 
