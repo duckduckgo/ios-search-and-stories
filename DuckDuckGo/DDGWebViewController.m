@@ -80,7 +80,13 @@
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    
+    if(buttonIndex == 0) {
+        // bookmark
+        
+    } else if(buttonIndex == 1) {
+        // share
+        
+    }
 }
 
 

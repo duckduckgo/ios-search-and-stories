@@ -71,6 +71,8 @@
 		4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */; };
 		4C3BEFAF15C4889D00EEA7BF /* share_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFAE15C4889D00EEA7BF /* share_button@2x.png */; };
 		4C3BEFB115C488E000EEA7BF /* share_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFB015C488E000EEA7BF /* share_button.png */; };
+		4C3BF0E015C4A01B00EEA7BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF0DF15C4A01B00EEA7BF /* Security.framework */; };
+		4C3BF0E115C4A02300EEA7BF /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */; };
 		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
 		4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CF915B759E100790F60 /* IGFormButton.m */; };
 		4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFB15B759E100790F60 /* IGFormElement.m */; };
@@ -192,6 +194,7 @@
 		4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddressBarTextField.m; sourceTree = "<group>"; };
 		4C3BEFAE15C4889D00EEA7BF /* share_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share_button@2x.png"; sourceTree = "<group>"; };
 		4C3BEFB015C488E000EEA7BF /* share_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = share_button.png; sourceTree = "<group>"; };
+		4C3BF0DF15C4A01B00EEA7BF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		4C5381451595045500490B9C /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
 		4C573CF815B759E100790F60 /* IGFormButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormButton.h; sourceTree = "<group>"; };
 		4C573CF915B759E100790F60 /* IGFormButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormButton.m; sourceTree = "<group>"; };
@@ -270,6 +273,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4C3BF0E115C4A02300EEA7BF /* SystemConfiguration.framework in Frameworks */,
+				4C3BF0E015C4A01B00EEA7BF /* Security.framework in Frameworks */,
 				4CF9ED58154DFC5F0075C23E /* UIKit.framework in Frameworks */,
 				4CF9ED57154DFC460075C23E /* MessageUI.framework in Frameworks */,
 				4CFA1A9014DDB73C00DF52FE /* Foundation.framework in Frameworks */,
@@ -505,6 +510,7 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
+				4C3BF0DF15C4A01B00EEA7BF /* Security.framework */,
 				4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */,
 				4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */,
 				4CF9ED56154DFC460075C23E /* MessageUI.framework */,
@@ -636,6 +642,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				de,
 			);
 			mainGroup = 83F3224D149290EF00A61BC5;
 			productRefGroup = 83F32259149290EF00A61BC5 /* Products */;
