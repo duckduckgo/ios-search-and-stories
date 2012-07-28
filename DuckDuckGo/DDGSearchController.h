@@ -15,21 +15,9 @@ typedef enum {
 } DDGSearchControllerState;
 
 @class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate>
-{
-	
-	IBOutlet UITableViewCell	*loadedCell;
-	
-    __weak IBOutlet UITableView *tableView;
-	__weak IBOutlet UIButton *searchButton;
-    __weak IBOutlet UIView *background;
-    
-    
-    DDGSearchControllerState state;
+@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> {
 	CGRect keyboardRect;
-    
-    id<DDGSearchHandler> __weak searchHandler;
-    
+        
     NSString *oldSearchText;
     BOOL barUpdated;
     

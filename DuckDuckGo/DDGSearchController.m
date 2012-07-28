@@ -14,32 +14,9 @@
 #import "DDGBangsProvider.h"
 #import "DDGInputAccessoryView.h"
 
-@interface DDGSearchController (Private)
-
--(void)revealBackground:(BOOL)reveal animated:(BOOL)animated;
--(void)revealAutocomplete:(BOOL)reveal;
--(void)cancelInputAfterDelay;
--(void)cancelInput;
--(void)loadQueryOrURL:(NSString *)queryOrURL;
--(void)searchFieldDidChange:(id)sender;
--(void)updateBarProgress;
--(void)createInputAccessory;
--(void)bangButtonPressed;
--(void)loadSuggestionsForBang:(NSString *)bang;
--(void)bangAutocompleteButtonPressed:(UIButton *)sender;
--(void)clearBangSuggestions;
--(void)reloadSuggestions;
-
-@end
-
 @implementation DDGSearchController
 
-@synthesize loadedCell;
-@synthesize tableView, searchButton, background;
-@synthesize searchHandler, state;
-
-- (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent
-{
+- (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent {
 	self = [super initWithNibName:nibNameOrNil bundle:nil];
     // the code below happens after viewDidLoad
     
@@ -146,17 +123,17 @@
     // if it's showing, hide it.
     [self revealAutocomplete:NO];
     
-	[searchHandler searchControllerLeftButtonPressed];
+	[_searchHandler searchControllerLeftButtonPressed];
 }
 
 
 -(void)setState:(DDGSearchControllerState)searchControllerState {
-	state = searchControllerState;
+	_state = searchControllerState;
 }
 
 -(void)stopOrReloadButtonPressed {
-    if([searchHandler respondsToSelector:@selector(searchControllerStopOrReloadButtonPressed)])
-        [searchHandler performSelector:@selector(searchControllerStopOrReloadButtonPressed)];
+    if([_searchHandler respondsToSelector:@selector(searchControllerStopOrReloadButtonPressed)])
+        [_searchHandler performSelector:@selector(searchControllerStopOrReloadButtonPressed)];
 }
 
 -(void)webViewStartedLoading {
@@ -174,7 +151,7 @@
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
     [historyProvider logHistoryItem:queryOrURL];
-    [searchHandler loadQueryOrURL:queryOrURL];
+    [_searchHandler loadQueryOrURL:queryOrURL];
 }
 
 #pragma mark - Helpers
@@ -234,7 +211,7 @@
                          } completion:nil];
         
         [UIView animateWithDuration:animationDuration animations:^{
-            background.alpha = (reveal ? 1.0 : 0.0);
+            _background.alpha = (reveal ? 1.0 : 0.0);
         }];
         
     } else {
@@ -281,13 +258,13 @@
     });
     
     [UIView animateWithDuration:animationDuration animations:^{
-        background.alpha = (reveal ? 1.0 : 0.0);
+        _background.alpha = (reveal ? 1.0 : 0.0);
     }];
 }
 
 
 -(void)revealAutocomplete:(BOOL)reveal {
-    tableView.hidden = !reveal;
+    _tableView.hidden = !reveal;
 }
 
 // cancelInput destroys the table view instantly, which causes issues when a cell is tapped and that needs to be processed before destroying the table view, so we wait for a tiny bit first.
@@ -302,8 +279,8 @@
         _searchField.text = oldSearchText;
         oldSearchText = nil;
     }
-    if([searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
-        [searchHandler searchControllerAddressBarWillCancel];
+    if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
+        [_searchHandler searchControllerAddressBarWillCancel];
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -347,7 +324,7 @@
 
 -(void)resetOmnibar {
     _searchField.text = @"";
-    [tableView reloadData];
+    [_tableView reloadData];
 }
 
 #pragma mark - Input accesory
@@ -474,14 +451,14 @@
 	if(newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
         [suggestionsProvider downloadSuggestionsForSearchText:newSearchText success:^{
-            [tableView reloadData];
+            [_tableView reloadData];
         }];
 	} else {
         // search text is blank; clear the suggestions cache, reload, and hide the table
         [suggestionsProvider emptyCache];
     }
     // either way, reload the table view.
-    [tableView reloadData];
+    [_tableView reloadData];
 }
 
 #pragma mark - Text field delegate
@@ -541,8 +518,8 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {    
-    if([searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
-        [searchHandler searchControllerAddressBarWillOpen];
+    if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
+        [_searchHandler searchControllerAddressBarWillOpen];
     
 	return YES;
 }
@@ -573,7 +550,7 @@
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [self revealBackground:NO animated:YES];
     
-    if(state==DDGSearchControllerStateWeb)
+    if(_state==DDGSearchControllerStateWeb)
         textField.rightView = stopOrReloadButton;
 }
 
