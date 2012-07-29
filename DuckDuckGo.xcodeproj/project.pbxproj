@@ -85,6 +85,7 @@
 		4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8D15C4EC9E00340B59 /* SVProgressHUD.m */; };
 		4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */; };
 		4C4B7E9515C4F1AA00340B59 /* DDGBookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */; };
+		4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */; };
 		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
 		4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CF915B759E100790F60 /* IGFormButton.m */; };
 		4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFB15B759E100790F60 /* IGFormElement.m */; };
@@ -265,6 +266,8 @@
 		4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBookmarksViewController.h; sourceTree = "<group>"; };
 		4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGBookmarksViewController.m; sourceTree = "<group>"; };
 		4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGBookmarksViewController.xib; sourceTree = "<group>"; };
+		4C4B7E9615C4F8E500340B59 /* DDGBookmarksProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBookmarksProvider.h; sourceTree = "<group>"; };
+		4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGBookmarksProvider.m; sourceTree = "<group>"; };
 		4C5381451595045500490B9C /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
 		4C573CF815B759E100790F60 /* IGFormButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormButton.h; sourceTree = "<group>"; };
 		4C573CF915B759E100790F60 /* IGFormButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormButton.m; sourceTree = "<group>"; };
@@ -463,6 +466,8 @@
 				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
 				4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */,
 				4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */,
+				4C4B7E9615C4F8E500340B59 /* DDGBookmarksProvider.h */,
+				4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */,
 			);
 			name = Bookmarks;
 			sourceTree = "<group>";
@@ -917,6 +922,7 @@
 				4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
 				4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */,
+				4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
