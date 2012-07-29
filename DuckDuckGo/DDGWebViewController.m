@@ -8,6 +8,8 @@
 
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
+#import "DDGCache.h"
+#import "SVProgressHUD.h"
 #import "SHK.h"
 
 @implementation DDGWebViewController
@@ -71,11 +73,15 @@
 #pragma mark - Action sheet
 
 -(void)searchControllerActionButtonPressed {
+    BOOL bookmarked = ([DDGCache objectForKey:webViewURL.absoluteString inCache:@"bookmarks"] != nil);
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
-                                                    otherButtonTitles:@"Bookmark", @"Share", nil];
+                                                    otherButtonTitles:
+                                  (bookmarked ? @"Unbookmark" : @"Bookmark"),
+                                  @"Share",
+                                  nil];
     [actionSheet showInView:self.view];
 }
 
@@ -83,9 +89,18 @@
     
     NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     if(buttonIndex == 0) {
-        // bookmark
+        // bookmark/unbookmark
         
+        BOOL bookmarked = ([DDGCache objectForKey:webViewURL.absoluteString inCache:@"bookmarks"] != nil);
+        if(bookmarked)
+            [DDGCache setObject:nil forKey:webViewURL.absoluteString inCache:@"bookmarks"];
+        else
+            [DDGCache setObject:pageTitle forKey:webViewURL.absoluteString inCache:@"bookmarks"];
+    
+        [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unbookmarked!" : @"Bookmarked!")];
     } else if(buttonIndex == 1) {
+        // share
+        
         SHKItem *item = [SHKItem URL:webViewURL title:pageTitle contentType:SHKURLContentTypeWebpage];
         SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
         [SHK setRootViewController:self];
