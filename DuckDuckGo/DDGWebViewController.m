@@ -8,7 +8,7 @@
 
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
-#import "DDGCache.h"
+#import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
 #import "SHK.h"
 
@@ -73,7 +73,7 @@
 #pragma mark - Action sheet
 
 -(void)searchControllerActionButtonPressed {
-    BOOL bookmarked = ([DDGCache objectForKey:webViewURL.absoluteString inCache:@"bookmarks"] != nil);
+    BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:webViewURL];
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
@@ -91,11 +91,11 @@
     if(buttonIndex == 0) {
         // bookmark/unbookmark
         
-        BOOL bookmarked = ([DDGCache objectForKey:webViewURL.absoluteString inCache:@"bookmarks"] != nil);
+        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:webViewURL];
         if(bookmarked)
-            [DDGCache setObject:nil forKey:webViewURL.absoluteString inCache:@"bookmarks"];
+            [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:webViewURL];
         else
-            [DDGCache setObject:pageTitle forKey:webViewURL.absoluteString inCache:@"bookmarks"];
+            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:pageTitle URL:webViewURL];
     
         [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unbookmarked!" : @"Bookmarked!")];
     } else if(buttonIndex == 1) {
