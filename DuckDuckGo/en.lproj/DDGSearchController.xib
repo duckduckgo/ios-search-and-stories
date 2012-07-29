@@ -41,6 +41,7 @@
 					<object class="IBUIView" id="479174929">
 						<reference key="NSNextResponder" ref="398799709"/>
 						<int key="NSvFlags">274</int>
+						<array class="NSMutableArray" key="NSSubviews"/>
 						<string key="NSFrame">{{0, 44}, {320, 197}}</string>
 						<reference key="NSSuperview" ref="398799709"/>
 						<reference key="NSWindow"/>
@@ -332,12 +333,6 @@
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">9</int>
-						<reference key="object" ref="502605198"/>
-						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="398799709"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">10</int>
 						<reference key="object" ref="450705218"/>
 						<reference key="parent" ref="398799709"/>
@@ -355,11 +350,17 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">21</int>
 						<reference key="object" ref="479174929"/>
+						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="398799709"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">29</int>
 						<reference key="object" ref="528723170"/>
+						<reference key="parent" ref="398799709"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">9</int>
+						<reference key="object" ref="502605198"/>
 						<reference key="parent" ref="398799709"/>
 					</object>
 				</array>
@@ -384,7 +385,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">32</int>
+			<int key="maxID">41</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -399,20 +400,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">DDGSearchController</string>
 					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="actionButtonPressed:">id</string>
-						<string key="leftButtonPressed:">UIButton</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="actionButtonPressed:">
-							<string key="name">actionButtonPressed:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="leftButtonPressed:">
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">leftButtonPressed:</string>
+						<string key="NS.object.0">UIButton</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">leftButtonPressed:</string>
+						<object class="IBActionInfo" key="NS.object.0">
 							<string key="name">leftButtonPressed:</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
-					</dictionary>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="actionButton">UIButton</string>
 						<string key="background">UIView</string>

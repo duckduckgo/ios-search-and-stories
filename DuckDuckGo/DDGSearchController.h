@@ -38,10 +38,11 @@ typedef enum {
 @property(nonatomic, weak) IBOutlet UIView *background;
 @property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 
+@property(nonatomic, weak) UIViewController *containerViewController;
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
 
--(id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent;
+-(id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container;
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(void)updateBarWithURL:(NSURL *)url;

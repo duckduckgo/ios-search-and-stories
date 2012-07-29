@@ -25,7 +25,7 @@
 	webViewLoadingDepth = 0;
     _webView.backgroundColor = [UIColor colorWithRed:0.216 green:0.231 blue:0.235 alpha:1.000];
     
-	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
+	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" containerViewController:self];
     
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateWeb;

@@ -13,14 +13,21 @@
 #import "DDGAddressBarTextField.h"
 #import "DDGBangsProvider.h"
 #import "DDGInputAccessoryView.h"
+#import "DDGBookmarksViewController.h"
 
 @implementation DDGSearchController
+static NSString *bookmarksCellID = @"BCell";
+static NSString *suggestionCellID = @"SCell";
+static NSString *historyCellID = @"HCell";
+static NSString *emptyCellID = @"ECell";
 
-- (id)initWithNibName:(NSString *)nibNameOrNil view:(UIView*)parent {
+- (id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container {
 	self = [super initWithNibName:nibNameOrNil bundle:nil];
     // the code below happens after viewDidLoad
     
-	if (self) {        
+	if (self) {
+        self.containerViewController = container;
+
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
         if(PORTRAIT)
@@ -30,7 +37,7 @@
         
         self.view.frame = frame;
 
-		[parent addSubview:self.view];
+		[_containerViewController.view addSubview:self.view];
         [self revealBackground:NO animated:NO];
 
         keyboardRect = CGRectZero;
@@ -597,15 +604,29 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return ([[suggestionsProvider suggestionsForSearchText:_searchField.text] count] +
+    if([_searchField.text isEqualToString:@""])
+        return 1;
+    else
+        return ([[suggestionsProvider suggestionsForSearchText:_searchField.text] count] +
             [[historyProvider pastHistoryItemsForPrefix:_searchField.text] count]);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *suggestionCellID = @"SCell";
-    static NSString *historyCellID = @"HCell";
-    static NSString *emptyCellID = @"ECell";
+{    
+    if([_searchField.text isEqualToString:@""]) {
+        UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:bookmarksCellID];
+        if(cell == nil) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:bookmarksCellID];
+            cell.textLabel.text = @"Bookmarked";
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
+            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.selectionStyle = UITableViewCellSelectionStyleGray;
+            cell.backgroundView = [[UIView alloc] init];
+            [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
+        }
+        return cell;
+    }
     
     NSArray *history = [historyProvider pastHistoryItemsForPrefix:_searchField.text];
     NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:_searchField.text];
@@ -686,16 +707,21 @@
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSArray *history = [historyProvider pastHistoryItemsForPrefix:_searchField.text];
-    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:_searchField.text];
-    if(indexPath.row < history.count) {
-        NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
-        [self loadQueryOrURL:[historyItem objectForKey:@"text"]];        
+    if([[[tv cellForRowAtIndexPath:indexPath] reuseIdentifier] isEqualToString:bookmarksCellID]) {
+        DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
+        [_containerViewController.navigationController pushViewController:bookmarksVC animated:YES];
     } else {
-     	NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
-        [self loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];        
+        NSArray *history = [historyProvider pastHistoryItemsForPrefix:_searchField.text];
+        NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:_searchField.text];
+        if(indexPath.row < history.count) {
+            NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
+            [self loadQueryOrURL:[historyItem objectForKey:@"text"]];        
+        } else {
+            NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
+            [self loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];        
+        }
     }
-    	
+    
 	[tv deselectRowAtIndexPath:indexPath animated:YES];
 	[_searchField resignFirstResponder];
 }

@@ -83,6 +83,8 @@
 		4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */; };
 		4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */; };
 		4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8D15C4EC9E00340B59 /* SVProgressHUD.m */; };
+		4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */; };
+		4C4B7E9515C4F1AA00340B59 /* DDGBookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */; };
 		4C5381461595045500490B9C /* noimage.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5381451595045500490B9C /* noimage.png */; };
 		4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CF915B759E100790F60 /* IGFormButton.m */; };
 		4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFB15B759E100790F60 /* IGFormElement.m */; };
@@ -260,6 +262,9 @@
 		4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		4C4B7E8C15C4EC9E00340B59 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		4C4B7E8D15C4EC9E00340B59 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
+		4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBookmarksViewController.h; sourceTree = "<group>"; };
+		4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGBookmarksViewController.m; sourceTree = "<group>"; };
+		4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGBookmarksViewController.xib; sourceTree = "<group>"; };
 		4C5381451595045500490B9C /* noimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = noimage.png; sourceTree = "<group>"; };
 		4C573CF815B759E100790F60 /* IGFormButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormButton.h; sourceTree = "<group>"; };
 		4C573CF915B759E100790F60 /* IGFormButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormButton.m; sourceTree = "<group>"; };
@@ -452,6 +457,16 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		4C4B7E9015C4F18800340B59 /* Bookmarks */ = {
+			isa = PBXGroup;
+			children = (
+				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
+				4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */,
+				4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */,
+			);
+			name = Bookmarks;
+			sourceTree = "<group>";
+		};
 		4C573C1115B7311200790F60 /* Home screen */ = {
 			isa = PBXGroup;
 			children = (
@@ -633,6 +648,7 @@
 				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
 				4C660A741591487C001AB510 /* Search controller */,
+				4C4B7E9015C4F18800340B59 /* Bookmarks */,
 				4C573C1115B7311200790F60 /* Home screen */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
@@ -843,6 +859,7 @@
 				4C3BEFB115C488E000EEA7BF /* share_button.png in Resources */,
 				4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */,
 				4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */,
+				4C4B7E9515C4F1AA00340B59 /* DDGBookmarksViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -899,6 +916,7 @@
 				4CBDCE0115C116A500372237 /* Reachability.m in Sources */,
 				4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
+				4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

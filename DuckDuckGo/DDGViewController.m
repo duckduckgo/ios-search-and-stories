@@ -26,7 +26,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 		
-	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" view:self.view];
+	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" containerViewController:self];
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateHome;
     
