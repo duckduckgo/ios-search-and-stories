@@ -189,7 +189,7 @@
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
 	label.text = [story objectForKey:@"title"];
     if([[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"readStories"] boolValue])
-        label.textColor = [UIColor lightGrayColor];
+        label.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     else
         label.textColor = [UIColor whiteColor];
     
