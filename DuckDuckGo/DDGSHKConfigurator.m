@@ -10,4 +10,16 @@
 
 @implementation DDGSHKConfigurator
 
+-(NSString *)appName {
+    return @"DuckDuckGo";
+}
+
+-(NSString *)appURL {
+    return @"http://duckduckgo.com";
+}
+
+-(NSString *)sharersPlistName {
+    return @"DDGSHKSharers.plist";
+}
+
 @end

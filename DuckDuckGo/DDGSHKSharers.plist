@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>actions</key>
+	<array>
+		<string>SHKPhotoAlbum</string>
+		<string>SHKCopy</string>
+		<string>SHKMail</string>
+		<string>SHKSafari</string>
+		<string>SHKTextMessage</string>
+	</array>
+	<key>services</key>
+	<array>
+		<string>SHKReadability</string>
+		<string>SHKEvernote</string>
+		<string>SHKDelicious</string>
+		<string>SHKTwitter</string>
+		<string>SHKDiigo</string>
+		<string>SHKPinboard</string>
+		<string>SHKGoogleReader</string>
+		<string>SHKFacebook</string>
+		<string>SHKVkontakte</string>
+		<string>SHKReadItLater</string>
+		<string>SHKInstapaper</string>
+		<string>SHKTumblr</string>
+		<string>SHKFlickr</string>
+		<string>SHKLinkedIn</string>
+		<string>SHKFoursquareV2</string>
+	</array>
+</dict>
+</plist>
