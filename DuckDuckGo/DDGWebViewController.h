@@ -12,12 +12,10 @@
 @interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate> {
     BOOL viewsInitialized;
     NSString *queryOrURLToLoad;
-
+    NSURL *webViewURL;
+    
     NSUInteger webViewLoadingDepth;
     NSUInteger webViewLoadEvents;
-    
-    BOOL addressBarIsAnimating;
-    BOOL addressBarIsInside;
 }
 
 @property (nonatomic, strong) IBOutlet UIWebView *webView;

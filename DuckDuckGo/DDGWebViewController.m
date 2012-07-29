@@ -8,14 +8,14 @@
 
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
+#import "SHK.h"
 
 @implementation DDGWebViewController
 
 #pragma mark - View lifecycle
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
 	_webView.delegate = self;
@@ -80,12 +80,16 @@
 }
 
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    
+    NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     if(buttonIndex == 0) {
         // bookmark
         
     } else if(buttonIndex == 1) {
-        // share
-        
+        SHKItem *item = [SHKItem URL:webViewURL title:pageTitle contentType:SHKURLContentTypeWebpage];
+        SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
+        [SHK setRootViewController:self];
+        [actionSheet showInView:self.view];
     }
 }
 
@@ -121,6 +125,7 @@
         NSURL *url = [NSURL URLWithString:urlString];
         [_webView loadRequest:[NSURLRequest requestWithURL:url]];
         [_searchController updateBarWithURL:url];
+        webViewURL = url;
     }
 }
 
@@ -142,9 +147,10 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 
-    if([request.URL isEqual:request.mainDocumentURL])
+    if([request.URL isEqual:request.mainDocumentURL]) {
         [_searchController updateBarWithURL:request.URL];
-    
+        webViewURL = request.URL;
+    }
     return YES;
 }
 

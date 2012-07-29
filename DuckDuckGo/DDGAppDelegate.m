@@ -11,6 +11,8 @@
 #import "SDURLCache.h"
 #import "DDGCache.h"
 #import "DDGSettingsViewController.h"
+#import "DDGSHKConfigurator.h"
+#import "SHKConfiguration.h"
 
 @implementation DDGAppDelegate
 
@@ -31,6 +33,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     // load default settings
     [DDGSettingsViewController loadDefaultSettings];
+    
+    DefaultSHKConfigurator *configurator = [[DDGSHKConfigurator alloc] init];
+    [SHKConfiguration sharedInstanceWithConfigurator:configurator];
     
     return YES;
 }
