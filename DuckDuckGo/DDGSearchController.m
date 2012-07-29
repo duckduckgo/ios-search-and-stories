@@ -118,7 +118,8 @@ static NSString *emptyCellID = @"ECell";
     
     if([_searchField isFirstResponder]) {
         // user just started editing the search box
-        [self revealBackground:YES animated:YES];
+        if(!_childViewControllerVisible)
+            [self revealBackground:YES animated:YES];
         [self reloadSuggestions];
     }
 }
@@ -175,6 +176,8 @@ static NSString *emptyCellID = @"ECell";
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
+    if([_searchField isFirstResponder])
+        [_searchField resignFirstResponder];
     [historyProvider logHistoryItem:queryOrURL];
     [_searchHandler loadQueryOrURL:queryOrURL];
 }
@@ -572,7 +575,8 @@ static NSString *emptyCellID = @"ECell";
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    [self revealBackground:NO animated:YES];
+    if(!_childViewControllerVisible)
+        [self revealBackground:NO animated:YES];
     
     if(_state==DDGSearchControllerStateWeb)
         textField.rightView = stopOrReloadButton;
@@ -709,7 +713,10 @@ static NSString *emptyCellID = @"ECell";
 {
     if([[[tv cellForRowAtIndexPath:indexPath] reuseIdentifier] isEqualToString:bookmarksCellID]) {
         DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
+        bookmarksVC.searchController = self;
         [_containerViewController.navigationController pushViewController:bookmarksVC animated:YES];
+        self.childViewControllerVisible = YES;
+    	[tv deselectRowAtIndexPath:indexPath animated:YES];
     } else {
         NSArray *history = [historyProvider pastHistoryItemsForPrefix:_searchField.text];
         NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:_searchField.text];
@@ -720,10 +727,10 @@ static NSString *emptyCellID = @"ECell";
             NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
             [self loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];        
         }
+        
+        [tv deselectRowAtIndexPath:indexPath animated:YES];
+        [_searchField resignFirstResponder];
     }
-    
-	[tv deselectRowAtIndexPath:indexPath animated:YES];
-	[_searchField resignFirstResponder];
 }
 
 - (void)tableView:(UITableView *)tv accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {

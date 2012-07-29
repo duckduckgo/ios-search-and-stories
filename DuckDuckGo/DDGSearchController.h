@@ -27,7 +27,6 @@ typedef enum {
     UIButton *stopOrReloadButton;
     DDGInputAccessoryView *inputAccessory;
     NSRange currentWordRange;
-    
     NSMutableArray *unusedBangButtons;
 }
 
@@ -42,6 +41,8 @@ typedef enum {
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
 
+@property(nonatomic, assign) BOOL childViewControllerVisible;
+
 -(id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container;
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;
@@ -55,5 +56,7 @@ typedef enum {
 -(void)webViewStartedLoading;
 -(void)webViewFinishedLoading;
 -(void)setProgress:(CGFloat)progress;
+
+-(void)loadQueryOrURL:(NSString *)queryOrURL;
 
 @end

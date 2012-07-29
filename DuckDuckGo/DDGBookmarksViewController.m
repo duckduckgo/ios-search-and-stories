@@ -8,6 +8,7 @@
 
 #import "DDGBookmarksViewController.h"
 #import "DDGBookmarksProvider.h"
+#import "DDGSearchController.h"
 
 @implementation DDGBookmarksViewController
 
@@ -18,10 +19,14 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    NSLog(@"IT IS %@",self.navigationController);
+
     [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
+    NSLog(@"IT IS %@",self.navigationController);
+
     [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
@@ -70,15 +75,17 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSURL *url = [[[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row] objectForKey:@"url"];
+    
+    _searchController.childViewControllerVisible = NO;
+    [self.navigationController popViewControllerAnimated:YES];
+    
+    double delayInSeconds = 0.5;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [_searchController loadQueryOrURL:url.absoluteString];
+    });
 }
 
 @end
