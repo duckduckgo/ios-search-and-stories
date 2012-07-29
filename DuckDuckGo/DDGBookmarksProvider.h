@@ -18,5 +18,6 @@
 
 -(NSArray *)bookmarks;
 -(void)deleteBookmarkAtIndex:(NSInteger)index;
+-(void)moveBookmarkAtIndex:(NSInteger)from toIndex:(NSInteger)to;
 
 @end

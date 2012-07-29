@@ -38,8 +38,7 @@ static DDGBookmarksProvider *sharedProvider;
     NSArray *bookmarks = self.bookmarks;
     bookmarks = [bookmarks arrayByAddingObject:@{
                  @"title": title,
-                 @"url": url,
-                 @"date": [NSDate date]
+                 @"url": url
                  }];
     [DDGCache setObject:bookmarks forKey:@"bookmarks" inCache:@"misc"];
 }
@@ -57,6 +56,14 @@ static DDGBookmarksProvider *sharedProvider;
 -(void)deleteBookmarkAtIndex:(NSInteger)index {
     NSMutableArray *bookmarks = self.bookmarks.mutableCopy;
     [bookmarks removeObjectAtIndex:index];
+    [DDGCache setObject:bookmarks.copy forKey:@"bookmarks" inCache:@"misc"];
+}
+
+-(void)moveBookmarkAtIndex:(NSInteger)from toIndex:(NSInteger)to {
+    NSMutableArray *bookmarks = self.bookmarks.mutableCopy;
+    NSDictionary *bookmark = [bookmarks objectAtIndex:from];
+    [bookmarks removeObjectAtIndex:from];
+    [bookmarks insertObject:bookmark atIndex:to];
     [DDGCache setObject:bookmarks.copy forKey:@"bookmarks" inCache:@"misc"];
 }
 
