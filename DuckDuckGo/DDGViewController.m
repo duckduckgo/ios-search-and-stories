@@ -165,16 +165,26 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
-	static NSString *CellIdentifier = @"CurrentTopicCell";
-	UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
-	if (cell == nil) {
-        [[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil];
-        cell = _loadedCell;
-        self.loadedCell = nil;
-    }
+	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
+	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
 
     NSArray *stories = [[DDGStoriesProvider sharedProvider] stories];
     NSDictionary *story = [stories objectAtIndex:indexPath.row];
+    
+    NSString *cellID = nil;
+    if([[story objectForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(320, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
+        cellID = OneLineCellIdentifier;
+    else
+        cellID = TwoLineCellIdentifier;
+
+    
+	UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:cellID];
+    
+    if (cell == nil) {
+        [[NSBundle mainBundle] loadNibNamed:cellID owner:self options:nil];
+        cell = _loadedCell;
+        self.loadedCell = nil;
+    }
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
 	label.text = [story objectForKey:@"title"];
@@ -190,24 +200,25 @@
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
     faviconImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"feed"] inCache:@"sourceImages"]];
-    	
+    
+    // resize label, backgroundImageView, faviconImageView as needed
+    UIView *backgroundImageView = (UIImageView *)[cell.contentView viewWithTag:400];
+    backgroundImageView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
+    
 	return cell;
 }
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
 	return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
 	return [DDGStoriesProvider sharedProvider].stories.count;
 }
 
 #pragma  mark - UITableViewDelegate
 
-- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *story = [[DDGStoriesProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
