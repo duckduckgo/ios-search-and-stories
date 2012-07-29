@@ -25,8 +25,6 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
-    NSLog(@"IT IS %@",self.navigationController);
-
     [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
@@ -78,7 +76,6 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSURL *url = [[[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row] objectForKey:@"url"];
     
-    _searchController.childViewControllerVisible = NO;
     [self.navigationController popViewControllerAnimated:YES];
     
     double delayInSeconds = 0.5;

@@ -117,9 +117,11 @@ static NSString *emptyCellID = @"ECell";
 	keyboardRect = [self.view convertRect:keyboardRect toView:nil];
     
     if([_searchField isFirstResponder]) {
-        // user just started editing the search box
+        // if child view controller is visible, don't reveal background because background is already revealed
         if(!_childViewControllerVisible)
             [self revealBackground:YES animated:YES];
+        else
+            self.childViewControllerVisible = NO;
         [self reloadSuggestions];
     }
 }
@@ -704,13 +706,11 @@ static NSString *emptyCellID = @"ECell";
 
 #pragma mark - Table view delegate
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	return 44.0;
 }
 
-- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if([[[tv cellForRowAtIndexPath:indexPath] reuseIdentifier] isEqualToString:bookmarksCellID]) {
         DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
         bookmarksVC.searchController = self;

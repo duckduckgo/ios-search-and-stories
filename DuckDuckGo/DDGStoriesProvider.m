@@ -38,6 +38,9 @@ static DDGStoriesProvider *sharedProvider;
 
 -(void)downloadSourcesFinished:(void (^)())finished {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        
+        NSLog(@"Downloading sources...");
+        
         NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1"];
         NSData *response = [NSData dataWithContentsOfURL:url];
         if(!response)
@@ -48,6 +51,8 @@ static DDGStoriesProvider *sharedProvider;
                                                                 error:nil];
         NSMutableDictionary *newSourcesDict = [[NSMutableDictionary alloc] init];
         NSMutableArray *categories = [[NSMutableArray alloc] init];
+        
+        NSLog(@"Downloaded %i sources.",newSources.count);
         
         for(NSMutableDictionary *source in newSources) {
 
