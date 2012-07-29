@@ -158,31 +158,34 @@ static DDGStoriesProvider *sharedProvider;
         
         // download story images (this method doesn't return until all story images are downloaded)
         NSLog(@"Downloading images...");
-        [newStories iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
-            NSDictionary *story = (NSDictionary *)obj;
-            BOOL reload = NO;
+        // synchronize to prevent multiple simultaneous refreshes from downloading images on top of each other and wasting bandwidth
+        @synchronized(self) {
+            [newStories iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+                NSDictionary *story = (NSDictionary *)obj;
+                BOOL reload = NO;
 
-            if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]) {
-                NSLog(@"Downloading image for %@",[story objectForKey:@"title"]);
-                // main image: download it and resize it as needed
-                NSString *imageURL = [story objectForKey:@"image"];
-                NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
-                UIImage *image = [UIImage imageWithData:imageData];
-                NSLog(@"Got %@",image);
-                if(!image)
-                    image = [UIImage imageNamed:@"noimage.png"];
+                if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]) {
+                    
+                    NSLog(@"Downloading image for %@",[story objectForKey:@"title"]);
+                    // main image: download it and resize it as needed
+                    NSString *imageURL = [story objectForKey:@"image"];
+                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
+                    UIImage *image = [UIImage imageWithData:imageData];
+                    NSLog(@"Got %@",image);
+                    if(!image)
+                        image = [UIImage imageNamed:@"noimage.png"];
 
-                [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
-                reload = YES;
-            }
-                        
-            if(reload) {
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                });
-            }
-            
-        }];
+                    [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+                    reload = YES;
+                }
+                            
+                if(reload) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                    });
+                }
+            }];
+        }
         
         NSLog(@"Finished downloading stories.");
         dispatch_async(dispatch_get_main_queue(), ^{
