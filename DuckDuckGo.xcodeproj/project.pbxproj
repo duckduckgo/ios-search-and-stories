@@ -110,7 +110,6 @@
 		4CA0DC4B14EF1C2900CFC5D2 /* SDURLCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CA0DC4914EF1C2900CFC5D2 /* SDURLCache.m */; };
 		4CA8C5821592914D0011665C /* DDGWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4CA8C5811592914D0011665C /* DDGWebViewController.xib */; };
 		4CB72E8D15BE7CF300D8541F /* DDGAddCustomSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */; };
-		4CBDCE0115C116A500372237 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBDCE0015C116A500372237 /* Reachability.m */; };
 		4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */; };
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
 		4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */; };
@@ -306,7 +305,6 @@
 		4CB72E8B15BE7CF300D8541F /* DDGAddCustomSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddCustomSourceViewController.h; sourceTree = "<group>"; };
 		4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddCustomSourceViewController.m; sourceTree = "<group>"; };
 		4CBDCDFF15C116A500372237 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		4CBDCE0015C116A500372237 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
 		4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchHistoryProvider.h; sourceTree = "<group>"; };
 		4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchHistoryProvider.m; sourceTree = "<group>"; };
 		4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchSuggestionsProvider.h; sourceTree = "<group>"; };
@@ -526,7 +524,6 @@
 			children = (
 				4C3BEF8F15C47D5500EEA7BF /* IGFormViewController */,
 				4CBDCDFF15C116A500372237 /* Reachability.h */,
-				4CBDCE0015C116A500372237 /* Reachability.m */,
 				4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */,
 				4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */,
 				4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */,
@@ -922,7 +919,6 @@
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
 				4C2E001215B87C700096C994 /* DDGNewsSourcesViewController.m in Sources */,
 				4CB72E8D15BE7CF300D8541F /* DDGAddCustomSourceViewController.m in Sources */,
-				4CBDCE0115C116A500372237 /* Reachability.m in Sources */,
 				4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
 				4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */,
