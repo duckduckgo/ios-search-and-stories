@@ -137,9 +137,6 @@ static NSString *emptyCellID = @"ECell";
 
 - (IBAction)leftButtonPressed:(UIButton*)sender {
 	[_searchField resignFirstResponder];
-    
-    // if it's showing, hide it.
-    [self revealAutocomplete:NO];
 	[_searchHandler searchControllerLeftButtonPressed];
 }
 
@@ -272,7 +269,7 @@ static NSString *emptyCellID = @"ECell";
                              completion:nil];
         });
     }
-    [self revealAutocomplete:NO]; // if we're revealing, we'll show it again after the animation
+    [self revealAutocomplete:reveal animated:animated]; // if we're revealing, we'll show it again after the animation
     
     // expand the frame to fullscreen for a moment so that the background looks like it's behind the keyboard, then adjust it to appropriate size once the animation completes.
     
@@ -282,9 +279,6 @@ static NSString *emptyCellID = @"ECell";
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, animationDuration * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         self.view.frame = rect;
-        if(reveal) {
-            [self revealAutocomplete:YES];
-        }
     });
     
     [UIView animateWithDuration:animationDuration animations:^{
@@ -293,8 +287,26 @@ static NSString *emptyCellID = @"ECell";
 }
 
 
--(void)revealAutocomplete:(BOOL)reveal {
-    _tableView.hidden = !reveal;
+-(void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
+    NSLog(@"REVEALING");
+    CGFloat animationDuration = (animated ? 0.25 : 0);
+    if(reveal) {
+        _tableView.hidden = NO;
+        _tableView.alpha = 0;
+        [UIView animateWithDuration:animationDuration
+                         animations:^{
+                             _tableView.alpha = 1;
+                         }];
+    } else {
+        [UIView animateWithDuration:animationDuration
+                         animations:^{
+                             _tableView.alpha = 0;
+                         }
+                         completion:^(BOOL finished) {
+                             _tableView.alpha = 1;
+                             _tableView.hidden = YES;
+                         }];
+    }
 }
 
 // cancelInput destroys the table view instantly, which causes issues when a cell is tapped and that needs to be processed before destroying the table view, so we wait for a tiny bit first.
