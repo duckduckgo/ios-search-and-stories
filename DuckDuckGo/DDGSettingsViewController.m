@@ -9,6 +9,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGCache.h"
 #import "DDGNewsSourcesViewController.h"
+#import "SHK.h"
 
 @implementation DDGSettingsViewController
 
@@ -40,6 +41,13 @@
     [self addButton:@"Change sources" action:^{
         DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [self.navigationController pushViewController:sourcesVC animated:YES];
+    }];
+    
+    [self addSectionWithTitle:nil];
+    [self addButton:@"Share this app" action:^{
+        SHKItem *shareItem = [SHKItem URL:[NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"] title:@"Check out the DuckDuckGo app!" contentType:SHKURLContentTypeWebpage];
+        SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:shareItem];
+        [actionSheet showInView:self.view];
     }];
 }
 

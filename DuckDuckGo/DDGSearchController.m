@@ -77,8 +77,6 @@ static NSString *emptyCellID = @"ECell";
 	
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     
-    // TODO (WHEN I GET BACK): MAKE DISCLOSURE BUTTON TAPS NOT TRIGGER CANCELINPUT (see those lines below).
-    
     UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelInputAfterDelay)];
     gestureRecognizer.cancelsTouchesInView = NO;
     [self.tableView addGestureRecognizer:gestureRecognizer];
