@@ -7,8 +7,9 @@
 //
 
 #import "IGFormViewController.h"
+#import <MessageUI/MessageUI.h>
 
-@interface DDGSettingsViewController : IGFormViewController
+@interface DDGSettingsViewController : IGFormViewController <MFMailComposeViewControllerDelegate>
 
 +(void)loadDefaultSettings;
 

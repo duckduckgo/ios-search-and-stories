@@ -10,6 +10,7 @@
 #import "DDGCache.h"
 #import "DDGNewsSourcesViewController.h"
 #import "SHK.h"
+#import "SVProgressHUD.h"
 
 @implementation DDGSettingsViewController
 
@@ -49,6 +50,17 @@
         SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:shareItem];
         [actionSheet showInView:self.view];
     }];
+    [self addButton:@"Rate this app" action:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=479988136&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
+    }];
+    __weak DDGSettingsViewController *weakSelf = self;
+    [self addButton:@"Send Feedback" action:^{
+        MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
+        mailVC.mailComposeDelegate = self;
+        [mailVC setToRecipients:@[@"ishaan@duckduckgo.com"]];
+        [mailVC setSubject:@"DuckDuckGo app feedback"];
+        [weakSelf presentModalViewController:mailVC animated:YES];
+    }];
 }
 
 -(void)saveData:(NSDictionary *)formData {
@@ -63,6 +75,15 @@
     [DDGCache setObject:[formData objectForKey:@"Quack on refresh"] 
                  forKey:@"quack" 
                 inCache:@"settings"];
+}
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
+    if(result == MFMailComposeResultSent) {
+        [SVProgressHUD showSuccessWithStatus:@"Feedback sent!"];
+    } else if(result == MFMailComposeResultFailed) {
+        [SVProgressHUD showErrorWithStatus:@"Feedback send failed!"];
+    }
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 @end
