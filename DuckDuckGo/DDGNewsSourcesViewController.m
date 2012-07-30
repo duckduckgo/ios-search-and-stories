@@ -62,31 +62,51 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1+[[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] count];
+    return 2+[[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(section==0)
+        return 0;
+    else if(section==1)
         return 1+[DDGStoriesProvider sharedProvider].customSources.count;
     else {
-        NSString *category = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
+        NSString *category = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-2];
         return [[[[DDGStoriesProvider sharedProvider] sources] objectForKey:category] count];
     }
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if(section==0)
+        return nil;
+    else if(section==1)
         return @"Custom sources";
     else
-        return [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
+        return [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-2];
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return (indexPath.section == 0);
+    return (indexPath.section == 1);
+}
+
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if(section==0) {
+        UITextView *headerView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 150)];
+        headerView.text = @"Our app home screen has the most popular content from the best sources. It's like a water cooler for the Internet.\n\nYou can customize the sources for your Water Cooler below. These are all aggregated feeds, which means only the most talked about stories from these sources will appear.";
+        return headerView;
+    } else
+        return nil;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    if(section==0)
+        return 150;
+    else
+        return 30;
 }
 
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section == 0) {
+    if(indexPath.section == 1) {
         if(indexPath.row == 0)
             return UITableViewCellEditingStyleInsert;
         else
@@ -102,7 +122,7 @@
     static NSString *ButtonCellIdentifier = @"ButtonCell";
     static NSString *CustomSourceCellIdentifier = @"CustomSourceCell";
     
-    if(indexPath.section == 0) {
+    if(indexPath.section == 1) {
         if(indexPath.row == 0) {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
             if(!cell) {
@@ -133,7 +153,7 @@
             [cell addSubview:imageView];
         }
         
-        NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
+        NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-2];
         NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
         NSDictionary *source = [category objectAtIndex:indexPath.row];
         
@@ -157,11 +177,11 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0) {
+    if(indexPath.section == 1) {
         DDGAddCustomSourceViewController *vc = [[DDGAddCustomSourceViewController alloc] initWithDefaults];
         [self.navigationController pushViewController:vc animated:YES];
     } else {
-        NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
+        NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-2];
         NSArray *category = [[[DDGStoriesProvider sharedProvider] sources] objectForKey:categoryName];
         NSDictionary *source = [category objectAtIndex:indexPath.row];
         
