@@ -131,7 +131,6 @@
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
 		83F32270149290EF00A61BC5 /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83F3226E149290EF00A61BC5 /* iPhone.storyboard */; };
-		83F32273149290EF00A61BC5 /* iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83F32271149290EF00A61BC5 /* iPad.storyboard */; };
 		83F32276149290EF00A61BC5 /* DDGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32275149290EF00A61BC5 /* DDGViewController.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
 /* End PBXBuildFile section */
@@ -334,7 +333,6 @@
 		83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGAppDelegate.h; sourceTree = "<group>"; };
 		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGAppDelegate.m; sourceTree = "<group>"; };
 		83F3226F149290EF00A61BC5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone.storyboard; sourceTree = "<group>"; };
-		83F32272149290EF00A61BC5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPad.storyboard; sourceTree = "<group>"; };
 		83F32274149290EF00A61BC5 /* DDGViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGViewController.h; sourceTree = "<group>"; };
 		83F32275149290EF00A61BC5 /* DDGViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGViewController.m; sourceTree = "<group>"; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
@@ -605,7 +603,6 @@
 			children = (
 				4C0BC93515B8C2BE008C6FC4 /* quack.wav */,
 				83F3226E149290EF00A61BC5 /* iPhone.storyboard */,
-				83F32271149290EF00A61BC5 /* iPad.storyboard */,
 				838E906C149A76D400C11E41 /* Localizable.strings */,
 			);
 			name = Resources;
@@ -814,7 +811,6 @@
 				4C3BF12515C4A82600EEA7BF /* ShareKit.bundle in Resources */,
 				83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */,
 				83F32270149290EF00A61BC5 /* iPhone.storyboard in Resources */,
-				83F32273149290EF00A61BC5 /* iPad.storyboard in Resources */,
 				838E9065149A763200C11E41 /* TwoLineTopicCell.xib in Resources */,
 				838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */,
 				838E906A149A76D400C11E41 /* Localizable.strings in Resources */,
@@ -991,14 +987,6 @@
 			name = iPhone.storyboard;
 			sourceTree = "<group>";
 		};
-		83F32271149290EF00A61BC5 /* iPad.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				83F32272149290EF00A61BC5 /* en */,
-			);
-			name = iPad.storyboard;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -1095,6 +1083,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1116,6 +1105,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
 			};
