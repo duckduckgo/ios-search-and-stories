@@ -45,6 +45,8 @@
 	[refreshHeaderView refreshLastUpdatedDate];
 }
 
+
+
 - (void)viewDidUnload
 {
     [super viewDidUnload];
@@ -195,11 +197,11 @@
     
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    articleImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]];
+    articleImageView.image = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"];
     [articleImageView setContentMode:UIViewContentModeScaleAspectFill];
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    faviconImageView.image = [UIImage imageWithData:[DDGCache objectForKey:[story objectForKey:@"feed"] inCache:@"sourceImages"]];
+    faviconImageView.image = [DDGCache objectForKey:[story objectForKey:@"feed"] inCache:@"sourceImages"];
     
     // resize label, backgroundImageView, faviconImageView as needed
     UIView *backgroundImageView = (UIImageView *)[cell.contentView viewWithTag:400];

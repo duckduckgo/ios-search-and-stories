@@ -72,7 +72,8 @@ static DDGStoriesProvider *sharedProvider;
             NSDictionary *source = (NSDictionary *)obj;
             if(![DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"]) {
                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
-                [DDGCache setObject:data forKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
+                UIImage *image = [[UIImage alloc] initWithData:data];
+                [DDGCache setObject:image forKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
             }
         }];
             
@@ -180,7 +181,7 @@ static DDGStoriesProvider *sharedProvider;
                     if(!image)
                         image = [UIImage imageNamed:@"noimage.png"];
 
-                    [DDGCache setObject:imageData forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+                    [DDGCache setObject:image forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
                     reload = YES;
                 }
                             
