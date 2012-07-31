@@ -10,6 +10,7 @@
 #import "DDGCache.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "NSArray+ConcurrentIteration.h"
+#import "UIImage-DDG.h"
 
 @implementation DDGStoriesProvider
 static DDGStoriesProvider *sharedProvider;
@@ -70,7 +71,7 @@ static DDGStoriesProvider *sharedProvider;
             NSDictionary *source = (NSDictionary *)obj;
             if(![DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"]) {
                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
-                UIImage *image = [[UIImage alloc] initWithData:data];
+                UIImage *image = [UIImage ddg_decompressedImageWithData:data];
                 [DDGCache setObject:image forKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
             }
         }];
@@ -170,7 +171,8 @@ static DDGStoriesProvider *sharedProvider;
                     // main image: download it and resize it as needed
                     NSString *imageURL = [story objectForKey:@"image"];
                     NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
-                    UIImage *image = [UIImage imageWithData:imageData];
+                    UIImage *image = [UIImage ddg_decompressedImageWithData:imageData];
+
                     if(!image)
                         image = [UIImage imageNamed:@"noimage.png"];
 

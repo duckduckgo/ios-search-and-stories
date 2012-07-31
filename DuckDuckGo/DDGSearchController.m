@@ -286,7 +286,6 @@ static NSString *emptyCellID = @"ECell";
 
 
 -(void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
-    NSLog(@"REVEALING");
     CGFloat animationDuration = (animated ? 0.25 : 0);
     if(reveal) {
         _tableView.hidden = NO;
