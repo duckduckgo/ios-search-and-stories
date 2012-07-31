@@ -39,7 +39,6 @@ static DDGStoriesProvider *sharedProvider;
 -(void)downloadSourcesFinished:(void (^)())finished {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        NSLog(@"Downloading sources...");
         
         NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1"];
         NSData *response = [NSData dataWithContentsOfURL:url];
@@ -52,7 +51,6 @@ static DDGStoriesProvider *sharedProvider;
         NSMutableDictionary *newSourcesDict = [[NSMutableDictionary alloc] init];
         NSMutableArray *categories = [[NSMutableArray alloc] init];
         
-        NSLog(@"Downloaded %i sources.",newSources.count);
         
         for(NSMutableDictionary *source in newSources) {
 
@@ -116,7 +114,6 @@ static DDGStoriesProvider *sharedProvider;
     // do everything in the background
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
 
-        NSLog(@"Downloading stories...");
         
         NSString *urlStr = @"http://caine.duckduckgo.com/watrcoolr.js?o=json&s=";
         urlStr = [urlStr stringByAppendingString:[[self enabledSourceIDs] componentsJoinedByString:@","]];
@@ -124,7 +121,7 @@ static DDGStoriesProvider *sharedProvider;
         NSURL *url = [NSURL URLWithString:urlStr];
         NSData *response = [NSData dataWithContentsOfURL:url];
         if(!response) {
-            NSLog(@"failed!");
+            NSLog(@"downloading stories failed!");
             dispatch_async(dispatch_get_main_queue(), ^{
                 finished();
             });
@@ -133,7 +130,6 @@ static DDGStoriesProvider *sharedProvider;
         NSMutableArray *newStories = [NSJSONSerialization JSONObjectWithData:response
                                                                      options:NSJSONReadingMutableContainers
                                                                        error:nil];
-        NSLog(@"Downloaded %i stories.",newStories.count);
         
         [self downloadCustomStoriesToArray:newStories];
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -163,7 +159,6 @@ static DDGStoriesProvider *sharedProvider;
         });
         
         // download story images (this method doesn't return until all story images are downloaded)
-        NSLog(@"Downloading images...");
         // synchronize to prevent multiple simultaneous refreshes from downloading images on top of each other and wasting bandwidth
         @synchronized(self) {
             [newStories iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
@@ -172,12 +167,10 @@ static DDGStoriesProvider *sharedProvider;
 
                 if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]) {
                     
-                    NSLog(@"Downloading image for %@",[story objectForKey:@"title"]);
                     // main image: download it and resize it as needed
                     NSString *imageURL = [story objectForKey:@"image"];
                     NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
                     UIImage *image = [UIImage imageWithData:imageData];
-                    NSLog(@"Got %@",image);
                     if(!image)
                         image = [UIImage imageNamed:@"noimage.png"];
 
@@ -193,7 +186,6 @@ static DDGStoriesProvider *sharedProvider;
             }];
         }
         
-        NSLog(@"Finished downloading stories.");
         dispatch_async(dispatch_get_main_queue(), ^{
             finished();
         });
@@ -240,21 +232,18 @@ static DDGStoriesProvider *sharedProvider;
 }
 
 -(void)downloadCustomStoriesToArray:(NSMutableArray *)newStories {
-    NSLog(@"Downloading custom stories...");
     
     [self.customSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
         NSString *newsKeyword = (NSString *)obj;
-        NSLog(@"Downloading %@",newsKeyword);
         NSString *urlString = [@"http://caine.duckduckgo.com/news.js?o=json&t=m&q=" stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         
         NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
         if(!response)
-            NSLog(@"failed!");
+            NSLog(@"download custom stories from source failed!");
         if(response) {
             NSArray *news = [NSJSONSerialization JSONObjectWithData:response
                                                             options:0
                                                               error:nil];
-            NSLog(@"Processing %i items.",news.count);
             for(NSDictionary *newsItem in news) {
                 NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
                 [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
