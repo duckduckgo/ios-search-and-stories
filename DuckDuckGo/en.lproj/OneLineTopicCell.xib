@@ -47,6 +47,7 @@
 								<string key="NSFrameSize">{320, 120}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="319187008"/>
 								<string key="NSReuseIdentifierKey">_NS:554</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">3</int>
@@ -64,6 +65,7 @@
 								<string key="NSFrame">{{0, 86}, {320, 43}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="779277510"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<int key="IBUIContentMode">3</int>
 								<int key="IBUITag">400</int>
@@ -145,6 +147,7 @@
 								<string key="NSFrame">{{0, 120}, {320, 1}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">3</int>
@@ -179,7 +182,7 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<int key="IBUISelectionStyle">0</int>
 				<reference key="IBUIContentView" ref="873179220"/>
-				<string key="IBUIReuseIdentifier">CurrentTopicCell</string>
+				<string key="IBUIReuseIdentifier">OneLineTopicCell</string>
 				<real value="121" key="IBUIRowHeight"/>
 			</object>
 		</array>

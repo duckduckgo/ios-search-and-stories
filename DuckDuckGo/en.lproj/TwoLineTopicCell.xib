@@ -182,7 +182,7 @@
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 				<int key="IBUISelectionStyle">0</int>
 				<reference key="IBUIContentView" ref="873179220"/>
-				<string key="IBUIReuseIdentifier">CurrentTopicCell</string>
+				<string key="IBUIReuseIdentifier">TwoLineTopicCell</string>
 				<real value="121" key="IBUIRowHeight"/>
 			</object>
 		</array>
