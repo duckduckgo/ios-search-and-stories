@@ -90,7 +90,7 @@
     NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     if(buttonIndex == 0) {
         // bookmark/unbookmark
-        
+                
         BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:webViewURL];
         if(bookmarked)
             [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:webViewURL];
@@ -101,7 +101,15 @@
     } else if(buttonIndex == 1) {
         // share
         
-        SHKItem *item = [SHKItem URL:webViewURL title:pageTitle contentType:SHKURLContentTypeWebpage];
+        // strip extra params from DDG search URLs
+        NSURL *shareURL = webViewURL;
+        NSString *query = [_searchController queryFromDDGURL:webViewURL];
+        if(query) {
+            query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
+        }
+        
+        SHKItem *item = [SHKItem URL:shareURL title:pageTitle contentType:SHKURLContentTypeWebpage];
         SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
         [SHK setRootViewController:self];
         [actionSheet showInView:self.view];

@@ -58,5 +58,6 @@ typedef enum {
 -(void)setProgress:(CGFloat)progress;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
+-(NSString *)queryFromDDGURL:(NSURL *)url;
 
 @end

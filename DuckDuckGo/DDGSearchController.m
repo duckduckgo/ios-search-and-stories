@@ -207,6 +207,43 @@ static NSString *emptyCellID = @"ECell";
     return ![self validURLStringFromString:queryOrURL];
 }
 
+-(NSString *)queryFromDDGURL:(NSURL *)url {
+    // parse URL query components
+    NSArray *queryComponentsArray = [[url query] componentsSeparatedByString:@"&"];
+    NSMutableDictionary *queryComponents = [[NSMutableDictionary alloc] init];
+    for(NSString *queryComponent in queryComponentsArray) {
+        NSArray *parameter = [queryComponent componentsSeparatedByString:@"="];
+        if(parameter.count > 1)
+            [queryComponents setObject:[parameter objectAtIndex:1] forKey:[parameter objectAtIndex:0]];
+    }
+    
+    // check whether we have a DDG search URL
+    if([[url host] isEqualToString:@"duckduckgo.com"]) {
+        if([[url path] isEqualToString:@"/"] && [queryComponents objectForKey:@"q"]) {
+            // yep! extract the search query...
+            NSString *query = [queryComponents objectForKey:@"q"];
+            query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
+            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            return query;
+        } else if(![[url pathExtension] isEqualToString:@"html"]) {
+            // article page
+            NSString *query = [url path];
+            query = [query substringFromIndex:1]; // strip the leading '/' in the URL
+            query = [query stringByReplacingOccurrencesOfString:@"_" withString:@"%20"];
+            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            
+            return query;
+        } else {
+            // a URL on DDG.com, but not a search query
+            return nil;
+        }
+    } else {
+        // no, just a plain old URL.
+        return nil;
+    }
+}
+
 #pragma mark - Omnibar management methods
 
 - (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
@@ -324,41 +361,8 @@ static NSString *emptyCellID = @"ECell";
 
 -(void)updateBarWithURL:(NSURL *)url {
     barUpdated = YES;
-    
-    // parse URL query components
-    NSArray *queryComponentsArray = [[url query] componentsSeparatedByString:@"&"];
-    NSMutableDictionary *queryComponents = [[NSMutableDictionary alloc] init];
-    for(NSString *queryComponent in queryComponentsArray) {
-        NSArray *parameter = [queryComponent componentsSeparatedByString:@"="];
-        if(parameter.count > 1)
-            [queryComponents setObject:[parameter objectAtIndex:1] forKey:[parameter objectAtIndex:0]];
-    }
-    
-    // check whether we have a DDG search URL
-    if([[url host] isEqualToString:@"duckduckgo.com"]) {
-        if([[url path] isEqualToString:@"/"] && [queryComponents objectForKey:@"q"]) {
-            // yep! extract the search query...
-            NSString *query = [queryComponents objectForKey:@"q"];
-            query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
-            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            
-            _searchField.text = query;
-        } else if(![[url pathExtension] isEqualToString:@"html"]) {
-            // article page
-            NSString *query = [url path];
-            query = [query substringFromIndex:1]; // strip the leading '/' in the URL
-            query = [query stringByReplacingOccurrencesOfString:@"_" withString:@"%20"];
-            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            
-            _searchField.text = query;
-        } else {
-            // a URL on DDG.com, but not a search query
-            _searchField.text = [url absoluteString];
-        }
-    } else {
-        // no, just a plain old URL.
-        _searchField.text = [url absoluteString];
-    }
+    NSString *query = [self queryFromDDGURL:url];
+    _searchField.text = (query ? query : url.absoluteString);
 }
 
 -(void)resetOmnibar {
