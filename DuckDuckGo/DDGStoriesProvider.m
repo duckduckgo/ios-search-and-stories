@@ -11,6 +11,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "NSArray+ConcurrentIteration.h"
 #import "UIImage+DDG.h"
+#import "Constants.h"
 
 @implementation DDGStoriesProvider
 static DDGStoriesProvider *sharedProvider;
@@ -41,7 +42,7 @@ static DDGStoriesProvider *sharedProvider;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
         
-        NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1"];
+        NSURL *url = [NSURL URLWithString:kDDGTypeInfoURLString];
         NSData *response = [NSData dataWithContentsOfURL:url];
         if(!response) {
             // could not fetch data
@@ -137,7 +138,7 @@ static DDGStoriesProvider *sharedProvider;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
 
         
-        NSString *urlStr = @"http://caine.duckduckgo.com/watrcoolr.js?o=json&s=";
+        NSString *urlStr = kDDGStoriesURLString;
         urlStr = [urlStr stringByAppendingString:[[self enabledSourceIDs] componentsJoinedByString:@","]];
         
         NSURL *url = [NSURL URLWithString:urlStr];
@@ -263,7 +264,7 @@ static DDGStoriesProvider *sharedProvider;
     
     [self.customSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
         NSString *newsKeyword = (NSString *)obj;
-        NSString *urlString = [@"http://caine.duckduckgo.com/news.js?o=json&t=m&q=" stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+        NSString *urlString = [kDDGCustomStoriesURLString stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         
         NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
         if(!response) {
