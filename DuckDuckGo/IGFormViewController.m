@@ -53,8 +53,8 @@
 	// if this is taller than possible (e.g. landscape with keyboard), the popover will do its own scrolling, which is badly broken
 	NSInteger minHeight = ([self tableViewHeight]<282 ? [self tableViewHeight] : 282);
 	
-    self.contentSizeForViewInPopover = CGSizeMake(320, minHeight);		
-		
+    self.contentSizeForViewInPopover = CGSizeMake(320, minHeight);
+    
     if([self.navigationController.viewControllers objectAtIndex:0]==self) {
         UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                     target:self
@@ -74,12 +74,12 @@
 
 -(void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
-	    
+    
     [self.navigationController setToolbarHidden:YES animated:YES];
     
 	if([elements count] >= 2) {
 		NSObject *element = [elements objectAtIndex:1];
-	
+        
 		if([element isKindOfClass:[IGFormTextField class]]) {
 			[[(IGFormTextField *)element textField] becomeFirstResponder];
 		} else if([element isKindOfClass:[IGFormTextView class]]) {
@@ -89,25 +89,25 @@
 }
 
 /*
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-*/
+ - (void)viewWillAppear:(BOOL)animated {
+ [super viewWillAppear:animated];
+ }
+ */
 /*
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-*/
+ - (void)viewDidAppear:(BOOL)animated {
+ [super viewDidAppear:animated];
+ }
+ */
 /*
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-}
-*/
+ - (void)viewWillDisappear:(BOOL)animated {
+ [super viewWillDisappear:animated];
+ }
+ */
 /*
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-}
-*/
+ - (void)viewDidDisappear:(BOOL)animated {
+ [super viewDidDisappear:animated];
+ }
+ */
 
 #pragma mark -
 #pragma mark Popover support
@@ -177,7 +177,7 @@
 	[self addTextField:fieldName];
 	
 	IGFormTextField *textField = [elements lastObject];
-	textField.textField.text = value;	
+	textField.textField.text = value;
 }
 
 -(void)addTextView:(NSString *)fieldName value:(NSString *)value {
@@ -214,7 +214,7 @@
 -(void)addButton:(NSString *)title type:(IGFormButtonType)type action:(void (^)(void))action {
     [self addDefaultSectionIfNeeded];
     
-    IGFormButton *button = [[IGFormButton alloc] initWithTitle:title 
+    IGFormButton *button = [[IGFormButton alloc] initWithTitle:title
                                                         action:action];
     button.type = type;
     [elements addObject:button];
@@ -276,7 +276,7 @@
 	}
 	
 	NSDictionary *immFormData = [formData copy];
-
+    
 	return immFormData;
 }
 
@@ -295,20 +295,20 @@
 
 -(void)saveButtonPressed {
 	NSDictionary *formData = [self formData];
-
+    
 	NSString *validationResult = [self validateData:formData];
 	if(validationResult==nil) {
 		[self saveAndExit];
 	} else {
 		// validation failed, display error message
-		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" 
-														message:validationResult 
-													   delegate:nil 
-											  cancelButtonTitle:nil 
+		UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error"
+														message:validationResult
+													   delegate:nil
+											  cancelButtonTitle:nil
 											  otherButtonTitles:@"OK",nil];
 		[alert show];
 	}
-
+    
 }
 
 #pragma mark -
@@ -316,11 +316,11 @@
 
 -(BOOL)textFieldShouldReturn:(UITextField *)textField {
 	[textField resignFirstResponder];
-
+    
 	if([self validateData:[self formData]]==nil) {
 		[self saveAndExit];
 	}
-
+    
 	return YES;
 }
 
@@ -345,7 +345,7 @@
 			
 			if(section == currentSection)
 				return [(IGFormSection *)element title];
-
+            
 		}
 	}
 	
@@ -396,6 +396,7 @@
     // set default cell attributes to be overriden based on the element below
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = @"";
+    cell.textLabel.textAlignment = UITextAlignmentLeft;
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.accessoryView = nil;
     
@@ -431,6 +432,8 @@
         cell.textLabel.text = formButton.title;
         if(formButton.type == IGFormButtonTypeDisclosure)
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        else
+            cell.textLabel.textAlignment = UITextAlignmentCenter;
     }
     
     return cell;
@@ -451,7 +454,7 @@
 	NSObject *e = [self elementAtIndexPath:indexPath];
 	if([e isKindOfClass:[IGFormRadioOption class]]) {
 		IGFormRadioOption *radioOption = (IGFormRadioOption *)e;
-
+        
 		// deselect all in that category
 		for(NSObject *element in elements) {
 			if([element isKindOfClass:[IGFormRadioOption class]] && [[(IGFormRadioOption *)element category] isEqualToString:radioOption.category])
@@ -488,4 +491,3 @@
 }
 
 @end
-
