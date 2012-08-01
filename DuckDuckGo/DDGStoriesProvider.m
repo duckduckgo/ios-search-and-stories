@@ -43,12 +43,31 @@ static DDGStoriesProvider *sharedProvider;
         
         NSURL *url = [NSURL URLWithString:@"http://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1"];
         NSData *response = [NSData dataWithContentsOfURL:url];
-        if(!response)
-            return; // could not fetch data
+        if(!response) {
+            // could not fetch data
+            if(finished) {
+                NSLog(@"Download sources failed!");
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    finished();
+                });
+            }
+            return;
+        }
         
+        NSError *error = nil;
         NSArray *newSources = [NSJSONSerialization JSONObjectWithData:response 
                                                               options:NSJSONReadingMutableContainers 
-                                                                error:nil];
+                                                                error:&error];
+        if(error) {
+            NSLog(@"Error reading sources JSON! %@",error.userInfo);
+            if(finished) {
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    finished();
+                });
+            }
+            return;
+        }
+        
         NSMutableDictionary *newSourcesDict = [[NSMutableDictionary alloc] init];
         NSMutableArray *categories = [[NSMutableArray alloc] init];
         
@@ -81,9 +100,11 @@ static DDGStoriesProvider *sharedProvider;
         [DDGCache setObject:newSourcesDict forKey:@"sources" inCache:@"misc"];
         [DDGCache setObject:sortedCategories forKey:@"sourceCategories" inCache:@"misc"];
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            finished();
-        });
+        if(finished) {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                finished();
+            });
+        }
     });
 }
 
@@ -122,15 +143,24 @@ static DDGStoriesProvider *sharedProvider;
         NSURL *url = [NSURL URLWithString:urlStr];
         NSData *response = [NSData dataWithContentsOfURL:url];
         if(!response) {
-            NSLog(@"downloading stories failed!");
+            NSLog(@"Download stories failed!");
             dispatch_async(dispatch_get_main_queue(), ^{
-                finished();
+                if(finished)
+                    finished();
             });
             return; // could not download stories
         }
+        NSError *error = nil;
         NSMutableArray *newStories = [NSJSONSerialization JSONObjectWithData:response
                                                                      options:NSJSONReadingMutableContainers
-                                                                       error:nil];
+                                                                       error:&error];
+        if(error) {
+            NSLog(@"Error generating stories JSON: %@",error.userInfo);
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if(finished)
+                    finished();
+            });
+        }
         
         [self downloadCustomStoriesToArray:newStories];
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
@@ -172,10 +202,6 @@ static DDGStoriesProvider *sharedProvider;
                     NSString *imageURL = [story objectForKey:@"image"];
                     NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
                     UIImage *image = [UIImage ddg_decompressedImageWithData:imageData];
-
-                    if(!image)
-                        image = [UIImage imageNamed:@"noimage.png"];
-
                     [DDGCache setObject:image forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
                     reload = YES;
                 }
@@ -240,22 +266,37 @@ static DDGStoriesProvider *sharedProvider;
         NSString *urlString = [@"http://caine.duckduckgo.com/news.js?o=json&t=m&q=" stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         
         NSData *response = [NSData dataWithContentsOfURL:[NSURL URLWithString:urlString]];
-        if(!response)
-            NSLog(@"download custom stories from source failed!");
-        if(response) {
+        if(!response) {
+            NSLog(@"Download custom stories from %@ failed!",urlString);
+        } else {
+            NSError *error = nil;
             NSArray *news = [NSJSONSerialization JSONObjectWithData:response
                                                             options:0
-                                                              error:nil];
+                                                              error:&error];
+            if(error) {
+                NSLog(@"Error reading custom stories from %@: %@",urlString,error.userInfo);
+                return;
+            }
             for(NSDictionary *newsItem in news) {
+                // TODO: when i get back, make sure all of the keys in newsItem actually exist before attempting to do any of this. (data robustness)
+                for(NSString *key in @[ @"title", @"url", @"image", @"date" ]) {
+                    if(![newsItem objectForKey:key]) {
+                        NSLog(@"Error: news item doesn't have %@ attribute!",key);
+                        return;
+                    }
+                }
+                
                 NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
                 [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
                 [story setObject:[newsItem objectForKey:@"url"] forKey:@"url"];
-                if([newsItem objectForKey:@"image"])
-                    [story setObject:[newsItem objectForKey:@"image"] forKey:@"image"];
+                [story setObject:[newsItem objectForKey:@"image"] forKey:@"image"];
+                
                 NSString *date = [[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]] description];
                 [story setObject:date forKey:@"timestamp"];
+                
                 NSString *storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
                 [story setObject:storyID forKey:@"id"];
+                
                 @synchronized(newStories) {
                     [newStories addObject:story.copy];
                 }
