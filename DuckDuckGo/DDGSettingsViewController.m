@@ -41,7 +41,7 @@
 
     [self addSectionWithTitle:@"Water Cooler"];
     [self addSwitch:@"Quack on refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
-    [self addButton:@"Change sources" action:^{
+    [self addButton:@"Change sources" type:IGFormButtonTypeDisclosure action:^{
         DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [self.navigationController pushViewController:sourcesVC animated:YES];
     }];
