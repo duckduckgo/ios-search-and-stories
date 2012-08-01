@@ -70,10 +70,6 @@
     [DDGCache setObject:[formData objectForKey:@"Record history"] 
                  forKey:@"history" 
                 inCache:@"settings"];
-
-    [DDGCache setObject:[formData objectForKey:@"Refresh over 3G"]
-                 forKey:@"refresh3g"
-                inCache:@"settings"];
     
     [DDGCache setObject:[formData objectForKey:@"Quack on refresh"] 
                  forKey:@"quack" 
