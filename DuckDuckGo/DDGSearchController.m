@@ -394,7 +394,7 @@ static NSString *emptyCellID = @"ECell";
     else
         width = screenRect.size.width;
 
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(46, 0, width-46, 46)];
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, width, 46)];
     scrollView.showsHorizontalScrollIndicator = YES;
     scrollView.contentSize = CGSizeMake(0, 46);
     scrollView.tag = 102;
@@ -436,6 +436,7 @@ static NSString *emptyCellID = @"ECell";
         scrollView.hidden = NO;
         UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
         [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button_open.png"] forState:UIControlStateNormal];
+        bangButton.hidden = YES;
     }
     UIImage *backgroundImg = [[UIImage imageNamed:@"empty_bang_button.png"] stretchableImageWithLeftCapWidth:7.0 topCapHeight:0];
 
@@ -478,6 +479,7 @@ static NSString *emptyCellID = @"ECell";
     scrollView.hidden = YES;
     UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
     [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
+    bangButton.hidden = NO;
 }
 
 #pragma mark - Search suggestions
