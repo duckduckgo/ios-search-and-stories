@@ -51,7 +51,7 @@ static NSString *emptyCellID = @"ECell";
         _searchField.rightView = stopOrReloadButton;
         
         suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
-        historyProvider = [DDGSearchHistoryProvider sharedInstance];
+        historyProvider = [DDGSearchHistoryProvider sharedProvider];
         
         unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];
         [self createInputAccessory];

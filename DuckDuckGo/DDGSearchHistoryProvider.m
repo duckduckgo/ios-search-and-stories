@@ -14,7 +14,7 @@
 
 static DDGSearchHistoryProvider *sharedInstance;
 
-+(id)sharedInstance {
++(id)sharedProvider {
     if(!sharedInstance)
         sharedInstance = [[self alloc] init];
     return sharedInstance;
@@ -30,7 +30,7 @@ static DDGSearchHistoryProvider *sharedInstance;
     return self;
 }
 
--(void)clear {
+-(void)clearHistory {
     history = [[NSMutableArray alloc] init];
     [self save];
 }

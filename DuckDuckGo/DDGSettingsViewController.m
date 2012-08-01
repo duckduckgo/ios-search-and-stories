@@ -12,6 +12,7 @@
 #import "SHK.h"
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
+#import "DDGSearchHistoryProvider.h"
 
 @implementation DDGSettingsViewController
 
@@ -32,9 +33,11 @@
 -(void)configure {
     self.title = @"Settings";
     
-    [self addSectionWithTitle:nil footer:@"History is stored on your phone."];
+    [self addSectionWithTitle:@"History" footer:@"History is stored on your phone."];
     [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
-
+    [self addButton:@"Clear history" action:^{
+        [[DDGSearchHistoryProvider sharedProvider] clearHistory];
+    }];
 
     [self addSectionWithTitle:@"Water Cooler"];
     [self addSwitch:@"Quack on refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
