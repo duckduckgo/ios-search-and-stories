@@ -10,6 +10,7 @@
 
 @interface IGFormButton : IGFormElement
 @property(nonatomic, strong) void(^action)(void);
+@property(nonatomic, assign) IGFormButtonType type;
 
 -(id)initWithTitle:(NSString *)aTitle action:(void(^)(void))anAction;
 

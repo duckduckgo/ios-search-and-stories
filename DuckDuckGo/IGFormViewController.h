@@ -8,11 +8,17 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum _IGFormButtonType {
+    IGFormButtonTypeNormal,
+    IGFormButtonTypeDisclosure
+} IGFormButtonType;
+
 @interface IGFormViewController : UITableViewController <UIPopoverControllerDelegate, UITextFieldDelegate> {
 	UINavigationController *popoverNavigationController;
 	NSMutableArray *elements;
 }
 @property(weak, nonatomic,readonly) UINavigationController *popoverNavigationController;
+
 // Always init with this method
 -(id)initWithDefaults;
 
@@ -49,5 +55,8 @@
 
 // Adds a button that executes the given block when pressed
 -(void)addButton:(NSString *)title action:(void(^)(void))action;
+
+// Adds a button (see above) with a specific style
+-(void)addButton:(NSString *)title type:(IGFormButtonType)type action:(void(^)(void))action;
 
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "IGFormViewController.h"
 
 @interface IGFormElement : NSObject {
 	NSString *title;

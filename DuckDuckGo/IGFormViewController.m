@@ -7,7 +7,6 @@
 //
 
 #import "IGFormViewController.h"
-
 #import "IGFormElement.h"
 #import "IGFormSection.h"
 #import "IGFormTextField.h"
@@ -209,10 +208,15 @@
 }
 
 -(void)addButton:(NSString *)title action:(void (^)(void))action {
+    [self addButton:title type:IGFormButtonTypeNormal action:action];
+}
+
+-(void)addButton:(NSString *)title type:(IGFormButtonType)type action:(void (^)(void))action {
     [self addDefaultSectionIfNeeded];
     
     IGFormButton *button = [[IGFormButton alloc] initWithTitle:title 
                                                         action:action];
+    button.type = type;
     [elements addObject:button];
 }
 
@@ -267,7 +271,7 @@
 		} else if([element isKindOfClass:[IGFormSwitch class]]) {
             IGFormSwitch *formSwitch = (IGFormSwitch *)element;
             
-            [formData setObject:@(formSwitch.switchControl.on) forKey:formSwitch.title];
+            [formData setObject:[NSNumber numberWithBool:formSwitch.switchControl.on] forKey:formSwitch.title];
         }
 	}
 	
@@ -389,51 +393,44 @@
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     }
     
+    // set default cell attributes to be overriden based on the element below
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    cell.textLabel.text = @"";
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    cell.accessoryView = nil;
+    
 	// find the appropriate element
 	NSObject *e = [self elementAtIndexPath:indexPath];
 	
 	if([e isKindOfClass:[IGFormTextField class]]) {
-		
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		
 		IGFormTextField *textField = (IGFormTextField *)e;
-		
 		textField.textField.frame = CGRectMake(12, 0, 286, 44);
 		textField.textField.contentVerticalAlignment = UIControlContentVerticalAlignmentCenter;
 		[cell.contentView addSubview:textField.textField];
-	
-		cell.textLabel.text = @"";
-	
+        
 	} else if([e isKindOfClass:[IGFormRadioOption class]]) {
-		
 		IGFormRadioOption *radioOption = (IGFormRadioOption *)e;
-		
 		cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-		cell.accessoryType = (radioOption.value ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone);
+        if(radioOption.value)
+            cell.accessoryType = UITableViewCellAccessoryCheckmark;
 		cell.textLabel.text = [radioOption title];
-		
+        
 	} else if([e isKindOfClass:[IGFormTextView class]]) {
-		
-		cell.selectionStyle = UITableViewCellSelectionStyleNone;
-		
 		IGFormTextView *textView = (IGFormTextView *)e;
 		textView.textView.frame = CGRectMake(0, 0, 300, 140);
 		[cell.contentView addSubview:textView.textView];
-		
+        
 	} else if([e isKindOfClass:[IGFormSwitch class]]) {
-        
-        cell.selectionStyle = UITableViewCellSelectionStyleNone;
-        
         IGFormSwitch *formSwitch = (IGFormSwitch *)e;
-        
         cell.textLabel.text = formSwitch.title;
         cell.accessoryView = formSwitch.switchControl;
         
     } else if([e isKindOfClass:[IGFormButton class]]) {
-        
+        IGFormButton *formButton = (IGFormButton *)e;
         cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-        cell.textLabel.text = ((IGFormButton *)e).title;
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        cell.textLabel.text = formButton.title;
+        if(formButton.type == IGFormButtonTypeDisclosure)
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
     return cell;
@@ -471,7 +468,11 @@
 		
 	} else if([e isKindOfClass:[IGFormButton class]]) {
         // execute the form button action
-        (((IGFormButton *)e).action)();
+        IGFormButton *button = (IGFormButton *)e;
+        if(button.action)
+            button.action();
+        if(button.type == IGFormButtonTypeNormal)
+            [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
 }
 
