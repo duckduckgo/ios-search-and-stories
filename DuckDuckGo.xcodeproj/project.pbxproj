@@ -461,7 +461,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4C4B7E9015C4F18800340B59 /* Bookmarks */ = {
+		4C4B7E9015C4F18800340B59 /* Autocomplete tier 2 */ = {
 			isa = PBXGroup;
 			children = (
 				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
@@ -470,7 +470,7 @@
 				4C4B7E9615C4F8E500340B59 /* DDGBookmarksProvider.h */,
 				4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */,
 			);
-			name = Bookmarks;
+			name = "Autocomplete tier 2";
 			sourceTree = "<group>";
 		};
 		4C573C1115B7311200790F60 /* Home screen */ = {
@@ -653,7 +653,7 @@
 				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
 				4C660A741591487C001AB510 /* Search controller */,
-				4C4B7E9015C4F18800340B59 /* Bookmarks */,
+				4C4B7E9015C4F18800340B59 /* Autocomplete tier 2 */,
 				4C573C1115B7311200790F60 /* Home screen */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
