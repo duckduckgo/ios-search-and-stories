@@ -18,6 +18,8 @@
 #import "DDGNewsSourcesViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "Reachability.h"
+#import "UIImage+DDG.h"
+#import "NSArray+ConcurrentIteration.h"
 
 @implementation DDGViewController
 
@@ -43,6 +45,19 @@
 	
 	//  update the last update date
 	[refreshHeaderView refreshLastUpdatedDate];
+    
+    // force-decompress all images
+    // be careful! we're in a background thread and everything is changing under our feet
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        for(NSString *cacheName in @[@"storyImages", @"sourceImages"]) {
+            NSDictionary *cache = [DDGCache cacheNamed:cacheName].copy;
+            for(NSString *key in cache) {
+                UIImage *image = [cache objectForKey:key];
+                image = [UIImage ddg_decompressedImageWithImage:image];
+                [DDGCache updateObject:image forKey:key inCache:cacheName];
+            }
+        }        
+    });
 }
 
 

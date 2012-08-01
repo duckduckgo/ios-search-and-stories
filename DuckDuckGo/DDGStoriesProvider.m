@@ -10,7 +10,7 @@
 #import "DDGCache.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "NSArray+ConcurrentIteration.h"
-#import "UIImage-DDG.h"
+#import "UIImage+DDG.h"
 
 @implementation DDGStoriesProvider
 static DDGStoriesProvider *sharedProvider;

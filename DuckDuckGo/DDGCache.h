@@ -12,6 +12,7 @@
 
 @interface DDGCache : NSObject
 
++(void)updateObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName;
 +(void)setObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName;
 +(id)objectForKey:(NSString *)key inCache:(NSString *)cacheName;
 +(NSDictionary *)cacheNamed:(NSString *)cacheName;

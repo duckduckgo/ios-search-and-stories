@@ -11,6 +11,7 @@
 @interface UIImage (DDG)
 
 +(UIImage *)ddg_decompressedImageWithData:(NSData *)data;
++(UIImage *)ddg_decompressedImageWithImage:(UIImage *)image;
 
 -(NSData *)ddg_dataRepresentation;
 -(void)ddg_setDataRepresentation:(NSData *)newDataRepresentation;

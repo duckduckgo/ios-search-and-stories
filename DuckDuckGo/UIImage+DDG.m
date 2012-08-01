@@ -6,7 +6,7 @@
 //
 //
 
-#import "UIImage-DDG.h"
+#import "UIImage+DDG.h"
 #import <objc/runtime.h>
 
 static void *DataRepresentationKey;
@@ -14,11 +14,13 @@ static void *DataRepresentationKey;
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
-@implementation UIImage (IGNSCoding)
+@implementation UIImage (DDG)
 
 - (id)initWithCoder:(NSCoder *)decoder {
     NSData *data = [decoder decodeObjectForKey:@"DataRepresentation"];
-    return [UIImage ddg_decompressedImageWithData:data];
+    UIImage *result = [UIImage imageWithData:data];
+    [result ddg_setDataRepresentation:data];
+    return result;
 }
 
 - (void)encodeWithCoder:(NSCoder *)encoder {
@@ -27,24 +29,24 @@ static void *DataRepresentationKey;
 }
 
 +(UIImage *)ddg_decompressedImageWithData:(NSData *)data {
-    UIImage *tempImage = [UIImage imageWithData:data];
-    
-    UIGraphicsBeginImageContext(tempImage.size);
-    [tempImage drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
+    UIImage *result = [self ddg_decompressedImageWithImage:[self imageWithData:data]];
+    [result ddg_setDataRepresentation:data];
+    return result;
+}
+
++(UIImage *)ddg_decompressedImageWithImage:(UIImage *)image {
+    UIGraphicsBeginImageContext(image.size);
+    [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
     UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     
-    [decompressed ddg_setDataRepresentation:data];
+    [decompressed ddg_setDataRepresentation:image.ddg_dataRepresentation];
+    
     return decompressed;
 }
 
 -(NSData *)ddg_dataRepresentation {
-    NSData *data = objc_getAssociatedObject(self, &DataRepresentationKey);
-    if(!data) {
-        data = UIImagePNGRepresentation(self);
-        [self ddg_setDataRepresentation:data];
-    }
-    return data;
+    return objc_getAssociatedObject(self, &DataRepresentationKey);
 }
 
 -(void)ddg_setDataRepresentation:(NSData *)newDataRepresentation {

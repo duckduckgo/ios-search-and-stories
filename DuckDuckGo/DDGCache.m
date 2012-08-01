@@ -12,6 +12,17 @@
 
 static NSMutableDictionary *globalCache;
 
++(void)updateObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName {
+    @synchronized(globalCache) {
+        [self loadCache:cacheName];
+        
+        NSMutableDictionary *cache = [globalCache objectForKey:cacheName];
+        
+        if([cache objectForKey:key])
+            [cache setObject:object forKey:key];
+    }
+}
+
 +(void)setObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName {
     @synchronized(globalCache) {
         [self loadCache:cacheName];
