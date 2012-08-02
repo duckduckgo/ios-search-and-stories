@@ -79,7 +79,7 @@
                                                     cancelButtonTitle:@"Cancel"
                                                destructiveButtonTitle:nil
                                                     otherButtonTitles:
-                                  (bookmarked ? @"Unbookmark" : @"Bookmark"),
+                                  (bookmarked ? @"Unsave" : @"Save"),
                                   @"Share",
                                   nil];
     [actionSheet showInView:self.view];
@@ -97,7 +97,7 @@
         else
             [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:pageTitle URL:webViewURL];
     
-        [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unbookmarked!" : @"Bookmarked!")];
+        [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unsaved!" : @"Saved!")];
     } else if(buttonIndex == 1) {
         // share
         

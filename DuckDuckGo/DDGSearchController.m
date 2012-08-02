@@ -638,7 +638,7 @@ static NSString *emptyCellID = @"ECell";
         UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:bookmarksCellID];
         if(cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:bookmarksCellID];
-            cell.textLabel.text = @"Bookmarked";
+            cell.textLabel.text = @"Saved";
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
             cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
             cell.textLabel.textColor = [UIColor darkGrayColor];
