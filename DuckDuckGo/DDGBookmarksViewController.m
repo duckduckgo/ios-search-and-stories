@@ -14,7 +14,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Saved Links";
+    self.title = @"Saved";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
