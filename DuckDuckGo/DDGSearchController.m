@@ -709,11 +709,6 @@ static NSString *emptyCellID = @"ECell";
             [iv setImageWithURL:[NSURL URLWithString:[suggestionItem objectForKey:@"image"]]];
         else
             [iv setImage:nil]; // wipe out any image that used to be there
-   
-        if([suggestionItem objectForKey:@"officialsite"])
-            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-        else
-            cell.accessoryType = UITableViewCellAccessoryNone;
     }
     
     return cell;
@@ -744,20 +739,6 @@ static NSString *emptyCellID = @"ECell";
                 [self loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
         }
         
-        [tv deselectRowAtIndexPath:indexPath animated:YES];
-        [_searchField resignFirstResponder];
-    }
-}
-
-- (void)tableView:(UITableView *)tv accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    NSArray *history = [historyProvider pastHistoryItemsForPrefix:_searchField.text];
-    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:_searchField.text];
-    if(indexPath.row < history.count) {
-        // this should never happen
-        NSLog(@"??? Accessory button tapped for a history item");
-    } else {
-     	NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
-        [self loadQueryOrURL:[suggestionItem objectForKey:@"officialsite"]];        
         [tv deselectRowAtIndexPath:indexPath animated:YES];
         [_searchField resignFirstResponder];
     }
