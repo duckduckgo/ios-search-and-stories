@@ -9,8 +9,8 @@
 #import "DDGSearchSuggestionsProvider.h"
 #import "AFNetworking.h"
 #import "DDGCache.h"
+#import "Constants.h"
 
-static NSString *suggestionServerBaseURL = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
 static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
 
 @implementation DDGSearchSuggestionsProvider
@@ -50,7 +50,7 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
     if([suggestionsCache objectForKey:searchText])
         return;
     
-    NSString *urlString = [suggestionServerBaseURL stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+    NSString *urlString = [kDDGSuggestionsURLString stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     serverRequest.URL = [NSURL URLWithString:urlString];
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
@@ -92,7 +92,7 @@ static NSString *officialSitesBaseURL = @"https://duckduckgo.com/?o=json&q=";
     }
 }
 
--(NSString *)officialSiteForItem:(NSString *)suggestion {    
+-(NSString *)officialSiteForItem:(NSString *)suggestion {
     // in the cache, @"" means the server returned no official sites, and nil means there's just no cached response. But this method is always and only supposed to return nil when there's no official site.
     NSString *cachedOfficialSite = [DDGCache objectForKey:suggestion inCache:@"officialSites"];
     

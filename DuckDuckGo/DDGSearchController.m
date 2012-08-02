@@ -740,7 +740,8 @@ static NSString *emptyCellID = @"ECell";
             [self loadQueryOrURL:[historyItem objectForKey:@"text"]];        
         } else {
             NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
-            [self loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];        
+            if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
+                [self loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
         }
         
         [tv deselectRowAtIndexPath:indexPath animated:YES];
