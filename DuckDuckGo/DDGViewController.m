@@ -34,6 +34,11 @@
     _tableView.separatorColor = [UIColor clearColor];
     _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
     
+    topShadow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"table_view_shadow_top.png"]];
+    topShadow.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 5.0);
+    topShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    // shadow gets added to table view in scrollViewDidScroll
+    
     if (refreshHeaderView == nil) {
 		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
 		refreshHeaderView.delegate = self;
@@ -117,10 +122,16 @@
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 	[refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+
+    CGRect f = topShadow.frame;
+    f.origin.y = scrollView.contentOffset.y;
+    topShadow.frame = f;
+    
+    [_tableView insertSubview:topShadow atIndex:0];
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-	[refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];	
+	[refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 #pragma mark EGORefreshTableHeaderDelegate Methods
@@ -225,7 +236,7 @@
 	return [DDGStoriesProvider sharedProvider].stories.count;
 }
 
-#pragma  mark - UITableViewDelegate
+#pragma  mark - Table view delegate
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *story = [[DDGStoriesProvider sharedProvider].stories objectAtIndex:indexPath.row];
