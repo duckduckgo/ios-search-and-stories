@@ -30,33 +30,34 @@
     }
 }
 
+#pragma mark - Form view controller
+
 -(void)configure {
     self.title = @"Settings";
-    
-    [self addSectionWithTitle:@"History" footer:@"History is stored on your phone."];
-    [self addSwitch:@"Record history" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
-    [self addButton:@"Clear history" action:^{
-        [[DDGSearchHistoryProvider sharedProvider] clearHistory];
-    }];
-
-    [self addSectionWithTitle:@"Water Cooler"];
-    [self addSwitch:@"Quack on refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
-    [self addButton:@"Change sources" type:IGFormButtonTypeDisclosure action:^{
-        DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
-        [self.navigationController pushViewController:sourcesVC animated:YES];
-    }];
-    
-    [self addSectionWithTitle:nil];
-    [self addButton:@"Share this app" action:^{
-        SHKItem *shareItem = [SHKItem URL:[NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"] title:@"Check out the DuckDuckGo app!" contentType:SHKURLContentTypeWebpage];
-        SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:shareItem];
-        [actionSheet showInView:self.view];
-    }];
-    [self addButton:@"Rate this app" action:^{
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=479988136&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
-    }];
+    // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
-    [self addButton:@"Send feedback" action:^{
+    
+    [self addSectionWithTitle:@"Water Cooler"];
+    [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
+    [self addButton:@"Change Sources" type:IGFormButtonTypeDisclosure action:^{
+        DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
+    }];
+    
+    [self addSectionWithTitle:@"Privacy"];
+    [self addSwitch:@"Record History" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
+    [self addSectionWithTitle:nil footer:@"History is stored on your phone."];
+    [self addButton:@"Clear History" action:^{
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
+                                                                 delegate:weakSelf
+                                                        cancelButtonTitle:@"Cancel"
+                                                   destructiveButtonTitle:nil
+                                                        otherButtonTitles:@"Clear History", nil];
+        [actionSheet showInView:weakSelf.view];
+    }];
+    
+    [self addSectionWithTitle:@"Support"];
+    [self addButton:@"Send Feedback" action:^{
         MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
         mailVC.mailComposeDelegate = self;
         [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
@@ -64,16 +65,33 @@
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
         [weakSelf presentModalViewController:mailVC animated:YES];
     }];
+    [self addButton:@"Share This App" action:^{
+        SHKItem *shareItem = [SHKItem URL:[NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"] title:@"Check out the DuckDuckGo app!" contentType:SHKURLContentTypeWebpage];
+        SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:shareItem];
+        [actionSheet showInView:weakSelf.view];
+    }];
+    [self addButton:@"Rate This App" action:^{
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=479988136&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
+    }];
 }
 
 -(void)saveData:(NSDictionary *)formData {
-    [DDGCache setObject:[formData objectForKey:@"Record history"] 
+    [DDGCache setObject:[formData objectForKey:@"Record History"]
                  forKey:@"history" 
                 inCache:@"settings"];
     
-    [DDGCache setObject:[formData objectForKey:@"Quack on refresh"] 
+    [DDGCache setObject:[formData objectForKey:@"Quack on Refresh"] 
                  forKey:@"quack" 
                 inCache:@"settings"];
+}
+
+#pragma mark - Helper methodsq
+
+-(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if(buttonIndex == 0) {
+        [[DDGSearchHistoryProvider sharedProvider] clearHistory];
+        [SVProgressHUD showSuccessWithStatus:@"History cleared!"];
+    }
 }
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
