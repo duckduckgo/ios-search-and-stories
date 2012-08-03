@@ -44,53 +44,53 @@
         
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         		
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 62.0f, self.frame.size.width, 20.0f)];
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(75.0f, frame.size.height - 58.0f, self.frame.size.width, 20.0f)];
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		label.font = [UIFont boldSystemFontOfSize:13.0f];
-		label.textColor = [UIColor colorWithRed:178.0/255.0
-                                          green:187.0/255.0
+		label.font = [UIFont boldSystemFontOfSize:14.0f];
+		label.textColor = [UIColor colorWithRed:179.0/255.0
+                                          green:189.0/255.0
                                            blue:200.0/255.0
                                           alpha:1.0];
-		label.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
+		label.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.4];
 		label.shadowOffset = CGSizeMake(0.0f, -1.0f);
 		label.backgroundColor = [UIColor clearColor];
-		label.textAlignment = UITextAlignmentCenter;
 		[self addSubview:label];
 		_statusLabel=label;
 		[label release];
 		
-        label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 42.0f, self.frame.size.width, 20.0f)];
+        label = [[UILabel alloc] initWithFrame:CGRectMake(75.0f, frame.size.height - 42.0f, self.frame.size.width, 20.0f)];
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		label.font = [UIFont systemFontOfSize:12.0f];
-		label.textColor = [UIColor colorWithRed:178.0/255.0
-                                          green:187.0/255.0
-                                           blue:200.0/255.0
+		label.font = [UIFont systemFontOfSize:14.0f];
+		label.textColor = [UIColor colorWithRed:142.0/255.0
+                                          green:151.0/255.0
+                                           blue:165.0/255.0
                                           alpha:1.0];
 		label.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
 		label.shadowOffset = CGSizeMake(0.0f, -1.0f);
 		label.backgroundColor = [UIColor clearColor];
-		label.textAlignment = UITextAlignmentCenter;
 		[self addSubview:label];
 		_lastUpdatedLabel=label;
 		[label release];
 
         
 		CALayer *layer = [CALayer layer];
-		layer.frame = CGRectMake(32.0f, frame.size.height - 57.0f, 32.0f, 32.0f);
-		layer.contentsGravity = kCAGravityResizeAspect;
+		layer.frame = CGRectMake(16.0f, frame.size.height - 57.0f, 32.0f, 32.0f);
+        layer.contentsGravity = kCAGravityTopLeft;
+        layer.contentsScale = [UIScreen mainScreen].scale;
 		layer.contents = (id)[UIImage imageNamed:@"refresh_arrow.png"].CGImage;
-		
-#if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
-		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
-			layer.contentsScale = [[UIScreen mainScreen] scale];
-		}
-#endif
-		
 		[[self layer] addSublayer:layer];
 		_arrowImage=layer;
-		
-		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
-		view.frame = CGRectMake(25.0f, frame.size.height - 38.0f, 20.0f, 20.0f);
+
+        layer = [CALayer layer];
+		layer.frame = CGRectMake(58.0f, frame.size.height - 57.0f, 3.0f, 33.0f);
+        layer.contentsGravity = kCAGravityTopLeft;
+        layer.contentsScale = [UIScreen mainScreen].scale;
+		layer.contents = (id)[UIImage imageNamed:@"refresh_dotted_line.png"].CGImage;
+		[[self layer] addSublayer:layer];
+
+        
+		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+		view.frame = CGRectMake(16.0f, frame.size.height - 57.0f, 32.0f, 32.0f);
 		[self addSubview:view];
 		_activityView = view;
 		[view release];

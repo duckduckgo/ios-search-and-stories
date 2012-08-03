@@ -32,7 +32,8 @@
     _searchController.state = DDGSearchControllerStateHome;
     
     _tableView.separatorColor = [UIColor clearColor];
-
+    _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
+    
     if (refreshHeaderView == nil) {
 		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
 		refreshHeaderView.delegate = self;
