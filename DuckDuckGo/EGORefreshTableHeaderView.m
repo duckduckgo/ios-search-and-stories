@@ -28,7 +28,8 @@
 
 
 #define FLIP_ANIMATION_DURATION 0.18f
-
+#define FLIP_TRIGGER_OFFSET (-87.0)
+#define LOADING_OFFSET (82.0)
 
 @interface EGORefreshTableHeaderView (Private)
 - (void)setState:(EGOPullRefreshState)aState;
@@ -88,6 +89,11 @@
 		layer.contents = (id)[UIImage imageNamed:@"refresh_dotted_line.png"].CGImage;
 		[[self layer] addSublayer:layer];
 
+        UIImageView *bottomShadow = [[UIImageView alloc] initWithFrame:CGRectMake(0, frame.size.height - 5.0, frame.size.width, 5.0)];
+        bottomShadow.image = [UIImage imageNamed:@"table_view_shadow_bottom.png"];
+        bottomShadow.contentMode = UIViewContentModeRedraw;
+        bottomShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+        [self addSubview:bottomShadow];
         
 		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
 		view.frame = CGRectMake(16.0f, frame.size.height - 57.0f, 32.0f, 32.0f);
@@ -187,7 +193,7 @@
 	if (_state == EGOOPullRefreshLoading) {
 		
 		CGFloat offset = MAX(scrollView.contentOffset.y * -1, 0);
-		offset = MIN(offset, 60);
+		offset = MIN(offset, LOADING_OFFSET);
 		scrollView.contentInset = UIEdgeInsetsMake(offset, 0.0f, 0.0f, 0.0f);
 		
 	} else if (scrollView.isDragging) {
@@ -199,9 +205,9 @@
 		
         if(_loading) {
             [self setState:EGOOPullRefreshLoading];
-        } else if (_state == EGOOPullRefreshPulling && scrollView.contentOffset.y > -65.0f && scrollView.contentOffset.y < 0.0f && !_loading) {
+        } else if (_state == EGOOPullRefreshPulling && scrollView.contentOffset.y > FLIP_TRIGGER_OFFSET && scrollView.contentOffset.y < 0.0f && !_loading) {
 			[self setState:EGOOPullRefreshNormal];
-		} else if (_state == EGOOPullRefreshNormal && scrollView.contentOffset.y < -65.0f && !_loading) {
+		} else if (_state == EGOOPullRefreshNormal && scrollView.contentOffset.y < FLIP_TRIGGER_OFFSET && !_loading) {
 			[self setState:EGOOPullRefreshPulling];
 		}
 		
@@ -220,7 +226,7 @@
 		_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
 	}
 	
-	if (scrollView.contentOffset.y <= - 65.0f && !_loading) {
+	if (scrollView.contentOffset.y <= FLIP_TRIGGER_OFFSET && !_loading) {
 		
 		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
 			[_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
@@ -229,7 +235,7 @@
 		[self setState:EGOOPullRefreshLoading];
 		[UIView beginAnimations:nil context:NULL];
 		[UIView setAnimationDuration:0.2];
-		scrollView.contentInset = UIEdgeInsetsMake(60.0f, 0.0f, 0.0f, 0.0f);
+		scrollView.contentInset = UIEdgeInsetsMake(LOADING_OFFSET, 0.0f, 0.0f, 0.0f);
 		[UIView commitAnimations];
 		
 	}
