@@ -27,7 +27,6 @@
 #import "EGORefreshTableHeaderView.h"
 
 
-#define TEXT_COLOR	 [UIColor colorWithRed:87.0/255.0 green:108.0/255.0 blue:137.0/255.0 alpha:1.0]
 #define FLIP_ANIMATION_DURATION 0.18f
 
 
@@ -40,40 +39,46 @@
 @synthesize delegate=_delegate;
 
 
-- (id)initWithFrame:(CGRect)frame arrowImageName:(NSString *)arrow textColor:(UIColor *)textColor  {
+- (id)initWithFrame:(CGRect)frame  {
     if((self = [super initWithFrame:frame])) {
-		
+        
 		self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		self.backgroundColor = [UIColor colorWithRed:55.0/255.0 green:59.0/255.0 blue:60.0/255.0 alpha:1.0];
-
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 30.0f, self.frame.size.width, 20.0f)];
-		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-		label.font = [UIFont systemFontOfSize:12.0f];
-		label.textColor = textColor;
-		label.shadowColor = [UIColor colorWithWhite:0.5f alpha:1.0f];
-		label.shadowOffset = CGSizeMake(0.0f, 1.0f);
-		label.backgroundColor = [UIColor clearColor];
-		label.textAlignment = UITextAlignmentCenter;
-		[self addSubview:label];
-		_lastUpdatedLabel=label;
-		[label release];
-		
-		label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 48.0f, self.frame.size.width, 20.0f)];
+        		
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 62.0f, self.frame.size.width, 20.0f)];
 		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 		label.font = [UIFont boldSystemFontOfSize:13.0f];
-		label.textColor = textColor;
-		label.shadowColor = [UIColor colorWithWhite:0.5f alpha:1.0f];
-		label.shadowOffset = CGSizeMake(0.0f, 1.0f);
+		label.textColor = [UIColor colorWithRed:178.0/255.0
+                                          green:187.0/255.0
+                                           blue:200.0/255.0
+                                          alpha:1.0];
+		label.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
+		label.shadowOffset = CGSizeMake(0.0f, -1.0f);
 		label.backgroundColor = [UIColor clearColor];
 		label.textAlignment = UITextAlignmentCenter;
 		[self addSubview:label];
 		_statusLabel=label;
 		[label release];
 		
+        label = [[UILabel alloc] initWithFrame:CGRectMake(0.0f, frame.size.height - 42.0f, self.frame.size.width, 20.0f)];
+		label.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+		label.font = [UIFont systemFontOfSize:12.0f];
+		label.textColor = [UIColor colorWithRed:178.0/255.0
+                                          green:187.0/255.0
+                                           blue:200.0/255.0
+                                          alpha:1.0];
+		label.shadowColor = [UIColor colorWithWhite:0.0f alpha:0.4f];
+		label.shadowOffset = CGSizeMake(0.0f, -1.0f);
+		label.backgroundColor = [UIColor clearColor];
+		label.textAlignment = UITextAlignmentCenter;
+		[self addSubview:label];
+		_lastUpdatedLabel=label;
+		[label release];
+
+        
 		CALayer *layer = [CALayer layer];
-		layer.frame = CGRectMake(25.0f, frame.size.height - 65.0f, 30.0f, 55.0f);
+		layer.frame = CGRectMake(32.0f, frame.size.height - 57.0f, 32.0f, 32.0f);
 		layer.contentsGravity = kCAGravityResizeAspect;
-		layer.contents = (id)[UIImage imageNamed:arrow].CGImage;
+		layer.contents = (id)[UIImage imageNamed:@"refresh_arrow.png"].CGImage;
 		
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 40000
 		if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
@@ -96,11 +101,6 @@
     }
 	
     return self;
-	
-}
-
-- (id)initWithFrame:(CGRect)frame  {
-  return [self initWithFrame:frame arrowImageName:@"blueArrow.png" textColor:TEXT_COLOR];
 }
 
 #pragma mark -

@@ -34,9 +34,7 @@
     _tableView.separatorColor = [UIColor clearColor];
 
     if (refreshHeaderView == nil) {
-		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)
-                                                              arrowImageName:@"refresh_arrow.png"
-                                                                   textColor:[UIColor colorWithWhite:1.0 alpha:0.0]];
+		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
 		refreshHeaderView.delegate = self;
 		[self.tableView addSubview:refreshHeaderView];
         [refreshHeaderView refreshLastUpdatedDate];
