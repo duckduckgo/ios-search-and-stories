@@ -56,7 +56,7 @@
         [actionSheet showInView:weakSelf.view];
     }];
     
-    [self addSectionWithTitle:@"Support"];
+    [self addSectionWithTitle:nil];
     [self addButton:@"Send Feedback" action:^{
         MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
         mailVC.mailComposeDelegate = self;
