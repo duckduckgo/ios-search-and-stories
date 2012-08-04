@@ -40,8 +40,6 @@ typedef enum {
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
 
-@property(nonatomic, assign) BOOL childViewControllerVisible;
-
 -(id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container;
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;

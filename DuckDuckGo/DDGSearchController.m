@@ -27,6 +27,8 @@
 		[container.view addSubview:self.view];
         [self didMoveToParentViewController:container];
         
+        self.autocompleteNavigationController.view.autoresizesSubviews = YES;
+        self.autocompleteNavigationController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addChildViewController:_autocompleteNavigationController];
         [self.view addSubview:_autocompleteNavigationController.view];
         _autocompleteNavigationController.view.frame = _background.frame;
@@ -116,15 +118,6 @@
 {
 	keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
 	keyboardRect = [self.view convertRect:keyboardRect toView:nil];
-    
-    if([_searchField isFirstResponder]) {
-        // if child view controller is visible, don't reveal background because background is already revealed
-        if(!_childViewControllerVisible)
-            [self revealBackground:YES animated:YES];
-        else
-            self.childViewControllerVisible = NO;
-        [self searchFieldDidChange:_searchField];
-    }
 }
 
 #pragma mark - Action sheet
@@ -563,6 +556,7 @@
     }
     
     textField.rightView = nil;
+    [self revealBackground:YES animated:YES];
     [self searchFieldDidChange:_searchField];
     
     if([_searchField.text isEqualToString:@""])
@@ -574,8 +568,7 @@
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    if(!_childViewControllerVisible)
-        [self revealBackground:NO animated:YES];
+    [self revealBackground:NO animated:YES];
     
     if(_state==DDGSearchControllerStateWeb)
         textField.rightView = stopOrReloadButton;
