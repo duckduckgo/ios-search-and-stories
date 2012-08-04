@@ -37,7 +37,6 @@ typedef enum {
 @property(nonatomic, weak) IBOutlet UIView *background;
 @property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 
-@property(nonatomic, weak) UIViewController *containerViewController;
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
 

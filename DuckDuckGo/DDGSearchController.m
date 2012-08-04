@@ -26,8 +26,10 @@ static NSString *emptyCellID = @"ECell";
     // the code below happens after viewDidLoad
     
 	if (self) {
-        self.containerViewController = container;
-
+        [container addChildViewController:self];
+		[container.view addSubview:self.view];
+        [self didMoveToParentViewController:container];
+        
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
         if(PORTRAIT)
@@ -37,7 +39,6 @@ static NSString *emptyCellID = @"ECell";
         
         self.view.frame = frame;
 
-		[_containerViewController.view addSubview:self.view];
         [self revealBackground:NO animated:NO];
 
         keyboardRect = CGRectZero;
@@ -724,7 +725,7 @@ static NSString *emptyCellID = @"ECell";
     if([[[tv cellForRowAtIndexPath:indexPath] reuseIdentifier] isEqualToString:bookmarksCellID]) {
         DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
         bookmarksVC.searchController = self;
-        [_containerViewController.navigationController pushViewController:bookmarksVC animated:YES];
+        [self.parentViewController.navigationController pushViewController:bookmarksVC animated:YES];
         self.childViewControllerVisible = YES;
     	[tv deselectRowAtIndexPath:indexPath animated:YES];
     } else {
