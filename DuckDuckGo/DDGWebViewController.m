@@ -23,7 +23,7 @@
 	_webView.delegate = self;
 	_webView.scalesPageToFit = YES;
 	webViewLoadingDepth = 0;
-    _webView.backgroundColor = [UIColor colorWithRed:0.216 green:0.231 blue:0.235 alpha:1.000];
+    _webView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
     
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" containerViewController:self];
     
