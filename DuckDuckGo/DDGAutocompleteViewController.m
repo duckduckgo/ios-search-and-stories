@@ -19,6 +19,7 @@ static NSString *historyCellID = @"HCell";
 static NSString *emptyCellID = @"ECell";
 
 -(void)viewDidLoad {
+    self.clearsSelectionOnViewWillAppear = YES;
     suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
 }
 
@@ -159,9 +160,7 @@ static NSString *emptyCellID = @"ECell";
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if([[[tv cellForRowAtIndexPath:indexPath] reuseIdentifier] isEqualToString:bookmarksCellID]) {
         DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
-        bookmarksVC.searchController = self; // TODO
-        [self.parentViewController.navigationController pushViewController:bookmarksVC animated:YES];
-    	[tv deselectRowAtIndexPath:indexPath animated:YES];
+        [self.navigationController pushViewController:bookmarksVC animated:YES];
     } else {
         NSArray *history = [[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
         NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:self.searchController.searchField.text];
@@ -177,6 +176,10 @@ static NSString *emptyCellID = @"ECell";
         [tv deselectRowAtIndexPath:indexPath animated:YES];
         [self.searchController.searchField resignFirstResponder];
     }
+}
+
+-(void)tableViewBackgroundTouched {
+    [self.searchController cancelInput];
 }
 
 @end

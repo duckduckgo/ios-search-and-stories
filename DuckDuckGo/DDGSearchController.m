@@ -72,8 +72,7 @@
 
 #pragma mark - View lifecycle
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
 
 	_searchField.rightViewMode = UITextFieldViewModeAlways;
@@ -81,10 +80,6 @@
 	_searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    
-    UITapGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(cancelInputAfterDelay)];
-    gestureRecognizer.cancelsTouchesInView = NO;
-    [_autocompleteNavigationController.view addGestureRecognizer:gestureRecognizer];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -339,13 +334,8 @@
     }
 }
 
-// cancelInput destroys the table view instantly, which causes issues when a cell is tapped and that needs to be processed before destroying the table view, so we wait for a tiny bit first.
--(void)cancelInputAfterDelay {
-    [self performSelector:@selector(cancelInput) withObject:nil afterDelay:0.01];
-}
-
+// cleans up the search field and dismisses
 -(void)cancelInput {
-    
     [_searchField resignFirstResponder];
     if(!barUpdated) {
         _searchField.text = oldSearchText;
@@ -353,6 +343,10 @@
     }
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
         [_searchHandler searchControllerAddressBarWillCancel];
+    
+    [self revealBackground:NO animated:YES];
+    if(_state==DDGSearchControllerStateWeb)
+        _searchField.rightView = stopOrReloadButton;
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -565,13 +559,6 @@
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
 	return YES;
-}
-
-- (void)textFieldDidEndEditing:(UITextField *)textField {
-    [self revealBackground:NO animated:YES];
-    
-    if(_state==DDGSearchControllerStateWeb)
-        textField.rightView = stopOrReloadButton;
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

@@ -57,4 +57,5 @@ typedef enum {
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
 -(NSString *)queryFromDDGURL:(NSURL *)url;
 
+-(void)cancelInput;
 @end

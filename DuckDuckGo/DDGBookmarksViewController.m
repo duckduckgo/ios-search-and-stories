@@ -71,15 +71,19 @@
 
 #pragma mark - Table view delegate
 
+-(DDGSearchController *)searchController {
+    return (DDGSearchController *)self.navigationController.parentViewController;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSURL *url = [[[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row] objectForKey:@"url"];
     
-    [self.navigationController popViewControllerAnimated:YES];
-    
+    [self.searchController.searchHandler loadQueryOrURL:url.absoluteString];
+
     double delayInSeconds = 0.5;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [_searchController.searchHandler loadQueryOrURL:url.absoluteString];
+        [self.navigationController popViewControllerAnimated:NO];
     });
 }
 

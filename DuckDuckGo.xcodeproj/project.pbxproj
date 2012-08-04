@@ -104,6 +104,7 @@
 		4C660A7915914E73001AB510 /* empty_bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C660A7815914E73001AB510 /* empty_bang_button.png */; };
 		4C7A67BD15C5C9200087D548 /* OneLineTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */; };
 		4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */; };
+		4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C967F5115CDB3FB009A3A52 /* DDGAutocompleteTableView.m */; };
 		4C9A9773154DEAED00286619 /* reload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9771154DEAED00286619 /* reload@2x.png */; };
 		4C9A9774154DEAED00286619 /* stop@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9772154DEAED00286619 /* stop@2x.png */; };
 		4CA0DC4A14EF1C2900CFC5D2 /* SDURLCache.h in Headers */ = {isa = PBXBuildFile; fileRef = 4CA0DC4814EF1C2900CFC5D2 /* SDURLCache.h */; };
@@ -306,6 +307,8 @@
 		4C7A67BC15C5C9200087D548 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OneLineTopicCell.xib; sourceTree = "<group>"; };
 		4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBangsProvider.h; sourceTree = "<group>"; };
 		4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGBangsProvider.m; sourceTree = "<group>"; };
+		4C967F5015CDB3FB009A3A52 /* DDGAutocompleteTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAutocompleteTableView.h; sourceTree = "<group>"; };
+		4C967F5115CDB3FB009A3A52 /* DDGAutocompleteTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAutocompleteTableView.m; sourceTree = "<group>"; };
 		4C9A9771154DEAED00286619 /* reload@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "reload@2x.png"; sourceTree = "<group>"; };
 		4C9A9772154DEAED00286619 /* stop@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "stop@2x.png"; sourceTree = "<group>"; };
 		4CA0DC4814EF1C2900CFC5D2 /* SDURLCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SDURLCache.h; sourceTree = "<group>"; };
@@ -501,6 +504,8 @@
 				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
 				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
 				4CD9249B15CD7DAB00EB062F /* Tier 2 */,
+				4C967F5015CDB3FB009A3A52 /* DDGAutocompleteTableView.h */,
+				4C967F5115CDB3FB009A3A52 /* DDGAutocompleteTableView.m */,
 			);
 			name = Autocomplete;
 			sourceTree = "<group>";
@@ -977,6 +982,7 @@
 				4CBA647B15C878B900DADD00 /* UIImage+DDG.m in Sources */,
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
 				4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */,
+				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

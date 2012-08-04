@@ -8,9 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@class DDGSearchController;
 @interface DDGBookmarksViewController : UITableViewController
-
-@property(nonatomic, weak) DDGSearchController *searchController;
 
 @end
