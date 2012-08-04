@@ -15,7 +15,7 @@ typedef enum {
 } DDGSearchControllerState;
 
 @class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate> {
+@interface DDGSearchController : UIViewController<UITextFieldDelegate> {
 	CGRect keyboardRect;
         
     NSString *oldSearchText;
@@ -30,7 +30,7 @@ typedef enum {
     NSMutableArray *unusedBangButtons;
 }
 
-@property(nonatomic, weak) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) IBOutlet UINavigationController *autocompleteNavigationController;
 @property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
 @property(nonatomic, weak) IBOutlet UIButton *searchButton;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;

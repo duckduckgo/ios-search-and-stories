@@ -122,6 +122,7 @@
 		4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */; };
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
 		4CD9247E15C9ED0900EB062F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9247D15C9ED0900EB062F /* Constants.m */; };
+		4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */; };
 		4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */; };
 		4CF9ED57154DFC460075C23E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF9ED56154DFC460075C23E /* MessageUI.framework */; };
 		4CF9ED58154DFC5F0075C23E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
@@ -330,6 +331,8 @@
 		4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchSuggestionsProvider.m; sourceTree = "<group>"; };
 		4CD9247C15C9ED0900EB062F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		4CD9247D15C9ED0900EB062F /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
+		4CD9249815CD7D8C00EB062F /* DDGAutocompleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAutocompleteViewController.h; sourceTree = "<group>"; };
+		4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAutocompleteViewController.m; sourceTree = "<group>"; };
 		4CE458FC15963729009225F5 /* DuckDuckGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = DuckDuckGo.entitlements; sourceTree = "<group>"; };
 		4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGInputAccessoryView.h; sourceTree = "<group>"; };
 		4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGInputAccessoryView.m; sourceTree = "<group>"; };
@@ -488,16 +491,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		4C4B7E9015C4F18800340B59 /* Autocomplete tier 2 */ = {
+		4C4B7E9015C4F18800340B59 /* Autocomplete */ = {
 			isa = PBXGroup;
 			children = (
-				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
-				4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */,
-				4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */,
-				4C4B7E9615C4F8E500340B59 /* DDGBookmarksProvider.h */,
-				4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */,
+				4CD9249815CD7D8C00EB062F /* DDGAutocompleteViewController.h */,
+				4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */,
+				4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */,
+				4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */,
+				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
+				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
+				4CD9249B15CD7DAB00EB062F /* Tier 2 */,
 			);
-			name = "Autocomplete tier 2";
+			name = Autocomplete;
 			sourceTree = "<group>";
 		};
 		4C573C1115B7311200790F60 /* Home screen */ = {
@@ -535,10 +540,6 @@
 				4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */,
 				4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */,
 				4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */,
-				4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */,
-				4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */,
-				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
-				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
 				4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */,
 				4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */,
 				4C2F2C6A15604657005AAA2E /* DDGAddressBarTextField.h */,
@@ -568,6 +569,18 @@
 				4CA0DC4914EF1C2900CFC5D2 /* SDURLCache.m */,
 			);
 			name = SDURLCache;
+			sourceTree = "<group>";
+		};
+		4CD9249B15CD7DAB00EB062F /* Tier 2 */ = {
+			isa = PBXGroup;
+			children = (
+				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
+				4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */,
+				4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */,
+				4C4B7E9615C4F8E500340B59 /* DDGBookmarksProvider.h */,
+				4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */,
+			);
+			name = "Tier 2";
 			sourceTree = "<group>";
 		};
 		4CFA1A9114DDB73C00DF52FE /* NoARC */ = {
@@ -679,7 +692,7 @@
 				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
 				4C660A741591487C001AB510 /* Search controller */,
-				4C4B7E9015C4F18800340B59 /* Autocomplete tier 2 */,
+				4C4B7E9015C4F18800340B59 /* Autocomplete */,
 				4C573C1115B7311200790F60 /* Home screen */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
@@ -963,6 +976,7 @@
 				4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */,
 				4CBA647B15C878B900DADD00 /* UIImage+DDG.m in Sources */,
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
+				4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -39,7 +39,10 @@ static DDGSearchHistoryProvider *sharedInstance;
     if(![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
         return;
     
-    NSDictionary *historyItemDictionary = @{@"text": historyItem,@"date": [NSDate date]};
+    NSDictionary *historyItemDictionary = @{
+        @"text": historyItem,
+        @"date": [NSDate date]
+    };
     
     for(int i=0; i<history.count; i++) {
         if([[[history objectAtIndex:i] objectForKey:@"text"] isEqualToString:historyItem]) {
