@@ -116,12 +116,18 @@
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             CGRect f = self.view.frame;
+            
             if(show)
                 f.size.height = self.view.superview.bounds.size.height - f.origin.y - keyboardEnd.size.height;
             else
                 f.size.height = self.view.superview.bounds.size.height - f.origin.y;
-            
-            self.view.frame = f;
+
+//            [UIView animateWithDuration:0
+//                                  delay:0
+//                                options:UIViewAnimationOptionBeginFromCurrentState
+//                             animations:^{
+                                 self.view.frame = f;
+//                            } completion:nil];
         });
                 
     } else {
@@ -311,9 +317,18 @@
 }
 
 -(void)revealInputAccessory:(BOOL)reveal animationDuration:(CGFloat)animationDuration {
-    [UIView animateWithDuration:animationDuration animations:^{
-        inputAccessory.alpha = (reveal ? 1.0 : 0.0);
-    }];
+    if(reveal) {
+        [UIView animateWithDuration:animationDuration animations:^{
+            inputAccessory.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            [self positionNavControllerForInputAccessoryForceHidden:NO];
+        }];
+    } else {
+        [self positionNavControllerForInputAccessoryForceHidden:YES];
+        [UIView animateWithDuration:animationDuration animations:^{
+            inputAccessory.alpha = 0.0;
+        }];
+    }
 }
 
 // cleans up the search field and dismisses
@@ -367,11 +382,12 @@
     [inputAccessory addSubview:scrollView];
 }
 
--(void)positionNavControllerForInputAccessory {
+// if the input accessory isn't hidden, but is about to hide, you can set forceHidden to position nav controller as though input accessory is hidden. Use this e.g. when animating inputAccessory, so the nav controller shows up behind it.
+-(void)positionNavControllerForInputAccessoryForceHidden:(BOOL)forceHidden {
     UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
     
     CGRect f = _autocompleteNavigationController.view.frame;
-    if(scrollView.hidden || inputAccessory.hidden || inputAccessory.alpha < 0.1) {
+    if(scrollView.hidden || inputAccessory.hidden || inputAccessory.alpha < 0.1 || forceHidden) {
         f.size.height = _autocompleteNavigationController.view.superview.bounds.size.height;
     } else {
         f.size.height = _autocompleteNavigationController.view.superview.bounds.size.height - 44.0;
@@ -409,7 +425,7 @@
     NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
     if(suggestions.count > 0) {
         scrollView.hidden = NO;
-        [self positionNavControllerForInputAccessory];
+        [self positionNavControllerForInputAccessoryForceHidden:NO];
         UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
         [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button_open.png"] forState:UIControlStateNormal];
         bangButton.hidden = YES;
@@ -454,7 +470,7 @@
     }
     
     scrollView.hidden = YES;
-    [self positionNavControllerForInputAccessory];
+    [self positionNavControllerForInputAccessoryForceHidden:NO];
     
     UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
     [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];

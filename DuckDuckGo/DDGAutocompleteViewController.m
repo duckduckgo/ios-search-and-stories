@@ -194,7 +194,12 @@ static NSString *emptyCellID = @"ECell";
         [tv deselectRowAtIndexPath:indexPath animated:YES];
     }
     
-    [self.searchController.searchField resignFirstResponder];
+    // as a workaround for a UINavigationController bug, we can't hide the keyboard until after the transition is complete
+    double delayInSeconds = 0.4;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self.searchController.searchField resignFirstResponder];
+    });
 }
 
 -(void)tableViewBackgroundTouched {
