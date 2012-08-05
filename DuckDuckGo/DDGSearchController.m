@@ -352,6 +352,7 @@
 -(void)createInputAccessory {
     inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46, self.view.bounds.size.width, 46)];
     inputAccessory.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    inputAccessory.alpha = 0.0;
     [self.view addSubview:inputAccessory];
     
     // add bang button
