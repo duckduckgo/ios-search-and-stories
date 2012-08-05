@@ -194,7 +194,7 @@
     NSDictionary *story = [stories objectAtIndex:indexPath.row];
     
     NSString *cellID = nil;
-    if([[story objectForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(320, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
+    if([[story objectForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
         cellID = OneLineCellIdentifier;
     else
         cellID = TwoLineCellIdentifier;

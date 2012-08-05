@@ -38,11 +38,7 @@
         
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
-        if(PORTRAIT)
-            frame.size.width = [UIScreen mainScreen].bounds.size.width;
-        else
-            frame.size.width = [UIScreen mainScreen].bounds.size.height;
-        
+        frame.size.width = self.view.superview.bounds.size.width;
         self.view.frame = frame;
 
         [self revealBackground:NO animated:NO];
@@ -103,8 +99,9 @@
 -(void)keyboardWillShow:(BOOL)show notification:(NSNotification*)notification {
     NSDictionary *info = [notification userInfo];
     CGRect keyboardBegin = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
+    keyboardBegin = [self.view.superview convertRect:keyboardBegin fromView:nil];
     CGRect keyboardEnd = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-
+    keyboardEnd = [self.view.superview convertRect:keyboardEnd fromView:nil];
     double dy = keyboardEnd.origin.y - keyboardBegin.origin.y;
     if(ABS(dy) < 1) {
         
@@ -121,13 +118,8 @@
                 f.size.height = self.view.superview.bounds.size.height - f.origin.y - keyboardEnd.size.height;
             else
                 f.size.height = self.view.superview.bounds.size.height - f.origin.y;
-
-//            [UIView animateWithDuration:0
-//                                  delay:0
-//                                options:UIViewAnimationOptionBeginFromCurrentState
-//                             animations:^{
-                                 self.view.frame = f;
-//                            } completion:nil];
+            
+            self.view.frame = f;
         });
                 
     } else {
@@ -159,10 +151,8 @@
                               delay:0
                             options:options
                          animations:^{
-                             CGRect keyboardFrame = [self.view.superview convertRect:keyboardEnd fromView:nil];
-                             
                              CGRect f = self.view.frame;
-                             f.size.height = keyboardFrame.origin.y - f.origin.y;
+                             f.size.height = keyboardEnd.origin.y - f.origin.y;
                              self.view.frame = f;
                          } completion:nil];
     }

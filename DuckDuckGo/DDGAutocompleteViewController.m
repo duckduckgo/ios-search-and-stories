@@ -178,6 +178,14 @@ static NSString *emptyCellID = @"ECell";
     if([[[tv cellForRowAtIndexPath:indexPath] reuseIdentifier] isEqualToString:bookmarksCellID]) {
         DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:bookmarksVC animated:YES];
+        
+        // as a workaround for a UINavigationController bug, we can't hide the keyboard until after the transition is complete
+        double delayInSeconds = 0.4;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self.searchController.searchField resignFirstResponder];
+        });
+
     } else {
         NSArray *history = [[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
         NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:self.searchController.searchField.text];
@@ -191,14 +199,8 @@ static NSString *emptyCellID = @"ECell";
         }
         
         [tv deselectRowAtIndexPath:indexPath animated:YES];
+        [self.searchController dismissAutocomplete];
     }
-    
-    // as a workaround for a UINavigationController bug, we can't hide the keyboard until after the transition is complete
-    double delayInSeconds = 0.4;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.searchController.searchField resignFirstResponder];
-    });
 }
 
 -(void)tableViewBackgroundTouched {
