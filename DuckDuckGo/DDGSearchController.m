@@ -27,11 +27,13 @@
 		[container.view addSubview:self.view];
         [self didMoveToParentViewController:container];
         
-        self.autocompleteNavigationController.view.autoresizesSubviews = YES;
-        self.autocompleteNavigationController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        
+        self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:[[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain]];
+        _autocompleteNavigationController.view.autoresizesSubviews = YES;
+        _autocompleteNavigationController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         [self addChildViewController:_autocompleteNavigationController];
-        [self.view addSubview:_autocompleteNavigationController.view];
-        _autocompleteNavigationController.view.frame = _background.frame;
+        [_background addSubview:_autocompleteNavigationController.view];
+        _autocompleteNavigationController.view.frame = _background.bounds;
         [_autocompleteNavigationController didMoveToParentViewController:self];
         
         // expand the view's frame to fill the width of the screen
@@ -79,7 +81,8 @@
 	_searchField.leftViewMode = UITextFieldViewModeAlways;
 	_searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowOrHide:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShowOrHide:) name:UIKeyboardWillHideNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -87,32 +90,41 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    
-    UIInterfaceOrientation currentOrientation = [UIApplication sharedApplication].statusBarOrientation;
-    
-    CGRect inputAccessoryFrame = inputAccessory.frame;
-    CGRect scrollViewFrame = [inputAccessory viewWithTag:102].frame;
-
-    if(UIInterfaceOrientationIsLandscape(toInterfaceOrientation) && UIInterfaceOrientationIsPortrait(currentOrientation)) {
-        inputAccessoryFrame.size.width += 160;
-        scrollViewFrame.size.width += 160;
-    } else if(UIInterfaceOrientationIsPortrait(toInterfaceOrientation) && UIInterfaceOrientationIsLandscape(currentOrientation)) {
-        inputAccessoryFrame.size.width -= 160;
-        scrollViewFrame.size.width -= 160;
-    }
-    
-    inputAccessory.frame = inputAccessoryFrame;
-    [inputAccessory viewWithTag:102].frame = scrollViewFrame;
-}
-
 #pragma mark - Updating keyboardRect
 
-- (void)keyboardWillShow:(NSNotification*)notification
-{
-	keyboardRect = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-	keyboardRect = [self.view convertRect:keyboardRect toView:nil];
+-(void)keyboardWillShowOrHide:(NSNotification*)notification {
+    NSDictionary *info = [notification userInfo];
+    
+    UIViewAnimationCurve curve = [[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
+    UIViewAnimationOptions options = 0;
+    switch (curve) {
+        case UIViewAnimationCurveEaseIn:
+            options = UIViewAnimationOptionCurveEaseIn;
+            break;
+        case UIViewAnimationCurveEaseInOut:
+            options = UIViewAnimationOptionCurveEaseInOut;
+            break;
+        case UIViewAnimationCurveEaseOut:
+            options = UIViewAnimationOptionCurveEaseOut;
+            break;
+        case UIViewAnimationCurveLinear:
+            options = UIViewAnimationOptionCurveLinear;
+            break;
+        default:
+            options = UIViewAnimationOptionCurveEaseInOut;
+            break;
+    }
+    [UIView animateWithDuration:[[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue]
+                          delay:0
+                        options:options
+                     animations:^{
+                         CGRect keyboardFrame = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+                         keyboardFrame = [self.view.superview convertRect:keyboardFrame fromView:nil];
+                         
+                         CGRect f = self.view.frame;
+                         f.size.height = keyboardFrame.origin.y - f.origin.y;
+                         self.view.frame = f;
+                     } completion:nil];
 }
 
 #pragma mark - Action sheet
@@ -238,104 +250,33 @@
 #pragma mark - Omnibar management methods
 
 - (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
-    CGSize screenSize = self.view.superview.frame.size;
-	CGRect rect = self.view.frame;
-    double animationDuration = (animated ? 0.25 : 0.0);
-    
-    if (reveal) {
-		rect.size.height = screenSize.height - keyboardRect.size.height;
-        
-        // animate the bang bar's appearance
-        CGRect bangBarFrame = inputAccessory.frame;
-        bangBarFrame.origin.y = rect.size.height - 46.0;
-        bangBarFrame.size.width = rect.size.width;
-        inputAccessory.frame = bangBarFrame;
-        inputAccessory.hidden = NO;
-        
-        __block CGRect f = inputAccessory.frame;
-        f.origin.y += keyboardRect.size.height;
-        inputAccessory.frame = f;
-        [UIView animateWithDuration:animationDuration
-                              delay:0 
-                            options:UIViewAnimationCurveEaseOut 
-                         animations:^{
-                             f.origin.y -= keyboardRect.size.height;
-                             inputAccessory.frame = f;                                 
-                         } completion:nil];
-        
-        [UIView animateWithDuration:animationDuration animations:^{
-            _background.alpha = (reveal ? 1.0 : 0.0);
-        }];
-        
-    } else {
-		// clip to search entry height
-		rect.size.height = 46.0;
-        
-        // animate the bang bar's disappearance
-        [UIView animateWithDuration:animationDuration
-                              delay:0 
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             CGRect f = inputAccessory.frame;
-                             f.origin.y = screenSize.height-f.size.height;
-                             inputAccessory.frame = f;
-                         }
-                         completion:nil];
-        
-        dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 0.5 * animationDuration * NSEC_PER_SEC);
-        dispatch_after(time, dispatch_get_main_queue(), ^{
-            [UIView animateWithDuration:animationDuration*0.5
-                                  delay:0
-                                options:UIViewAnimationOptionCurveEaseOut|UIViewAnimationOptionBeginFromCurrentState
-                             animations:^{
-                                 CGRect f = inputAccessory.frame;
-                                 f.origin.y = screenSize.height;
-                                 inputAccessory.frame = f;
-                             }
-                             completion:nil];
-        });
-    }
-    [self revealAutocomplete:reveal animated:animated]; // if we're revealing, we'll show it again after the animation
-    
-    // expand the frame to fullscreen for a moment so that the background looks like it's behind the keyboard, then adjust it to appropriate size once the animation completes.
+
+    if(reveal)
+        [_autocompleteNavigationController viewWillAppear:animated];
+    else
+        [_autocompleteNavigationController viewWillDisappear:animated];
     
     if(animated)
-        self.view.frame = self.view.superview.bounds;
-    
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, animationDuration * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        self.view.frame = rect;
-    });
-    
-    [UIView animateWithDuration:animationDuration animations:^{
+        [UIView animateWithDuration:0.25 animations:^{
+            _background.alpha = (reveal ? 1.0 : 0.0);
+        } completion:^(BOOL finished) {
+            if(reveal)
+                [_autocompleteNavigationController viewDidAppear:animated];
+            else
+                [_autocompleteNavigationController viewDidDisappear:animated];
+        }];
+    else {
         _background.alpha = (reveal ? 1.0 : 0.0);
-    }];
-}
-
-
--(void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
-    CGFloat animationDuration = (animated ? 0.25 : 0);
-    if(reveal) {
-        _autocompleteNavigationController.view.hidden = NO;
-        _autocompleteNavigationController.view.alpha = 0;
-        [UIView animateWithDuration:animationDuration
-                         animations:^{
-                             _autocompleteNavigationController.view.alpha = 1;
-                         }];
-    } else {
-        [UIView animateWithDuration:animationDuration
-                         animations:^{
-                             _autocompleteNavigationController.view.alpha = 0;
-                         }
-                         completion:^(BOOL finished) {
-                             _autocompleteNavigationController.view.alpha = 1;
-                             _autocompleteNavigationController.view.hidden = YES;
-                         }];
+        if(reveal)
+            [_autocompleteNavigationController viewDidAppear:animated];
+        else
+            [_autocompleteNavigationController viewDidDisappear:animated];
     }
+    
 }
 
 // cleans up the search field and dismisses
--(void)cancelInput {
+-(void)dismissAutocomplete {
     [_searchField resignFirstResponder];
     if(!barUpdated) {
         _searchField.text = oldSearchText;
@@ -363,35 +304,44 @@
 #pragma mark - Input accesory
 
 -(void)createInputAccessory {
-    inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, 0, 0, 46)];
-    inputAccessory.hidden = YES;
+    inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, _background.bounds.size.height - 46, _background.bounds.size.width, 46)];
+    inputAccessory.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;    
+    [_background addSubview:inputAccessory];
     
-    
+    // add bang button
     UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    
     [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
     bangButton.frame = CGRectMake(0, 0, 46, 46);
     bangButton.tag = 103;
     [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [inputAccessory addSubview:bangButton];
     
-    // get screen width so we can size the scroll view appropriately
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    UIInterfaceOrientation orientation = [[UIApplication sharedApplication] statusBarOrientation];
-    CGFloat width;
-    if(orientation == UIInterfaceOrientationLandscapeLeft || orientation == UIInterfaceOrientationLandscapeRight)
-        width = screenRect.size.height;
-    else
-        width = screenRect.size.width;
-
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, width, 46)];
+    // add scroll view
+    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, _background.bounds.size.width, 46)];
+    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     scrollView.showsHorizontalScrollIndicator = YES;
     scrollView.contentSize = CGSizeMake(0, 46);
     scrollView.tag = 102;
     scrollView.hidden = YES;
     [inputAccessory addSubview:scrollView];
-    
-    [self.view addSubview:inputAccessory];
+}
+
+-(void)setBangBarHidden:(BOOL)hidden {
+    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
+
+    if(scrollView.hidden == hidden) {
+        // do nothing
+    } else if(hidden) {
+        CGRect f = _autocompleteNavigationController.view.frame;
+        f.size.height += 44;
+        _autocompleteNavigationController.view.frame = f;
+        scrollView.hidden = YES;
+    } else {
+        CGRect f = _autocompleteNavigationController.view.frame;
+        f.size.height -= 44;
+        _autocompleteNavigationController.view.frame = f;
+        scrollView.hidden = NO;
+    }
 }
 
 -(void)bangButtonPressed {
@@ -423,7 +373,7 @@
     
     NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
     if(suggestions.count > 0) {
-        scrollView.hidden = NO;
+        [self setBangBarHidden:NO];
         UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
         [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button_open.png"] forState:UIControlStateNormal];
         bangButton.hidden = YES;
@@ -466,7 +416,9 @@
             [unusedBangButtons addObject:subview];
         }
     }
-    scrollView.hidden = YES;
+    
+    [self setBangBarHidden:YES];
+    
     UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
     [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
     bangButton.hidden = NO;

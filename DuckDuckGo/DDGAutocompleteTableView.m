@@ -10,19 +10,24 @@
 
 @implementation DDGAutocompleteTableView
 
-- (id)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
+-(id)initWithFrame:(CGRect)frame style:(UITableViewStyle)style {
+    self = [super initWithFrame:frame style:style];
+    if (self)
         [self customInit];
-    }
+    return self;
+}
+
+-(id)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self)
+        [self customInit];
     return self;
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
-    if(self) {
+    if(self)
         [self customInit];
-    }
     return self;
 }
 
@@ -40,7 +45,7 @@
             break;
         }
     }
-    
+        
     if(!insideSubview && [self.delegate respondsToSelector:@selector(tableViewBackgroundTouched)])
         [self.delegate performSelector:@selector(tableViewBackgroundTouched)];
 }

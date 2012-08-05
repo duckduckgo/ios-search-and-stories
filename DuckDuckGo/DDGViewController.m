@@ -121,13 +121,15 @@
 #pragma mark - Scroll view delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-	[refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
+    if(scrollView.contentOffset.y <= 0) {
+        [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 
-    CGRect f = topShadow.frame;
-    f.origin.y = scrollView.contentOffset.y;
-    topShadow.frame = f;
-    
-    [_tableView insertSubview:topShadow atIndex:0];
+        CGRect f = topShadow.frame;
+        f.origin.y = scrollView.contentOffset.y;
+        topShadow.frame = f;
+        
+        [_tableView insertSubview:topShadow atIndex:0];
+    }
 }
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {

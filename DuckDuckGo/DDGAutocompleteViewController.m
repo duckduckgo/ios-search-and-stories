@@ -7,6 +7,7 @@
 //
 
 #import "DDGAutocompleteViewController.h"
+#import "DDGAutocompleteTableView.h"
 #import "DDGSearchController.h"
 #import "DDGAddressBarTextField.h"
 #import "AFNetworking.h"
@@ -19,8 +20,25 @@ static NSString *historyCellID = @"HCell";
 static NSString *emptyCellID = @"ECell";
 
 -(void)viewDidLoad {
+    [super viewDidLoad];
+    
+    // use our custom table view class
+    self.tableView = [[DDGAutocompleteTableView alloc] initWithFrame:self.tableView.frame
+                                                               style:UITableViewStylePlain];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.tableView.delegate = self;
+    self.tableView.dataSource = self;
+    
     self.clearsSelectionOnViewWillAppear = YES;
+    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    
     suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
+}
+
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.navigationController setNavigationBarHidden:YES animated:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -179,7 +197,7 @@ static NSString *emptyCellID = @"ECell";
 }
 
 -(void)tableViewBackgroundTouched {
-    [self.searchController cancelInput];
+    [self.searchController dismissAutocomplete];
 }
 
 @end

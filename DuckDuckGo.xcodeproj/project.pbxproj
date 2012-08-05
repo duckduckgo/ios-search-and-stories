@@ -101,6 +101,7 @@
 		4C5F81F4158F96D6007B745A /* bangs.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F3158F96D6007B745A /* bangs.json */; };
 		4C5F81FA158FEA94007B745A /* bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F8158FEA94007B745A /* bang_button.png */; };
 		4C5F81FB158FEA94007B745A /* bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F9158FEA94007B745A /* bang_button@2x.png */; };
+		4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6029DE15CED3E000EDA6E6 /* DDGPassthroughView.m */; };
 		4C660A7915914E73001AB510 /* empty_bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C660A7815914E73001AB510 /* empty_bang_button.png */; };
 		4C7A67BD15C5C9200087D548 /* OneLineTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */; };
 		4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */; };
@@ -303,6 +304,8 @@
 		4C5F81F3158F96D6007B745A /* bangs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bangs.json; sourceTree = "<group>"; };
 		4C5F81F8158FEA94007B745A /* bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bang_button.png; sourceTree = "<group>"; };
 		4C5F81F9158FEA94007B745A /* bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button@2x.png"; sourceTree = "<group>"; };
+		4C6029DD15CED3E000EDA6E6 /* DDGPassthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGPassthroughView.h; sourceTree = "<group>"; };
+		4C6029DE15CED3E000EDA6E6 /* DDGPassthroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGPassthroughView.m; sourceTree = "<group>"; };
 		4C660A7815914E73001AB510 /* empty_bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_bang_button.png; sourceTree = "<group>"; };
 		4C7A67BC15C5C9200087D548 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OneLineTopicCell.xib; sourceTree = "<group>"; };
 		4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBangsProvider.h; sourceTree = "<group>"; };
@@ -499,13 +502,13 @@
 			children = (
 				4CD9249815CD7D8C00EB062F /* DDGAutocompleteViewController.h */,
 				4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */,
+				4C967F5015CDB3FB009A3A52 /* DDGAutocompleteTableView.h */,
+				4C967F5115CDB3FB009A3A52 /* DDGAutocompleteTableView.m */,
 				4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */,
 				4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */,
 				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
 				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
 				4CD9249B15CD7DAB00EB062F /* Tier 2 */,
-				4C967F5015CDB3FB009A3A52 /* DDGAutocompleteTableView.h */,
-				4C967F5115CDB3FB009A3A52 /* DDGAutocompleteTableView.m */,
 			);
 			name = Autocomplete;
 			sourceTree = "<group>";
@@ -542,6 +545,8 @@
 				83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */,
 				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
 				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
+				4C6029DD15CED3E000EDA6E6 /* DDGPassthroughView.h */,
+				4C6029DE15CED3E000EDA6E6 /* DDGPassthroughView.m */,
 				4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */,
 				4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */,
 				4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */,
@@ -983,6 +988,7 @@
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
 				4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */,
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
+				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -19,11 +19,13 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:NO animated:animated];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
     [self.navigationController setNavigationBarHidden:YES animated:animated];
+    [super viewWillDisappear:animated];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -79,6 +81,7 @@
     NSURL *url = [[[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row] objectForKey:@"url"];
     
     [self.searchController.searchHandler loadQueryOrURL:url.absoluteString];
+    [self.searchController dismissAutocomplete];
 
     double delayInSeconds = 0.5;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);

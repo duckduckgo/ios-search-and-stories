@@ -30,13 +30,12 @@ typedef enum {
     NSMutableArray *unusedBangButtons;
 }
 
-@property (strong, nonatomic) IBOutlet UINavigationController *autocompleteNavigationController;
 @property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
 @property(nonatomic, weak) IBOutlet UIButton *searchButton;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
-@property(nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 
+@property(nonatomic, strong) UINavigationController *autocompleteNavigationController;
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
 
@@ -57,5 +56,5 @@ typedef enum {
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
 -(NSString *)queryFromDDGURL:(NSURL *)url;
 
--(void)cancelInput;
+-(void)dismissAutocomplete;
 @end
