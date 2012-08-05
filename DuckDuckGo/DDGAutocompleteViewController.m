@@ -192,8 +192,9 @@ static NSString *emptyCellID = @"ECell";
         }
         
         [tv deselectRowAtIndexPath:indexPath animated:YES];
-        [self.searchController.searchField resignFirstResponder];
     }
+    
+    [self.searchController.searchField resignFirstResponder];
 }
 
 -(void)tableViewBackgroundTouched {
