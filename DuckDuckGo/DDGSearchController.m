@@ -480,9 +480,17 @@
 #pragma mark - Text field delegate
 
 -(void)searchFieldDidChange:(id)sender {
-    UIViewController *topViewController = [_autocompleteNavigationController topViewController];
-    if([topViewController respondsToSelector:@selector(searchFieldDidChange:)])
-        [topViewController performSelector:@selector(searchFieldDidChange:) withObject:_searchField];
+    // this event is called on editing began as well as actual content changes, so we need to ignore editing began events.
+    if(searchFieldJustBeganEditing) {
+        searchFieldJustBeganEditing = NO;
+        return;
+    }
+    
+    DDGAutocompleteViewController *autocompleteViewController = [_autocompleteNavigationController.viewControllers objectAtIndex:0];
+    if(_autocompleteNavigationController.topViewController != autocompleteViewController)
+        [_autocompleteNavigationController popToRootViewControllerAnimated:NO];
+
+    [autocompleteViewController searchFieldDidChange:_searchField];
 }
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -539,6 +547,7 @@
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
         [_searchHandler searchControllerAddressBarWillOpen];
     
+    searchFieldJustBeganEditing = YES;
 	return YES;
 }
 

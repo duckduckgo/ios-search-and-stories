@@ -28,6 +28,8 @@ typedef enum {
     DDGInputAccessoryView *inputAccessory;
     NSRange currentWordRange;
     NSMutableArray *unusedBangButtons;
+    
+    BOOL searchFieldJustBeganEditing;
 }
 
 @property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;

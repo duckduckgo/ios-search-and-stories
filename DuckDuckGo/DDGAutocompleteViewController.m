@@ -78,8 +78,7 @@ static NSString *emptyCellID = @"ECell";
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if([self.searchController.searchField.text isEqualToString:@""])
         return 1;
     else
