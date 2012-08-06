@@ -8,7 +8,6 @@
 
 #import "DDGSearchController.h"
 #import "DDGSearchSuggestionsProvider.h"
-#import "DDGSearchHistoryProvider.h"
 #import "AFNetworking.h"
 #import "DDGAddressBarTextField.h"
 #import "DDGBangsProvider.h"
@@ -20,50 +19,24 @@
 
 - (id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container {
 	self = [super initWithNibName:nibNameOrNil bundle:nil];
-    // the code below happens after viewDidLoad
     
 	if (self) {
+        // this code is executed *after* viewDidLoad
+
         [container addChildViewController:self];
 		[container.view addSubview:self.view];
         [self didMoveToParentViewController:container];
-        
-        
-        self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:[[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain]];
-        _autocompleteNavigationController.view.autoresizesSubviews = YES;
-        _autocompleteNavigationController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        [self addChildViewController:_autocompleteNavigationController];
-        [_background addSubview:_autocompleteNavigationController.view];
-        _autocompleteNavigationController.view.frame = _background.bounds;
-        [_autocompleteNavigationController didMoveToParentViewController:self];
-        
+                
         // expand the view's frame to fill the width of the screen
         CGRect frame = self.view.frame;
         frame.size.width = self.view.superview.bounds.size.width;
         self.view.frame = frame;
 
-        [self revealBackground:NO animated:NO];
-
-        keyboardRect = CGRectZero;
-		
-        _searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
-        [_searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
-
-        stopOrReloadButton = [[UIButton alloc] init];
-        stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
-        [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-        _searchField.rightView = stopOrReloadButton;
-        
-        suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
-        historyProvider = [DDGSearchHistoryProvider sharedProvider];
-        
-        unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];
-        [self createInputAccessory];
 	}
 	return self;
 }
 
-- (void)dealloc
-{
+- (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self.view removeFromSuperview];
 }
@@ -72,7 +45,29 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:[[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain]];
+    _autocompleteNavigationController.view.autoresizesSubviews = YES;
+    _autocompleteNavigationController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [self addChildViewController:_autocompleteNavigationController];
+    [_background addSubview:_autocompleteNavigationController.view];
+    _autocompleteNavigationController.view.frame = _background.bounds;
+    [_autocompleteNavigationController didMoveToParentViewController:self];
+    
+    [self revealBackground:NO animated:NO];
+    
+    _searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
+    [_searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    
+    stopOrReloadButton = [[UIButton alloc] init];
+    stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
+    [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    _searchField.rightView = stopOrReloadButton;
+    
+    unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];
+    
+    [self createInputAccessory];
+    
 	_searchField.rightViewMode = UITextFieldViewModeAlways;
 	_searchField.leftViewMode = UITextFieldViewModeAlways;
 	_searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
@@ -86,7 +81,13 @@
     return (interfaceOrientation == UIInterfaceOrientationPortrait);
 }
 
-#pragma mark - Updating keyboardRect
+- (void)viewDidUnload {
+    [self setActionButton:nil];
+    [self setAutocompleteNavigationController:nil];
+    [super viewDidUnload];
+}
+
+#pragma mark - Keyboard notifications
 
 -(void)keyboardWillShow:(NSNotification *)notification {
     [self keyboardWillShow:YES notification:notification];
@@ -158,14 +159,12 @@
     }
 }
 
-#pragma mark - Action sheet
+#pragma mark - Interactions with search handler
 
 - (IBAction)actionButtonPressed:(id)sender {
     if([_searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
         [_searchHandler searchControllerActionButtonPressed];
 }
-
-#pragma  mark - Interactions with search handler
 
 - (IBAction)leftButtonPressed:(UIButton*)sender {
 	[_searchField resignFirstResponder];
@@ -206,14 +205,7 @@
     [_searchField setProgress:progress];
 }
 
--(void)loadQueryOrURL:(NSString *)queryOrURL {
-    if([_searchField isFirstResponder])
-        [_searchField resignFirstResponder];
-    [historyProvider logHistoryItem:queryOrURL];
-    [_searchHandler loadQueryOrURL:queryOrURL];
-}
-
-#pragma mark - Helpers
+#pragma mark - Helper methods
 
 -(NSString *)validURLStringFromString:(NSString *)urlString {
     // check whether the entered text is a URL or a search query
@@ -278,7 +270,7 @@
     }
 }
 
-#pragma mark - Omnibar management methods
+#pragma mark - View management
 
 - (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
 
@@ -342,12 +334,11 @@
     _searchField.text = (query ? query : url.absoluteString);
 }
 
--(void)resetOmnibar {
+-(void)clearAddressBar {
     _searchField.text = @"";
-    [self searchFieldDidChange:_searchField];
 }
 
-#pragma mark - Input accesory
+#pragma mark - Input accessory (the bang button/bar)
 
 -(void)createInputAccessory {
     inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46, self.view.bounds.size.width, 46)];
@@ -471,12 +462,6 @@
 #pragma mark - Text field delegate
 
 -(void)searchFieldDidChange:(id)sender {
-    // this event is called on editing began as well as actual content changes, so we need to ignore editing began events.
-    if(searchFieldJustBeganEditing) {
-        searchFieldJustBeganEditing = NO;
-        return;
-    }
-    
     DDGAutocompleteViewController *autocompleteViewController = [_autocompleteNavigationController.viewControllers objectAtIndex:0];
     if(_autocompleteNavigationController.topViewController != autocompleteViewController)
         [_autocompleteNavigationController popToRootViewControllerAnimated:NO];
@@ -485,6 +470,8 @@
 }
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
+    // find the word that the cursor is currently in and update the bang bar based on it
+    
     NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
 
     if(newString.length == 0) {
@@ -533,12 +520,10 @@
     return YES;
 }
 
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
-{    
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
         [_searchHandler searchControllerAddressBarWillOpen];
     
-    searchFieldJustBeganEditing = YES;
 	return YES;
 }
 
@@ -551,12 +536,11 @@
     barUpdated = NO;
     
     if(![self isQuery:textField.text]) {
-        textField.text = @"";
+        [self clearAddressBar];
     }
     
     textField.rightView = nil;
     [self revealBackground:YES animated:YES];
-    [self searchFieldDidChange:_searchField];
     
     if([_searchField.text isEqualToString:@""])
         [self loadSuggestionsForBang:@"!"];
@@ -569,24 +553,18 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
 	NSString *s = [textField.text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	
-	if (![s length])
-	{
+	if (![s length]) {
 		textField.text = nil;
 		return NO;
 	}
 	[textField resignFirstResponder];
 	
-    [self loadQueryOrURL:([_searchField.text length] ? _searchField.text : nil)];
+    [[DDGSearchHistoryProvider sharedProvider] logHistoryItem:([_searchField.text length] ? _searchField.text : nil)];
+    [self.searchHandler loadQueryOrURL:([_searchField.text length] ? _searchField.text : nil)];
+    [self dismissAutocomplete];
 
     oldSearchText = nil;
 	return YES;
 }
 
-// TODO: move viewDidUnload to a better place
-
-- (void)viewDidUnload {
-    [self setActionButton:nil];
-    [self setAutocompleteNavigationController:nil];
-    [super viewDidUnload];
-}
 @end

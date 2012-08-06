@@ -12,12 +12,13 @@
 #import "Constants.h"
 
 @implementation DDGSearchSuggestionsProvider
+static DDGSearchSuggestionsProvider *sharedProvider;
 
 -(id)init {
     self = [super init];
     if(self) {
         suggestionsCache = [[NSMutableDictionary alloc] init];
-        
+
         serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
                                                 cachePolicy:NSURLRequestUseProtocolCachePolicy
                                             timeoutInterval:10.0];
@@ -28,6 +29,12 @@
         return self;
     }
     return nil;
+}
+
++(DDGSearchSuggestionsProvider *)sharedProvider {
+    if(!sharedProvider)
+        sharedProvider = [[self alloc] init];
+    return sharedProvider;
 }
 
 #pragma mark - Downloading and returning search suggestions
@@ -47,6 +54,12 @@
     // check the cache before querying the server
     if([suggestionsCache objectForKey:searchText])
         return;
+    else if(!searchText || [searchText isEqualToString:@""]) {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            success();
+        });
+        return;
+    }
     
     NSString *urlString = [kDDGSuggestionsURLString stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     serverRequest.URL = [NSURL URLWithString:urlString];

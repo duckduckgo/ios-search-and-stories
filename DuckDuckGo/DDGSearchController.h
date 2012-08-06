@@ -16,26 +16,20 @@ typedef enum {
 
 @class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
 @interface DDGSearchController : UIViewController<UITextFieldDelegate> {
-	CGRect keyboardRect;
-        
     NSString *oldSearchText;
     BOOL barUpdated;
-    
-    DDGSearchSuggestionsProvider *suggestionsProvider;
-    DDGSearchHistoryProvider *historyProvider;
     
     UIButton *stopOrReloadButton;
     DDGInputAccessoryView *inputAccessory;
     NSRange currentWordRange;
     NSMutableArray *unusedBangButtons;
-    
-    BOOL searchFieldJustBeganEditing;
 }
 
 @property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
 @property(nonatomic, weak) IBOutlet UIButton *searchButton;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
+-(IBAction)leftButtonPressed:(UIButton*)sender;
 
 @property(nonatomic, strong) UINavigationController *autocompleteNavigationController;
 @property(nonatomic, assign) DDGSearchControllerState state;
@@ -43,20 +37,19 @@ typedef enum {
 
 -(id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container;
 
--(IBAction)leftButtonPressed:(UIButton*)sender;
+// managing the search controller
 -(void)updateBarWithURL:(NSURL *)url;
--(void)resetOmnibar;
+-(void)clearAddressBar;
+-(void)dismissAutocomplete;
 
--(NSString *)validURLStringFromString:(NSString *)urlString;
--(BOOL)isQuery:(NSString *)queryOrURL;
-
-// the web view needs to call these at the appropriate times to update the stop/reload button
+// the web view needs to call these at the appropriate times
 -(void)webViewStartedLoading;
 -(void)webViewFinishedLoading;
 -(void)setProgress:(CGFloat)progress;
 
--(void)loadQueryOrURL:(NSString *)queryOrURL;
+// helper methods
+-(NSString *)validURLStringFromString:(NSString *)urlString;
+-(BOOL)isQuery:(NSString *)queryOrURL;
 -(NSString *)queryFromDDGURL:(NSURL *)url;
 
--(void)dismissAutocomplete;
 @end

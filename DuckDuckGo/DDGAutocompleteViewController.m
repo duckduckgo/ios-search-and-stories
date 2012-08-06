@@ -32,13 +32,15 @@ static NSString *emptyCellID = @"ECell";
     self.clearsSelectionOnViewWillAppear = YES;
     self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    
-    suggestionsProvider = [[DDGSearchSuggestionsProvider alloc] init];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
+
+    [[DDGSearchSuggestionsProvider sharedProvider] downloadSuggestionsForSearchText:self.searchController.searchField.text success:^{
+        [self.tableView reloadData];
+    }];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -59,15 +61,19 @@ static NSString *emptyCellID = @"ECell";
 
 	if(newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
-        [suggestionsProvider downloadSuggestionsForSearchText:newSearchText success:^{
+        [[DDGSearchSuggestionsProvider sharedProvider] downloadSuggestionsForSearchText:newSearchText success:^{
             [self.tableView reloadData];
         }];
 	} else {
         // search text is blank; clear the suggestions cache, reload, and hide the table
-        [suggestionsProvider emptyCache];
+        [[DDGSearchSuggestionsProvider sharedProvider] emptyCache];
     }
     // either way, reload the table view.
     [self.tableView reloadData];
+}
+
+-(void)tableViewBackgroundTouched {
+    [self.searchController dismissAutocomplete];
 }
 
 #pragma mark - Table view data source
@@ -82,12 +88,13 @@ static NSString *emptyCellID = @"ECell";
     if([self.searchController.searchField.text isEqualToString:@""])
         return 1;
     else
-        return ([[suggestionsProvider suggestionsForSearchText:self.searchController.searchField.text] count] +
+        return ([[[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text] count] +
                 [[[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text] count]);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     if([self.searchController.searchField.text isEqualToString:@""]) {
         UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:bookmarksCellID];
         if(cell == nil) {
@@ -104,16 +111,16 @@ static NSString *emptyCellID = @"ECell";
     }
     
     NSArray *history = [[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
-    NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:self.searchController.searchField.text];
+    NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
     if((suggestions.count + history.count) <= indexPath.row) {
         // this entry no longer exists; return empty cell. the tableview will be reloading very soon anyway.
         UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:emptyCellID];
         if(cell == nil)
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:emptyCellID];
         return cell;
-    }
+    }    UITableViewCell *cell;
+
     
-    UITableViewCell *cell;
     if(indexPath.row < history.count) {
         // dequeue or initialize a history cell
         cell = [tv dequeueReusableCellWithIdentifier:historyCellID];
@@ -170,11 +177,8 @@ static NSString *emptyCellID = @"ECell";
 
 #pragma mark - Table view delegate
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	return 44.0;
-}
-
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
     if([[[tv cellForRowAtIndexPath:indexPath] reuseIdentifier] isEqualToString:bookmarksCellID]) {
         DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:bookmarksVC animated:YES];
@@ -188,23 +192,21 @@ static NSString *emptyCellID = @"ECell";
 
     } else {
         NSArray *history = [[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
-        NSArray *suggestions = [suggestionsProvider suggestionsForSearchText:self.searchController.searchField.text];
+        NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
         if(indexPath.row < history.count) {
             NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
-            [self.searchController loadQueryOrURL:[historyItem objectForKey:@"text"]];
+            [[DDGSearchHistoryProvider sharedProvider] logHistoryItem:[historyItem objectForKey:@"text"]];
+            [self.searchController.searchHandler loadQueryOrURL:[historyItem objectForKey:@"text"]];
         } else {
             NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row - history.count];
             if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
-                [self.searchController loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
+                [[DDGSearchHistoryProvider sharedProvider] logHistoryItem:[suggestionItem objectForKey:@"phrase"]];
+                [self.searchController.searchHandler loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
         }
         
         [tv deselectRowAtIndexPath:indexPath animated:YES];
         [self.searchController dismissAutocomplete];
     }
-}
-
--(void)tableViewBackgroundTouched {
-    [self.searchController dismissAutocomplete];
 }
 
 @end

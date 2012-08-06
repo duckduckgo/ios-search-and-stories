@@ -14,6 +14,8 @@
     NSDictionary *bangs; 
 }
 
++(DDGSearchSuggestionsProvider *)sharedProvider;
+
 -(NSArray *)suggestionsForSearchText:(NSString *)searchText;
 -(void)downloadSuggestionsForSearchText:(NSString *)searchText success:(void (^)(void))success;
 -(void)emptyCache;

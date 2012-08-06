@@ -73,7 +73,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [_searchController resetOmnibar];
+    [_searchController clearAddressBar];
     
     [self beginDownloadingStories];
 }

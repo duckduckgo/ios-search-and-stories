@@ -554,6 +554,7 @@
 				4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */,
 				4C2F2C6A15604657005AAA2E /* DDGAddressBarTextField.h */,
 				4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */,
+				4C4B7E9015C4F18800340B59 /* Autocomplete */,
 			);
 			name = "Search controller";
 			sourceTree = "<group>";
@@ -701,10 +702,9 @@
 				4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */,
 				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
-				4C660A741591487C001AB510 /* Search controller */,
-				4C4B7E9015C4F18800340B59 /* Autocomplete */,
 				4C573C1115B7311200790F60 /* Home screen */,
 				4C573C1215B7313E00790F60 /* Settings */,
+				4C660A741591487C001AB510 /* Search controller */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				4CA8C5811592914D0011665C /* DDGWebViewController.xib */,

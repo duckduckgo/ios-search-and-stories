@@ -10,9 +10,7 @@
 #import "DDGSearchHistoryProvider.h"
 #import "DDGSearchSuggestionsProvider.h"
 
-@interface DDGAutocompleteViewController : UITableViewController {
-    DDGSearchSuggestionsProvider *suggestionsProvider;
-}
+@interface DDGAutocompleteViewController : UITableViewController
 
 -(void)searchFieldDidChange:(id)sender;
 
