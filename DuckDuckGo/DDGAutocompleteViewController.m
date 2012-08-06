@@ -18,7 +18,6 @@
 static NSString *bookmarksCellID = @"BCell";
 static NSString *suggestionCellID = @"SCell";
 static NSString *historyCellID = @"HCell";
-static NSString *emptyCellID = @"ECell";
 
 -(void)viewDidLoad {
     [super viewDidLoad];
@@ -158,7 +157,11 @@ static NSString *emptyCellID = @"ECell";
         }
         
         NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
-     	NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
+
+        // the tableview sometimes requests rows that don't exist. in this case the table's reloading anyway so just return whatever and don't crash.
+        NSDictionary *suggestionItem;
+        if(indexPath.row < suggestions.count)
+            suggestionItem = [suggestions objectAtIndex:indexPath.row];
         
         cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
         cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
@@ -189,7 +192,6 @@ static NSString *emptyCellID = @"ECell";
     }
     
     return cell;
-    // TODO: if random crashes show up, add empty-cell code. if not, then delete the dead remaining emptycell code.
 }
 
 #pragma mark - Table view delegate
