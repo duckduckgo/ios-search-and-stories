@@ -169,25 +169,27 @@ static DDGNewsProvider *sharedProvider;
                                                      options:0
                                                        range:NSMakeRange(0, 19)];
         }];
-        
-        
+                
         NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
         NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
                 
         dispatch_async(dispatch_get_main_queue(), ^{
             // update the stories array
             [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
+            [self generateGroupedStories];
             
             // record the last-updated time
             [DDGCache setObject:[NSDate date] forKey:@"storiesUpdated" inCache:@"misc"];
             
             // update the table view with added and removed stories
-            [tableView beginUpdates];
-            [tableView insertRowsAtIndexPaths:addedStories
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView deleteRowsAtIndexPaths:removedStories
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView endUpdates];
+            [tableView reloadData];
+//            [tableView beginUpdates];
+//            [tableView insertRowsAtIndexPaths:addedStories
+//                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [tableView deleteRowsAtIndexPaths:removedStories
+//                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+//            [tableView endUpdates];
+
         });
         
         // download story images (this method doesn't return until all story images are downloaded)
@@ -209,14 +211,14 @@ static DDGNewsProvider *sharedProvider;
                             
                 if(reload) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                        [tableView reloadData];
+//                        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
                     });
                 }
             }];
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            [self groupedStoriesForStories:self.stories];
             finished();
         });
     });
@@ -245,24 +247,22 @@ static DDGNewsProvider *sharedProvider;
 
 #pragma mark - Grouping stories
 
--(NSArray *)dateGroups {
-    NSMutableArray *groups = @[[self dateAtEndOfDayForDate:[self dateAtEndOfDayForDate:[NSDate date]]]].mutableCopy;
+-(void)generateGroupedStories {
+    NSMutableArray *dateGroups = @[[self dateAtEndOfDayForDate:[self dateAtEndOfDayForDate:[NSDate date]]]].mutableCopy;
     for(int i=1;i<7;i++)
-        [groups addObject:[self dateByAddingDays:-1*i toDate:[groups objectAtIndex:i-1]]];
-    return groups.copy;
-}
+        [dateGroups addObject:[self dateByAddingDays:-1*i toDate:[dateGroups objectAtIndex:0]]];
 
--(NSDictionary *)groupedStoriesForStories:(NSArray *)ungroupedStories {
-    NSArray *dateGroups = [self dateGroups];
     NSMutableArray *emptyMutableArrays = [NSMutableArray array];
     for(NSDate *date in dateGroups)
         [emptyMutableArrays addObject:[NSMutableArray array]];
+    
     NSDictionary *result = [NSDictionary dictionaryWithObjects:emptyMutableArrays forKeys:dateGroups];
     
+    NSArray *stories = self.stories;
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
     formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
     formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    for(NSDictionary *story in ungroupedStories) {
+    for(NSDictionary *story in stories) {
         // timestamp format is 2012-07-19 12:50:41.350319
         NSString *timestamp = [[story objectForKey:@"timestamp"] substringToIndex:19];
         NSDate *date = [formatter dateFromString:timestamp];
@@ -273,8 +273,9 @@ static DDGNewsProvider *sharedProvider;
                 [[result objectForKey:upperBound] addObject:story];
         }
     }
-    
-    return result;
+
+    _dateGroups = dateGroups;
+    _groupedStories = result;
 }
 
 // http://oleb.net/blog/2011/12/tutorial-how-to-sort-and-group-uitableview-by-date/

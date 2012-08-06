@@ -24,7 +24,7 @@
 -(NSArray *)stories;
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished;
 
--(NSArray *)dateGroups; // @[@"Today",@"Yesterday",@"Last Week"]
--(NSDictionary *)groupedStories; // @{@"Today": [...], @"Yesterday": [...], @"Last Week": [...]}
+@property(nonatomic, strong) NSArray *dateGroups; // array of dates
+@property(nonatomic, strong) NSDictionary *groupedStories; // dictionary with dates in dateGroups for keys
 
 @end

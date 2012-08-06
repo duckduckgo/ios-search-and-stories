@@ -185,13 +185,27 @@
 
 #pragma mark - Table view data source
 
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+	return [DDGNewsProvider sharedProvider].dateGroups.count;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+    NSDate *date = [[DDGNewsProvider sharedProvider].dateGroups objectAtIndex:section];
+    return [[[DDGNewsProvider sharedProvider].groupedStories objectForKey:date] count];
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    NSDate *date = [[DDGNewsProvider sharedProvider].dateGroups objectAtIndex:section];
+    return [date description];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
 
-    NSArray *stories = [[DDGNewsProvider sharedProvider] stories];
-    NSDictionary *story = [stories objectAtIndex:indexPath.row];
+    NSDate *date = [[DDGNewsProvider sharedProvider].dateGroups objectAtIndex:indexPath.section];
+    NSDictionary *story = [[[DDGNewsProvider sharedProvider].groupedStories objectForKey:date] objectAtIndex:indexPath.row];
     
     NSString *cellID = nil;
     if([[story objectForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
@@ -227,14 +241,6 @@
     faviconImageView.image = [DDGCache objectForKey:[story objectForKey:@"feed"] inCache:@"sourceImages"];
         
 	return cell;
-}
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [DDGNewsProvider sharedProvider].stories.count;
 }
 
 #pragma  mark - Table view delegate
