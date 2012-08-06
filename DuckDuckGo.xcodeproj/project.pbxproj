@@ -79,6 +79,7 @@
 		4C3BF12415C4A81D00EEA7BF /* libShareKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF11B15C4A6E300EEA7BF /* libShareKit.a */; };
 		4C3BF12515C4A82600EEA7BF /* ShareKit.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BF11D15C4A6E300EEA7BF /* ShareKit.bundle */; };
 		4C3BF12615C4A86400EEA7BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF0DF15C4A01B00EEA7BF /* Security.framework */; };
+		4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */; };
 		4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */; };
 		4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */; };
 		4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */; };
@@ -269,6 +270,8 @@
 		4C3BF10915C4A49000EEA7BF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		4C3BF10B15C4A4A700EEA7BF /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ShareKit.xcodeproj; path = Submodules/ShareKit/ShareKit.xcodeproj; sourceTree = "<group>"; };
+		4C487FCC15CF87C700618747 /* DDGTier2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTier2ViewController.h; sourceTree = "<group>"; };
+		4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTier2ViewController.m; sourceTree = "<group>"; };
 		4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKConfigurator.h; sourceTree = "<group>"; };
 		4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKConfigurator.m; sourceTree = "<group>"; };
 		4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DDGSHKSharers.plist; sourceTree = "<group>"; };
@@ -497,6 +500,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		4C487FCB15CF879500618747 /* Tier 2 */ = {
+			isa = PBXGroup;
+			children = (
+				4C487FCC15CF87C700618747 /* DDGTier2ViewController.h */,
+				4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */,
+			);
+			name = "Tier 2";
+			sourceTree = "<group>";
+		};
 		4C4B7E9015C4F18800340B59 /* Autocomplete */ = {
 			isa = PBXGroup;
 			children = (
@@ -508,7 +520,8 @@
 				4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */,
 				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
 				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
-				4CD9249B15CD7DAB00EB062F /* Tier 2 */,
+				4CD9249B15CD7DAB00EB062F /* Bookmarks */,
+				4C487FCB15CF879500618747 /* Tier 2 */,
 			);
 			name = Autocomplete;
 			sourceTree = "<group>";
@@ -582,7 +595,7 @@
 			name = SDURLCache;
 			sourceTree = "<group>";
 		};
-		4CD9249B15CD7DAB00EB062F /* Tier 2 */ = {
+		4CD9249B15CD7DAB00EB062F /* Bookmarks */ = {
 			isa = PBXGroup;
 			children = (
 				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
@@ -591,7 +604,7 @@
 				4C4B7E9615C4F8E500340B59 /* DDGBookmarksProvider.h */,
 				4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */,
 			);
-			name = "Tier 2";
+			name = Bookmarks;
 			sourceTree = "<group>";
 		};
 		4CFA1A9114DDB73C00DF52FE /* NoARC */ = {
@@ -989,6 +1002,7 @@
 				4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */,
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
 				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
+				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

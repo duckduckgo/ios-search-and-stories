@@ -12,6 +12,7 @@
 #import "DDGAddressBarTextField.h"
 #import "AFNetworking.h"
 #import "DDGBookmarksViewController.h"
+#import "DDGTier2ViewController.h"
 
 @implementation DDGAutocompleteViewController
 static NSString *bookmarksCellID = @"BCell";
@@ -161,10 +162,17 @@ static NSString *emptyCellID = @"ECell";
         
         cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
         cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
+        
         if([suggestionItem objectForKey:@"image"])
             [iv setImageWithURL:[NSURL URLWithString:[suggestionItem objectForKey:@"image"]]];
         else
             [iv setImage:nil]; // wipe out any image that used to be there
+        
+        if([suggestionItem objectForKey:@"calls"] && [[suggestionItem objectForKey:@"calls"] count])
+            cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+        else
+            cell.accessoryType = UITableViewCellAccessoryNone;
+
         
     } else if(indexPath.section == 2) {
         cell = [tv dequeueReusableCellWithIdentifier:bookmarksCellID];
@@ -203,15 +211,27 @@ static NSString *emptyCellID = @"ECell";
     } else if(indexPath.section == 2) {
         DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:bookmarksVC animated:YES];
-        
-        // as a workaround for a UINavigationController bug, we can't hide the keyboard until after the transition is complete
-        double delayInSeconds = 0.4;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            [self.searchController.searchField resignFirstResponder];
-        });
-
+        [self hideKeyboardAfterDelay];
     }
+}
+
+-(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
+    NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
+    NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
+
+    DDGTier2ViewController *tier2VC = [[DDGTier2ViewController alloc] initWithSuggestionItem:suggestionItem];
+    [self.navigationController pushViewController:tier2VC animated:YES];
+    [self hideKeyboardAfterDelay];
+    
+}
+
+-(void)hideKeyboardAfterDelay {
+    // as a workaround for a UINavigationController bug, we can't hide the keyboard until after the transition is complete
+    double delayInSeconds = 0.4;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self.searchController.searchField resignFirstResponder];
+    });
 }
 
 @end
