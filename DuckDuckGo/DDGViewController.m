@@ -263,14 +263,7 @@
 -(void)beginDownloadingStories {
     isRefreshing = YES;
     
-    [[DDGStoriesProvider sharedProvider] downloadSourcesFinished:^{
-        if(![DDGCache objectForKey:@"notFirstLaunch" inCache:@"misc"]) {
-            [DDGCache setObject:@(YES) forKey:@"notFirstLaunch" inCache:@"misc"];
-            
-            UINavigationController *navC = [[UINavigationController alloc] initWithRootViewController:[[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped]];
-            [self presentModalViewController:navC animated:YES];
-        }
-        
+    [[DDGStoriesProvider sharedProvider] downloadSourcesFinished:^{        
         [[DDGStoriesProvider sharedProvider] downloadStoriesInTableView:self.tableView finished:^{
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
