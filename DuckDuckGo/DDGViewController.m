@@ -206,6 +206,9 @@
         [[NSBundle mainBundle] loadNibNamed:cellID owner:self options:nil];
         cell = _loadedCell;
         self.loadedCell = nil;
+    
+        UIView *backgroundImageView = (UIImageView *)[cell.contentView viewWithTag:400];
+        backgroundImageView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
     }
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
@@ -222,11 +225,7 @@
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
     faviconImageView.image = [DDGCache objectForKey:[story objectForKey:@"feed"] inCache:@"sourceImages"];
-    
-    // resize label, backgroundImageView, faviconImageView as needed
-    UIView *backgroundImageView = (UIImageView *)[cell.contentView viewWithTag:400];
-    backgroundImageView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
-    
+        
 	return cell;
 }
 
