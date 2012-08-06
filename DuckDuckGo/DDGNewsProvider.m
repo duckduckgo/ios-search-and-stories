@@ -6,15 +6,15 @@
 //
 //
 
-#import "DDGStoriesProvider.h"
+#import "DDGNewsProvider.h"
 #import "DDGCache.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "NSArray+ConcurrentIteration.h"
 #import "UIImage+DDG.h"
 #import "Constants.h"
 
-@implementation DDGStoriesProvider
-static DDGStoriesProvider *sharedProvider;
+@implementation DDGNewsProvider
+static DDGNewsProvider *sharedProvider;
 
 #pragma mark - Lifecycle
 
@@ -27,10 +27,10 @@ static DDGStoriesProvider *sharedProvider;
     return self;
 }
 
-+(DDGStoriesProvider *)sharedProvider {
++(DDGNewsProvider *)sharedProvider {
     @synchronized(self) {
         if(!sharedProvider)
-            sharedProvider = [[DDGStoriesProvider alloc] init];
+            sharedProvider = [[DDGNewsProvider alloc] init];
         
         return sharedProvider;
     }
@@ -216,6 +216,7 @@ static DDGStoriesProvider *sharedProvider;
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            [self groupedStoriesForStories:self.stories];
             finished();
         });
     });
@@ -240,6 +241,71 @@ static DDGStoriesProvider *sharedProvider;
             [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
     }
     return [indexPaths copy];
+}
+
+#pragma mark - Grouping stories
+
+-(NSArray *)dateGroups {
+    NSMutableArray *groups = @[[self dateAtEndOfDayForDate:[self dateAtEndOfDayForDate:[NSDate date]]]].mutableCopy;
+    for(int i=1;i<7;i++)
+        [groups addObject:[self dateByAddingDays:-1*i toDate:[groups objectAtIndex:i-1]]];
+    return groups.copy;
+}
+
+-(NSDictionary *)groupedStoriesForStories:(NSArray *)ungroupedStories {
+    NSArray *dateGroups = [self dateGroups];
+    NSMutableArray *emptyMutableArrays = [NSMutableArray array];
+    for(NSDate *date in dateGroups)
+        [emptyMutableArrays addObject:[NSMutableArray array]];
+    NSDictionary *result = [NSDictionary dictionaryWithObjects:emptyMutableArrays forKeys:dateGroups];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+    for(NSDictionary *story in ungroupedStories) {
+        // timestamp format is 2012-07-19 12:50:41.350319
+        NSString *timestamp = [[story objectForKey:@"timestamp"] substringToIndex:19];
+        NSDate *date = [formatter dateFromString:timestamp];
+
+        for(int i=dateGroups.count-1; i>=0; i--) {
+            NSDate *upperBound = [dateGroups objectAtIndex:i];
+            if([date timeIntervalSince1970] <= [upperBound timeIntervalSince1970])
+                [[result objectForKey:upperBound] addObject:story];
+        }
+    }
+    
+    return result;
+}
+
+// http://oleb.net/blog/2011/12/tutorial-how-to-sort-and-group-uitableview-by-date/
+- (NSDate *)dateAtEndOfDayForDate:(NSDate *)inputDate {
+    // Use the user's current calendar and time zone
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSTimeZone *timeZone = [NSTimeZone systemTimeZone];
+    [calendar setTimeZone:timeZone];
+    
+    // Selectively convert the date components (year, month, day) of the input date
+    NSDateComponents *dateComps = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:inputDate];
+    
+    // Set the time components manually
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    
+    // Convert back, add 1 day, and subtract 1 second
+    NSDate *beginningOfDay = [calendar dateFromComponents:dateComps];
+    return [[self dateByAddingDays:1 toDate:beginningOfDay] dateByAddingTimeInterval:-1.0];
+}
+
+- (NSDate *)dateByAddingDays:(NSInteger)numberOfDays toDate:(NSDate *)inputDate {
+    // Use the user's current calendar
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    NSDateComponents *dateComps = [[NSDateComponents alloc] init];
+    [dateComps setDay:numberOfDays];
+    
+    NSDate *newDate = [calendar dateByAddingComponents:dateComps toDate:inputDate options:0];
+    return newDate;
 }
 
 #pragma mark - Custom sources

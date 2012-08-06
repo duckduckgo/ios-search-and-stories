@@ -7,7 +7,7 @@
 //
 
 #import "DDGAddCustomSourceViewController.h"
-#import "DDGStoriesProvider.h"
+#import "DDGNewsProvider.h"
 
 @implementation DDGAddCustomSourceViewController
 
@@ -25,7 +25,7 @@
 }
 
 -(void)saveData:(NSDictionary *)formData {
-    [[DDGStoriesProvider sharedProvider] addCustomSource:[formData objectForKey:@"News keyword"]];
+    [[DDGNewsProvider sharedProvider] addCustomSource:[formData objectForKey:@"News keyword"]];
 }
 
 @end

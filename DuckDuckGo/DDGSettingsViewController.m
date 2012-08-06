@@ -8,7 +8,7 @@
 
 #import "DDGSettingsViewController.h"
 #import "DDGCache.h"
-#import "DDGNewsSourcesViewController.h"
+#import "DDGChooseSourcesViewController.h"
 #import "SHK.h"
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
@@ -40,7 +40,7 @@
     [self addSectionWithTitle:@"Water Cooler"];
     [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
     [self addButton:@"Change Sources" type:IGFormButtonTypeDisclosure action:^{
-        DDGNewsSourcesViewController *sourcesVC = [[DDGNewsSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
     

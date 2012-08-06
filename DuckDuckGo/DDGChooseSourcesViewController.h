@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGNewsSourcesViewController : UITableViewController <UIAlertViewDelegate>
+@interface DDGChooseSourcesViewController : UITableViewController <UIAlertViewDelegate>
 
 @end

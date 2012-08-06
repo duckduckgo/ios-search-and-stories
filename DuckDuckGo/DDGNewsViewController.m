@@ -7,20 +7,20 @@
 //
 
 #import "DDGAppDelegate.h"
-#import "DDGViewController.h"
+#import "DDGNewsViewController.h"
 #import "DDGWebViewController.h"
 #import "AFNetworking.h"
 #import "DDGCache.h"
 #import <QuartzCore/QuartzCore.h>
 #import "NSArray+ConcurrentIteration.h"
-#import "DDGStoriesProvider.h"
+#import "DDGNewsProvider.h"
 #import "DDGSettingsViewController.h"
-#import "DDGNewsSourcesViewController.h"
+#import "DDGChooseSourcesViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "UIImage+DDG.h"
 #import "NSArray+ConcurrentIteration.h"
 
-@implementation DDGViewController
+@implementation DDGNewsViewController
 
 #pragma mark - View lifecycle
 
@@ -190,7 +190,7 @@
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
 
-    NSArray *stories = [[DDGStoriesProvider sharedProvider] stories];
+    NSArray *stories = [[DDGNewsProvider sharedProvider] stories];
     NSDictionary *story = [stories objectAtIndex:indexPath.row];
     
     NSString *cellID = nil;
@@ -234,13 +234,13 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-	return [DDGStoriesProvider sharedProvider].stories.count;
+	return [DDGNewsProvider sharedProvider].stories.count;
 }
 
 #pragma  mark - Table view delegate
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *story = [[DDGStoriesProvider sharedProvider].stories objectAtIndex:indexPath.row];
+    NSDictionary *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // mark the story as read
@@ -262,8 +262,8 @@
 -(void)beginDownloadingStories {
     isRefreshing = YES;
     
-    [[DDGStoriesProvider sharedProvider] downloadSourcesFinished:^{        
-        [[DDGStoriesProvider sharedProvider] downloadStoriesInTableView:self.tableView finished:^{
+    [[DDGNewsProvider sharedProvider] downloadSourcesFinished:^{        
+        [[DDGNewsProvider sharedProvider] downloadStoriesInTableView:self.tableView finished:^{
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
         }];

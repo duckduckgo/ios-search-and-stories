@@ -30,7 +30,7 @@
 		4C0BC92815B892D3008C6FC4 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0BC91315B892D3008C6FC4 /* UIImageView+AFNetworking.m */; };
 		4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BC93515B8C2BE008C6FC4 /* quack.wav */; };
 		4C0BC93A15B8C45B008C6FC4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */; };
-		4C11C6AF15B5E4C200D046BA /* DDGStoriesProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */; };
+		4C11C6AF15B5E4C200D046BA /* DDGNewsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */; };
 		4C14244E15AF3F8100EFBDE3 /* bang_button_open@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C14244D15AF3F8100EFBDE3 /* bang_button_open@2x.png */; };
 		4C14245015AF3F8E00EFBDE3 /* empty_bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C14244F15AF3F8E00EFBDE3 /* empty_bang_button@2x.png */; };
 		4C14245215AF420800EFBDE3 /* bang_button_open.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C14245115AF420800EFBDE3 /* bang_button_open.png */; };
@@ -67,7 +67,7 @@
 		4C24A75B15BA0946003DCB56 /* load_bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C24A75915BA0946003DCB56 /* load_bar@2x.png */; };
 		4C2DD65F159CD14100A74526 /* topic_cell_background@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2DD65D159CD14100A74526 /* topic_cell_background@2x.png */; };
 		4C2DD660159CD14100A74526 /* topic_cell_background.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C2DD65E159CD14100A74526 /* topic_cell_background.png */; };
-		4C2E001215B87C700096C994 /* DDGNewsSourcesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2E001115B87C700096C994 /* DDGNewsSourcesViewController.m */; };
+		4C2E001215B87C700096C994 /* DDGChooseSourcesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2E001115B87C700096C994 /* DDGChooseSourcesViewController.m */; };
 		4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */; };
 		4C3BEFAF15C4889D00EEA7BF /* share_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFAE15C4889D00EEA7BF /* share_button@2x.png */; };
 		4C3BEFB115C488E000EEA7BF /* share_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BEFB015C488E000EEA7BF /* share_button.png */; };
@@ -145,7 +145,7 @@
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
 		83F32270149290EF00A61BC5 /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83F3226E149290EF00A61BC5 /* iPhone.storyboard */; };
-		83F32276149290EF00A61BC5 /* DDGViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32275149290EF00A61BC5 /* DDGViewController.m */; };
+		83F32276149290EF00A61BC5 /* DDGNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32275149290EF00A61BC5 /* DDGNewsViewController.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
 /* End PBXBuildFile section */
 
@@ -219,8 +219,8 @@
 		4C0BC93515B8C2BE008C6FC4 /* quack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = quack.wav; sourceTree = "<group>"; };
 		4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
-		4C11C6AD15B5E4C200D046BA /* DDGStoriesProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoriesProvider.h; sourceTree = "<group>"; };
-		4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoriesProvider.m; sourceTree = "<group>"; };
+		4C11C6AD15B5E4C200D046BA /* DDGNewsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGNewsProvider.h; sourceTree = "<group>"; };
+		4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNewsProvider.m; sourceTree = "<group>"; };
 		4C14244D15AF3F8100EFBDE3 /* bang_button_open@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button_open@2x.png"; sourceTree = "<group>"; };
 		4C14244F15AF3F8E00EFBDE3 /* empty_bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty_bang_button@2x.png"; sourceTree = "<group>"; };
 		4C14245115AF420800EFBDE3 /* bang_button_open.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bang_button_open.png; sourceTree = "<group>"; };
@@ -259,8 +259,8 @@
 		4C24A75915BA0946003DCB56 /* load_bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "load_bar@2x.png"; sourceTree = "<group>"; };
 		4C2DD65D159CD14100A74526 /* topic_cell_background@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topic_cell_background@2x.png"; sourceTree = "<group>"; };
 		4C2DD65E159CD14100A74526 /* topic_cell_background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topic_cell_background.png; sourceTree = "<group>"; };
-		4C2E001015B87C700096C994 /* DDGNewsSourcesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGNewsSourcesViewController.h; sourceTree = "<group>"; };
-		4C2E001115B87C700096C994 /* DDGNewsSourcesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNewsSourcesViewController.m; sourceTree = "<group>"; };
+		4C2E001015B87C700096C994 /* DDGChooseSourcesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGChooseSourcesViewController.h; sourceTree = "<group>"; };
+		4C2E001115B87C700096C994 /* DDGChooseSourcesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGChooseSourcesViewController.m; sourceTree = "<group>"; };
 		4C2F2C6A15604657005AAA2E /* DDGAddressBarTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddressBarTextField.h; sourceTree = "<group>"; };
 		4C2F2C6B15604657005AAA2E /* DDGAddressBarTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddressBarTextField.m; sourceTree = "<group>"; };
 		4C3BEFAE15C4889D00EEA7BF /* share_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "share_button@2x.png"; sourceTree = "<group>"; };
@@ -367,8 +367,8 @@
 		83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGAppDelegate.h; sourceTree = "<group>"; };
 		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGAppDelegate.m; sourceTree = "<group>"; };
 		83F3226F149290EF00A61BC5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone.storyboard; sourceTree = "<group>"; };
-		83F32274149290EF00A61BC5 /* DDGViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGViewController.h; sourceTree = "<group>"; };
-		83F32275149290EF00A61BC5 /* DDGViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGViewController.m; sourceTree = "<group>"; };
+		83F32274149290EF00A61BC5 /* DDGNewsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGNewsViewController.h; sourceTree = "<group>"; };
+		83F32275149290EF00A61BC5 /* DDGNewsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGNewsViewController.m; sourceTree = "<group>"; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -529,12 +529,12 @@
 		4C573C1115B7311200790F60 /* Home screen */ = {
 			isa = PBXGroup;
 			children = (
-				83F32274149290EF00A61BC5 /* DDGViewController.h */,
-				83F32275149290EF00A61BC5 /* DDGViewController.m */,
+				83F32274149290EF00A61BC5 /* DDGNewsViewController.h */,
+				83F32275149290EF00A61BC5 /* DDGNewsViewController.m */,
 				838E9067149A763200C11E41 /* TwoLineTopicCell.xib */,
 				4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */,
-				4C11C6AD15B5E4C200D046BA /* DDGStoriesProvider.h */,
-				4C11C6AE15B5E4C200D046BA /* DDGStoriesProvider.m */,
+				4C11C6AD15B5E4C200D046BA /* DDGNewsProvider.h */,
+				4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */,
 			);
 			name = "Home screen";
 			sourceTree = "<group>";
@@ -544,8 +544,8 @@
 			children = (
 				4C573D1315B75A2900790F60 /* DDGSettingsViewController.h */,
 				4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */,
-				4C2E001015B87C700096C994 /* DDGNewsSourcesViewController.h */,
-				4C2E001115B87C700096C994 /* DDGNewsSourcesViewController.m */,
+				4C2E001015B87C700096C994 /* DDGChooseSourcesViewController.h */,
+				4C2E001115B87C700096C994 /* DDGChooseSourcesViewController.m */,
 				4CB72E8B15BE7CF300D8541F /* DDGAddCustomSourceViewController.h */,
 				4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */,
 			);
@@ -971,7 +971,7 @@
 			files = (
 				83F32269149290EF00A61BC5 /* main.m in Sources */,
 				83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */,
-				83F32276149290EF00A61BC5 /* DDGViewController.m in Sources */,
+				83F32276149290EF00A61BC5 /* DDGNewsViewController.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
@@ -981,7 +981,7 @@
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
 				4C19FFD71593B617003AC03F /* DDGCache.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
-				4C11C6AF15B5E4C200D046BA /* DDGStoriesProvider.m in Sources */,
+				4C11C6AF15B5E4C200D046BA /* DDGNewsProvider.m in Sources */,
 				4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */,
 				4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */,
 				4C573D0C15B759E100790F60 /* IGFormRadioOption.m in Sources */,
@@ -991,7 +991,7 @@
 				4C573D1015B759E100790F60 /* IGFormTextView.m in Sources */,
 				4C573D1115B759E100790F60 /* IGFormViewController.m in Sources */,
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
-				4C2E001215B87C700096C994 /* DDGNewsSourcesViewController.m in Sources */,
+				4C2E001215B87C700096C994 /* DDGChooseSourcesViewController.m in Sources */,
 				4CB72E8D15BE7CF300D8541F /* DDGAddCustomSourceViewController.m in Sources */,
 				4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,

@@ -10,7 +10,7 @@
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface DDGViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate> {
+@interface DDGNewsViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate> {
     EGORefreshTableHeaderView *refreshHeaderView;
     UIImageView *topShadow;
     BOOL isRefreshing;

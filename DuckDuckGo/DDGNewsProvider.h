@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface DDGStoriesProvider : NSObject
+@interface DDGNewsProvider : NSObject
 
-+(DDGStoriesProvider *)sharedProvider;
++(DDGNewsProvider *)sharedProvider;
 
 -(void)downloadSourcesFinished:(void (^)())finished;
 -(NSDictionary *)sources;
@@ -23,5 +23,8 @@
 
 -(NSArray *)stories;
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished;
+
+-(NSArray *)dateGroups; // @[@"Today",@"Yesterday",@"Last Week"]
+-(NSDictionary *)groupedStories; // @{@"Today": [...], @"Yesterday": [...], @"Last Week": [...]}
 
 @end
