@@ -264,28 +264,37 @@ static DDGNewsProvider *sharedProvider;
 }
 
 -(NSArray *)sectionOffsetsForArray:(NSArray *)array {
+    // cache the last generated result
+    static NSArray *lastArray;
+    static NSArray *lastSectionOffsets;
+    
     if(!array)
         array = self.stories;
     
-    NSArray *dates = self.sectionDates;
-    NSMutableArray *offsets = @[@0, @0, @0, @0, @0, @0, @0, @(array.count)].mutableCopy;
-    
-    int dateIdx = 0;
-    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-    formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-    for(int i=0; i<array.count; i++) {
-        NSDictionary *story = [array objectAtIndex:i];
-        NSString *timestamp = [[story objectForKey:@"timestamp"] substringToIndex:19];
-        NSDate *date = [formatter dateFromString:timestamp];
+    if(array != lastArray) {
+        NSArray *dates = self.sectionDates;
+        NSMutableArray *offsets = @[@0, @0, @0, @0, @0, @0, @0, @(array.count)].mutableCopy;
+        
+        int dateIdx = 0;
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        for(int i=0; i<array.count; i++) {
+            NSDictionary *story = [array objectAtIndex:i];
+            NSString *timestamp = [[story objectForKey:@"timestamp"] substringToIndex:19];
+            NSDate *date = [formatter dateFromString:timestamp];
 
-        while([date timeIntervalSince1970] < [[dates objectAtIndex:dateIdx] timeIntervalSince1970]) {
-            dateIdx++;
-            [offsets replaceObjectAtIndex:dateIdx withObject:@(i)];
+            while([date timeIntervalSince1970] < [[dates objectAtIndex:dateIdx] timeIntervalSince1970]) {
+                dateIdx++;
+                [offsets replaceObjectAtIndex:dateIdx withObject:@(i)];
+            }
         }
+        
+        lastArray = array;
+        lastSectionOffsets = offsets.copy;
     }
     
-    return offsets.copy;
+    return lastSectionOffsets;
 }
 
 -(NSUInteger)numberOfStoriesInSection:(NSInteger)section inArray:(NSArray *)array {
