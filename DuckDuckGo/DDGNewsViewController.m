@@ -186,16 +186,15 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return [DDGNewsProvider sharedProvider].dateGroups.count;
+	return [DDGNewsProvider sharedProvider].sectionDates.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSDate *date = [[DDGNewsProvider sharedProvider].dateGroups objectAtIndex:section];
-    return [[[DDGNewsProvider sharedProvider].groupedStories objectForKey:date] count];
+    return [[DDGNewsProvider sharedProvider] numberOfStoriesInSection:section inArray:nil];
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSDate *date = [[DDGNewsProvider sharedProvider].dateGroups objectAtIndex:section];
+    NSDate *date = [[DDGNewsProvider sharedProvider].sectionDates objectAtIndex:section];
     return [date description];
 }
 
@@ -204,8 +203,7 @@
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
 
-    NSDate *date = [[DDGNewsProvider sharedProvider].dateGroups objectAtIndex:indexPath.section];
-    NSDictionary *story = [[[DDGNewsProvider sharedProvider].groupedStories objectForKey:date] objectAtIndex:indexPath.row];
+    NSDictionary *story = [[DDGNewsProvider sharedProvider] storyAtIndexPath:indexPath inArray:nil];
     
     NSString *cellID = nil;
     if([[story objectForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
@@ -246,7 +244,7 @@
 #pragma  mark - Table view delegate
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
+    NSDictionary *story = [[DDGNewsProvider sharedProvider] storyAtIndexPath:indexPath inArray:nil];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // mark the story as read

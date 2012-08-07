@@ -24,7 +24,9 @@
 -(NSArray *)stories;
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished;
 
-@property(nonatomic, strong) NSArray *dateGroups; // array of dates
-@property(nonatomic, strong) NSDictionary *groupedStories; // dictionary with dates in dateGroups for keys
+-(NSArray *)sectionDates;
+-(NSUInteger)numberOfStoriesInSection:(NSInteger)section inArray:(NSArray *)array;
+-(NSDictionary *)storyAtIndexPath:(NSIndexPath *)indexPath inArray:(NSArray *)array;
+-(NSIndexPath *)indexPathForStoryAtIndex:(NSUInteger)index inArray:(NSArray *)array;
 
 @end
