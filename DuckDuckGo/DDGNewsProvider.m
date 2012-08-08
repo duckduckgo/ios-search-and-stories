@@ -179,7 +179,7 @@ static DDGNewsProvider *sharedProvider;
             
             // if generateSectionDates actually changed the dates, the entire table view is now out of date and messed up, so we need to fix with a reload before proceeding.
             // alternately, you could try to figure out what changed in code and notify the table view, which would make the animation smoother, but it's a headache to code
-            // TODO: consider this solution: rewrite generateSectionDates/sectionOffsets to make a date group for every single day that has stories (instead of a catch-all "earlier" category). then the changes from generateSectionDates will be limited to adding sections in the front and deleting sections in the back and we can try to figure those out.
+            // TODO: consider this solution: rewrite generateSectionDates/sectionOffsets to make a date group for every single day that has stories (instead of a catch-all "earlier" category). then the changes from generateSectionDates will be limited to adding sections in the front and deleting sections in the back and we can try to figure those out. OR just switch to core data (probably the better option in the long term)
             if(![self.sectionDates isEqualToArray:oldSectionDates])
                 [tableView reloadData];
             
