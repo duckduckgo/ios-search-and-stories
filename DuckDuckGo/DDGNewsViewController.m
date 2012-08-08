@@ -136,7 +136,7 @@
 	[refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
-#pragma mark EGORefreshTableHeaderDelegate Methods
+#pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
     [self beginDownloadingStories];
@@ -195,7 +195,35 @@
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     NSDate *date = [[DDGNewsProvider sharedProvider].sectionDates objectAtIndex:section];
-    return [date description];
+    
+    NSDate *dateDay;
+    NSDate *todayDay;
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    [calendar rangeOfUnit:NSDayCalendarUnit
+                startDate:&dateDay
+                 interval:NULL
+                  forDate:date];
+    [calendar rangeOfUnit:NSDayCalendarUnit
+                startDate:&todayDay
+                 interval:NULL
+                  forDate:[NSDate date]];
+    
+    NSDateComponents *difference = [calendar components:NSDayCalendarUnit
+                                               fromDate:dateDay
+                                                 toDate:todayDay
+                                                options:0];
+    
+    int daysAgo = difference.day;
+    
+    if(daysAgo==0)
+        return @"Today";
+    else if(daysAgo==1)
+        return @"Yesterday";
+    else if(daysAgo>100)
+        return @"Earlier";
+    else
+        return [NSString stringWithFormat:@"%i days ago",difference.day];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
