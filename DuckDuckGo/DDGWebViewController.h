@@ -18,9 +18,9 @@
     NSUInteger webViewLoadEvents;
 }
 
-@property (nonatomic, strong) IBOutlet UIWebView *webView;
-@property (nonatomic, strong) IBOutlet DDGSearchController *searchController;
-@property (nonatomic, strong) NSDictionary *params;
+@property(nonatomic, strong) IBOutlet UIWebView *webView;
+@property(nonatomic, strong) IBOutlet DDGSearchController *searchController;
+@property(nonatomic, strong) NSDictionary *params;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString;
 

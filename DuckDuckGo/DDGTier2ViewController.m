@@ -7,6 +7,7 @@
 //
 
 #import "DDGTier2ViewController.h"
+#import "DDGNewsProvider.h"
 #import "DDGSearchController.h"
 
 @implementation DDGTier2ViewController
@@ -15,6 +16,20 @@
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
         self.suggestionItem = suggestionItem;
+        
+        // download news
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            NSArray *keywords = @[[suggestionItem objectForKey:@"phrase"]];
+            NSMutableArray *theNews = [NSMutableArray array];
+            [[DDGNewsProvider sharedProvider] downloadCustomStoriesForKeywords:keywords
+                                                                       toArray:theNews];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                news = theNews.copy;
+                [[self tableView] reloadData];
+            });
+        });
+        
     }
     return self;
 }
@@ -44,23 +59,53 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1;
+    return 2;
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    switch (section) {
+        case 0:
+            return @"News";
+        case 1:
+            return @"Calls";
+        default:
+            return nil;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[_suggestionItem objectForKey:@"calls"] count];
+    switch(section) {
+        case 0:
+            return news.count;
+        case 1:
+            return [[_suggestionItem objectForKey:@"calls"] count];
+        default:
+            return 0;
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    static NSString *CallCellIdentifier = @"CallCell";
+    static NSString *NewsCellIdentifier = @"NewsCell";
+
+    UITableViewCell *cell;
+    if(indexPath.section==0) {
+        cell = [tableView dequeueReusableCellWithIdentifier:CallCellIdentifier];
+        if(!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NewsCellIdentifier];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        cell.textLabel.text = [[news objectAtIndex:indexPath.row] objectForKey:@"title"];
+    } else if(indexPath.section==1) {
+        cell = [tableView dequeueReusableCellWithIdentifier:CallCellIdentifier];
+        if(!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CallCellIdentifier];
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+        }
+        
+        NSString *call = [[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row];
+        cell.textLabel.text = call;
     }
-    
-    NSString *call = [[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row];
-    cell.textLabel.text = call;
     
     return cell;
 }
@@ -68,10 +113,14 @@
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSString *call = [[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row];
-    NSString *query = [[_suggestionItem objectForKey:@"phrase"] stringByAppendingFormat:@" %@",call];
-    
-    [self.searchController.searchHandler loadQueryOrURL:query];
+    if(indexPath.section==0) {
+        [self.searchController.searchHandler loadQueryOrURL:[[news objectAtIndex:indexPath.row] objectForKey:@"url"]];
+    } else if(indexPath.section==1) {
+        NSString *call = [[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row];
+        NSString *query = [[_suggestionItem objectForKey:@"phrase"] stringByAppendingFormat:@" %@",call];
+        
+        [self.searchController.searchHandler loadQueryOrURL:query];
+    }
     [self.searchController dismissAutocomplete];
     
     // workaround for a UINavigationController bug

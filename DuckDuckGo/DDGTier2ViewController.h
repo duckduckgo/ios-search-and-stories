@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGTier2ViewController : UITableViewController
+@interface DDGTier2ViewController : UITableViewController {
+    NSArray *news;
+}
 @property(nonatomic, copy) NSDictionary *suggestionItem;
 
 -(id)initWithSuggestionItem:(NSDictionary *)aSuggestionItem;

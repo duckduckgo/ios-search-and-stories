@@ -163,7 +163,7 @@ static DDGNewsProvider *sharedProvider;
             });
         }
         
-        [self downloadCustomStoriesToArray:newStories];
+        [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             return [[obj2 objectForKey:@"timestamp"] compare:[obj1 objectForKey:@"timestamp"]
                                                      options:0
@@ -382,9 +382,9 @@ static DDGNewsProvider *sharedProvider;
     [DDGCache setObject:customSources.copy forKey:@"customSources" inCache:@"misc"];
 }
 
--(void)downloadCustomStoriesToArray:(NSMutableArray *)newStories {
+-(void)downloadCustomStoriesForKeywords:(NSArray *)keywords toArray:(NSMutableArray *)newStories {
     
-    [self.customSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+    [keywords iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
         NSString *newsKeyword = (NSString *)obj;
         NSString *urlString = [kDDGCustomStoriesURLString stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         
