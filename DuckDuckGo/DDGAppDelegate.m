@@ -13,6 +13,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGSHKConfigurator.h"
 #import "SHKConfiguration.h"
+#import "DDGNewsProvider.h"
 
 @implementation DDGAppDelegate
 
@@ -36,6 +37,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     DefaultSHKConfigurator *configurator = [[DDGSHKConfigurator alloc] init];
     [SHKConfiguration sharedInstanceWithConfigurator:configurator];
+
+    
+    // regenerate the news provider's dates now, before the table view loads, to minimize the chances of a change happening later (which would mean force-reloading the table view)
+    [[DDGNewsProvider sharedProvider] generateSectionDates];
     
     return YES;
 }

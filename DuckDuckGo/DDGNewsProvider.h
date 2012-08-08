@@ -8,7 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@interface DDGNewsProvider : NSObject
+@interface DDGNewsProvider : NSObject {
+    NSArray *lastSectionOffsetsArray;
+    NSArray *lastSectionOffsets;
+}
 
 +(DDGNewsProvider *)sharedProvider;
 
@@ -25,6 +28,7 @@
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished;
 
 -(NSArray *)sectionDates;
+-(void)generateSectionDates;
 -(NSUInteger)numberOfStoriesInSection:(NSInteger)section inArray:(NSArray *)array;
 -(NSDictionary *)storyAtIndexPath:(NSIndexPath *)indexPath inArray:(NSArray *)array;
 -(NSIndexPath *)indexPathForStoryAtIndex:(NSUInteger)index inArray:(NSArray *)array;

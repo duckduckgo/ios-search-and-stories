@@ -202,14 +202,14 @@ static NSString *historyCellID = @"HCell";
         NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
         [[DDGSearchHistoryProvider sharedProvider] logHistoryItem:[historyItem objectForKey:@"text"]];
         [self.searchController.searchHandler loadQueryOrURL:[historyItem objectForKey:@"text"]];
-        
+        [self.searchController dismissAutocomplete];
     } else if(indexPath.section == 1) {
         NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
         NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
         if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
             [[DDGSearchHistoryProvider sharedProvider] logHistoryItem:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController.searchHandler loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
-
+        [self.searchController dismissAutocomplete];
     } else if(indexPath.section == 2) {
         DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
         [self.navigationController pushViewController:bookmarksVC animated:YES];

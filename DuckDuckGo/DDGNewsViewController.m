@@ -284,7 +284,6 @@
     });
 
     NSString *escapedStoryURL = [[story objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    
     [self loadQueryOrURL:escapedStoryURL];
 }
 

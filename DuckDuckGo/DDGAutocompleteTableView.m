@@ -45,7 +45,7 @@
             break;
         }
     }
-        
+
     if(!insideSubview && [self.delegate respondsToSelector:@selector(tableViewBackgroundTouched)])
         [self.delegate performSelector:@selector(tableViewBackgroundTouched)];
 }

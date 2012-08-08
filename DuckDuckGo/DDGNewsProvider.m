@@ -171,14 +171,20 @@ static DDGNewsProvider *sharedProvider;
         }];
                         
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSArray *oldSectionDates = self.sectionDates;
             [self generateSectionDates];
+
             NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
             NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
             
-            // update the stories array
-            [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
+            // if generateSectionDates actually changed the dates, the entire table view is now out of date and messed up, so we need to fix with a reload before proceeding.
+            // alternately, you could try to figure out what changed in code and notify the table view, which would make the animation smoother, but it's a headache to code
+            // TODO: consider this solution: rewrite generateSectionDates/sectionOffsets to make a date group for every single day that has stories (instead of a catch-all "earlier" category). then the changes from generateSectionDates will be limited to adding sections in the front and deleting sections in the back and we can try to figure those out.
+            if(![self.sectionDates isEqualToArray:oldSectionDates])
+                [tableView reloadData];
             
-            // record the last-updated time
+            // update the stories array and last-updated time
+            [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
             [DDGCache setObject:[NSDate date] forKey:@"storiesUpdated" inCache:@"misc"];
             
             // update the table view with added and removed stories
@@ -255,23 +261,27 @@ static DDGNewsProvider *sharedProvider;
 }
 
 -(void)generateSectionDates {
+    NSArray *oldSectionDates = [DDGCache objectForKey:@"sectionDates" inCache:@"misc"];
+    
     NSMutableArray *dates = @[[self dateAtBeginningOfDayForDate:[NSDate date]]].mutableCopy;
     for(int i=0;i<5;i++)
         [dates addObject:[self dateByAddingDays:-1 toDate:[dates lastObject]]];
     [dates addObject:[NSDate distantPast]];
     
     [DDGCache setObject:dates.copy forKey:@"sectionDates" inCache:@"misc"];
+    
+    // if we actually changed something, be sure to clear the section offsets cache
+    if(![self.sectionDates isEqualToArray:oldSectionDates]) {
+        lastSectionOffsetsArray = nil;
+        lastSectionOffsets = nil;
+    }
 }
 
 -(NSArray *)sectionOffsetsForArray:(NSArray *)array {
-    // cache the last generated result
-    static NSArray *lastArray;
-    static NSArray *lastSectionOffsets;
-    
     if(!array)
         array = self.stories;
     
-    if(array != lastArray) {
+    if(array != lastSectionOffsetsArray) {
         NSArray *dates = self.sectionDates;
         NSMutableArray *offsets = @[@0, @0, @0, @0, @0, @0, @0, @(array.count)].mutableCopy;
         
@@ -290,7 +300,7 @@ static DDGNewsProvider *sharedProvider;
             }
         }
         
-        lastArray = array;
+        lastSectionOffsetsArray = array;
         lastSectionOffsets = offsets.copy;
     }
     
