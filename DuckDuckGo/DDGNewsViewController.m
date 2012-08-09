@@ -186,44 +186,11 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return [DDGNewsProvider sharedProvider].sectionDates.count;
+	return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[DDGNewsProvider sharedProvider] numberOfStoriesInSection:section inArray:nil];
-}
-
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    NSDate *date = [[DDGNewsProvider sharedProvider].sectionDates objectAtIndex:section];
-    
-    NSDate *dateDay;
-    NSDate *todayDay;
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    
-    [calendar rangeOfUnit:NSDayCalendarUnit
-                startDate:&dateDay
-                 interval:NULL
-                  forDate:date];
-    [calendar rangeOfUnit:NSDayCalendarUnit
-                startDate:&todayDay
-                 interval:NULL
-                  forDate:[NSDate date]];
-    
-    NSDateComponents *difference = [calendar components:NSDayCalendarUnit
-                                               fromDate:dateDay
-                                                 toDate:todayDay
-                                                options:0];
-    
-    int daysAgo = difference.day;
-    
-    if(daysAgo==0)
-        return @"Today";
-    else if(daysAgo==1)
-        return @"Yesterday";
-    else if(daysAgo>100)
-        return @"Earlier";
-    else
-        return [NSString stringWithFormat:@"%i days ago",difference.day];
+    return [DDGNewsProvider sharedProvider].stories.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -231,7 +198,7 @@
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
 
-    NSDictionary *story = [[DDGNewsProvider sharedProvider] storyAtIndexPath:indexPath inArray:nil];
+    NSDictionary *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
     NSString *cellID = nil;
     if([[story objectForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
@@ -272,7 +239,7 @@
 #pragma  mark - Table view delegate
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *story = [[DDGNewsProvider sharedProvider] storyAtIndexPath:indexPath inArray:nil];
+    NSDictionary *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // mark the story as read

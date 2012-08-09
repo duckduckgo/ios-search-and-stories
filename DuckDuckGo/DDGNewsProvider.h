@@ -28,11 +28,4 @@
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished;
 -(void)downloadCustomStoriesForKeywords:(NSArray *)keywords toArray:(NSMutableArray *)newStories;
 
--(NSArray *)sectionDates;
--(void)generateSectionDates;
--(NSUInteger)numberOfStoriesInSection:(NSInteger)section inArray:(NSArray *)array;
--(NSDictionary *)storyAtIndexPath:(NSIndexPath *)indexPath inArray:(NSArray *)array;
--(NSIndexPath *)indexPathForStoryAtIndex:(NSUInteger)index inArray:(NSArray *)array;
-
-
 @end

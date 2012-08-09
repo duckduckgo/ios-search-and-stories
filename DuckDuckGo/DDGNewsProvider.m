@@ -171,17 +171,8 @@ static DDGNewsProvider *sharedProvider;
         }];
                         
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSArray *oldSectionDates = self.sectionDates;
-            [self generateSectionDates];
-
             NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
             NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
-            
-            // if generateSectionDates actually changed the dates, the entire table view is now out of date and messed up, so we need to fix with a reload before proceeding.
-            // alternately, you could try to figure out what changed in code and notify the table view, which would make the animation smoother, but it's a headache to code
-            // TODO: consider this solution: rewrite generateSectionDates/sectionOffsets to make a date group for every single day that has stories (instead of a catch-all "earlier" category). then the changes from generateSectionDates will be limited to adding sections in the front and deleting sections in the back and we can try to figure those out. OR just switch to core data (probably the better option in the long term)
-            if(![self.sectionDates isEqualToArray:oldSectionDates])
-                [tableView reloadData];
             
             // update the stories array and last-updated time
             [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
@@ -216,7 +207,7 @@ static DDGNewsProvider *sharedProvider;
                             
                 if(reload) {
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [tableView reloadRowsAtIndexPaths:@[[self indexPathForStoryAtIndex:i inArray:self.stories]] withRowAnimation:UITableViewRowAnimationFade];
+                        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
                     });
                 }
             }];
@@ -244,124 +235,9 @@ static DDGNewsProvider *sharedProvider;
         }
         
         if(!matchFound)
-            [indexPaths addObject:[self indexPathForStoryAtIndex:i inArray:newStories]];
+            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
     }
     return [indexPaths copy];
-}
-
-#pragma mark - Grouping stories
-
--(NSArray *)sectionDates {
-    NSArray *dates = [DDGCache objectForKey:@"sectionDates" inCache:@"misc"];
-    if(!dates) {
-        [self generateSectionDates];
-        dates = [DDGCache objectForKey:@"sectionDates" inCache:@"misc"];
-    }
-    return dates;
-}
-
--(void)generateSectionDates {
-    NSArray *oldSectionDates = [DDGCache objectForKey:@"sectionDates" inCache:@"misc"];
-    
-    NSMutableArray *dates = @[[self dateAtBeginningOfDayForDate:[NSDate date]]].mutableCopy;
-    for(int i=0;i<5;i++)
-        [dates addObject:[self dateByAddingDays:-1 toDate:[dates lastObject]]];
-    [dates addObject:[NSDate distantPast]];
-    
-    [DDGCache setObject:dates.copy forKey:@"sectionDates" inCache:@"misc"];
-    
-    // if we actually changed something, be sure to clear the section offsets cache
-    if(![self.sectionDates isEqualToArray:oldSectionDates]) {
-        lastSectionOffsetsArray = nil;
-        lastSectionOffsets = nil;
-    }
-}
-
--(NSArray *)sectionOffsetsForArray:(NSArray *)array {
-    if(!array)
-        array = self.stories;
-    
-    if(array != lastSectionOffsetsArray) {
-        NSArray *dates = self.sectionDates;
-        NSMutableArray *offsets = @[@0, @0, @0, @0, @0, @0, @0, @(array.count)].mutableCopy;
-        
-        int dateIdx = 0;
-        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-        formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        for(int i=0; i<array.count; i++) {
-            NSDictionary *story = [array objectAtIndex:i];
-            NSString *timestamp = [[story objectForKey:@"timestamp"] substringToIndex:19];
-            NSDate *date = [formatter dateFromString:timestamp];
-
-            while([date timeIntervalSince1970] < [[dates objectAtIndex:dateIdx] timeIntervalSince1970]) {
-                dateIdx++;
-                [offsets replaceObjectAtIndex:dateIdx withObject:@(i)];
-            }
-        }
-        
-        lastSectionOffsetsArray = array;
-        lastSectionOffsets = offsets.copy;
-    }
-    
-    return lastSectionOffsets;
-}
-
--(NSUInteger)numberOfStoriesInSection:(NSInteger)section inArray:(NSArray *)array {
-    NSArray *offsets = [self sectionOffsetsForArray:array];
-    return [[offsets objectAtIndex:section+1] intValue] - [[offsets objectAtIndex:section] intValue];
-}
-
--(NSDictionary *)storyAtIndexPath:(NSIndexPath *)indexPath inArray:(NSArray *)array {
-    if(!array)
-        array = self.stories;
-    
-    NSArray *offsets = [self sectionOffsetsForArray:array];
-    return [array objectAtIndex:[[offsets objectAtIndex:indexPath.section] intValue]+indexPath.row];
-}
-
--(NSIndexPath *)indexPathForStoryAtIndex:(NSUInteger)index inArray:(NSArray *)array {
-    if(!array)
-        array = self.stories;
-    
-    NSArray *offsets = [self sectionOffsetsForArray:array];
-    int section = 0;
-    while([[offsets objectAtIndex:section+1] intValue] <= index)
-        section++;
-    
-    return [NSIndexPath indexPathForRow:index-[[offsets objectAtIndex:section] intValue]
-                              inSection:section];
-}
-
-// http://oleb.net/blog/2011/12/tutorial-how-to-sort-and-group-uitableview-by-date/
-- (NSDate *)dateAtBeginningOfDayForDate:(NSDate *)inputDate {
-    // Use the user's current calendar and time zone
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    NSTimeZone *timeZone = [NSTimeZone systemTimeZone];
-    [calendar setTimeZone:timeZone];
-    
-    // Selectively convert the date components (year, month, day) of the input date
-    NSDateComponents *dateComps = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:inputDate];
-    
-    // Set the time components manually
-    [dateComps setHour:0];
-    [dateComps setMinute:0];
-    [dateComps setSecond:0];
-    
-    // Convert back, add 1 day, and subtract 1 second
-    NSDate *beginningOfDay = [calendar dateFromComponents:dateComps];
-    return beginningOfDay;
-}
-
-- (NSDate *)dateByAddingDays:(NSInteger)numberOfDays toDate:(NSDate *)inputDate {
-    // Use the user's current calendar
-    NSCalendar *calendar = [NSCalendar currentCalendar];
-    
-    NSDateComponents *dateComps = [[NSDateComponents alloc] init];
-    [dateComps setDay:numberOfDays];
-    
-    NSDate *newDate = [calendar dateByAddingComponents:dateComps toDate:inputDate options:0];
-    return newDate;
 }
 
 #pragma mark - Custom sources
