@@ -28,20 +28,9 @@ static DDGNewsProvider *sharedProvider;
             [DDGCache setObject:[[NSArray alloc] init] forKey:@"customSources" inCache:@"misc"];
 
         NSPersistentStoreCoordinator *coordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
-        if(![NSThread isMainThread]) {
-            mainMOC = [[NSManagedObjectContext alloc] init];
-            mainMOC.persistentStoreCoordinator = coordinator;
-        } else {
-            dispatch_sync(dispatch_get_main_queue(), ^{
-                mainMOC = [[NSManagedObjectContext alloc] init];
-                mainMOC.persistentStoreCoordinator = coordinator;
-            });
-        }
-        
-        backgroundMOCQueue = dispatch_queue_create("DDGNewsProviderBackgroundMOCQueue", NULL);
-        dispatch_async(backgroundMOCQueue, ^{
-            backgroundMOC = [[NSManagedObjectContext alloc] init];
-            backgroundMOC.persistentStoreCoordinator = coordinator;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            managedObjectContext = [[NSManagedObjectContext alloc] init];
+            managedObjectContext.persistentStoreCoordinator = coordinator;
         });
     }
     return self;
@@ -155,7 +144,7 @@ static DDGNewsProvider *sharedProvider;
 
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished {
     // do everything in the background
-    dispatch_async(backgroundMOCQueue, ^ {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
 
         
         NSString *urlStr = kDDGStoriesURLString;
@@ -185,20 +174,22 @@ static DDGNewsProvider *sharedProvider;
         
         [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
         
-        for(NSDictionary *storyDict in newStories) {
-            if([backgroundMOC fetchObjectsForEntityName:@"Story" withPredicate:@"id == ?",[storyDict objectForKey:@"id"]].count)
-                continue;
-            
-            NSManagedObject *story = [NSEntityDescription insertNewObjectForEntityForName:@"Story"
-                                                                   inManagedObjectContext:backgroundMOC];
-            
-            [story setValue:[storyDict objectForKey:@"url"] forKey:@"url"];
-            [story setValue:[storyDict objectForKey:@"title"] forKey:@"title"];
-            [story setValue:[storyDict objectForKey:@"image"] forKey:@"imageURL"];
-            [story setValue:[storyDict objectForKey:@"feed"] forKey:@"feed"];
-            [story setValue:[storyDict objectForKey:@"id"] forKey:@"id"];
-        }
-        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            for(NSDictionary *storyDict in newStories) {
+                if([managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:@"id == ?",[storyDict objectForKey:@"id"]].count)
+                    continue;
+                
+                NSManagedObject *story = [NSEntityDescription insertNewObjectForEntityForName:@"Story"
+                                                                       inManagedObjectContext:managedObjectContext];
+                
+                [story setValue:[storyDict objectForKey:@"url"] forKey:@"url"];
+                [story setValue:[storyDict objectForKey:@"title"] forKey:@"title"];
+                [story setValue:[storyDict objectForKey:@"image"] forKey:@"imageURL"];
+                [story setValue:[storyDict objectForKey:@"feed"] forKey:@"feed"];
+                [story setValue:[storyDict objectForKey:@"id"] forKey:@"id"];
+            }            
+        });
+
         // download story images (this method doesn't return until all story images are downloaded)
         // synchronize to prevent multiple simultaneous refreshes from downloading images on top of each other and wasting bandwidth
         @synchronized(self) {
