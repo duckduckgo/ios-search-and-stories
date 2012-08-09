@@ -12,6 +12,8 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "UIImage+DDG.h"
 #import "Constants.h"
+#import <CoreData/CoreData.h>
+#import "DDGAppDelegate.h"
 
 @implementation DDGNewsProvider
 static DDGNewsProvider *sharedProvider;
@@ -23,6 +25,22 @@ static DDGNewsProvider *sharedProvider;
     if(self) {
         if(![DDGCache objectForKey:@"customSources" inCache:@"misc"])
             [DDGCache setObject:[[NSArray alloc] init] forKey:@"customSources" inCache:@"misc"];
+
+        if(![NSThread isMainThread]) {
+            mainMOC = [[NSManagedObjectContext alloc] init];
+            mainMOC.persistentStoreCoordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
+        } else {
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                mainMOC = [[NSManagedObjectContext alloc] init];
+                mainMOC.persistentStoreCoordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
+            });
+        }
+        
+        backgroundMOCQueue = dispatch_queue_create("DDGNewsProviderBackgroundMOCQueue", NULL);
+        dispatch_async(backgroundMOCQueue, ^{
+            backgroundMOC = [[NSManagedObjectContext alloc] init];
+            backgroundMOC.persistentStoreCoordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
+        });
     }
     return self;
 }

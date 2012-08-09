@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface DDGNewsProvider : NSObject {
+    NSManagedObjectContext *mainMOC;
+    NSManagedObjectContext *backgroundMOC;
+    dispatch_queue_t backgroundMOCQueue;
+    
     NSArray *lastSectionOffsetsArray;
     NSArray *lastSectionOffsets;
 }

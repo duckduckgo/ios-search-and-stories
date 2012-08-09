@@ -99,6 +99,7 @@
 		4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */; };
 		4C57C10F158A8D6500E4C6BF /* refresh_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */; };
 		4C57C112158A8F5400E4C6BF /* refresh_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */; };
+		4C5F1F2315D41C120048C5DB /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C5F1F2115D41C120048C5DB /* Model.xcdatamodeld */; };
 		4C5F81F4158F96D6007B745A /* bangs.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F3158F96D6007B745A /* bangs.json */; };
 		4C5F81FA158FEA94007B745A /* bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F8158FEA94007B745A /* bang_button.png */; };
 		4C5F81FB158FEA94007B745A /* bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F9158FEA94007B745A /* bang_button@2x.png */; };
@@ -304,6 +305,7 @@
 		4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSettingsViewController.m; sourceTree = "<group>"; };
 		4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh_arrow.png; sourceTree = "<group>"; };
 		4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh_arrow@2x.png"; sourceTree = "<group>"; };
+		4C5F1F2215D41C120048C5DB /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		4C5F81F3158F96D6007B745A /* bangs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bangs.json; sourceTree = "<group>"; };
 		4C5F81F8158FEA94007B745A /* bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bang_button.png; sourceTree = "<group>"; };
 		4C5F81F9158FEA94007B745A /* bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button@2x.png"; sourceTree = "<group>"; };
@@ -706,6 +708,7 @@
 		83F32262149290EF00A61BC5 /* DuckDuckGo */ = {
 			isa = PBXGroup;
 			children = (
+				4C5F1F2115D41C120048C5DB /* Model.xcdatamodeld */,
 				4CD9247C15C9ED0900EB062F /* Constants.h */,
 				4CD9247D15C9ED0900EB062F /* Constants.m */,
 				4C5F81F3158F96D6007B745A /* bangs.json */,
@@ -1003,6 +1006,7 @@
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
 				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
+				4C5F1F2315D41C120048C5DB /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1214,6 +1218,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		4C5F1F2115D41C120048C5DB /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				4C5F1F2215D41C120048C5DB /* Model.xcdatamodel */,
+			);
+			currentVersion = 4C5F1F2215D41C120048C5DB /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 83F3224F149290EF00A61BC5 /* Project object */;
 }
