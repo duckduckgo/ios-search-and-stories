@@ -541,9 +541,6 @@
     
     textField.rightView = nil;
     [self revealBackground:YES animated:YES];
-    
-    if([_searchField.text isEqualToString:@""])
-        [self loadSuggestionsForBang:@"!"];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
