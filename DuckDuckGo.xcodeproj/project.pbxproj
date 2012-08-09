@@ -99,7 +99,6 @@
 		4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */; };
 		4C57C10F158A8D6500E4C6BF /* refresh_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */; };
 		4C57C112158A8F5400E4C6BF /* refresh_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */; };
-		4C5F1F2315D41C120048C5DB /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 4C5F1F2115D41C120048C5DB /* Model.xcdatamodeld */; };
 		4C5F81F4158F96D6007B745A /* bangs.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F3158F96D6007B745A /* bangs.json */; };
 		4C5F81FA158FEA94007B745A /* bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F8158FEA94007B745A /* bang_button.png */; };
 		4C5F81FB158FEA94007B745A /* bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F9158FEA94007B745A /* bang_button@2x.png */; };
@@ -127,8 +126,6 @@
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
 		4CD9247E15C9ED0900EB062F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9247D15C9ED0900EB062F /* Constants.m */; };
 		4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */; };
-		4CE97B4115D42B1E00334B5A /* NSManagedObjectContext+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE97B4015D42B1E00334B5A /* NSManagedObjectContext+DDG.m */; };
-		4CE97B4315D443DB00334B5A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE97B4215D443DB00334B5A /* CoreData.framework */; };
 		4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */; };
 		4CF9ED57154DFC460075C23E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF9ED56154DFC460075C23E /* MessageUI.framework */; };
 		4CF9ED58154DFC5F0075C23E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
@@ -307,7 +304,6 @@
 		4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSettingsViewController.m; sourceTree = "<group>"; };
 		4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh_arrow.png; sourceTree = "<group>"; };
 		4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "refresh_arrow@2x.png"; sourceTree = "<group>"; };
-		4C5F1F2215D41C120048C5DB /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		4C5F81F3158F96D6007B745A /* bangs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bangs.json; sourceTree = "<group>"; };
 		4C5F81F8158FEA94007B745A /* bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bang_button.png; sourceTree = "<group>"; };
 		4C5F81F9158FEA94007B745A /* bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button@2x.png"; sourceTree = "<group>"; };
@@ -347,9 +343,6 @@
 		4CD9249815CD7D8C00EB062F /* DDGAutocompleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAutocompleteViewController.h; sourceTree = "<group>"; };
 		4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAutocompleteViewController.m; sourceTree = "<group>"; };
 		4CE458FC15963729009225F5 /* DuckDuckGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = DuckDuckGo.entitlements; sourceTree = "<group>"; };
-		4CE97B3F15D42B1E00334B5A /* NSManagedObjectContext+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+DDG.h"; sourceTree = "<group>"; };
-		4CE97B4015D42B1E00334B5A /* NSManagedObjectContext+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+DDG.m"; sourceTree = "<group>"; };
-		4CE97B4215D443DB00334B5A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGInputAccessoryView.h; sourceTree = "<group>"; };
 		4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGInputAccessoryView.m; sourceTree = "<group>"; };
 		4CF9ED56154DFC460075C23E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -397,7 +390,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CE97B4315D443DB00334B5A /* CoreData.framework in Frameworks */,
 				4C3BF12615C4A86400EEA7BF /* Security.framework in Frameworks */,
 				4C3BF12415C4A81D00EEA7BF /* libShareKit.a in Frameworks */,
 				4C3BF10C15C4A4A700EEA7BF /* CoreFoundation.framework in Frameworks */,
@@ -686,7 +678,6 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
-				4CE97B4215D443DB00334B5A /* CoreData.framework */,
 				4C3BF10B15C4A4A700EEA7BF /* CoreFoundation.framework */,
 				4C3BF10915C4A49000EEA7BF /* CoreLocation.framework */,
 				4C3BF10715C4A48200EEA7BF /* CFNetwork.framework */,
@@ -715,7 +706,6 @@
 		83F32262149290EF00A61BC5 /* DuckDuckGo */ = {
 			isa = PBXGroup;
 			children = (
-				4C5F1F2115D41C120048C5DB /* Model.xcdatamodeld */,
 				4CD9247C15C9ED0900EB062F /* Constants.h */,
 				4CD9247D15C9ED0900EB062F /* Constants.m */,
 				4C5F81F3158F96D6007B745A /* bangs.json */,
@@ -737,8 +727,6 @@
 				4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */,
 				4CBA647C15C8836B00DADD00 /* UIImage+DDG.h */,
 				4CBA647A15C878B900DADD00 /* UIImage+DDG.m */,
-				4CE97B3F15D42B1E00334B5A /* NSManagedObjectContext+DDG.h */,
-				4CE97B4015D42B1E00334B5A /* NSManagedObjectContext+DDG.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
 				838E906D149A794F00C11E41 /* Resources */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
@@ -1015,8 +1003,6 @@
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
 				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
-				4C5F1F2315D41C120048C5DB /* Model.xcdatamodeld in Sources */,
-				4CE97B4115D42B1E00334B5A /* NSManagedObjectContext+DDG.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1117,7 +1103,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Suren Gulrajani (XBRVWK3QD3)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1132,7 +1118,7 @@
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "18E7F687-9A7C-4A1F-B35A-65E468891161";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1165,7 +1151,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
@@ -1174,7 +1159,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
@@ -1230,19 +1214,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCVersionGroup section */
-		4C5F1F2115D41C120048C5DB /* Model.xcdatamodeld */ = {
-			isa = XCVersionGroup;
-			children = (
-				4C5F1F2215D41C120048C5DB /* Model.xcdatamodel */,
-			);
-			currentVersion = 4C5F1F2215D41C120048C5DB /* Model.xcdatamodel */;
-			path = Model.xcdatamodeld;
-			sourceTree = "<group>";
-			versionGroupType = wrapper.xcdatamodel;
-		};
-/* End XCVersionGroup section */
 	};
 	rootObject = 83F3224F149290EF00A61BC5 /* Project object */;
 }

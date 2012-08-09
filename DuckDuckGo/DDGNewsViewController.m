@@ -26,16 +26,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"Story"];
-    fetchRequest.sortDescriptors = @[[[NSSortDescriptor alloc] initWithKey:@"date" ascending:NO]];
-    fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
-                                                                   managedObjectContext:[DDGNewsProvider sharedProvider].managedObjectContext
-                                                                     sectionNameKeyPath:nil
-                                                                              cacheName:nil];
-    fetchedResultsController.delegate = self;
-    [fetchedResultsController performFetch:nil];
-    
+		
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" containerViewController:self];
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateHome;
@@ -195,15 +186,44 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return fetchedResultsController.sections.count;
+	return [DDGNewsProvider sharedProvider].sectionDates.count;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [[fetchedResultsController.sections objectAtIndex:section] numberOfObjects];
+    return [[DDGNewsProvider sharedProvider] numberOfStoriesInSection:section inArray:nil];
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return [[fetchedResultsController.sections objectAtIndex:section] name];
+    NSDate *date = [[DDGNewsProvider sharedProvider].sectionDates objectAtIndex:section];
+    
+    NSDate *dateDay;
+    NSDate *todayDay;
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    [calendar rangeOfUnit:NSDayCalendarUnit
+                startDate:&dateDay
+                 interval:NULL
+                  forDate:date];
+    [calendar rangeOfUnit:NSDayCalendarUnit
+                startDate:&todayDay
+                 interval:NULL
+                  forDate:[NSDate date]];
+    
+    NSDateComponents *difference = [calendar components:NSDayCalendarUnit
+                                               fromDate:dateDay
+                                                 toDate:todayDay
+                                                options:0];
+    
+    int daysAgo = difference.day;
+    
+    if(daysAgo==0)
+        return @"Today";
+    else if(daysAgo==1)
+        return @"Yesterday";
+    else if(daysAgo>100)
+        return @"Earlier";
+    else
+        return [NSString stringWithFormat:@"%i days ago",difference.day];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -211,10 +231,10 @@
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
 
-    NSManagedObject *story = [fetchedResultsController objectAtIndexPath:indexPath];
+    NSDictionary *story = [[DDGNewsProvider sharedProvider] storyAtIndexPath:indexPath inArray:nil];
     
     NSString *cellID = nil;
-    if([[story valueForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
+    if([[story objectForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
         cellID = OneLineCellIdentifier;
     else
         cellID = TwoLineCellIdentifier;
@@ -232,19 +252,19 @@
     }
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
-	label.text = [story valueForKey:@"title"];
-    if([[DDGCache objectForKey:[story valueForKey:@"id"] inCache:@"readStories"] boolValue])
+	label.text = [story objectForKey:@"title"];
+    if([[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"readStories"] boolValue])
         label.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     else
         label.textColor = [UIColor whiteColor];
     
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    articleImageView.image = [story valueForKey:@"image"];
+    articleImageView.image = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"];
     [articleImageView setContentMode:UIViewContentModeScaleAspectFill];
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    faviconImageView.image = [DDGCache objectForKey:[story valueForKey:@"feed"] inCache:@"sourceImages"];
+    faviconImageView.image = [DDGCache objectForKey:[story objectForKey:@"feed"] inCache:@"sourceImages"];
         
 	return cell;
 }
@@ -252,18 +272,18 @@
 #pragma  mark - Table view delegate
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSManagedObject *story = [fetchedResultsController objectAtIndexPath:indexPath];
+    NSDictionary *story = [[DDGNewsProvider sharedProvider] storyAtIndexPath:indexPath inArray:nil];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // mark the story as read
-        [DDGCache setObject:@(YES) forKey:[story valueForKey:@"id"] inCache:@"readStories"];
+        [DDGCache setObject:@(YES) forKey:[story objectForKey:@"id"] inCache:@"readStories"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [_tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete
         });
     });
 
-    NSString *escapedStoryURL = [[story valueForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *escapedStoryURL = [[story objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [self loadQueryOrURL:escapedStoryURL];
 }
 
@@ -280,67 +300,6 @@
         }];
         
     }];
-}
-
-#pragma mark - Fetched results controller delegate
-
-- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView beginUpdates];
-}
-
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type {
-    
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]
-                          withRowAnimation:UITableViewRowAnimationFade];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]
-                          withRowAnimation:UITableViewRowAnimationFade];
-            break;
-    }
-}
-
-
-- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
-       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
-      newIndexPath:(NSIndexPath *)newIndexPath {
-    
-    UITableView *tableView = self.tableView;
-    
-    switch(type) {
-            
-        case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
-                             withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
-                             withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            [tableView reloadRowsAtIndexPaths:@[indexPath]
-                             withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath]
-                             withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]
-                             withRowAnimation:UITableViewRowAnimationAutomatic];
-            break;
-    }
-}
-
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView endUpdates];
 }
 
 @end

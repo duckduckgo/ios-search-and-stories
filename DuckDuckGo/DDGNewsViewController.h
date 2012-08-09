@@ -9,11 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
-#import <CoreData/CoreData.h>
 
-@interface DDGNewsViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, NSFetchedResultsControllerDelegate> {
-    NSFetchedResultsController *fetchedResultsController;
-    
+@interface DDGNewsViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate> {
     EGORefreshTableHeaderView *refreshHeaderView;
     UIImageView *topShadow;
     BOOL isRefreshing;

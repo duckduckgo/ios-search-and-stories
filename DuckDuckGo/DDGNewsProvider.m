@@ -12,9 +12,6 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "UIImage+DDG.h"
 #import "Constants.h"
-#import <CoreData/CoreData.h>
-#import "DDGAppDelegate.h"
-#import "NSManagedObjectContext+DDG.h"
 
 @implementation DDGNewsProvider
 static DDGNewsProvider *sharedProvider;
@@ -26,8 +23,6 @@ static DDGNewsProvider *sharedProvider;
     if(self) {
         if(![DDGCache objectForKey:@"customSources" inCache:@"misc"])
             [DDGCache setObject:[[NSArray alloc] init] forKey:@"customSources" inCache:@"misc"];
-    
-        self.managedObjectContext = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
     }
     return self;
 }
@@ -168,46 +163,205 @@ static DDGNewsProvider *sharedProvider;
             });
         }
         
-//        [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
-        
+        [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
+        [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
+            return [[obj2 objectForKey:@"timestamp"] compare:[obj1 objectForKey:@"timestamp"]
+                                                     options:0
+                                                       range:NSMakeRange(0, 19)];
+        }];
+                        
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
-            formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-            
-            for(NSDictionary *storyDict in newStories) {
-                if([[_managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:@"id == '%@'",[storyDict objectForKey:@"id"]] anyObject])
-                    continue;
+            NSArray *oldSectionDates = self.sectionDates;
+            [self generateSectionDates];
 
-                NSManagedObject *story = [NSEntityDescription insertNewObjectForEntityForName:@"Story"
-                                                                       inManagedObjectContext:_managedObjectContext];
-                
-                [story setValue:[storyDict objectForKey:@"url"] forKey:@"url"];
-                [story setValue:[storyDict objectForKey:@"title"] forKey:@"title"];
-                [story setValue:[storyDict objectForKey:@"image"] forKey:@"imageURL"];
-                if([storyDict objectForKey:@"feed"] != [NSNull null])
-                    [story setValue:[storyDict objectForKey:@"feed"] forKey:@"feed"];
-                [story setValue:[storyDict objectForKey:@"id"] forKey:@"id"];
-                [story setValue:[formatter dateFromString:[storyDict objectForKey:@"timestamp"]] forKey:@"date"];
-            }
+            NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
+            NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
             
-            NSSet *noImages = [_managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:@"image == nil"];
-            for(NSManagedObject *story in noImages) {
-                NSString *imageURL = [story valueForKey:@"imageURL"];
-                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
-                    UIImage *image = [UIImage imageWithData:data];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [story setValue:image forKey:@"image"];
-                    });
-                });
-            }
+            // if generateSectionDates actually changed the dates, the entire table view is now out of date and messed up, so we need to fix with a reload before proceeding.
+            // alternately, you could try to figure out what changed in code and notify the table view, which would make the animation smoother, but it's a headache to code
+            // TODO: consider this solution: rewrite generateSectionDates/sectionOffsets to make a date group for every single day that has stories (instead of a catch-all "earlier" category). then the changes from generateSectionDates will be limited to adding sections in the front and deleting sections in the back and we can try to figure those out. OR just switch to core data (probably the better option in the long term)
+            if(![self.sectionDates isEqualToArray:oldSectionDates])
+                [tableView reloadData];
+            
+            // update the stories array and last-updated time
+            [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
+            [DDGCache setObject:[NSDate date] forKey:@"storiesUpdated" inCache:@"misc"];
+            
+            // update the table view with added and removed stories
+            [tableView beginUpdates];
+            [tableView insertRowsAtIndexPaths:addedStories
+                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView deleteRowsAtIndexPaths:removedStories
+                                  withRowAnimation:UITableViewRowAnimationAutomatic];
+            [tableView endUpdates];
+
         });
+        
+        // download story images (this method doesn't return until all story images are downloaded)
+        // synchronize to prevent multiple simultaneous refreshes from downloading images on top of each other and wasting bandwidth
+        @synchronized(self) {
+            [newStories iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+                NSDictionary *story = (NSDictionary *)obj;
+                BOOL reload = NO;
+
+                if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]) {
+                    
+                    // main image: download it and resize it as needed
+                    NSString *imageURL = [story objectForKey:@"image"];
+                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
+                    UIImage *image = [UIImage ddg_decompressedImageWithData:imageData];
+                    [DDGCache setObject:image forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
+                    reload = YES;
+                }
+                            
+                if(reload) {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [tableView reloadRowsAtIndexPaths:@[[self indexPathForStoryAtIndex:i inArray:self.stories]] withRowAnimation:UITableViewRowAnimationFade];
+                    });
+                }
+            }];
+        }
         
         dispatch_async(dispatch_get_main_queue(), ^{
             finished();
         });
     });
+}
+
+// this method ignores stories from custom sources
+-(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    
+    for(int i=0;i<newStories.count;i++) {
+        NSString *storyID = [[newStories objectAtIndex:i] objectForKey:@"id"];
+        
+        BOOL matchFound = NO;
+        for(NSDictionary *oldStory in oldStories) {
+            if([storyID isEqualToString:[oldStory objectForKey:@"id"]]) {
+                matchFound = YES;
+                break;
+            }
+        }
+        
+        if(!matchFound)
+            [indexPaths addObject:[self indexPathForStoryAtIndex:i inArray:newStories]];
+    }
+    return [indexPaths copy];
+}
+
+#pragma mark - Grouping stories
+
+-(NSArray *)sectionDates {
+    NSArray *dates = [DDGCache objectForKey:@"sectionDates" inCache:@"misc"];
+    if(!dates) {
+        [self generateSectionDates];
+        dates = [DDGCache objectForKey:@"sectionDates" inCache:@"misc"];
+    }
+    return dates;
+}
+
+-(void)generateSectionDates {
+    NSArray *oldSectionDates = [DDGCache objectForKey:@"sectionDates" inCache:@"misc"];
+    
+    NSMutableArray *dates = @[[self dateAtBeginningOfDayForDate:[NSDate date]]].mutableCopy;
+    for(int i=0;i<5;i++)
+        [dates addObject:[self dateByAddingDays:-1 toDate:[dates lastObject]]];
+    [dates addObject:[NSDate distantPast]];
+    
+    [DDGCache setObject:dates.copy forKey:@"sectionDates" inCache:@"misc"];
+    
+    // if we actually changed something, be sure to clear the section offsets cache
+    if(![self.sectionDates isEqualToArray:oldSectionDates]) {
+        lastSectionOffsetsArray = nil;
+        lastSectionOffsets = nil;
+    }
+}
+
+-(NSArray *)sectionOffsetsForArray:(NSArray *)array {
+    if(!array)
+        array = self.stories;
+    
+    if(array != lastSectionOffsetsArray) {
+        NSArray *dates = self.sectionDates;
+        NSMutableArray *offsets = @[@0, @0, @0, @0, @0, @0, @0, @(array.count)].mutableCopy;
+        
+        int dateIdx = 0;
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        for(int i=0; i<array.count; i++) {
+            NSDictionary *story = [array objectAtIndex:i];
+            NSString *timestamp = [[story objectForKey:@"timestamp"] substringToIndex:19];
+            NSDate *date = [formatter dateFromString:timestamp];
+
+            while([date timeIntervalSince1970] < [[dates objectAtIndex:dateIdx] timeIntervalSince1970]) {
+                dateIdx++;
+                [offsets replaceObjectAtIndex:dateIdx withObject:@(i)];
+            }
+        }
+        
+        lastSectionOffsetsArray = array;
+        lastSectionOffsets = offsets.copy;
+    }
+    
+    return lastSectionOffsets;
+}
+
+-(NSUInteger)numberOfStoriesInSection:(NSInteger)section inArray:(NSArray *)array {
+    NSArray *offsets = [self sectionOffsetsForArray:array];
+    return [[offsets objectAtIndex:section+1] intValue] - [[offsets objectAtIndex:section] intValue];
+}
+
+-(NSDictionary *)storyAtIndexPath:(NSIndexPath *)indexPath inArray:(NSArray *)array {
+    if(!array)
+        array = self.stories;
+    
+    NSArray *offsets = [self sectionOffsetsForArray:array];
+    return [array objectAtIndex:[[offsets objectAtIndex:indexPath.section] intValue]+indexPath.row];
+}
+
+-(NSIndexPath *)indexPathForStoryAtIndex:(NSUInteger)index inArray:(NSArray *)array {
+    if(!array)
+        array = self.stories;
+    
+    NSArray *offsets = [self sectionOffsetsForArray:array];
+    int section = 0;
+    while([[offsets objectAtIndex:section+1] intValue] <= index)
+        section++;
+    
+    return [NSIndexPath indexPathForRow:index-[[offsets objectAtIndex:section] intValue]
+                              inSection:section];
+}
+
+// http://oleb.net/blog/2011/12/tutorial-how-to-sort-and-group-uitableview-by-date/
+- (NSDate *)dateAtBeginningOfDayForDate:(NSDate *)inputDate {
+    // Use the user's current calendar and time zone
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSTimeZone *timeZone = [NSTimeZone systemTimeZone];
+    [calendar setTimeZone:timeZone];
+    
+    // Selectively convert the date components (year, month, day) of the input date
+    NSDateComponents *dateComps = [calendar components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit fromDate:inputDate];
+    
+    // Set the time components manually
+    [dateComps setHour:0];
+    [dateComps setMinute:0];
+    [dateComps setSecond:0];
+    
+    // Convert back, add 1 day, and subtract 1 second
+    NSDate *beginningOfDay = [calendar dateFromComponents:dateComps];
+    return beginningOfDay;
+}
+
+- (NSDate *)dateByAddingDays:(NSInteger)numberOfDays toDate:(NSDate *)inputDate {
+    // Use the user's current calendar
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    
+    NSDateComponents *dateComps = [[NSDateComponents alloc] init];
+    [dateComps setDay:numberOfDays];
+    
+    NSDate *newDate = [calendar dateByAddingComponents:dateComps toDate:inputDate options:0];
+    return newDate;
 }
 
 #pragma mark - Custom sources
