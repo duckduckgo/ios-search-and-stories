@@ -14,6 +14,7 @@
 #import "Constants.h"
 #import <CoreData/CoreData.h>
 #import "DDGAppDelegate.h"
+#import "NSManagedObjectContext+DDG.h"
 
 @implementation DDGNewsProvider
 static DDGNewsProvider *sharedProvider;
@@ -26,20 +27,21 @@ static DDGNewsProvider *sharedProvider;
         if(![DDGCache objectForKey:@"customSources" inCache:@"misc"])
             [DDGCache setObject:[[NSArray alloc] init] forKey:@"customSources" inCache:@"misc"];
 
+        NSPersistentStoreCoordinator *coordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
         if(![NSThread isMainThread]) {
             mainMOC = [[NSManagedObjectContext alloc] init];
-            mainMOC.persistentStoreCoordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
+            mainMOC.persistentStoreCoordinator = coordinator;
         } else {
             dispatch_sync(dispatch_get_main_queue(), ^{
                 mainMOC = [[NSManagedObjectContext alloc] init];
-                mainMOC.persistentStoreCoordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
+                mainMOC.persistentStoreCoordinator = coordinator;
             });
         }
         
         backgroundMOCQueue = dispatch_queue_create("DDGNewsProviderBackgroundMOCQueue", NULL);
         dispatch_async(backgroundMOCQueue, ^{
             backgroundMOC = [[NSManagedObjectContext alloc] init];
-            backgroundMOC.persistentStoreCoordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
+            backgroundMOC.persistentStoreCoordinator = coordinator;
         });
     }
     return self;
@@ -153,7 +155,7 @@ static DDGNewsProvider *sharedProvider;
 
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished {
     // do everything in the background
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
+    dispatch_async(backgroundMOCQueue, ^ {
 
         
         NSString *urlStr = kDDGStoriesURLString;
@@ -182,38 +184,20 @@ static DDGNewsProvider *sharedProvider;
         }
         
         [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
-        [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [[obj2 objectForKey:@"timestamp"] compare:[obj1 objectForKey:@"timestamp"]
-                                                     options:0
-                                                       range:NSMakeRange(0, 19)];
-        }];
-                        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            NSArray *oldSectionDates = self.sectionDates;
-            [self generateSectionDates];
-
-            NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
-            NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
+        
+        for(NSDictionary *storyDict in newStories) {
+            if([backgroundMOC fetchObjectsForEntityName:@"Story" withPredicate:@"id == ?",[storyDict objectForKey:@"id"]].count)
+                continue;
             
-            // if generateSectionDates actually changed the dates, the entire table view is now out of date and messed up, so we need to fix with a reload before proceeding.
-            // alternately, you could try to figure out what changed in code and notify the table view, which would make the animation smoother, but it's a headache to code
-            // TODO: consider this solution: rewrite generateSectionDates/sectionOffsets to make a date group for every single day that has stories (instead of a catch-all "earlier" category). then the changes from generateSectionDates will be limited to adding sections in the front and deleting sections in the back and we can try to figure those out. OR just switch to core data (probably the better option in the long term)
-            if(![self.sectionDates isEqualToArray:oldSectionDates])
-                [tableView reloadData];
+            NSManagedObject *story = [NSEntityDescription insertNewObjectForEntityForName:@"Story"
+                                                                   inManagedObjectContext:backgroundMOC];
             
-            // update the stories array and last-updated time
-            [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
-            [DDGCache setObject:[NSDate date] forKey:@"storiesUpdated" inCache:@"misc"];
-            
-            // update the table view with added and removed stories
-            [tableView beginUpdates];
-            [tableView insertRowsAtIndexPaths:addedStories
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView deleteRowsAtIndexPaths:removedStories
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView endUpdates];
-
-        });
+            [story setValue:[storyDict objectForKey:@"url"] forKey:@"url"];
+            [story setValue:[storyDict objectForKey:@"title"] forKey:@"title"];
+            [story setValue:[storyDict objectForKey:@"image"] forKey:@"imageURL"];
+            [story setValue:[storyDict objectForKey:@"feed"] forKey:@"feed"];
+            [story setValue:[storyDict objectForKey:@"id"] forKey:@"id"];
+        }
         
         // download story images (this method doesn't return until all story images are downloaded)
         // synchronize to prevent multiple simultaneous refreshes from downloading images on top of each other and wasting bandwidth

@@ -127,6 +127,7 @@
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
 		4CD9247E15C9ED0900EB062F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9247D15C9ED0900EB062F /* Constants.m */; };
 		4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */; };
+		4CE97B4115D42B1E00334B5A /* NSManagedObjectContext+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE97B4015D42B1E00334B5A /* NSManagedObjectContext+DDG.m */; };
 		4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */; };
 		4CF9ED57154DFC460075C23E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF9ED56154DFC460075C23E /* MessageUI.framework */; };
 		4CF9ED58154DFC5F0075C23E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
@@ -345,6 +346,8 @@
 		4CD9249815CD7D8C00EB062F /* DDGAutocompleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAutocompleteViewController.h; sourceTree = "<group>"; };
 		4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAutocompleteViewController.m; sourceTree = "<group>"; };
 		4CE458FC15963729009225F5 /* DuckDuckGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = DuckDuckGo.entitlements; sourceTree = "<group>"; };
+		4CE97B3F15D42B1E00334B5A /* NSManagedObjectContext+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+DDG.h"; sourceTree = "<group>"; };
+		4CE97B4015D42B1E00334B5A /* NSManagedObjectContext+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+DDG.m"; sourceTree = "<group>"; };
 		4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGInputAccessoryView.h; sourceTree = "<group>"; };
 		4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGInputAccessoryView.m; sourceTree = "<group>"; };
 		4CF9ED56154DFC460075C23E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -730,6 +733,8 @@
 				4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */,
 				4CBA647C15C8836B00DADD00 /* UIImage+DDG.h */,
 				4CBA647A15C878B900DADD00 /* UIImage+DDG.m */,
+				4CE97B3F15D42B1E00334B5A /* NSManagedObjectContext+DDG.h */,
+				4CE97B4015D42B1E00334B5A /* NSManagedObjectContext+DDG.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
 				838E906D149A794F00C11E41 /* Resources */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
@@ -1007,6 +1012,7 @@
 				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 				4C5F1F2315D41C120048C5DB /* Model.xcdatamodeld in Sources */,
+				4CE97B4115D42B1E00334B5A /* NSManagedObjectContext+DDG.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
