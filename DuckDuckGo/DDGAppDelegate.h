@@ -9,11 +9,12 @@
 #import <UIKit/UIKit.h>
 
 @interface DDGAppDelegate : UIResponder <UIApplicationDelegate> {
+    NSManagedObjectContext *_managedObjectContext;
     NSManagedObjectModel *_managedObjectModel;
     NSPersistentStoreCoordinator *_persistentStoreCoordinator;
 }
 @property (strong, nonatomic) UIWindow *window;
 
--(NSPersistentStoreCoordinator *)persistentStoreCoordinator;
+-(NSManagedObjectContext *)managedObjectContext;
 
 @end

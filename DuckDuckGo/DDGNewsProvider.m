@@ -26,12 +26,8 @@ static DDGNewsProvider *sharedProvider;
     if(self) {
         if(![DDGCache objectForKey:@"customSources" inCache:@"misc"])
             [DDGCache setObject:[[NSArray alloc] init] forKey:@"customSources" inCache:@"misc"];
-
-        NSPersistentStoreCoordinator *coordinator = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] persistentStoreCoordinator];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            managedObjectContext = [[NSManagedObjectContext alloc] init];
-            managedObjectContext.persistentStoreCoordinator = coordinator;
-        });
+    
+        self.managedObjectContext = [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] managedObjectContext];
     }
     return self;
 }
@@ -175,19 +171,24 @@ static DDGNewsProvider *sharedProvider;
         [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+            formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+            
             for(NSDictionary *storyDict in newStories) {
-                if([managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:@"id == ?",[storyDict objectForKey:@"id"]].count)
+                if([_managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:@"id == ?",[storyDict objectForKey:@"id"]].count)
                     continue;
                 
                 NSManagedObject *story = [NSEntityDescription insertNewObjectForEntityForName:@"Story"
-                                                                       inManagedObjectContext:managedObjectContext];
+                                                                       inManagedObjectContext:_managedObjectContext];
                 
                 [story setValue:[storyDict objectForKey:@"url"] forKey:@"url"];
                 [story setValue:[storyDict objectForKey:@"title"] forKey:@"title"];
                 [story setValue:[storyDict objectForKey:@"image"] forKey:@"imageURL"];
                 [story setValue:[storyDict objectForKey:@"feed"] forKey:@"feed"];
                 [story setValue:[storyDict objectForKey:@"id"] forKey:@"id"];
-            }            
+                [story setValue:[formatter dateFromString:[storyDict objectForKey:@"timestamp"]] forKey:@"date"];
+            }
         });
 
         // download story images (this method doesn't return until all story images are downloaded)

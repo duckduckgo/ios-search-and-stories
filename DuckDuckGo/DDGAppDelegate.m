@@ -52,6 +52,23 @@ static void uncaughtExceptionHandler(NSException *exception) {
 
 #pragma mark - Core data
 
+-(NSManagedObjectContext *)managedObjectContext {
+    @synchronized(self) {
+        if(_managedObjectContext != nil)
+            return _managedObjectContext;
+        
+        if([NSThread isMainThread])
+            _managedObjectContext = [[NSManagedObjectContext alloc] init];
+        else
+            dispatch_sync(dispatch_get_main_queue(), ^{
+                _managedObjectContext = [[NSManagedObjectContext alloc] init];
+            });
+        
+        _managedObjectContext.persistentStoreCoordinator = [self persistentStoreCoordinator];
+        return _managedObjectContext;
+    }
+}
+
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
 - (NSManagedObjectModel *)managedObjectModel {
@@ -66,23 +83,21 @@ static void uncaughtExceptionHandler(NSException *exception) {
 // Returns the persistent store coordinator for the application.
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator {
-    @synchronized(self) {
-        if (_persistentStoreCoordinator != nil) {
-            return _persistentStoreCoordinator;
-        }
-        
-        NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"CoreData.sqlite"];
-        
-        NSError *error = nil;
-        _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-        if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
-            
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        
+    if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
+    
+    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"CoreData.sqlite"];
+    
+    NSError *error = nil;
+    _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+        
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
+    
+    return _persistentStoreCoordinator;
 }
 
 - (NSURL *)applicationDocumentsDirectory {

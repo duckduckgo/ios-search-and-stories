@@ -9,11 +9,10 @@
 #import <Foundation/Foundation.h>
 
 @interface DDGNewsProvider : NSObject {
-    NSManagedObjectContext *managedObjectContext;
-    
     NSArray *lastSectionOffsetsArray;
     NSArray *lastSectionOffsets;
 }
+@property(nonatomic,strong) NSManagedObjectContext *managedObjectContext;
 
 +(DDGNewsProvider *)sharedProvider;
 
