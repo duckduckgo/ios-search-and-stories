@@ -128,6 +128,7 @@
 		4CD9247E15C9ED0900EB062F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9247D15C9ED0900EB062F /* Constants.m */; };
 		4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */; };
 		4CE97B4115D42B1E00334B5A /* NSManagedObjectContext+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CE97B4015D42B1E00334B5A /* NSManagedObjectContext+DDG.m */; };
+		4CE97B4315D443DB00334B5A /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE97B4215D443DB00334B5A /* CoreData.framework */; };
 		4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */; };
 		4CF9ED57154DFC460075C23E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF9ED56154DFC460075C23E /* MessageUI.framework */; };
 		4CF9ED58154DFC5F0075C23E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
@@ -348,6 +349,7 @@
 		4CE458FC15963729009225F5 /* DuckDuckGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = DuckDuckGo.entitlements; sourceTree = "<group>"; };
 		4CE97B3F15D42B1E00334B5A /* NSManagedObjectContext+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObjectContext+DDG.h"; sourceTree = "<group>"; };
 		4CE97B4015D42B1E00334B5A /* NSManagedObjectContext+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObjectContext+DDG.m"; sourceTree = "<group>"; };
+		4CE97B4215D443DB00334B5A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGInputAccessoryView.h; sourceTree = "<group>"; };
 		4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGInputAccessoryView.m; sourceTree = "<group>"; };
 		4CF9ED56154DFC460075C23E /* MessageUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MessageUI.framework; path = System/Library/Frameworks/MessageUI.framework; sourceTree = SDKROOT; };
@@ -395,6 +397,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CE97B4315D443DB00334B5A /* CoreData.framework in Frameworks */,
 				4C3BF12615C4A86400EEA7BF /* Security.framework in Frameworks */,
 				4C3BF12415C4A81D00EEA7BF /* libShareKit.a in Frameworks */,
 				4C3BF10C15C4A4A700EEA7BF /* CoreFoundation.framework in Frameworks */,
@@ -683,6 +686,7 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
+				4CE97B4215D443DB00334B5A /* CoreData.framework */,
 				4C3BF10B15C4A4A700EEA7BF /* CoreFoundation.framework */,
 				4C3BF10915C4A49000EEA7BF /* CoreLocation.framework */,
 				4C3BF10715C4A48200EEA7BF /* CFNetwork.framework */,

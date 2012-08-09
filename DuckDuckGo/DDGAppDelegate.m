@@ -39,10 +39,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     DefaultSHKConfigurator *configurator = [[DDGSHKConfigurator alloc] init];
     [SHKConfiguration sharedInstanceWithConfigurator:configurator];
 
-    
-    // regenerate the news provider's dates now, before the table view loads, to minimize the chances of a change happening later (which would mean force-reloading the table view)
-    [[DDGNewsProvider sharedProvider] generateSectionDates];
-    
     return YES;
 }
 
@@ -75,7 +71,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     if (_managedObjectModel != nil) {
         return _managedObjectModel;
     }
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"CoreData" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Model" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
 }
