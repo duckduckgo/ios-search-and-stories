@@ -22,4 +22,8 @@
     return @"DDGSHKSharers.plist";
 }
 
+- (NSString*)facebookAppId {
+	return @"208114382551369";
+}
+
 @end
