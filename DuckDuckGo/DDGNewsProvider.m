@@ -176,10 +176,9 @@ static DDGNewsProvider *sharedProvider;
             formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
             
             for(NSDictionary *storyDict in newStories) {
-                NSLog(@"Adding %u",[_managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:nil].count);
-                if([_managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:@"id == '%@'",[storyDict objectForKey:@"id"]].count)
+                if([[_managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:@"id == '%@'",[storyDict objectForKey:@"id"]] anyObject])
                     continue;
-                NSLog(@"continued");
+
                 NSManagedObject *story = [NSEntityDescription insertNewObjectForEntityForName:@"Story"
                                                                        inManagedObjectContext:_managedObjectContext];
                 
@@ -190,6 +189,18 @@ static DDGNewsProvider *sharedProvider;
                     [story setValue:[storyDict objectForKey:@"feed"] forKey:@"feed"];
                 [story setValue:[storyDict objectForKey:@"id"] forKey:@"id"];
                 [story setValue:[formatter dateFromString:[storyDict objectForKey:@"timestamp"]] forKey:@"date"];
+            }
+            
+            NSSet *noImages = [_managedObjectContext fetchObjectsForEntityName:@"Story" withPredicate:@"image == nil"];
+            for(NSManagedObject *story in noImages) {
+                NSString *imageURL = [story valueForKey:@"imageURL"];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
+                    UIImage *image = [UIImage imageWithData:data];
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [story setValue:image forKey:@"image"];
+                    });
+                });
             }
         });
         

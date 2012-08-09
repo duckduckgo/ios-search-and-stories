@@ -240,7 +240,7 @@
     
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    articleImageView.image = [DDGCache objectForKey:[story valueForKey:@"id"] inCache:@"storyImages"];
+    articleImageView.image = [story valueForKey:@"image"];
     [articleImageView setContentMode:UIViewContentModeScaleAspectFill];
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
@@ -286,7 +286,6 @@
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller {
     [self.tableView beginUpdates];
-    NSLog(@"stuff changing");
 }
 
 
