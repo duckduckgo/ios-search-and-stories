@@ -11,6 +11,7 @@
 #import <CommonCrypto/CommonDigest.h>
 #import "NSArray+ConcurrentIteration.h"
 #import "UIImage+DDG.h"
+#import "DDGStory.h"
 #import "Constants.h"
 
 @implementation DDGNewsProvider
@@ -23,6 +24,11 @@ static DDGNewsProvider *sharedProvider;
     if(self) {
         if(![DDGCache objectForKey:@"customSources" inCache:@"misc"])
             [DDGCache setObject:[[NSArray alloc] init] forKey:@"customSources" inCache:@"misc"];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(lowMemoryWarning)
+                                                     name:UIApplicationDidReceiveMemoryWarningNotification
+                                                   object:nil];
     }
     return self;
 }
@@ -34,6 +40,13 @@ static DDGNewsProvider *sharedProvider;
         
         return sharedProvider;
     }
+}
+
+-(void)lowMemoryWarning {
+    NSLog(@"Low memory warning received, unloading images...");
+    NSArray *stories = self.stories;
+    for(DDGStory *story in stories)
+        [story unloadImage];
 }
 
 #pragma mark - Downloading sources
@@ -161,18 +174,51 @@ static DDGNewsProvider *sharedProvider;
                 if(finished)
                     finished();
             });
+            return;
+        }
+
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
+        formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
+        for(int i=0; i<newStories.count; i++) {
+            NSDictionary *storyDict = [newStories objectAtIndex:i];
+            // if it exists, try to use an existing old story object because it has a preloaded image
+            DDGStory *story;
+            NSArray *stories = self.stories;
+            for(DDGStory *oldStory in stories) {
+                if([oldStory.storyID isEqualToString:[storyDict objectForKey:@"id"]]) {
+                    story = oldStory;
+                }
+            }
+            if(!story) {
+                story = [[DDGStory alloc] init];
+                story.storyID = [storyDict objectForKey:@"id"];
+                story.title = [storyDict objectForKey:@"title"];
+                story.url = [storyDict objectForKey:@"url"];
+                story.feed = [storyDict objectForKey:@"feed"];
+                story.date = [formatter dateFromString:[storyDict objectForKey:@"timestamp"]];
+                story.imageURL = [storyDict objectForKey:@"image"];
+            }
+            [newStories replaceObjectAtIndex:i withObject:story];
         }
         
         [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
+        
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
-            return [[obj2 objectForKey:@"timestamp"] compare:[obj1 objectForKey:@"timestamp"]
-                                                     options:0
-                                                       range:NSMakeRange(0, 19)];
+            DDGStory *story1 = (DDGStory *)obj1;
+            DDGStory *story2 = (DDGStory *)obj2;
+            return [story1.date compare:story2.date];
         }];
-                        
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
             NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
+            
+            // delete old story images
+            for(NSIndexPath *indexPath in removedStories) {
+                DDGStory *removedStory = [self.stories objectAtIndex:indexPath.row];
+                [removedStory deleteImage];
+            }
             
             // update the stories array and last-updated time
             [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
@@ -185,35 +231,15 @@ static DDGNewsProvider *sharedProvider;
             [tableView deleteRowsAtIndexPaths:removedStories
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView endUpdates];
-
-        });
         
-        // download story images (this method doesn't return until all story images are downloaded)
-        // synchronize to prevent multiple simultaneous refreshes from downloading images on top of each other and wasting bandwidth
-        @synchronized(self) {
-            [newStories iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
-                NSDictionary *story = (NSDictionary *)obj;
-                BOOL reload = NO;
-
-                if(![DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"]) {
-                    
-                    // main image: download it and resize it as needed
-                    NSString *imageURL = [story objectForKey:@"image"];
-                    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:imageURL]];
-                    UIImage *image = [UIImage ddg_decompressedImageWithData:imageData];
-                    [DDGCache setObject:image forKey:[story objectForKey:@"id"] inCache:@"storyImages"];
-                    reload = YES;
-                }
-                            
-                if(reload) {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                    });
-                }
-            }];
-        }
+            // download story images
+            for(int i=0; i<newStories.count; i++) {
+                [[newStories objectAtIndex:i] downloadImageFinished:^{
+                    [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                }];
+            }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+            // and we're done!
             finished();
         });
     });
@@ -224,11 +250,11 @@ static DDGNewsProvider *sharedProvider;
     NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
     
     for(int i=0;i<newStories.count;i++) {
-        NSString *storyID = [[newStories objectAtIndex:i] objectForKey:@"id"];
+        NSString *storyID = [[newStories objectAtIndex:i] storyID];
         
         BOOL matchFound = NO;
-        for(NSDictionary *oldStory in oldStories) {
-            if([storyID isEqualToString:[oldStory objectForKey:@"id"]]) {
+        for(DDGStory *oldStory in oldStories) {
+            if([storyID isEqualToString:[oldStory storyID]]) {
                 matchFound = YES;
                 break;
             }
@@ -285,16 +311,12 @@ static DDGNewsProvider *sharedProvider;
                     }
                 }
                 
-                NSMutableDictionary *story = [NSMutableDictionary dictionaryWithCapacity:5];
-                [story setObject:[newsItem objectForKey:@"title"] forKey:@"title"];
-                [story setObject:[newsItem objectForKey:@"url"] forKey:@"url"];
-                [story setObject:[newsItem objectForKey:@"image"] forKey:@"image"];
-                
-                NSString *date = [[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]] description];
-                [story setObject:date forKey:@"timestamp"];
-                
-                NSString *storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
-                [story setObject:storyID forKey:@"id"];
+                DDGStory *story = [[DDGStory alloc] init];
+                story.storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
+                story.title = [newsItem objectForKey:@"title"];
+                story.url = [newsItem objectForKey:@"url"];
+                story.imageURL = [newsItem objectForKey:@"image"];
+                story.date = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]];
                 
                 @synchronized(newStories) {
                     [newStories addObject:story.copy];

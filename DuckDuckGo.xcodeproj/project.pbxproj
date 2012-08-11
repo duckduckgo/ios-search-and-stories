@@ -79,6 +79,7 @@
 		4C3BF12415C4A81D00EEA7BF /* libShareKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF11B15C4A6E300EEA7BF /* libShareKit.a */; };
 		4C3BF12515C4A82600EEA7BF /* ShareKit.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BF11D15C4A6E300EEA7BF /* ShareKit.bundle */; };
 		4C3BF12615C4A86400EEA7BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF0DF15C4A01B00EEA7BF /* Security.framework */; };
+		4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C41359E15D5DAC200A9326C /* DDGStory.m */; };
 		4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */; };
 		4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */; };
 		4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */; };
@@ -121,7 +122,6 @@
 		4CA9C48A15CC82A3001F3231 /* table_view_shadow_bottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48815CC82A3001F3231 /* table_view_shadow_bottom@2x.png */; };
 		4CA9C48B15CC82A3001F3231 /* table_view_shadow_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48915CC82A3001F3231 /* table_view_shadow_bottom.png */; };
 		4CB72E8D15BE7CF300D8541F /* DDGAddCustomSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */; };
-		4CBA647B15C878B900DADD00 /* UIImage+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CBA647A15C878B900DADD00 /* UIImage+DDG.m */; };
 		4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */; };
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
 		4CD9247E15C9ED0900EB062F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9247D15C9ED0900EB062F /* Constants.m */; };
@@ -270,6 +270,8 @@
 		4C3BF10915C4A49000EEA7BF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		4C3BF10B15C4A4A700EEA7BF /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ShareKit.xcodeproj; path = Submodules/ShareKit/ShareKit.xcodeproj; sourceTree = "<group>"; };
+		4C41359D15D5DAC200A9326C /* DDGStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStory.h; sourceTree = "<group>"; };
+		4C41359E15D5DAC200A9326C /* DDGStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStory.m; sourceTree = "<group>"; };
 		4C487FCC15CF87C700618747 /* DDGTier2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTier2ViewController.h; sourceTree = "<group>"; };
 		4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTier2ViewController.m; sourceTree = "<group>"; };
 		4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKConfigurator.h; sourceTree = "<group>"; };
@@ -331,8 +333,6 @@
 		4CA9C48915CC82A3001F3231 /* table_view_shadow_bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = table_view_shadow_bottom.png; sourceTree = "<group>"; };
 		4CB72E8B15BE7CF300D8541F /* DDGAddCustomSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddCustomSourceViewController.h; sourceTree = "<group>"; };
 		4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddCustomSourceViewController.m; sourceTree = "<group>"; };
-		4CBA647A15C878B900DADD00 /* UIImage+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+DDG.m"; sourceTree = "<group>"; };
-		4CBA647C15C8836B00DADD00 /* UIImage+DDG.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIImage+DDG.h"; sourceTree = "<group>"; };
 		4CBDCDFF15C116A500372237 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchHistoryProvider.h; sourceTree = "<group>"; };
 		4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchHistoryProvider.m; sourceTree = "<group>"; };
@@ -526,7 +526,7 @@
 			name = Autocomplete;
 			sourceTree = "<group>";
 		};
-		4C573C1115B7311200790F60 /* Home screen */ = {
+		4C573C1115B7311200790F60 /* News */ = {
 			isa = PBXGroup;
 			children = (
 				83F32274149290EF00A61BC5 /* DDGNewsViewController.h */,
@@ -535,8 +535,10 @@
 				4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */,
 				4C11C6AD15B5E4C200D046BA /* DDGNewsProvider.h */,
 				4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */,
+				4C41359D15D5DAC200A9326C /* DDGStory.h */,
+				4C41359E15D5DAC200A9326C /* DDGStory.m */,
 			);
-			name = "Home screen";
+			name = News;
 			sourceTree = "<group>";
 		};
 		4C573C1215B7313E00790F60 /* Settings */ = {
@@ -715,7 +717,7 @@
 				4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */,
 				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
-				4C573C1115B7311200790F60 /* Home screen */,
+				4C573C1115B7311200790F60 /* News */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				4C660A741591487C001AB510 /* Search controller */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
@@ -725,8 +727,6 @@
 				4C19FFD61593B617003AC03F /* DDGCache.m */,
 				4C184D0C15A3742A003AAD5E /* NSArray+ConcurrentIteration.h */,
 				4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */,
-				4CBA647C15C8836B00DADD00 /* UIImage+DDG.h */,
-				4CBA647A15C878B900DADD00 /* UIImage+DDG.m */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
 				838E906D149A794F00C11E41 /* Resources */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
@@ -997,12 +997,12 @@
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
 				4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */,
 				4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */,
-				4CBA647B15C878B900DADD00 /* UIImage+DDG.m in Sources */,
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
 				4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */,
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
 				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
+				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1130,7 +1130,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;

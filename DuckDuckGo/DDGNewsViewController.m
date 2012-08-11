@@ -19,6 +19,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "UIImage+DDG.h"
 #import "NSArray+ConcurrentIteration.h"
+#import "DDGStory.h"
 
 @implementation DDGNewsViewController
 
@@ -50,16 +51,12 @@
 	[refreshHeaderView refreshLastUpdatedDate];
     
     // force-decompress all images
-    // be careful! we're in a background thread and everything is changing under our feet
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        for(NSString *cacheName in @[@"storyImages", @"sourceImages"]) {
-            NSDictionary *cache = [DDGCache cacheNamed:cacheName].copy;
-            for(NSString *key in cache) {
-                UIImage *image = [cache objectForKey:key];
-                image = [UIImage ddg_decompressedImageWithImage:image];
-                [DDGCache updateObject:image forKey:key inCache:cacheName];
-            }
-        }        
+        NSLog(@"decompressing...");
+        NSArray *stories = [DDGNewsProvider sharedProvider].stories;
+        for(DDGStory *story in stories)
+            [story prefetchAndDecompressImage];
+        NSLog(@"done!");
     });
 }
 
@@ -161,6 +158,9 @@
 #pragma mark - Search handler
 
 -(void)searchControllerLeftButtonPressed {
+    [[DDGNewsProvider sharedProvider] performSelector:@selector(lowMemoryWarning)];
+    return;
+    
     // this is the settings button, so let's load the settings controller
     DDGSettingsViewController *settingsVC = [[DDGSettingsViewController alloc] initWithDefaults];
     
@@ -198,10 +198,10 @@
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
 
-    NSDictionary *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
+    DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
     NSString *cellID = nil;
-    if([[story objectForKey:@"title"] sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
+    if([story.title sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
         cellID = OneLineCellIdentifier;
     else
         cellID = TwoLineCellIdentifier;
@@ -219,19 +219,19 @@
     }
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
-	label.text = [story objectForKey:@"title"];
-    if([[DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"readStories"] boolValue])
+	label.text = story.title;
+    if([[DDGCache objectForKey:story.storyID inCache:@"readStories"] boolValue])
         label.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     else
         label.textColor = [UIColor whiteColor];
     
     // load article image
     UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    articleImageView.image = [DDGCache objectForKey:[story objectForKey:@"id"] inCache:@"storyImages"];
     [articleImageView setContentMode:UIViewContentModeScaleAspectFill];
+    [story loadImageIntoView:articleImageView];
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    faviconImageView.image = [DDGCache objectForKey:[story objectForKey:@"feed"] inCache:@"sourceImages"];
+    faviconImageView.image = [DDGCache objectForKey:story.feed inCache:@"sourceImages"];
         
 	return cell;
 }
@@ -239,18 +239,18 @@
 #pragma  mark - Table view delegate
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSDictionary *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
+    DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // mark the story as read
-        [DDGCache setObject:@(YES) forKey:[story objectForKey:@"id"] inCache:@"readStories"];
+        [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             [_tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete
         });
     });
 
-    NSString *escapedStoryURL = [[story objectForKey:@"url"] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+    NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [self loadQueryOrURL:escapedStoryURL];
 }
 
