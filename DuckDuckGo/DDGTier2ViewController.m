@@ -9,6 +9,7 @@
 #import "DDGTier2ViewController.h"
 #import "DDGNewsProvider.h"
 #import "DDGSearchController.h"
+#import "DDGStory.h"
 
 @implementation DDGTier2ViewController
 
@@ -95,7 +96,7 @@
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NewsCellIdentifier];
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }
-        cell.textLabel.text = [[news objectAtIndex:indexPath.row] objectForKey:@"title"];
+        cell.textLabel.text = [[news objectAtIndex:indexPath.row] title];
     } else if(indexPath.section==1) {
         cell = [tableView dequeueReusableCellWithIdentifier:CallCellIdentifier];
         if(!cell) {
@@ -114,7 +115,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.section==0) {
-        [self.searchController.searchHandler loadQueryOrURL:[[news objectAtIndex:indexPath.row] objectForKey:@"url"]];
+        [self.searchController.searchHandler loadQueryOrURL:[(DDGStory *)[news objectAtIndex:indexPath.row] url]];
     } else if(indexPath.section==1) {
         NSString *call = [[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row];
         NSString *query = [[_suggestionItem objectForKey:@"phrase"] stringByAppendingFormat:@" %@",call];

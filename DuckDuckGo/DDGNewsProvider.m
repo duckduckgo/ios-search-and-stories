@@ -318,7 +318,7 @@ static DDGNewsProvider *sharedProvider;
                 story.date = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]];
                 
                 @synchronized(newStories) {
-                    [newStories addObject:story.copy];
+                    [newStories addObject:story];
                 }
             }
         }

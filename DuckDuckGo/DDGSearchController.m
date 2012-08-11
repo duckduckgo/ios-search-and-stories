@@ -46,13 +46,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:[[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain]];
-    _autocompleteNavigationController.view.autoresizesSubviews = YES;
-    _autocompleteNavigationController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    // as a workaround for a UINavigationController bug we have to init with a nil root view controller and then push the view controller on later.
+    DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
+    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:nil];
     [self addChildViewController:_autocompleteNavigationController];
     [_background addSubview:_autocompleteNavigationController.view];
     _autocompleteNavigationController.view.frame = _background.bounds;
     [_autocompleteNavigationController didMoveToParentViewController:self];
+    [_autocompleteNavigationController pushViewController:autocompleteVC animated:NO];
     
     [self revealBackground:NO animated:NO];
     
