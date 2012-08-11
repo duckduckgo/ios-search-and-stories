@@ -10,7 +10,6 @@
 #import "DDGCache.h"
 #import <CommonCrypto/CommonDigest.h>
 #import "NSArray+ConcurrentIteration.h"
-#import "UIImage+DDG.h"
 #import "DDGStory.h"
 #import "Constants.h"
 
@@ -104,7 +103,7 @@ static DDGNewsProvider *sharedProvider;
             NSDictionary *source = (NSDictionary *)obj;
             if(![DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"]) {
                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
-                UIImage *image = [UIImage ddg_decompressedImageWithData:data];
+                UIImage *image = [UIImage imageWithData:data];
                 [DDGCache setObject:image forKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
             }
         }];

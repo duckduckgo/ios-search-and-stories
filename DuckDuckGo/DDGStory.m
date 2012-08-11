@@ -10,7 +10,22 @@
 
 @implementation DDGStory
 
+// make a serial background queue for last-minute image loading because we need to make sure images are loaded in the order they are requested.
+// (otherwise an old load request could overwrite the image from the newer, correct one)
+static dispatch_queue_t imageLoadingQueue;
+
 #pragma mark - NSCoding
+
+-(id)init {
+    self = [super init];
+    if(self) {
+        @synchronized(@"DDGStoryImageLoadingQueue") {
+            if(!imageLoadingQueue)
+                imageLoadingQueue = dispatch_queue_create("DDGStoryImageLoadingQueue", NULL);
+        }
+    }
+    return self;
+}
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
     self = [super init];
@@ -95,7 +110,7 @@
             imageView.image = _image;
         } else {
             imageView.image = nil;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            dispatch_async(imageLoadingQueue, ^{
                 [self prefetchAndDecompressImage];
                 dispatch_async(dispatch_get_main_queue(), ^{
                     imageView.image = self.image;

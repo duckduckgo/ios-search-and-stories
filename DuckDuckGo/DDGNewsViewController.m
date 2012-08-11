@@ -17,7 +17,6 @@
 #import "DDGSettingsViewController.h"
 #import "DDGChooseSourcesViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
-#import "UIImage+DDG.h"
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGStory.h"
 
