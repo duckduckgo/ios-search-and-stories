@@ -40,7 +40,7 @@
 -(void)tap:(UIGestureRecognizer *)recognizer {
     BOOL insideSubview = NO;
     for(UIView *subview in self.subviews) {
-        if([subview pointInside:[recognizer locationInView:subview] withEvent:nil]) {
+        if(subview.hidden = NO && subview.alpha > 0 && [subview pointInside:[recognizer locationInView:subview] withEvent:nil]) {
             insideSubview = YES;
             break;
         }
