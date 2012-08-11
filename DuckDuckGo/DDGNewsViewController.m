@@ -156,10 +156,7 @@
 
 #pragma mark - Search handler
 
--(void)searchControllerLeftButtonPressed {
-    [[DDGNewsProvider sharedProvider] performSelector:@selector(lowMemoryWarning)];
-    return;
-    
+-(void)searchControllerLeftButtonPressed {    
     // this is the settings button, so let's load the settings controller
     DDGSettingsViewController *settingsVC = [[DDGSettingsViewController alloc] initWithDefaults];
     
