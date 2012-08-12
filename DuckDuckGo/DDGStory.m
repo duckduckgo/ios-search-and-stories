@@ -28,7 +28,7 @@ static dispatch_queue_t imageLoadingQueue;
 }
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
-    self = [super init];
+    self = [self init];
     if(self) {
         self.storyID = [aDecoder decodeObjectForKey:@"storyID"];
         self.title = [aDecoder decodeObjectForKey:@"title"];
@@ -36,6 +36,7 @@ static dispatch_queue_t imageLoadingQueue;
         self.feed = [aDecoder decodeObjectForKey:@"feed"];
         self.date = [aDecoder decodeObjectForKey:@"date"];
         self.imageURL = [aDecoder decodeObjectForKey:@"imageURL"];
+        imageDownloaded = [aDecoder decodeBoolForKey:@"imageDownloaded"];
     }
     return self;
 }
@@ -47,19 +48,23 @@ static dispatch_queue_t imageLoadingQueue;
     [encoder encodeObject:self.feed forKey:@"feed"];
     [encoder encodeObject:self.date forKey:@"date"];
     [encoder encodeObject:self.imageURL forKey:@"imageURL"];
+    [encoder encodeBool:imageDownloaded forKey:@"imageDownloaded"];
 }
 
 #pragma mark - Image
 
 -(void)downloadImageFinished:(void (^)())finished {
     @synchronized(self) {
-        if(self.image)
+        if(imageDownloaded)
             return;
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageURL]];
             [imageData writeToFile:self.imageFilePath atomically:YES];
-            _image = [UIImage imageWithData:imageData];
+            imageDownloaded = YES;
+            @synchronized(self) {
+                _image = [UIImage imageWithData:imageData];
+            }
             [self prefetchAndDecompressImage];
             dispatch_async(dispatch_get_main_queue(), ^{
                 if(finished)
@@ -80,14 +85,14 @@ static dispatch_queue_t imageLoadingQueue;
 }
 
 -(void)prefetchAndDecompressImage {
+    UIImage *image = self.image;
+    
+    UIGraphicsBeginImageContext(image.size);
+    [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
+    UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
     @synchronized(self) {
-        UIImage *image = self.image;
-        
-        UIGraphicsBeginImageContext(image.size);
-        [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
-        UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-
         _image = decompressed;
     }
 }
@@ -100,7 +105,8 @@ static dispatch_queue_t imageLoadingQueue;
 
 -(void)deleteImage {
     @synchronized(self) {
-        [[NSFileManager defaultManager] removeItemAtPath:self.imageFilePath error:nil];
+        [[[NSFileManager alloc] init] removeItemAtPath:self.imageFilePath error:nil];
+        imageDownloaded = NO;
     }
 }
 

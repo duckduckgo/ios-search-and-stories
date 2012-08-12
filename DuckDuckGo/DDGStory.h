@@ -10,6 +10,7 @@
 
 @interface DDGStory : NSObject <NSCoding> {
     UIImage *_image;
+    BOOL imageDownloaded;
 }
 
 @property(strong) NSString *storyID;

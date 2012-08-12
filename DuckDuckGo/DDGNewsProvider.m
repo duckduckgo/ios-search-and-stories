@@ -43,9 +43,11 @@ static DDGNewsProvider *sharedProvider;
 
 -(void)lowMemoryWarning {
     NSLog(@"Low memory warning received, unloading images...");
-    NSArray *stories = self.stories;
-    for(DDGStory *story in stories)
-        [story unloadImage];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        NSArray *stories = self.stories;
+        for(DDGStory *story in stories)
+            [story unloadImage];
+    });
 }
 
 #pragma mark - Downloading sources
@@ -211,13 +213,15 @@ static DDGNewsProvider *sharedProvider;
         
         dispatch_async(dispatch_get_main_queue(), ^{
             NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
-            NSMutableArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories].mutableCopy;
+            NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
             
             // delete old story images
-            for(NSIndexPath *indexPath in removedStories) {
-                DDGStory *removedStory = [self.stories objectAtIndex:indexPath.row];
-                [removedStory deleteImage];
-            }
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                for(NSIndexPath *indexPath in removedStories) {
+                    DDGStory *removedStory = [self.stories objectAtIndex:indexPath.row];
+                    [removedStory deleteImage];
+                }                
+            });
             
             // update the stories array and last-updated time
             [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];

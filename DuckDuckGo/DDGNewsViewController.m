@@ -156,7 +156,14 @@
 
 #pragma mark - Search handler
 
--(void)searchControllerLeftButtonPressed {    
+-(void)searchControllerLeftButtonPressed {
+    int64_t delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [[DDGNewsProvider sharedProvider] performSelector:@selector(lowMemoryWarning)];
+    });
+    return;
+    
     // this is the settings button, so let's load the settings controller
     DDGSettingsViewController *settingsVC = [[DDGSettingsViewController alloc] initWithDefaults];
     
