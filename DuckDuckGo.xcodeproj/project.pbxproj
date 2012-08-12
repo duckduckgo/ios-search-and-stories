@@ -145,7 +145,7 @@
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
 		83F32270149290EF00A61BC5 /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83F3226E149290EF00A61BC5 /* iPhone.storyboard */; };
-		83F32276149290EF00A61BC5 /* DDGNewsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32275149290EF00A61BC5 /* DDGNewsViewController.m */; };
+		83F32276149290EF00A61BC5 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32275149290EF00A61BC5 /* DDGHomeViewController.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
 /* End PBXBuildFile section */
 
@@ -367,8 +367,8 @@
 		83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGAppDelegate.h; sourceTree = "<group>"; };
 		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGAppDelegate.m; sourceTree = "<group>"; };
 		83F3226F149290EF00A61BC5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone.storyboard; sourceTree = "<group>"; };
-		83F32274149290EF00A61BC5 /* DDGNewsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGNewsViewController.h; sourceTree = "<group>"; };
-		83F32275149290EF00A61BC5 /* DDGNewsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGNewsViewController.m; sourceTree = "<group>"; };
+		83F32274149290EF00A61BC5 /* DDGHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
+		83F32275149290EF00A61BC5 /* DDGHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -526,11 +526,11 @@
 			name = Autocomplete;
 			sourceTree = "<group>";
 		};
-		4C573C1115B7311200790F60 /* News */ = {
+		4C573C1115B7311200790F60 /* Home screen */ = {
 			isa = PBXGroup;
 			children = (
-				83F32274149290EF00A61BC5 /* DDGNewsViewController.h */,
-				83F32275149290EF00A61BC5 /* DDGNewsViewController.m */,
+				83F32274149290EF00A61BC5 /* DDGHomeViewController.h */,
+				83F32275149290EF00A61BC5 /* DDGHomeViewController.m */,
 				838E9067149A763200C11E41 /* TwoLineTopicCell.xib */,
 				4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */,
 				4C11C6AD15B5E4C200D046BA /* DDGNewsProvider.h */,
@@ -538,7 +538,7 @@
 				4C41359D15D5DAC200A9326C /* DDGStory.h */,
 				4C41359E15D5DAC200A9326C /* DDGStory.m */,
 			);
-			name = News;
+			name = "Home screen";
 			sourceTree = "<group>";
 		};
 		4C573C1215B7313E00790F60 /* Settings */ = {
@@ -717,7 +717,7 @@
 				4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */,
 				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
-				4C573C1115B7311200790F60 /* News */,
+				4C573C1115B7311200790F60 /* Home screen */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				4C660A741591487C001AB510 /* Search controller */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
@@ -971,7 +971,7 @@
 			files = (
 				83F32269149290EF00A61BC5 /* main.m in Sources */,
 				83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */,
-				83F32276149290EF00A61BC5 /* DDGNewsViewController.m in Sources */,
+				83F32276149290EF00A61BC5 /* DDGHomeViewController.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,

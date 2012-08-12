@@ -7,7 +7,7 @@
 //
 
 #import "DDGAppDelegate.h"
-#import "DDGNewsViewController.h"
+#import "DDGHomeViewController.h"
 #import "DDGWebViewController.h"
 #import "AFNetworking.h"
 #import "DDGCache.h"
@@ -20,7 +20,7 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGStory.h"
 
-@implementation DDGNewsViewController
+@implementation DDGHomeViewController
 
 #pragma mark - View lifecycle
 
