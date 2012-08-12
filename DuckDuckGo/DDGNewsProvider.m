@@ -216,9 +216,10 @@ static DDGNewsProvider *sharedProvider;
             NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
             
             // delete old story images
+            NSArray *oldStories = self.stories;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
                 for(NSIndexPath *indexPath in removedStories) {
-                    DDGStory *removedStory = [self.stories objectAtIndex:indexPath.row];
+                    DDGStory *removedStory = [oldStories objectAtIndex:indexPath.row];
                     [removedStory deleteImage];
                 }                
             });
