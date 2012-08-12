@@ -19,6 +19,7 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGStory.h"
+#import "DDGScrollbarClockView.h"
 
 @implementation DDGHomeViewController
 
@@ -26,7 +27,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-		
+    
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" containerViewController:self];
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateHome;
@@ -46,8 +47,10 @@
         [refreshHeaderView refreshLastUpdatedDate];
 	}
 	
-	//  update the last update date
-	[refreshHeaderView refreshLastUpdatedDate];
+    [refreshHeaderView refreshLastUpdatedDate];
+    
+    clockView = [[DDGScrollbarClockView alloc] init];
+    [self.view addSubview:clockView];
     
     // force-decompress all images
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -117,6 +120,8 @@
 #pragma mark - Scroll view delegate
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self repositionClockView];
+    
     if(scrollView.contentOffset.y <= 0) {
         [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
 
@@ -130,6 +135,30 @@
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
 	[refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
+-(void)repositionClockView {
+    CGRect f = clockView.frame;
+    
+    // calculate the center of the scroll bar. the scroll bar's height is the greater of 34px or the proportion of the content that is visible
+    CGFloat scrollProgress = _tableView.contentOffset.y / (_tableView.contentSize.height - _tableView.bounds.size.height);
+    CGFloat scrollbarHeight = MAX(34.0, self.tableView.bounds.size.height / _tableView.contentSize.height);
+    CGFloat scrollbarCenter = scrollProgress*(_tableView.bounds.size.height - scrollbarHeight) + (scrollbarHeight/2.0);
+    
+    scrollbarCenter = MAX(scrollbarCenter, f.size.height / 2);
+    scrollbarCenter = MIN(scrollbarCenter, _tableView.bounds.size.height - (f.size.height / 2));
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(displayLinkWithTarget:selector:)] &&
+        ([UIScreen mainScreen].scale == 2.0)) {
+        // for retina screens, round to the nearest half pixel
+        scrollbarCenter = round(scrollbarCenter*2)/2.0;
+    } else {
+        scrollbarCenter = round(scrollbarCenter);
+    }
+    
+    // add 44px to compensate for the title bar, and another 1px to make it look right
+    f.origin.y = 44 + 2 + scrollbarCenter - (f.size.height / 2);
+    f.origin.x = _tableView.bounds.size.width - (f.size.width+15);
+    clockView.frame = f;
 }
 
 #pragma mark - EGORefreshTableHeaderDelegate Methods
@@ -157,13 +186,6 @@
 #pragma mark - Search handler
 
 -(void)searchControllerLeftButtonPressed {
-    int64_t delayInSeconds = 2.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [[DDGNewsProvider sharedProvider] performSelector:@selector(lowMemoryWarning)];
-    });
-    return;
-    
     // this is the settings button, so let's load the settings controller
     DDGSettingsViewController *settingsVC = [[DDGSettingsViewController alloc] initWithDefaults];
     

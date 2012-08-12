@@ -121,6 +121,7 @@
 		4CA9C48715CC7E41001F3231 /* table_view_shadow_top@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48515CC7E41001F3231 /* table_view_shadow_top@2x.png */; };
 		4CA9C48A15CC82A3001F3231 /* table_view_shadow_bottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48815CC82A3001F3231 /* table_view_shadow_bottom@2x.png */; };
 		4CA9C48B15CC82A3001F3231 /* table_view_shadow_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48915CC82A3001F3231 /* table_view_shadow_bottom.png */; };
+		4CAD448315D843730045F1EC /* DDGScrollbarClockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CAD448215D843730045F1EC /* DDGScrollbarClockView.m */; };
 		4CB72E8D15BE7CF300D8541F /* DDGAddCustomSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */; };
 		4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */; };
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
@@ -331,6 +332,8 @@
 		4CA9C48515CC7E41001F3231 /* table_view_shadow_top@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table_view_shadow_top@2x.png"; sourceTree = "<group>"; };
 		4CA9C48815CC82A3001F3231 /* table_view_shadow_bottom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table_view_shadow_bottom@2x.png"; sourceTree = "<group>"; };
 		4CA9C48915CC82A3001F3231 /* table_view_shadow_bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = table_view_shadow_bottom.png; sourceTree = "<group>"; };
+		4CAD448115D843730045F1EC /* DDGScrollbarClockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGScrollbarClockView.h; sourceTree = "<group>"; };
+		4CAD448215D843730045F1EC /* DDGScrollbarClockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGScrollbarClockView.m; sourceTree = "<group>"; };
 		4CB72E8B15BE7CF300D8541F /* DDGAddCustomSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddCustomSourceViewController.h; sourceTree = "<group>"; };
 		4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddCustomSourceViewController.m; sourceTree = "<group>"; };
 		4CBDCDFF15C116A500372237 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -533,6 +536,8 @@
 				83F32275149290EF00A61BC5 /* DDGHomeViewController.m */,
 				838E9067149A763200C11E41 /* TwoLineTopicCell.xib */,
 				4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */,
+				4CAD448115D843730045F1EC /* DDGScrollbarClockView.h */,
+				4CAD448215D843730045F1EC /* DDGScrollbarClockView.m */,
 				4C11C6AD15B5E4C200D046BA /* DDGNewsProvider.h */,
 				4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */,
 				4C41359D15D5DAC200A9326C /* DDGStory.h */,
@@ -1003,6 +1008,7 @@
 				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
+				4CAD448315D843730045F1EC /* DDGScrollbarClockView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

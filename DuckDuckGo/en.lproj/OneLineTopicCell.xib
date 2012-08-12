@@ -46,6 +46,7 @@
 								<int key="NSvFlags">274</int>
 								<string key="NSFrameSize">{320, 120}</string>
 								<reference key="NSSuperview" ref="873179220"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="319187008"/>
 								<string key="NSReuseIdentifierKey">_NS:554</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
@@ -63,6 +64,7 @@
 								<int key="NSvFlags">290</int>
 								<string key="NSFrame">{{0, 78}, {320, 43}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="779277510"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<int key="IBUIContentMode">9</int>
@@ -79,6 +81,7 @@
 								<int key="NSvFlags">266</int>
 								<string key="NSFrame">{{38, 86}, {282, 28}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="333148496"/>
 								<string key="NSReuseIdentifierKey">_NS:328</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
@@ -129,6 +132,7 @@
 								<int key="NSvFlags">268</int>
 								<string key="NSFrame">{{6, 88}, {24, 24}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
+								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="619246761"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor" id="743182180">
@@ -144,6 +148,7 @@
 								<int key="NSvFlags">266</int>
 								<string key="NSFrame">{{0, 120}, {320, 1}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
+								<reference key="NSWindow"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor">
 									<int key="NSColorSpace">3</int>
@@ -154,6 +159,7 @@
 						</array>
 						<string key="NSFrameSize">{320, 120}</string>
 						<reference key="NSSuperview" ref="712966024"/>
+						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="952143328"/>
 						<string key="NSReuseIdentifierKey">_NS:374</string>
 						<reference key="IBUIBackgroundColor" ref="743182180"/>
@@ -166,6 +172,7 @@
 				</array>
 				<string key="NSFrameSize">{320, 121}</string>
 				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="873179220"/>
 				<string key="NSReuseIdentifierKey">_NS:363</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
@@ -267,7 +274,32 @@
 			<nil key="sourceID"/>
 			<int key="maxID">19</int>
 		</object>
-		<object class="IBClassDescriber" key="IBDocument.Classes"/>
+		<object class="IBClassDescriber" key="IBDocument.Classes">
+			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
+				<object class="IBPartialClassDescription">
+					<string key="className">DDGHomeViewController</string>
+					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="loadedCell">UITableViewCell</string>
+						<string key="tableView">UITableView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="loadedCell">
+							<string key="name">loadedCell</string>
+							<string key="candidateClassName">UITableViewCell</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="tableView">
+							<string key="name">tableView</string>
+							<string key="candidateClassName">UITableView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/DDGHomeViewController.h</string>
+					</object>
+				</object>
+			</array>
+		</object>
 		<int key="IBDocument.localizationMode">0</int>
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">

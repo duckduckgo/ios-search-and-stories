@@ -10,10 +10,13 @@
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
 
+@class DDGScrollbarClockView;
 @interface DDGHomeViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate> {
     EGORefreshTableHeaderView *refreshHeaderView;
     UIImageView *topShadow;
     BOOL isRefreshing;
+    
+    DDGScrollbarClockView *clockView;
 }
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
