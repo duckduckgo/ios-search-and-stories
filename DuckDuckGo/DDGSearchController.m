@@ -85,6 +85,7 @@
 - (void)viewDidUnload {
     [self setActionButton:nil];
     [self setAutocompleteNavigationController:nil];
+    [self setCancelButton:nil];
     [super viewDidUnload];
 }
 
@@ -176,13 +177,17 @@
 	_state = searchControllerState;
     
     if(_state == DDGSearchControllerStateHome)
-        [_searchButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
+        [_leftButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
     else if (_state == DDGSearchControllerStateWeb) {
-        [_searchButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
-        // resize searchField and show action button
+        [_leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+
         CGRect f = _searchField.frame;
         f.size.width -= _actionButton.frame.size.width + 5;
         _searchField.frame = f;
+        
+        f = _cancelButton.frame;
+        f.origin.x -= _actionButton.frame.size.width + 5;
+        _cancelButton.frame = f;
         
         _actionButton.hidden = NO;
     }
@@ -327,6 +332,41 @@
     [self revealBackground:NO animated:YES];
     if(_state==DDGSearchControllerStateWeb)
         _searchField.rightView = stopOrReloadButton;
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        _leftButton.alpha = 1;
+        
+        CGRect f = _leftButton.frame;
+        f.origin.x += _leftButton.frame.size.width - 7;
+        _leftButton.frame = f;
+        
+        CGRect searchFieldFrame = _searchField.frame;
+        searchFieldFrame.origin.x += _leftButton.frame.size.width - 7;
+        searchFieldFrame.size.width -= _leftButton.frame.size.width - 7;
+        
+        if(_state == DDGSearchControllerStateWeb) {
+            _actionButton.alpha = 1;
+            searchFieldFrame.size.width -= _actionButton.frame.size.width + 5;
+        
+            f = _cancelButton.frame;
+            f.origin.x = self.view.bounds.size.width - (_actionButton.frame.size.width + 5);
+            _cancelButton.frame = f;
+        } else {
+            f = _cancelButton.frame;
+            f.origin.x = self.view.bounds.size.width;
+            _cancelButton.frame = f;
+        }
+        
+        _cancelButton.alpha = 0;
+        
+        searchFieldFrame.size.width += _cancelButton.frame.size.width + 5;
+        
+        _searchField.frame = searchFieldFrame;
+    }];
+}
+
+-(IBAction)cancelButtonPressed:(id)sender {
+    [self dismissAutocomplete];
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -542,6 +582,33 @@
     
     textField.rightView = nil;
     [self revealBackground:YES animated:YES];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        _leftButton.alpha = 0;
+        
+        CGRect f = _leftButton.frame;
+        f.origin.x -= _leftButton.frame.size.width - 7;
+        _leftButton.frame = f;
+        
+        CGRect searchFieldFrame = _searchField.frame;
+        searchFieldFrame.origin.x -= _leftButton.frame.size.width - 7;
+        searchFieldFrame.size.width += _leftButton.frame.size.width - 7;
+        
+        if(_state == DDGSearchControllerStateWeb) {
+            _actionButton.alpha = 0;
+            searchFieldFrame.size.width += _actionButton.frame.size.width + 5;
+        }
+
+        _cancelButton.alpha = 1;
+        
+        f = _cancelButton.frame;
+        f.origin.x = self.view.bounds.size.width - _cancelButton.frame.size.width - 5;
+        _cancelButton.frame = f;
+        
+        searchFieldFrame.size.width -= _cancelButton.frame.size.width + 5;
+        
+        _searchField.frame = searchFieldFrame;
+    }];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
