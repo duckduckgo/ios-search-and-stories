@@ -81,6 +81,7 @@
 		4C3BF12615C4A86400EEA7BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF0DF15C4A01B00EEA7BF /* Security.framework */; };
 		4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C41359E15D5DAC200A9326C /* DDGStory.m */; };
 		4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */; };
+		4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EC015D9826900B44342 /* DDGJSONViewController.m */; };
 		4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */; };
 		4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */; };
 		4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */; };
@@ -275,6 +276,8 @@
 		4C41359E15D5DAC200A9326C /* DDGStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStory.m; sourceTree = "<group>"; };
 		4C487FCC15CF87C700618747 /* DDGTier2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTier2ViewController.h; sourceTree = "<group>"; };
 		4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTier2ViewController.m; sourceTree = "<group>"; };
+		4C4A0EBF15D9826900B44342 /* DDGJSONViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGJSONViewController.h; sourceTree = "<group>"; };
+		4C4A0EC015D9826900B44342 /* DDGJSONViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGJSONViewController.m; sourceTree = "<group>"; };
 		4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKConfigurator.h; sourceTree = "<group>"; };
 		4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKConfigurator.m; sourceTree = "<group>"; };
 		4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DDGSHKSharers.plist; sourceTree = "<group>"; };
@@ -508,6 +511,8 @@
 			children = (
 				4C487FCC15CF87C700618747 /* DDGTier2ViewController.h */,
 				4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */,
+				4C4A0EBF15D9826900B44342 /* DDGJSONViewController.h */,
+				4C4A0EC015D9826900B44342 /* DDGJSONViewController.m */,
 			);
 			name = "Tier 2";
 			sourceTree = "<group>";
@@ -1009,6 +1014,7 @@
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
 				4CAD448315D843730045F1EC /* DDGScrollbarClockView.m in Sources */,
+				4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1175,6 +1181,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
@@ -1183,6 +1190,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;

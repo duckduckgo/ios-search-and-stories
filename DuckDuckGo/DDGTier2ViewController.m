@@ -10,6 +10,7 @@
 #import "DDGNewsProvider.h"
 #import "DDGSearchController.h"
 #import "DDGStory.h"
+#import "DDGJSONViewController.h"
 
 @implementation DDGTier2ViewController
 
@@ -17,20 +18,6 @@
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
         self.suggestionItem = suggestionItem;
-        
-        // download news
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-            NSArray *keywords = @[[suggestionItem objectForKey:@"phrase"]];
-            NSMutableArray *theNews = [NSMutableArray array];
-            [[DDGNewsProvider sharedProvider] downloadCustomStoriesForKeywords:keywords
-                                                                       toArray:theNews];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                news = theNews.copy;
-                [[self tableView] reloadData];
-            });
-        });
-        
     }
     return self;
 }
@@ -52,84 +39,67 @@
 
 -(void)setSuggestionItem:(NSDictionary *)suggestionItem {
     _suggestionItem = suggestionItem;
-    
-    self.title = [_suggestionItem objectForKey:@"phrase"];
     [self.tableView reloadData];
 }
 
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    return 1;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    switch (section) {
-        case 0:
-            return @"News";
-        case 1:
-            return @"Calls";
-        default:
-            return nil;
-    }
+    return [_suggestionItem objectForKey:@"phrase"];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    switch(section) {
-        case 0:
-            return news.count;
-        case 1:
-            return [[_suggestionItem objectForKey:@"calls"] count];
-        default:
-            return 0;
-    }
+    return [[_suggestionItem objectForKey:@"calls"] count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CallCellIdentifier = @"CallCell";
-    static NSString *NewsCellIdentifier = @"NewsCell";
-
+    
     UITableViewCell *cell;
-    if(indexPath.section==0) {
-        cell = [tableView dequeueReusableCellWithIdentifier:CallCellIdentifier];
-        if(!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:NewsCellIdentifier];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
-        cell.textLabel.text = [[news objectAtIndex:indexPath.row] title];
-    } else if(indexPath.section==1) {
-        cell = [tableView dequeueReusableCellWithIdentifier:CallCellIdentifier];
-        if(!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CallCellIdentifier];
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-        }
-        
-        NSString *call = [[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row];
-        cell.textLabel.text = call;
+    cell = [tableView dequeueReusableCellWithIdentifier:CallCellIdentifier];
+    if(!cell) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CallCellIdentifier];
+        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
     }
     
+    cell.textLabel.text = [[[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row] objectForKey:@"name"];
+
     return cell;
 }
 
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section==0) {
-        [self.searchController.searchHandler loadQueryOrURL:[(DDGStory *)[news objectAtIndex:indexPath.row] url]];
-    } else if(indexPath.section==1) {
-        NSString *call = [[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row];
-        NSString *query = [[_suggestionItem objectForKey:@"phrase"] stringByAppendingFormat:@" %@",call];
-        
-        [self.searchController.searchHandler loadQueryOrURL:query];
-    }
-    [self.searchController dismissAutocomplete];
+    NSDictionary *call = [[_suggestionItem objectForKey:@"calls"] objectAtIndex:indexPath.row];
+    BOOL dismissAutocomplete = NO;
+
+        NSURL *external = [NSURL URLWithString:[call objectForKey:@"external"]];
+        if(external && [[UIApplication sharedApplication] canOpenURL:external]) {
+            [[UIApplication sharedApplication] openURL:external];
+            dismissAutocomplete = YES;
+        } else if([call objectForKey:@"json"]) {
+            DDGJSONViewController *jsonVC = [[DDGJSONViewController alloc] init];
+            jsonVC.jsonURL = [NSURL URLWithString:[call objectForKey:@"json"]];
+            
+            [self.navigationController pushViewController:jsonVC animated:YES];
+        } else {
+            [self.searchController.searchHandler loadQueryOrURL:[call objectForKey:@"url"]];
+            dismissAutocomplete = YES;
+        }
     
-    // workaround for a UINavigationController bug
-    double delayInSeconds = 0.5;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.navigationController popViewControllerAnimated:NO];
-    });
+    if(dismissAutocomplete) {
+        [self.searchController dismissAutocomplete];
+        // workaround for a UINavigationController bug
+        double delayInSeconds = 0.5;
+        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+            [self.navigationController popViewControllerAnimated:NO];
+        });
+    }
 }
 
 @end
