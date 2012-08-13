@@ -55,7 +55,7 @@ static NSMutableDictionary *loadingImageViews;
         if(imageDownloaded)
             return;
         
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
             NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageURL]];
             [imageData writeToFile:self.imageFilePath atomically:YES];
             imageDownloaded = YES;
