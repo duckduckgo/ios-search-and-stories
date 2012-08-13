@@ -248,8 +248,10 @@ static DDGNewsProvider *sharedProvider;
         
         
         // and we're done!
-        finished();
-
+        dispatch_async(dispatch_get_main_queue(), ^{
+           if(finished)
+               finished();
+        });
     });
 }
 
