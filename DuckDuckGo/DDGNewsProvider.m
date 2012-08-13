@@ -240,7 +240,7 @@ static DDGNewsProvider *sharedProvider;
         
         // download story images
         [newStories iterateConcurrentlyWithThreads:6 priority:DISPATCH_QUEUE_PRIORITY_BACKGROUND block:^(int i, id obj) {
-            if([(DDGStory *)obj downloadImage]);
+            if([(DDGStory *)obj downloadImage])
                 dispatch_async(dispatch_get_main_queue(), ^{
                     [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
                 });
