@@ -15,10 +15,11 @@ typedef enum {
 } DDGSearchControllerState;
 
 @class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
-@interface DDGSearchController : UIViewController<UITextFieldDelegate> {
+@interface DDGSearchController : UIViewController<UITextFieldDelegate, UINavigationControllerDelegate> {
     NSString *oldSearchText;
     BOOL barUpdated;
     BOOL autocompleteOpen;
+    BOOL backButtonVisible;
     
     UIButton *stopOrReloadButton;
     DDGInputAccessoryView *inputAccessory;

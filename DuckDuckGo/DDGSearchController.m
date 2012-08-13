@@ -46,9 +46,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    backButtonVisible = YES;
+    
     // as a workaround for a UINavigationController bug we have to init with a nil root view controller and then push the view controller on later.
     DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
     self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:nil];
+    _autocompleteNavigationController.delegate = self;
     [self addChildViewController:_autocompleteNavigationController];
     [_background addSubview:_autocompleteNavigationController.view];
     _autocompleteNavigationController.view.frame = _background.bounds;
@@ -169,8 +172,12 @@
 }
 
 - (IBAction)leftButtonPressed:(UIButton*)sender {
-	[_searchField resignFirstResponder];
-	[_searchHandler searchControllerLeftButtonPressed];
+    if(autocompleteOpen) {
+        [_autocompleteNavigationController popViewControllerAnimated:YES];
+    } else {
+        [_searchField resignFirstResponder];
+        [_searchHandler searchControllerLeftButtonPressed];
+    }
 }
 
 -(void)setState:(DDGSearchControllerState)searchControllerState {
@@ -276,12 +283,24 @@
     }
 }
 
+#pragma mark - Nav controller delegate
+
+-(void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if(!autocompleteOpen)
+        return;
+    
+    BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
+    NSLog(@"bbv %i",backButtonVisible);
+    if(showBackButton != backButtonVisible)
+        [UIView animateWithDuration:0.25 animations:^{
+            _searchField.frame = [self showBackButton:showBackButton];
+        }];
+}
+
 #pragma mark - View management
 
 // set up and reveal the autocomplete view
--(void)revealAutocomplete {
-    autocompleteOpen = YES;
-    
+-(void)revealAutocomplete {    
     // save search text in case user cancels input without navigating somewhere
     if(!oldSearchText)
         oldSearchText = _searchField.text;
@@ -294,16 +313,9 @@
     _searchField.rightView = nil;
     [self revealBackground:YES animated:YES];
     
-    [UIView animateWithDuration:0.25 animations:^{
-        _leftButton.alpha = 0;
-        
-        CGRect f = _leftButton.frame;
-        f.origin.x -= _leftButton.frame.size.width - 7;
-        _leftButton.frame = f;
-        
-        CGRect searchFieldFrame = _searchField.frame;
-        searchFieldFrame.origin.x -= _leftButton.frame.size.width - 7;
-        searchFieldFrame.size.width += _leftButton.frame.size.width - 7;
+    [UIView animateWithDuration:0.25 animations:^{        
+        CGRect f;
+        CGRect searchFieldFrame = [self showBackButton:NO];
         
         if(_state == DDGSearchControllerStateWeb) {
             _actionButton.alpha = 0;
@@ -319,11 +331,21 @@
         searchFieldFrame.size.width -= _cancelButton.frame.size.width + 5;
         
         _searchField.frame = searchFieldFrame;
+    } completion:^(BOOL finished) {
+        [_leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];        
     }];
+    
+    autocompleteOpen = YES;
 }
 
 // cleans up the search field and dismisses
 -(void)dismissAutocomplete {
+    autocompleteOpen = NO;
+    
+    if(_state == DDGSearchControllerStateHome)
+        [_leftButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
+
+
     [_searchField resignFirstResponder];
     if(!barUpdated) {
         _searchField.text = oldSearchText;
@@ -336,16 +358,9 @@
     if(_state==DDGSearchControllerStateWeb)
         _searchField.rightView = stopOrReloadButton;
     
-    [UIView animateWithDuration:0.25 animations:^{
-        _leftButton.alpha = 1;
-        
-        CGRect f = _leftButton.frame;
-        f.origin.x += _leftButton.frame.size.width - 7;
-        _leftButton.frame = f;
-        
-        CGRect searchFieldFrame = _searchField.frame;
-        searchFieldFrame.origin.x += _leftButton.frame.size.width - 7;
-        searchFieldFrame.size.width -= _leftButton.frame.size.width - 7;
+    [UIView animateWithDuration:0.25 animations:^{        
+        CGRect f;
+        CGRect searchFieldFrame = [self showBackButton:YES];
         
         if(_state == DDGSearchControllerStateWeb) {
             _actionButton.alpha = 1;
@@ -366,8 +381,28 @@
         
         _searchField.frame = searchFieldFrame;
     }];
+}
+
+// this returns the updated searchFieldFrame instead of setting it because sometimes we want to make further changes to it
+-(CGRect)showBackButton:(BOOL)show {
+    if(backButtonVisible == show)
+        return _searchField.frame;
     
-    autocompleteOpen = NO;
+    backButtonVisible = show;
+    
+    _leftButton.alpha = (show ? 1 : 0);
+    
+    CGFloat direction = (show ? 1 : -1);
+    
+    CGRect f = _leftButton.frame;
+    f.origin.x += direction*(_leftButton.frame.size.width - 7);
+    _leftButton.frame = f;
+    
+    CGRect searchFieldFrame = _searchField.frame;
+    searchFieldFrame.origin.x += direction*(_leftButton.frame.size.width - 7);
+    searchFieldFrame.size.width -= direction*(_leftButton.frame.size.width - 7);
+    
+    return searchFieldFrame;
 }
 
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
