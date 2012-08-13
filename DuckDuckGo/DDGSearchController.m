@@ -278,45 +278,48 @@
 
 #pragma mark - View management
 
-- (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
-
-    if(reveal)
-        [_autocompleteNavigationController viewWillAppear:animated];
-    else
-        [_autocompleteNavigationController viewWillDisappear:animated];
+// set up and reveal the autocomplete view
+-(void)revealAutocomplete {
+    autocompleteOpen = YES;
     
-    if(animated)
-        [UIView animateWithDuration:0.25 animations:^{
-            _background.alpha = (reveal ? 1.0 : 0.0);
-        } completion:^(BOOL finished) {
-            if(reveal)
-                [_autocompleteNavigationController viewDidAppear:animated];
-            else
-                [_autocompleteNavigationController viewDidDisappear:animated];
-        }];
-    else {
-        _background.alpha = (reveal ? 1.0 : 0.0);
-        if(reveal)
-            [_autocompleteNavigationController viewDidAppear:animated];
-        else
-            [_autocompleteNavigationController viewDidDisappear:animated];
+    // save search text in case user cancels input without navigating somewhere
+    if(!oldSearchText)
+        oldSearchText = _searchField.text;
+    barUpdated = NO;
+    
+    if(![self isQuery:_searchField.text]) {
+        [self clearAddressBar];
     }
     
-}
-
--(void)revealInputAccessory:(BOOL)reveal animationDuration:(CGFloat)animationDuration {
-    if(reveal) {
-        [UIView animateWithDuration:animationDuration animations:^{
-            inputAccessory.alpha = 1.0;
-        } completion:^(BOOL finished) {
-            [self positionNavControllerForInputAccessoryForceHidden:NO];
-        }];
-    } else {
-        [self positionNavControllerForInputAccessoryForceHidden:YES];
-        [UIView animateWithDuration:animationDuration animations:^{
-            inputAccessory.alpha = 0.0;
-        }];
-    }
+    _searchField.rightView = nil;
+    [self revealBackground:YES animated:YES];
+    
+    [UIView animateWithDuration:0.25 animations:^{
+        _leftButton.alpha = 0;
+        
+        CGRect f = _leftButton.frame;
+        f.origin.x -= _leftButton.frame.size.width - 7;
+        _leftButton.frame = f;
+        
+        CGRect searchFieldFrame = _searchField.frame;
+        searchFieldFrame.origin.x -= _leftButton.frame.size.width - 7;
+        searchFieldFrame.size.width += _leftButton.frame.size.width - 7;
+        
+        if(_state == DDGSearchControllerStateWeb) {
+            _actionButton.alpha = 0;
+            searchFieldFrame.size.width += _actionButton.frame.size.width + 5;
+        }
+        
+        _cancelButton.alpha = 1;
+        
+        f = _cancelButton.frame;
+        f.origin.x = self.view.bounds.size.width - _cancelButton.frame.size.width - 5;
+        _cancelButton.frame = f;
+        
+        searchFieldFrame.size.width -= _cancelButton.frame.size.width + 5;
+        
+        _searchField.frame = searchFieldFrame;
+    }];
 }
 
 // cleans up the search field and dismisses
@@ -363,6 +366,51 @@
         
         _searchField.frame = searchFieldFrame;
     }];
+    
+    autocompleteOpen = NO;
+}
+
+// fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
+- (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
+    
+    if(reveal)
+        [_autocompleteNavigationController viewWillAppear:animated];
+    else
+        [_autocompleteNavigationController viewWillDisappear:animated];
+    
+    if(animated)
+        [UIView animateWithDuration:0.25 animations:^{
+            _background.alpha = (reveal ? 1.0 : 0.0);
+        } completion:^(BOOL finished) {
+            if(reveal)
+                [_autocompleteNavigationController viewDidAppear:animated];
+            else
+                [_autocompleteNavigationController viewDidDisappear:animated];
+        }];
+    else {
+        _background.alpha = (reveal ? 1.0 : 0.0);
+        if(reveal)
+            [_autocompleteNavigationController viewDidAppear:animated];
+        else
+            [_autocompleteNavigationController viewDidDisappear:animated];
+    }
+    
+}
+
+// fade in or out the input accessory– to be used on keyboard show/hide
+-(void)revealInputAccessory:(BOOL)reveal animationDuration:(CGFloat)animationDuration {
+    if(reveal) {
+        [UIView animateWithDuration:animationDuration animations:^{
+            inputAccessory.alpha = 1.0;
+        } completion:^(BOOL finished) {
+            [self positionNavControllerForInputAccessoryForceHidden:NO];
+        }];
+    } else {
+        [self positionNavControllerForInputAccessoryForceHidden:YES];
+        [UIView animateWithDuration:animationDuration animations:^{
+            inputAccessory.alpha = 0.0;
+        }];
+    }
 }
 
 -(IBAction)cancelButtonPressed:(id)sender {
@@ -570,45 +618,8 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     currentWordRange = NSMakeRange(NSNotFound, 0);
-    
-    // save search text in case user cancels input without navigating somewhere
-    if(!oldSearchText)
-        oldSearchText = textField.text;
-    barUpdated = NO;
-    
-    if(![self isQuery:textField.text]) {
-        [self clearAddressBar];
-    }
-    
-    textField.rightView = nil;
-    [self revealBackground:YES animated:YES];
-    
-    [UIView animateWithDuration:0.25 animations:^{
-        _leftButton.alpha = 0;
-        
-        CGRect f = _leftButton.frame;
-        f.origin.x -= _leftButton.frame.size.width - 7;
-        _leftButton.frame = f;
-        
-        CGRect searchFieldFrame = _searchField.frame;
-        searchFieldFrame.origin.x -= _leftButton.frame.size.width - 7;
-        searchFieldFrame.size.width += _leftButton.frame.size.width - 7;
-        
-        if(_state == DDGSearchControllerStateWeb) {
-            _actionButton.alpha = 0;
-            searchFieldFrame.size.width += _actionButton.frame.size.width + 5;
-        }
-
-        _cancelButton.alpha = 1;
-        
-        f = _cancelButton.frame;
-        f.origin.x = self.view.bounds.size.width - _cancelButton.frame.size.width - 5;
-        _cancelButton.frame = f;
-        
-        searchFieldFrame.size.width -= _cancelButton.frame.size.width + 5;
-        
-        _searchField.frame = searchFieldFrame;
-    }];
+    if(!autocompleteOpen)
+        [self revealAutocomplete];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {

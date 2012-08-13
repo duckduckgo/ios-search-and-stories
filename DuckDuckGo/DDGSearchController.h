@@ -18,6 +18,7 @@ typedef enum {
 @interface DDGSearchController : UIViewController<UITextFieldDelegate> {
     NSString *oldSearchText;
     BOOL barUpdated;
+    BOOL autocompleteOpen;
     
     UIButton *stopOrReloadButton;
     DDGInputAccessoryView *inputAccessory;
