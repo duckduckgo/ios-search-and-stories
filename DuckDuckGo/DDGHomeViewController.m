@@ -233,6 +233,9 @@
 	
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
+    static UIColor *CellOverlayPatternColor;
+    if(!CellOverlayPatternColor)
+        CellOverlayPatternColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
 
     DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
@@ -252,8 +255,8 @@
         
         [[cell.contentView viewWithTag:100] setBackgroundColor:linen];
         
-        UIView *backgroundImageView = (UIImageView *)[cell.contentView viewWithTag:400];
-        backgroundImageView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
+        UIView *overlayImageView = (UIImageView *)[cell.contentView viewWithTag:400];
+        overlayImageView.backgroundColor = CellOverlayPatternColor;
     }
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];

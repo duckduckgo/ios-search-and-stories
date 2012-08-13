@@ -50,25 +50,21 @@ static NSMutableDictionary *loadingImageViews;
 
 #pragma mark - Image
 
--(void)downloadImageFinished:(void (^)())finished {
+-(BOOL)downloadImage {
     @synchronized(self) {
         if(imageDownloaded)
-            return;
-        
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-            NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageURL]];
-            [imageData writeToFile:self.imageFilePath atomically:YES];
-            imageDownloaded = YES;
-            @synchronized(self) {
-                _image = [UIImage imageWithData:imageData];
-            }
-            [self prefetchAndDecompressImage];
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if(finished)
-                    finished();
-            });
-        });
+            return NO;
     }
+    
+    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageURL]];
+    [imageData writeToFile:self.imageFilePath atomically:YES];
+    imageDownloaded = YES;
+    @synchronized(self) {
+        _image = [UIImage imageWithData:imageData];
+    }
+    [self prefetchAndDecompressImage];
+    
+    return YES;
 }
 
 -(UIImage *)image {

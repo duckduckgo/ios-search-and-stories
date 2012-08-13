@@ -22,7 +22,7 @@
 @property(strong) NSString *imageURL;
 @property(readonly) UIImage *image;
 
--(void)downloadImageFinished:(void (^)())finished;
+-(BOOL)downloadImage;
 -(void)prefetchAndDecompressImage;
 -(void)unloadImage;
 -(void)deleteImage;

@@ -209,7 +209,7 @@ static DDGNewsProvider *sharedProvider;
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             DDGStory *story1 = (DDGStory *)obj1;
             DDGStory *story2 = (DDGStory *)obj2;
-            return [story1.date compare:story2.date];
+            return [story2.date compare:story1.date];
         }];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -236,17 +236,20 @@ static DDGNewsProvider *sharedProvider;
             [tableView deleteRowsAtIndexPaths:removedStories
                                   withRowAnimation:UITableViewRowAnimationAutomatic];
             [tableView endUpdates];
-        
-            // download story images
-            for(int i=0; i<newStories.count; i++) {
-                [[newStories objectAtIndex:i] downloadImageFinished:^{
-                    [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                }];
-            }
-        
-            // and we're done!
-            finished();
         });
+        
+        // download story images
+        [newStories iterateConcurrentlyWithThreads:6 priority:DISPATCH_QUEUE_PRIORITY_BACKGROUND block:^(int i, id obj) {
+            if([(DDGStory *)obj downloadImage]);
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                });
+        }];
+        
+        
+        // and we're done!
+        finished();
+
     });
 }
 
