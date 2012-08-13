@@ -269,7 +269,10 @@
     [story loadImageIntoView:articleImageView];
     // load site favicon image
     UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    faviconImageView.image = [DDGCache objectForKey:story.feed inCache:@"sourceImages"];
+    if(story.feed)
+        faviconImageView.image = [DDGCache objectForKey:story.feed inCache:@"sourceImages"];
+    else
+        faviconImageView.image = nil;
         
 	return cell;
 }

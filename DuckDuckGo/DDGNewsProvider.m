@@ -196,7 +196,8 @@ static DDGNewsProvider *sharedProvider;
                 story.storyID = [storyDict objectForKey:@"id"];
                 story.title = [storyDict objectForKey:@"title"];
                 story.url = [storyDict objectForKey:@"url"];
-                story.feed = [storyDict objectForKey:@"feed"];
+                if([storyDict objectForKey:@"feed"] && [storyDict objectForKey:@"feed"] != [NSNull null])
+                    story.feed = [storyDict objectForKey:@"feed"];
                 story.date = [formatter dateFromString:[[storyDict objectForKey:@"timestamp"] substringToIndex:19]];
                 story.imageURL = [storyDict objectForKey:@"image"];
             }
