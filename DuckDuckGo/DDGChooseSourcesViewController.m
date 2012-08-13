@@ -140,9 +140,15 @@
         cell.textLabel.text = [source objectForKey:@"title"];
         cell.detailTextLabel.text = [source objectForKey:@"description"];
         
-        UIImage *image = [DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
-        cell.imageView.image = image;
-        [(UIImageView *)[cell viewWithTag:100] setImage:image];
+        if([source objectForKey:@"link"] && [source objectForKey:@"link"] != [NSNull null]) {
+            UIImage *image = [DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
+            cell.imageView.image = image;
+            [(UIImageView *)[cell viewWithTag:100] setImage:image];
+        } else {
+            cell.imageView.image = nil;
+            [(UIImageView *)[cell viewWithTag:100] setImage:nil];
+
+        }
         
         if([[DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"] boolValue])
             cell.accessoryType = UITableViewCellAccessoryCheckmark;
