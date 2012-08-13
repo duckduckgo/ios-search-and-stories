@@ -32,8 +32,9 @@
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateHome;
     
+    linen = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
     _tableView.separatorColor = [UIColor clearColor];
-    _tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
+    _tableView.backgroundColor = linen;
     
     topShadow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"table_view_shadow_top.png"]];
     topShadow.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 5.0);
@@ -49,17 +50,16 @@
 	
     [refreshHeaderView refreshLastUpdatedDate];
     
+    // force-decompress the first 10 images
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        
+        NSArray *stories = [DDGNewsProvider sharedProvider].stories;
+        for(int i=0;i<MIN(stories.count, 10);i++)
+            [[stories objectAtIndex:i] prefetchAndDecompressImage];
+    });
+    
     clockView = [[DDGScrollbarClockView alloc] init];
     [self.view addSubview:clockView];
-    
-    // force-decompress all images
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        NSLog(@"decompressing...");
-        NSArray *stories = [DDGNewsProvider sharedProvider].stories;
-        for(DDGStory *story in stories)
-            [story prefetchAndDecompressImage];
-        NSLog(@"done!");
-    });
 }
 
 - (void)viewDidUnload {
@@ -249,7 +249,9 @@
         [[NSBundle mainBundle] loadNibNamed:cellID owner:self options:nil];
         cell = _loadedCell;
         self.loadedCell = nil;
-    
+        
+        [[cell.contentView viewWithTag:100] setBackgroundColor:linen];
+        
         UIView *backgroundImageView = (UIImageView *)[cell.contentView viewWithTag:400];
         backgroundImageView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
     }

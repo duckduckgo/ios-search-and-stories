@@ -17,6 +17,8 @@
     BOOL isRefreshing;
     
     DDGScrollbarClockView *clockView;
+    
+    UIColor *linen;
 }
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;

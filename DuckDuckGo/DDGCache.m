@@ -9,7 +9,6 @@
 #import "DDGCache.h"
 
 @implementation DDGCache
-
 static NSMutableDictionary *globalCache;
 
 +(void)updateObject:(id)object forKey:(NSString *)key inCache:(NSString *)cacheName {

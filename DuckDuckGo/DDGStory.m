@@ -9,19 +9,16 @@
 #import "DDGStory.h"
 
 @implementation DDGStory
-
-// make a serial background queue for last-minute image loading because we need to make sure images are loaded in the order they are requested.
-// (otherwise an old load request could overwrite the image from the newer, correct one)
-static dispatch_queue_t imageLoadingQueue;
+static NSMutableDictionary *loadingImageViews;
 
 #pragma mark - NSCoding
 
 -(id)init {
     self = [super init];
     if(self) {
-        @synchronized(@"DDGStoryImageLoadingQueue") {
-            if(!imageLoadingQueue)
-                imageLoadingQueue = dispatch_queue_create("DDGStoryImageLoadingQueue", NULL);
+        @synchronized(@"DDGStoryLoadingImageViews") {
+            if(!loadingImageViews)
+                loadingImageViews = [[NSMutableDictionary alloc] init];
         }
     }
     return self;
@@ -112,14 +109,30 @@ static dispatch_queue_t imageLoadingQueue;
 
 -(void)loadImageIntoView:(UIImageView *)imageView {
     @synchronized(self) {
+        @synchronized(loadingImageViews) {
+            [loadingImageViews setObject:self forKey:[NSValue valueWithNonretainedObject:imageView]];
+        }
+        
+        
         if(_image) {
             imageView.image = _image;
         } else {
             imageView.image = nil;
-            dispatch_async(imageLoadingQueue, ^{
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+                @synchronized(loadingImageViews) {
+                    if([loadingImageViews objectForKey:[NSValue valueWithNonretainedObject:imageView]] != self)
+                        return;
+                }
+                
                 [self prefetchAndDecompressImage];
+                
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    imageView.image = self.image;
+                    @synchronized(loadingImageViews) {
+                        if([loadingImageViews objectForKey:[NSValue valueWithNonretainedObject:imageView]] == self) {
+                            imageView.image = self.image;
+                            [loadingImageViews removeObjectForKey:[NSValue valueWithNonretainedObject:imageView]];
+                        }
+                    }
                 });
             });
         }
