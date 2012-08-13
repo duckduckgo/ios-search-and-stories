@@ -197,7 +197,7 @@ static DDGNewsProvider *sharedProvider;
                 story.title = [storyDict objectForKey:@"title"];
                 story.url = [storyDict objectForKey:@"url"];
                 story.feed = [storyDict objectForKey:@"feed"];
-                story.date = [formatter dateFromString:[storyDict objectForKey:@"timestamp"]];
+                story.date = [formatter dateFromString:[[storyDict objectForKey:@"timestamp"] substringToIndex:19]];
                 story.imageURL = [storyDict objectForKey:@"image"];
             }
             [newStories replaceObjectAtIndex:i withObject:story];

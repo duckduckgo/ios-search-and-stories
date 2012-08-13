@@ -8,6 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGScrollbarClockView : UIView
+@interface DDGScrollbarClockView : UIView {
+    BOOL showing;
+    NSDate *date;
+    UILabel *label;
+    NSDateFormatter *formatter;
+}
+
+-(void)show:(BOOL)show animated:(BOOL)animated;
+-(void)updateDate:(NSDate *)newDate;
 
 @end

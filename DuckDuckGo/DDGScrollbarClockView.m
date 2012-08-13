@@ -13,19 +13,38 @@
 - (id)init {
     self = [super initWithFrame:CGRectMake(0, 0, 100, 34)];
     if (self) {
-        self.backgroundColor = [UIColor redColor];
-        self.alpha = 0.5;
+        self.backgroundColor = [UIColor whiteColor];
+        self.alpha = 0;
+        
+        label = [[UILabel alloc] initWithFrame:self.bounds];
+        label.font = [UIFont systemFontOfSize:12];
+        [self addSubview:label];
+        
+        formatter = [[NSDateFormatter alloc] init];
+        formatter.dateFormat = @"MMM dd hh:mm a";
     }
     return self;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
+-(void)show:(BOOL)show animated:(BOOL)animated {
+    if(show == showing)
+        return;
+    
+    showing = show;
+    [UIView animateWithDuration:(animated ? 0.25 : 0) animations:^{
+        self.alpha = (show ? 1 : 0);
+    }];
 }
-*/
+
+-(void)updateDate:(NSDate *)newDate {
+    if(date == newDate)
+        return;
+    date = newDate;
+    label.text = [formatter stringFromDate:date];
+}
+
+-(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event {
+    return NO;
+}
 
 @end
