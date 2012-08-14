@@ -20,6 +20,8 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGStory.h"
 #import "DDGScrollbarClockView.h"
+#import "ECSlidingViewController.h"
+#import "DDGUnderViewController.h"
 
 @implementation DDGHomeViewController
 
@@ -60,6 +62,20 @@
     
     clockView = [[DDGScrollbarClockView alloc] init];
     [self.view addSubview:clockView];
+    
+    if (![self.slidingViewController.underLeftViewController isKindOfClass:[DDGUnderViewController class]]) {
+	    DDGUnderViewController *underVC = [[DDGUnderViewController alloc] initWithStyle:UITableViewStylePlain];
+        underVC.homeViewController = self;
+        
+        self.slidingViewController.underLeftViewController = underVC;
+    }
+    
+    [self.view addGestureRecognizer:self.slidingViewController.panGesture];
+    [self.slidingViewController setAnchorRightRevealAmount:200.0]; // TODO: customize?
+    
+    self.view.layer.shadowOpacity = 0.75f;
+    self.view.layer.shadowRadius = 10.0f;
+    self.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
 - (void)viewDidUnload {
@@ -67,7 +83,6 @@
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
-
 
 - (void)viewWillAppear:(BOOL)animated
 {

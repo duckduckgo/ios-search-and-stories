@@ -13,6 +13,7 @@
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
 #import "DDGSearchHistoryProvider.h"
+#import "ECSlidingViewController.h"
 
 @implementation DDGSettingsViewController
 
@@ -28,6 +29,17 @@
                          forKey:key 
                         inCache:@"settings"];
     }
+}
+
+#pragma mark - View lifecycle
+
+-(void)viewDidLoad {
+    [super viewDidLoad];
+    
+    [self.navigationController.view addGestureRecognizer:self.slidingViewController.panGesture];
+    self.navigationController.view.layer.shadowOpacity = 0.75f;
+    self.navigationController.view.layer.shadowRadius = 10.0f;
+    self.navigationController.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
 #pragma mark - Form view controller
@@ -85,7 +97,7 @@
                 inCache:@"settings"];
 }
 
-#pragma mark - Helper methodsq
+#pragma mark - Helper methods
 
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 0) {

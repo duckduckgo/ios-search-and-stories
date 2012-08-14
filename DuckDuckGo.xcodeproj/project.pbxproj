@@ -84,6 +84,7 @@
 		4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EC015D9826900B44342 /* DDGJSONViewController.m */; };
 		4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE015DACE8B00B44342 /* ECSlidingViewController.m */; };
 		4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE215DACE8B00B44342 /* UIImage+ImageWithUIView.m */; };
+		4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */; };
 		4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */; };
 		4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */; };
 		4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */; };
@@ -284,6 +285,8 @@
 		4C4A0EE015DACE8B00B44342 /* ECSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSlidingViewController.m; sourceTree = "<group>"; };
 		4C4A0EE115DACE8B00B44342 /* UIImage+ImageWithUIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageWithUIView.h"; sourceTree = "<group>"; };
 		4C4A0EE215DACE8B00B44342 /* UIImage+ImageWithUIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageWithUIView.m"; sourceTree = "<group>"; };
+		4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewController.h; sourceTree = "<group>"; };
+		4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewController.m; sourceTree = "<group>"; };
 		4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKConfigurator.h; sourceTree = "<group>"; };
 		4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKConfigurator.m; sourceTree = "<group>"; };
 		4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DDGSHKSharers.plist; sourceTree = "<group>"; };
@@ -745,6 +748,8 @@
 				4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */,
 				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
+				4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */,
+				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
 				4C573C1115B7311200790F60 /* Home screen */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				4C660A741591487C001AB510 /* Search controller */,
@@ -1035,6 +1040,7 @@
 				4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */,
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
 				4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */,
+				4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
