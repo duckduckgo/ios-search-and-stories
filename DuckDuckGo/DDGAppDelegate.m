@@ -25,15 +25,13 @@ static void uncaughtExceptionHandler(NSException *exception) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-
+    
     // set the global URL cache to SDURLCache, which caches to disk
-//    SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
-//                                                         diskCapacity:1024*1024*5 // 5MB disk cache
-//                                                             diskPath:[SDURLCache defaultCachePath]];
-//    [NSURLCache setSharedURLCache:urlCache];
-    [[NSURLCache sharedURLCache] setMemoryCapacity:0];
-    [[NSURLCache sharedURLCache] setDiskCapacity:0];
-
+    SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
+                                                         diskCapacity:1024*1024*10 // 10MB disk cache
+                                                             diskPath:[SDURLCache defaultCachePath]];
+    [NSURLCache setSharedURLCache:urlCache];
+    
     // load default settings
     [DDGSettingsViewController loadDefaultSettings];
     
