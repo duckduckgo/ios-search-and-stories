@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 
 @class DDGHomeViewController, DDGSettingsViewController;
-@interface DDGUnderViewController : UITableViewController
+@interface DDGUnderViewController : UITableViewController {
+    NSMutableArray *viewControllers;
+}
 
-@property(nonatomic, strong) DDGHomeViewController *homeViewController;
-@property(nonatomic, strong) UINavigationController *settingsViewController;
+-(id)initWithHomeViewController:(UIViewController *)homeViewController;
+-(void)addPageWithQueryOrURL:(NSString *)queryOrURL title:(NSString *)title;
 
 @end

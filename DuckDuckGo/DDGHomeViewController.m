@@ -64,14 +64,13 @@
     [self.view addSubview:clockView];
     
     if (![self.slidingViewController.underLeftViewController isKindOfClass:[DDGUnderViewController class]]) {
-	    DDGUnderViewController *underVC = [[DDGUnderViewController alloc] initWithStyle:UITableViewStylePlain];
-        underVC.homeViewController = self;
-        
+	    DDGUnderViewController *underVC = [[DDGUnderViewController alloc] initWithHomeViewController:self];
         self.slidingViewController.underLeftViewController = underVC;
     }
     
+    // this one time, we have to do add the gesture recognizer manually; underVC only does it for us when the view is loaded through the menu
     [self.view addGestureRecognizer:self.slidingViewController.panGesture];
-    [self.slidingViewController setAnchorRightRevealAmount:200.0]; // TODO: customize?
+    [self.slidingViewController setAnchorRightRevealAmount:200.0];
     
     self.view.layer.shadowOpacity = 0.75f;
     self.view.layer.shadowRadius = 10.0f;
@@ -88,7 +87,7 @@
 {
     [super viewWillAppear:animated];
     [_searchController clearAddressBar];
-    
+        
     [self beginDownloadingStories];
 }
 
@@ -219,19 +218,8 @@
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {    
-    DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    [webVC loadQueryOrURL:queryOrURL];
-    
-    // because we want the search bar to stay in place, we need to do custom animation here instead of relying on UINavigationController.
-    
-    [clockView show:NO animated:NO];
-    [UIView animateWithDuration:0.3 animations:^{
-        _tableView.transform = CGAffineTransformMakeScale(2, 2);
-        _tableView.alpha = 0;
-    } completion:^(BOOL finished) {
-        _tableView.transform = CGAffineTransformIdentity;
-        [self.navigationController pushViewController:webVC animated:NO];
-    }];
+    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController addPageWithQueryOrURL:queryOrURL
+                                                                                                  title:queryOrURL];
 }
 
 #pragma mark - Table view data source
@@ -310,7 +298,8 @@
     });
 
     NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    [self loadQueryOrURL:escapedStoryURL];
+    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController addPageWithQueryOrURL:escapedStoryURL
+                                                                                                  title:story.title];
 }
 
 #pragma mark - Loading popular stories

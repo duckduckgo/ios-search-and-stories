@@ -11,7 +11,7 @@
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
 #import "SHK.h"
-
+#import "ECSlidingViewController.h"
 @implementation DDGWebViewController
 
 #pragma mark - View lifecycle
@@ -34,6 +34,10 @@
 	viewsInitialized = YES;
     if(queryOrURLToLoad)
         [self loadQueryOrURL:queryOrURLToLoad];
+    
+    self.view.layer.shadowOpacity = 0.75f;
+    self.view.layer.shadowRadius = 10.0f;
+    self.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
 -(void)viewDidAppear:(BOOL)animated {
