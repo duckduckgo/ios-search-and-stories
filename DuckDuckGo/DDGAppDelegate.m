@@ -14,6 +14,7 @@
 #import "DDGSHKConfigurator.h"
 #import "SHKConfiguration.h"
 #import "DDGNewsProvider.h"
+#import "ECSlidingViewController.h"
 
 @implementation DDGAppDelegate
 
@@ -35,9 +36,15 @@ static void uncaughtExceptionHandler(NSException *exception) {
     // load default settings
     [DDGSettingsViewController loadDefaultSettings];
     
+    // initialize sharekit
     DefaultSHKConfigurator *configurator = [[DDGSHKConfigurator alloc] init];
     [SHKConfiguration sharedInstanceWithConfigurator:configurator];
     
+    // configure the sliding view controller
+    ECSlidingViewController *slidingViewController = (ECSlidingViewController *)self.window.rootViewController;    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhone" bundle:nil];
+    slidingViewController.topViewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
+
     return YES;
 }
 

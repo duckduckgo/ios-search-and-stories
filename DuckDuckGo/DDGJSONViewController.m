@@ -18,7 +18,7 @@
     _jsonURL = jsonURL;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         NSData *data = [NSData dataWithContentsOfURL:_jsonURL];
-        NSArray *newJSON = [NSJSONSerialization JSONObjectWithData:data options:NULL error:nil];
+        NSArray *newJSON = [NSJSONSerialization JSONObjectWithData:data options:0 error:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
             json = newJSON;
             [self.tableView reloadData];
