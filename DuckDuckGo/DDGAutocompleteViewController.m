@@ -79,7 +79,7 @@ static NSString *historyCellID = @"HCell";
 #pragma mark - Table view data source
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 3;
+    return 2;
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
@@ -88,15 +88,16 @@ static NSString *historyCellID = @"HCell";
         return nil;
     
     switch (section) {
-        case 0:
-            return @"History";
-        case 1:
-            return @"Suggestions";
-        case 2: // we want a separator only if there's something on top of this section
-            for(int i=0; i<2; i++)
-                if([self tableView:tableView numberOfRowsInSection:i])
-                    return @" ";
-            return nil;
+        case 0: // return "History" if there's stuff in the section, nil otherwise
+            if([self tableView:tableView numberOfRowsInSection:section])
+                return @"History";
+            else
+                return nil;
+        case 1: // return "Suggestions" if there's stuff in the section AND there's a history section, nil otherwise
+            if([self tableView:tableView numberOfRowsInSection:section] && [self tableView:tableView numberOfRowsInSection:0])
+                return @"Suggestions";
+            else
+                return nil;
         default:
             return nil;
     }
@@ -108,8 +109,6 @@ static NSString *historyCellID = @"HCell";
             return [[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
         case 1:
             return [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count;
-        case 2:
-            return 1;
         default:
             return 0;
     }
@@ -177,18 +176,6 @@ static NSString *historyCellID = @"HCell";
             cell.accessoryType = UITableViewCellAccessoryNone;
 
         
-    } else if(indexPath.section == 2) {
-        cell = [tv dequeueReusableCellWithIdentifier:bookmarksCellID];
-        if(cell == nil) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:bookmarksCellID];
-            cell.textLabel.text = @"Saved";
-            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
-            cell.textLabel.textColor = [UIColor darkGrayColor];
-            cell.selectionStyle = UITableViewCellSelectionStyleGray;
-            cell.backgroundView = [[UIView alloc] init];
-            [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
-        }
     }
     
     return cell;
@@ -210,10 +197,6 @@ static NSString *historyCellID = @"HCell";
             [[DDGSearchHistoryProvider sharedProvider] logHistoryItem:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController.searchHandler loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController dismissAutocomplete];
-    } else if(indexPath.section == 2) {
-        DDGBookmarksViewController *bookmarksVC = [[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil];
-        [self.navigationController pushViewController:bookmarksVC animated:YES];
-        [self hideKeyboardAfterDelay];
     }
 }
 

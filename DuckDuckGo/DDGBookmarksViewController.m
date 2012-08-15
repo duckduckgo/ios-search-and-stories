@@ -9,6 +9,8 @@
 #import "DDGBookmarksViewController.h"
 #import "DDGBookmarksProvider.h"
 #import "DDGSearchController.h"
+#import "DDGUnderViewController.h"
+#import "ECSlidingViewController.h"
 
 @implementation DDGBookmarksViewController
 
@@ -20,7 +22,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    [self.navigationController setNavigationBarHidden:NO animated:animated];
+    [self.tableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -68,22 +70,10 @@
 
 #pragma mark - Table view delegate
 
--(DDGSearchController *)searchController {
-    return (DDGSearchController *)self.navigationController.parentViewController;
-}
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    NSURL *url = [[[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row] objectForKey:@"url"];
-    
-    [self.searchController.searchHandler loadQueryOrURL:url.absoluteString];
-    [self.searchController dismissAutocomplete];
-
-    // workaround for a UINavigationController bug
-    double delayInSeconds = 0.5;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.navigationController popViewControllerAnimated:NO];
-    });
+    NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
+    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController addPageWithQueryOrURL:[[bookmark objectForKey:@"url"] absoluteString]
+                                                                                                  title:[bookmark objectForKey:@"title"]];
 }
 
 @end

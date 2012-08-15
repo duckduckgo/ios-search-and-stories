@@ -11,6 +11,7 @@
 #import "DDGHomeViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGWebViewController.h"
+#import "DDGBookmarksViewController.h"
 
 @implementation DDGUnderViewController
 
@@ -22,6 +23,10 @@
                 @{
                     @"title" : @"Stories",
                     @"viewController" : homeViewController
+                },
+                @{
+                    @"title" : @"Saved Pages",
+                    @"viewController" : [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]]
                 },
                 @{
                     @"title" : @"Settings",
@@ -48,6 +53,9 @@
 #pragma mark - Navigation management
 
 -(void)addPageWithQueryOrURL:(NSString *)queryOrURL title:(NSString *)title {
+    if(!title)
+        title = queryOrURL;
+    
     [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
         
         DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
