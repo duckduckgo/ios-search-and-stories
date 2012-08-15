@@ -213,8 +213,9 @@
         
         [[cell.contentView viewWithTag:100] setBackgroundColor:linen];
         
-        UIView *overlayImageView = (UIImageView *)[cell.contentView viewWithTag:400];
+        UIImageView *overlayImageView = (UIImageView *)[cell.contentView viewWithTag:400];
         overlayImageView.backgroundColor = CellOverlayPatternColor;
+        overlayImageView.image = nil;
     }
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
