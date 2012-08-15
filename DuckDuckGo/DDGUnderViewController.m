@@ -34,6 +34,14 @@
     return self;
 }
 
+-(void)configureViewController:(UIViewController *)viewController {
+    [viewController.view addGestureRecognizer:self.slidingViewController.panGesture];
+    
+    viewController.view.layer.shadowOpacity = 0.75f;
+    viewController.view.layer.shadowRadius = 10.0f;
+    viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
+}
+
 #pragma mark - Navigation management
 
 -(void)addPageWithQueryOrURL:(NSString *)queryOrURL title:(NSString *)title {
@@ -92,7 +100,7 @@
         self.slidingViewController.topViewController.view.frame = frame;
         [self.slidingViewController resetTopView];
         
-        [newTopViewController.view addGestureRecognizer:self.slidingViewController.panGesture];
+        [self configureViewController:newTopViewController];
     }];
 }
 

@@ -34,10 +34,6 @@
 	viewsInitialized = YES;
     if(queryOrURLToLoad)
         [self loadQueryOrURL:queryOrURLToLoad];
-    
-    self.view.layer.shadowOpacity = 0.75f;
-    self.view.layer.shadowRadius = 10.0f;
-    self.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
 -(void)viewDidAppear:(BOOL)animated {

@@ -35,10 +35,6 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    
-    self.navigationController.view.layer.shadowOpacity = 0.75f;
-    self.navigationController.view.layer.shadowRadius = 10.0f;
-    self.navigationController.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
 #pragma mark - Form view controller

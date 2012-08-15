@@ -63,18 +63,12 @@
     clockView = [[DDGScrollbarClockView alloc] init];
     [self.view addSubview:clockView];
     
-    if (![self.slidingViewController.underLeftViewController isKindOfClass:[DDGUnderViewController class]]) {
-	    DDGUnderViewController *underVC = [[DDGUnderViewController alloc] initWithHomeViewController:self];
-        self.slidingViewController.underLeftViewController = underVC;
-    }
-    
-    // this one time, we have to do add the gesture recognizer manually; underVC only does it for us when the view is loaded through the menu
-    [self.view addGestureRecognizer:self.slidingViewController.panGesture];
+    DDGUnderViewController *underVC = [[DDGUnderViewController alloc] initWithHomeViewController:self];
+    self.slidingViewController.underLeftViewController = underVC;
     [self.slidingViewController setAnchorRightRevealAmount:200.0];
     
-    self.view.layer.shadowOpacity = 0.75f;
-    self.view.layer.shadowRadius = 10.0f;
-    self.view.layer.shadowColor = [UIColor blackColor].CGColor;
+    // this one time, we have to do add the gesture recognizer manually; underVC only does it for us when the view is loaded through the menu
+    [underVC configureViewController:self];
 }
 
 - (void)viewDidUnload {
