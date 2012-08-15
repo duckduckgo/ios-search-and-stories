@@ -16,7 +16,7 @@
 
 -(id)initWithHomeViewController:(UIViewController *)homeViewController {
     self = [super initWithStyle:UITableViewStylePlain];
-    if(self) {        
+    if(self) {
         viewControllers = @[
             @[
                 @{
@@ -30,6 +30,9 @@
             ],
             @[].mutableCopy
         ].mutableCopy;
+        
+        self.clearsSelectionOnViewWillAppear = NO;
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
     return self;
 }
@@ -76,6 +79,10 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return [[viewControllers objectAtIndex:section] count];
+}
+
+-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    return (section == 1 ? @"Pages" : nil);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
