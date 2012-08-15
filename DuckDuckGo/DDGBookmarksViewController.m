@@ -18,6 +18,7 @@
     [super viewDidLoad];
     self.title = @"Saved";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    self.tableView.scrollsToTop = NO;
 }
 
 -(void)viewWillAppear:(BOOL)animated {

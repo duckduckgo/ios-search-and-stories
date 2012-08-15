@@ -52,4 +52,20 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [DDGCache saveCaches];
 }
 
+-(void)scrollAllScrollViewsToTop {
+    for(UIWindow *window in [UIApplication sharedApplication].windows) {
+        [self scrollAllScrollViewsToTopRecursivelyInView:window];
+    }
+}
+
+-(void)scrollAllScrollViewsToTopRecursivelyInView:(UIView *)view {
+    for(UIView *subview in view.subviews) {
+        if([subview isKindOfClass:[UIScrollView class]]) {
+            UIScrollView *scrollView = (UIScrollView *)subview;
+            [scrollView setContentOffset:CGPointMake(scrollView.contentOffset.x, 0) animated:YES];
+        }
+        [self scrollAllScrollViewsToTopRecursivelyInView:subview];
+    }
+}
+
 @end

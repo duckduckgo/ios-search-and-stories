@@ -35,6 +35,7 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
+    self.tableView.scrollsToTop = NO;
 }
 
 #pragma mark - Form view controller

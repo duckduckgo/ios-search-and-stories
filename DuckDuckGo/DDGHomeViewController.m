@@ -127,6 +127,11 @@
 
 #pragma mark - Scroll view delegate
 
+-(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
+    [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] scrollAllScrollViewsToTop];
+    return NO;
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     [self repositionClockView];
     [clockView show:YES animated:NO];
