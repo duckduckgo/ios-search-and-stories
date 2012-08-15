@@ -140,6 +140,10 @@
     }
 }
 
+-(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
+    [refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
+}
+
 #pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
@@ -250,7 +254,7 @@
 
     NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [(DDGUnderViewController *)self.slidingViewController.underLeftViewController addPageWithQueryOrURL:escapedStoryURL
-                                                                                                  title:story.title];
+                        title:story.title];
 }
 
 #pragma mark - Loading popular stories
@@ -258,7 +262,7 @@
 // downloads stories asynchronously
 -(void)beginDownloadingStories {
     isRefreshing = YES;
-    
+
     [[DDGNewsProvider sharedProvider] downloadSourcesFinished:^{        
         [[DDGNewsProvider sharedProvider] downloadStoriesInTableView:self.tableView finished:^{
             isRefreshing = NO;
