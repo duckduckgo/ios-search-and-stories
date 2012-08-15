@@ -85,6 +85,8 @@
 		4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE015DACE8B00B44342 /* ECSlidingViewController.m */; };
 		4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE215DACE8B00B44342 /* UIImage+ImageWithUIView.m */; };
 		4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */; };
+		4C4A0F0215DC334F00B44342 /* triforce_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4A0F0015DC334E00B44342 /* triforce_button.png */; };
+		4C4A0F0315DC334F00B44342 /* triforce_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C4A0F0115DC334E00B44342 /* triforce_button@2x.png */; };
 		4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */; };
 		4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */; };
 		4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */; };
@@ -125,7 +127,6 @@
 		4CA9C48715CC7E41001F3231 /* table_view_shadow_top@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48515CC7E41001F3231 /* table_view_shadow_top@2x.png */; };
 		4CA9C48A15CC82A3001F3231 /* table_view_shadow_bottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48815CC82A3001F3231 /* table_view_shadow_bottom@2x.png */; };
 		4CA9C48B15CC82A3001F3231 /* table_view_shadow_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48915CC82A3001F3231 /* table_view_shadow_bottom.png */; };
-		4CAD448315D843730045F1EC /* DDGScrollbarClockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CAD448215D843730045F1EC /* DDGScrollbarClockView.m */; };
 		4CB72E8D15BE7CF300D8541F /* DDGAddCustomSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */; };
 		4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */; };
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
@@ -287,6 +288,8 @@
 		4C4A0EE215DACE8B00B44342 /* UIImage+ImageWithUIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageWithUIView.m"; sourceTree = "<group>"; };
 		4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewController.h; sourceTree = "<group>"; };
 		4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewController.m; sourceTree = "<group>"; };
+		4C4A0F0015DC334E00B44342 /* triforce_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = triforce_button.png; sourceTree = "<group>"; };
+		4C4A0F0115DC334E00B44342 /* triforce_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "triforce_button@2x.png"; sourceTree = "<group>"; };
 		4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKConfigurator.h; sourceTree = "<group>"; };
 		4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKConfigurator.m; sourceTree = "<group>"; };
 		4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DDGSHKSharers.plist; sourceTree = "<group>"; };
@@ -344,8 +347,6 @@
 		4CA9C48515CC7E41001F3231 /* table_view_shadow_top@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table_view_shadow_top@2x.png"; sourceTree = "<group>"; };
 		4CA9C48815CC82A3001F3231 /* table_view_shadow_bottom@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "table_view_shadow_bottom@2x.png"; sourceTree = "<group>"; };
 		4CA9C48915CC82A3001F3231 /* table_view_shadow_bottom.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = table_view_shadow_bottom.png; sourceTree = "<group>"; };
-		4CAD448115D843730045F1EC /* DDGScrollbarClockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGScrollbarClockView.h; sourceTree = "<group>"; };
-		4CAD448215D843730045F1EC /* DDGScrollbarClockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGScrollbarClockView.m; sourceTree = "<group>"; };
 		4CB72E8B15BE7CF300D8541F /* DDGAddCustomSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddCustomSourceViewController.h; sourceTree = "<group>"; };
 		4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddCustomSourceViewController.m; sourceTree = "<group>"; };
 		4CBDCDFF15C116A500372237 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -462,6 +463,8 @@
 				4C1FD7E61548FF65006B2511 /* search_field@2x.png */,
 				4C1FD7E71548FF65006B2511 /* settings_button.png */,
 				4C1FD7E81548FF65006B2511 /* settings_button@2x.png */,
+				4C4A0F0015DC334E00B44342 /* triforce_button.png */,
+				4C4A0F0115DC334E00B44342 /* triforce_button@2x.png */,
 				4C1FD7E91548FF65006B2511 /* spacer8x16.png */,
 				4C1FD7EA1548FF65006B2511 /* spacer44x44.png */,
 				4C1FD7EB1548FF65006B2511 /* stop.png */,
@@ -561,8 +564,6 @@
 				83F32275149290EF00A61BC5 /* DDGHomeViewController.m */,
 				838E9067149A763200C11E41 /* TwoLineTopicCell.xib */,
 				4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */,
-				4CAD448115D843730045F1EC /* DDGScrollbarClockView.h */,
-				4CAD448215D843730045F1EC /* DDGScrollbarClockView.m */,
 				4C11C6AD15B5E4C200D046BA /* DDGNewsProvider.h */,
 				4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */,
 				4C41359D15D5DAC200A9326C /* DDGStory.h */,
@@ -973,6 +974,8 @@
 				4CA9C48715CC7E41001F3231 /* table_view_shadow_top@2x.png in Resources */,
 				4CA9C48A15CC82A3001F3231 /* table_view_shadow_bottom@2x.png in Resources */,
 				4CA9C48B15CC82A3001F3231 /* table_view_shadow_bottom.png in Resources */,
+				4C4A0F0215DC334F00B44342 /* triforce_button.png in Resources */,
+				4C4A0F0315DC334F00B44342 /* triforce_button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1036,7 +1039,6 @@
 				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
-				4CAD448315D843730045F1EC /* DDGScrollbarClockView.m in Sources */,
 				4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */,
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
 				4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */,

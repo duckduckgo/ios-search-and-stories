@@ -184,7 +184,7 @@
 	_state = searchControllerState;
     
     if(_state == DDGSearchControllerStateHome)
-        [_leftButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
+        [_leftButton setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
     else if (_state == DDGSearchControllerStateWeb) {
         [_leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
 
@@ -343,7 +343,7 @@
     autocompleteOpen = NO;
     
     if(_state == DDGSearchControllerStateHome)
-        [_leftButton setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
+        [_leftButton setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
 
 
     [_searchField resignFirstResponder];

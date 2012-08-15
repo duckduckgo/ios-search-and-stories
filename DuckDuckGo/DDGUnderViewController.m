@@ -25,7 +25,7 @@
                     @"viewController" : homeViewController
                 },
                 @{
-                    @"title" : @"Saved Pages",
+                    @"title" : @"Saved",
                     @"viewController" : [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]]
                 },
                 @{
@@ -35,14 +35,14 @@
             ],
             @[].mutableCopy
         ].mutableCopy;
-        
-        self.clearsSelectionOnViewWillAppear = NO;
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     
         self.tableView.scrollsToTop = NO;
         
         self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
         self.tableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.25];
+
+        self.clearsSelectionOnViewWillAppear = NO;
+        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
     return self;
 }
@@ -95,7 +95,7 @@
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return (section == 1 ? @"Pages" : nil);
+    return (section == 1 ? @"Recent" : nil);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {

@@ -16,8 +16,6 @@
     UIImageView *topShadow;
     BOOL isRefreshing;
     
-    DDGScrollbarClockView *clockView;
-    
     UIColor *linen;
 }
 
