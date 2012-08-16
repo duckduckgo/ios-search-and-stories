@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface DDGSearchHistoryProvider : NSObject {
+@interface DDGHistoryProvider : NSObject {
     NSMutableArray *history;
 }
 

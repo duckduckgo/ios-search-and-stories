@@ -8,11 +8,11 @@
 
 #import "DDGCache.h"
 #import "DDGAppDelegate.h"
-#import "DDGSearchHistoryProvider.h"
+#import "DDGHistoryProvider.h"
 
-@implementation DDGSearchHistoryProvider
+@implementation DDGHistoryProvider
 
-static DDGSearchHistoryProvider *sharedInstance;
+static DDGHistoryProvider *sharedInstance;
 
 +(id)sharedProvider {
     if(!sharedInstance)

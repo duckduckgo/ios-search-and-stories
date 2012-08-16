@@ -128,7 +128,7 @@
 		4CA9C48A15CC82A3001F3231 /* table_view_shadow_bottom@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48815CC82A3001F3231 /* table_view_shadow_bottom@2x.png */; };
 		4CA9C48B15CC82A3001F3231 /* table_view_shadow_bottom.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CA9C48915CC82A3001F3231 /* table_view_shadow_bottom.png */; };
 		4CB72E8D15BE7CF300D8541F /* DDGAddCustomSourceViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */; };
-		4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */; };
+		4CCDC2AF1527B18C00CB6907 /* DDGHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGHistoryProvider.m */; };
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
 		4CD9247E15C9ED0900EB062F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9247D15C9ED0900EB062F /* Constants.m */; };
 		4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */; };
@@ -350,8 +350,8 @@
 		4CB72E8B15BE7CF300D8541F /* DDGAddCustomSourceViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAddCustomSourceViewController.h; sourceTree = "<group>"; };
 		4CB72E8C15BE7CF300D8541F /* DDGAddCustomSourceViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAddCustomSourceViewController.m; sourceTree = "<group>"; };
 		4CBDCDFF15C116A500372237 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
-		4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchHistoryProvider.h; sourceTree = "<group>"; };
-		4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchHistoryProvider.m; sourceTree = "<group>"; };
+		4CCDC2AD1527B18C00CB6907 /* DDGHistoryProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHistoryProvider.h; sourceTree = "<group>"; };
+		4CCDC2AE1527B18C00CB6907 /* DDGHistoryProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHistoryProvider.m; sourceTree = "<group>"; };
 		4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchSuggestionsProvider.h; sourceTree = "<group>"; };
 		4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchSuggestionsProvider.m; sourceTree = "<group>"; };
 		4CD9247C15C9ED0900EB062F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -547,11 +547,10 @@
 				4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */,
 				4C967F5015CDB3FB009A3A52 /* DDGAutocompleteTableView.h */,
 				4C967F5115CDB3FB009A3A52 /* DDGAutocompleteTableView.m */,
-				4CCDC2AD1527B18C00CB6907 /* DDGSearchHistoryProvider.h */,
-				4CCDC2AE1527B18C00CB6907 /* DDGSearchHistoryProvider.m */,
+				4CCDC2AD1527B18C00CB6907 /* DDGHistoryProvider.h */,
+				4CCDC2AE1527B18C00CB6907 /* DDGHistoryProvider.m */,
 				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
 				4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */,
-				4CD9249B15CD7DAB00EB062F /* Bookmarks */,
 				4C487FCB15CF879500618747 /* Tier 2 */,
 			);
 			name = Autocomplete;
@@ -754,6 +753,7 @@
 				4C573C1115B7311200790F60 /* Home screen */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				4C660A741591487C001AB510 /* Search controller */,
+				4CD9249B15CD7DAB00EB062F /* Bookmarks */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				4CA8C5811592914D0011665C /* DDGWebViewController.xib */,
@@ -1011,7 +1011,7 @@
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
-				4CCDC2AF1527B18C00CB6907 /* DDGSearchHistoryProvider.m in Sources */,
+				4CCDC2AF1527B18C00CB6907 /* DDGHistoryProvider.m in Sources */,
 				4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */,
 				4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */,
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,

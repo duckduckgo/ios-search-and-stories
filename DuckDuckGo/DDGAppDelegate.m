@@ -7,7 +7,7 @@
 //
 
 #import "DDGAppDelegate.h"
-#import "DDGSearchHistoryProvider.h"
+#import "DDGHistoryProvider.h"
 #import "SDURLCache.h"
 #import "DDGCache.h"
 #import "DDGSettingsViewController.h"

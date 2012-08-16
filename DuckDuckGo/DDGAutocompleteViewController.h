@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "DDGSearchHistoryProvider.h"
+#import "DDGHistoryProvider.h"
 #import "DDGSearchSuggestionsProvider.h"
 
 @interface DDGAutocompleteViewController : UITableViewController

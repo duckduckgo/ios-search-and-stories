@@ -12,7 +12,7 @@
 #import "SHK.h"
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
-#import "DDGSearchHistoryProvider.h"
+#import "DDGHistoryProvider.h"
 #import "ECSlidingViewController.h"
 
 @implementation DDGSettingsViewController
@@ -97,7 +97,7 @@
 
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 0) {
-        [[DDGSearchHistoryProvider sharedProvider] clearHistory];
+        [[DDGHistoryProvider sharedProvider] clearHistory];
         [SVProgressHUD showSuccessWithStatus:@"History cleared!"];
     }
 }

@@ -14,7 +14,7 @@ typedef enum {
 	DDGSearchControllerStateWeb
 } DDGSearchControllerState;
 
-@class DDGSearchSuggestionsProvider, DDGSearchHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
+@class DDGSearchSuggestionsProvider, DDGHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
 @interface DDGSearchController : UIViewController<UITextFieldDelegate, UINavigationControllerDelegate> {
     NSString *oldSearchText;
     BOOL barUpdated;

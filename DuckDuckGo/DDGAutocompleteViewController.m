@@ -108,7 +108,7 @@ static NSString *historyCellID = @"HCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
         case 0:
-            return [[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
+            return [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
         case 1:
             return [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count;
         default:
@@ -130,7 +130,7 @@ static NSString *historyCellID = @"HCell";
             [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
         }
         
-        NSArray *history = [[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
+        NSArray *history = [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
         NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
         
         cell.textLabel.text = [historyItem objectForKey:@"text"];
@@ -187,16 +187,16 @@ static NSString *historyCellID = @"HCell";
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.section == 0) {
-        NSArray *history = [[DDGSearchHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
+        NSArray *history = [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
         NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
-        [[DDGSearchHistoryProvider sharedProvider] logHistoryItem:[historyItem objectForKey:@"text"]];
+        [[DDGHistoryProvider sharedProvider] logHistoryItem:[historyItem objectForKey:@"text"]];
         [self.searchController.searchHandler loadQueryOrURL:[historyItem objectForKey:@"text"]];
         [self.searchController dismissAutocomplete];
     } else if(indexPath.section == 1) {
         NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
         NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
         if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
-            [[DDGSearchHistoryProvider sharedProvider] logHistoryItem:[suggestionItem objectForKey:@"phrase"]];
+            [[DDGHistoryProvider sharedProvider] logHistoryItem:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController.searchHandler loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController dismissAutocomplete];
     }
