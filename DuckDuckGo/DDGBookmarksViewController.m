@@ -19,6 +19,12 @@
     self.title = @"Saved";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
     self.tableView.scrollsToTop = NO;
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(0, 0, 31, 31);
+    [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -28,6 +34,10 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+-(void)leftButtonPressed {
+    [self.slidingViewController anchorTopViewTo:ECRight];
 }
 
 #pragma mark - Table view data source

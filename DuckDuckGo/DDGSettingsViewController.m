@@ -36,6 +36,16 @@
 -(void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.scrollsToTop = NO;
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(0, 0, 31, 31);
+    [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+}
+
+-(void)leftButtonPressed {
+    [self.slidingViewController anchorTopViewTo:ECRight];
 }
 
 #pragma mark - Form view controller
