@@ -14,6 +14,7 @@
 #import "DDGInputAccessoryView.h"
 #import "DDGBookmarksViewController.h"
 #import "DDGAutocompleteViewController.h"
+#import "ECSlidingViewController.h"
 
 @implementation DDGSearchController
 
@@ -342,12 +343,16 @@
         [_leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];        
     }];
     
+    self.parentViewController.slidingViewController.panGesture.enabled = NO;
+    
     autocompleteOpen = YES;
 }
 
 // cleans up the search field and dismisses
 -(void)dismissAutocomplete {
     autocompleteOpen = NO;
+
+    self.parentViewController.slidingViewController.panGesture.enabled = YES;
     
     if(_state == DDGSearchControllerStateHome)
         [_leftButton setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
