@@ -192,7 +192,7 @@
     DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
     NSString *cellID = nil;
-    if([story.title sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
+    if([story.title sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width-38, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
         cellID = OneLineCellIdentifier;
     else
         cellID = TwoLineCellIdentifier;
