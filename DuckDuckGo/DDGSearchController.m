@@ -88,6 +88,7 @@
 - (void)viewDidUnload {
     [self setActionButton:nil];
     [self setAutocompleteNavigationController:nil];
+    [self setCancelButton:nil];
     [super viewDidUnload];
 }
 
@@ -190,7 +191,11 @@
         CGRect f = _searchField.frame;
         f.size.width -= _actionButton.frame.size.width + 5;
         _searchField.frame = f;
-
+        
+        f = _cancelButton.frame;
+        f.origin.x -= _actionButton.frame.size.width + 5;
+        _cancelButton.frame = f;
+        
         _actionButton.hidden = NO;
     }
 }
@@ -292,6 +297,7 @@
         return;
     
     BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
+    NSLog(@"bbv %i",backButtonVisible);
     if(showBackButton != backButtonVisible)
         [UIView animateWithDuration:0.25 animations:^{
             _searchField.frame = [self showBackButton:showBackButton];
@@ -315,12 +321,21 @@
     [self revealBackground:YES animated:YES];
     
     [UIView animateWithDuration:0.25 animations:^{        
+        CGRect f;
         CGRect searchFieldFrame = [self showBackButton:NO];
         
         if(_state == DDGSearchControllerStateWeb) {
             _actionButton.alpha = 0;
             searchFieldFrame.size.width += _actionButton.frame.size.width + 5;
         }
+        
+        _cancelButton.alpha = 1;
+        
+        f = _cancelButton.frame;
+        f.origin.x = self.view.bounds.size.width - _cancelButton.frame.size.width - 5;
+        _cancelButton.frame = f;
+        
+        searchFieldFrame.size.width -= _cancelButton.frame.size.width + 5;
         
         _searchField.frame = searchFieldFrame;
     } completion:^(BOOL finished) {
@@ -351,12 +366,25 @@
         _searchField.rightView = stopOrReloadButton;
     
     [UIView animateWithDuration:0.25 animations:^{        
+        CGRect f;
         CGRect searchFieldFrame = [self showBackButton:YES];
         
         if(_state == DDGSearchControllerStateWeb) {
             _actionButton.alpha = 1;
             searchFieldFrame.size.width -= _actionButton.frame.size.width + 5;
+        
+            f = _cancelButton.frame;
+            f.origin.x = self.view.bounds.size.width - (_actionButton.frame.size.width + 5);
+            _cancelButton.frame = f;
+        } else {
+            f = _cancelButton.frame;
+            f.origin.x = self.view.bounds.size.width;
+            _cancelButton.frame = f;
         }
+        
+        _cancelButton.alpha = 0;
+        
+        searchFieldFrame.size.width += _cancelButton.frame.size.width + 5;
         
         _searchField.frame = searchFieldFrame;
     }];
@@ -425,6 +453,10 @@
             inputAccessory.alpha = 0.0;
         }];
     }
+}
+
+-(IBAction)cancelButtonPressed:(id)sender {
+    [self dismissAutocomplete];
 }
 
 -(void)updateBarWithURL:(NSURL *)url {
@@ -615,10 +647,6 @@
         oldSearchText = textField.text;
     
     [self clearBangSuggestions];
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self dismissAutocomplete];
-    });
     
     return YES;
 }

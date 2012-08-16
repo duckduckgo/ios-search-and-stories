@@ -30,10 +30,12 @@ typedef enum {
 @property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
 @property(nonatomic, weak) IBOutlet UIButton *leftButton;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
+@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(IBAction)actionButtonPressed:(id)sender;
+-(IBAction)cancelButtonPressed:(id)sender;
 
 @property(nonatomic, strong) UINavigationController *autocompleteNavigationController;
 @property(nonatomic, assign) DDGSearchControllerState state;
