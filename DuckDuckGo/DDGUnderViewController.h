@@ -16,6 +16,6 @@
 -(id)initWithHomeViewController:(UIViewController *)homeViewController;
 -(void)configureViewController:(UIViewController *)viewController;
 
--(void)addPageWithQueryOrURL:(NSString *)queryOrURL title:(NSString *)title;
+-(void)loadQueryOrURL:(NSString *)queryOrURL;
 
 @end

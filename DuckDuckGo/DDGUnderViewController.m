@@ -55,51 +55,14 @@
     viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
-#pragma mark - Navigation management
-
--(void)addPageWithQueryOrURL:(NSString *)queryOrURL title:(NSString *)title {
-    if(!title)
-        title = queryOrURL;
-
-    void (^insertAndLoad)() = ^{
-        DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-        [webVC loadQueryOrURL:queryOrURL];
-        
-        [[viewControllers lastObject] insertObject:@{@"title" : title, @"viewController" : webVC} atIndex:0];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0
-                                                    inSection:viewControllers.count-1];
-        
-        [self.tableView insertRowsAtIndexPaths:@[indexPath]
-                              withRowAnimation:UITableViewRowAnimationTop];
-        
-        // wait for the insert animation to finish before selecting/loading the new page
-        CGFloat delayInSeconds = 0.5;
-        dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
-        dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            
-            [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
-            
-            UIViewController *newTopViewController = [[[viewControllers objectAtIndex:indexPath.section] objectAtIndex:indexPath.row] objectForKey:@"viewController"];
-            
-            CGRect frame = self.slidingViewController.topViewController.view.frame;
-            self.slidingViewController.topViewController = newTopViewController;
-            self.slidingViewController.topViewController.view.frame = frame;
-            [self.slidingViewController resetTopView];
-            
-            [self configureViewController:newTopViewController];
-        });
-    };
-
-    if(self.slidingViewController.underLeftShowing) {
-        [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:insertAndLoad];
-    } else {
-        CGFloat oldAnchorRightRevealAmount = self.slidingViewController.anchorRightRevealAmount;
-        self.slidingViewController.anchorRightRevealAmount = 50.0;
-        [self.slidingViewController anchorTopViewTo:ECRight animations:nil onComplete:^{
-            insertAndLoad();
-            self.slidingViewController.anchorRightRevealAmount = oldAnchorRightRevealAmount;
-        }];
-    }
+-(void)loadQueryOrURL:(NSString *)queryOrURL {
+    DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+    [webVC loadQueryOrURL:queryOrURL];
+    
+    CGRect frame = self.slidingViewController.topViewController.view.frame;
+    self.slidingViewController.topViewController = webVC;
+    self.slidingViewController.topViewController.view.frame = frame;
+    [self configureViewController:webVC];
 }
 
 

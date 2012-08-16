@@ -173,8 +173,7 @@
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {    
-    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController addPageWithQueryOrURL:queryOrURL
-                                                                                                  title:queryOrURL];
+    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:queryOrURL];
 }
 
 #pragma mark - Table view data source
@@ -254,8 +253,7 @@
     });
 
     NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController addPageWithQueryOrURL:escapedStoryURL
-                        title:story.title];
+    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:escapedStoryURL];
 }
 
 #pragma mark - Loading popular stories
