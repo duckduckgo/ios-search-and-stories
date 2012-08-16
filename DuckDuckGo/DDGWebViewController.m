@@ -12,6 +12,8 @@
 #import "SVProgressHUD.h"
 #import "SHK.h"
 #import "ECSlidingViewController.h"
+#import "DDGUnderViewController.h"
+
 @implementation DDGWebViewController
 
 #pragma mark - View lifecycle
@@ -125,7 +127,7 @@
 	if(_webView.canGoBack)
         [_webView goBack];
 	else
-	    [self.navigationController popViewControllerAnimated:NO];
+	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadHomeViewController];
 }
 
 -(void)searchControllerStopOrReloadButtonPressed {
@@ -182,6 +184,8 @@
 {
     webViewLoadEvents++;
     [self updateProgressBar];
+    
+    [_searchController webViewCanGoBack:theWebView.canGoBack];
     
 	if (++webViewLoadingDepth == 1) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;

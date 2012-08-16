@@ -50,6 +50,7 @@ typedef enum {
 -(void)webViewStartedLoading;
 -(void)webViewFinishedLoading;
 -(void)setProgress:(CGFloat)progress;
+-(void)webViewCanGoBack:(BOOL)canGoBack;
 
 // helper methods
 -(NSString *)validURLStringFromString:(NSString *)urlString;

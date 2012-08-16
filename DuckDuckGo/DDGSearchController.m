@@ -185,7 +185,7 @@
     if(_state == DDGSearchControllerStateHome)
         [_leftButton setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
     else if (_state == DDGSearchControllerStateWeb) {
-        [_leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+        [_leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
 
         CGRect f = _searchField.frame;
         f.size.width -= _actionButton.frame.size.width + 5;
@@ -207,6 +207,13 @@
 -(void)webViewFinishedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
     [_searchField finish];
+}
+
+-(void)webViewCanGoBack:(BOOL)canGoBack {
+    if(canGoBack)
+        [_leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+    else
+        [_leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
 }
 
 -(void)setProgress:(CGFloat)progress {

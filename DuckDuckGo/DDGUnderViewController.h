@@ -11,11 +11,14 @@
 @class DDGHomeViewController, DDGSettingsViewController;
 @interface DDGUnderViewController : UITableViewController {
     NSMutableArray *viewControllers;
+    UIViewController *_homeViewController;
 }
+@property(nonatomic,strong) UIViewController *homeViewController;
 
 -(id)initWithHomeViewController:(UIViewController *)homeViewController;
 -(void)configureViewController:(UIViewController *)viewController;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
+-(void)loadHomeViewController;
 
 @end

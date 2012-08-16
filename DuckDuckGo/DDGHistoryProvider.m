@@ -56,6 +56,10 @@ static DDGHistoryProvider *sharedInstance;
     [self save];
 }
 
+-(NSArray *)allHistoryItems {
+    return [[history reverseObjectEnumerator] allObjects];
+}
+
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
     // there are certain cases in which we don't want to return any history
     if([prefix isEqualToString:@""] || ![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
