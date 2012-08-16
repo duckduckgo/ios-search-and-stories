@@ -123,11 +123,6 @@
 
 #pragma mark - Scroll view delegate
 
--(BOOL)scrollViewShouldScrollToTop:(UIScrollView *)scrollView {
-    [(DDGAppDelegate *)[[UIApplication sharedApplication] delegate] scrollAllScrollViewsToTop];
-    return NO;
-}
-
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     if(scrollView.contentOffset.y <= 0) {
         [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];

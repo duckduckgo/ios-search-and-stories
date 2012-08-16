@@ -18,8 +18,7 @@
     [super viewDidLoad];
     self.title = @"Saved";
     self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    self.tableView.scrollsToTop = NO;
-    
+
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
     button.frame = CGRectMake(0, 0, 31, 31);

@@ -35,7 +35,6 @@
 
 -(void)viewDidLoad {
     [super viewDidLoad];
-    self.tableView.scrollsToTop = NO;
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];

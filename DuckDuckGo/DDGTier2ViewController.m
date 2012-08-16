@@ -18,7 +18,6 @@
     self = [super initWithStyle:UITableViewStylePlain];
     if (self) {
         self.suggestionItem = suggestionItem;
-        self.tableView.scrollsToTop = NO;
     }
     return self;
 }

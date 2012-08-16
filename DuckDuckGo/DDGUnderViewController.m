@@ -40,6 +40,8 @@
         self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
         self.tableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.25];
 
+        self.clearsSelectionOnViewWillAppear = NO;
+
         [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
     return self;

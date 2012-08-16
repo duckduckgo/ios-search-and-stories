@@ -26,7 +26,6 @@
 	_webView.scalesPageToFit = YES;
 	webViewLoadingDepth = 0;
     _webView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
-    _webView.scrollView.scrollsToTop = NO;
     
 	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" containerViewController:self];
     

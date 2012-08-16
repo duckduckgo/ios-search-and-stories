@@ -11,6 +11,4 @@
 @interface DDGAppDelegate : UIResponder <UIApplicationDelegate>
 @property (strong, nonatomic) UIWindow *window;
 
--(void)scrollAllScrollViewsToTop;
-
 @end
