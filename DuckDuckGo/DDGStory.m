@@ -7,9 +7,11 @@
 //
 
 #import "DDGStory.h"
+#import "NSOperationStack.h"
 
 @implementation DDGStory
 static NSMutableDictionary *loadingImageViews;
+static NSOperationQueue *imageLoadingStack;
 
 #pragma mark - NSCoding
 
@@ -19,6 +21,10 @@ static NSMutableDictionary *loadingImageViews;
         @synchronized(@"DDGStoryLoadingImageViews") {
             if(!loadingImageViews)
                 loadingImageViews = [[NSMutableDictionary alloc] init];
+            if(!imageLoadingStack) {
+                imageLoadingStack = [[NSOperationQueue alloc] init];
+                imageLoadingStack.maxConcurrentOperationCount = 2;
+            }
         }
     }
     return self;
@@ -114,7 +120,8 @@ static NSMutableDictionary *loadingImageViews;
             imageView.image = _image;
         } else {
             imageView.image = nil;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            
+            [imageLoadingStack addOperationAtFrontOfQueueWithBlock:^{
                 @synchronized(loadingImageViews) {
                     if([loadingImageViews objectForKey:[NSValue valueWithNonretainedObject:imageView]] != self)
                         return;
@@ -130,7 +137,7 @@ static NSMutableDictionary *loadingImageViews;
                         }
                     }
                 });
-            });
+            }];
         }
     }
 }
