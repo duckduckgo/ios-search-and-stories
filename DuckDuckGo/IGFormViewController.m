@@ -98,11 +98,16 @@
  [super viewDidAppear:animated];
  }
  */
-/*
+
  - (void)viewWillDisappear:(BOOL)animated {
  [super viewWillDisappear:animated];
+     NSDictionary *formData = self.formData;
+     NSString *validationResult = [self validateData:formData];
+     if(validationResult==nil)
+         [self saveData:formData];
+
  }
- */
+ 
 /*
  - (void)viewDidDisappear:(BOOL)animated {
  [super viewDidDisappear:animated];
