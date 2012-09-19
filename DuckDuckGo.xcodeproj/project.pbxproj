@@ -45,8 +45,6 @@
 		4C1FD7EF1548FF65006B2511 /* back_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7D61548FF65006B2511 /* back_button.png */; };
 		4C1FD7F01548FF65006B2511 /* back_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7D71548FF65006B2511 /* back_button@2x.png */; };
 		4C1FD7F21548FF65006B2511 /* chevron15x27.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7D91548FF65006B2511 /* chevron15x27.png */; };
-		4C1FD7F31548FF65006B2511 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7DA1548FF65006B2511 /* Default.png */; };
-		4C1FD7F41548FF65006B2511 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7DB1548FF65006B2511 /* Default@2x.png */; };
 		4C1FD7F61548FF65006B2511 /* header_tile.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7DD1548FF65006B2511 /* header_tile.png */; };
 		4C1FD7F71548FF65006B2511 /* header_tile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7DE1548FF65006B2511 /* header_tile@2x.png */; };
 		4C1FD7F81548FF65006B2511 /* home_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1FD7DF1548FF65006B2511 /* home_button.png */; };
@@ -157,6 +155,9 @@
 		83F32270149290EF00A61BC5 /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83F3226E149290EF00A61BC5 /* iPhone.storyboard */; };
 		83F32276149290EF00A61BC5 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32275149290EF00A61BC5 /* DDGHomeViewController.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
+		E4D87C11160968A4001C5E92 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4D87C071609675D001C5E92 /* Default-568h@2x.png */; };
+		E4D87C13160968CD001C5E92 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E4D87C12160968CD001C5E92 /* Default.png */; };
+		E4D87C15160968DB001C5E92 /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E4D87C14160968DB001C5E92 /* Default@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -395,6 +396,9 @@
 		83F32275149290EF00A61BC5 /* DDGHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
+		E4D87C071609675D001C5E92 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default-568h@2x.png"; path = "../Default-568h@2x.png"; sourceTree = "<group>"; };
+		E4D87C12160968CD001C5E92 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = ../Default.png; sourceTree = "<group>"; };
+		E4D87C14160968DB001C5E92 /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Default@2x.png"; path = "../Default@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -459,6 +463,9 @@
 				4C1FD7D91548FF65006B2511 /* chevron15x27.png */,
 				4C1FD7DA1548FF65006B2511 /* Default.png */,
 				4C1FD7DB1548FF65006B2511 /* Default@2x.png */,
+				E4D87C12160968CD001C5E92 /* Default.png */,
+				E4D87C14160968DB001C5E92 /* Default@2x.png */,
+				E4D87C071609675D001C5E92 /* Default-568h@2x.png */,
 				4C1FD7DD1548FF65006B2511 /* header_tile.png */,
 				4C1FD7DE1548FF65006B2511 /* header_tile@2x.png */,
 				4C1FD7DF1548FF65006B2511 /* home_button.png */,
@@ -936,8 +943,6 @@
 				4C1FD7EF1548FF65006B2511 /* back_button.png in Resources */,
 				4C1FD7F01548FF65006B2511 /* back_button@2x.png in Resources */,
 				4C1FD7F21548FF65006B2511 /* chevron15x27.png in Resources */,
-				4C1FD7F31548FF65006B2511 /* Default.png in Resources */,
-				4C1FD7F41548FF65006B2511 /* Default@2x.png in Resources */,
 				4C1FD7F61548FF65006B2511 /* header_tile.png in Resources */,
 				4C1FD7F71548FF65006B2511 /* header_tile@2x.png in Resources */,
 				4C1FD7F81548FF65006B2511 /* home_button.png in Resources */,
@@ -991,6 +996,9 @@
 				4C4A0F0315DC334F00B44342 /* triforce_button@2x.png in Resources */,
 				4C4A0F0615DD65D600B44342 /* home_button.png in Resources */,
 				4C4A0F0715DD65D600B44342 /* home_button@2x.png in Resources */,
+				E4D87C11160968A4001C5E92 /* Default-568h@2x.png in Resources */,
+				E4D87C13160968CD001C5E92 /* Default.png in Resources */,
+				E4D87C15160968DB001C5E92 /* Default@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -184,9 +184,13 @@
 -(void)setState:(DDGSearchControllerState)searchControllerState {
 	_state = searchControllerState;
     
-    if(_state == DDGSearchControllerStateHome)
+    if(_state == DDGSearchControllerStateHome) {
         [_leftButton setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
-    else if (_state == DDGSearchControllerStateWeb) {
+        
+        CGRect f = _leftButton.frame;
+        f.origin.y = _leftButton.frame.origin.y - 1;
+        _leftButton.frame = f;
+    } else if (_state == DDGSearchControllerStateWeb) {
         [_leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
 
         CGRect f = _searchField.frame;
