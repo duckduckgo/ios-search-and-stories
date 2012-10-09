@@ -160,11 +160,11 @@
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
 						<reference key="IBUINormalTitleShadowColor" ref="622462828"/>
-						<object class="NSCustomResource" key="IBUIHighlightedImage" id="560050192">
+						<object class="NSCustomResource" key="IBUIHighlightedImage" id="628069326">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">share-click.png</string>
 						</object>
-						<reference key="IBUISelectedImage" ref="560050192"/>
+						<reference key="IBUISelectedImage" ref="628069326"/>
 						<object class="NSCustomResource" key="IBUINormalImage">
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">share.png</string>
