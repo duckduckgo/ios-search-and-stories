@@ -38,8 +38,8 @@
         self.tableView.scrollsToTop = NO;
         
         self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
-        self.tableView.separatorColor = [UIColor colorWithWhite:0 alpha:0.25];
-
+        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        
         self.clearsSelectionOnViewWillAppear = NO;
 
         [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
@@ -94,10 +94,6 @@
     };
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return (section == 1 ? @"Recent" : nil);
-}
-
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -112,8 +108,48 @@
         cell.textLabel.text = [[[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row] objectForKey:@"text"];
     }
     
+    // cell separator
+    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                cell.contentView.bounds.size.height-2.0f,
+                                                                cell.contentView.bounds.size.width,
+                                                                1.0f)];
+    lineView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    lineView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.25];
+    [cell.contentView addSubview:lineView];
+    UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                cell.contentView.bounds.size.height-1.0f,
+                                                                cell.contentView.bounds.size.width,
+                                                                1.0f)];
+    lineView2.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+    lineView2.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.03];
+    [cell.contentView addSubview:lineView2];
+
+    
+    
     return cell;
 }
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return (section == 0 ? 0 : 22);
+}
+
+-(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 22)];
+    [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
+    
+    if(section == 1) {
+        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 22)];
+        title.text = @"Recent";
+        title.textColor = [UIColor whiteColor];
+        title.opaque = NO;
+        title.backgroundColor = [UIColor clearColor];
+        title.font = [UIFont boldSystemFontOfSize:13.0];
+        [headerView addSubview:title];
+    }
+    
+    return headerView;
+}
+
 
 #pragma mark - Table view delegate
 
