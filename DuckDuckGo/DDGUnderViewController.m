@@ -22,11 +22,11 @@
         self.homeViewController = homeViewController;
         viewControllers = @[
             @{
-                @"title" : @"Stories",
+                @"title" : @"Home",
                 @"viewController" : homeViewController
             },
             @{
-                @"title" : @"Saved",
+                @"title" : @"Saved Pages",
                 @"viewController" : [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]]
             },
             @{
@@ -110,20 +110,20 @@
     
     // cell separator
     UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                cell.contentView.bounds.size.height-2.0f,
+                                                                cell.contentView.bounds.size.height-1.0f,
                                                                 cell.contentView.bounds.size.width,
                                                                 1.0f)];
     lineView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     lineView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.25];
     [cell.contentView addSubview:lineView];
+
     UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                cell.contentView.bounds.size.height-1.0f,
+                                                                0.0f,
                                                                 cell.contentView.bounds.size.width,
                                                                 1.0f)];
     lineView2.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
     lineView2.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.03];
     [cell.contentView addSubview:lineView2];
-
     
     
     return cell;
@@ -134,11 +134,11 @@
 }
 
 -(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 22)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
     [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
     
     if(section == 1) {
-        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 22)];
+        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 23)];
         title.text = @"Recent";
         title.textColor = [UIColor whiteColor];
         title.opaque = NO;
