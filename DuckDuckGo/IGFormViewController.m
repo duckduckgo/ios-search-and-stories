@@ -57,9 +57,6 @@
     
     if([self.navigationController.viewControllers objectAtIndex:0]==self)
 	{
-//        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-//                                                                                    target:self
-//                                                                                    action:@selector(saveButtonPressed)];
 		UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
 		
 		[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateNormal];
