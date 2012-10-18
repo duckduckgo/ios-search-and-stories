@@ -55,12 +55,20 @@
 	
     self.contentSizeForViewInPopover = CGSizeMake(320, minHeight);
     
-    if([self.navigationController.viewControllers objectAtIndex:0]==self) {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                    target:self
-                                                                                    action:@selector(saveButtonPressed)];
-        self.navigationItem.rightBarButtonItem = doneButton;
-    } else {
+    if([self.navigationController.viewControllers objectAtIndex:0]==self)
+	{
+//        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+//                                                                                    target:self
+//                                                                                    action:@selector(saveButtonPressed)];
+		UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+		
+		[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateNormal];
+		[button addTarget:self action:@selector(saveButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+		button.frame = CGRectMake(0, 0, 57, 32);
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+    }
+	else
+	{
         UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
                                                                                     target:self
                                                                                     action:@selector(saveButtonPressed)];

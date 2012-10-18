@@ -142,6 +142,10 @@
 		4CFA1A9C14DDB77F00DF52FE /* libNoARC.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CFA1A8F14DDB73C00DF52FE /* libNoARC.a */; };
 		830ECE541630A28F004DBADA /* cancel_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE531630A28F004DBADA /* cancel_1.png */; };
 		830ECE561630A787004DBADA /* cancel_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE551630A787004DBADA /* cancel_1@2x.png */; };
+		830ECE5D1630B356004DBADA /* done_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE591630B353004DBADA /* done_button.png */; };
+		830ECE5E1630B356004DBADA /* done_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE5A1630B353004DBADA /* done_button@2x.png */; };
+		830ECE5F1630B356004DBADA /* edit_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE5B1630B354004DBADA /* edit_button.png */; };
+		830ECE601630B356004DBADA /* edit_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE5C1630B355004DBADA /* edit_button@2x.png */; };
 		8345080614AB8D520093C2A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53D1494164F00509F2E /* Foundation.framework */; };
 		834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */; };
 		834E5002149418D400EABD6E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834E5001149418D400EABD6E /* Twitter.framework */; };
@@ -595,6 +599,10 @@
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		830ECE531630A28F004DBADA /* cancel_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel_1.png; sourceTree = "<group>"; };
 		830ECE551630A787004DBADA /* cancel_1@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "cancel_1@2x.png"; sourceTree = "<group>"; };
+		830ECE591630B353004DBADA /* done_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = done_button.png; sourceTree = "<group>"; };
+		830ECE5A1630B353004DBADA /* done_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "done_button@2x.png"; sourceTree = "<group>"; };
+		830ECE5B1630B354004DBADA /* edit_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edit_button.png; sourceTree = "<group>"; };
+		830ECE5C1630B355004DBADA /* edit_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "edit_button@2x.png"; sourceTree = "<group>"; };
 		833DB53D1494164F00509F2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		834E5001149418D400EABD6E /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
@@ -720,6 +728,10 @@
 				4C2DD65E159CD14100A74526 /* topic_cell_background.png */,
 				4C02E272162389CF0010F06C /* home_button.png */,
 				4C02E273162389CF0010F06C /* home_button@2x.png */,
+				830ECE591630B353004DBADA /* done_button.png */,
+				830ECE5A1630B353004DBADA /* done_button@2x.png */,
+				830ECE5B1630B354004DBADA /* edit_button.png */,
+				830ECE5C1630B355004DBADA /* edit_button@2x.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -1472,6 +1484,10 @@
 				4C02E2E21623C9F70010F06C /* bg_divider@2x.png in Resources */,
 				830ECE541630A28F004DBADA /* cancel_1.png in Resources */,
 				830ECE561630A787004DBADA /* cancel_1@2x.png in Resources */,
+				830ECE5D1630B356004DBADA /* done_button.png in Resources */,
+				830ECE5E1630B356004DBADA /* done_button@2x.png in Resources */,
+				830ECE5F1630B356004DBADA /* edit_button.png in Resources */,
+				830ECE601630B356004DBADA /* edit_button@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
