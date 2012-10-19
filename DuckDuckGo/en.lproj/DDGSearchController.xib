@@ -3,12 +3,12 @@
 	<data>
 		<int key="IBDocument.SystemTarget">1536</int>
 		<string key="IBDocument.SystemVersion">12C60</string>
-		<string key="IBDocument.InterfaceBuilderVersion">2840</string>
+		<string key="IBDocument.InterfaceBuilderVersion">2843</string>
 		<string key="IBDocument.AppKitVersion">1187.34</string>
 		<string key="IBDocument.HIToolboxVersion">625.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-			<string key="NS.object.0">1926</string>
+			<string key="NS.object.0">1929</string>
 		</object>
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
@@ -43,7 +43,6 @@
 						<string key="NSFrame">{{0, 44}, {320, 416}}</string>
 						<reference key="NSSuperview" ref="398799709"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:196</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -180,7 +179,7 @@
 					<object class="IBUIButton" id="99062334">
 						<reference key="NSNextResponder" ref="398799709"/>
 						<int key="NSvFlags">289</int>
-						<string key="NSFrame">{{320, 6}, {57, 32}}</string>
+						<string key="NSFrame">{{320, 6}, {57, 33}}</string>
 						<reference key="NSSuperview" ref="398799709"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="479174929"/>
@@ -487,11 +486,11 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="cancel_1.png">{57, 32}</string>
+			<string key="cancel_1.png">{57, 33}</string>
 			<string key="header_tile.png">{1, 46}</string>
 			<string key="share-click.png">{40, 35}</string>
 			<string key="share.png">{40, 35}</string>
 		</dictionary>
-		<string key="IBCocoaTouchPluginVersion">1926</string>
+		<string key="IBCocoaTouchPluginVersion">1929</string>
 	</data>
 </archive>
