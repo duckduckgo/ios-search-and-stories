@@ -30,6 +30,7 @@
 	[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateSelected];
 	[button addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
 	button.frame = CGRectMake(0, 0, 57, 32);
+	button.hidden = ![DDGBookmarksProvider sharedProvider].bookmarks.count;
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 }
 
@@ -59,8 +60,11 @@
     return 1;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [DDGBookmarksProvider sharedProvider].bookmarks.count;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+	NSInteger count = [DDGBookmarksProvider sharedProvider].bookmarks.count;
+	((UIButton*)self.navigationItem.rightBarButtonItem.customView).hidden = !count;
+    return count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
