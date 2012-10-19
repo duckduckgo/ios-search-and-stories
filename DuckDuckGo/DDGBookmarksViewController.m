@@ -17,13 +17,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"Saved";
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
     button.frame = CGRectMake(0, 0, 31, 31);
     [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+
+	button = [UIButton buttonWithType:UIButtonTypeCustom];
+	
+	[button setImage:[UIImage imageNamed:@"edit_button.png"] forState:UIControlStateNormal];
+	[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateSelected];
+	[button addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
+	button.frame = CGRectMake(0, 0, 57, 32);
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -33,6 +40,13 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void)editAction:(UIButton*)button
+{
+	BOOL edit = !button.selected;
+	button.selected = edit;
+	[self.tableView setEditing:edit animated:YES];
 }
 
 -(void)leftButtonPressed {

@@ -27,8 +27,15 @@
                                                                                               target:self
                                                                                               action:@selector(dismissButtonPressed)];
     }
-    self.navigationItem.rightBarButtonItem = self.editButtonItem;
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+	
+	[button setImage:[UIImage imageNamed:@"edit_button.png"] forState:UIControlStateNormal];
+	[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateSelected];
+	[button addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
+	button.frame = CGRectMake(0, 0, 57, 32);
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 }
+
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -37,6 +44,13 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return IPAD || (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void)editAction:(UIButton*)button
+{
+	BOOL edit = !button.selected;
+	button.selected = edit;
+	[self.tableView setEditing:edit animated:YES];
 }
 
 -(void)dismissButtonPressed {
