@@ -186,10 +186,6 @@
     
     if(_state == DDGSearchControllerStateHome) {
         [_leftButton setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
-        
-        CGRect f = _leftButton.frame;
-        f.origin.y = _leftButton.frame.origin.y - 1;
-        _leftButton.frame = f;
     } else if (_state == DDGSearchControllerStateWeb) {
         [_leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
 
@@ -411,12 +407,12 @@
     CGFloat direction = (show ? 1 : -1);
     
     CGRect f = _leftButton.frame;
-    f.origin.x += direction*(_leftButton.frame.size.width - 7);
+    f.origin.x += direction*(_leftButton.frame.size.width + 6);
     _leftButton.frame = f;
     
     CGRect searchFieldFrame = _searchField.frame;
-    searchFieldFrame.origin.x += direction*(_leftButton.frame.size.width - 7);
-    searchFieldFrame.size.width -= direction*(_leftButton.frame.size.width - 7);
+    searchFieldFrame.origin.x += direction*(_leftButton.frame.size.width + 6);
+    searchFieldFrame.size.width -= direction*(_leftButton.frame.size.width + 6);
     
     return searchFieldFrame;
 }
