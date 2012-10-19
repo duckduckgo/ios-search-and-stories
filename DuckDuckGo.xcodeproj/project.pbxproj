@@ -979,6 +979,14 @@
 				834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */,
 				834E5001149418D400EABD6E /* Twitter.framework */,
 				833DB53D1494164F00509F2E /* Foundation.framework */,
+				4C3BF10B15C4A4A700EEA7BF /* CoreFoundation.framework */,
+				4C3BF10915C4A49000EEA7BF /* CoreLocation.framework */,
+				4C3BF10715C4A48200EEA7BF /* CFNetwork.framework */,
+				4C3BF0DF15C4A01B00EEA7BF /* Security.framework */,
+				4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */,
+				4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */,
+				4CF9ED56154DFC460075C23E /* MessageUI.framework */,
+				4C1EF85D150C048A00532858 /* QuartzCore.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -996,14 +1004,6 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
-				4C3BF10B15C4A4A700EEA7BF /* CoreFoundation.framework */,
-				4C3BF10915C4A49000EEA7BF /* CoreLocation.framework */,
-				4C3BF10715C4A48200EEA7BF /* CFNetwork.framework */,
-				4C3BF0DF15C4A01B00EEA7BF /* Security.framework */,
-				4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */,
-				4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */,
-				4CF9ED56154DFC460075C23E /* MessageUI.framework */,
-				4C1EF85D150C048A00532858 /* QuartzCore.framework */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */,
 				4CFA1A9114DDB73C00DF52FE /* NoARC */,
