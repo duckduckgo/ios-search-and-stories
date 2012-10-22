@@ -12,7 +12,6 @@
 @interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate> {
     BOOL viewsInitialized;
     NSString *queryOrURLToLoad;
-    NSURL *webViewURL;
     
     NSUInteger webViewLoadingDepth;
     NSUInteger webViewLoadEvents;
@@ -21,6 +20,7 @@
 @property(nonatomic, strong) IBOutlet UIWebView *webView;
 @property(nonatomic, strong) IBOutlet DDGSearchController *searchController;
 @property(nonatomic, strong) NSDictionary *params;
+@property(nonatomic, strong) NSURL *webViewURL;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString;
 

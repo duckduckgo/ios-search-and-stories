@@ -50,6 +50,11 @@
 
 - (void)dealloc
 {
+	_webView.delegate = nil;
+	[_webView stopLoading];
+	
+	self.webViewURL = nil;
+	
 	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
@@ -75,7 +80,7 @@
 #pragma mark - Action sheet
 
 -(void)searchControllerActionButtonPressed {
-    BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:webViewURL];
+    BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
                                                     cancelButtonTitle:@"Cancel"
@@ -93,19 +98,19 @@
     if(buttonIndex == 0) {
         // bookmark/unbookmark
                 
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:webViewURL];
+        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
         if(bookmarked)
-            [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:webViewURL];
+            [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:_webViewURL];
         else
-            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:pageTitle URL:webViewURL];
+            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:pageTitle URL:_webViewURL];
     
         [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unsaved!" : @"Saved!")];
     } else if(buttonIndex == 1) {
         // share
         
         // strip extra params from DDG search URLs
-        NSURL *shareURL = webViewURL;
-        NSString *query = [_searchController queryFromDDGURL:webViewURL];
+        NSURL *shareURL = _webViewURL;
+        NSString *query = [_searchController queryFromDDGURL:_webViewURL];
         if(query) {
             query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
@@ -150,7 +155,7 @@
         NSURL *url = [NSURL URLWithString:urlString];
         [_webView loadRequest:[NSURLRequest requestWithURL:url]];
         [_searchController updateBarWithURL:url];
-        webViewURL = url;
+        self.webViewURL = url;
     }
 }
 
@@ -174,7 +179,7 @@
 
     if([request.URL isEqual:request.mainDocumentURL]) {
         [_searchController updateBarWithURL:request.URL];
-        webViewURL = request.URL;
+        self.webViewURL = request.URL;
     }
     return YES;
 }
