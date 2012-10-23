@@ -6,6 +6,8 @@
 //
 //
 
+#import <QuartzCore/QuartzCore.h>
+
 #import "DDGAutocompleteViewController.h"
 #import "DDGAutocompleteTableView.h"
 #import "DDGSearchController.h"
@@ -45,6 +47,12 @@ static NSString *historyCellID = @"HCell";
     }];
 }
 
+- (void)viewDidDisappear:(BOOL)animated
+{
+	[super viewDidDisappear:animated];
+	cacheHistoryCount = cacheSearchSuggestionsCount = 0;
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
@@ -61,12 +69,15 @@ static NSString *historyCellID = @"HCell";
         return;
     }
     
-	if(newSearchText.length) {
+	if (newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
         [[DDGSearchSuggestionsProvider sharedProvider] downloadSuggestionsForSearchText:newSearchText success:^{
             [self.tableView reloadData];
         }];
-	} else {
+	}
+	else
+	{
+		cacheHistoryCount = cacheSearchSuggestionsCount = 0;
         // search text is blank; clear the suggestions cache, reload, and hide the table
         [[DDGSearchSuggestionsProvider sharedProvider] emptyCache];
     }
@@ -84,36 +95,92 @@ static NSString *historyCellID = @"HCell";
     return 2;
 }
 
--(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    // empty sections shouldn't have headers
-    if(![self tableView:tableView numberOfRowsInSection:section])
-        return nil;
-    
-    switch (section) {
+- (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+	if (!section && !cacheHistoryCount)
+		return nil;
+	if (section == 1 && !cacheSearchSuggestionsCount)
+		return nil;
+
+	UILabel *hv = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 24)];
+	
+	hv.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"section_tile.png"]];
+	hv.textColor = [UIColor  colorWithRed:0x77/255.0 green:0x74/255.0 blue:0x7E/255.0 alpha:1.0];
+	hv.shadowColor = [UIColor whiteColor];
+	hv.shadowOffset = CGSizeMake(0.5, 0.5);
+	hv.font = [UIFont boldSystemFontOfSize:14.0];
+	hv.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+
+	switch (section)
+	{
         case 0: // return "History" if there's stuff in the section, nil otherwise
-            if([self tableView:tableView numberOfRowsInSection:section])
-                return @"History";
-            else
-                return nil;
+            if (cacheHistoryCount)
+                hv.text = @" History";
+			break;
+			
         case 1: // return "Suggestions" if there's stuff in the section AND there's a history section, nil otherwise
-            if([self tableView:tableView numberOfRowsInSection:section] && [self tableView:tableView numberOfRowsInSection:0])
-                return @"Suggestions";
-            else
-                return nil;
-        default:
-            return nil;
+            if (cacheSearchSuggestionsCount && cacheHistoryCount)
+                hv.text = @" Suggestions";
+			break;
     }
+	return hv;
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    switch (section) {
+//-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+//    // empty sections shouldn't have headers
+//    if(![self tableView:tableView numberOfRowsInSection:section])
+//        return nil;
+//    
+//    switch (section) {
+//        case 0: // return "History" if there's stuff in the section, nil otherwise
+//            if([self tableView:tableView numberOfRowsInSection:section])
+//                return @"History";
+//            else
+//                return nil;
+//        case 1: // return "Suggestions" if there's stuff in the section AND there's a history section, nil otherwise
+//            if([self tableView:tableView numberOfRowsInSection:section] && [self tableView:tableView numberOfRowsInSection:0])
+//                return @"Suggestions";
+//            else
+//                return nil;
+//        default:
+//            return nil;
+//    }
+//}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+	if (!section && cacheHistoryCount)
+		return 24.0;
+	if (section == 1 && cacheSearchSuggestionsCount)
+		return 24.0;
+	
+	return 0.0;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    switch (section)
+	{
         case 0:
-            return [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
+            cacheHistoryCount = [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
+			break;
         case 1:
-            return [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count;
-        default:
-            return 0;
+            cacheSearchSuggestionsCount = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count;
+			break;
     }
+	if (cacheHistoryCount || cacheSearchSuggestionsCount)
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+	else
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+	
+    switch (section)
+	{
+        case 0:
+			return cacheHistoryCount;
+        case 1:
+			return cacheSearchSuggestionsCount;
+    }
+	return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -123,7 +190,7 @@ static NSString *historyCellID = @"HCell";
         cell = [tv dequeueReusableCellWithIdentifier:historyCellID];
         if(!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:historyCellID];
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:16.0];
             cell.textLabel.textColor = [UIColor darkGrayColor];
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
             cell.backgroundView = [[UIView alloc] init];
@@ -135,25 +202,40 @@ static NSString *historyCellID = @"HCell";
         
         cell.textLabel.text = [historyItem objectForKey:@"text"];
         
-    } else if(indexPath.section == 1) {
+    }
+	else if(indexPath.section == 1)
+	{
         cell = [tv dequeueReusableCellWithIdentifier:suggestionCellID];
         UIImageView *iv;
-        if(!cell) {
+        if(!cell)
+		{
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:suggestionCellID];
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:15.0];
-            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.textLabel.font = [UIFont boldSystemFontOfSize:16.0];
+            cell.textLabel.textColor = [UIColor  colorWithRed:0x54/255.0 green:0x59/255.0 blue:0x5F/255.0 alpha:1.0];
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
-            cell.imageView.image = [UIImage imageNamed:@"spacer44x44.png"];
+            cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
+			
+			cell.detailTextLabel.numberOfLines = 2;
+			cell.detailTextLabel.textColor = [UIColor colorWithRed:0x7C/255.0 green:0x85/255.0 blue:0x94/255.0 alpha:1.0];
+			
             cell.backgroundView = [[UIView alloc] init];
             [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
             
-            iv = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 44.0, 44.0)];
+            iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 53, 53)];
             iv.tag = 100;
             iv.contentMode = UIViewContentModeScaleAspectFill;
             iv.clipsToBounds = YES;
             iv.backgroundColor = [UIColor whiteColor];
+
+			CALayer *layer = iv.layer;
+			layer.borderWidth = 0.5;
+			layer.borderColor = [UIColor lightGrayColor].CGColor;
+			layer.cornerRadius = 5.0;
+			
             [cell.contentView addSubview:iv];
-        } else {
+        }
+		else
+		{
             iv = (UIImageView *)[cell.contentView viewWithTag:100];
         }
         
@@ -183,7 +265,23 @@ static NSString *historyCellID = @"HCell";
     return cell;
 }
 
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (!indexPath.section)
+		return 44.0;
+	return 62.0;
+}
+
 #pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (indexPath.section == 1)
+	{
+		UIView *iv = [cell.contentView viewWithTag:100];
+		iv.center = cell.imageView.center;
+	}
+}
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     if(indexPath.section == 0) {
