@@ -12,8 +12,6 @@
 
 @interface DDGAutocompleteViewController : UITableViewController
 {
-	NSInteger		cacheHistoryCount;
-	NSInteger		cacheSearchSuggestionsCount;
 }
 
 -(void)searchFieldDidChange:(id)sender;

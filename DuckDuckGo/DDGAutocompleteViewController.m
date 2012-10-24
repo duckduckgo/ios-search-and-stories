@@ -17,9 +17,13 @@
 #import "DDGTier2ViewController.h"
 
 @implementation DDGAutocompleteViewController
+
 static NSString *bookmarksCellID = @"BCell";
 static NSString *suggestionCellID = @"SCell";
 static NSString *historyCellID = @"HCell";
+
+#define kCellHeightHistory			44.0
+#define kCellHeightSuggestions		62.0
 
 -(void)viewDidLoad {
     [super viewDidLoad];
@@ -33,7 +37,7 @@ static NSString *historyCellID = @"HCell";
     
     self.clearsSelectionOnViewWillAppear = YES;
     self.tableView.backgroundColor = [UIColor clearColor];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.tableView.scrollsToTop = NO;
 }
@@ -45,12 +49,6 @@ static NSString *historyCellID = @"HCell";
     [[DDGSearchSuggestionsProvider sharedProvider] downloadSuggestionsForSearchText:self.searchController.searchField.text success:^{
         [self.tableView reloadData];
     }];
-}
-
-- (void)viewDidDisappear:(BOOL)animated
-{
-	[super viewDidDisappear:animated];
-	cacheHistoryCount = cacheSearchSuggestionsCount = 0;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -77,7 +75,6 @@ static NSString *historyCellID = @"HCell";
 	}
 	else
 	{
-		cacheHistoryCount = cacheSearchSuggestionsCount = 0;
         // search text is blank; clear the suggestions cache, reload, and hide the table
         [[DDGSearchSuggestionsProvider sharedProvider] emptyCache];
     }
@@ -97,61 +94,32 @@ static NSString *historyCellID = @"HCell";
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-	if (!section && !cacheHistoryCount)
+	if (!section && ![[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
 		return nil;
-	if (section == 1 && !cacheSearchSuggestionsCount)
+	else if (section == 1 && ![[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count)
 		return nil;
 
-	UILabel *hv = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 320, 24)];
+	UILabel *hv = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 24.0)];
 	
 	hv.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"section_tile.png"]];
 	hv.textColor = [UIColor  colorWithRed:0x77/255.0 green:0x74/255.0 blue:0x7E/255.0 alpha:1.0];
 	hv.shadowColor = [UIColor whiteColor];
 	hv.shadowOffset = CGSizeMake(0.5, 0.5);
 	hv.font = [UIFont boldSystemFontOfSize:14.0];
-	hv.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+	hv.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
-	switch (section)
-	{
-        case 0: // return "History" if there's stuff in the section, nil otherwise
-            if (cacheHistoryCount)
-                hv.text = @" History";
-			break;
-			
-        case 1: // return "Suggestions" if there's stuff in the section AND there's a history section, nil otherwise
-            if (cacheSearchSuggestionsCount && cacheHistoryCount)
-                hv.text = @" Suggestions";
-			break;
-    }
+	if (!section)
+		hv.text = @" History";
+	else
+		hv.text = @" Suggestions";
 	return hv;
 }
 
-//-(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-//    // empty sections shouldn't have headers
-//    if(![self tableView:tableView numberOfRowsInSection:section])
-//        return nil;
-//    
-//    switch (section) {
-//        case 0: // return "History" if there's stuff in the section, nil otherwise
-//            if([self tableView:tableView numberOfRowsInSection:section])
-//                return @"History";
-//            else
-//                return nil;
-//        case 1: // return "Suggestions" if there's stuff in the section AND there's a history section, nil otherwise
-//            if([self tableView:tableView numberOfRowsInSection:section] && [self tableView:tableView numberOfRowsInSection:0])
-//                return @"Suggestions";
-//            else
-//                return nil;
-//        default:
-//            return nil;
-//    }
-//}
-
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-	if (!section && cacheHistoryCount)
+	if (!section && [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
 		return 24.0;
-	if (section == 1 && cacheSearchSuggestionsCount)
+	if (section == 1 && [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count)
 		return 24.0;
 	
 	return 0.0;
@@ -162,28 +130,15 @@ static NSString *historyCellID = @"HCell";
     switch (section)
 	{
         case 0:
-            cacheHistoryCount = [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
-			break;
+            return [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
         case 1:
-            cacheSearchSuggestionsCount = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count;
-			break;
-    }
-	if (cacheHistoryCount || cacheSearchSuggestionsCount)
-		self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
-	else
-		self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-	
-    switch (section)
-	{
-        case 0:
-			return cacheHistoryCount;
-        case 1:
-			return cacheSearchSuggestionsCount;
+            return [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count;
     }
 	return 0;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
     UITableViewCell *cell;
     
     if(indexPath.section == 0) {
@@ -195,6 +150,12 @@ static NSString *historyCellID = @"HCell";
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
             cell.backgroundView = [[UIView alloc] init];
             [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
+
+			// self contained separator lines
+			UIView *separatorLine = [[UIView alloc] initWithFrame:CGRectMake(0, kCellHeightHistory, tv.frame.size.width, 1.0)];
+			separatorLine.clipsToBounds = YES;
+			separatorLine.backgroundColor = [UIColor lightGrayColor];
+			[cell.contentView addSubview:separatorLine];
         }
         
         NSArray *history = [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
@@ -233,6 +194,13 @@ static NSString *historyCellID = @"HCell";
 			layer.cornerRadius = 5.0;
 			
             [cell.contentView addSubview:iv];
+			
+			// self contained separator lines
+			UIView *separatorLine = [[UIView alloc] initWithFrame:CGRectMake(0, kCellHeightSuggestions, tv.frame.size.width, 1.0)];
+			separatorLine.clipsToBounds = YES;
+			separatorLine.backgroundColor = [UIColor lightGrayColor];
+			separatorLine.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+			[cell.contentView addSubview:separatorLine];
         }
 		else
 		{
@@ -267,9 +235,12 @@ static NSString *historyCellID = @"HCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (!indexPath.section)
-		return 44.0;
-	return 62.0;
+	if (!indexPath.section && [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
+		return kCellHeightHistory+1;
+	else if (indexPath.section == 1 && [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count)
+		return kCellHeightSuggestions+1;
+
+	return 0.0;
 }
 
 #pragma mark - Table view delegate
