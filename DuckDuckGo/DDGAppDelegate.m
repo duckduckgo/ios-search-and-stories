@@ -46,9 +46,12 @@ static void uncaughtExceptionHandler(NSException *exception) {
     slidingViewController.topViewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
 
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"header_tile.png"] forBarMetrics:UIBarMetricsDefault];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{UITextAttributeTextColor : [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0], UITextAttributeTextShadowOffset : [NSValue valueWithUIOffset:UIOffsetMake(0, 1)]}];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0],
+														UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
+														UITextAttributeTextShadowColor : [UIColor whiteColor]
+	 }];
     [[UINavigationBar appearance] setTintColor:[UIColor lightGrayColor]];
-    
+	
     return YES;
 }
 
