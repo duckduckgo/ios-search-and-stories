@@ -67,14 +67,15 @@ static DDGHistoryProvider *sharedInstance;
     
     NSMutableArray *results = [[NSMutableArray alloc] init];
     
-    for(NSDictionary *historyItem in history) {
-        
+    for(NSDictionary *historyItem in history)
+	{
         NSString *text = [historyItem objectForKey:@"text"];
-        if([text hasPrefix:prefix] ||
-           [text hasPrefix:[@"http://" stringByAppendingString:prefix]] ||
-           [text hasPrefix:[@"https://" stringByAppendingString:prefix]] ||
-           [text hasPrefix:[@"http://www." stringByAppendingString:prefix]] ||
-           [text hasPrefix:[@"https://www." stringByAppendingString:prefix]]
+		// be case insensitive when comparing search strings (and not URL's)
+        if ([[text lowercaseString] hasPrefix:[prefix lowercaseString]]			||
+			[text hasPrefix:[@"http://" stringByAppendingString:prefix]]		||
+			[text hasPrefix:[@"https://" stringByAppendingString:prefix]]		||
+			[text hasPrefix:[@"http://www." stringByAppendingString:prefix]]	||
+			[text hasPrefix:[@"https://www." stringByAppendingString:prefix]]
            )
             [results addObject:historyItem];
     }
