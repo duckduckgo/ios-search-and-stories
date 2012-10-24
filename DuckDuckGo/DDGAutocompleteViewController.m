@@ -218,9 +218,15 @@ static NSString *historyCellID = @"HCell";
         cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
         
         if([suggestionItem objectForKey:@"image"])
+		{
             [iv setImageWithURL:[NSURL URLWithString:[suggestionItem objectForKey:@"image"]]];
+			iv.hidden = NO;
+		}
         else
+		{
             [iv setImage:nil]; // wipe out any image that used to be there
+			iv.hidden = YES;
+		}
         
         if([suggestionItem objectForKey:@"calls"] && [[suggestionItem objectForKey:@"calls"] count])
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
