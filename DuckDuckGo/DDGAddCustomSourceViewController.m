@@ -13,7 +13,9 @@
 
 -(void)configure {
     self.title = @"Add Source";
-    
+
+	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
+
     [self addTextField:@"News keyword"];
 }
 

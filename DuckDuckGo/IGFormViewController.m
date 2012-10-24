@@ -44,7 +44,8 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-	
+	self.tableView.backgroundColor = nil;
+	self.tableView.backgroundView = nil;
 	[self configure]; // let the subclass set up form data
 	
 	self.tableView.showsVerticalScrollIndicator = YES;

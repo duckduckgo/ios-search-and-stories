@@ -97,15 +97,39 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(!cell) {
+    if(!cell)
+	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.textLabel.textColor = [UIColor whiteColor];
     }
     
-    if(indexPath.section == 0) {
+    if(indexPath.section == 0)
+	{
         cell.textLabel.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
-    } else {
+		switch (indexPath.row)
+		{
+			case 0:
+			{
+				cell.imageView.image = [UIImage imageNamed:@"icon_home.png"];
+			}
+				break;
+			case 1:
+			{
+				cell.imageView.image = [UIImage imageNamed:@"icon_saved-pages.png"];
+			}
+				break;
+			case 2:
+			{
+				cell.imageView.image = [UIImage imageNamed:@"icon_settings.png"];
+			}
+				break;
+				
+		}
+    }
+	else
+	{
         cell.textLabel.text = [[[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row] objectForKey:@"text"];
+		cell.imageView.image = nil;
     }
     
     // cell separator
@@ -138,8 +162,8 @@
     [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
     
     if(section == 1) {
-        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 23)];
-        title.text = @"Recent";
+        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
+        title.text = @"History";
         title.textColor = [UIColor whiteColor];
         title.opaque = NO;
         title.backgroundColor = [UIColor clearColor];
