@@ -99,7 +99,7 @@ static NSString *historyCellID = @"HCell";
 	else if (section == 1 && ![[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count)
 		return nil;
 
-	UILabel *hv = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 24.0)];
+	UILabel *hv = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 23.0)];
 	
 	hv.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"section_tile.png"]];
 	hv.textColor = [UIColor  colorWithRed:0x77/255.0 green:0x74/255.0 blue:0x7E/255.0 alpha:1.0];
@@ -118,9 +118,9 @@ static NSString *historyCellID = @"HCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
 	if (!section && [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
-		return 24.0;
+		return 23.0;
 	if (section == 1 && [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count)
-		return 24.0;
+		return 23.0;
 	
 	return 0.0;
 }
@@ -140,6 +140,7 @@ static NSString *historyCellID = @"HCell";
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
+	BOOL lineHidden;
     
     if(indexPath.section == 0) {
         cell = [tv dequeueReusableCellWithIdentifier:historyCellID];
@@ -155,6 +156,7 @@ static NSString *historyCellID = @"HCell";
 			UIView *separatorLine = [[UIView alloc] initWithFrame:CGRectMake(0, kCellHeightHistory, tv.frame.size.width, 1.0)];
 			separatorLine.clipsToBounds = YES;
 			separatorLine.backgroundColor = [UIColor lightGrayColor];
+			separatorLine.tag = 200;
 			[cell.contentView addSubview:separatorLine];
         }
         
@@ -163,6 +165,7 @@ static NSString *historyCellID = @"HCell";
         
         cell.textLabel.text = [historyItem objectForKey:@"text"];
         
+		lineHidden = (indexPath.row == [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count - 1) ? YES : NO;
     }
 	else if(indexPath.section == 1)
 	{
@@ -200,13 +203,16 @@ static NSString *historyCellID = @"HCell";
 			separatorLine.clipsToBounds = YES;
 			separatorLine.backgroundColor = [UIColor lightGrayColor];
 			separatorLine.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
+			separatorLine.tag = 200;
 			[cell.contentView addSubview:separatorLine];
         }
 		else
 		{
             iv = (UIImageView *)[cell.contentView viewWithTag:100];
         }
-        
+		
+		lineHidden = (indexPath.row == [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count - 1) ? YES : NO;
+
         NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
 
         // the tableview sometimes requests rows that don't exist. in this case the table's reloading anyway so just return whatever and don't crash.
@@ -232,9 +238,9 @@ static NSString *historyCellID = @"HCell";
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
         else
             cell.accessoryType = UITableViewCellAccessoryNone;
-
-        
     }
+	
+	[cell.contentView viewWithTag:200].hidden = lineHidden;
     
     return cell;
 }
