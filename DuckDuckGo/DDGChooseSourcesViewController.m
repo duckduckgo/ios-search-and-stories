@@ -19,9 +19,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.title = @"Water Cooler";
-    self.tableView.allowsSelectionDuringEditing = YES;
+	self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
+	self.tableView.allowsSelectionDuringEditing = YES;
+    self.title = @"Water Cooler";
     if(self.navigationController.viewControllers.count == 1) {
         // we're the only view controller, so there won't be a back button to get out, so we need a different exit button
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
