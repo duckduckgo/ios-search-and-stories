@@ -11,12 +11,19 @@
 
 @implementation DDGAddCustomSourceViewController
 
--(void)configure {
+-(void)configure
+{
     self.title = @"Add Source";
 
 	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 
     [self addTextField:@"News keyword"];
+	
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+	[button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+	button.frame = CGRectMake(0, 0, 36, 31);
+	[button addTarget:self action:@selector(backButtonpressed) forControlEvents:UIControlEventTouchUpInside];
+	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 }
 
 -(NSString *)validateData:(NSDictionary *)formData {
@@ -28,6 +35,11 @@
 
 -(void)saveData:(NSDictionary *)formData {
     [[DDGNewsProvider sharedProvider] addCustomSource:[formData objectForKey:@"News keyword"]];
+}
+
+-(void)backButtonpressed
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 @end

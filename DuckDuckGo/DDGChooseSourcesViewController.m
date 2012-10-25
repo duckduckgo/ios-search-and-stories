@@ -1,5 +1,5 @@
 //
-//  DDGNewsSourcesViewController.m
+//  DDGChooseSourcesViewController.m
 //  DuckDuckGo
 //
 //  Created by Ishaan Gulrajani on 7/19/12.
@@ -23,13 +23,23 @@
 	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 	self.tableView.allowsSelectionDuringEditing = YES;
     self.title = @"Water Cooler";
-    if(self.navigationController.viewControllers.count == 1) {
+	UIButton *button;
+    if (self.navigationController.viewControllers.count == 1)
+	{
         // we're the only view controller, so there won't be a back button to get out, so we need a different exit button
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                                               target:self
                                                                                               action:@selector(dismissButtonPressed)];
     }
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+	else
+	{
+		button = [UIButton buttonWithType:UIButtonTypeCustom];
+		[button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+		button.frame = CGRectMake(0, 0, 36, 31);
+		[button addTarget:self action:@selector(backButtonpressed) forControlEvents:UIControlEventTouchUpInside];
+		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+	}
+	button = [UIButton buttonWithType:UIButtonTypeCustom];
 	
 	[button setImage:[UIImage imageNamed:@"edit_button.png"] forState:UIControlStateNormal];
 	[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateSelected];
@@ -57,6 +67,11 @@
 
 -(void)dismissButtonPressed {
     [self dismissModalViewControllerAnimated:YES];
+}
+
+-(void)backButtonpressed
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark - Adding custom news sources
