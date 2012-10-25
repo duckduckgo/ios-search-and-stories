@@ -404,6 +404,7 @@
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
     cell.textLabel.text = @"";
     cell.textLabel.textAlignment = UITextAlignmentLeft;
+    cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
     cell.accessoryType = UITableViewCellAccessoryNone;
     cell.accessoryView = nil;
     

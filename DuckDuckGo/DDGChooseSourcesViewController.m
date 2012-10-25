@@ -125,24 +125,29 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
                 cell.textLabel.text = @"Add custom source";
                 cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
             }
             return cell;
         } else {
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CustomSourceCellIdentifier];
             if(!cell)
+			{
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CustomSourceCellIdentifier];
-            
+				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
+            }
             cell.textLabel.text = [[DDGNewsProvider sharedProvider].customSources objectAtIndex:indexPath.row-1];
             return cell;
         }
     } else {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
-        if(!cell) {
+        if(!cell)
+		{
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
             
             // keep using the default imageview for layout/spacing purposes, but use our own one for displaying the image
             cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
             cell.imageView.alpha = 0;
+			cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 34, 34)];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.tag = 100;
