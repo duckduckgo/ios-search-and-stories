@@ -106,24 +106,25 @@
     if(indexPath.section == 0)
 	{
         cell.textLabel.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
+		cell.textLabel.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
+		cell.backgroundColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		switch (indexPath.row)
 		{
 			case 0:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"icon_home.png"];
+				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
 			}
 				break;
 			case 1:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"icon_saved-pages.png"];
+				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
 			}
 				break;
 			case 2:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"icon_settings.png"];
+				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
 			}
 				break;
-				
 		}
     }
 	else
@@ -177,10 +178,13 @@
 
 #pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
-        if(indexPath.section == 0) {
-            UIViewController *newTopViewController = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"viewController"];
+        if(indexPath.section == 0)
+		{
+			menuIndex = indexPath.row;
+            UIViewController *newTopViewController = [[viewControllers objectAtIndex:menuIndex] objectForKey:@"viewController"];
             
             CGRect frame = self.slidingViewController.topViewController.view.frame;
             self.slidingViewController.topViewController = newTopViewController;
@@ -188,7 +192,9 @@
             [self.slidingViewController resetTopView];
             
             [self configureViewController:newTopViewController];
-        } else if(indexPath.section == 1) {
+        }
+		else if(indexPath.section == 1)
+		{
             [self loadQueryOrURL:[[[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row] objectForKey:@"text"]];
             [self.slidingViewController resetTopView];
         }

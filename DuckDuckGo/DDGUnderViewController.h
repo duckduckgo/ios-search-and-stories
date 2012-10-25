@@ -9,10 +9,14 @@
 #import <UIKit/UIKit.h>
 
 @class DDGHomeViewController, DDGSettingsViewController;
-@interface DDGUnderViewController : UITableViewController {
-    NSMutableArray *viewControllers;
-    UIViewController *_homeViewController;
+
+@interface DDGUnderViewController : UITableViewController
+{
+    NSMutableArray		*viewControllers;
+    UIViewController	*_homeViewController;
+	NSInteger			menuIndex;
 }
+
 @property(nonatomic,strong) UIViewController *homeViewController;
 
 -(id)initWithHomeViewController:(UIViewController *)homeViewController;
