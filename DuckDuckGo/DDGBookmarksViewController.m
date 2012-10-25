@@ -29,7 +29,7 @@
 	[button setImage:[UIImage imageNamed:@"edit_button.png"] forState:UIControlStateNormal];
 	[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateSelected];
 	[button addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
-	button.frame = CGRectMake(0, 0, 57, 32);
+	button.frame = CGRectMake(0, 0, 58, 33);
 	button.hidden = ![DDGBookmarksProvider sharedProvider].bookmarks.count;
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 }
