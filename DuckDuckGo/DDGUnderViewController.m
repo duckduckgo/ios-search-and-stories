@@ -183,6 +183,27 @@
 
 
 #pragma mark - Table view delegate
+- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (!indexPath.section)
+	{
+		UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
+		switch (indexPath.row)
+		{
+			case 0:
+				cell.imageView.image = [UIImage imageNamed:@"icon_home_selected.png"];
+				break;
+			case 1:
+				cell.imageView.image = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
+				break;
+			case 2:
+				cell.imageView.image = [UIImage imageNamed:@"icon_settings_selected.png"];
+				break;
+		}
+	}
+	return indexPath;
+}
+
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
