@@ -51,6 +51,7 @@
 		4C1D95E8163F3D2100F7A0B9 /* bg_home-bar@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1D95E2163F3D2100F7A0B9 /* bg_home-bar@2x.png */; };
 		4C1D95E9163F3D2100F7A0B9 /* bg_home-bar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1D95E3163F3D2100F7A0B9 /* bg_home-bar.png */; };
 		4C1D95EA163F3D2100F7A0B9 /* bg_menu-items.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1D95E4163F3D2100F7A0B9 /* bg_menu-items.png */; };
+		4C1D95EC163F3F0300F7A0B9 /* settings_bg_tile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C1D95EB163F3F0300F7A0B9 /* settings_bg_tile@2x.png */; };
 		4C1EF85B150C043D00532858 /* EGORefreshTableHeaderView.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */; };
 		4C1EF85C150C043D00532858 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */; };
 		4C1EF85E150C048B00532858 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C1EF85D150C048A00532858 /* QuartzCore.framework */; };
@@ -503,6 +504,7 @@
 		4C1D95E2163F3D2100F7A0B9 /* bg_home-bar@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_home-bar@2x.png"; sourceTree = "<group>"; };
 		4C1D95E3163F3D2100F7A0B9 /* bg_home-bar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_home-bar.png"; sourceTree = "<group>"; };
 		4C1D95E4163F3D2100F7A0B9 /* bg_menu-items.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_menu-items.png"; sourceTree = "<group>"; };
+		4C1D95EB163F3F0300F7A0B9 /* settings_bg_tile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "settings_bg_tile@2x.png"; sourceTree = "<group>"; };
 		4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EGORefreshTableHeaderView.h; sourceTree = "<group>"; };
 		4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EGORefreshTableHeaderView.m; sourceTree = "<group>"; };
 		4C1EF85D150C048A00532858 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -723,6 +725,7 @@
 			isa = PBXGroup;
 			children = (
 				83864C5A163865A700F66AAA /* settings_bg_tile.png */,
+				4C1D95EB163F3F0300F7A0B9 /* settings_bg_tile@2x.png */,
 				83CAD03C16397F8C0030C4FC /* icon_caret_onclick.png */,
 				83CAD03D16397F8C0030C4FC /* icon_caret_onclick@2x.png */,
 				83CAD03E16397F8D0030C4FC /* icon_caret.png */,
@@ -1592,6 +1595,7 @@
 				4C1D95E8163F3D2100F7A0B9 /* bg_home-bar@2x.png in Resources */,
 				4C1D95E9163F3D2100F7A0B9 /* bg_home-bar.png in Resources */,
 				4C1D95EA163F3D2100F7A0B9 /* bg_menu-items.png in Resources */,
+				4C1D95EC163F3F0300F7A0B9 /* settings_bg_tile@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
