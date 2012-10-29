@@ -101,6 +101,23 @@
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.textLabel.textColor = [UIColor whiteColor];
+        
+        // cell separator
+        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                    cell.contentView.bounds.size.height-1.0f,
+                                                                    cell.contentView.bounds.size.width,
+                                                                    1.0f)];
+        lineView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+        lineView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.25];
+        [cell.contentView addSubview:lineView];
+        
+        UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
+                                                                     0.0f,
+                                                                     cell.contentView.bounds.size.width,
+                                                                     1.0f)];
+        lineView2.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
+        lineView2.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.03];
+        [cell.contentView addSubview:lineView2];
     }
     
     if(indexPath.section == 0)
@@ -138,24 +155,6 @@
 		cell.accessoryView = nil;
     }
 	cell.textLabel.backgroundColor = cell.contentView.backgroundColor;
-    
-    // cell separator
-    UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                cell.contentView.bounds.size.height-1.0f,
-                                                                cell.contentView.bounds.size.width,
-                                                                1.0f)];
-    lineView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    lineView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.25];
-    [cell.contentView addSubview:lineView];
-
-    UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                0.0f,
-                                                                cell.contentView.bounds.size.width,
-                                                                1.0f)];
-    lineView2.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-    lineView2.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.03];
-    [cell.contentView addSubview:lineView2];
-    
     
     return cell;
 }
