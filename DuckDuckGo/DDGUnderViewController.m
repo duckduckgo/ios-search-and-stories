@@ -129,19 +129,23 @@
 		{
 			case 0:
 			{
-				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
+				
+                cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
+                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
 				cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_home-bar.png"]];
 			}
 				break;
 			case 1:
 			{
 				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
+                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
 				cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_menu-items.png"]];
 			}
 				break;
 			case 2:
 			{
 				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
+                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected.png"];
 				cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_menu-items.png"]];
 			}
 				break;
@@ -182,31 +186,10 @@
 
 
 #pragma mark - Table view delegate
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if (!indexPath.section)
-	{
-		UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
-		NSLog(@"selected cell: %@",cell);
-        switch (indexPath.row)
-		{
-			case 0:
-				cell.imageView.image = [UIImage imageNamed:@"icon_home_selected.png"];
-				break;
-			case 1:
-				cell.imageView.image = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
-				break;
-			case 2:
-				cell.imageView.image = [UIImage imageNamed:@"icon_settings_selected.png"];
-				break;
-		}
-	}
-	return indexPath;
-}
-
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSLog(@"didselectrowatindexpath");
     [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
         if(indexPath.section == 0)
 		{
