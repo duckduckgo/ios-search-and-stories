@@ -17,7 +17,11 @@
     BOOL isRefreshing;
     
     UIColor *linen;
+
+    UIColor *cellOverlayPatternColor;
 }
+
+@property (nonatomic, strong) UIColor *cellOverlayPatternColor;
 
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
