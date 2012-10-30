@@ -187,7 +187,8 @@
 	if (!indexPath.section)
 	{
 		UITableViewCell * cell = [tableView cellForRowAtIndexPath:indexPath];
-		switch (indexPath.row)
+		NSLog(@"selected cell: %@",cell);
+        switch (indexPath.row)
 		{
 			case 0:
 				cell.imageView.image = [UIImage imageNamed:@"icon_home_selected.png"];

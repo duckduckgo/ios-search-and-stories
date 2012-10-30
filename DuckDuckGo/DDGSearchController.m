@@ -339,8 +339,6 @@
         searchFieldFrame.size.width -= _cancelButton.frame.size.width + 5;
         
         _searchField.frame = searchFieldFrame;
-    } completion:^(BOOL finished) {
-        [_leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];        
     }];
     
     self.parentViewController.slidingViewController.panGesture.enabled = NO;

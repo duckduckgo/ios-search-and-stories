@@ -202,6 +202,8 @@
     webViewLoadEvents++;
     [self updateProgressBar];
     
+    [_searchController webViewCanGoBack:theWebView.canGoBack];
+    
 	if (--webViewLoadingDepth <= 0) {
 		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         [_searchController webViewFinishedLoading];
