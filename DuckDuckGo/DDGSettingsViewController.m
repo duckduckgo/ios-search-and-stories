@@ -37,7 +37,7 @@
     [super viewDidLoad];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"settings_button.png"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
     button.frame = CGRectMake(0, 0, 38, 31); // the actual image is 36px wide but we need 1px horizontal padding on either side
     
     // we need to offset the triforce image by 1px down to compensate for the shadow in the image
