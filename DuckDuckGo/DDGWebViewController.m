@@ -14,6 +14,15 @@
 #import "ECSlidingViewController.h"
 #import "DDGUnderViewController.h"
 
+@implementation NSString (URLDecoding)
+
+- (NSString *) URLDecodedString
+{
+    return (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (__bridge CFStringRef)self, CFSTR(""), kCFStringEncodingUTF8);
+}
+
+@end
+
 @implementation DDGWebViewController
 
 #pragma mark - View lifecycle
@@ -173,15 +182,76 @@
     [self loadQueryOrURL:selection];
 }
 
+#pragma mark - Mail sender deleagte
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+	if(result == MFMailComposeResultSent)
+	{
+		[SVProgressHUD showSuccessWithStatus:@"Mail sent!"];
+	}
+	else if (result == MFMailComposeResultFailed)
+	{
+		[SVProgressHUD showErrorWithStatus:@"Mail send failed!"];
+	}
+	[self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)internalMailAction:(NSURL*)url
+{
+	if ([MFMailComposeViewController canSendMail])
+	{
+		NSMutableDictionary *params = [NSMutableDictionary dictionaryWithCapacity:3];
+        NSString *mailtoParameterString = [[url absoluteString] substringFromIndex:[@"mailto:" length]];
+        NSUInteger questionMarkLocation = [mailtoParameterString rangeOfString:@"?"].location;
+		
+        if (questionMarkLocation == NSNotFound)
+		{
+			// simply a to parameter
+			[params setObject:mailtoParameterString forKey:@"to"];
+		}
+		else
+		{
+			// more than just a to field
+			[params setObject:[mailtoParameterString substringToIndex:questionMarkLocation] forKey:@"to"];
+            NSString *parameterString = [mailtoParameterString substringFromIndex:questionMarkLocation + 1];
+            NSArray *keyValuePairs = [parameterString componentsSeparatedByString:@"&"];
+            for (NSString *queryString in keyValuePairs)
+			{
+                NSArray *keyValuePair = [queryString componentsSeparatedByString:@"="];
+                if (keyValuePair.count == 2)
+                    [params setObject:[[keyValuePair objectAtIndex:1] URLDecodedString] forKey:[[keyValuePair objectAtIndex:0] URLDecodedString]];
+            }
+        }
+		// now mail it
+		MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
+		mailVC.mailComposeDelegate = self;
+		if ([params objectForKey:@"to"])
+			[mailVC setToRecipients:[[params objectForKey:@"to"] componentsSeparatedByString:@","]];
+		else
+			[mailVC setToRecipients:@[]];
+		[mailVC setSubject:[params objectForKey:@"subject"]];
+		[mailVC setMessageBody:[params objectForKey:@"body"] isHTML:YES];
+		[self presentModalViewController:mailVC animated:YES];
+	}
+}
+
 #pragma mark - Web view deleagte
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
 
-    if([request.URL isEqual:request.mainDocumentURL]) {
+    if ([[[request.URL scheme] lowercaseString] isEqualToString:@"mailto"])
+	{
+		// user is interested in mailing so use the internal mail API
+		[self performSelector:@selector(internalMailAction:) withObject:request.URL afterDelay:0.005];
+		return NO;
+	}
+	else if([request.URL isEqual:request.mainDocumentURL])
+	{
         [_searchController updateBarWithURL:request.URL];
         self.webViewURL = request.URL;
     }
-    return YES;
+	return YES;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)theWebView
