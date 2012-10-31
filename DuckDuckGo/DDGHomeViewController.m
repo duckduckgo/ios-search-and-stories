@@ -24,8 +24,6 @@
 
 @implementation DDGHomeViewController
 
-@synthesize cellOverlayPatternColor;
-
 #pragma mark - View lifecycle
 
 - (void)viewDidLoad {
@@ -67,8 +65,6 @@
     
     // this one time, we have to do add the gesture recognizer manually; underVC only does it for us when the view is loaded through the menu
     [underVC configureViewController:self];
-
-	self.cellOverlayPatternColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
 }
 
 - (void)viewDidUnload {
@@ -189,6 +185,9 @@
 	
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
+    static UIColor *CellOverlayPatternColor;
+    if(!CellOverlayPatternColor)
+        CellOverlayPatternColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
 
     DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
@@ -209,7 +208,7 @@
         [[cell.contentView viewWithTag:100] setBackgroundColor:linen];
         
         UIImageView *overlayImageView = (UIImageView *)[cell.contentView viewWithTag:400];
-        overlayImageView.backgroundColor = cellOverlayPatternColor;
+        overlayImageView.backgroundColor = CellOverlayPatternColor;
         overlayImageView.image = nil;
     }
     
