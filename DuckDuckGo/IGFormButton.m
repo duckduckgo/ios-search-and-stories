@@ -10,11 +10,14 @@
 
 @implementation IGFormButton
 @synthesize action;
+@synthesize path;
 
--(id)initWithTitle:(NSString *)aTitle action:(void(^)(void))anAction {
+-(id)initWithTitle:(NSString *)aTitle path:(NSString*)aPath action:(void(^)(void))anAction {
     self = [super initWithTitle:aTitle];
-    if(self) {
+    if(self)
+	{
         self.action = anAction;
+		self.path = aPath;
     }
     return self;
 }

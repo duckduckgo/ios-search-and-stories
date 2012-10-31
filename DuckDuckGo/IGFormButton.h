@@ -9,9 +9,11 @@
 #import "IGFormElement.h"
 
 @interface IGFormButton : IGFormElement
+
 @property(nonatomic, strong) void(^action)(void);
+@property(nonatomic, strong) NSString *path;
 @property(nonatomic, assign) IGFormButtonType type;
 
--(id)initWithTitle:(NSString *)aTitle action:(void(^)(void))anAction;
+-(id)initWithTitle:(NSString *)aTitle path:(NSString*)aPath action:(void(^)(void))anAction;
 
 @end

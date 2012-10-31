@@ -57,6 +57,6 @@ typedef enum _IGFormButtonType {
 -(void)addButton:(NSString *)title action:(void(^)(void))action;
 
 // Adds a button (see above) with a specific style
--(void)addButton:(NSString *)title type:(IGFormButtonType)type action:(void(^)(void))action;
+-(void)addButton:(NSString *)title path:(NSString*)path type:(IGFormButtonType)type action:(void(^)(void))action;
 
 @end

@@ -9,6 +9,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGCache.h"
 #import "DDGChooseSourcesViewController.h"
+#import "DDGChooseRegionViewController.h"
 #import "SHK.h"
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
@@ -20,7 +21,8 @@
 +(void)loadDefaultSettings {
     NSDictionary *defaults = @{
         @"history": @(YES),
-        @"quack": @(NO)
+        @"quack": @(NO),
+		@"region": @"us-en"
     };
     
     for(NSString *key in defaults) {
@@ -63,9 +65,15 @@
     
     [self addSectionWithTitle:@"Water Cooler"];
     [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
-    [self addButton:@"Change Sources" type:IGFormButtonTypeDisclosure action:^{
+    [self addButton:@"Change Sources" path:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
+    }];
+    
+    [self addSectionWithTitle:@"Regions"];
+    [self addButton:@"Change Region" path:@"region" type:IGFormButtonTypeDisclosure action:^{
+        DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        [weakSelf.navigationController pushViewController:rvc animated:YES];
     }];
     
     [self addSectionWithTitle:@"Privacy"];
