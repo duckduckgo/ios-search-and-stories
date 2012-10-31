@@ -181,13 +181,11 @@
     return [DDGNewsProvider sharedProvider].stories.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-	
+
+- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
-    static UIColor *CellOverlayPatternColor;
-    if(!CellOverlayPatternColor)
-        CellOverlayPatternColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"topic_cell_background.png"]];
 
     DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
     
@@ -200,7 +198,8 @@
     
 	UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:cellID];
     
-    if (cell == nil) {
+    if (cell == nil)
+	{
         [[NSBundle mainBundle] loadNibNamed:cellID owner:self options:nil];
         cell = _loadedCell;
         self.loadedCell = nil;
@@ -208,8 +207,7 @@
         [[cell.contentView viewWithTag:100] setBackgroundColor:linen];
         
         UIImageView *overlayImageView = (UIImageView *)[cell.contentView viewWithTag:400];
-        overlayImageView.backgroundColor = CellOverlayPatternColor;
-        overlayImageView.image = nil;
+        overlayImageView.image = [UIImage imageNamed:@"topic_cell_background.png"];
     }
     
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
