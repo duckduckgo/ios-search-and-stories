@@ -194,7 +194,7 @@ static NSString *historyCellID = @"HCell";
 			CALayer *layer = iv.layer;
 			layer.borderWidth = 0.5;
 			layer.borderColor = [UIColor lightGrayColor].CGColor;
-			layer.cornerRadius = 5.0;
+			layer.cornerRadius = 3.0;
 			
             [cell.contentView addSubview:iv];
 			
