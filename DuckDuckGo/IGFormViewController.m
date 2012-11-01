@@ -65,10 +65,12 @@
 	else
 	{
 		// this means this is the "Add Source screen"
-        UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                                                                    target:self
-                                                                                    action:@selector(saveButtonPressed)];
-        self.navigationItem.rightBarButtonItem = saveButton;
+		UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+		
+		[button setImage:[UIImage imageNamed:@"save_button.png"] forState:UIControlStateNormal];
+		[button addTarget:self action:@selector(saveButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+		button.frame = CGRectMake(0, 0, 58, 33);
+		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
     }
 }
 
