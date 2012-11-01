@@ -454,7 +454,7 @@
         if (formButton.type == IGFormButtonTypeDisclosure)
 		{
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			if (formButton.path)
+			if ([formButton.path isEqualToString:@"region"])
 			{
 				cell.detailTextLabel.text =  [[DDGRegionProvider shared] titleForRegion:[DDGRegionProvider shared].region];
 			}
