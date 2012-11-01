@@ -13,6 +13,7 @@
 #import "SHK.h"
 #import "ECSlidingViewController.h"
 #import "DDGUnderViewController.h"
+#import "DDGCache.h"
 
 @implementation NSString (URLDecoding)
 
@@ -157,7 +158,9 @@
     } else if(queryOrURLString) {
         NSString *urlString;
         if([_searchController isQuery:queryOrURLString]) {
-            urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1", [queryOrURLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+            urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
+						 [queryOrURLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
+						 [DDGCache objectForKey:@"region" inCache:@"settings"]];
         } else
             urlString = [_searchController validURLStringFromString:queryOrURLString];
         
