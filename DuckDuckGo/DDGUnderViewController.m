@@ -101,6 +101,7 @@
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.textLabel.textColor = [UIColor whiteColor];
+		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_menu-items.png"]];
         
         // cell separator
         UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
@@ -132,21 +133,18 @@
 				
                 cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
-				cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_home-bar.png"]];
 			}
 				break;
 			case 1:
 			{
 				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
-				cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_menu-items.png"]];
 			}
 				break;
 			case 2:
 			{
 				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected.png"];
-				cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_menu-items.png"]];
 			}
 				break;
 		}
@@ -155,7 +153,6 @@
 	{
         cell.textLabel.text = [[[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row] objectForKey:@"text"];
 		cell.imageView.image = nil;
-		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_history-items.png"]];
 		cell.accessoryView = nil;
     }
 	cell.textLabel.backgroundColor = cell.contentView.backgroundColor;
