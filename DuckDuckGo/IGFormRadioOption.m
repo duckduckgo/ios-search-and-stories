@@ -12,9 +12,10 @@
 @implementation IGFormRadioOption
 @synthesize category, value;
 
--(id)initWithCategory:(NSString *)aCategory title:(NSString *)aTitle {
+-(id)initWithCategory:(NSString *)aCategory title:(NSString *)aTitle enabled:(BOOL)enabled {
 	if((self = [super initWithTitle:aTitle])) {
 		category = aCategory;
+        value = enabled;
 	}
 	return self;
 }

@@ -15,15 +15,11 @@
 #import "IGFormSwitch.h"
 #import "IGFormButton.h"
 
-#import "DDGRegionProvider.h"
-
 @interface IGFormViewController ()
 
 // Private methods. Don't use these!
 -(NSInteger)tableViewHeight;
 -(NSDictionary *)formData;
--(void)saveAndExit;
--(void)saveButtonPressed;
 -(IGFormElement *)elementAtIndexPath:(NSIndexPath *)indexPath;
 
 @end
@@ -36,7 +32,6 @@
 
 - (id)initWithDefaults {
     if ((self = [super initWithStyle:UITableViewStyleGrouped])) {
-		elements = [[NSMutableArray alloc] init];
 	}
     return self;
 }
@@ -48,7 +43,6 @@
     [super viewDidLoad];
 	self.tableView.backgroundColor = nil;
 	self.tableView.backgroundView = nil;
-	[self configure]; // let the subclass set up form data
 	
 	self.tableView.showsVerticalScrollIndicator = YES;
     self.clearsSelectionOnViewWillAppear = YES;
@@ -62,7 +56,10 @@
 -(void)viewWillAppear:(BOOL)animated
 {
 	[super viewWillAppear:animated];
-	[self.tableView reloadData];
+
+    elements = [[NSMutableArray alloc] init];
+	[self configure]; // let the subclass set up form data
+    [self.tableView reloadData];
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -191,10 +188,10 @@
 #pragma mark -
 #pragma mark Adding other form elements
 
--(void)addRadioOption:(NSString *)category title:(NSString *)title {
+-(void)addRadioOption:(NSString *)category title:(NSString *)title enabled:(BOOL)enabled {
 	[self addDefaultSectionIfNeeded];
 	
-	IGFormRadioOption *radioOption = [[IGFormRadioOption alloc] initWithCategory:category title:title];
+	IGFormRadioOption *radioOption = [[IGFormRadioOption alloc] initWithCategory:category title:title enabled:enabled];
 	[elements addObject:radioOption];
 }
 
@@ -207,14 +204,14 @@
 
 -(void)addButton:(NSString *)title action:(void (^)(void))action
 {
-    [self addButton:title path:nil type:IGFormButtonTypeNormal action:action];
+    [self addButton:title detailTitle:nil type:IGFormButtonTypeNormal action:action];
 }
 
--(void)addButton:(NSString *)title path:(NSString*)path type:(IGFormButtonType)type action:(void(^)(void))action
+-(void)addButton:(NSString *)title detailTitle:(NSString*)detailTitle type:(IGFormButtonType)type action:(void(^)(void))action
 {
     [self addDefaultSectionIfNeeded];
     IGFormButton *button = [[IGFormButton alloc] initWithTitle:title
-														  path:path
+														  detailTitle:detailTitle
                                                         action:action];
     button.type = type;
     [elements addObject:button];
@@ -387,18 +384,21 @@
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    static NSString *CellIdentifier = @"Cell";
+    static NSString *DefaultCellIdentifier = @"Default";
+    static NSString *Value1CellIdentifier = @"Value1";
     
 	// find the appropriate element
 	NSObject *e = [self elementAtIndexPath:indexPath];
-	
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-	{
-		if([e isKindOfClass:[IGFormButton class]] && ((IGFormButton *)e).path)
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
-		else
-			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+
+    UITableViewCell *cell;
+    if([e isKindOfClass:[IGFormButton class]] && ((IGFormButton *)e).detailTitle) {
+        cell = [tableView dequeueReusableCellWithIdentifier:Value1CellIdentifier];
+        if(!cell)
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:Value1CellIdentifier];
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:DefaultCellIdentifier];
+        if(!cell)
+			cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:DefaultCellIdentifier];
     }
     
     // set default cell attributes to be overriden based on the element below
@@ -440,10 +440,7 @@
         if (formButton.type == IGFormButtonTypeDisclosure)
 		{
             cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-			if ([formButton.path isEqualToString:@"region"])
-			{
-				cell.detailTextLabel.text =  [[DDGRegionProvider shared] titleForRegion:[DDGRegionProvider shared].region];
-			}
+			cell.detailTextLabel.text = formButton.detailTitle;
 		}
         else
 		{

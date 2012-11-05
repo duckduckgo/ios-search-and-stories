@@ -48,7 +48,7 @@ typedef enum _IGFormButtonType {
 -(void)addTextView:(NSString *)fieldName value:(NSString *)value;
 
 // Adds a radio option (a row with a checkbox to the right). You should call this multiple times with the same category for each set of options.
--(void)addRadioOption:(NSString *)category title:(NSString *)title;
+-(void)addRadioOption:(NSString *)category title:(NSString *)title enabled:(BOOL)enabled;
 
 // Adds a toggle switch and sets the default value
 -(void)addSwitch:(NSString *)title enabled:(BOOL)enabled;
@@ -57,6 +57,9 @@ typedef enum _IGFormButtonType {
 -(void)addButton:(NSString *)title action:(void(^)(void))action;
 
 // Adds a button (see above) with a specific style
--(void)addButton:(NSString *)title path:(NSString*)path type:(IGFormButtonType)type action:(void(^)(void))action;
+-(void)addButton:(NSString *)title detailTitle:(NSString*)detailTitle type:(IGFormButtonType)type action:(void(^)(void))action;
+
+-(void)saveAndExit; // save and exit (doesn't perform validations)
+-(void)saveButtonPressed; // validate, then save
 
 @end

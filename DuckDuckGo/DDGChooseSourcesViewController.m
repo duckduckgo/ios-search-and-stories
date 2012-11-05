@@ -32,7 +32,7 @@
     // we need to offset the triforce image by 1px down to compensate for the shadow in the image
     float topInset = 1.0f;
     button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
-    [button addTarget:self action:@selector(backButtonpressed) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 
     
@@ -62,25 +62,9 @@
 	[self.tableView setEditing:edit animated:YES];
 }
 
--(void)backButtonpressed
+-(void)backButtonPressed
 {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-#pragma mark - Adding custom news sources
-
--(void)addButtonPressed {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Add Custom News Source" 
-                                                    message:@"Enter a keyword to see related news topics" 
-                                                   delegate:self 
-                                          cancelButtonTitle:@"Cancel" 
-                                          otherButtonTitles:@"OK", nil];
-    [alert setAlertViewStyle:UIAlertViewStylePlainTextInput];
-    [alert show];
-}
-
--(void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    
 }
 
 #pragma mark - Table view data source

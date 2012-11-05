@@ -27,7 +27,7 @@
     float topInset = 1.0f;
     button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
     
-    [button addTarget:self action:@selector(backButtonpressed) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
     
     
@@ -50,7 +50,7 @@
     [[DDGNewsProvider sharedProvider] addCustomSource:[formData objectForKey:@"News keyword"]];
 }
 
--(void)backButtonpressed
+-(void)backButtonPressed
 {
     [self.navigationController popViewControllerAnimated:YES];
 }

@@ -16,6 +16,6 @@
 @property(weak, nonatomic,readonly) NSString *category;
 @property(nonatomic) BOOL value;
 
--(id)initWithCategory:(NSString *)aCategory title:(NSString *)aTitle;
+-(id)initWithCategory:(NSString *)aCategory title:(NSString *)aTitle enabled:(BOOL)enabled;
 
 @end

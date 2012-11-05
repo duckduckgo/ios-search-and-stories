@@ -15,6 +15,7 @@
 #import <sys/utsname.h>
 #import "DDGHistoryProvider.h"
 #import "ECSlidingViewController.h"
+#import "DDGRegionProvider.h"
 
 @implementation DDGSettingsViewController
 
@@ -65,14 +66,14 @@
     
     [self addSectionWithTitle:@"Water Cooler"];
     [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
-    [self addButton:@"Change Sources" path:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addButton:@"Change Sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
     
     [self addSectionWithTitle:@"Regions"];
-    [self addButton:@"Change Region" path:@"region" type:IGFormButtonTypeDisclosure action:^{
-        DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithStyle:UITableViewStyleGrouped];
+    [self addButton:@"Region" detailTitle:[[DDGRegionProvider shared] titleForRegion:[[DDGRegionProvider shared] region]] type:IGFormButtonTypeDisclosure action:^{
+        DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
         [weakSelf.navigationController pushViewController:rvc animated:YES];
     }];
     
@@ -112,7 +113,7 @@
                  forKey:@"history" 
                 inCache:@"settings"];
     
-    [DDGCache setObject:[formData objectForKey:@"Quack on Refresh"] 
+    [DDGCache setObject:[formData objectForKey:@"Quack on Refresh"]
                  forKey:@"quack" 
                 inCache:@"settings"];
 }

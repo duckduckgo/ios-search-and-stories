@@ -189,7 +189,6 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"didselectrowatindexpath");
     [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
         if(indexPath.section == 0)
 		{

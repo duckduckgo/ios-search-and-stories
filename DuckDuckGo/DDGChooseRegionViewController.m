@@ -9,86 +9,48 @@
 #import "DDGChooseRegionViewController.h"
 #import "DDGRegionProvider.h"
 
-@interface DDGChooseRegionViewController ()
-
--(void)backButtonpressed;
-
-@end
-
 @implementation DDGChooseRegionViewController
 
--(void)backButtonpressed
+- (void)configure
 {
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self)
-	{
-    }
-    return self;
-}
-
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
 	self.title = @"Region";
 
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-	[button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
-	button.frame = CGRectMake(0, 0, 36, 31);
-	[button addTarget:self action:@selector(backButtonpressed) forControlEvents:UIControlEventTouchUpInside];
+    self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 
-	self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-}
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(0, 0, 38, 31); // the actual image is 36px wide but we need 1px horizontal padding on either side
+    
+    // we need to offset the triforce image by 1px down to compensate for the shadow in the image
+    float topInset = 1.0f;
+    button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
+    [button addTarget:self action:@selector(saveAndExit) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
-{
-    // Return the number of sections.
-    return 1;
-}
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-{
-    // Return the number of rows in the section.
-    return [[DDGRegionProvider shared].regions count];
-}
-
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil)
-	{
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    
+    for(NSDictionary *regionSet in [DDGRegionProvider shared].regions) {
+        for(NSString *regionKey in regionSet) {
+            [self addRadioOption:@"region" title:[[DDGRegionProvider shared] titleForRegion:regionKey] enabled:([regionKey isEqualToString:[DDGRegionProvider shared].region])];
+        }
     }
-    // this entry is
-	NSDictionary *entry = [[DDGRegionProvider shared].regions objectAtIndex:indexPath.row];
-	NSString *key = [[entry allKeys] objectAtIndex:0];
-    cell.textLabel.text = [entry objectForKey:key];
-	cell.accessoryType = [key isEqualToString:[DDGRegionProvider shared].region] ? UITableViewCellAccessoryCheckmark : UITableViewCellAccessoryNone;
-
-    return cell;
 }
 
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // this entry is
-	NSDictionary *entry = [[DDGRegionProvider shared].regions objectAtIndex:indexPath.row];
-	[[DDGRegionProvider shared] setRegion:[[entry allKeys] objectAtIndex:0]];
-    [self.navigationController popViewControllerAnimated:YES];
+-(void)saveData:(NSDictionary *)formData {
+    NSString *regionTitle = [formData objectForKey:@"region"];
+    for(NSDictionary *regionSet in [DDGRegionProvider shared].regions) {
+        for(NSString *regionKey in regionSet) {
+            if([[regionSet objectForKey:regionKey] isEqualToString:regionTitle])
+                [[DDGRegionProvider shared] setRegion:regionKey];
+        }
+    }
 }
+
+//- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    // this entry is
+//	NSDictionary *entry = [[DDGRegionProvider shared].regions objectAtIndex:indexPath.row];
+//	[[DDGRegionProvider shared] setRegion:[[entry allKeys] objectAtIndex:0]];
+//    [self.navigationController popViewControllerAnimated:YES];
+//}
 
 @end
