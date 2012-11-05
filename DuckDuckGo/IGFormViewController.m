@@ -57,21 +57,6 @@
 	NSInteger minHeight = ([self tableViewHeight]<282 ? [self tableViewHeight] : 282);
 	
     self.contentSizeForViewInPopover = CGSizeMake(320, minHeight);
-    
-    if([self.navigationController.viewControllers objectAtIndex:0]==self)
-	{
-		// this means this is the settings screen
-    }
-	else
-	{
-		// this means this is the "Add Source screen"
-		UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-		
-		[button setImage:[UIImage imageNamed:@"save_button.png"] forState:UIControlStateNormal];
-		[button addTarget:self action:@selector(saveButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-		button.frame = CGRectMake(0, 0, 58, 33);
-		self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-    }
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -228,7 +213,6 @@
 -(void)addButton:(NSString *)title path:(NSString*)path type:(IGFormButtonType)type action:(void(^)(void))action
 {
     [self addDefaultSectionIfNeeded];
-    
     IGFormButton *button = [[IGFormButton alloc] initWithTitle:title
 														  path:path
                                                         action:action];

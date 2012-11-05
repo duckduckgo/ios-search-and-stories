@@ -23,22 +23,19 @@
 	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 	self.tableView.allowsSelectionDuringEditing = YES;
     self.title = @"Water Cooler";
-	UIButton *button;
-    if (self.navigationController.viewControllers.count == 1)
-	{
-        // we're the only view controller, so there won't be a back button to get out, so we need a different exit button
-        self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                              target:self
-                                                                                              action:@selector(dismissButtonPressed)];
-    }
-	else
-	{
-		button = [UIButton buttonWithType:UIButtonTypeCustom];
-		[button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
-		button.frame = CGRectMake(0, 0, 36, 31);
-		[button addTarget:self action:@selector(backButtonpressed) forControlEvents:UIControlEventTouchUpInside];
-		self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-	}
+    
+    
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    [button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+    button.frame = CGRectMake(0, 0, 38, 31); // the actual image is 36px wide but we need 1px horizontal padding on either side
+    
+    // we need to offset the triforce image by 1px down to compensate for the shadow in the image
+    float topInset = 1.0f;
+    button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
+    [button addTarget:self action:@selector(backButtonpressed) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+
+    
 	button = [UIButton buttonWithType:UIButtonTypeCustom];
 	
 	[button setImage:[UIImage imageNamed:@"edit_button.png"] forState:UIControlStateNormal];
@@ -63,10 +60,6 @@
 	BOOL edit = !button.selected;
 	button.selected = edit;
 	[self.tableView setEditing:edit animated:YES];
-}
-
--(void)dismissButtonPressed {
-    [self dismissModalViewControllerAnimated:YES];
 }
 
 -(void)backButtonpressed
