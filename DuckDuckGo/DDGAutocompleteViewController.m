@@ -147,7 +147,7 @@ static NSString *historyCellID = @"HCell";
         if(!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:historyCellID];
             cell.textLabel.font = [UIFont boldSystemFontOfSize:16.0];
-            cell.textLabel.textColor = [UIColor darkGrayColor];
+            cell.textLabel.textColor = [UIColor  colorWithRed:0x9F/255.0 green:0xA7/255.0 blue:0xB4/255.0 alpha:1.0]; // #9FA7B4
             cell.selectionStyle = UITableViewCellSelectionStyleGray;
             cell.backgroundView = [[UIView alloc] init];
             [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
