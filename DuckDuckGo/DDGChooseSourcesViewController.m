@@ -10,7 +10,7 @@
 #import "DDGNewsProvider.h"
 #import "DDGCache.h"
 #import "UIImageView+AFNetworking.h"
-#import "DDGAddCustomSourceViewController.h"
+#import "SVProgressHUD.h"
 
 @implementation DDGChooseSourcesViewController
 
@@ -34,15 +34,6 @@
     button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
     [button addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-
-    
-	button = [UIButton buttonWithType:UIButtonTypeCustom];
-	
-	[button setImage:[UIImage imageNamed:@"edit_button.png"] forState:UIControlStateNormal];
-	[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateSelected];
-	[button addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
-	button.frame = CGRectMake(0, 0, 58, 33);
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 }
 
 
@@ -110,17 +101,23 @@
     static NSString *ButtonCellIdentifier = @"ButtonCell";
     static NSString *CustomSourceCellIdentifier = @"CustomSourceCell";
     
-    if(indexPath.section == 0) {
-        if(indexPath.row == 0) {
+    if(indexPath.section == 0)
+	{
+        if(indexPath.row == 0)
+		{
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
-            if(!cell) {
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
-                cell.textLabel.text = @"Add custom source";
-                cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            if(!cell)
+			{
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ButtonCellIdentifier];
+                cell.textLabel.text = @"Suggest a new source";
+				cell.detailTextLabel.text = @"Email us to make a source suggestion.";
+                cell.accessoryType = UITableViewCellAccessoryNone;
 				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
             }
             return cell;
-        } else {
+        }
+		else
+		{
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CustomSourceCellIdentifier];
             if(!cell)
 			{
@@ -130,7 +127,9 @@
             cell.textLabel.text = [[DDGNewsProvider sharedProvider].customSources objectAtIndex:indexPath.row-1];
             return cell;
         }
-    } else {
+    }
+	else
+	{
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
         if(!cell)
 		{
@@ -172,14 +171,40 @@
     }
 }
 
+#pragma mark - Mail sender deleagte
+
+-(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
+{
+	if(result == MFMailComposeResultSent)
+	{
+		[SVProgressHUD showSuccessWithStatus:@"Mail sent!"];
+	}
+	else if (result == MFMailComposeResultFailed)
+	{
+		[SVProgressHUD showErrorWithStatus:@"Mail send failed!"];
+	}
+	[self dismissModalViewControllerAnimated:YES];
+}
+
 #pragma mark - Table view delegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0) {
-        DDGAddCustomSourceViewController *vc = [[DDGAddCustomSourceViewController alloc] initWithDefaults];
-        [self.navigationController pushViewController:vc animated:YES];
-    } else {
+    if(indexPath.section == 0)
+	{
+		// send an email to make a suggestion for a new source
+		if ([MFMailComposeViewController canSendMail])
+		{
+			MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
+			mailVC.mailComposeDelegate = self;
+			[mailVC setToRecipients:@[@"ios@duckduckgo.com"]];
+			[mailVC setSubject:@"suggestion: water cooler source"];
+			[mailVC setMessageBody:@"Please provide a link here so we can investigate the source you would like to see us implement." isHTML:NO];
+			[self presentModalViewController:mailVC animated:YES];
+		}
+    }
+	else
+	{
         NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
         NSArray *category = [[[DDGNewsProvider sharedProvider] sources] objectForKey:categoryName];
         NSDictionary *source = [category objectAtIndex:indexPath.row];
@@ -204,16 +229,6 @@
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
-
--(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(editingStyle == UITableViewCellEditingStyleDelete) {
-        [[DDGNewsProvider sharedProvider] deleteCustomSourceAtIndex:indexPath.row-1];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-    } else if(editingStyle == UITableViewCellEditingStyleInsert) {
-        DDGAddCustomSourceViewController *vc = [[DDGAddCustomSourceViewController alloc] initWithDefaults];
-        [self.navigationController pushViewController:vc animated:YES];
-    }
 }
 
 @end

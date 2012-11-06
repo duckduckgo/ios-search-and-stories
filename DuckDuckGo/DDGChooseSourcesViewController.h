@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MessageUI/MessageUI.h>
 
-@interface DDGChooseSourcesViewController : UITableViewController <UIAlertViewDelegate>
+@interface DDGChooseSourcesViewController : UITableViewController <UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
 
 @end
