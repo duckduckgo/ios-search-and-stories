@@ -140,7 +140,7 @@ static NSString *historyCellID = @"HCell";
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *cell;
-	BOOL lineHidden;
+	BOOL lineHidden = NO;
     
     if(indexPath.section == 0) {
         cell = [tv dequeueReusableCellWithIdentifier:historyCellID];

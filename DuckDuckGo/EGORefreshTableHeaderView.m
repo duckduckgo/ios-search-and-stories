@@ -94,6 +94,7 @@
         bottomShadow.contentMode = UIViewContentModeRedraw;
         bottomShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
         [self addSubview:bottomShadow];
+		[bottomShadow release];
         
 		UIActivityIndicatorView *view = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
 		view.frame = CGRectMake(16.0f, frame.size.height - 57.0f, 32.0f, 32.0f);
