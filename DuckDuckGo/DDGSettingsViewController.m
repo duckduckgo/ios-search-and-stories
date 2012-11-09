@@ -21,7 +21,7 @@
 
 +(void)loadDefaultSettings {
     NSDictionary *defaults = @{
-        @"history": @(YES),
+        @"history": @(NO),
         @"quack": @(NO),
 		@"region": @"us-en"
     };
