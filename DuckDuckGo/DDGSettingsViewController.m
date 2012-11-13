@@ -41,21 +41,41 @@
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
-    button.frame = CGRectMake(0, 0, 38, 31); // the actual image is 36px wide but we need 1px horizontal padding on either side
+
+	button.imageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+	button.autoresizesSubviews = YES;
     
-    // we need to offset the triforce image by 1px down to compensate for the shadow in the image
     float topInset = 1.0f;
     button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
     
     [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
+	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
+		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
+	else
+		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
+	
 	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 }
 
 -(void)leftButtonPressed {
     [self.slidingViewController anchorTopViewTo:ECRight];
 }
+
+#pragma mark - Rotation
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+{
+	CGPoint center = self.navigationItem.leftBarButtonItem.customView.center;
+	if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
+		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
+	else
+		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
+	self.navigationItem.leftBarButtonItem.customView.center = center;
+	
+    return [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
+}
+
 
 #pragma mark - Form view controller
 

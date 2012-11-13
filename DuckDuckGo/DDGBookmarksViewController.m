@@ -12,6 +12,8 @@
 #import "DDGUnderViewController.h"
 #import "ECSlidingViewController.h"
 
+#import "DDGCache.h"
+
 @implementation DDGBookmarksViewController
 
 - (void)viewDidLoad {
@@ -20,7 +22,6 @@
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
-    button.frame = CGRectMake(0, 0, 38, 31); // the actual image is 36px wide but we need 1px horizontal padding on either side
     
     // we need to offset the triforce image by 1px down to compensate for the shadow in the image
     float topInset = 1.0f;
@@ -34,10 +35,19 @@
 	[button setImage:[UIImage imageNamed:@"edit_button.png"] forState:UIControlStateNormal];
 	[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateSelected];
 	[button addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
-	button.frame = CGRectMake(0, 0, 58, 33);
 	button.hidden = ![DDGBookmarksProvider sharedProvider].bookmarks.count;
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-    
+
+	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
+	{
+		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
+		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 40, 23);
+	}
+	else
+	{
+		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
+		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 58, 33);
+	}
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -45,9 +55,28 @@
     [self.tableView reloadData];
 }
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+#pragma mark - Rotation
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+{
+	CGPoint cl = self.navigationItem.leftBarButtonItem.customView.center;
+	CGPoint cr = self.navigationItem.rightBarButtonItem.customView.center;
+	if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
+	{
+		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
+		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 40, 23);
+	}
+	else
+	{
+		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
+		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 58, 33);
+	}
+	self.navigationItem.leftBarButtonItem.customView.center = cl;
+	self.navigationItem.rightBarButtonItem.customView.center = cr;
+	
+    return [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
 }
+
 
 - (void)editAction:(UIButton*)button
 {
@@ -84,7 +113,21 @@
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
     cell.textLabel.text = [bookmark objectForKey:@"title"];
     cell.detailTextLabel.text = [[bookmark objectForKey:@"url"] absoluteString];
-    
+
+	UIImage *image = [DDGCache objectForKey:[bookmark objectForKey:@"source"] inCache:@"sourceImages"];
+	cell.imageView.image = image;
+//	if([source objectForKey:@"link"] && [source objectForKey:@"link"] != [NSNull null]) {
+//		UIImage *image = [DDGCache objectForKey:[source objectForKey:@"source"] inCache:@"sourceImages"];
+//		cell.imageView.image = image;
+//		[(UIImageView *)[cell viewWithTag:100] setImage:image];
+//	}
+//	else
+//	{
+//		cell.imageView.image = nil;
+//		[(UIImageView *)[cell viewWithTag:100] setImage:nil];
+//		
+//	}
+
     return cell;
 }
 
