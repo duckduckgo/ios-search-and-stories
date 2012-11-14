@@ -212,7 +212,7 @@
 			MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
 			mailVC.mailComposeDelegate = self;
 			[mailVC setToRecipients:@[@"ios@duckduckgo.com"]];
-			[mailVC setSubject:@"suggestion: news source"];
+			[mailVC setSubject:@"suggestion: story source"];
 			[mailVC setMessageBody:@"Please provide a link here so we can investigate the source you would like to see us implement." isHTML:NO];
 			[self presentModalViewController:mailVC animated:YES];
 		}
@@ -227,7 +227,7 @@
         if(cell.accessoryType == UITableViewCellAccessoryCheckmark) {
             if([[DDGNewsProvider sharedProvider] enabledSourceIDs].count == 1) {
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Whoa, there!"
-                                                                message:@"You must select at least one news source."
+                                                                message:@"You must select at least one source."
                                                                delegate:nil
                                                       cancelButtonTitle:@"OK"
                                                       otherButtonTitles:nil];
