@@ -76,7 +76,6 @@
     return [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
 }
 
-
 #pragma mark - Form view controller
 
 -(void)configure {
@@ -84,7 +83,7 @@
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
     
-    [self addSectionWithTitle:@"Water Cooler"];
+    [self addSectionWithTitle:@"Sources"];
     [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
     [self addButton:@"Change Sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];

@@ -22,7 +22,7 @@
 	self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 	self.tableView.allowsSelectionDuringEditing = YES;
-    self.title = @"Water Cooler";
+    self.title = @"Sources";
     
     
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -212,7 +212,7 @@
 			MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
 			mailVC.mailComposeDelegate = self;
 			[mailVC setToRecipients:@[@"ios@duckduckgo.com"]];
-			[mailVC setSubject:@"suggestion: water cooler source"];
+			[mailVC setSubject:@"suggestion: news source"];
 			[mailVC setMessageBody:@"Please provide a link here so we can investigate the source you would like to see us implement." isHTML:NO];
 			[self presentModalViewController:mailVC animated:YES];
 		}
