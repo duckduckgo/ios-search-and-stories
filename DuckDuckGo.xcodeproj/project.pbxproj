@@ -151,6 +151,8 @@
 		830ECE5E1630B356004DBADA /* done_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE5A1630B353004DBADA /* done_button@2x.png */; };
 		830ECE5F1630B356004DBADA /* edit_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE5B1630B354004DBADA /* edit_button.png */; };
 		830ECE601630B356004DBADA /* edit_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE5C1630B355004DBADA /* edit_button@2x.png */; };
+		8343FCD8165459FD00F1E28F /* header_lp_tile.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343FCD6165459FD00F1E28F /* header_lp_tile.png */; };
+		8343FCD9165459FD00F1E28F /* header_lp_tile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343FCD7165459FD00F1E28F /* header_lp_tile@2x.png */; };
 		8345080614AB8D520093C2A1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 833DB53D1494164F00509F2E /* Foundation.framework */; };
 		834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */; };
 		834E5002149418D400EABD6E /* Twitter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 834E5001149418D400EABD6E /* Twitter.framework */; };
@@ -638,6 +640,8 @@
 		830ECE5B1630B354004DBADA /* edit_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = edit_button.png; sourceTree = "<group>"; };
 		830ECE5C1630B355004DBADA /* edit_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "edit_button@2x.png"; sourceTree = "<group>"; };
 		833DB53D1494164F00509F2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		8343FCD6165459FD00F1E28F /* header_lp_tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = header_lp_tile.png; sourceTree = "<group>"; };
+		8343FCD7165459FD00F1E28F /* header_lp_tile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "header_lp_tile@2x.png"; sourceTree = "<group>"; };
 		834CD86A14A0FC3C006240F1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		834E5001149418D400EABD6E /* Twitter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Twitter.framework; path = System/Library/Frameworks/Twitter.framework; sourceTree = SDKROOT; };
 		83864C42163838AD00F66AAA /* icon_home.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_home.png; sourceTree = "<group>"; };
@@ -785,6 +789,8 @@
 				E4D87C071609675D001C5E92 /* Default-568h@2x.png */,
 				4C1FD7DD1548FF65006B2511 /* header_tile.png */,
 				4C1FD7DE1548FF65006B2511 /* header_tile@2x.png */,
+				8343FCD6165459FD00F1E28F /* header_lp_tile.png */,
+				8343FCD7165459FD00F1E28F /* header_lp_tile@2x.png */,
 				4C1FD7E11548FF65006B2511 /* icon57x.png */,
 				4C1FD7E21548FF65006B2511 /* icon57x@2x.png */,
 				4C1FD7E31548FF65006B2511 /* icon72x.png */,
@@ -1609,6 +1615,8 @@
 				83DC6E921642AF3B00E06A9C /* save_button.png in Resources */,
 				83DC6E931642AF3B00E06A9C /* save_button@2x.png in Resources */,
 				83D3DE02164D60D00062D30B /* DDGWebViewController.xib in Resources */,
+				8343FCD8165459FD00F1E28F /* header_lp_tile.png in Resources */,
+				8343FCD9165459FD00F1E28F /* header_lp_tile@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
