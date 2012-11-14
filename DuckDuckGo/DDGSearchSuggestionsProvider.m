@@ -37,9 +37,25 @@ static DDGSearchSuggestionsProvider *sharedProvider;
     return sharedProvider;
 }
 
+#pragma mark - Utility
+
+- (BOOL)textIsLink:(NSString*)text
+{
+	NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+	NSArray *matches = [linkDetector matchesInString:text options:0 range:NSMakeRange(0, [text length])];
+	for (NSTextCheckingResult *match in matches)
+	{
+		if ([match resultType] == NSTextCheckingTypeLink)
+		{
+			return YES;
+		}
+	}
+	return NO;
+}
+
 #pragma mark - Downloading and returning search suggestions
 
--(NSArray *)suggestionsForSearchText:(NSString *)searchText {    
+-(NSArray *)suggestionsForSearchText:(NSString *)searchText {
     NSString *bestMatch = nil;
     
     for(NSString *suggestionText in suggestionsCache) {
@@ -50,30 +66,32 @@ static DDGSearchSuggestionsProvider *sharedProvider;
     return (bestMatch ? [suggestionsCache objectForKey:bestMatch] : @[]);
 }
 
--(void)downloadSuggestionsForSearchText:(NSString *)searchText success:(void (^)(void))success {
+-(void)downloadSuggestionsForSearchText:(NSString *)searchText success:(void (^)(void))success
+{
     // check the cache before querying the server
-    if([suggestionsCache objectForKey:searchText])
+    if ([suggestionsCache objectForKey:searchText])
+		// we have this suggestion already
         return;
-    else if(!searchText || [searchText isEqualToString:@""]) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            success();
-        });
-        return;
+    else if(!searchText || [searchText isEqualToString:@""] || [self textIsLink:searchText])
+	{
+        dispatch_async(dispatch_get_main_queue(), ^{ success(); });
+		//NSLog (@"downloadSuggestionsForSearchText:textIsLink: [%@]", searchText);
     }
-    
-    NSString *urlString = [kDDGSuggestionsURLString stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-    serverRequest.URL = [NSURL URLWithString:urlString];
-    
-    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [suggestionsCache setObject:JSON forKey:searchText];
-            success(); // run callback
-        });
-    } failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
-        NSLog(@"error: %@",[error userInfo]);
-    }];
-    [operation start];
-    
+	else
+	{
+		NSString *urlString = [kDDGSuggestionsURLString stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+		serverRequest.URL = [NSURL URLWithString:urlString];
+		
+		AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+			dispatch_async(dispatch_get_main_queue(), ^{
+				[suggestionsCache setObject:JSON forKey:searchText];
+				success(); // run callback
+			});
+		} failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
+			NSLog(@"error: %@",[error userInfo]);
+		}];
+		[operation start];
+	}
 }
 
 -(void)emptyCache {
