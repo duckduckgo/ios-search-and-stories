@@ -83,7 +83,7 @@
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
     
-    [self addSectionWithTitle:@"Sources"];
+    [self addSectionWithTitle:@"Stories"];
     [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
     [self addButton:@"Change Sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
