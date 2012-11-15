@@ -37,17 +37,9 @@
 	[button addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
 	button.hidden = ![DDGBookmarksProvider sharedProvider].bookmarks.count;
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
-	{
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
-		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 40, 23);
-	}
-	else
-	{
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
-		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 58, 33);
-	}
+	
+	// force 1st time through for iOS < 6.0
+	[self viewWillLayoutSubviews];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -57,11 +49,11 @@
 
 #pragma mark - Rotation
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+- (void)viewWillLayoutSubviews
 {
 	CGPoint cl = self.navigationItem.leftBarButtonItem.customView.center;
 	CGPoint cr = self.navigationItem.rightBarButtonItem.customView.center;
-	if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
+	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
 	{
 		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
 		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 40, 23);
@@ -73,8 +65,6 @@
 	}
 	self.navigationItem.leftBarButtonItem.customView.center = cl;
 	self.navigationItem.rightBarButtonItem.customView.center = cr;
-	
-    return [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

@@ -25,13 +25,10 @@
     button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
     [button addTarget:self action:@selector(saveAndExit) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+	
+	// force 1st time through for iOS < 6.0
+	[self viewWillLayoutSubviews];
 
-	// the actual image is 36px wide but we need 1px horizontal padding on either side
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
-	else
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
-    
     for(NSDictionary *regionSet in [DDGRegionProvider shared].regions) {
         for(NSString *regionKey in regionSet) {
             [self addRadioOption:@"region" title:[[DDGRegionProvider shared] titleForRegion:regionKey] enabled:([regionKey isEqualToString:[DDGRegionProvider shared].region])];
@@ -51,16 +48,14 @@
 
 #pragma mark - Rotation
 
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+- (void)viewWillLayoutSubviews
 {
 	CGPoint center = self.navigationItem.leftBarButtonItem.customView.center;
-	if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
+	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
 		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
 	else
 		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
 	self.navigationItem.leftBarButtonItem.customView.center = center;
-	
-    return [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {

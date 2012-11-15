@@ -50,10 +50,9 @@
     
     [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
-	else
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
+	
+	// force 1st time through for iOS < 6.0
+	[self viewWillLayoutSubviews];
 	
 	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 }
@@ -62,19 +61,17 @@
     [self.slidingViewController anchorTopViewTo:ECRight];
 }
 
-#pragma mark - Rotation
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation duration:(NSTimeInterval)duration
+- (void)viewWillLayoutSubviews
 {
 	CGPoint center = self.navigationItem.leftBarButtonItem.customView.center;
-	if (UIInterfaceOrientationIsLandscape(interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
+	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
 		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
 	else
 		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
 	self.navigationItem.leftBarButtonItem.customView.center = center;
-	
-    return [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
 }
+
+#pragma mark - Rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
