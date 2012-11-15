@@ -60,6 +60,11 @@
     return [super willAnimateRotationToInterfaceOrientation:interfaceOrientation duration:duration];
 }
 
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
+    // Return YES for supported orientations
+    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
 - (void)editAction:(UIButton*)button
 {
 	BOOL edit = !button.selected;
