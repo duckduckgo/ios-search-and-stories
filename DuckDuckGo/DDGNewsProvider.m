@@ -147,6 +147,18 @@ static DDGNewsProvider *sharedProvider;
     return [DDGCache objectForKey:@"stories" inCache:@"misc"];
 }
 
+- (NSString*)feedForURL:(NSString*)url
+{
+	// scan stories trying to find a match to url
+	NSArray *stories = [self stories];
+	for (DDGStory *story in stories)
+		if ([story.url isEqualToString:url])
+			// found story so return feed
+			return story.feed;
+
+	return nil;
+}
+
 -(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished {
     // do everything in the background
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {

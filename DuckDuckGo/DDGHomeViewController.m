@@ -8,7 +8,6 @@
 
 #import "DDGAppDelegate.h"
 #import "DDGHomeViewController.h"
-#import "DDGWebViewController.h"
 #import "AFNetworking.h"
 #import "DDGCache.h"
 #import <QuartzCore/QuartzCore.h>

@@ -13,7 +13,7 @@
 +(DDGBookmarksProvider *)sharedProvider;
 
 -(BOOL)bookmarkExistsForPageWithURL:(NSURL *)url;
--(void)bookmarkPageWithTitle:(NSString *)title URL:(NSURL *)url;
+-(void)bookmarkPageWithTitle:(NSString *)title feed:(NSString*)feed URL:(NSURL *)url;
 -(void)unbookmarkPageWithURL:(NSURL *)url;
 
 -(NSArray *)bookmarks;

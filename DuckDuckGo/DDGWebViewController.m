@@ -9,6 +9,7 @@
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
+#import "DDGNewsProvider.h"
 #import "SVProgressHUD.h"
 #import "SHK.h"
 #import "ECSlidingViewController.h"
@@ -102,26 +103,47 @@
     [actionSheet showInView:self.view];
 }
 
+/*
+ 1) if article from watrcoolr add internal favicon
+ 2) if search -- add the search favicon (not sure if this exists -- if not ask other chris)
+ 3) if other site we have no favicon -- just omit.
+ */
+
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     
     NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    if(buttonIndex == 0) {
+    if(buttonIndex == 0)
+	{
         // bookmark/unbookmark
                 
         BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
         if(bookmarked)
             [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:_webViewURL];
         else
-            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:pageTitle URL:_webViewURL];
+		{
+			NSString *feed = [_webViewURL absoluteString];
+			
+			if ([feed hasPrefix:@"https://duckduckgo.com/?q="])
+				// this is clearly a direct DDG search
+				feed = @"search_icon.png";
+			else
+				// see if this is a news feed story that was bookmarked
+				feed = [[DDGNewsProvider sharedProvider] feedForURL:feed];				
+
+            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:pageTitle feed:feed URL:_webViewURL];
+		}
     
         [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unsaved!" : @"Saved!")];
-    } else if(buttonIndex == 1) {
+    }
+	else if (buttonIndex == 1)
+	{
         // share
         
         // strip extra params from DDG search URLs
         NSURL *shareURL = _webViewURL;
         NSString *query = [_searchController queryFromDDGURL:_webViewURL];
-        if(query) {
+        if(query)
+		{
             query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
         }
@@ -151,18 +173,28 @@
         [_webView reload];
 }
 
--(void)loadQueryOrURL:(NSString *)queryOrURLString {
-    if(!viewsInitialized) {
+-(void)loadQueryOrURL:(NSString *)queryOrURLString
+{
+    if(!viewsInitialized)
+	{
         // if views haven't loaded yet, nothing below work, so we need to save the URL/query to load later
         queryOrURLToLoad = queryOrURLString;
-    } else if(queryOrURLString) {
+    }
+	else if (queryOrURLString)
+	{
         NSString *urlString;
-        if([_searchController isQuery:queryOrURLString]) {
+        if([_searchController isQuery:queryOrURLString])
+		{
+			// direct query
             urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
 						 [queryOrURLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
 						 [DDGCache objectForKey:@"region" inCache:@"settings"]];
-        } else
+        }
+		else
+		{
+			// a URL entered by user
             urlString = [_searchController validURLStringFromString:queryOrURLString];
+		}
         
         NSURL *url = [NSURL URLWithString:urlString];
         [_webView loadRequest:[NSURLRequest requestWithURL:url]];

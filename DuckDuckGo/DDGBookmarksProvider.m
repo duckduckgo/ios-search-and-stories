@@ -34,11 +34,14 @@ static DDGBookmarksProvider *sharedProvider;
     return NO;
 }
 
--(void)bookmarkPageWithTitle:(NSString *)title URL:(NSURL *)url {
+-(void)bookmarkPageWithTitle:(NSString *)title feed:(NSString*)feed URL:(NSURL *)url
+{
     NSArray *bookmarks = self.bookmarks;
-    bookmarks = [bookmarks arrayByAddingObject:@{
+    bookmarks = [bookmarks arrayByAddingObject:
+				 @{
                  @"title": title,
-                 @"url": url
+                 @"url": url,
+				 @"feed": feed ? feed : @""
                  }];
     [DDGCache setObject:bookmarks forKey:@"bookmarks" inCache:@"misc"];
 }

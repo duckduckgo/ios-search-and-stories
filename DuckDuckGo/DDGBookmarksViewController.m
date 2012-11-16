@@ -105,27 +105,31 @@
 {
     static NSString *CellIdentifier = @"Cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(!cell) {
+    if(!cell)
+	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
+		cell.imageView.image = [UIImage imageNamed:@"spacer44x44.png"];
+		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 44, 44)];
+		[cell.contentView addSubview:iv];
+		iv.tag = 100;
+		iv.contentMode = UIViewContentModeScaleAspectFit;
     }
     
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
     cell.textLabel.text = [bookmark objectForKey:@"title"];
     cell.detailTextLabel.text = [[bookmark objectForKey:@"url"] absoluteString];
 
-	UIImage *image = [DDGCache objectForKey:[bookmark objectForKey:@"source"] inCache:@"sourceImages"];
-	cell.imageView.image = image;
-//	if([source objectForKey:@"link"] && [source objectForKey:@"link"] != [NSNull null]) {
-//		UIImage *image = [DDGCache objectForKey:[source objectForKey:@"source"] inCache:@"sourceImages"];
-//		cell.imageView.image = image;
-//		[(UIImageView *)[cell viewWithTag:100] setImage:image];
-//	}
-//	else
-//	{
-//		cell.imageView.image = nil;
-//		[(UIImageView *)[cell viewWithTag:100] setImage:nil];
-//		
-//	}
+	NSString *feed = [bookmark objectForKey:@"feed"];
+	if ([feed isEqualToString:@"search_icon.png"])
+	{
+		((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:feed];
+	}
+	else if (feed)
+	{
+		((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:feed inCache:@"sourceImages"];
+	}
+	else
+		((UIImageView *)[cell viewWithTag:100]).image = nil;
 
     return cell;
 }
