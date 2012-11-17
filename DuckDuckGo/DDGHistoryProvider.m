@@ -31,29 +31,31 @@ static DDGHistoryProvider *sharedInstance;
 }
 
 -(void)clearHistory {
-    history = [[NSMutableArray alloc] init];
+    [history removeAllObjects];
     [self save];
 }
 
--(void)logHistoryItem:(NSString *)historyItem {
-    if(![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
-        return;
-    
-    NSDictionary *historyItemDictionary = @{
-        @"text": historyItem,
-        @"date": [NSDate date]
-    };
-    
-    for(int i=0; i<history.count; i++) {
-        if([[[history objectAtIndex:i] objectForKey:@"text"] isEqualToString:historyItem]) {
-            // add the new history item at the end to keep the array ordered
-            [history removeObjectAtIndex:i];
-            [history addObject:historyItemDictionary];
-            return;
-        }
-    }
-    [history addObject:historyItemDictionary];
-    [self save];
+-(void)logHistoryItem:(NSDictionary *)historyItem
+{
+    if ([[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
+    {
+		NSMutableDictionary *historyItemDictionary = [NSMutableDictionary dictionaryWithDictionary:historyItem];
+		
+		[historyItemDictionary setObject:[NSDate date] forKey:@"date"];
+		
+		for (int i = 0; i < history.count; i++)
+		{
+			if ([[[history objectAtIndex:i] objectForKey:@"text"] isEqualToString:[historyItem  objectForKey:@"text"]])
+			{
+				// add the new history item at the end to keep the array ordered
+				[history removeObjectAtIndex:i];
+				[history addObject:historyItemDictionary];
+				return;
+			}
+		}
+		[history addObject:historyItemDictionary];
+		[self save];
+	}
 }
 
 -(NSArray *)allHistoryItems {

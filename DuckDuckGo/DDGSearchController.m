@@ -680,7 +680,9 @@
 	}
 	[textField resignFirstResponder];
 	
-    [[DDGHistoryProvider sharedProvider] logHistoryItem:([_searchField.text length] ? _searchField.text : nil)];
+	if ([_searchField.text length])
+		[[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": _searchField.text, @"kind": @"search"}];
+
     [self.searchHandler loadQueryOrURL:([_searchField.text length] ? _searchField.text : nil)];
     [self dismissAutocomplete];
 

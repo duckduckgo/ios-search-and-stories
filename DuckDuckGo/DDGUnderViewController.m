@@ -13,6 +13,7 @@
 #import "DDGWebViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGBookmarksViewController.h"
+#import "DDGCache.h"
 
 @implementation DDGUnderViewController
 
@@ -100,7 +101,6 @@
     if(!cell)
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.textLabel.textColor = [UIColor whiteColor];
 		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_menu-items.png"]];
         
         // cell separator
@@ -119,13 +119,24 @@
         lineView2.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
         lineView2.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.03];
         [cell.contentView addSubview:lineView2];
+
+		cell.imageView.image = [UIImage imageNamed:@"spacer32x32.png"];
+
+		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 32.0, 32.0)];
+		[cell.contentView addSubview:iv];
+		iv.tag = 100;
+		iv.contentMode = UIViewContentModeScaleAspectFit;
+		iv.center = cell.imageView.center;
     }
+	((UIImageView *)[cell viewWithTag:100]).image = nil;
     
     if(indexPath.section == 0)
 	{
         cell.textLabel.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
 		cell.textLabel.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_caret.png"] highlightedImage:[UIImage imageNamed:@"icon_caret_onclick.png"]];
+		cell.textLabel.numberOfLines = 1;
+		cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0];
 		switch (indexPath.row)
 		{
 			case 0:
@@ -151,9 +162,25 @@
     }
 	else
 	{
-        cell.textLabel.text = [[[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row] objectForKey:@"text"];
-		cell.imageView.image = nil;
+		cell.textLabel.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
+		cell.imageView.image = [UIImage imageNamed:@"spacer32x32.png"];
+		[cell viewWithTag:100].center = cell.imageView.center;
+		NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
+		
+		if ([[item objectForKey:@"kind"] isEqualToString:@"search"])
+		{
+			((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:@"search_icon.png"];
+		}
+		else if ([[item objectForKey:@"kind"] isEqualToString:@"feed"])
+		{
+			((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
+		}
+
+        cell.textLabel.text = [item objectForKey:@"text"];
+		cell.imageView.image = [UIImage imageNamed:@"spacer44x44.png"];
 		cell.accessoryView = nil;
+		cell.textLabel.numberOfLines = 2;
+		cell.textLabel.font = [UIFont systemFontOfSize:14.0];
     }
 	cell.textLabel.backgroundColor = cell.contentView.backgroundColor;
     
@@ -201,7 +228,13 @@
         }
 		else if(indexPath.section == 1)
 		{
-            [self loadQueryOrURL:[[[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row] objectForKey:@"text"]];
+			NSDictionary *historyItem = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
+			NSString *queryOrURL;
+			if ([[historyItem objectForKey:@"kind"] isEqualToString:@"feed"])
+				queryOrURL = [historyItem objectForKey:@"url"];
+			else
+				queryOrURL = [historyItem objectForKey:@"text"];
+            [self loadQueryOrURL:queryOrURL];
             [self.slidingViewController resetTopView];
         }
     }];

@@ -13,6 +13,7 @@
 #import <QuartzCore/QuartzCore.h>
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGNewsProvider.h"
+#import "DDGHistoryProvider.h"
 #import "DDGSettingsViewController.h"
 #import "DDGChooseSourcesViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
@@ -243,9 +244,10 @@
             [_tableView performSelector:@selector(reloadData) withObject:nil afterDelay:0.5]; // wait for the animation to complete
         });
     });
-
     NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
     [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:escapedStoryURL];
+
+	[[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": story.title, @"url": story.url, @"feed": story.feed, @"kind": @"feed"}];
 }
 
 #pragma mark - Loading popular stories

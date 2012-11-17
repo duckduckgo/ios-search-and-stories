@@ -108,8 +108,8 @@
     if(!cell)
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-		cell.imageView.image = [UIImage imageNamed:@"spacer44x44.png"];
-		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(5, 5, 44, 44)];
+		cell.imageView.image = [UIImage imageNamed:@"spacer32x32.png"];
+		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(11, 11, 32, 32)];
 		[cell.contentView addSubview:iv];
 		iv.tag = 100;
 		iv.contentMode = UIViewContentModeScaleAspectFit;

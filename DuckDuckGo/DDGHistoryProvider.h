@@ -14,7 +14,7 @@
 
 +(id)sharedProvider;
 -(void)clearHistory;
--(void)logHistoryItem:(NSString *)historyItem;
+-(void)logHistoryItem:(NSDictionary *)historyItem;
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix;
 -(NSArray *)allHistoryItems;
 @end

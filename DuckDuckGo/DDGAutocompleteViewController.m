@@ -266,18 +266,22 @@ static NSString *historyCellID = @"HCell";
 	}
 }
 
-- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section == 0) {
+- (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if(indexPath.section == 0)
+	{
         NSArray *history = [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
         NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
-        [[DDGHistoryProvider sharedProvider] logHistoryItem:[historyItem objectForKey:@"text"]];
+        [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": [historyItem objectForKey:@"text"], @"kind": @"history"}];
         [self.searchController.searchHandler loadQueryOrURL:[historyItem objectForKey:@"text"]];
         [self.searchController dismissAutocomplete];
-    } else if(indexPath.section == 1) {
+    }
+	else if (indexPath.section == 1)
+	{
         NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
         NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
         if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
-            [[DDGHistoryProvider sharedProvider] logHistoryItem:[suggestionItem objectForKey:@"phrase"]];
+            [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text":[suggestionItem objectForKey:@"phrase"], @"kind": @"suggestion"}];
         [self.searchController.searchHandler loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController dismissAutocomplete];
     }
