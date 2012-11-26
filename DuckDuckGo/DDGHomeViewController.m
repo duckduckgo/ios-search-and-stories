@@ -148,7 +148,7 @@
         SystemSoundID quack;
         NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
         NSURL *url = [NSURL URLWithString:path];
-        AudioServicesCreateSystemSoundID((__bridge_retained CFURLRef)url, &quack);
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &quack);
         AudioServicesPlaySystemSound(quack);
     }
 }

@@ -104,6 +104,7 @@
     CGColorRef shadowColor = CGColorCreate( colorSpace, components);
     CGContextSetShadowWithColor(context, shadowOffset, shadowBlur, shadowColor);
     CGColorRelease(shadowColor);
+	CGColorSpaceRelease(colorSpace);
     
     [super drawTextInRect:rect];
     
