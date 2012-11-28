@@ -120,9 +120,9 @@
         lineView2.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.03];
         [cell.contentView addSubview:lineView2];
 
-		cell.imageView.image = [UIImage imageNamed:@"spacer32x32.png"];
+		cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
 
-		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 32.0, 32.0)];
+		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, cell.imageView.image.size.width, cell.imageView.image.size.height)];
 		[cell.contentView addSubview:iv];
 		iv.tag = 100;
 		iv.contentMode = UIViewContentModeScaleAspectFit;
