@@ -128,6 +128,8 @@
 		iv.contentMode = UIViewContentModeScaleAspectFit;
 		iv.center = cell.imageView.center;
     }
+	cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
+	
 	((UIImageView *)[cell viewWithTag:100]).image = nil;
     
     if(indexPath.section == 0)
@@ -142,19 +144,19 @@
 			case 0:
 			{
 				
-                ((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
+				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
 			}
 				break;
 			case 1:
 			{
-				((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
+				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
 			}
 				break;
 			case 2:
 			{
-				((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
+				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected.png"];
 			}
 				break;
