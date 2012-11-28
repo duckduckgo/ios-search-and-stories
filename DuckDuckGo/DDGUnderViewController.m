@@ -142,19 +142,19 @@
 			case 0:
 			{
 				
-                cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
+                ((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
 			}
 				break;
 			case 1:
 			{
-				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
+				((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
 			}
 				break;
 			case 2:
 			{
-				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
+				((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected.png"];
 			}
 				break;
@@ -163,11 +163,9 @@
 	else
 	{
 		cell.textLabel.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
-		cell.imageView.image = [UIImage imageNamed:@"spacer32x32.png"];
-		[cell viewWithTag:100].center = cell.imageView.center;
 		NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
 		
-		if ([[item objectForKey:@"kind"] isEqualToString:@"search"])
+		if ([[item objectForKey:@"kind"] isEqualToString:@"search"] || [[item objectForKey:@"kind"] isEqualToString:@"suggestion"])
 		{
 			((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:@"search_icon.png"];
 		}
@@ -175,9 +173,7 @@
 		{
 			((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
 		}
-
         cell.textLabel.text = [item objectForKey:@"text"];
-		cell.imageView.image = [UIImage imageNamed:@"spacer44x44.png"];
 		cell.accessoryView = nil;
 		cell.textLabel.numberOfLines = 2;
 		cell.textLabel.font = [UIFont systemFontOfSize:14.0];
@@ -185,6 +181,11 @@
 	cell.textLabel.backgroundColor = cell.contentView.backgroundColor;
     
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	[cell viewWithTag:100].center = CGPointMake(cell.contentView.frame.size.height/2, cell.contentView.frame.size.height/2);
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {

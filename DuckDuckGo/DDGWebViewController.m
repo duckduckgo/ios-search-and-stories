@@ -273,19 +273,31 @@
 
 #pragma mark - Web view deleagte
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-
-    if ([[[request.URL scheme] lowercaseString] isEqualToString:@"mailto"])
+- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
+{
+	if (navigationType == UIWebViewNavigationTypeLinkClicked)
 	{
-		// user is interested in mailing so use the internal mail API
-		[self performSelector:@selector(internalMailAction:) withObject:request.URL afterDelay:0.005];
-		return NO;
+		if ([[[request.URL scheme] lowercaseString] isEqualToString:@"mailto"])
+		{
+			// user is interested in mailing so use the internal mail API
+			[self performSelector:@selector(internalMailAction:) withObject:request.URL afterDelay:0.005];
+			return NO;
+		}
+		else if ([[request.URL absoluteString] isEqual:@"about:blank"])
+		{
+			NSLog(@"shouldStartLoadWithRequest: [about:blank]");
+		}
+		else if([request.URL isEqual:request.mainDocumentURL])
+		{
+			[_searchController updateBarWithURL:request.URL];
+			self.webViewURL = request.URL;
+		}
+		else
+		{
+			NSLog(@"shouldStartLoadWithRequestNOT: [%@] != [%@]", [request.URL absoluteString], [request.mainDocumentURL absoluteString]);
+		}
 	}
-	else if([request.URL isEqual:request.mainDocumentURL])
-	{
-        [_searchController updateBarWithURL:request.URL];
-        self.webViewURL = request.URL;
-    }
+	
 	return YES;
 }
 
