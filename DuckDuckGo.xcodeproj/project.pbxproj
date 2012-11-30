@@ -171,6 +171,7 @@
 		838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9063149A75D700C11E41 /* DDGSearchController.xib */; };
 		838E9065149A763200C11E41 /* TwoLineTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9067149A763200C11E41 /* TwoLineTopicCell.xib */; };
 		838E906A149A76D400C11E41 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838E906C149A76D400C11E41 /* Localizable.strings */; };
+		8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */; };
 		839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839819421493C1DB0017A892 /* DDGWebViewController.m */; };
 		8398DAC416419EB100A559C3 /* regions.json in Resources */ = {isa = PBXBuildFile; fileRef = 8398DAC316419EB100A559C3 /* regions.json */; };
 		8398DAC816419FFD00A559C3 /* DDGChooseRegionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8398DAC616419FFD00A559C3 /* DDGChooseRegionViewController.m */; };
@@ -661,6 +662,8 @@
 		838E9062149A75D700C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DDGSearchController.xib; sourceTree = "<group>"; };
 		838E9066149A763200C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TwoLineTopicCell.xib; sourceTree = "<group>"; };
 		838E906B149A76D400C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8392E2301668E148004263B6 /* NSMutableString+DDGDumpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+DDGDumpView.h"; sourceTree = "<group>"; };
+		8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+DDGDumpView.m"; sourceTree = "<group>"; };
 		839819411493C1DB0017A892 /* DDGWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebViewController.h; sourceTree = "<group>"; };
 		839819421493C1DB0017A892 /* DDGWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebViewController.m; sourceTree = "<group>"; };
 		8398DAC316419EB100A559C3 /* regions.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = regions.json; sourceTree = "<group>"; };
@@ -1106,6 +1109,15 @@
 			name = Resources;
 			sourceTree = "<group>";
 		};
+		8392E22F1668E106004263B6 /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				8392E2301668E148004263B6 /* NSMutableString+DDGDumpView.h */,
+				8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */,
+			);
+			name = Utility;
+			sourceTree = "<group>";
+		};
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
@@ -1150,6 +1162,7 @@
 				4C19FFD61593B617003AC03F /* DDGCache.m */,
 				4C184D0C15A3742A003AAD5E /* NSArray+ConcurrentIteration.h */,
 				4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */,
+				8392E22F1668E106004263B6 /* Utility */,
 				838E906D149A794F00C11E41 /* Resources */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
 				83F32263149290EF00A61BC5 /* Supporting Files */,
@@ -1694,6 +1707,7 @@
 				4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */,
 				8398DAC816419FFD00A559C3 /* DDGChooseRegionViewController.m in Sources */,
 				8398DACC1641DA9F00A559C3 /* DDGRegionProvider.m in Sources */,
+				8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
