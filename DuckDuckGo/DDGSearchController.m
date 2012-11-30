@@ -16,6 +16,8 @@
 #import "DDGAutocompleteViewController.h"
 #import "ECSlidingViewController.h"
 
+#import "NSMutableString+DDGDumpView.h"
+
 @implementation DDGSearchController
 
 - (id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container {
@@ -43,6 +45,22 @@
 }
 
 #pragma mark - View lifecycle
+
+- (void)viewWillLayoutSubviews
+{
+	if (self.view.frame.origin.y < 0.0)
+	{
+//		// uncoment these lines to get/see a nicely formatted view hiearchy dump
+//		NSMutableString *s = [NSMutableString string];
+//		[s dumpView:self.view atIndent:0];
+//		NSLog (@"DDGSearchController:viewWILLLayoutSubviews \n%@", s);
+
+		// repair damage occuring deep in the bowels of this view hiearchy
+		CGRect r = self.view.frame;
+		r.origin.y = 0.0;
+		self.view.frame = r;
+	}
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
