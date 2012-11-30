@@ -678,6 +678,8 @@
 		83CAD03F16397F8D0030C4FC /* icon_caret@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_caret@2x.png"; sourceTree = "<group>"; };
 		83CD212E16374042000220B0 /* section_tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = section_tile.png; sourceTree = "<group>"; };
 		83CD212F16374045000220B0 /* section_tile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "section_tile@2x.png"; sourceTree = "<group>"; };
+		83CEFDCD16695C4F003E50C5 /* ShareKit keys.numbers */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ShareKit keys.numbers"; sourceTree = "<group>"; };
+		83CEFDCE16695C4F003E50C5 /* ShareKit keys.xls */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ShareKit keys.xls"; sourceTree = "<group>"; };
 		83D3DE01164D60D00062D30B /* DDGWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGWebViewController.xib; sourceTree = "<group>"; };
 		83DC6E901642AF3B00E06A9C /* save_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = save_button.png; sourceTree = "<group>"; };
 		83DC6E911642AF3B00E06A9C /* save_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "save_button@2x.png"; sourceTree = "<group>"; };
@@ -1149,6 +1151,8 @@
 				4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */,
 				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
+				83CEFDCD16695C4F003E50C5 /* ShareKit keys.numbers */,
+				83CEFDCE16695C4F003E50C5 /* ShareKit keys.xls */,
 				4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */,
 				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
 				4C573C1115B7311200790F60 /* Home screen */,
