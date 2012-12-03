@@ -16,11 +16,21 @@
 #import "DDGUnderViewController.h"
 #import "DDGCache.h"
 
-@implementation NSString (URLDecoding)
+@implementation NSString (URLPrivateDDG)
 
-- (NSString *) URLDecodedString
+- (NSString *)URLDecodedStringDDG
 {
     return (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (__bridge CFStringRef)self, CFSTR(""), kCFStringEncodingUTF8);
+}
+
+- (NSString *)URLEncodedStringDDG
+{
+    NSString *s = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+																						(__bridge CFStringRef)self,
+																						NULL,
+																						CFSTR("!*'();:@&=$,/?%#[]"), // BUT NOT + 'cause we'll take care of that
+																						kCFStringEncodingUTF8);
+	return [s stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"];
 }
 
 @end
@@ -187,7 +197,7 @@
 		{
 			// direct query
             urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
-						 [queryOrURLString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding],
+						 [queryOrURLString URLEncodedStringDDG], 
 						 [DDGCache objectForKey:@"region" inCache:@"settings"]];
         }
 		else
@@ -255,7 +265,7 @@
 			{
                 NSArray *keyValuePair = [queryString componentsSeparatedByString:@"="];
                 if (keyValuePair.count == 2)
-                    [params setObject:[[keyValuePair objectAtIndex:1] URLDecodedString] forKey:[[keyValuePair objectAtIndex:0] URLDecodedString]];
+                    [params setObject:[[keyValuePair objectAtIndex:1] URLDecodedStringDDG] forKey:[[keyValuePair objectAtIndex:0] URLDecodedStringDDG]];
             }
         }
 		// now mail it
@@ -283,18 +293,10 @@
 			[self performSelector:@selector(internalMailAction:) withObject:request.URL afterDelay:0.005];
 			return NO;
 		}
-		else if ([[request.URL absoluteString] isEqual:@"about:blank"])
-		{
-			NSLog(@"shouldStartLoadWithRequest: [about:blank]");
-		}
 		else if([request.URL isEqual:request.mainDocumentURL])
 		{
 			[_searchController updateBarWithURL:request.URL];
 			self.webViewURL = request.URL;
-		}
-		else
-		{
-			NSLog(@"shouldStartLoadWithRequestNOT: [%@] != [%@]", [request.URL absoluteString], [request.mainDocumentURL absoluteString]);
 		}
 	}
 	
