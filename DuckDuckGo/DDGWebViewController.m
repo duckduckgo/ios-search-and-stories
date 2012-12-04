@@ -100,7 +100,8 @@
 
 #pragma mark - Action sheet
 
--(void)searchControllerActionButtonPressed {
+-(void)searchControllerActionButtonPressed
+{
     BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
     UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
                                                              delegate:self
@@ -109,6 +110,7 @@
                                                     otherButtonTitles:
                                   (bookmarked ? @"Unsave" : @"Save"),
                                   @"Share",
+								  @"Open in Safari",
                                   nil];
     [actionSheet showInView:self.view];
 }
@@ -163,6 +165,11 @@
         [SHK setRootViewController:self];
         [actionSheet showInView:self.view];
     }
+	else if (buttonIndex == 2)
+	{
+		// open in Safari
+		[[UIApplication sharedApplication] openURL:_webViewURL];
+	}
 }
 
 
