@@ -52,12 +52,12 @@
 // Readability - http://www.readability.com/publishers/api/
 - (NSString*)readabilityConsumerKey
 {
-	return @"";
+	return @"DuckDuckGo1";
 }
 
 - (NSString*)readabilitySecret
 {
-	return @"";
+	return @"TUXGwuZaamMrKefC4YJWa5AApvfGZ83P";
 }
 
 // Evernote - http://www.evernote.com/about/developer/api/

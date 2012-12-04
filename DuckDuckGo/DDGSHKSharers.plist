@@ -4,10 +4,8 @@
 <dict>
 	<key>actions</key>
 	<array>
-		<string>SHKPhotoAlbum</string>
 		<string>SHKCopy</string>
 		<string>SHKMail</string>
-		<string>SHKSafari</string>
 		<string>SHKTextMessage</string>
 	</array>
 	<key>services</key>
@@ -20,13 +18,11 @@
 		<string>SHKPinboard</string>
 		<string>SHKGoogleReader</string>
 		<string>SHKFacebook</string>
-		<string>SHKVkontakte</string>
 		<string>SHKReadItLater</string>
 		<string>SHKInstapaper</string>
 		<string>SHKTumblr</string>
 		<string>SHKFlickr</string>
 		<string>SHKLinkedIn</string>
-		<string>SHKFoursquareV2</string>
 	</array>
 </dict>
 </plist>
