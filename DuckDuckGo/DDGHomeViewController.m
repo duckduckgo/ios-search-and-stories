@@ -61,7 +61,7 @@
     
     DDGUnderViewController *underVC = [[DDGUnderViewController alloc] initWithHomeViewController:self];
     self.slidingViewController.underLeftViewController = underVC;
-    [self.slidingViewController setAnchorRightRevealAmount:200.0];
+    [self.slidingViewController setAnchorRightRevealAmount:255.0];
     
     // this one time, we have to do add the gesture recognizer manually; underVC only does it for us when the view is loaded through the menu
     [underVC configureViewController:self];
