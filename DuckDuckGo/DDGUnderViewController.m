@@ -38,7 +38,7 @@
     
         self.tableView.scrollsToTop = NO;
         
-        self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
+        self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_texture-dark.png"]];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
         self.clearsSelectionOnViewWillAppear = NO;
@@ -101,28 +101,11 @@
     if(!cell)
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_menu-items.png"]];
         
-        // cell separator
-        UIView *lineView = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                    cell.contentView.bounds.size.height-1.0f,
-                                                                    cell.contentView.bounds.size.width,
-                                                                    1.0f)];
-        lineView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-        lineView.backgroundColor = [UIColor colorWithWhite:0.0 alpha:0.25];
-        [cell.contentView addSubview:lineView];
-        
-        UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0.0f,
-                                                                     0.0f,
-                                                                     cell.contentView.bounds.size.width,
-                                                                     1.0f)];
-        lineView2.autoresizingMask = UIViewAutoresizingFlexibleTopMargin;
-        lineView2.backgroundColor = [UIColor colorWithWhite:1.0 alpha:0.03];
-        [cell.contentView addSubview:lineView2];
-
 		cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
 
-		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, cell.imageView.image.size.width, cell.imageView.image.size.height)];
+		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 16.0, 16.0)];
+		iv.layer.cornerRadius = 2.0;
 		[cell.contentView addSubview:iv];
 		iv.tag = 100;
 		iv.contentMode = UIViewContentModeScaleAspectFit;
@@ -134,6 +117,7 @@
     
     if(indexPath.section == 0)
 	{
+		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_menu-items.png"]];
         cell.textLabel.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
 		cell.textLabel.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_caret.png"] highlightedImage:[UIImage imageNamed:@"icon_caret_onclick.png"]];
@@ -164,6 +148,7 @@
     }
 	else
 	{
+		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_history-items.png"]];
 		cell.textLabel.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
 		
@@ -190,15 +175,23 @@
 	[cell viewWithTag:100].center = CGPointMake(cell.contentView.frame.size.height/2, cell.contentView.frame.size.height/2);
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return (section == 0 ? 0 : 22);
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return (section == 0 ? 0 : 23);
 }
 
--(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return (section == 0 ? 0 : 1);
+}
+
+-(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
     [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
     
-    if(section == 1) {
+    if (section == 1)
+	{
         UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
         title.text = @"History";
         title.textColor = [UIColor whiteColor];
@@ -209,6 +202,14 @@
     }
     
     return headerView;
+}
+
+-(UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
+    [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
+    
+    return footerView;
 }
 
 
