@@ -176,7 +176,7 @@
 		}
 		else
 		{
-			cell.imageView.image = [UIImage imageNamed:@"reminder_bubble.png"];
+			cell.imageView.image = [UIImage imageNamed:@"icon_notification.png"];
 			cell.textLabel.text = @"Record History is disabled.\nYou can enable it in settings.";
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
