@@ -48,9 +48,15 @@
     return self;
 }
 
--(void)viewWillAppear:(BOOL)animated {
+-(void)viewWillAppear:(BOOL)animated
+{
     [super viewWillAppear:animated];
     [self.tableView reloadData];
+}
+
+-(void)viewWillLayoutSubviews
+{
+    [super viewWillLayoutSubviews];
 }
 
 -(void)configureViewController:(UIViewController *)viewController {
@@ -89,7 +95,9 @@
         case 0:
             return viewControllers.count;
         case 1:
-            return [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
+		{
+            return ![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue] ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
+		}
         default:
             return 0;
     };
@@ -112,7 +120,7 @@
 		iv.center = cell.imageView.center;
     }
 	cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
-	
+	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 	((UIImageView *)[cell viewWithTag:100]).image = nil;
     
     if(indexPath.section == 0)
@@ -150,17 +158,28 @@
 	{
 		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_history-items.png"]];
 		cell.textLabel.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
-		NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
 		
-		if ([[item objectForKey:@"kind"] isEqualToString:@"search"] || [[item objectForKey:@"kind"] isEqualToString:@"suggestion"])
+		if ([[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
 		{
-			((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:@"search_icon.png"];
+			// we have history and it is enabled
+			NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
+			
+			if ([[item objectForKey:@"kind"] isEqualToString:@"search"] || [[item objectForKey:@"kind"] isEqualToString:@"suggestion"])
+			{
+				((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:@"search_icon.png"];
+			}
+			else if ([[item objectForKey:@"kind"] isEqualToString:@"feed"])
+			{
+				((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
+			}
+			cell.textLabel.text = [item objectForKey:@"text"];
 		}
-		else if ([[item objectForKey:@"kind"] isEqualToString:@"feed"])
+		else
 		{
-			((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
+			cell.imageView.image = [UIImage imageNamed:@"reminder_bubble.png"];
+			cell.textLabel.text = @"Record History is disabled.\nYou can enable it in settings.";
+			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
-        cell.textLabel.text = [item objectForKey:@"text"];
 		cell.accessoryView = nil;
 		cell.textLabel.numberOfLines = 2;
 		cell.textLabel.font = [UIFont systemFontOfSize:14.0];
@@ -214,6 +233,14 @@
 
 
 #pragma mark - Table view delegate
+
+- (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+	if (indexPath.section == 1 && ![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
+		return nil;
+	
+	return indexPath;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
