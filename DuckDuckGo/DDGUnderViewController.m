@@ -138,7 +138,7 @@
 		cell.textLabel.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_caret.png"] highlightedImage:[UIImage imageNamed:@"icon_caret_onclick.png"]];
 		cell.textLabel.numberOfLines = 1;
-		cell.textLabel.font = [UIFont boldSystemFontOfSize:17.0];
+		cell.textLabel.font = [UIFont fontWithName:@"Helvetica Neue Medium" size:18]; //[UIFont boldSystemFontOfSize:17.0];
 		switch (indexPath.row)
 		{
 			case 0:
