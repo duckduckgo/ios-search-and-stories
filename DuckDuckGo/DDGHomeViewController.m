@@ -14,7 +14,6 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGNewsProvider.h"
 #import "DDGHistoryProvider.h"
-#import "DDGSettingsViewController.h"
 #import "DDGChooseSourcesViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "NSArray+ConcurrentIteration.h"
