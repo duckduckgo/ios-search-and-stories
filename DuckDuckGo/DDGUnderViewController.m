@@ -125,7 +125,7 @@
         lbl.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
 		lbl.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		lbl.numberOfLines = 1;
-		lbl.font = [UIFont fontWithName:@"Helvetica Neue Medium" size:18]; //[UIFont boldSystemFontOfSize:17.0];
+		lbl.font = [UIFont boldSystemFontOfSize:17.0];//[UIFont fontWithName:@"Helvetica Neue Medium" size:18];
 		iv = (UIImageView*)[cell.contentView viewWithTag:300];
 		iv.hidden = NO;
 		iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_caret_onclick.png" : @"icon_caret.png"];
