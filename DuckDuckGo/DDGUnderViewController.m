@@ -42,6 +42,8 @@
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
         self.clearsSelectionOnViewWillAppear = NO;
+		
+		self.tableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
 
         [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
@@ -52,11 +54,6 @@
 {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
-}
-
--(void)viewWillLayoutSubviews
-{
-    [super viewWillLayoutSubviews];
 }
 
 -(void)configureViewController:(UIViewController *)viewController {
@@ -103,39 +100,39 @@
     };
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *CellIdentifier = @"Cell";
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *CellIdentifier = @"DDGUnderViewControllerCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+	UIImageView *iv;
     if(!cell)
 	{
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil] objectAtIndex:0];
         
 		cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
 
-		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(0.0, 0.0, 16.0, 16.0)];
+		iv = (UIImageView *)[cell viewWithTag:100];
 		iv.layer.cornerRadius = 2.0;
-		[cell.contentView addSubview:iv];
-		iv.tag = 100;
-		iv.contentMode = UIViewContentModeScaleAspectFit;
-		iv.center = cell.imageView.center;
     }
 	cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
 	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
 	((UIImageView *)[cell viewWithTag:100]).image = nil;
     
+	UILabel *lbl = (UILabel*)[cell.contentView viewWithTag:200];
     if(indexPath.section == 0)
 	{
 		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_menu-items.png"]];
-        cell.textLabel.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
-		cell.textLabel.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
-		cell.accessoryView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_caret.png"] highlightedImage:[UIImage imageNamed:@"icon_caret_onclick.png"]];
-		cell.textLabel.numberOfLines = 1;
-		cell.textLabel.font = [UIFont fontWithName:@"Helvetica Neue Medium" size:18]; //[UIFont boldSystemFontOfSize:17.0];
+        lbl.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
+		lbl.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
+		lbl.numberOfLines = 1;
+		lbl.font = [UIFont fontWithName:@"Helvetica Neue Medium" size:18]; //[UIFont boldSystemFontOfSize:17.0];
+		iv = (UIImageView*)[cell.contentView viewWithTag:300];
+		iv.hidden = NO;
+		iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_caret_onclick.png" : @"icon_caret.png"];
 		switch (indexPath.row)
 		{
 			case 0:
 			{
-				
 				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
 			}
@@ -157,7 +154,7 @@
 	else
 	{
 		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_history-items.png"]];
-		cell.textLabel.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
+		lbl.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		
 		if ([[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
 		{
@@ -172,19 +169,20 @@
 			{
 				((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
 			}
-			cell.textLabel.text = [item objectForKey:@"text"];
+			lbl.text = [item objectForKey:@"text"];
 		}
 		else
 		{
 			cell.imageView.image = [UIImage imageNamed:@"icon_notification.png"];
-			cell.textLabel.text = @"Record History is disabled.\nYou can enable it in settings.";
+			lbl.text = @"Record History is disabled.\nYou can enable it in settings.";
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
-		cell.accessoryView = nil;
-		cell.textLabel.numberOfLines = 2;
-		cell.textLabel.font = [UIFont systemFontOfSize:14.0];
+		lbl.numberOfLines = 2;
+		lbl.font = [UIFont systemFontOfSize:14.0];
+		iv = (UIImageView*)[cell.contentView viewWithTag:300];
+		iv.hidden = YES;
     }
-	cell.textLabel.backgroundColor = cell.contentView.backgroundColor;
+	lbl.backgroundColor = cell.contentView.backgroundColor;
     
     return cell;
 }
@@ -192,6 +190,12 @@
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	[cell viewWithTag:100].center = CGPointMake(cell.contentView.frame.size.height/2, cell.contentView.frame.size.height/2);
+//	
+//	CGRect r = cell.textLabel.frame;
+//	r.size.width -= 65.0;
+//	cell.textLabel.frame = r;
+//	[cell.textLabel layoutIfNeeded];
+//	r = cell.textLabel.frame;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -276,6 +280,18 @@
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+	CGSize sz = [[UIScreen mainScreen] bounds].size;
+	CGFloat width;
+	if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
+		width = sz.width;
+	else
+		width = sz.height;
+	
+    [self.slidingViewController setAnchorRightRevealAmount:width - 65.0];
 }
 
 
