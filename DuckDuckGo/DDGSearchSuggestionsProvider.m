@@ -10,8 +10,11 @@
 #import "AFNetworking.h"
 #import "DDGCache.h"
 #import "Constants.h"
+#import "DDGUtility.h"
+
 
 @implementation DDGSearchSuggestionsProvider
+
 static DDGSearchSuggestionsProvider *sharedProvider;
 
 -(id)init {
@@ -26,6 +29,7 @@ static DDGSearchSuggestionsProvider *sharedProvider;
 		[serverRequest setValue:@"Keep-Alive" forHTTPHeaderField:@"Connection"];
 		[serverRequest setValue:@"gzip" forHTTPHeaderField:@"Accept-Encoding"];
 		[serverRequest setValue:@"text/plain; charset=UTF-8" forHTTPHeaderField:@"Accept"];
+		[serverRequest setValue:[DDGUtility agentDDG] forHTTPHeaderField:@"User-Agent"];
         return self;
     }
     return nil;

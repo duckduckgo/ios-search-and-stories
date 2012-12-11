@@ -35,7 +35,6 @@
 		4C0BC92515B892D3008C6FC4 /* AFXMLRequestOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C0BC91015B892D3008C6FC4 /* AFXMLRequestOperation.h */; };
 		4C0BC92615B892D3008C6FC4 /* AFXMLRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0BC91115B892D3008C6FC4 /* AFXMLRequestOperation.m */; };
 		4C0BC92715B892D3008C6FC4 /* UIImageView+AFNetworking.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C0BC91215B892D3008C6FC4 /* UIImageView+AFNetworking.h */; };
-		4C0BC92815B892D3008C6FC4 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0BC91315B892D3008C6FC4 /* UIImageView+AFNetworking.m */; };
 		4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BC93515B8C2BE008C6FC4 /* quack.wav */; };
 		4C0BC93A15B8C45B008C6FC4 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C0BC93915B8C45B008C6FC4 /* AudioToolbox.framework */; };
 		4C11C6AF15B5E4C200D046BA /* DDGNewsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */; };
@@ -181,6 +180,8 @@
 		838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9063149A75D700C11E41 /* DDGSearchController.xib */; };
 		838E9065149A763200C11E41 /* TwoLineTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9067149A763200C11E41 /* TwoLineTopicCell.xib */; };
 		838E906A149A76D400C11E41 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838E906C149A76D400C11E41 /* Localizable.strings */; };
+		8390A3EC1677BE0A00336DE7 /* UIImageView+AFNetworking.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C0BC91315B892D3008C6FC4 /* UIImageView+AFNetworking.m */; };
+		8390A3F51677CB3500336DE7 /* DDGUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8390A3F41677CB3400336DE7 /* DDGUtility.m */; };
 		8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */; };
 		839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 839819421493C1DB0017A892 /* DDGWebViewController.m */; };
 		8398DAC416419EB100A559C3 /* regions.json in Resources */ = {isa = PBXBuildFile; fileRef = 8398DAC316419EB100A559C3 /* regions.json */; };
@@ -683,6 +684,8 @@
 		838E9062149A75D700C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DDGSearchController.xib; sourceTree = "<group>"; };
 		838E9066149A763200C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TwoLineTopicCell.xib; sourceTree = "<group>"; };
 		838E906B149A76D400C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8390A3F31677CB3400336DE7 /* DDGUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUtility.h; sourceTree = "<group>"; };
+		8390A3F41677CB3400336DE7 /* DDGUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUtility.m; sourceTree = "<group>"; };
 		8392E2301668E148004263B6 /* NSMutableString+DDGDumpView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableString+DDGDumpView.h"; sourceTree = "<group>"; };
 		8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableString+DDGDumpView.m"; sourceTree = "<group>"; };
 		839819411493C1DB0017A892 /* DDGWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebViewController.h; sourceTree = "<group>"; };
@@ -1146,6 +1149,8 @@
 		8392E22F1668E106004263B6 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				8390A3F31677CB3400336DE7 /* DDGUtility.h */,
+				8390A3F41677CB3400336DE7 /* DDGUtility.m */,
 				8392E2301668E148004263B6 /* NSMutableString+DDGDumpView.h */,
 				8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */,
 			);
@@ -1707,8 +1712,8 @@
 				4C0BC92215B892D3008C6FC4 /* AFPropertyListRequestOperation.m in Sources */,
 				4C0BC92415B892D3008C6FC4 /* AFURLConnectionOperation.m in Sources */,
 				4C0BC92615B892D3008C6FC4 /* AFXMLRequestOperation.m in Sources */,
-				4C0BC92815B892D3008C6FC4 /* UIImageView+AFNetworking.m in Sources */,
 				4C4A0F0B15DDC1DA00B44342 /* NSOperationStack.m in Sources */,
+				8390A3EC1677BE0A00336DE7 /* UIImageView+AFNetworking.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1756,6 +1761,7 @@
 				8398DAC816419FFD00A559C3 /* DDGChooseRegionViewController.m in Sources */,
 				8398DACC1641DA9F00A559C3 /* DDGRegionProvider.m in Sources */,
 				8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */,
+				8390A3F51677CB3500336DE7 /* DDGUtility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

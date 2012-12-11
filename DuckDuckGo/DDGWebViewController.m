@@ -15,6 +15,7 @@
 #import "ECSlidingViewController.h"
 #import "DDGUnderViewController.h"
 #import "DDGCache.h"
+#import "DDGUtility.h"
 
 @implementation NSString (URLPrivateDDG)
 
@@ -214,7 +215,11 @@
 		}
         
         NSURL *url = [NSURL URLWithString:urlString];
-        [_webView loadRequest:[NSURLRequest requestWithURL:url]];
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+		if ([[url host] hasSuffix:@"duckduckgo.com"])
+			[request setValue:[DDGUtility agentDDG] forHTTPHeaderField:@"User-Agent"];
+			
+        [_webView loadRequest:request];
         [_searchController updateBarWithURL:url];
         self.webViewURL = url;
     }
