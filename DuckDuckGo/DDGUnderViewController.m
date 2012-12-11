@@ -109,50 +109,53 @@
 	{
         cell = [[[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil] objectAtIndex:0];
         
-		cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
-
 		iv = (UIImageView *)[cell viewWithTag:100];
 		iv.layer.cornerRadius = 2.0;
     }
-	cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
 	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-	((UIImageView *)[cell viewWithTag:100]).image = nil;
+	iv = (UIImageView *)[cell viewWithTag:100];
+	iv.image = nil;
     
 	UILabel *lbl = (UILabel*)[cell.contentView viewWithTag:200];
     if(indexPath.section == 0)
 	{
+		[cell.contentView viewWithTag:300].hidden = NO;
+		((UIImageView*)[cell.contentView viewWithTag:300]).image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_caret_onclick.png" : @"icon_caret.png"];
+
 		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_menu-items.png"]];
+
         lbl.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
 		lbl.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		lbl.numberOfLines = 1;
-		lbl.font = [UIFont boldSystemFontOfSize:17.0];//[UIFont fontWithName:@"Helvetica Neue Medium" size:18];
-		iv = (UIImageView*)[cell.contentView viewWithTag:300];
-		iv.hidden = NO;
-		iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_caret_onclick.png" : @"icon_caret.png"];
+		lbl.font = [UIFont fontWithName:@"Helvetica Neue Medium" size:18]; //[UIFont boldSystemFontOfSize:17.0];
+
 		switch (indexPath.row)
 		{
 			case 0:
 			{
-				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
-                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
+				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
+                iv.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
 			}
 				break;
 			case 1:
 			{
-				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
-                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
+				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
+                iv.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
 			}
 				break;
 			case 2:
 			{
-				cell.imageView.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
-                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected.png"];
+				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
+                iv.highlightedImage = [UIImage imageNamed:@"icon_settings_selected.png"];
 			}
 				break;
 		}
+		iv.frame = CGRectMake(0, 0, 24, 24);
     }
 	else
 	{
+		[cell.contentView viewWithTag:300].hidden = YES;
+		
 		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_history-items.png"]];
 		lbl.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		
@@ -173,29 +176,18 @@
 		}
 		else
 		{
-			cell.imageView.image = [UIImage imageNamed:@"icon_notification.png"];
+			iv.image = [UIImage imageNamed:@"icon_notification.png"];
 			lbl.text = @"Record History is disabled.\nYou can enable it in settings.";
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
 		lbl.numberOfLines = 2;
 		lbl.font = [UIFont systemFontOfSize:14.0];
-		iv = (UIImageView*)[cell.contentView viewWithTag:300];
-		iv.hidden = YES;
+		iv.frame = CGRectMake(0, 0, 16, 16);
     }
+	iv.center = CGPointMake(22, 22);
 	lbl.backgroundColor = cell.contentView.backgroundColor;
     
     return cell;
-}
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	[cell viewWithTag:100].center = CGPointMake(cell.contentView.frame.size.height/2, cell.contentView.frame.size.height/2);
-//	
-//	CGRect r = cell.textLabel.frame;
-//	r.size.width -= 65.0;
-//	cell.textLabel.frame = r;
-//	[cell.textLabel layoutIfNeeded];
-//	r = cell.textLabel.frame;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
