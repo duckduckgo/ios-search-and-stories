@@ -615,12 +615,17 @@
 
 #pragma mark - Text field delegate
 
--(void)searchFieldDidChange:(id)sender {
-    DDGAutocompleteViewController *autocompleteViewController = [_autocompleteNavigationController.viewControllers objectAtIndex:0];
-    if(_autocompleteNavigationController.topViewController != autocompleteViewController)
-        [_autocompleteNavigationController popToRootViewControllerAnimated:NO];
-
-    [autocompleteViewController searchFieldDidChange:_searchField];
+-(void)searchFieldDidChange:(id)sender
+{
+	if ([[DDGCache objectForKey:@"autocomplete" inCache:@"settings"] boolValue])
+	{
+		// autocomplete only when enabled
+		DDGAutocompleteViewController *autocompleteViewController = [_autocompleteNavigationController.viewControllers objectAtIndex:0];
+		if(_autocompleteNavigationController.topViewController != autocompleteViewController)
+			[_autocompleteNavigationController popToRootViewControllerAnimated:NO];
+		
+		[autocompleteViewController searchFieldDidChange:_searchField];
+	}
 }
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
