@@ -23,7 +23,8 @@
     NSDictionary *defaults = @{
         @"history": @(NO),
         @"quack": @(NO),
-		@"region": @"us-en"
+		@"region": @"us-en",
+		@"autocomplete": @(YES),
     };
     
     for(NSString *key in defaults) {
@@ -92,6 +93,9 @@
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
     
+    [self addSectionWithTitle:@"Search Auto Complete"];
+    [self addSwitch:@"Enable Auto Complete" enabled:[[DDGCache objectForKey:@"autocomplete" inCache:@"settings"] boolValue]];
+    
     [self addSectionWithTitle:@"Regions"];
     [self addButton:@"Region" detailTitle:[[DDGRegionProvider shared] titleForRegion:[[DDGRegionProvider shared] region]] type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
@@ -135,7 +139,11 @@
                 inCache:@"settings"];
     
     [DDGCache setObject:[formData objectForKey:@"Quack on Refresh"]
-                 forKey:@"quack" 
+                 forKey:@"quack"
+                inCache:@"settings"];
+    
+    [DDGCache setObject:[formData objectForKey:@"Enable Auto Complete"]
+                 forKey:@"autocomplete"
                 inCache:@"settings"];
 }
 

@@ -16,6 +16,8 @@
 #import "DDGAutocompleteViewController.h"
 #import "ECSlidingViewController.h"
 
+#import "DDGCache.h"
+
 #import "NSMutableString+DDGDumpView.h"
 
 @implementation DDGSearchController
@@ -681,7 +683,8 @@
 
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     currentWordRange = NSMakeRange(NSNotFound, 0);
-    if(!autocompleteOpen)
+	// only open autocomplete if not already open and it is enabled for use
+    if(!autocompleteOpen && [[DDGCache objectForKey:@"autocomplete" inCache:@"settings"] boolValue])
         [self revealAutocomplete];
 }
 
