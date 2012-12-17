@@ -15,7 +15,7 @@
 }
 
 -(NSString *)appURL {
-    return @"http://duckduckgo.com";
+    return @"https://duckduckgo.com";
 }
 
 -(NSString *)sharersPlistName {
