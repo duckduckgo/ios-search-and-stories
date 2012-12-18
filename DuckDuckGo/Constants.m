@@ -17,4 +17,4 @@
 NSString * const kDDGTypeInfoURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
 NSString * const kDDGStoriesURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&s=";
 NSString * const kDDGCustomStoriesURLString = @"https://duckduckgo.com/news.js?o=json&t=m&q=";
-NSString * const kDDGSuggestionsURLString = @"http://swass.duckduckgo.com:6767/face/suggest/?q=";
+NSString * const kDDGSuggestionsURLString = @"https://duckduckgo.com/ac/?q=";
