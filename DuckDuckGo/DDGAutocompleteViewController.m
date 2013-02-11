@@ -18,7 +18,7 @@
 
 @implementation DDGAutocompleteViewController
 
-static NSString *bookmarksCellID = @"BCell";
+// static NSString *bookmarksCellID = @"BCell";
 static NSString *suggestionCellID = @"SCell";
 static NSString *historyCellID = @"HCell";
 
