@@ -1,3 +1,12 @@
 [submodule "Submodules/ShareKit"]
 	path = Submodules/ShareKit
 	url = git://github.com/ShareKit/ShareKit.git
+[submodule "AFNetworking"]
+	path = AFNetworking
+	url = git://github.com/AFNetworking/AFNetworking.git
+[submodule "Submodules/AFNetworking"]
+	path = Submodules/AFNetworking
+	url = git://github.com/AFNetworking/AFNetworking.git
+[submodule "Submodules/SDURLCache"]
+	path = Submodules/SDURLCache
+	url = git://github.com/rs/SDURLCache.git
