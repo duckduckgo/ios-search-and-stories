@@ -115,9 +115,10 @@
     }];
     
     [self addSectionWithTitle:nil];
+    
     [self addButton:@"Send Feedback" action:^{
         MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
-        mailVC.mailComposeDelegate = self;
+        mailVC.mailComposeDelegate = weakSelf;
         [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
         [mailVC setSubject:@"DuckDuckGo app feedback"];
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
