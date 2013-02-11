@@ -305,12 +305,13 @@
 			[self performSelector:@selector(internalMailAction:) withObject:request.URL afterDelay:0.005];
 			return NO;
 		}
-		else if([request.URL isEqual:request.mainDocumentURL])
-		{
-			[_searchController updateBarWithURL:request.URL];
-			self.webViewURL = request.URL;
-		}
 	}
+    
+    if ([request.URL isEqual:request.mainDocumentURL])
+    {
+        [_searchController updateBarWithURL:request.URL];
+        self.webViewURL = request.URL;
+    }
 	
 	return YES;
 }
