@@ -10,6 +10,7 @@
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
 
+@class DDGStoryCell;
 @class DDGScrollbarClockView;
 @interface DDGHomeViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate> {
     EGORefreshTableHeaderView *refreshHeaderView;
@@ -19,7 +20,7 @@
     UIColor *linen;
 }
 
-@property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
+@property (nonatomic, strong) IBOutlet DDGStoryCell *loadedCell;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) DDGSearchController *searchController;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;

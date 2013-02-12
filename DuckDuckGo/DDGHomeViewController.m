@@ -23,6 +23,7 @@
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
 #import "SHK.h"
+#import "DDGStoryCell.h"
 
 @interface DDGHomeViewController ()
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
@@ -351,7 +352,7 @@
         cellID = TwoLineCellIdentifier;
 
     
-	UITableViewCell *cell = [tv dequeueReusableCellWithIdentifier:cellID];
+	DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:cellID];
     
     if (cell == nil)
 	{
@@ -359,29 +360,24 @@
         cell = _loadedCell;
         self.loadedCell = nil;
         
-        [[cell.contentView viewWithTag:100] setBackgroundColor:linen];
-        
-        UIImageView *overlayImageView = (UIImageView *)[cell.contentView viewWithTag:400];
-        overlayImageView.image = [UIImage imageNamed:@"topic_cell_background.png"];
+        cell.imageView.backgroundColor = linen;
+        cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        cell.overlayImageView.image = [UIImage imageNamed:@"topic_cell_background.png"];
     }
     
-    UILabel *label = (UILabel *)[cell.contentView viewWithTag:200];
-	label.text = story.title;
-    if([[DDGCache objectForKey:story.storyID inCache:@"readStories"] boolValue])
-        label.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    else
-        label.textColor = [UIColor whiteColor];
+    cell.textLabel.text = story.title;
     
-    // load article image
-    UIImageView *articleImageView = (UIImageView *)[cell.contentView viewWithTag:100];
-    [articleImageView setContentMode:UIViewContentModeScaleAspectFill];
-    [story loadImageIntoView:articleImageView];
-    // load site favicon image
-    UIImageView *faviconImageView = (UIImageView *)[cell.contentView viewWithTag:300];
-    if(story.feed)
-        faviconImageView.image = [DDGCache objectForKey:story.feed inCache:@"sourceImages"];
+    if([[DDGCache objectForKey:story.storyID inCache:@"readStories"] boolValue])
+        cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     else
-        faviconImageView.image = nil;
+        cell.textLabel.textColor = [UIColor whiteColor];
+    
+    [story loadImageIntoView:cell.imageView];
+    
+    if(story.feed)
+        cell.faviconImageView.image = [DDGCache objectForKey:story.feed inCache:@"sourceImages"];
+    else
+        cell.faviconImageView.image = nil;
         
 	return cell;
 }
