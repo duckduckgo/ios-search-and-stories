@@ -31,17 +31,17 @@
 				<string key="IBProxiedObjectIdentifier">IBFirstResponder</string>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
-			<object class="IBUIView" id="766897932">
+			<object class="IBUIView" id="495050426">
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="IBUIButton" id="455821118">
-						<reference key="NSNextResponder" ref="766897932"/>
-						<int key="NSvFlags">302</int>
-						<string key="NSFrame">{{20, 3}, {130, 44}}</string>
-						<reference key="NSSuperview" ref="766897932"/>
+					<object class="IBUIButton" id="410176879">
+						<reference key="NSNextResponder" ref="495050426"/>
+						<int key="NSvFlags">294</int>
+						<string key="NSFrame">{{20, 20}, {130, 44}}</string>
+						<reference key="NSSuperview" ref="495050426"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="78191527"/>
+						<reference key="NSNextKeyView" ref="564890732"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -49,7 +49,7 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Save</string>
-						<object class="NSColor" key="IBUIHighlightedTitleColor" id="976651812">
+						<object class="NSColor" key="IBUIHighlightedTitleColor" id="934369902">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MQA</bytes>
 						</object>
@@ -57,25 +57,25 @@
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
-						<object class="NSColor" key="IBUINormalTitleShadowColor" id="1014829550">
+						<object class="NSColor" key="IBUINormalTitleShadowColor" id="687296543">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MC41AA</bytes>
 						</object>
-						<object class="IBUIFontDescription" key="IBUIFontDescription" id="124641386">
+						<object class="IBUIFontDescription" key="IBUIFontDescription" id="786804866">
 							<int key="type">2</int>
 							<double key="pointSize">15</double>
 						</object>
-						<object class="NSFont" key="IBUIFont" id="761724473">
+						<object class="NSFont" key="IBUIFont" id="1006226722">
 							<string key="NSName">Helvetica-Bold</string>
 							<double key="NSSize">15</double>
 							<int key="NSfFlags">16</int>
 						</object>
 					</object>
-					<object class="IBUIButton" id="78191527">
-						<reference key="NSNextResponder" ref="766897932"/>
-						<int key="NSvFlags">299</int>
-						<string key="NSFrame">{{170, 3}, {130, 44}}</string>
-						<reference key="NSSuperview" ref="766897932"/>
+					<object class="IBUIButton" id="564890732">
+						<reference key="NSNextResponder" ref="495050426"/>
+						<int key="NSvFlags">291</int>
+						<string key="NSFrame">{{170, 20}, {130, 44}}</string>
+						<reference key="NSSuperview" ref="495050426"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
@@ -85,20 +85,20 @@
 						<int key="IBUIContentVerticalAlignment">0</int>
 						<int key="IBUIButtonType">1</int>
 						<string key="IBUINormalTitle">Share</string>
-						<reference key="IBUIHighlightedTitleColor" ref="976651812"/>
+						<reference key="IBUIHighlightedTitleColor" ref="934369902"/>
 						<object class="NSColor" key="IBUINormalTitleColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
 						</object>
-						<reference key="IBUINormalTitleShadowColor" ref="1014829550"/>
-						<reference key="IBUIFontDescription" ref="124641386"/>
-						<reference key="IBUIFont" ref="761724473"/>
+						<reference key="IBUINormalTitleShadowColor" ref="687296543"/>
+						<reference key="IBUIFontDescription" ref="786804866"/>
+						<reference key="IBUIFont" ref="1006226722"/>
 					</object>
 				</array>
-				<string key="NSFrameSize">{320, 50}</string>
+				<string key="NSFrameSize">{320, 83}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="455821118"/>
+				<reference key="NSNextKeyView" ref="410176879"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -116,7 +116,7 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">swipeView</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="766897932"/>
+						<reference key="destination" ref="495050426"/>
 					</object>
 					<int key="connectionID">15</int>
 				</object>
@@ -124,14 +124,14 @@
 					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">swipeViewSaveButton</string>
 						<reference key="source" ref="372490531"/>
-						<reference key="destination" ref="455821118"/>
+						<reference key="destination" ref="410176879"/>
 					</object>
 					<int key="connectionID">16</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">share:</string>
-						<reference key="source" ref="78191527"/>
+						<reference key="source" ref="564890732"/>
 						<reference key="destination" ref="975951072"/>
 						<int key="IBEventType">7</int>
 					</object>
@@ -140,7 +140,7 @@
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">save:</string>
-						<reference key="source" ref="455821118"/>
+						<reference key="source" ref="410176879"/>
 						<reference key="destination" ref="975951072"/>
 						<int key="IBEventType">7</int>
 					</object>
@@ -168,24 +168,24 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">3</int>
-						<reference key="object" ref="766897932"/>
+						<reference key="object" ref="495050426"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="78191527"/>
-							<reference ref="455821118"/>
+							<reference ref="564890732"/>
+							<reference ref="410176879"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">4</int>
-						<reference key="object" ref="78191527"/>
+						<reference key="object" ref="564890732"/>
 						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="766897932"/>
+						<reference key="parent" ref="495050426"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">5</int>
-						<reference key="object" ref="455821118"/>
+						<reference key="object" ref="410176879"/>
 						<array class="NSMutableArray" key="children"/>
-						<reference key="parent" ref="766897932"/>
+						<reference key="parent" ref="495050426"/>
 					</object>
 				</array>
 			</object>
@@ -210,15 +210,15 @@
 					<string key="className">DDGHomeViewController</string>
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="loadedCell">UITableViewCell</string>
+						<string key="loadedCell">DDGStoryCell</string>
 						<string key="swipeView">UIView</string>
-						<string key="swipeViewSaveButton">UIView</string>
+						<string key="swipeViewSaveButton">UIButton</string>
 						<string key="tableView">UITableView</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="loadedCell">
 							<string key="name">loadedCell</string>
-							<string key="candidateClassName">UITableViewCell</string>
+							<string key="candidateClassName">DDGStoryCell</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="swipeView">
 							<string key="name">swipeView</string>
@@ -226,7 +226,7 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="swipeViewSaveButton">
 							<string key="name">swipeViewSaveButton</string>
-							<string key="candidateClassName">UIView</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="tableView">
 							<string key="name">tableView</string>
@@ -236,6 +236,38 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/DDGHomeViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DDGStoryCell</string>
+					<string key="superclassName">UITableViewCell</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="faviconImageView">UIImageView</string>
+						<string key="imageView">UIImageView</string>
+						<string key="overlayImageView">UIImageView</string>
+						<string key="textLabel">UILabel</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="faviconImageView">
+							<string key="name">faviconImageView</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="imageView">
+							<string key="name">imageView</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="overlayImageView">
+							<string key="name">overlayImageView</string>
+							<string key="candidateClassName">UIImageView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="textLabel">
+							<string key="name">textLabel</string>
+							<string key="candidateClassName">UILabel</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/DDGStoryCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

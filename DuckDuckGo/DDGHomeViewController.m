@@ -225,7 +225,7 @@
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     [UIView animateWithDuration:0.2
                      animations:^{
-                         cell.frame = self.swipeView.frame;
+                         cell.imageView.frame = self.swipeView.frame;
                      } completion:^(BOOL finished) {
                          [self.swipeView removeFromSuperview];
                          self.swipeViewIndexPath = nil;
@@ -243,19 +243,20 @@
     
     void(^completion)() = ^() {
         if (nil != cell) {
-            CGRect cellFrame = cell.frame;
+            UIView *behindView = cell.imageView;
+            CGRect swipeFrame = behindView.frame;
             
             if (nil == self.swipeView)
                 [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
             
-            self.swipeView.frame = cellFrame;
-            [cell.superview insertSubview:self.swipeView belowSubview:cell];
+            self.swipeView.frame = swipeFrame;
+            [behindView.superview insertSubview:self.swipeView belowSubview:behindView];
             [UIView animateWithDuration:0.2
                              animations:^{
-                                 cell.frame = CGRectMake(cellFrame.origin.x - cellFrame.size.width,
-                                                         cellFrame.origin.y,
-                                                         cellFrame.size.width,
-                                                         cellFrame.size.height);
+                                 behindView.frame = CGRectMake(swipeFrame.origin.x - swipeFrame.size.width,
+                                                             swipeFrame.origin.y,
+                                                             swipeFrame.size.width,
+                                                             swipeFrame.size.height);
                              }];
             self.swipeViewIndexPath = indexPath;
         }
