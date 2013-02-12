@@ -22,5 +22,7 @@
 @property (nonatomic, strong) IBOutlet UITableViewCell *loadedCell;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) DDGSearchController *searchController;
+@property (strong, nonatomic) IBOutlet UIView *swipeView;
+@property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
 
 @end
