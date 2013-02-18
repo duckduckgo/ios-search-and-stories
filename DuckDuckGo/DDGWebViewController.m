@@ -307,10 +307,16 @@
 		}
 	}
     
-    if ([request.URL isEqual:request.mainDocumentURL])
+    NSURL *url = request.URL;
+    
+    if ([url isEqual:request.mainDocumentURL])
     {
-        [_searchController updateBarWithURL:request.URL];
-        self.webViewURL = request.URL;
+        NSString *scheme = [[url scheme] lowercaseString];
+        if ([scheme isEqualToString:@"http"]
+            || [scheme isEqualToString:@"https"]) {
+            [_searchController updateBarWithURL:request.URL];
+            self.webViewURL = request.URL;            
+        }
     }
 	
 	return YES;
