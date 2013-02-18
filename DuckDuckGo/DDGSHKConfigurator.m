@@ -7,6 +7,8 @@
 //
 
 #import "DDGSHKConfigurator.h"
+#import "DDGSHKShareMenu.h"
+#import "DDGSHKFormController.h"
 
 @implementation DDGSHKConfigurator
 
@@ -93,5 +95,12 @@
 	return @"1c521ddb317315b3";
 }
 
+- (Class)SHKShareMenuSubclass {
+    return [DDGSHKShareMenu class];    
+}
+
+- (Class)SHKFormControllerSubclass {
+    return [DDGSHKFormController class];
+}
 
 @end

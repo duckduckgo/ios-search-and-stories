@@ -12,6 +12,7 @@
 #import "DDGCache.h"
 #import "DDGSettingsViewController.h"
 #import "DDGSHKConfigurator.h"
+#import "DDGSHKFormController.h"
 #import "SHKConfiguration.h"
 #import "DDGNewsProvider.h"
 #import "ECSlidingViewController.h"
@@ -51,7 +52,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
 														UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
 														UITextAttributeTextShadowColor : [UIColor whiteColor]
 	 }];
-	
+    
     return YES;
 }
 
