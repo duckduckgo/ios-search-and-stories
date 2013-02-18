@@ -128,6 +128,13 @@ static DDGNewsProvider *sharedProvider;
     });
 }
 
+- (void)setSourceFilter:(NSString *)sourceFilter {
+    if (sourceFilter == _sourceFilter)
+        return;
+    
+    _sourceFilter = [sourceFilter copy];
+}
+
 -(NSDictionary *)sources {
     return [DDGCache objectForKey:@"sources" inCache:@"misc"];
 }
@@ -223,6 +230,16 @@ static DDGNewsProvider *sharedProvider;
         
         [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
         
+        if (nil != self.sourceFilter) {
+            NSMutableArray *filteredStories = [NSMutableArray arrayWithCapacity:newStories.count];
+            for (DDGStory *story in newStories) {
+                if (story.feed == self.sourceFilter) {
+                    [filteredStories addObject:story];
+                }
+            }
+            newStories = filteredStories;
+        }
+        
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             DDGStory *story1 = (DDGStory *)obj1;
             DDGStory *story2 = (DDGStory *)obj2;
@@ -257,9 +274,13 @@ static DDGNewsProvider *sharedProvider;
         
         // download story images
         [newStories iterateConcurrentlyWithThreads:6 priority:DISPATCH_QUEUE_PRIORITY_BACKGROUND block:^(int i, id obj) {
-            if([(DDGStory *)obj downloadImage])
+            DDGStory *story = obj;
+            if([story downloadImage])
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                    NSUInteger rows = [tableView numberOfRowsInSection:0];
+                    if (rows > i) {
+                        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                    }
                 });
         }];
         

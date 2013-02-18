@@ -298,7 +298,20 @@
 }
 
 - (IBAction)filter:(id)sender {
-    NSLog(@"filter: %@", sender);
+
+    DDGNewsProvider *newsProvider = [DDGNewsProvider sharedProvider];
+    
+    if (nil != newsProvider.sourceFilter) {
+        newsProvider.sourceFilter = nil;
+    } else if ([sender isKindOfClass:[UIButton class]]) {
+        UIButton *button = (UIButton *)sender;
+        CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+        DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];        
+        newsProvider.sourceFilter = story.feed;
+    }
+    
+    [self beginDownloadingStories];
 }
 
 #pragma mark - EGORefreshTableHeaderDelegate Methods

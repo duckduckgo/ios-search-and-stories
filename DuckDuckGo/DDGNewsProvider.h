@@ -12,6 +12,7 @@
     NSArray *lastSectionOffsetsArray;
     NSArray *lastSectionOffsets;
 }
+@property (nonatomic, copy) NSString *sourceFilter;
 
 +(DDGNewsProvider *)sharedProvider;
 
