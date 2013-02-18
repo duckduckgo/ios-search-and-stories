@@ -10,6 +10,8 @@
 
 @implementation DDGStoryCell
 
-- (void)layoutSubviews {}
+- (void)layoutSubviews {
+    self.contentView.frame = self.contentView.superview.bounds;
+}
 
 @end
