@@ -12,5 +12,5 @@
 @property (nonatomic, strong) IBOutlet UILabel *textLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *imageView;
 @property (nonatomic, strong) IBOutlet UIImageView *overlayImageView;
-@property (nonatomic, strong) IBOutlet UIImageView *faviconImageView;
+@property (nonatomic, strong) IBOutlet UIButton *faviconButton;
 @end
