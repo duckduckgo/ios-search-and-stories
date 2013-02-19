@@ -64,13 +64,17 @@ static NSOperationQueue *imageLoadingStack;
     
     NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageURL]];
     [imageData writeToFile:self.imageFilePath atomically:YES];
-    imageDownloaded = YES;
-    @synchronized(self) {
-        _image = [UIImage imageWithData:imageData];
-    }
-    [self prefetchAndDecompressImage];
     
-    return YES;
+    BOOL success = (nil != imageData);
+    if (success) {
+        imageDownloaded = YES;
+        @synchronized(self) {
+            _image = [UIImage imageWithData:imageData];
+        }
+        [self prefetchAndDecompressImage];        
+    }
+    
+    return success;
 }
 
 -(UIImage *)image {
