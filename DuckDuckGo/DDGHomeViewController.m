@@ -188,10 +188,11 @@
 - (void)save:(id)sender {
     if (nil == self.swipeViewIndexPath)
         return;
+
+    DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
     
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
 
-    DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
     NSURL *storyURL = [NSURL URLWithString:story.url];
     
     if (nil == storyURL)
@@ -210,9 +211,9 @@
     if (nil == self.swipeViewIndexPath)
         return;
     
+    DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
+    
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-        DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
-        
         SHKItem *item = [SHKItem URL:[NSURL URLWithString:story.url] title:story.title contentType:SHKURLContentTypeWebpage];
         SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
         [SHK setRootViewController:self];
