@@ -45,7 +45,7 @@ static DDGSearchSuggestionsProvider *sharedProvider;
 
 - (BOOL)textIsLink:(NSString*)text
 {
-	NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:NSTextCheckingTypeLink error:nil];
+	NSDataDetector *linkDetector = [NSDataDetector dataDetectorWithTypes:(NSTextCheckingTypes) NSTextCheckingTypeLink error:nil];
 	NSArray *matches = [linkDetector matchesInString:text options:0 range:NSMakeRange(0, [text length])];
 	for (NSTextCheckingResult *match in matches)
 	{
