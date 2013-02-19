@@ -453,16 +453,17 @@
     // download story images
 
     NSArray *stories = [[self stories] copy];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        for (NSUInteger i=0; i<[stories count]; i++) {
-            DDGStory *story = [stories objectAtIndex:i];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [stories iterateConcurrentlyWithThreads:6 priority:DISPATCH_QUEUE_PRIORITY_BACKGROUND block:^(int i, id obj) {
+            DDGStory *story = obj;
             if([story downloadImage])
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    if (self.stories.count > i) {
+                    NSUInteger rows = [self.tableView numberOfRowsInSection:0];
+                    if (rows > i) {
                         [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
                     }
                 });
-        }
+        }];
     });
 }
 
