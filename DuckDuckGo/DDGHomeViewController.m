@@ -12,8 +12,8 @@
 #import "DDGCache.h"
 #import <QuartzCore/QuartzCore.h>
 #import "NSArray+ConcurrentIteration.h"
-#import "DDGNewsProvider.h"
 #import "DDGHistoryProvider.h"
+#import "DDGNewsProvider.h"
 #import "DDGChooseSourcesViewController.h"
 #import <AudioToolbox/AudioToolbox.h>
 #import "NSArray+ConcurrentIteration.h"
@@ -29,6 +29,7 @@
 @interface DDGHomeViewController ()
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
 @property (nonatomic, strong) UISwipeGestureRecognizer *leftSwipeGestureRecognizer;
+@property (nonatomic, copy) NSArray *stories;
 @end
 
 @implementation DDGHomeViewController
@@ -67,10 +68,12 @@
 	
     [refreshHeaderView refreshLastUpdatedDate];
     
+    self.stories = [[DDGNewsProvider sharedProvider] filteredStories];
+    
     // force-decompress the first 10 images
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
         
-        NSArray *stories = [DDGNewsProvider sharedProvider].stories;
+        NSArray *stories = self.stories;
         for(int i=0;i<MIN(stories.count, 10);i++)
             [[stories objectAtIndex:i] prefetchAndDecompressImage];
     });
@@ -95,7 +98,7 @@
     CGPoint location = [recognizer locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
     
-    DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
+    DDGStory *story = [self.stories objectAtIndex:indexPath.row];
     NSURL *storyURL = [NSURL URLWithString:story.url];
     
     if (nil != storyURL) {
@@ -188,7 +191,7 @@
     
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
 
-    DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:self.swipeViewIndexPath.row];
+    DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
     NSURL *storyURL = [NSURL URLWithString:story.url];
     
     if (nil == storyURL)
@@ -208,7 +211,7 @@
         return;
     
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-        DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:self.swipeViewIndexPath.row];
+        DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
         
         SHKItem *item = [SHKItem URL:[NSURL URLWithString:story.url] title:story.title contentType:SHKURLContentTypeWebpage];
         SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
@@ -307,11 +310,11 @@
         UIButton *button = (UIButton *)sender;
         CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-        DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];        
+        DDGStory *story = [self.stories objectAtIndex:indexPath.row];
         newsProvider.sourceFilter = story.feed;
     }
     
-    [self beginDownloadingStories];
+    [self replaceStories:newsProvider.filteredStories];
 }
 
 #pragma mark - EGORefreshTableHeaderDelegate Methods
@@ -336,6 +339,12 @@
     return [DDGCache objectForKey:@"storiesUpdated" inCache:@"misc"];
 }
 
+#pragma mark - DDGNewsProviderDelegate
+
+- (void)newsProviderDidRefreshStories:(DDGNewsProvider *)newsProvider {
+    
+}
+
 #pragma mark - Search handler
 
 -(void)searchControllerLeftButtonPressed {
@@ -353,7 +362,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return [DDGNewsProvider sharedProvider].stories.count;
+    return self.stories.count;
 }
 
 
@@ -362,7 +371,7 @@
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
 
-    DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
+    DDGStory *story = [self.stories objectAtIndex:indexPath.row];
     
     NSString *cellID = nil;
     if([story.title sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width-38, 60) lineBreakMode:UILineBreakModeWordWrap].height < 19)
@@ -422,7 +431,7 @@
 }
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    DDGStory *story = [[DDGNewsProvider sharedProvider].stories objectAtIndex:indexPath.row];
+    DDGStory *story = [self.stories objectAtIndex:indexPath.row];
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         // mark the story as read
@@ -440,16 +449,82 @@
 
 #pragma mark - Loading popular stories
 
+- (void)downloadStoryImages {
+    // download story images
+
+    NSArray *stories = [[self stories] copy];
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        for (NSUInteger i=0; i<[stories count]; i++) {
+            DDGStory *story = [stories objectAtIndex:i];
+            if([story downloadImage])
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (self.stories.count > i) {
+                        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+                    }
+                });
+        }
+    });
+}
+
+// this method ignores stories from custom sources
+-(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
+    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
+    
+    for(int i=0;i<newStories.count;i++) {
+        NSString *storyID = [[newStories objectAtIndex:i] storyID];
+        
+        BOOL matchFound = NO;
+        for(DDGStory *oldStory in oldStories) {
+            if([storyID isEqualToString:[oldStory storyID]]) {
+                matchFound = YES;
+                break;
+            }
+        }
+        
+        if(!matchFound)
+            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+    return [indexPaths copy];
+}
+
+- (void)replaceStories:(NSArray *)newStories {
+    
+    NSArray *oldStories = [self.stories copy];
+    self.stories = newStories;
+    
+    NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:oldStories];
+    NSArray *removedStories = [self indexPathsofStoriesInArray:oldStories andNotArray:newStories];
+    
+    // delete old story images
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+        for(NSIndexPath *indexPath in removedStories) {
+            DDGStory *removedStory = [oldStories objectAtIndex:indexPath.row];
+            [removedStory deleteImage];
+        }
+    });
+        
+    // update the table view with added and removed stories
+    [self.tableView beginUpdates];    
+    [self.tableView insertRowsAtIndexPaths:addedStories
+                     withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView deleteRowsAtIndexPaths:removedStories
+                     withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
+}
+
 // downloads stories asynchronously
 -(void)beginDownloadingStories {
     isRefreshing = YES;
 
-    [[DDGNewsProvider sharedProvider] downloadSourcesFinished:^{        
-        [[DDGNewsProvider sharedProvider] downloadStoriesInTableView:self.tableView finished:^{
+    DDGNewsProvider *newsProvider = [DDGNewsProvider sharedProvider];    
+    
+    [newsProvider downloadSourcesFinished:^{
+        [newsProvider downloadStoriesFinished:^{
+            [self replaceStories:newsProvider.filteredStories];
+            [self downloadStoryImages];
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
         }];
-        
     }];
 }
 

@@ -25,8 +25,10 @@
 -(void)addCustomSource:(NSString *)customSource;
 -(void)deleteCustomSourceAtIndex:(NSUInteger)index;
 
--(NSArray *)stories;
--(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished;
+//-(NSArray *)stories;
+-(NSArray *)filteredStories;
+
+-(void)downloadStoriesFinished:(void (^)())finished;
 -(void)downloadCustomStoriesForKeywords:(NSArray *)keywords toArray:(NSMutableArray *)newStories;
 - (NSString*)feedForURL:(NSString*)url;
 

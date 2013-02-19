@@ -159,6 +159,22 @@ static DDGNewsProvider *sharedProvider;
     return [DDGCache objectForKey:@"stories" inCache:@"misc"];
 }
 
+-(NSArray *)filteredStories {
+    NSArray *stories = [self stories];
+    
+    if (nil != self.sourceFilter) {
+        NSMutableArray *filteredStories = [NSMutableArray arrayWithCapacity:stories.count];
+        for (DDGStory *story in stories) {
+            if (story.feed == self.sourceFilter) {
+                [filteredStories addObject:story];
+            }
+        }
+        stories = filteredStories;
+    }
+    
+    return [stories copy];
+}
+
 - (NSString*)feedForURL:(NSString*)url
 {
 	// scan stories trying to find a match to url
@@ -171,7 +187,7 @@ static DDGNewsProvider *sharedProvider;
 	return nil;
 }
 
--(void)downloadStoriesInTableView:(UITableView *)tableView finished:(void (^)())finished {
+-(void)downloadStoriesFinished:(void (^)())finished {
     // do everything in the background
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^ {
 
@@ -230,16 +246,6 @@ static DDGNewsProvider *sharedProvider;
         
         [self downloadCustomStoriesForKeywords:self.customSources toArray:newStories];
         
-        if (nil != self.sourceFilter) {
-            NSMutableArray *filteredStories = [NSMutableArray arrayWithCapacity:newStories.count];
-            for (DDGStory *story in newStories) {
-                if (story.feed == self.sourceFilter) {
-                    [filteredStories addObject:story];
-                }
-            }
-            newStories = filteredStories;
-        }
-        
         [newStories sortUsingComparator:^NSComparisonResult(id obj1, id obj2) {
             DDGStory *story1 = (DDGStory *)obj1;
             DDGStory *story2 = (DDGStory *)obj2;
@@ -247,43 +253,10 @@ static DDGNewsProvider *sharedProvider;
         }];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:self.stories];
-            NSArray *removedStories = [self indexPathsofStoriesInArray:self.stories andNotArray:newStories];
-            
-            // delete old story images
-            NSArray *oldStories = self.stories;
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-                for(NSIndexPath *indexPath in removedStories) {
-                    DDGStory *removedStory = [oldStories objectAtIndex:indexPath.row];
-                    [removedStory deleteImage];
-                }                
-            });
-            
             // update the stories array and last-updated time
             [DDGCache setObject:newStories forKey:@"stories" inCache:@"misc"];
             [DDGCache setObject:[NSDate date] forKey:@"storiesUpdated" inCache:@"misc"];
-            
-            // update the table view with added and removed stories
-            [tableView beginUpdates];
-            [tableView insertRowsAtIndexPaths:addedStories
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView deleteRowsAtIndexPaths:removedStories
-                                  withRowAnimation:UITableViewRowAnimationAutomatic];
-            [tableView endUpdates];
         });
-        
-        // download story images
-        [newStories iterateConcurrentlyWithThreads:6 priority:DISPATCH_QUEUE_PRIORITY_BACKGROUND block:^(int i, id obj) {
-            DDGStory *story = obj;
-            if([story downloadImage])
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSUInteger rows = [tableView numberOfRowsInSection:0];
-                    if (rows > i) {
-                        [tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                    }
-                });
-        }];
-        
         
         // and we're done!
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -291,27 +264,6 @@ static DDGNewsProvider *sharedProvider;
                finished();
         });
     });
-}
-
-// this method ignores stories from custom sources
--(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-    
-    for(int i=0;i<newStories.count;i++) {
-        NSString *storyID = [[newStories objectAtIndex:i] storyID];
-        
-        BOOL matchFound = NO;
-        for(DDGStory *oldStory in oldStories) {
-            if([storyID isEqualToString:[oldStory storyID]]) {
-                matchFound = YES;
-                break;
-            }
-        }
-        
-        if(!matchFound)
-            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-    }
-    return [indexPaths copy];
 }
 
 #pragma mark - Custom sources
