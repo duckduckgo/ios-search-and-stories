@@ -69,12 +69,22 @@ static NSMutableDictionary *globalCache;
 }
 
 +(void)saveCaches {
+    static UIBackgroundTaskIdentifier identifier;    
+    identifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        identifier = UIBackgroundTaskInvalid;
+    }];
+    
     NSMutableData *data = [[NSMutableData alloc] init];
     NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
     [archiver encodeObject:globalCache forKey:@"key"];
     [archiver finishEncoding];
     
     [data writeToFile:self.cachePath atomically:YES];
+    
+    if (identifier != UIBackgroundTaskInvalid) {
+        [[UIApplication sharedApplication] endBackgroundTask:identifier];
+        identifier = UIBackgroundTaskInvalid;
+    }
 }
 
 +(NSString *)cachePath {

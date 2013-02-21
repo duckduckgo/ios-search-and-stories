@@ -76,6 +76,14 @@ static void uncaughtExceptionHandler(NSException *exception) {
     return YES;
 }
 
+- (void)applicationWillTerminate:(UIApplication *)application {
+    [DDGCache saveCaches];
+}
+
+-(void)applicationWillResignActive:(UIApplication *)application {
+    [DDGCache saveCaches];    
+}
+
 -(void)applicationDidEnterBackground:(UIApplication *)application {
     [DDGCache saveCaches];
 }
