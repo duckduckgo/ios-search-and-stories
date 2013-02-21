@@ -185,6 +185,22 @@
 
 #pragma mark - Swipe View
 
+- (IBAction)openInSafari:(id)sender {
+    if (nil == self.swipeViewIndexPath)
+        return;
+    
+    DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
+    
+    [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
+    
+    NSURL *storyURL = [NSURL URLWithString:story.url];
+    
+    if (nil == storyURL)
+        return;
+    
+    [[UIApplication sharedApplication] openURL:storyURL];    
+}
+
 - (void)save:(id)sender {
     if (nil == self.swipeViewIndexPath)
         return;

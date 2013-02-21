@@ -13,6 +13,7 @@
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
 			<string>IBUIButton</string>
+			<string>IBUIImageView</string>
 			<string>IBUIView</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
@@ -35,10 +36,25 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
+					<object class="IBUIImageView" id="753098942">
+						<reference key="NSNextResponder" ref="495050426"/>
+						<int key="NSvFlags">292</int>
+						<string key="NSFrameSize">{320, 83}</string>
+						<reference key="NSSuperview" ref="495050426"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="410176879"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIUserInteractionEnabled">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<object class="NSCustomResource" key="IBUIImage">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">linen_bg</string>
+						</object>
+					</object>
 					<object class="IBUIButton" id="410176879">
 						<reference key="NSNextResponder" ref="495050426"/>
 						<int key="NSvFlags">294</int>
-						<string key="NSFrame">{{20, 20}, {130, 44}}</string>
+						<string key="NSFrame">{{20, 20}, {80, 44}}</string>
 						<reference key="NSSuperview" ref="495050426"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="564890732"/>
@@ -74,10 +90,10 @@
 					<object class="IBUIButton" id="564890732">
 						<reference key="NSNextResponder" ref="495050426"/>
 						<int key="NSvFlags">291</int>
-						<string key="NSFrame">{{170, 20}, {130, 44}}</string>
+						<string key="NSFrame">{{120, 20}, {80, 44}}</string>
 						<reference key="NSSuperview" ref="495050426"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
+						<reference key="NSNextKeyView" ref="246550962"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
@@ -94,11 +110,34 @@
 						<reference key="IBUIFontDescription" ref="786804866"/>
 						<reference key="IBUIFont" ref="1006226722"/>
 					</object>
+					<object class="IBUIButton" id="246550962">
+						<reference key="NSNextResponder" ref="495050426"/>
+						<int key="NSvFlags">291</int>
+						<string key="NSFrame">{{220, 20}, {80, 44}}</string>
+						<reference key="NSSuperview" ref="495050426"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
+						<string key="NSReuseIdentifierKey">_NS:9</string>
+						<bool key="IBUIOpaque">NO</bool>
+						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
+						<int key="IBUIContentHorizontalAlignment">0</int>
+						<int key="IBUIContentVerticalAlignment">0</int>
+						<int key="IBUIButtonType">1</int>
+						<string key="IBUINormalTitle">Safari</string>
+						<reference key="IBUIHighlightedTitleColor" ref="934369902"/>
+						<object class="NSColor" key="IBUINormalTitleColor">
+							<int key="NSColorSpace">1</int>
+							<bytes key="NSRGB">MC4xOTYwNzg0MzQ2IDAuMzA5ODAzOTMyOSAwLjUyMTU2ODY1NgA</bytes>
+						</object>
+						<reference key="IBUINormalTitleShadowColor" ref="687296543"/>
+						<reference key="IBUIFontDescription" ref="786804866"/>
+						<reference key="IBUIFont" ref="1006226722"/>
+					</object>
 				</array>
 				<string key="NSFrameSize">{320, 83}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="410176879"/>
+				<reference key="NSNextKeyView" ref="753098942"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
 					<int key="NSColorSpace">3</int>
@@ -146,6 +185,15 @@
 					</object>
 					<int key="connectionID">13</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">openInSafari:</string>
+						<reference key="source" ref="246550962"/>
+						<reference key="destination" ref="975951072"/>
+						<int key="IBEventType">7</int>
+					</object>
+					<int key="connectionID">20</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -170,8 +218,10 @@
 						<int key="objectID">3</int>
 						<reference key="object" ref="495050426"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="564890732"/>
 							<reference ref="410176879"/>
+							<reference ref="753098942"/>
+							<reference ref="564890732"/>
+							<reference ref="246550962"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -187,6 +237,16 @@
 						<array class="NSMutableArray" key="children"/>
 						<reference key="parent" ref="495050426"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">17</int>
+						<reference key="object" ref="753098942"/>
+						<reference key="parent" ref="495050426"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">18</int>
+						<reference key="object" ref="246550962"/>
+						<reference key="parent" ref="495050426"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -194,6 +254,8 @@
 				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="17.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
+				<string key="18.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="5.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -202,13 +264,27 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">16</int>
+			<int key="maxID">20</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<object class="IBPartialClassDescription">
 					<string key="className">DDGHomeViewController</string>
 					<string key="superclassName">UIViewController</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="filter:">id</string>
+						<string key="openInSafari:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="filter:">
+							<string key="name">filter:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="openInSafari:">
+							<string key="name">openInSafari:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="loadedCell">DDGStoryCell</string>
 						<string key="swipeView">UIView</string>
@@ -242,15 +318,15 @@
 					<string key="className">DDGStoryCell</string>
 					<string key="superclassName">UITableViewCell</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="faviconImageView">UIImageView</string>
+						<string key="faviconButton">UIButton</string>
 						<string key="imageView">UIImageView</string>
 						<string key="overlayImageView">UIImageView</string>
 						<string key="textLabel">UILabel</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<object class="IBToOneOutletInfo" key="faviconImageView">
-							<string key="name">faviconImageView</string>
-							<string key="candidateClassName">UIImageView</string>
+						<object class="IBToOneOutletInfo" key="faviconButton">
+							<string key="name">faviconButton</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="imageView">
 							<string key="name">imageView</string>
@@ -273,10 +349,15 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">FirstResponder</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="openInSafari:">id</string>
 						<string key="save:">id</string>
 						<string key="share:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="openInSafari:">
+							<string key="name">openInSafari:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="save:">
 							<string key="name">save:</string>
 							<string key="candidateClassName">id</string>
@@ -297,6 +378,10 @@
 		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaTouchFramework</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="NS.key.0">linen_bg</string>
+			<string key="NS.object.0">{16, 16}</string>
+		</object>
 		<string key="IBCocoaTouchPluginVersion">2083</string>
 	</data>
 </archive>
