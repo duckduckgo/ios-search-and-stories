@@ -10,7 +10,6 @@
 
 @interface NSArray (ConcurrentIteration)
 
--(void)iterateConcurrentlyWithThreads:(int)threads block:(void (^)(int i, id obj))block;
--(void)iterateConcurrentlyWithThreads:(int)threads priority:(dispatch_queue_priority_t)priority block:(void (^)(int i, id obj))block;
+-(void)iterateWithMaximumConcurrentOperations:(NSUInteger)max block:(void (^)(int i, id obj))block;
 
 @end

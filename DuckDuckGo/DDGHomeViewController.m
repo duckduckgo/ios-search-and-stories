@@ -455,7 +455,7 @@
 
     NSArray *stories = [[self stories] copy];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [stories iterateConcurrentlyWithThreads:6 priority:DISPATCH_QUEUE_PRIORITY_BACKGROUND block:^(int i, id obj) {
+        [stories iterateWithMaximumConcurrentOperations:6 block:^(int i, id obj) {
             DDGStory *story = obj;
             if([story downloadImage])
                 dispatch_async(dispatch_get_main_queue(), ^{

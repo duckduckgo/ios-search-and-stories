@@ -102,7 +102,7 @@ static DDGNewsProvider *sharedProvider;
                 [self setSourceWithID:[source objectForKey:@"id"] enabled:([[source objectForKey:@"default"] intValue] == 1)];
         }
         
-        [newSources iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+        [newSources iterateWithMaximumConcurrentOperations:6 block:^(int i, id obj) {
             NSDictionary *source = (NSDictionary *)obj;
             if(![DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"]) {
                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
@@ -286,7 +286,7 @@ static DDGNewsProvider *sharedProvider;
 
 -(void)downloadCustomStoriesForKeywords:(NSArray *)keywords toArray:(NSMutableArray *)newStories {
     
-    [keywords iterateConcurrentlyWithThreads:6 block:^(int i, id obj) {
+    [keywords iterateWithMaximumConcurrentOperations:6 block:^(int i, id obj) {
         NSString *newsKeyword = (NSString *)obj;
         NSString *urlString = [kDDGCustomStoriesURLString stringByAppendingString:[newsKeyword stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
         
