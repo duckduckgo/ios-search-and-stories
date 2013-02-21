@@ -115,6 +115,10 @@
 		5B044EE316D392CE005A9584 /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B044EE216D392CE005A9584 /* AdSupport.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5B044EE516D392F0005A9584 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B044EE416D392F0005A9584 /* libsqlite3.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
 		5B044EE716D392FD005A9584 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B044EE616D392FD005A9584 /* Social.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		5B66096A16D63C120006B5DE /* button-bg-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B66096616D63C110006B5DE /* button-bg-highlighted.png */; };
+		5B66096B16D63C120006B5DE /* button-bg-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B66096716D63C120006B5DE /* button-bg-highlighted@2x.png */; };
+		5B66096C16D63C120006B5DE /* button-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B66096816D63C120006B5DE /* button-bg.png */; };
+		5B66096D16D63C120006B5DE /* button-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B66096916D63C120006B5DE /* button-bg@2x.png */; };
 		5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */; };
 		5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AC16C904BA0066BCB0 /* AFHTTPRequestOperation.m */; };
 		5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AE16C904BA0066BCB0 /* AFImageRequestOperation.m */; };
@@ -616,6 +620,10 @@
 		5B044EE216D392CE005A9584 /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		5B044EE416D392F0005A9584 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5B044EE616D392FD005A9584 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		5B66096616D63C110006B5DE /* button-bg-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg-highlighted.png"; sourceTree = "<group>"; };
+		5B66096716D63C120006B5DE /* button-bg-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg-highlighted@2x.png"; sourceTree = "<group>"; };
+		5B66096816D63C120006B5DE /* button-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg.png"; sourceTree = "<group>"; };
+		5B66096916D63C120006B5DE /* button-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg@2x.png"; sourceTree = "<group>"; };
 		5BA321A916C904BA0066BCB0 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
 		5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
 		5BA321AB16C904BA0066BCB0 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -768,6 +776,10 @@
 		4C1FD7D31548FF5B006B2511 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				5B66096616D63C110006B5DE /* button-bg-highlighted.png */,
+				5B66096716D63C120006B5DE /* button-bg-highlighted@2x.png */,
+				5B66096816D63C120006B5DE /* button-bg.png */,
+				5B66096916D63C120006B5DE /* button-bg@2x.png */,
 				8343A2E21672827100DDE73C /* icon_notification.png */,
 				8343A2E11672827100DDE73C /* icon_notification@2x.png */,
 				8383E8EA1672549C008160E5 /* new_bg_texture-dark.png */,
@@ -1688,6 +1700,10 @@
 				8343A2E41672827100DDE73C /* icon_notification.png in Resources */,
 				83C2261E1676356200C9CF50 /* DDGUnderViewControllerCell.xib in Resources */,
 				5BB3F4DB16CA7AE100281A2B /* HomeSwipeView.xib in Resources */,
+				5B66096A16D63C120006B5DE /* button-bg-highlighted.png in Resources */,
+				5B66096B16D63C120006B5DE /* button-bg-highlighted@2x.png in Resources */,
+				5B66096C16D63C120006B5DE /* button-bg.png in Resources */,
+				5B66096D16D63C120006B5DE /* button-bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -53,6 +53,26 @@ static void uncaughtExceptionHandler(NSException *exception) {
 														UITextAttributeTextShadowColor : [UIColor whiteColor]
 	 }];
     
+    UIImage *bg = [[UIImage imageNamed:@"button-bg"] stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
+    UIImage *bgh = [[UIImage imageNamed:@"button-bg-highlighted"] stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
+    
+    [[UIBarButtonItem appearance] setBackgroundImage:bg forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setBackgroundImage:bgh forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setBackgroundVerticalPositionAdjustment:1.0 forBarMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.403 green:0.406 blue:0.427 alpha:1.000],
+                        UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
+                         UITextAttributeTextShadowColor : [UIColor whiteColor]
+	 } forState:UIControlStateNormal];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.581 green:0.585 blue:0.607 alpha:1.000],
+                        UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
+                         UITextAttributeTextShadowColor : [UIColor whiteColor]
+	 } forState:UIControlStateDisabled];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithWhite:0.995 alpha:1.000],
+                        UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, -1)],
+                         UITextAttributeTextShadowColor : [UIColor colorWithRed:0.170 green:0.185 blue:0.199 alpha:1.000]
+	 } forState:UIControlStateHighlighted];
+    
     return YES;
 }
 
