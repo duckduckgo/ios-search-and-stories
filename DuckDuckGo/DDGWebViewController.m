@@ -16,6 +16,7 @@
 #import "DDGUnderViewController.h"
 #import "DDGCache.h"
 #import "DDGUtility.h"
+#import "AFNetworking.h"
 
 @implementation NSString (URLPrivateDDG)
 
@@ -73,11 +74,13 @@
 - (void)dealloc
 {
 	_webView.delegate = nil;
-	[_webView stopLoading];
+    
+    if (_webView.isLoading) {
+        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
+        [_webView stopLoading];
+    }
 	
 	self.webViewURL = nil;
-	
-	[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
 }
 
 - (void)viewDidUnload
@@ -330,7 +333,7 @@
     [_searchController webViewCanGoBack:theWebView.canGoBack];
     
 	if (++webViewLoadingDepth == 1) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+        [[AFNetworkActivityIndicatorManager sharedManager] incrementActivityCount];
         [_searchController webViewStartedLoading];
     }
 }
@@ -343,7 +346,7 @@
     [_searchController webViewCanGoBack:theWebView.canGoBack];
     
 	if (--webViewLoadingDepth <= 0) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
         [_searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
         webViewLoadEvents = 0;
@@ -356,7 +359,7 @@
     [self updateProgressBar];
 
 	if (--webViewLoadingDepth <= 0) {
-		[UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
         [_searchController webViewFinishedLoading];
 		webViewLoadingDepth = 0;
         webViewLoadEvents = 0;

@@ -16,6 +16,7 @@
 #import "SHKConfiguration.h"
 #import "DDGNewsProvider.h"
 #import "ECSlidingViewController.h"
+#import "AFNetworking.h"
 
 @implementation DDGAppDelegate
 
@@ -33,6 +34,8 @@ static void uncaughtExceptionHandler(NSException *exception) {
                                                          diskCapacity:1024*1024*10 // 10MB disk cache
                                                              diskPath:[SDURLCache defaultCachePath]];
     [NSURLCache setSharedURLCache:urlCache];
+    
+    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];    
     
     // load default settings
     [DDGSettingsViewController loadDefaultSettings];

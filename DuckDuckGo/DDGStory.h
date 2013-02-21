@@ -9,23 +9,20 @@
 #import <Foundation/Foundation.h>
 
 @interface DDGStory : NSObject <NSCoding> {
-    UIImage *_image;
-    BOOL imageDownloaded;
 }
 
-@property(strong) NSString *storyID;
-@property(strong) NSString *title;
-@property(strong) NSString *url;
-@property(strong) NSString *feed;
-@property(strong) NSDate *date;
+@property(nonatomic, strong) NSString *storyID;
+@property(nonatomic, strong) NSString *title;
+@property(nonatomic, strong) NSString *url;
+@property(nonatomic, strong) NSString *feed;
+@property(nonatomic, strong) NSDate *date;
 
-@property(strong) NSString *imageURL;
-@property(readonly) UIImage *image;
+@property(nonatomic, strong) NSURL *imageURL;
+@property(nonatomic, strong) UIImage *image;
+@property(nonatomic, strong) UIImage *decompressedImage;
+@property(nonatomic, getter = isImageDownloaded) BOOL imageDownloaded;
 
--(BOOL)downloadImage;
--(void)prefetchAndDecompressImage;
 -(void)unloadImage;
 -(void)deleteImage;
--(void)loadImageIntoView:(UIImageView *)imageView;
 
 @end

@@ -44,11 +44,9 @@ static DDGNewsProvider *sharedProvider;
 
 -(void)lowMemoryWarning {
     NSLog(@"Low memory warning received, unloading images...");
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        NSArray *stories = self.stories;
-        for(DDGStory *story in stories)
-            [story unloadImage];
-    });
+    NSArray *stories = self.stories;
+    for(DDGStory *story in stories)
+        [story unloadImage];
 }
 
 #pragma mark - Downloading sources
@@ -239,7 +237,7 @@ static DDGNewsProvider *sharedProvider;
                 if([storyDict objectForKey:@"feed"] && [storyDict objectForKey:@"feed"] != [NSNull null])
                     story.feed = [storyDict objectForKey:@"feed"];
                 story.date = [formatter dateFromString:[[storyDict objectForKey:@"timestamp"] substringToIndex:19]];
-                story.imageURL = [storyDict objectForKey:@"image"];
+                story.imageURL = [NSURL URLWithString:[storyDict objectForKey:@"image"]];
             }
             [newStories replaceObjectAtIndex:i withObject:story];
         }
@@ -315,7 +313,7 @@ static DDGNewsProvider *sharedProvider;
                 story.storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
                 story.title = [newsItem objectForKey:@"title"];
                 story.url = [newsItem objectForKey:@"url"];
-                story.imageURL = [newsItem objectForKey:@"image"];
+                story.imageURL = [NSURL URLWithString:[newsItem objectForKey:@"image"]];
                 story.date = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]];
                 
                 @synchronized(newStories) {

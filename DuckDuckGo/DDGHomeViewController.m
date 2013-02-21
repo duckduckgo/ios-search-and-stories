@@ -27,6 +27,9 @@
 #import "UIImage+Resizing.h"
 
 @interface DDGHomeViewController ()
+@property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
+@property (nonatomic, strong) NSOperationQueue *imageDecompressionQueue;
+@property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
 @property (nonatomic, strong) UISwipeGestureRecognizer *leftSwipeGestureRecognizer;
 @property (nonatomic, copy) NSArray *stories;
@@ -36,6 +39,8 @@
 
 - (void)dealloc
 {
+    [self.imageDownloadQueue cancelAllOperations];
+    self.imageDownloadQueue = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:ECSlidingViewUnderLeftWillAppear
                                                   object:self.slidingViewController];
@@ -70,13 +75,12 @@
     
     self.stories = [[DDGNewsProvider sharedProvider] filteredStories];
     
-    // force-decompress the first 10 images
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        
-        NSArray *stories = self.stories;
-        for(int i=0;i<MIN(stories.count, 10);i++)
-            [[stories objectAtIndex:i] prefetchAndDecompressImage];
-    });
+//    // force-decompress the first 10 images
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{        
+//        NSArray *stories = self.stories;
+//        for(int i=0;i<MIN(stories.count, 10);i++)
+//            [[stories objectAtIndex:i] prefetchAndDecompressImage];
+//    });
     
     DDGUnderViewController *underVC = [[DDGUnderViewController alloc] initWithHomeViewController:self];
     self.slidingViewController.underLeftViewController = underVC;
@@ -90,6 +94,27 @@
     
     self.leftSwipeGestureRecognizer = leftSwipeGestureRecognizer;
     [self.slidingViewController.panGesture requireGestureRecognizerToFail:leftSwipeGestureRecognizer];
+    
+    NSOperationQueue *queue = [NSOperationQueue new];
+    queue.maxConcurrentOperationCount = 4;
+    queue.name = @"DDG Watercooler Image Download Queue";
+    self.imageDownloadQueue = queue;
+
+    NSOperationQueue *decompressionQueue = [NSOperationQueue new];
+    decompressionQueue.name = @"DDG Watercooler Image Decompression Queue";
+    self.imageDecompressionQueue = queue;
+    
+    self.enqueuedDownloadOperations = [NSMutableSet new];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    
+    if (nil == self.view) {
+        [self.imageDownloadQueue cancelAllOperations];
+        self.imageDownloadQueue = nil;
+        self.enqueuedDownloadOperations = nil;
+    }
 }
 
 // Called when a left swipe occurred
@@ -113,6 +138,10 @@
 - (void)viewDidUnload {
     [self setSwipeView:nil];
     [super viewDidUnload];
+    
+    [self.imageDownloadQueue cancelAllOperations];
+    self.imageDownloadQueue = nil;
+    self.enqueuedDownloadOperations = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:ECSlidingViewUnderLeftWillAppear
@@ -160,6 +189,9 @@
     
     [self.tableView removeGestureRecognizer:self.leftSwipeGestureRecognizer];
 	[super viewWillDisappear:animated];
+    
+    [self.imageDownloadQueue cancelAllOperations];
+    [self.enqueuedDownloadOperations removeAllObjects];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -416,8 +448,17 @@
         cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
     else
         cell.textLabel.textColor = [UIColor whiteColor];
-    
-    [story loadImageIntoView:cell.imageView];
+  
+    if (nil != story.decompressedImage) {
+        cell.imageView.image = story.decompressedImage;
+    } else {
+        cell.imageView.image = nil;
+        if (story.isImageDownloaded) {
+            [self decompressAndDisplayImageForStory:story];
+        } else  {
+            [self loadImageForStory:story];
+        }
+    }
     
     UIImage *image = nil;
     
@@ -466,22 +507,64 @@
 
 #pragma mark - Loading popular stories
 
-- (void)downloadStoryImages {
-    // download story images
-
-    NSArray *stories = [[self stories] copy];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        [stories iterateWithMaximumConcurrentOperations:6 block:^(int i, id obj) {
-            DDGStory *story = obj;
-            if([story downloadImage])
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    NSUInteger rows = [self.tableView numberOfRowsInSection:0];
-                    if (rows > i) {
-                        [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:i inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
-                    }
-                });
+- (void)loadImageForStory:(DDGStory *)story {
+    NSURL *imageURL = story.imageURL;
+    if (!story.imageDownloaded && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
+        NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
+        
+        AFImageRequestOperation *imageOperation = [AFImageRequestOperation imageRequestOperationWithRequest:request success:^(UIImage *image) {
+            story.imageDownloaded = YES;
+            story.image = image;
+            [self.enqueuedDownloadOperations removeObject:imageURL];
+            [self decompressAndDisplayImageForStory:story];
         }];
-    });
+        [imageOperation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
+            [self.enqueuedDownloadOperations removeObject:imageURL];
+        }];
+        
+        [self.enqueuedDownloadOperations addObject:imageURL];
+        [self.imageDownloadQueue addOperation:imageOperation];
+    }
+}
+
+- (void)decompressAndDisplayImageForStory:(DDGStory *)story {
+    if (nil == story.image)
+        return;
+    
+    void (^completionBlock)(UIImage *) = ^(UIImage *decompressedImage) {
+        story.decompressedImage = decompressedImage;
+        NSUInteger row = [self.stories indexOfObject:story];
+        if (row != NSNotFound) {
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+        }
+    };
+    
+    [self decompressImage:story.image completionBlock:completionBlock];
+}
+
+- (void)decompressImage:(UIImage *)image completionBlock:(void (^)(UIImage *decompressedImage))completionBlock {
+    
+    if (nil == image)
+        completionBlock(nil);
+    else {
+        [self.imageDecompressionQueue addOperationWithBlock:^{
+            UIGraphicsBeginImageContext(image.size);
+            [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
+            UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                completionBlock(decompressed);
+            }];
+        }];
+    }
+}
+
+- (void)downloadStoryImages {
+    NSArray *stories = [[self stories] copy];
+    for (DDGStory *story in stories) {
+        [self loadImageForStory:story];
+    }
 }
 
 // this method ignores stories from custom sources

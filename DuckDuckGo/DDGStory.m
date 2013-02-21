@@ -9,26 +9,15 @@
 #import "DDGStory.h"
 #import "NSOperationStack.h"
 
+@interface DDGStory () {
+    UIImage *_image;
+}
+
+@end
+
 @implementation DDGStory
-static NSMutableDictionary *loadingImageViews;
-static NSOperationQueue *imageLoadingStack;
 
 #pragma mark - NSCoding
-
--(id)init {
-    self = [super init];
-    if(self) {
-        @synchronized(@"DDGStoryLoadingImageViews") {
-            if(!loadingImageViews)
-                loadingImageViews = [[NSMutableDictionary alloc] init];
-            if(!imageLoadingStack) {
-                imageLoadingStack = [[NSOperationQueue alloc] init];
-                imageLoadingStack.maxConcurrentOperationCount = 2;
-            }
-        }
-    }
-    return self;
-}
 
 -(id)initWithCoder:(NSCoder *)aDecoder {
     self = [self init];
@@ -38,8 +27,8 @@ static NSOperationQueue *imageLoadingStack;
         self.url = [aDecoder decodeObjectForKey:@"url"];
         self.feed = [aDecoder decodeObjectForKey:@"feed"];
         self.date = [aDecoder decodeObjectForKey:@"date"];
-        self.imageURL = [aDecoder decodeObjectForKey:@"imageURL"];
-        imageDownloaded = [aDecoder decodeBoolForKey:@"imageDownloaded"];
+        self.imageURL = [NSURL URLWithString:[aDecoder decodeObjectForKey:@"imageURL"]];
+        self.imageDownloaded = [aDecoder decodeBoolForKey:@"imageDownloaded"];
     }
     return self;
 }
@@ -50,100 +39,40 @@ static NSOperationQueue *imageLoadingStack;
     [encoder encodeObject:self.url forKey:@"url"];
     [encoder encodeObject:self.feed forKey:@"feed"];
     [encoder encodeObject:self.date forKey:@"date"];
-    [encoder encodeObject:self.imageURL forKey:@"imageURL"];
-    [encoder encodeBool:imageDownloaded forKey:@"imageDownloaded"];
+    [encoder encodeObject:[self.imageURL absoluteString] forKey:@"imageURL"];
+    [encoder encodeBool:self.imageDownloaded forKey:@"imageDownloaded"];
 }
 
 #pragma mark - Image
 
--(BOOL)downloadImage {
-    @synchronized(self) {
-        if(imageDownloaded)
-            return NO;
-    }
+- (void)setImage:(UIImage *)image {
+    if (image == _image)
+        return;
     
-    NSData *imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:_imageURL]];
-    [imageData writeToFile:self.imageFilePath atomically:YES];
+    _image = image;
     
-    BOOL success = (nil != imageData);
-    if (success) {
-        imageDownloaded = YES;
-        @synchronized(self) {
-            _image = [UIImage imageWithData:imageData];
-        }
-        [self prefetchAndDecompressImage];        
-    }
-    
-    return success;
+    NSData *imageData = UIImagePNGRepresentation(image);
+    [imageData writeToFile:[self imageFilePath] atomically:NO];
 }
 
 -(UIImage *)image {
-    @synchronized(self) {
-        if(!_image) {
-            NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath];
-            _image = [UIImage imageWithData:imageData];
-        }
-        return _image;
+    if (nil == _image && self.imageDownloaded) {
+        NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath];
+        _image = [UIImage imageWithData:imageData];
     }
-}
-
--(void)prefetchAndDecompressImage {
-    UIImage *image = self.image;
     
-    UIGraphicsBeginImageContext(image.size);
-    [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
-    UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    @synchronized(self) {
-        _image = decompressed;
-    }
+    return _image;
 }
 
 -(void)unloadImage {
-    @synchronized(self) {
-        _image = nil;
-    }
+    self.image = nil;
+    self.decompressedImage = nil;
 }
 
 -(void)deleteImage {
-    @synchronized(self) {
-        [[[NSFileManager alloc] init] removeItemAtPath:self.imageFilePath error:nil];
-        imageDownloaded = NO;
-    }
-}
-
--(void)loadImageIntoView:(UIImageView *)imageView {
-    @synchronized(self) {
-        @synchronized(loadingImageViews) {
-            [loadingImageViews setObject:self forKey:[NSValue valueWithNonretainedObject:imageView]];
-        }
-        
-        
-        if(_image) {
-            imageView.image = _image;
-        } else {
-            imageView.image = nil;
-            
-            [imageLoadingStack addOperationAtFrontOfQueueWithBlock:^{
-                @synchronized(loadingImageViews) {
-                    if([loadingImageViews objectForKey:[NSValue valueWithNonretainedObject:imageView]] != self)
-                        return;
-                }
-                
-                [self prefetchAndDecompressImage];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    @synchronized(loadingImageViews) {
-                        if([loadingImageViews objectForKey:[NSValue valueWithNonretainedObject:imageView]] == self) {
-                            imageView.image = self.image;
-                            [loadingImageViews removeObjectForKey:[NSValue valueWithNonretainedObject:imageView]];
-                        }
-                    }
-                });
-            }];
-        }
-    }
+    self.image = nil;
+    [[NSFileManager defaultManager] removeItemAtPath:self.imageFilePath error:nil];
+    self.imageDownloaded = NO;
 }
 
 -(NSString *)imageFilePath {
