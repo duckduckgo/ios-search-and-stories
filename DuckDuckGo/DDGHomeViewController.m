@@ -548,7 +548,7 @@
         completionBlock(nil);
     else {
         [self.imageDecompressionQueue addOperationWithBlock:^{
-            UIGraphicsBeginImageContext(image.size);
+            UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
             [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
             UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
