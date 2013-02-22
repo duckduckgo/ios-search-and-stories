@@ -132,6 +132,18 @@
     [self addButton:@"Rate This App" action:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=479988136&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
     }];
+
+    NSString *bundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    NSString *shortBundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+    NSString *appName = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
+    if (appName == nil)
+        appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+    
+    NSString *versionInfo = [NSString stringWithFormat:@"%@ %@", appName, shortBundleVersion];
+    if (![shortBundleVersion isEqualToString:bundleVersion])
+        versionInfo = [versionInfo stringByAppendingFormat:@" (%@)", bundleVersion];
+    
+    [self addSectionWithTitle:nil footer:versionInfo];
 }
 
 -(void)saveData:(NSDictionary *)formData {
