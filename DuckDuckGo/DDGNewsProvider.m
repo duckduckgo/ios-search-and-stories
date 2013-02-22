@@ -158,7 +158,7 @@ static DDGNewsProvider *sharedProvider;
     if (nil != self.sourceFilter) {
         NSMutableArray *filteredStories = [NSMutableArray arrayWithCapacity:stories.count];
         for (DDGStory *story in stories) {
-            if (story.feed == self.sourceFilter) {
+            if ([story.feed isEqual:self.sourceFilter]) {
                 [filteredStories addObject:story];
             }
         }
