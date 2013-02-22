@@ -298,6 +298,20 @@
 
 #pragma mark - Web view deleagte
 
+- (void)updateBarWithRequest:(NSURLRequest *)request {
+    NSURL *url = request.URL;
+    
+    if ([url isEqual:request.mainDocumentURL])
+    {
+        NSString *scheme = [[url scheme] lowercaseString];
+        if ([scheme isEqualToString:@"http"]
+            || [scheme isEqualToString:@"https"]) {
+            [_searchController updateBarWithURL:request.URL];
+            self.webViewURL = request.URL;
+        }
+    }    
+}
+
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
 	if (navigationType == UIWebViewNavigationTypeLinkClicked)
@@ -310,17 +324,7 @@
 		}
 	}
     
-    NSURL *url = request.URL;
-    
-    if ([url isEqual:request.mainDocumentURL])
-    {
-        NSString *scheme = [[url scheme] lowercaseString];
-        if ([scheme isEqualToString:@"http"]
-            || [scheme isEqualToString:@"https"]) {
-            [_searchController updateBarWithURL:request.URL];
-            self.webViewURL = request.URL;            
-        }
-    }
+    [self updateBarWithRequest:request];
 	
 	return YES;
 }
@@ -343,6 +347,7 @@
     webViewLoadEvents++;
     [self updateProgressBar];
     
+    [self updateBarWithRequest:theWebView.request];
     [_searchController webViewCanGoBack:theWebView.canGoBack];
     
 	if (--webViewLoadingDepth <= 0) {
