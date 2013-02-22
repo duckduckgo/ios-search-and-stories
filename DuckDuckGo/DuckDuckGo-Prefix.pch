@@ -16,5 +16,5 @@
     #import <SystemConfiguration/SystemConfiguration.h>
 
 	#import "Always.h"
-
+    #import "TestFlight.h"
 #endif

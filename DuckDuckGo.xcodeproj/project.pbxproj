@@ -119,6 +119,8 @@
 		5B66096B16D63C120006B5DE /* button-bg-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B66096716D63C120006B5DE /* button-bg-highlighted@2x.png */; };
 		5B66096C16D63C120006B5DE /* button-bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B66096816D63C120006B5DE /* button-bg.png */; };
 		5B66096D16D63C120006B5DE /* button-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B66096916D63C120006B5DE /* button-bg@2x.png */; };
+		5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66096F16D781B20006B5DE /* libTestFlight.a */; };
+		5B66097316D781D00006B5DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66097216D781D00006B5DE /* libz.dylib */; };
 		5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */; };
 		5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AC16C904BA0066BCB0 /* AFHTTPRequestOperation.m */; };
 		5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AE16C904BA0066BCB0 /* AFImageRequestOperation.m */; };
@@ -624,6 +626,9 @@
 		5B66096716D63C120006B5DE /* button-bg-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg-highlighted@2x.png"; sourceTree = "<group>"; };
 		5B66096816D63C120006B5DE /* button-bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg.png"; sourceTree = "<group>"; };
 		5B66096916D63C120006B5DE /* button-bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-bg@2x.png"; sourceTree = "<group>"; };
+		5B66096F16D781B20006B5DE /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = TestFlightSDK1/libTestFlight.a; sourceTree = "<group>"; };
+		5B66097016D781B20006B5DE /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFlight.h; path = TestFlightSDK1/TestFlight.h; sourceTree = "<group>"; };
+		5B66097216D781D00006B5DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		5BA321A916C904BA0066BCB0 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
 		5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
 		5BA321AB16C904BA0066BCB0 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -748,6 +753,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B66097316D781D00006B5DE /* libz.dylib in Frameworks */,
 				5B044EE716D392FD005A9584 /* Social.framework in Frameworks */,
 				5B044EE516D392F0005A9584 /* libsqlite3.dylib in Frameworks */,
 				5B044EE316D392CE005A9584 /* AdSupport.framework in Frameworks */,
@@ -767,6 +773,7 @@
 				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */,
 				83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */,
+				5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1047,6 +1054,7 @@
 		4C6AC43514DDA95500A1ACA1 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
+				5B66096E16D7817A0006B5DE /* TestFlight */,
 				5BB3F51316D26A4800281A2B /* NYXImagesKit */,
 				5BA321EA16C9054A0066BCB0 /* SDURLCache */,
 				5BA321A816C904BA0066BCB0 /* AFNetworking */,
@@ -1069,6 +1077,15 @@
 				4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */,
 			);
 			name = Bookmarks;
+			sourceTree = "<group>";
+		};
+		5B66096E16D7817A0006B5DE /* TestFlight */ = {
+			isa = PBXGroup;
+			children = (
+				5B66096F16D781B20006B5DE /* libTestFlight.a */,
+				5B66097016D781B20006B5DE /* TestFlight.h */,
+			);
+			name = TestFlight;
 			sourceTree = "<group>";
 		};
 		5BA321A816C904BA0066BCB0 /* AFNetworking */ = {
@@ -1167,6 +1184,7 @@
 		833DB53C1494164F00509F2E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5B66097216D781D00006B5DE /* libz.dylib */,
 				5B044EE616D392FD005A9584 /* Social.framework */,
 				5B044EE416D392F0005A9584 /* libsqlite3.dylib */,
 				5B044EE216D392CE005A9584 /* AdSupport.framework */,
@@ -1844,6 +1862,61 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		5B66097416D783620006B5DE /* Release (Testflight) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release (Testflight)";
+		};
+		5B66097516D783620006B5DE /* Release (Testflight) */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				DEBUG = 1;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
+				GENERATE_PROFILING_CODE = YES;
+				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
+				);
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				TARGETED_DEVICE_FAMILY = 1;
+				USER_HEADER_SEARCH_PATHS = "Submodules/**";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Release (Testflight)";
+		};
 		83F32277149290EF00A61BC5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1908,10 +1981,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				DEBUG = 1;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				GENERATE_PROFILING_CODE = YES;
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -1932,10 +2010,15 @@
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				DEBUG = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				GENERATE_PROFILING_CODE = YES;
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -1958,6 +2041,7 @@
 			buildConfigurations = (
 				83F32277149290EF00A61BC5 /* Debug */,
 				83F32278149290EF00A61BC5 /* Release */,
+				5B66097416D783620006B5DE /* Release (Testflight) */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1967,6 +2051,7 @@
 			buildConfigurations = (
 				83F3227A149290EF00A61BC5 /* Debug */,
 				83F3227B149290EF00A61BC5 /* Release */,
+				5B66097516D783620006B5DE /* Release (Testflight) */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

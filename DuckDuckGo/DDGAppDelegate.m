@@ -27,7 +27,17 @@ static void uncaughtExceptionHandler(NSException *exception) {
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
+    
+#if DEBUG == 1
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+    // use deprecated uniqueIdentifier call for debug purposes only
+    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+#pragma clang diagnostic pop
+#endif
+    [TestFlight takeOff:@"7ed983ce368c469fdc805f409ddd5230_Njk5NDUyMDEyLTAzLTA5IDEwOjExOjU1LjY0NzQ1Mg"];    
     
     // set the global URL cache to SDURLCache, which caches to disk
     SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
