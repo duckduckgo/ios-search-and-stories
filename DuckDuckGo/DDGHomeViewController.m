@@ -102,7 +102,7 @@
 
     NSOperationQueue *decompressionQueue = [NSOperationQueue new];
     decompressionQueue.name = @"DDG Watercooler Image Decompression Queue";
-    self.imageDecompressionQueue = queue;
+    self.imageDecompressionQueue = decompressionQueue;
     
     self.enqueuedDownloadOperations = [NSMutableSet new];
 }
