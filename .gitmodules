@@ -10,6 +10,3 @@
 [submodule "Submodules/SDURLCache"]
 	path = Submodules/SDURLCache
 	url = git://github.com/rs/SDURLCache.git
-[submodule "Submodules/NYXImagesKit"]
-	path = Submodules/NYXImagesKit
-	url = git://github.com/Nyx0uf/NYXImagesKit.git

@@ -121,6 +121,7 @@
 		5B66096D16D63C120006B5DE /* button-bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B66096916D63C120006B5DE /* button-bg@2x.png */; };
 		5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66096F16D781B20006B5DE /* libTestFlight.a */; };
 		5B66097316D781D00006B5DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66097216D781D00006B5DE /* libz.dylib */; };
+		5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B66097716D7A3600006B5DE /* DDGFaviconButton.m */; };
 		5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */; };
 		5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AC16C904BA0066BCB0 /* AFHTTPRequestOperation.m */; };
 		5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AE16C904BA0066BCB0 /* AFImageRequestOperation.m */; };
@@ -139,8 +140,6 @@
 		5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F50416CAA49300281A2B /* DDGStoryCell.m */; };
 		5BB3F50B16D22EA000281A2B /* DDGSHKFormController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F50A16D22E9F00281A2B /* DDGSHKFormController.m */; };
 		5BB3F51216D2318200281A2B /* DDGSHKShareMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F51116D2318200281A2B /* DDGSHKShareMenu.m */; };
-		5BB3F51616D26A5B00281A2B /* UIImage+Resizing.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F51516D26A5B00281A2B /* UIImage+Resizing.m */; };
-		5BB3F51916D26A6B00281A2B /* NYXImagesHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F51816D26A6B00281A2B /* NYXImagesHelper.m */; };
 		5BB3F51B16D26AD300281A2B /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB3F51A16D26AD300281A2B /* CoreImage.framework */; };
 		830ECE541630A28F004DBADA /* cancel_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE531630A28F004DBADA /* cancel_1.png */; };
 		830ECE561630A787004DBADA /* cancel_1@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 830ECE551630A787004DBADA /* cancel_1@2x.png */; };
@@ -629,6 +628,8 @@
 		5B66096F16D781B20006B5DE /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = TestFlightSDK1/libTestFlight.a; sourceTree = "<group>"; };
 		5B66097016D781B20006B5DE /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFlight.h; path = TestFlightSDK1/TestFlight.h; sourceTree = "<group>"; };
 		5B66097216D781D00006B5DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		5B66097616D7A3600006B5DE /* DDGFaviconButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGFaviconButton.h; sourceTree = "<group>"; };
+		5B66097716D7A3600006B5DE /* DDGFaviconButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGFaviconButton.m; sourceTree = "<group>"; };
 		5BA321A916C904BA0066BCB0 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
 		5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
 		5BA321AB16C904BA0066BCB0 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -660,10 +661,6 @@
 		5BB3F50A16D22E9F00281A2B /* DDGSHKFormController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKFormController.m; sourceTree = "<group>"; };
 		5BB3F51016D2318200281A2B /* DDGSHKShareMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKShareMenu.h; sourceTree = "<group>"; };
 		5BB3F51116D2318200281A2B /* DDGSHKShareMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKShareMenu.m; sourceTree = "<group>"; };
-		5BB3F51416D26A5B00281A2B /* UIImage+Resizing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Resizing.h"; path = "Submodules/NYXImagesKit/Categories/UIImage+Resizing.h"; sourceTree = SOURCE_ROOT; };
-		5BB3F51516D26A5B00281A2B /* UIImage+Resizing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Resizing.m"; path = "Submodules/NYXImagesKit/Categories/UIImage+Resizing.m"; sourceTree = SOURCE_ROOT; };
-		5BB3F51716D26A6B00281A2B /* NYXImagesHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NYXImagesHelper.h; path = Submodules/NYXImagesKit/Helper/NYXImagesHelper.h; sourceTree = SOURCE_ROOT; };
-		5BB3F51816D26A6B00281A2B /* NYXImagesHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NYXImagesHelper.m; path = Submodules/NYXImagesKit/Helper/NYXImagesHelper.m; sourceTree = SOURCE_ROOT; };
 		5BB3F51A16D26AD300281A2B /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		830ECE531630A28F004DBADA /* cancel_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = cancel_1.png; sourceTree = "<group>"; };
@@ -1012,6 +1009,8 @@
 				4C41359E15D5DAC200A9326C /* DDGStory.m */,
 				5BB3F50316CAA49300281A2B /* DDGStoryCell.h */,
 				5BB3F50416CAA49300281A2B /* DDGStoryCell.m */,
+				5B66097616D7A3600006B5DE /* DDGFaviconButton.h */,
+				5B66097716D7A3600006B5DE /* DDGFaviconButton.m */,
 			);
 			name = "Home screen";
 			sourceTree = "<group>";
@@ -1055,7 +1054,6 @@
 			isa = PBXGroup;
 			children = (
 				5B66096E16D7817A0006B5DE /* TestFlight */,
-				5BB3F51316D26A4800281A2B /* NYXImagesKit */,
 				5BA321EA16C9054A0066BCB0 /* SDURLCache */,
 				5BA321A816C904BA0066BCB0 /* AFNetworking */,
 				5BA321EF16C906060066BCB0 /* NSOperationStack */,
@@ -1168,17 +1166,6 @@
 				83CEFDCE16695C4F003E50C5 /* ShareKit keys.xls */,
 			);
 			name = ShareKit;
-			sourceTree = "<group>";
-		};
-		5BB3F51316D26A4800281A2B /* NYXImagesKit */ = {
-			isa = PBXGroup;
-			children = (
-				5BB3F51716D26A6B00281A2B /* NYXImagesHelper.h */,
-				5BB3F51816D26A6B00281A2B /* NYXImagesHelper.m */,
-				5BB3F51416D26A5B00281A2B /* UIImage+Resizing.h */,
-				5BB3F51516D26A5B00281A2B /* UIImage+Resizing.m */,
-			);
-			name = NYXImagesKit;
 			sourceTree = "<group>";
 		};
 		833DB53C1494164F00509F2E /* Frameworks */ = {
@@ -1789,8 +1776,7 @@
 				5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */,
 				5BB3F50B16D22EA000281A2B /* DDGSHKFormController.m in Sources */,
 				5BB3F51216D2318200281A2B /* DDGSHKShareMenu.m in Sources */,
-				5BB3F51616D26A5B00281A2B /* UIImage+Resizing.m in Sources */,
-				5BB3F51916D26A6B00281A2B /* NYXImagesHelper.m in Sources */,
+				5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

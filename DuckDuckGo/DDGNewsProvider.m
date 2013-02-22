@@ -12,7 +12,6 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGStory.h"
 #import "Constants.h"
-#import "UIImage+Resizing.h"
 
 @implementation DDGNewsProvider
 static DDGNewsProvider *sharedProvider;
@@ -105,10 +104,6 @@ static DDGNewsProvider *sharedProvider;
             if(![DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"]) {
                 NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:[source objectForKey:@"image"]]];
                 UIImage *image = [UIImage imageWithData:data];
-                CGSize maxSize = CGSizeMake(24.0, 24.0);
-                if (image.size.width > maxSize.width
-                    || image.size.height > maxSize.height)
-                    image = [image scaleToFitSize:CGSizeMake(24.0, 24.0)];
                 [DDGCache setObject:image forKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
             }
         }];

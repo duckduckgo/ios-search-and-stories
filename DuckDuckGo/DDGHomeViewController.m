@@ -24,7 +24,6 @@
 #import "SVProgressHUD.h"
 #import "SHK.h"
 #import "DDGStoryCell.h"
-#import "UIImage+Resizing.h"
 
 @interface DDGHomeViewController ()
 @property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
@@ -461,17 +460,8 @@
     }
     
     UIImage *image = nil;
-    
-    if(story.feed) {
-        image = [DDGCache objectForKey:story.feed inCache:@"sourceImages"];
-        CGSize maxSize = CGSizeMake(24.0, 24.0);
-        if (image.size.width > maxSize.width
-            || image.size.height > maxSize.height) {
-            image = [image scaleToFitSize:CGSizeMake(24.0, 24.0)];
-            [DDGCache setObject:image forKey:story.feed inCache:@"sourceImages"];
-        }
-    }
-
+    if(story.feed)
+        image = [DDGCache objectForKey:story.feed inCache:@"sourceImages"];    
     [cell.faviconButton setImage:image forState:UIControlStateNormal];
     
 	return cell;
