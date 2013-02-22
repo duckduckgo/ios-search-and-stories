@@ -96,7 +96,7 @@
     [self.slidingViewController.panGesture requireGestureRecognizerToFail:leftSwipeGestureRecognizer];
     
     NSOperationQueue *queue = [NSOperationQueue new];
-    queue.maxConcurrentOperationCount = 4;
+    queue.maxConcurrentOperationCount = 2;
     queue.name = @"DDG Watercooler Image Download Queue";
     self.imageDownloadQueue = queue;
 
