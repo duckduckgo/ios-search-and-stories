@@ -127,8 +127,9 @@
     
     if (nil != storyURL) {
         BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:storyURL];
-        NSString *title = (bookmarked ? @"Unsave" : @"Save");
-        [self.swipeViewSaveButton setTitle:title forState:UIControlStateNormal];
+        NSString *imageName = (bookmarked ? @"swipe-un-save" : @"swipe-save");
+        UIImage *image = [UIImage imageNamed:imageName];
+        [self.swipeViewSaveButton setImage:image forState:UIControlStateNormal];
     }
     
     [self showSwipeViewForIndexPath:indexPath];

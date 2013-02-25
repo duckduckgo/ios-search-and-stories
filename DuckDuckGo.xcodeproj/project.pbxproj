@@ -122,6 +122,14 @@
 		5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66096F16D781B20006B5DE /* libTestFlight.a */; };
 		5B66097316D781D00006B5DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66097216D781D00006B5DE /* libz.dylib */; };
 		5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B66097716D7A3600006B5DE /* DDGFaviconButton.m */; };
+		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
+		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
+		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
+		5B88DBB216DB7BA7007A935D /* swipe-save@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBAA16DB7BA7007A935D /* swipe-save@2x.png */; };
+		5B88DBB316DB7BA7007A935D /* swipe-share.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBAB16DB7BA7007A935D /* swipe-share.png */; };
+		5B88DBB416DB7BA7007A935D /* swipe-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBAC16DB7BA7007A935D /* swipe-share@2x.png */; };
+		5B88DBB516DB7BA7007A935D /* swipe-un-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBAD16DB7BA7007A935D /* swipe-un-save.png */; };
+		5B88DBB616DB7BA7007A935D /* swipe-un-save@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBAE16DB7BA7007A935D /* swipe-un-save@2x.png */; };
 		5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */; };
 		5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AC16C904BA0066BCB0 /* AFHTTPRequestOperation.m */; };
 		5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AE16C904BA0066BCB0 /* AFImageRequestOperation.m */; };
@@ -630,6 +638,14 @@
 		5B66097216D781D00006B5DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		5B66097616D7A3600006B5DE /* DDGFaviconButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGFaviconButton.h; sourceTree = "<group>"; };
 		5B66097716D7A3600006B5DE /* DDGFaviconButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGFaviconButton.m; sourceTree = "<group>"; };
+		5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari.png"; sourceTree = "<group>"; };
+		5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari@2x.png"; sourceTree = "<group>"; };
+		5B88DBA916DB7BA7007A935D /* swipe-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save.png"; sourceTree = "<group>"; };
+		5B88DBAA16DB7BA7007A935D /* swipe-save@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save@2x.png"; sourceTree = "<group>"; };
+		5B88DBAB16DB7BA7007A935D /* swipe-share.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-share.png"; sourceTree = "<group>"; };
+		5B88DBAC16DB7BA7007A935D /* swipe-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-share@2x.png"; sourceTree = "<group>"; };
+		5B88DBAD16DB7BA7007A935D /* swipe-un-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-un-save.png"; sourceTree = "<group>"; };
+		5B88DBAE16DB7BA7007A935D /* swipe-un-save@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-un-save@2x.png"; sourceTree = "<group>"; };
 		5BA321A916C904BA0066BCB0 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
 		5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
 		5BA321AB16C904BA0066BCB0 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -888,6 +904,14 @@
 				83DC6E911642AF3B00E06A9C /* save_button@2x.png */,
 				83CD212E16374042000220B0 /* section_tile.png */,
 				83CD212F16374045000220B0 /* section_tile@2x.png */,
+				5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */,
+				5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */,
+				5B88DBA916DB7BA7007A935D /* swipe-save.png */,
+				5B88DBAA16DB7BA7007A935D /* swipe-save@2x.png */,
+				5B88DBAB16DB7BA7007A935D /* swipe-share.png */,
+				5B88DBAC16DB7BA7007A935D /* swipe-share@2x.png */,
+				5B88DBAD16DB7BA7007A935D /* swipe-un-save.png */,
+				5B88DBAE16DB7BA7007A935D /* swipe-un-save@2x.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -1709,6 +1733,14 @@
 				5B66096B16D63C120006B5DE /* button-bg-highlighted@2x.png in Resources */,
 				5B66096C16D63C120006B5DE /* button-bg.png in Resources */,
 				5B66096D16D63C120006B5DE /* button-bg@2x.png in Resources */,
+				5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */,
+				5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */,
+				5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */,
+				5B88DBB216DB7BA7007A935D /* swipe-save@2x.png in Resources */,
+				5B88DBB316DB7BA7007A935D /* swipe-share.png in Resources */,
+				5B88DBB416DB7BA7007A935D /* swipe-share@2x.png in Resources */,
+				5B88DBB516DB7BA7007A935D /* swipe-un-save.png in Resources */,
+				5B88DBB616DB7BA7007A935D /* swipe-un-save@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
