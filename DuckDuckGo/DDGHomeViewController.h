@@ -12,7 +12,7 @@
 
 @class DDGStoryCell;
 @class DDGScrollbarClockView;
-@interface DDGHomeViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate> {
+@interface DDGHomeViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
     EGORefreshTableHeaderView *refreshHeaderView;
     UIImageView *topShadow;
     BOOL isRefreshing;

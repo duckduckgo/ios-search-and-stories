@@ -130,6 +130,7 @@
 		5B88DBB416DB7BA7007A935D /* swipe-share@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBAC16DB7BA7007A935D /* swipe-share@2x.png */; };
 		5B88DBB516DB7BA7007A935D /* swipe-un-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBAD16DB7BA7007A935D /* swipe-un-save.png */; };
 		5B88DBB616DB7BA7007A935D /* swipe-un-save@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBAE16DB7BA7007A935D /* swipe-un-save@2x.png */; };
+		5B88DBDA16DB9C84007A935D /* DDGPanLeftGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B88DBD916DB9C84007A935D /* DDGPanLeftGestureRecognizer.m */; };
 		5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */; };
 		5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AC16C904BA0066BCB0 /* AFHTTPRequestOperation.m */; };
 		5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BA321AE16C904BA0066BCB0 /* AFImageRequestOperation.m */; };
@@ -646,6 +647,8 @@
 		5B88DBAC16DB7BA7007A935D /* swipe-share@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-share@2x.png"; sourceTree = "<group>"; };
 		5B88DBAD16DB7BA7007A935D /* swipe-un-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-un-save.png"; sourceTree = "<group>"; };
 		5B88DBAE16DB7BA7007A935D /* swipe-un-save@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-un-save@2x.png"; sourceTree = "<group>"; };
+		5B88DBD816DB9C84007A935D /* DDGPanLeftGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGPanLeftGestureRecognizer.h; sourceTree = "<group>"; };
+		5B88DBD916DB9C84007A935D /* DDGPanLeftGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGPanLeftGestureRecognizer.m; sourceTree = "<group>"; };
 		5BA321A916C904BA0066BCB0 /* AFHTTPClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPClient.h; sourceTree = "<group>"; };
 		5BA321AA16C904BA0066BCB0 /* AFHTTPClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFHTTPClient.m; sourceTree = "<group>"; };
 		5BA321AB16C904BA0066BCB0 /* AFHTTPRequestOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFHTTPRequestOperation.h; sourceTree = "<group>"; };
@@ -1035,6 +1038,8 @@
 				5BB3F50416CAA49300281A2B /* DDGStoryCell.m */,
 				5B66097616D7A3600006B5DE /* DDGFaviconButton.h */,
 				5B66097716D7A3600006B5DE /* DDGFaviconButton.m */,
+				5B88DBD816DB9C84007A935D /* DDGPanLeftGestureRecognizer.h */,
+				5B88DBD916DB9C84007A935D /* DDGPanLeftGestureRecognizer.m */,
 			);
 			name = "Home screen";
 			sourceTree = "<group>";
@@ -1809,6 +1814,7 @@
 				5BB3F50B16D22EA000281A2B /* DDGSHKFormController.m in Sources */,
 				5BB3F51216D2318200281A2B /* DDGSHKShareMenu.m in Sources */,
 				5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */,
+				5B88DBDA16DB9C84007A935D /* DDGPanLeftGestureRecognizer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

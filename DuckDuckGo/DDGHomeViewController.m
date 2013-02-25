@@ -24,13 +24,14 @@
 #import "SVProgressHUD.h"
 #import "SHK.h"
 #import "DDGStoryCell.h"
+#import "DDGPanLeftGestureRecognizer.h"
 
 @interface DDGHomeViewController ()
 @property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
 @property (nonatomic, strong) NSOperationQueue *imageDecompressionQueue;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
-@property (nonatomic, strong) UISwipeGestureRecognizer *leftSwipeGestureRecognizer;
+@property (nonatomic, strong) DDGPanLeftGestureRecognizer *panLeftGestureRecognizer;
 @property (nonatomic, copy) NSArray *stories;
 @end
 
@@ -88,11 +89,11 @@
     // this one time, we have to do add the gesture recognizer manually; underVC only does it for us when the view is loaded through the menu
     [underVC configureViewController:self];
     
-    UISwipeGestureRecognizer* leftSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
-    leftSwipeGestureRecognizer.direction = UISwipeGestureRecognizerDirectionLeft;
+    DDGPanLeftGestureRecognizer* panLeftGestureRecognizer = [[DDGPanLeftGestureRecognizer alloc] initWithTarget:self action:@selector(panLeft:)];
+    panLeftGestureRecognizer.maximumNumberOfTouches = 1;
     
-    self.leftSwipeGestureRecognizer = leftSwipeGestureRecognizer;
-    [self.slidingViewController.panGesture requireGestureRecognizerToFail:leftSwipeGestureRecognizer];
+    self.panLeftGestureRecognizer = panLeftGestureRecognizer;
+    [self.slidingViewController.panGesture requireGestureRecognizerToFail:panLeftGestureRecognizer];
     
     NSOperationQueue *queue = [NSOperationQueue new];
     queue.maxConcurrentOperationCount = 2;
@@ -117,23 +118,81 @@
 }
 
 // Called when a left swipe occurred
-- (void)swipeLeft:(UISwipeGestureRecognizer *)recognizer
-{
-    CGPoint location = [recognizer locationInView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+
+- (void)panLeft:(DDGPanLeftGestureRecognizer *)recognizer {
     
-    DDGStory *story = [self.stories objectAtIndex:indexPath.row];
-    NSURL *storyURL = [NSURL URLWithString:story.url];
-    
-    if (nil != storyURL) {
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:storyURL];
-        NSString *imageName = (bookmarked ? @"swipe-un-save" : @"swipe-save");
-        UIImage *image = [UIImage imageNamed:imageName];
-        [self.swipeViewSaveButton setImage:image forState:UIControlStateNormal];
+    if (recognizer.state == UIGestureRecognizerStateFailed) {
+        
+    } else if (recognizer.state == UIGestureRecognizerStateEnded
+               || recognizer.state == UIGestureRecognizerStateCancelled) {
+
+        if (nil != self.swipeViewIndexPath) {
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];
+            CGPoint origin = self.swipeView.frame.origin;
+            CGRect imageFrame = cell.imageView.frame;
+            CGFloat offset = origin.x - imageFrame.origin.x;
+            CGFloat percent = offset / imageFrame.size.width;
+            
+            CGPoint velocity = [recognizer velocityInView:recognizer.view];
+
+            if (velocity.x < 0 && percent > 0.25) {
+                CGFloat distanceRemaining = imageFrame.size.width - offset;
+                CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);                
+                [UIView animateWithDuration:duration
+                                 animations:^{
+                                     cell.imageView.frame = CGRectMake(origin.x - imageFrame.size.width,
+                                                                       imageFrame.origin.y,
+                                                                       imageFrame.size.width,
+                                                                       imageFrame.size.height);
+                                 }];
+                
+            } else {
+                [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];                
+            }
+        }
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        CGPoint location = [recognizer locationInView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+
+        if (nil != self.swipeViewIndexPath
+            && ![self.swipeViewIndexPath isEqual:indexPath]) {
+            [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
+        }
+        
+        if (nil == self.swipeViewIndexPath) {
+            [self insertSwipeViewForIndexPath:indexPath];
+        }
+
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];        
+        CGPoint translation = [recognizer translationInView:recognizer.view];
+        
+        CGPoint center = cell.imageView.center;
+        cell.imageView.center = CGPointMake(center.x + translation.x,
+                                            center.y);
+        
+        [recognizer setTranslation:CGPointZero inView:recognizer.view];
     }
     
-    [self showSwipeViewForIndexPath:indexPath];
 }
+
+//- (void)swipeLeft:(UISwipeGestureRecognizer *)recognizer
+//{
+//    CGPoint location = [recognizer locationInView:self.tableView];
+//    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+//    
+//    DDGStory *story = [self.stories objectAtIndex:indexPath.row];
+//    NSURL *storyURL = [NSURL URLWithString:story.url];
+//    
+//    if (nil != storyURL) {
+//        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:storyURL];
+//        NSString *imageName = (bookmarked ? @"swipe-un-save" : @"swipe-save");
+//        UIImage *image = [UIImage imageNamed:imageName];
+//        [self.swipeViewSaveButton setImage:image forState:UIControlStateNormal];
+//    }
+//    
+//    [self showSwipeViewForIndexPath:indexPath];
+//}
 
 - (void)viewDidUnload {
     [self setSwipeView:nil];
@@ -175,7 +234,7 @@
                                                  name:ECSlidingViewUnderLeftWillAppear
                                                object:self.slidingViewController];
     
-    [self.tableView addGestureRecognizer:self.leftSwipeGestureRecognizer];
+    [self.tableView addGestureRecognizer:self.panLeftGestureRecognizer];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -187,7 +246,7 @@
                                                     name:ECSlidingViewUnderLeftWillAppear
                                                   object:self.slidingViewController];
     
-    [self.tableView removeGestureRecognizer:self.leftSwipeGestureRecognizer];
+    [self.tableView removeGestureRecognizer:self.panLeftGestureRecognizer];
 	[super viewWillDisappear:animated];
     
     [self.imageDownloadQueue cancelAllOperations];
@@ -238,21 +297,20 @@
         return;
 
     DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
+    NSURL *storyURL = [NSURL URLWithString:story.url];    
     
-    [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-
-    NSURL *storyURL = [NSURL URLWithString:story.url];
-    
-    if (nil == storyURL)
-        return;
-    
-    BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:storyURL];
-    if(bookmarked)
-        [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:storyURL];
-    else
-        [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:story.title feed:story.feed URL:storyURL];
-    
-    [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unsaved!" : @"Saved!")];
+    [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
+        if (nil == storyURL)
+            return;
+        
+        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:storyURL];
+        if(bookmarked)
+            [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:storyURL];
+        else
+            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:story.title feed:story.feed URL:storyURL];
+        
+        [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unsaved!" : @"Saved!")];
+    }];
 }
 
 - (void)share:(id)sender {
@@ -276,42 +334,50 @@
 
 - (void)hideSwipeViewForIndexPath:(NSIndexPath *)indexPath completion:(void (^)())completion {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    [UIView animateWithDuration:0.2
+    self.swipeViewIndexPath = nil;    
+    [UIView animateWithDuration:0.1
                      animations:^{
                          cell.imageView.frame = self.swipeView.frame;
                      } completion:^(BOOL finished) {
-                         [self.swipeView removeFromSuperview];
-                         self.swipeViewIndexPath = nil;
+                         if (nil == self.swipeViewIndexPath)
+                             [self.swipeView removeFromSuperview];
                          if (NULL != completion)
                              completion();
                      }];
 }
 
+- (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    if (nil != cell) {
+        UIView *behindView = cell.imageView;
+        CGRect swipeFrame = behindView.frame;
+        
+        if (nil == self.swipeView)
+            [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
+        
+        self.swipeView.frame = swipeFrame;
+        [behindView.superview insertSubview:self.swipeView belowSubview:behindView];
+        self.swipeViewIndexPath = indexPath;
+    }
+    
+}
+
 - (void)showSwipeViewForIndexPath:(NSIndexPath *)indexPath {
-    
-    if ([self.swipeViewIndexPath isEqual:indexPath])
-        return;
-    
+        
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     
     void(^completion)() = ^() {
         if (nil != cell) {
             UIView *behindView = cell.imageView;
             CGRect swipeFrame = behindView.frame;
-            
-            if (nil == self.swipeView)
-                [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
-            
-            self.swipeView.frame = swipeFrame;
-            [behindView.superview insertSubview:self.swipeView belowSubview:behindView];
+            [self insertSwipeViewForIndexPath:indexPath];
             [UIView animateWithDuration:0.2
                              animations:^{
-                                 behindView.frame = CGRectMake(swipeFrame.origin.x - swipeFrame.size.width,
-                                                             swipeFrame.origin.y,
-                                                             swipeFrame.size.width,
-                                                             swipeFrame.size.height);
+                                 cell.imageView.frame = CGRectMake(swipeFrame.origin.x - swipeFrame.size.width,
+                                                                   swipeFrame.origin.y,
+                                                                   swipeFrame.size.width,
+                                                                   swipeFrame.size.height);
                              }];
-            self.swipeViewIndexPath = indexPath;
         }
     };
     
@@ -351,19 +417,26 @@
 
 - (IBAction)filter:(id)sender {
 
-    DDGNewsProvider *newsProvider = [DDGNewsProvider sharedProvider];
+    void (^completion)() = ^() {
+        DDGNewsProvider *newsProvider = [DDGNewsProvider sharedProvider];
+        
+        if (nil != newsProvider.sourceFilter) {
+            newsProvider.sourceFilter = nil;
+        } else if ([sender isKindOfClass:[UIButton class]]) {
+            UIButton *button = (UIButton *)sender;
+            CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
+            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+            DDGStory *story = [self.stories objectAtIndex:indexPath.row];
+            newsProvider.sourceFilter = story.feed;
+        }
+        
+        [self replaceStories:newsProvider.filteredStories];
+    };
     
-    if (nil != newsProvider.sourceFilter) {
-        newsProvider.sourceFilter = nil;
-    } else if ([sender isKindOfClass:[UIButton class]]) {
-        UIButton *button = (UIButton *)sender;
-        CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
-        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-        DDGStory *story = [self.stories objectAtIndex:indexPath.row];
-        newsProvider.sourceFilter = story.feed;
-    }
-    
-    [self replaceStories:newsProvider.filteredStories];
+    if (nil != self.swipeViewIndexPath)
+        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:completion];
+    else
+        completion();
 }
 
 #pragma mark - EGORefreshTableHeaderDelegate Methods
@@ -403,6 +476,8 @@
 -(void)loadQueryOrURL:(NSString *)queryOrURL {    
     [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:queryOrURL];
 }
+
+#pragma mark - UIGestureRecognizerDelegate
 
 #pragma mark - Table view data source
 
