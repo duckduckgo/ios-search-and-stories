@@ -18,11 +18,13 @@
 @property(nonatomic, strong) NSDate *date;
 
 @property(nonatomic, strong) NSURL *imageURL;
-@property(nonatomic, strong) UIImage *image;
+@property(nonatomic, readonly, strong) UIImage *image;
 @property(nonatomic, strong) UIImage *decompressedImage;
-@property(nonatomic, getter = isImageDownloaded) BOOL imageDownloaded;
+@property(nonatomic, readonly, getter = isImageDownloaded) BOOL imageDownloaded;
 
 -(void)unloadImage;
 -(void)deleteImage;
+
+- (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion;
 
 @end

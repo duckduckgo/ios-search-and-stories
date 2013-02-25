@@ -12,7 +12,8 @@
 @interface DDGStory () {
     UIImage *_image;
 }
-
+@property(nonatomic, readwrite, getter = isImageDownloaded) BOOL imageDownloaded;
+@property(nonatomic, readwrite, strong) UIImage *image;
 @end
 
 @implementation DDGStory
@@ -49,10 +50,7 @@
     if (image == _image)
         return;
     
-    _image = image;
-    
-    NSData *imageData = UIImagePNGRepresentation(image);
-    [imageData writeToFile:[self imageFilePath] atomically:NO];
+    _image = image;    
 }
 
 -(UIImage *)image {
@@ -73,6 +71,17 @@
     self.image = nil;
     [[NSFileManager defaultManager] removeItemAtPath:self.imageFilePath error:nil];
     self.imageDownloaded = NO;
+}
+
+- (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL suceess = [data writeToFile:[self imageFilePath] atomically:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.imageDownloaded = YES;
+            if (completion)
+                completion(suceess);
+        });
+    });
 }
 
 -(NSString *)imageFilePath {

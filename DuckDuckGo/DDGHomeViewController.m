@@ -500,20 +500,25 @@
 - (void)loadImageForStory:(DDGStory *)story {
     NSURL *imageURL = story.imageURL;
     if (!story.imageDownloaded && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
-        NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
-        
-        AFImageRequestOperation *imageOperation = [AFImageRequestOperation imageRequestOperationWithRequest:request success:^(UIImage *image) {
-            story.imageDownloaded = YES;
-            story.image = image;
+        NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];        
+        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSData *responseData = (NSData *)responseObject;
+            [story writeImageData:responseData completion:^(BOOL success) {
+                if (success)
+                    [self decompressAndDisplayImageForStory:story];
+            }];
             [self.enqueuedDownloadOperations removeObject:imageURL];
-            [self decompressAndDisplayImageForStory:story];
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            [self.enqueuedDownloadOperations removeObject:imageURL];
         }];
-        [imageOperation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
+        
+        [operation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
             [self.enqueuedDownloadOperations removeObject:imageURL];
         }];
         
         [self.enqueuedDownloadOperations addObject:imageURL];
-        [self.imageDownloadQueue addOperation:imageOperation];
+        [self.imageDownloadQueue addOperation:operation];
     }
 }
 
