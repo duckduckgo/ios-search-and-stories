@@ -419,18 +419,22 @@
 
     void (^completion)() = ^() {
         DDGNewsProvider *newsProvider = [DDGNewsProvider sharedProvider];
+        DDGStory *story = nil;
+                
+        if ([sender isKindOfClass:[UIButton class]]) {
+            UIButton *button = (UIButton *)sender;
+            CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
+            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+            story = [self.stories objectAtIndex:indexPath.row];
+        }
         
         if (nil != newsProvider.sourceFilter) {
             newsProvider.sourceFilter = nil;
         } else if ([sender isKindOfClass:[UIButton class]]) {
-            UIButton *button = (UIButton *)sender;
-            CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
-            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-            DDGStory *story = [self.stories objectAtIndex:indexPath.row];
             newsProvider.sourceFilter = story.feed;
         }
         
-        [self replaceStories:newsProvider.filteredStories];
+        [self replaceStories:newsProvider.filteredStories focusOnStory:story];
     };
     
     if (nil != self.swipeViewIndexPath)
@@ -660,7 +664,7 @@
     return [indexPaths copy];
 }
 
-- (void)replaceStories:(NSArray *)newStories {
+- (void)replaceStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
     
     NSArray *oldStories = [self.stories copy];
     self.stories = newStories;
@@ -683,6 +687,14 @@
     [self.tableView deleteRowsAtIndexPaths:removedStories
                      withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
+    
+    if (nil != story) {
+        NSUInteger row = [self.stories indexOfObject:story];
+        if (row != NSNotFound) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
+        }
+    }
 }
 
 // downloads stories asynchronously
@@ -693,7 +705,7 @@
     
     [newsProvider downloadSourcesFinished:^{
         [newsProvider downloadStoriesFinished:^{
-            [self replaceStories:newsProvider.filteredStories];
+            [self replaceStories:newsProvider.filteredStories focusOnStory:nil];
             [self downloadStoryImages];
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
