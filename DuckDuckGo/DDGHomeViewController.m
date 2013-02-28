@@ -602,30 +602,31 @@
     if (nil == story.image)
         return;
     
-    void (^completionBlock)(UIImage *) = ^(UIImage *decompressedImage) {
-        story.decompressedImage = decompressedImage;
+    void (^completionBlock)() = ^() {
         NSUInteger row = [self.stories indexOfObject:story];
         if (row != NSNotFound) {
             [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
         }
     };
     
-    [self decompressImage:story.image completionBlock:completionBlock];
-}
-
-- (void)decompressImage:(UIImage *)image completionBlock:(void (^)(UIImage *decompressedImage))completionBlock {
+    UIImage *image = story.image;    
     
     if (nil == image)
-        completionBlock(nil);
+        completionBlock();
     else {
         [self.imageDecompressionQueue addOperationWithBlock:^{
-            UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
-            [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
-            UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
-            UIGraphicsEndImageContext();
+            if (nil == story.decompressedImage) {
+                UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
+                [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
+                UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
+                UIGraphicsEndImageContext();
+                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                    story.decompressedImage = decompressed;
+                }];
+            }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                completionBlock(decompressed);
+                completionBlock();
             }];
         }];
     }
