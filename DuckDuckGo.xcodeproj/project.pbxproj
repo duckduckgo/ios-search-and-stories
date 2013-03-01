@@ -145,6 +145,8 @@
 		5BA321ED16C905BA0066BCB0 /* EGORefreshTableHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		5BA321F116C907650066BCB0 /* NSOperationStack.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0F0915DDC1DA00B44342 /* NSOperationStack.m */; };
 		5BA321F316C909700066BCB0 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BA321F216C9096E0066BCB0 /* MobileCoreServices.framework */; };
+		5BB1594916E0BAC100C2A0F9 /* header_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BB1594716E0BAC100C2A0F9 /* header_shadow.png */; };
+		5BB1594A16E0BAC100C2A0F9 /* header_shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BB1594816E0BAC100C2A0F9 /* header_shadow@2x.png */; };
 		5BB3F4DB16CA7AE100281A2B /* HomeSwipeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3F4DA16CA7AE100281A2B /* HomeSwipeView.xib */; };
 		5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F50416CAA49300281A2B /* DDGStoryCell.m */; };
 		5BB3F50B16D22EA000281A2B /* DDGSHKFormController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F50A16D22E9F00281A2B /* DDGSHKFormController.m */; };
@@ -673,6 +675,8 @@
 		5BA321E816C9053E0066BCB0 /* SDURLCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SDURLCache.h; path = Submodules/SDURLCache/SDURLCache.h; sourceTree = SOURCE_ROOT; };
 		5BA321E916C9053E0066BCB0 /* SDURLCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SDURLCache.m; path = Submodules/SDURLCache/SDURLCache.m; sourceTree = SOURCE_ROOT; };
 		5BA321F216C9096E0066BCB0 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		5BB1594716E0BAC100C2A0F9 /* header_shadow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = header_shadow.png; sourceTree = "<group>"; };
+		5BB1594816E0BAC100C2A0F9 /* header_shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "header_shadow@2x.png"; sourceTree = "<group>"; };
 		5BB3F4DA16CA7AE100281A2B /* HomeSwipeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeSwipeView.xib; sourceTree = "<group>"; };
 		5BB3F50316CAA49300281A2B /* DDGStoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryCell.h; sourceTree = "<group>"; };
 		5BB3F50416CAA49300281A2B /* DDGStoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryCell.m; sourceTree = "<group>"; };
@@ -869,6 +873,8 @@
 				E4D87C071609675D001C5E92 /* Default-568h@2x.png */,
 				4C1FD7DD1548FF65006B2511 /* header_tile.png */,
 				4C1FD7DE1548FF65006B2511 /* header_tile@2x.png */,
+				5BB1594716E0BAC100C2A0F9 /* header_shadow.png */,
+				5BB1594816E0BAC100C2A0F9 /* header_shadow@2x.png */,
 				8343FCD6165459FD00F1E28F /* header_lp_tile.png */,
 				8343FCD7165459FD00F1E28F /* header_lp_tile@2x.png */,
 				4C1FD7E11548FF65006B2511 /* icon57x.png */,
@@ -1746,6 +1752,8 @@
 				5B88DBB416DB7BA7007A935D /* swipe-share@2x.png in Resources */,
 				5B88DBB516DB7BA7007A935D /* swipe-un-save.png in Resources */,
 				5B88DBB616DB7BA7007A935D /* swipe-un-save@2x.png in Resources */,
+				5BB1594916E0BAC100C2A0F9 /* header_shadow.png in Resources */,
+				5BB1594A16E0BAC100C2A0F9 /* header_shadow@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
