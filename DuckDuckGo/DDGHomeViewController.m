@@ -55,7 +55,7 @@
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateHome;
     
-    linen = [UIColor colorWithPatternImage:[UIImage imageNamed:@"linen_bg.png"]];
+    linen = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     _tableView.separatorColor = [UIColor clearColor];
     _tableView.backgroundColor = linen;
     
@@ -349,7 +349,7 @@
 - (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     if (nil != cell) {
-        UIView *behindView = cell.imageView;
+        UIView *behindView = cell.contentView;
         CGRect swipeFrame = behindView.frame;
         
         if (nil == self.swipeView)
@@ -368,12 +368,12 @@
     
     void(^completion)() = ^() {
         if (nil != cell) {
-            UIView *behindView = cell.imageView;
+            UIView *behindView = cell.contentView;
             CGRect swipeFrame = behindView.frame;
             [self insertSwipeViewForIndexPath:indexPath];
             [UIView animateWithDuration:0.2
                              animations:^{
-                                 cell.imageView.frame = CGRectMake(swipeFrame.origin.x - swipeFrame.size.width,
+                                 behindView.frame = CGRectMake(swipeFrame.origin.x - swipeFrame.size.width,
                                                                    swipeFrame.origin.y,
                                                                    swipeFrame.size.width,
                                                                    swipeFrame.size.height);

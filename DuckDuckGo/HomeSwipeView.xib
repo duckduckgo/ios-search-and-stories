@@ -13,7 +13,6 @@
 		<array key="IBDocument.IntegratedClassDependencies">
 			<string>IBProxyObject</string>
 			<string>IBUIButton</string>
-			<string>IBUIImageView</string>
 			<string>IBUIView</string>
 		</array>
 		<array key="IBDocument.PluginDependencies">
@@ -36,21 +35,6 @@
 				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
-					<object class="IBUIImageView" id="753098942">
-						<reference key="NSNextResponder" ref="495050426"/>
-						<int key="NSvFlags">274</int>
-						<string key="NSFrameSize">{320, 83}</string>
-						<reference key="NSSuperview" ref="495050426"/>
-						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView" ref="410176879"/>
-						<string key="NSReuseIdentifierKey">_NS:9</string>
-						<bool key="IBUIUserInteractionEnabled">NO</bool>
-						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<object class="NSCustomResource" key="IBUIImage">
-							<string key="NSClassName">NSImage</string>
-							<string key="NSResourceName">linen_bg</string>
-						</object>
-					</object>
 					<object class="IBUIButton" id="410176879">
 						<reference key="NSNextResponder" ref="495050426"/>
 						<int key="NSvFlags">294</int>
@@ -129,7 +113,6 @@
 						<string key="NSFrame">{{220, 20}, {80, 44}}</string>
 						<reference key="NSSuperview" ref="495050426"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<object class="IBUIAccessibilityConfiguration" key="IBUIAccessibilityConfiguration">
@@ -156,14 +139,11 @@
 				<string key="NSFrameSize">{320, 83}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
-				<reference key="NSNextKeyView" ref="753098942"/>
+				<reference key="NSNextKeyView"/>
 				<string key="NSReuseIdentifierKey">_NS:9</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MQA</bytes>
-					<object class="NSColorSpace" key="NSCustomColorSpace">
-						<int key="NSID">2</int>
-					</object>
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MC4yMDM5MjE1Njg2IDAuMjE5NjA3ODQzMSAwLjI1MDk4MDM5MjIAA</bytes>
 				</object>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
@@ -238,7 +218,6 @@
 						<reference key="object" ref="495050426"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="410176879"/>
-							<reference ref="753098942"/>
 							<reference ref="564890732"/>
 							<reference ref="246550962"/>
 						</array>
@@ -257,11 +236,6 @@
 						<reference key="parent" ref="495050426"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">17</int>
-						<reference key="object" ref="753098942"/>
-						<reference key="parent" ref="495050426"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">18</int>
 						<reference key="object" ref="246550962"/>
 						<reference key="parent" ref="495050426"/>
@@ -273,7 +247,6 @@
 				<string key="-1.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="-2.CustomClassName">UIResponder</string>
 				<string key="-2.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="17.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="18.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
@@ -290,20 +263,6 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">DDGHomeViewController</string>
 					<string key="superclassName">UIViewController</string>
-					<dictionary class="NSMutableDictionary" key="actions">
-						<string key="filter:">id</string>
-						<string key="openInSafari:">id</string>
-					</dictionary>
-					<dictionary class="NSMutableDictionary" key="actionInfosByName">
-						<object class="IBActionInfo" key="filter:">
-							<string key="name">filter:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="openInSafari:">
-							<string key="name">openInSafari:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="loadedCell">DDGStoryCell</string>
 						<string key="swipeView">UIView</string>
@@ -398,7 +357,6 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<string key="linen_bg">{16, 16}</string>
 			<string key="swipe-open-in-safari">{16, 16}</string>
 			<string key="swipe-save">{16, 16}</string>
 			<string key="swipe-share">{16, 16}</string>
