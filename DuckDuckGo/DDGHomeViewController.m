@@ -55,9 +55,8 @@
 	_searchController.searchHandler = self;
     _searchController.state = DDGSearchControllerStateHome;
     
-    linen = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     _tableView.separatorColor = [UIColor clearColor];
-    _tableView.backgroundColor = linen;
+    _tableView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     
     topShadow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"table_view_shadow_top.png"]];
     topShadow.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 5.0);
@@ -516,7 +515,7 @@
         cell = _loadedCell;
         self.loadedCell = nil;
         
-        cell.imageView.backgroundColor = linen;
+        cell.imageView.backgroundColor = self.tableView.backgroundColor;
         cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
         cell.overlayImageView.image = [UIImage imageNamed:@"topic_cell_background.png"];
     }

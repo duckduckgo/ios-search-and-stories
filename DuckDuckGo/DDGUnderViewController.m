@@ -38,7 +38,7 @@
     
         self.tableView.scrollsToTop = NO;
         
-        self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_texture-dark.png"]];
+        self.tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         
         self.clearsSelectionOnViewWillAppear = NO;

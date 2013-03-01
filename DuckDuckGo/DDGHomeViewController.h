@@ -16,8 +16,6 @@
     EGORefreshTableHeaderView *refreshHeaderView;
     UIImageView *topShadow;
     BOOL isRefreshing;
-    
-    UIColor *linen;
 }
 
 @property (nonatomic, strong) IBOutlet DDGStoryCell *loadedCell;
