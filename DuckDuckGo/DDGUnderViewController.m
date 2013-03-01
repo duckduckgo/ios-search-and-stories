@@ -27,7 +27,7 @@
                 @"viewController" : homeViewController
             },
             @{
-                @"title" : @"Saved Pages",
+                @"title" : @"Saved",
                 @"viewController" : [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]]
             },
             @{
