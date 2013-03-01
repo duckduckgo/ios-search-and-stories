@@ -41,8 +41,9 @@
     [super viewDidLoad];
     
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
-
+    [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
+    
 	button.imageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	button.autoresizesSubviews = YES;
     

@@ -21,7 +21,8 @@
     self.title = @"Saved";
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
     
     // we need to offset the triforce image by 1px down to compensate for the shadow in the image
     float topInset = 1.0f;

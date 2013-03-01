@@ -205,9 +205,11 @@
 	_state = searchControllerState;
     
     if(_state == DDGSearchControllerStateHome) {
-        [_leftButton setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
+        [_leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
+        [_leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
     } else if (_state == DDGSearchControllerStateWeb) {
         [_leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
+        [_leftButton setImage:nil forState:UIControlStateHighlighted];
 
         CGRect f = _searchField.frame;
         f.size.width -= _actionButton.frame.size.width + 5;
@@ -372,9 +374,10 @@
 
     self.parentViewController.slidingViewController.panGesture.enabled = YES;
     
-    if(_state == DDGSearchControllerStateHome)
-        [_leftButton setImage:[UIImage imageNamed:@"triforce_button.png"] forState:UIControlStateNormal];
-
+    if(_state == DDGSearchControllerStateHome) {
+        [_leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
+        [_leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
+    }
 
     [_searchField resignFirstResponder];
     if(!barUpdated) {
