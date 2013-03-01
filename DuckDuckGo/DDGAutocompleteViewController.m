@@ -109,7 +109,7 @@ static NSString *historyCellID = @"HCell";
 	hv.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
 	if (!section)
-		hv.text = @" History";
+		hv.text = @" Recent";
 	else
 		hv.text = @" Suggestions";
 	return hv;

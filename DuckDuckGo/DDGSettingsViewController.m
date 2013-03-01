@@ -104,14 +104,14 @@
     }];
     
     [self addSectionWithTitle:@"Privacy"];
-    [self addSwitch:@"Record History" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
-    [self addSectionWithTitle:nil footer:@"History is stored on your phone."];
-    [self addButton:@"Clear History" action:^{
+    [self addSwitch:@"Record Recent" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
+    [self addSectionWithTitle:nil footer:@"Recents are stored on your phone."];
+    [self addButton:@"Clear Recent" action:^{
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
                                                                  delegate:weakSelf
                                                         cancelButtonTitle:@"Cancel"
                                                    destructiveButtonTitle:nil
-                                                        otherButtonTitles:@"Clear History", nil];
+                                                        otherButtonTitles:@"Clear Recent", nil];
         [actionSheet showInView:weakSelf.view];
     }];
     
@@ -148,7 +148,7 @@
 }
 
 -(void)saveData:(NSDictionary *)formData {
-    [DDGCache setObject:[formData objectForKey:@"Record History"]
+    [DDGCache setObject:[formData objectForKey:@"Record Recent"]
                  forKey:@"history" 
                 inCache:@"settings"];
     
@@ -166,7 +166,7 @@
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 0) {
         [[DDGHistoryProvider sharedProvider] clearHistory];
-        [SVProgressHUD showSuccessWithStatus:@"History cleared!"];
+        [SVProgressHUD showSuccessWithStatus:@"Recents cleared!"];
     }
 }
 
