@@ -127,7 +127,7 @@
         lbl.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
 		lbl.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		lbl.numberOfLines = 1;
-		lbl.font = [UIFont boldSystemFontOfSize:17.0]; //[UIFont fontWithName:@"Helvetica Neue Medium" size:18];
+		lbl.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
 
 		switch (indexPath.row)
 		{
@@ -158,7 +158,8 @@
 		
 		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_history-items.png"]];
 		lbl.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
-		
+		lbl.font = [UIFont fontWithName:@"HelveticaNeue" size:17.0];
+        
 		if ([[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
 		{
 			// we have history and it is enabled
@@ -212,7 +213,7 @@
         title.textColor = [UIColor whiteColor];
         title.opaque = NO;
         title.backgroundColor = [UIColor clearColor];
-        title.font = [UIFont boldSystemFontOfSize:13.0];
+        title.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:13.0];
         [headerView addSubview:title];
     }
     
