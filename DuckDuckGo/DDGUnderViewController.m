@@ -27,7 +27,7 @@
                 @"viewController" : homeViewController
             },
             @{
-                @"title" : @"Saved Pages",
+                @"title" : @"Saved",
                 @"viewController" : [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]]
             },
             @{
@@ -188,7 +188,7 @@
 		else
 		{
 			iv.image = [UIImage imageNamed:@"icon_notification.png"];
-			lbl.text = @"Record History is disabled.\nYou can enable it in settings.";
+			lbl.text = @"Recording recents is disabled.\nYou can enable it in settings.";
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
 		lbl.numberOfLines = 2;
@@ -219,7 +219,7 @@
     if (section == 1)
 	{
         UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
-        title.text = @"History";
+        title.text = @"Recent";
         title.textColor = [UIColor whiteColor];
         title.opaque = NO;
         title.backgroundColor = [UIColor clearColor];
