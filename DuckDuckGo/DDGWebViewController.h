@@ -10,6 +10,8 @@
 #import <MessageUI/MessageUI.h>
 #import "DDGSearchController.h"
 
+@class DDGStory;
+
 @interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 {
     BOOL viewsInitialized;
@@ -25,5 +27,6 @@
 @property(nonatomic, strong) NSURL *webViewURL;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString;
+-(void)loadStory:(DDGStory *)story;
 
 @end

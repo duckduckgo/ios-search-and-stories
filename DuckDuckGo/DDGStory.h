@@ -15,6 +15,7 @@
 @property(nonatomic, strong) NSString *title;
 @property(nonatomic, strong) NSString *url;
 @property(nonatomic, strong) NSString *feed;
+@property(nonatomic, strong) NSString *html;
 @property(nonatomic, strong) NSDate *date;
 
 @property(nonatomic, strong) NSURL *imageURL;

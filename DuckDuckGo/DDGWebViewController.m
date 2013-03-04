@@ -16,6 +16,7 @@
 #import "DDGUnderViewController.h"
 #import "DDGCache.h"
 #import "DDGUtility.h"
+#import "DDGStory.h"
 #import "AFNetworking.h"
 
 @implementation NSString (URLPrivateDDG)
@@ -226,6 +227,83 @@
         [_searchController updateBarWithURL:url];
         self.webViewURL = url;
     }
+}
+
+- (void)loadJSONForStory:(DDGStory *)story completion:(void (^)(id JSON))completion {
+    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&l=%@", story.storyID]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        if (completion)
+            completion(responseObject);
+        if (--webViewLoadingDepth <= 0) {
+            [_searchController webViewFinishedLoading];
+            webViewLoadingDepth = 0;
+            webViewLoadEvents = 0;
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        if (completion)
+            completion(nil);
+        [_searchController webViewFinishedLoading];
+        if (--webViewLoadingDepth <= 0) {
+            [_searchController webViewFinishedLoading];
+            webViewLoadingDepth = 0;
+            webViewLoadEvents = 0;
+        }
+        [self loadQueryOrURL:[story url]];
+    }];
+    
+    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
+        if (webViewLoadingDepth == 0) {
+            webViewLoadingDepth++;
+            webViewLoadEvents++;
+            [_searchController webViewCanGoBack:NO];            
+            [_searchController webViewStartedLoading];
+        }
+        
+        [_searchController setProgress:(float) totalBytesRead / totalBytesExpectedToRead];
+    }];
+    
+    [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"application/javascript"]];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [operation start];
+    });
+}
+
+-(void)loadStory:(DDGStory *)story {
+    [self view];
+    
+    void (^completion)(id JSON) = ^(id JSON) {
+        if ([JSON isKindOfClass:[NSArray class]]) {
+            
+            NSArray *stories = JSON;
+            if ([stories count] > 0) {
+                NSDictionary *dictionary = [stories objectAtIndex:0];
+                if ([dictionary isKindOfClass:[NSDictionary class]]) {
+                    NSString *html = [dictionary objectForKey:@"html"];
+                    story.html = html;                    
+                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                        // mark the story as read
+                        [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];
+                    });                    
+                }
+            }
+        }
+        
+        NSString *html = story.html;
+        if (nil != html) {
+            [_webView loadHTMLString:story.html baseURL:[NSURL URLWithString:story.url]];
+            [_searchController updateBarWithURL:nil];            
+        } else {
+            [self loadQueryOrURL:[story url]];            
+        }
+    };
+    
+    if (nil == story.html)
+        [self loadJSONForStory:story completion:completion];
+    else
+        completion(nil);    
 }
 
 #pragma mark - Searching for selected text

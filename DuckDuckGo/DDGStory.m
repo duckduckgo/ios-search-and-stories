@@ -28,6 +28,7 @@
         self.url = [aDecoder decodeObjectForKey:@"url"];
         self.feed = [aDecoder decodeObjectForKey:@"feed"];
         self.date = [aDecoder decodeObjectForKey:@"date"];
+        self.html = [aDecoder decodeObjectForKey:@"html"];
         self.imageURL = [NSURL URLWithString:[aDecoder decodeObjectForKey:@"imageURL"]];
         self.imageDownloaded = [aDecoder decodeBoolForKey:@"imageDownloaded"];
     }
@@ -40,6 +41,8 @@
     [encoder encodeObject:self.url forKey:@"url"];
     [encoder encodeObject:self.feed forKey:@"feed"];
     [encoder encodeObject:self.date forKey:@"date"];
+    if (nil != self.html)
+        [encoder encodeObject:self.html forKey:@"html"];
     [encoder encodeObject:[self.imageURL absoluteString] forKey:@"imageURL"];
     [encoder encodeBool:self.imageDownloaded forKey:@"imageDownloaded"];
 }

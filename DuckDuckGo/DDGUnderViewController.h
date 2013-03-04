@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@class DDGHomeViewController, DDGSettingsViewController;
+@class DDGHomeViewController, DDGSettingsViewController, DDGStory;
 
 @interface DDGUnderViewController : UITableViewController
 {
@@ -23,6 +23,7 @@
 -(void)configureViewController:(UIViewController *)viewController;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
+-(void)loadStory:(DDGStory *)story;
 -(void)loadHomeViewController;
 
 @end

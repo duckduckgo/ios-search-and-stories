@@ -64,6 +64,16 @@
     viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
+-(void)loadStory:(DDGStory *)story {
+    DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+    [webVC loadStory:story];
+    
+    CGRect frame = self.slidingViewController.topViewController.view.frame;
+    self.slidingViewController.topViewController = webVC;
+    self.slidingViewController.topViewController.view.frame = frame;
+    [self configureViewController:webVC];    
+}
+
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
     [webVC loadQueryOrURL:queryOrURL];
