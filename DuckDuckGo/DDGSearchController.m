@@ -428,12 +428,12 @@
     CGFloat direction = (show ? 1 : -1);
     
     CGRect f = _leftButton.frame;
-    f.origin.x += direction*(_leftButton.frame.size.width + 6);
+    f.origin.x += direction*(_leftButton.frame.size.width + 5);
     _leftButton.frame = f;
     
     CGRect searchFieldFrame = _searchField.frame;
-    searchFieldFrame.origin.x += direction*(_leftButton.frame.size.width + 6);
-    searchFieldFrame.size.width -= direction*(_leftButton.frame.size.width + 6);
+    searchFieldFrame.origin.x += direction*(_leftButton.frame.size.width + 5);
+    searchFieldFrame.size.width -= direction*(_leftButton.frame.size.width + 5);
     
     return searchFieldFrame;
 }
