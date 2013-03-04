@@ -14,6 +14,11 @@
 
 #import "DDGCache.h"
 
+@interface DDGBookmarksViewController ()
+@property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
+@property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
+@end
+
 @implementation DDGBookmarksViewController
 
 - (void)viewDidLoad {
@@ -30,15 +35,17 @@
 
     [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
+
+    self.doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Menu button label: Done")
+                                                              style:UIBarButtonItemStyleBordered
+                                                             target:self
+                                                             action:@selector(editAction:)];
+
+    self.editBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"Menu button label: Edit")
+                                                              style:UIBarButtonItemStyleBordered
+                                                             target:self
+                                                             action:@selector(editAction:)];
     
-	button = [UIButton buttonWithType:UIButtonTypeCustom];
-	
-	[button setImage:[UIImage imageNamed:@"edit_button.png"] forState:UIControlStateNormal];
-	[button setImage:[UIImage imageNamed:@"done_button.png"] forState:UIControlStateSelected];
-	[button addTarget:self action:@selector(editAction:) forControlEvents:UIControlEventTouchUpInside];
-	button.hidden = ![DDGBookmarksProvider sharedProvider].bookmarks.count;
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-	
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
 }
@@ -46,6 +53,13 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
+    
+    self.navigationItem.rightBarButtonItem = ([DDGBookmarksProvider sharedProvider].bookmarks.count)  ? self.editBarButtonItem : nil;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    [self.tableView setEditing:NO animated:animated];
 }
 
 #pragma mark - Rotation
@@ -53,19 +67,19 @@
 - (void)viewWillLayoutSubviews
 {
 	CGPoint cl = self.navigationItem.leftBarButtonItem.customView.center;
-	CGPoint cr = self.navigationItem.rightBarButtonItem.customView.center;
+//	CGPoint cr = self.navigationItem.rightBarButtonItem.customView.center;
 	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
 	{
 		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
-		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 40, 23);
+//		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 40, 23);
 	}
 	else
 	{
 		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
-		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 58, 33);
+//		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 58, 33);
 	}
 	self.navigationItem.leftBarButtonItem.customView.center = cl;
-	self.navigationItem.rightBarButtonItem.customView.center = cr;
+//	self.navigationItem.rightBarButtonItem.customView.center = cr;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -73,11 +87,11 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
-- (void)editAction:(UIButton*)button
+- (void)editAction:(UIBarButtonItem *)buttonItem
 {
-	BOOL edit = !button.selected;
-	button.selected = edit;
+	BOOL edit = (buttonItem == self.editBarButtonItem);
 	[self.tableView setEditing:edit animated:YES];
+    [self.navigationItem setRightBarButtonItem:(edit ? self.doneBarButtonItem : self.editBarButtonItem) animated:NO];
 }
 
 -(void)leftButtonPressed {

@@ -59,21 +59,33 @@ static void uncaughtExceptionHandler(NSException *exception) {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhone" bundle:nil];
     slidingViewController.topViewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
 
-    [[UINavigationBar appearance] setShadowImage:[UIImage imageNamed:@"header_shadow"]];
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"header_tile"] forBarMetrics:UIBarMetricsDefault];
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"header_lp_tile"] forBarMetrics:UIBarMetricsLandscapePhone];
+    [[UINavigationBar appearance] setShadowImage:[[UIImage imageNamed:@"toolbar_shadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0.0, 2.0)]];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg"] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg_32"] forBarMetrics:UIBarMetricsLandscapePhone];
     [[UINavigationBar appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0],
 														UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
 														UITextAttributeTextShadowColor : [UIColor whiteColor]
 	 }];
     
-    UIImage *bg = [[UIImage imageNamed:@"button-bg"] stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
-    UIImage *bgh = [[UIImage imageNamed:@"button-bg-highlighted"] stretchableImageWithLeftCapWidth:2.0 topCapHeight:0.0];
+    UIEdgeInsets insets = UIEdgeInsetsMake(5.0, 3.0, 5.0, 3.0);
     
-    [[UIBarButtonItem appearance] setBackgroundImage:bg forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    [[UIBarButtonItem appearance] setBackgroundImage:bgh forState:UIControlStateHighlighted barMetrics:UIBarMetricsDefault];
-    [[UIBarButtonItem appearance] setBackgroundVerticalPositionAdjustment:1.0 forBarMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg"] resizableImageWithCapInsets:insets]
+                                            forState:UIControlStateNormal
+                                          barMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg_highlighted"] resizableImageWithCapInsets:insets]
+                                            forState:UIControlStateHighlighted
+                                          barMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg_32"] resizableImageWithCapInsets:insets]
+                                            forState:UIControlStateNormal
+                                          barMetrics:UIBarMetricsLandscapePhone];
+    [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg_highlighted_32"] resizableImageWithCapInsets:insets]
+                                            forState:UIControlStateHighlighted
+                                          barMetrics:UIBarMetricsLandscapePhone];
+    
+//    [[UIBarButtonItem appearance] setBackgroundVerticalPositionAdjustment:1.0 forBarMetrics:UIBarMetricsDefault];
     [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsDefault];
+    [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsLandscapePhone];    
+
     [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.403 green:0.406 blue:0.427 alpha:1.000],
                         UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
                          UITextAttributeTextShadowColor : [UIColor whiteColor]
@@ -82,9 +94,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
                         UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
                          UITextAttributeTextShadowColor : [UIColor whiteColor]
 	 } forState:UIControlStateDisabled];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithWhite:0.995 alpha:1.000],
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithWhite:0.992 alpha:1.000],
                         UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, -1)],
-                         UITextAttributeTextShadowColor : [UIColor colorWithRed:0.170 green:0.185 blue:0.199 alpha:1.000]
+                         UITextAttributeTextShadowColor : [UIColor colorWithRed:0.169 green:0.180 blue:0.192 alpha:1.000]
 	 } forState:UIControlStateHighlighted];
     
     return YES;

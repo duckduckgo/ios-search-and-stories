@@ -89,7 +89,7 @@
     [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     _searchField.rightView = stopOrReloadButton;
     
-    unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];
+    unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];    
     
     [self createInputAccessory];
     
