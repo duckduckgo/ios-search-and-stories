@@ -232,7 +232,10 @@ static DDGNewsProvider *sharedProvider;
                 if([storyDict objectForKey:@"feed"] && [storyDict objectForKey:@"feed"] != [NSNull null])
                     story.feed = [storyDict objectForKey:@"feed"];
                 story.date = [formatter dateFromString:[[storyDict objectForKey:@"timestamp"] substringToIndex:19]];
+                NSURL *imageURL = story.imageURL;
                 story.imageURL = [NSURL URLWithString:[storyDict objectForKey:@"image"]];
+                if (![imageURL isEqual:story.imageURL])
+                    [story deleteImage];
             }
             [newStories replaceObjectAtIndex:i withObject:story];
         }
