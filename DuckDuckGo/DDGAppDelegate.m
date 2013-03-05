@@ -45,7 +45,39 @@ static void uncaughtExceptionHandler(NSException *exception) {
                                                              diskPath:[SDURLCache defaultCachePath]];
     [NSURLCache setSharedURLCache:urlCache];
     
-    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];    
+    [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
+    
+    // audio session
+    
+    AVAudioSession *audioSession = [AVAudioSession sharedInstance];
+    BOOL ok;
+    NSError *error = nil;
+    ok = [audioSession setActive:NO error:&error];
+    if (!ok)
+        NSLog(@"%s audioSession setActive:NO error=%@", __PRETTY_FUNCTION__, error);
+
+    ok = [audioSession setCategory:AVAudioSessionCategoryPlayback
+                             error:&error];
+    if (!ok)
+        NSLog(@"%s setCategoryError=%@", __PRETTY_FUNCTION__, error);
+    
+    // Modifying Playback Mixing Behavior, allow playing music in other apps
+    OSStatus propertySetError = 0;
+    UInt32 allowMixing = true;
+    
+    propertySetError = AudioSessionSetProperty (
+                                                kAudioSessionProperty_OverrideCategoryMixWithOthers,
+                                                sizeof (allowMixing),
+                                                &allowMixing);
+
+    if (propertySetError)
+        NSLog(@"%s propertySetError=%li", __PRETTY_FUNCTION__, propertySetError);
+    
+    // Active your audio session
+    ok = [audioSession setActive:YES error:&error];
+    if (!ok)
+        NSLog(@"%s audioSession setActive:YES error=%@", __PRETTY_FUNCTION__, error);
+    
     
     // load default settings
     [DDGSettingsViewController loadDefaultSettings];
@@ -59,6 +91,8 @@ static void uncaughtExceptionHandler(NSException *exception) {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhone" bundle:nil];
     slidingViewController.topViewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
 
+    // theme
+    
     [[UINavigationBar appearance] setShadowImage:[[UIImage imageNamed:@"toolbar_shadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0.0, 2.0)]];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg"] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg_32"] forBarMetrics:UIBarMetricsLandscapePhone];

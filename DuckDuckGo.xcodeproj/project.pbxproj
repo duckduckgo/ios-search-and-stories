@@ -134,6 +134,7 @@
 		5B7A1B6C16E4DCA900354310 /* toolbar_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1B6816E4DCA900354310 /* toolbar_bg@2x.png */; };
 		5B7A1B6F16E4DEDB00354310 /* toolbar_shadow.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1B6D16E4DEDB00354310 /* toolbar_shadow.png */; };
 		5B7A1B7016E4DEDB00354310 /* toolbar_shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1B6E16E4DEDB00354310 /* toolbar_shadow@2x.png */; };
+		5B7A1B7916E649B500354310 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */; };
 		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
 		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
 		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
@@ -775,6 +776,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5B7A1B7916E649B500354310 /* AVFoundation.framework in Frameworks */,
 				5B66097316D781D00006B5DE /* libz.dylib in Frameworks */,
 				5B044EE716D392FD005A9584 /* Social.framework in Frameworks */,
 				5B044EE516D392F0005A9584 /* libsqlite3.dylib in Frameworks */,

@@ -48,6 +48,10 @@
 	<true/>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2012 DuckDuckGo, Inc. All Rights Reserved.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>iPhone</string>
 	<key>UIRequiredDeviceCapabilities</key>
