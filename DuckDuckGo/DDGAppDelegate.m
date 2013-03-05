@@ -61,18 +61,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     if (!ok)
         NSLog(@"%s setCategoryError=%@", __PRETTY_FUNCTION__, error);
     
-    // Modifying Playback Mixing Behavior, allow playing music in other apps
-    OSStatus propertySetError = 0;
-    UInt32 allowMixing = true;
-    
-    propertySetError = AudioSessionSetProperty (
-                                                kAudioSessionProperty_OverrideCategoryMixWithOthers,
-                                                sizeof (allowMixing),
-                                                &allowMixing);
-
-    if (propertySetError)
-        NSLog(@"%s propertySetError=%li", __PRETTY_FUNCTION__, propertySetError);
-    
     // Active your audio session
     ok = [audioSession setActive:YES error:&error];
     if (!ok)
