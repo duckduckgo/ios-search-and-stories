@@ -293,10 +293,11 @@
         
         NSString *html = story.html;
         if (nil != html) {
+            self.webViewURL = [NSURL URLWithString:story.url];
             [_webView loadHTMLString:story.html baseURL:[NSURL URLWithString:story.url]];
             [_searchController updateBarWithURL:nil];            
         } else {
-            [self loadQueryOrURL:[story url]];            
+            [self loadQueryOrURL:[story url]];
         }
     };
     
