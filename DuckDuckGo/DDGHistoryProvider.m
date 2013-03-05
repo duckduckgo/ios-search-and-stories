@@ -9,6 +9,7 @@
 #import "DDGCache.h"
 #import "DDGAppDelegate.h"
 #import "DDGHistoryProvider.h"
+#import "DDGSettingsViewController.h"
 
 @implementation DDGHistoryProvider
 
@@ -37,7 +38,7 @@ static DDGHistoryProvider *sharedInstance;
 
 -(void)logHistoryItem:(NSDictionary *)historyItem
 {
-    if ([[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
+    if ([[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
     {
 		NSMutableDictionary *historyItemDictionary = [NSMutableDictionary dictionaryWithDictionary:historyItem];
 		
@@ -64,7 +65,7 @@ static DDGHistoryProvider *sharedInstance;
 
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
     // there are certain cases in which we don't want to return any history
-    if([prefix isEqualToString:@""] || ![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
+    if([prefix isEqualToString:@""] || ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
         return @[];
     
     NSMutableArray *results = [[NSMutableArray alloc] init];

@@ -25,6 +25,7 @@
 #import "SHK.h"
 #import "DDGStoryCell.h"
 #import "DDGPanLeftGestureRecognizer.h"
+#import "DDGSettingsViewController.h"
 
 @interface DDGHomeViewController ()
 @property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
@@ -429,7 +430,7 @@
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
     [self beginDownloadingStories];
     
-    if([[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]) {
+    if([[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]) {
         SystemSoundID quack;
         NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
         NSURL *url = [NSURL URLWithString:path];
@@ -549,12 +550,15 @@
         });
     });
     
-    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadStory:story];
-    
-//    NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-//    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:escapedStoryURL];
-//
-//	[[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": story.title, @"url": story.url, @"feed": story.feed, @"kind": @"feed"}];
+    BOOL showInReadView = [[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue];
+    if (showInReadView) {
+        [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadStory:story];
+    } else {
+        NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:escapedStoryURL];
+        
+        [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": story.title, @"url": story.url, @"feed": story.feed, @"kind": @"feed"}];        
+    }
 }
 
 #pragma mark - Loading popular stories

@@ -17,21 +17,29 @@
 #import "ECSlidingViewController.h"
 #import "DDGRegionProvider.h"
 
+NSString * const DDGSettingsCacheName = @"settings";
+NSString * const DDGSettingRecordHistory = @"history";
+NSString * const DDGSettingQuackOnRefresh = @"quack";
+NSString * const DDGSettingRegion = @"region";
+NSString * const DDGSettingAutocomplete = @"autocomplete";
+NSString * const DDGSettingStoriesReadView = @"stories_read_view";
+
 @implementation DDGSettingsViewController
 
 +(void)loadDefaultSettings {
     NSDictionary *defaults = @{
-        @"history": @(NO),
-        @"quack": @(NO),
-		@"region": @"us-en",
-		@"autocomplete": @(YES),
+        DDGSettingRecordHistory: @(NO),
+        DDGSettingQuackOnRefresh: @(NO),
+		DDGSettingRegion: @"us-en",
+		DDGSettingAutocomplete: @(YES),
+		DDGSettingStoriesReadView: @(YES),
     };
     
     for(NSString *key in defaults) {
-        if(![DDGCache objectForKey:key inCache:@"settings"])
+        if(![DDGCache objectForKey:key inCache:DDGSettingsCacheName])
             [DDGCache setObject:[defaults objectForKey:key] 
                          forKey:key 
-                        inCache:@"settings"];
+                        inCache:DDGSettingsCacheName];
     }
 }
 
@@ -88,14 +96,15 @@
     __weak DDGSettingsViewController *weakSelf = self;
     
     [self addSectionWithTitle:@"Stories"];
-    [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:@"quack" inCache:@"settings"] boolValue]];
+    [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
     [self addButton:@"Change Sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
+    [self addSwitch:@"Reader View" enabled:[[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue]];
     
     [self addSectionWithTitle:@"Search Auto Complete"];
-    [self addSwitch:@"Enable Auto Complete" enabled:[[DDGCache objectForKey:@"autocomplete" inCache:@"settings"] boolValue]];
+    [self addSwitch:@"Enable Auto Complete" enabled:[[DDGCache objectForKey:DDGSettingAutocomplete inCache:DDGSettingsCacheName] boolValue]];
     
     [self addSectionWithTitle:@"Regions"];
     [self addButton:@"Region" detailTitle:[[DDGRegionProvider shared] titleForRegion:[[DDGRegionProvider shared] region]] type:IGFormButtonTypeDisclosure action:^{
@@ -104,7 +113,7 @@
     }];
     
     [self addSectionWithTitle:@"Privacy"];
-    [self addSwitch:@"Record Recent" enabled:[[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue]];
+    [self addSwitch:@"Record Recent" enabled:[[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue]];
     [self addSectionWithTitle:nil footer:@"Recents are stored on your phone."];
     [self addButton:@"Clear Recent" action:^{
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
@@ -149,16 +158,20 @@
 
 -(void)saveData:(NSDictionary *)formData {
     [DDGCache setObject:[formData objectForKey:@"Record Recent"]
-                 forKey:@"history" 
-                inCache:@"settings"];
+                 forKey:DDGSettingRecordHistory
+                inCache:DDGSettingsCacheName];
+
+    [DDGCache setObject:[formData objectForKey:@"Reader View"]
+                 forKey:DDGSettingStoriesReadView
+                inCache:DDGSettingsCacheName];
     
     [DDGCache setObject:[formData objectForKey:@"Quack on Refresh"]
-                 forKey:@"quack"
-                inCache:@"settings"];
+                 forKey:DDGSettingQuackOnRefresh
+                inCache:DDGSettingsCacheName];
     
     [DDGCache setObject:[formData objectForKey:@"Enable Auto Complete"]
-                 forKey:@"autocomplete"
-                inCache:@"settings"];
+                 forKey:DDGSettingAutocomplete
+                inCache:DDGSettingsCacheName];
 }
 
 #pragma mark - Helper methods

@@ -18,6 +18,7 @@
 #import "DDGUtility.h"
 #import "DDGStory.h"
 #import "AFNetworking.h"
+#import "DDGSettingsViewController.h"
 
 @implementation NSString (URLPrivateDDG)
 
@@ -210,7 +211,7 @@
 			// direct query
             urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
 						 [queryOrURLString URLEncodedStringDDG], 
-						 [DDGCache objectForKey:@"region" inCache:@"settings"]];
+						 [DDGCache objectForKey:DDGSettingRegion inCache:DDGSettingsCacheName]];
         }
 		else
 		{

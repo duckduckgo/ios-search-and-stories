@@ -7,8 +7,8 @@
 //
 
 #import "DDGRegionProvider.h"
-
 #import "DDGCache.h"
+#import "DDGSettingsViewController.h"
 
 @interface DDGRegionProvider ()
 
@@ -48,12 +48,12 @@ static DDGRegionProvider *shared = nil;
 
 - (NSString*)region
 {
-	return [DDGCache objectForKey:@"region" inCache:@"settings"];
+	return [DDGCache objectForKey:DDGSettingRegion inCache:DDGSettingsCacheName];
 }
 
 - (void)setRegion:(NSString*)aRegion
 {
-	[DDGCache setObject:aRegion forKey:@"region" inCache:@"settings"];
+	[DDGCache setObject:aRegion forKey:DDGSettingRegion inCache:DDGSettingsCacheName];
 }
 
 - (NSString*)titleForRegion:(NSString*)aRegion

@@ -103,7 +103,7 @@
             return viewControllers.count;
         case 1:
 		{
-            return ![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue] ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
+            return ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue] ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
 		}
         default:
             return 0;
@@ -170,7 +170,7 @@
 		lbl.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		lbl.font = [UIFont fontWithName:@"HelveticaNeue" size:17.0];
         
-		if ([[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
+		if ([[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
 		{
 			// we have history and it is enabled
 			NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
@@ -243,7 +243,7 @@
 
 - (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section == 1 && ![[DDGCache objectForKey:@"history" inCache:@"settings"] boolValue])
+	if (indexPath.section == 1 && ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
 		return nil;
 	
 	return indexPath;
