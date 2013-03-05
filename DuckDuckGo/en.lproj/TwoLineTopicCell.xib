@@ -62,12 +62,13 @@
 							</object>
 							<object class="IBUIImageView" id="319187008">
 								<reference key="NSNextResponder" ref="873179220"/>
-								<int key="NSvFlags">288</int>
+								<int key="NSvFlags">266</int>
 								<string key="NSFrame">{{0, 70}, {320, 60}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1019407818"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
+								<bool key="IBUIClipsSubviews">YES</bool>
 								<int key="IBUIContentMode">9</int>
 								<int key="IBUITag">400</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
@@ -133,7 +134,6 @@
 								<string key="NSFrame">{{0, 120}, {320, 1}}</string>
 								<reference key="NSSuperview" ref="873179220"/>
 								<reference key="NSWindow"/>
-								<reference key="NSNextKeyView"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<object class="NSColor" key="IBUIBackgroundColor" id="589767333">
 									<int key="NSColorSpace">3</int>
@@ -351,6 +351,17 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">DDGHomeViewController</string>
 					<string key="superclassName">UIViewController</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">filter:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">filter:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">filter:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="loadedCell">DDGStoryCell</string>
 						<string key="swipeView">UIView</string>

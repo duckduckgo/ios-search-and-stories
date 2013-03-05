@@ -116,83 +116,6 @@
     }
 }
 
-// Called when a left swipe occurred
-
-- (void)panLeft:(DDGPanLeftGestureRecognizer *)recognizer {
-    
-    if (recognizer.state == UIGestureRecognizerStateFailed) {
-        
-    } else if (recognizer.state == UIGestureRecognizerStateEnded
-               || recognizer.state == UIGestureRecognizerStateCancelled) {
-
-        if (nil != self.swipeViewIndexPath) {
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];
-            CGPoint origin = self.swipeView.frame.origin;
-            CGRect imageFrame = cell.imageView.frame;
-            CGFloat offset = origin.x - imageFrame.origin.x;
-            CGFloat percent = offset / imageFrame.size.width;
-            
-            CGPoint velocity = [recognizer velocityInView:recognizer.view];
-
-            if (velocity.x < 0 && percent > 0.25) {
-                CGFloat distanceRemaining = imageFrame.size.width - offset;
-                CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);                
-                [UIView animateWithDuration:duration
-                                 animations:^{
-                                     cell.imageView.frame = CGRectMake(origin.x - imageFrame.size.width,
-                                                                       imageFrame.origin.y,
-                                                                       imageFrame.size.width,
-                                                                       imageFrame.size.height);
-                                 }];
-                
-            } else {
-                [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];                
-            }
-        }
-        
-    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGPoint location = [recognizer locationInView:self.tableView];
-        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
-
-        if (nil != self.swipeViewIndexPath
-            && ![self.swipeViewIndexPath isEqual:indexPath]) {
-            [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-        }
-        
-        if (nil == self.swipeViewIndexPath) {
-            [self insertSwipeViewForIndexPath:indexPath];
-        }
-
-        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];        
-        CGPoint translation = [recognizer translationInView:recognizer.view];
-        
-        CGPoint center = cell.imageView.center;
-        cell.imageView.center = CGPointMake(center.x + translation.x,
-                                            center.y);
-        
-        [recognizer setTranslation:CGPointZero inView:recognizer.view];
-    }
-    
-}
-
-//- (void)swipeLeft:(UISwipeGestureRecognizer *)recognizer
-//{
-//    CGPoint location = [recognizer locationInView:self.tableView];
-//    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
-//    
-//    DDGStory *story = [self.stories objectAtIndex:indexPath.row];
-//    NSURL *storyURL = [NSURL URLWithString:story.url];
-//    
-//    if (nil != storyURL) {
-//        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:storyURL];
-//        NSString *imageName = (bookmarked ? @"swipe-un-save" : @"swipe-save");
-//        UIImage *image = [UIImage imageNamed:imageName];
-//        [self.swipeViewSaveButton setImage:image forState:UIControlStateNormal];
-//    }
-//    
-//    [self showSwipeViewForIndexPath:indexPath];
-//}
-
 - (void)viewDidUnload {
     [self setSwipeView:nil];
     [super viewDidUnload];
@@ -336,7 +259,7 @@
     self.swipeViewIndexPath = nil;    
     [UIView animateWithDuration:0.1
                      animations:^{
-                         cell.imageView.frame = self.swipeView.frame;
+                         cell.contentView.frame = self.swipeView.frame;
                      } completion:^(BOOL finished) {
                          if (nil == self.swipeViewIndexPath)
                              [self.swipeView removeFromSuperview];
@@ -385,6 +308,65 @@
     } else {
         completion();
     }
+}
+
+// Called when a left swipe occurred
+
+- (void)panLeft:(DDGPanLeftGestureRecognizer *)recognizer {
+    
+    if (recognizer.state == UIGestureRecognizerStateFailed) {
+        
+    } else if (recognizer.state == UIGestureRecognizerStateEnded
+               || recognizer.state == UIGestureRecognizerStateCancelled) {
+        
+        if (nil != self.swipeViewIndexPath) {
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];
+            CGPoint origin = self.swipeView.frame.origin;
+            CGRect contentFrame = cell.contentView.frame;
+            CGFloat offset = origin.x - contentFrame.origin.x;
+            CGFloat percent = offset / contentFrame.size.width;
+            
+            CGPoint velocity = [recognizer velocityInView:recognizer.view];
+            
+            if (velocity.x < 0 && percent > 0.25) {
+                CGFloat distanceRemaining = contentFrame.size.width - offset;
+                CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);
+                [UIView animateWithDuration:duration
+                                 animations:^{
+                                     cell.contentView.frame = CGRectMake(origin.x - contentFrame.size.width,
+                                                                       contentFrame.origin.y,
+                                                                       contentFrame.size.width,
+                                                                       contentFrame.size.height);
+                                 }];
+                
+            } else {
+                [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
+            }
+        }
+        
+    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+        CGPoint location = [recognizer locationInView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+        
+        if (nil != self.swipeViewIndexPath
+            && ![self.swipeViewIndexPath isEqual:indexPath]) {
+            [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
+        }
+        
+        if (nil == self.swipeViewIndexPath) {
+            [self insertSwipeViewForIndexPath:indexPath];
+        }
+        
+        DDGStoryCell *cell = (DDGStoryCell *)[self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];        
+        CGPoint translation = [recognizer translationInView:recognizer.view];
+        
+        CGPoint center = cell.contentView.center;
+        cell.contentView.center = CGPointMake(center.x + translation.x,
+                                              center.y);
+        
+        [recognizer setTranslation:CGPointZero inView:recognizer.view];
+    }
+    
 }
 
 #pragma mark - Scroll view delegate
@@ -479,8 +461,6 @@
 -(void)loadQueryOrURL:(NSString *)queryOrURL {    
     [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:queryOrURL];
 }
-
-#pragma mark - UIGestureRecognizerDelegate
 
 #pragma mark - Table view data source
 
