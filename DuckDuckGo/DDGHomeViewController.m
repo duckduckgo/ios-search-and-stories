@@ -278,6 +278,13 @@
         if (nil == self.swipeView)
             [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
         
+        
+        DDGStory *story = [self.stories objectAtIndex:indexPath.row];
+        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:[NSURL URLWithString:story.url]];
+        
+        NSString *imageName = (bookmarked) ? @"swipe-un-save" : @"swipe-save";
+        [self.swipeViewSaveButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+        
         self.swipeView.frame = swipeFrame;
         [behindView.superview insertSubview:self.swipeView belowSubview:behindView];
         self.swipeViewIndexPath = indexPath;
