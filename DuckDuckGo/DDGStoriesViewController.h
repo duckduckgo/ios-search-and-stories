@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AudioToolbox/AudioToolbox.h>
 
 #import "DDGSearchHandler.h"
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
 
 @interface DDGStoriesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate>
+{}
 @property (nonatomic, strong) DDGSearchController *searchController;
 @end

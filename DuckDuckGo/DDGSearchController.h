@@ -32,6 +32,7 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property(nonatomic, weak) IBOutlet UIView *background;
+@property(nonatomic, weak) IBOutlet UIView *searchBar;
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(IBAction)actionButtonPressed:(id)sender;

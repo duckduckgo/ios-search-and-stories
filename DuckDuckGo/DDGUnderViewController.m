@@ -293,7 +293,7 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
                         newTopViewController = [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]];
                         break;
                     case DDGViewControllerTypeStories:
-                        newTopViewController = [[UINavigationController alloc] initWithRootViewController:[[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil]];                        
+                        newTopViewController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
                         break;
                     case DDGViewControllerTypeSettings:
                         newTopViewController = [[UINavigationController alloc] initWithRootViewController:[[DDGSettingsViewController alloc] initWithDefaults]];

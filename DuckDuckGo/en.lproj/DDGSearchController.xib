@@ -35,7 +35,7 @@
 			</object>
 			<object class="IBUIView" id="398799709">
 				<reference key="NSNextResponder"/>
-				<int key="NSvFlags">290</int>
+				<int key="NSvFlags">274</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUIView" id="479174929">
 						<reference key="NSNextResponder" ref="398799709"/>
@@ -295,6 +295,14 @@
 					<int key="connectionID">63</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">searchBar</string>
+						<reference key="source" ref="372490531"/>
+						<reference key="destination" ref="745545155"/>
+					</object>
+					<int key="connectionID">66</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">leftButtonPressed:</string>
 						<reference key="source" ref="450705218"/>
@@ -418,7 +426,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">65</int>
+			<int key="maxID">66</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -465,6 +473,7 @@
 						<string key="background">UIView</string>
 						<string key="cancelButton">UIButton</string>
 						<string key="leftButton">UIButton</string>
+						<string key="searchBar">UIView</string>
 						<string key="searchField">DDGAddressBarTextField</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -483,6 +492,10 @@
 						<object class="IBToOneOutletInfo" key="leftButton">
 							<string key="name">leftButton</string>
 							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="searchBar">
+							<string key="name">searchBar</string>
+							<string key="candidateClassName">UIView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="searchField">
 							<string key="name">searchField</string>

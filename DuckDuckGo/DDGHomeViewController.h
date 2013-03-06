@@ -8,20 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGSearchController.h"
-#import "EGORefreshTableHeaderView.h"
 
 @class DDGStoryCell;
 @class DDGScrollbarClockView;
-@interface DDGHomeViewController : UIViewController<UITextFieldDelegate, UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, UIGestureRecognizerDelegate> {
-    EGORefreshTableHeaderView *refreshHeaderView;
-    UIImageView *topShadow;
-    BOOL isRefreshing;
+@interface DDGHomeViewController : UIViewController<UITextFieldDelegate, DDGSearchHandler> {    
 }
 
-@property (nonatomic, strong) IBOutlet DDGStoryCell *loadedCell;
-@property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) DDGSearchController *searchController;
-@property (strong, nonatomic) IBOutlet UIView *swipeView;
-@property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
+@property (nonatomic, strong) UIViewController *contentController;
 
 @end

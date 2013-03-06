@@ -17,6 +17,9 @@
 #import "DDGNewsProvider.h"
 #import "ECSlidingViewController.h"
 #import "AFNetworking.h"
+#import "DDGUnderViewController.h"
+#import "DDGHomeViewController.h"
+#import "DDGDuckViewController.h"
 
 @implementation DDGAppDelegate
 
@@ -73,12 +76,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     // initialize sharekit
     DefaultSHKConfigurator *configurator = [[DDGSHKConfigurator alloc] init];
     [SHKConfiguration sharedInstanceWithConfigurator:configurator];
-    
-    // configure the sliding view controller
-    ECSlidingViewController *slidingViewController = (ECSlidingViewController *)self.window.rootViewController;    
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"iPhone" bundle:nil];
-    slidingViewController.topViewController = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
-
+        
     // theme
     
     [[UINavigationBar appearance] setShadowImage:[[UIImage imageNamed:@"toolbar_shadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0.0, 2.0)]];
@@ -120,6 +118,27 @@ static void uncaughtExceptionHandler(NSException *exception) {
                         UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, -1)],
                          UITextAttributeTextShadowColor : [UIColor colorWithRed:0.169 green:0.180 blue:0.192 alpha:1.000]
 	 } forState:UIControlStateHighlighted];
+    
+    
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.window.backgroundColor = [UIColor redColor];
+    
+    // configure the sliding view controller
+    DDGHomeViewController *home = [[DDGHomeViewController alloc] initWithNibName:nil bundle:nil];
+    DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithHomeViewController:home];
+    
+    ECSlidingViewController *slidingViewController = [[ECSlidingViewController alloc] initWithNibName:nil bundle:nil];
+    self.window.rootViewController = slidingViewController;
+    
+    slidingViewController.underLeftViewController = under;
+    slidingViewController.anchorRightRevealAmount = 255.0;
+    slidingViewController.topViewController = home;
+    
+    home.contentController = [DDGDuckViewController duckViewController];
+    
+    [under configureViewController:home];
+    
+    [self.window makeKeyAndVisible];
     
     return YES;
 }

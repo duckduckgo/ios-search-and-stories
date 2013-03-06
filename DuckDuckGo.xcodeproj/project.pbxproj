@@ -136,6 +136,8 @@
 		5B7A1B7016E4DEDB00354310 /* toolbar_shadow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1B6E16E4DEDB00354310 /* toolbar_shadow@2x.png */; };
 		5B7A1B7916E649B500354310 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */; };
 		5B7A1BC916E74C3500354310 /* DDGStoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1BC816E74C3500354310 /* DDGStoriesViewController.m */; };
+		5B7A1BCE16E78E4A00354310 /* DDGDuckViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1BCC16E78E4A00354310 /* DDGDuckViewController.m */; };
+		5B7A1BCF16E78E4A00354310 /* DDGDuckViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1BCD16E78E4A00354310 /* DDGDuckViewController.xib */; };
 		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
 		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
 		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
@@ -220,7 +222,6 @@
 		83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 83F32265149290EF00A61BC5 /* InfoPlist.strings */; };
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
-		83F32270149290EF00A61BC5 /* iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 83F3226E149290EF00A61BC5 /* iPhone.storyboard */; };
 		83F32276149290EF00A61BC5 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32275149290EF00A61BC5 /* DDGHomeViewController.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
 /* End PBXBuildFile section */
@@ -659,6 +660,9 @@
 		5B7A1B6E16E4DEDB00354310 /* toolbar_shadow@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "toolbar_shadow@2x.png"; sourceTree = "<group>"; };
 		5B7A1BC716E74C3500354310 /* DDGStoriesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoriesViewController.h; sourceTree = "<group>"; };
 		5B7A1BC816E74C3500354310 /* DDGStoriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoriesViewController.m; sourceTree = "<group>"; };
+		5B7A1BCB16E78E4A00354310 /* DDGDuckViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGDuckViewController.h; sourceTree = "<group>"; };
+		5B7A1BCC16E78E4A00354310 /* DDGDuckViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGDuckViewController.m; sourceTree = "<group>"; };
+		5B7A1BCD16E78E4A00354310 /* DDGDuckViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGDuckViewController.xib; sourceTree = "<group>"; };
 		5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari.png"; sourceTree = "<group>"; };
 		5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari@2x.png"; sourceTree = "<group>"; };
 		5B88DBA916DB7BA7007A935D /* swipe-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save.png"; sourceTree = "<group>"; };
@@ -767,7 +771,6 @@
 		83F3226A149290EF00A61BC5 /* DuckDuckGo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DuckDuckGo-Prefix.pch"; sourceTree = "<group>"; };
 		83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGAppDelegate.h; sourceTree = "<group>"; };
 		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGAppDelegate.m; sourceTree = "<group>"; };
-		83F3226F149290EF00A61BC5 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/iPhone.storyboard; sourceTree = "<group>"; };
 		83F32274149290EF00A61BC5 /* DDGHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
 		83F32275149290EF00A61BC5 /* DDGHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
@@ -1019,19 +1022,7 @@
 			children = (
 				83F32274149290EF00A61BC5 /* DDGHomeViewController.h */,
 				83F32275149290EF00A61BC5 /* DDGHomeViewController.m */,
-				838E9067149A763200C11E41 /* TwoLineTopicCell.xib */,
-				4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */,
-				5BB3F4DA16CA7AE100281A2B /* HomeSwipeView.xib */,
-				4C11C6AD15B5E4C200D046BA /* DDGNewsProvider.h */,
-				4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */,
-				4C41359D15D5DAC200A9326C /* DDGStory.h */,
-				4C41359E15D5DAC200A9326C /* DDGStory.m */,
-				5BB3F50316CAA49300281A2B /* DDGStoryCell.h */,
-				5BB3F50416CAA49300281A2B /* DDGStoryCell.m */,
-				5B66097616D7A3600006B5DE /* DDGFaviconButton.h */,
-				5B66097716D7A3600006B5DE /* DDGFaviconButton.m */,
-				5B88DBD816DB9C84007A935D /* DDGPanLeftGestureRecognizer.h */,
-				5B88DBD916DB9C84007A935D /* DDGPanLeftGestureRecognizer.m */,
+				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
 			);
 			name = "Home screen";
 			sourceTree = "<group>";
@@ -1141,8 +1132,31 @@
 			children = (
 				5B7A1BC716E74C3500354310 /* DDGStoriesViewController.h */,
 				5B7A1BC816E74C3500354310 /* DDGStoriesViewController.m */,
+				838E9067149A763200C11E41 /* TwoLineTopicCell.xib */,
+				4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */,
+				5BB3F4DA16CA7AE100281A2B /* HomeSwipeView.xib */,
+				4C11C6AD15B5E4C200D046BA /* DDGNewsProvider.h */,
+				4C11C6AE15B5E4C200D046BA /* DDGNewsProvider.m */,
+				4C41359D15D5DAC200A9326C /* DDGStory.h */,
+				4C41359E15D5DAC200A9326C /* DDGStory.m */,
+				5BB3F50316CAA49300281A2B /* DDGStoryCell.h */,
+				5BB3F50416CAA49300281A2B /* DDGStoryCell.m */,
+				5B66097616D7A3600006B5DE /* DDGFaviconButton.h */,
+				5B66097716D7A3600006B5DE /* DDGFaviconButton.m */,
+				5B88DBD816DB9C84007A935D /* DDGPanLeftGestureRecognizer.h */,
+				5B88DBD916DB9C84007A935D /* DDGPanLeftGestureRecognizer.m */,
 			);
 			name = Stories;
+			sourceTree = "<group>";
+		};
+		5B7A1BCA16E78E2F00354310 /* Duck Mode */ = {
+			isa = PBXGroup;
+			children = (
+				5B7A1BCB16E78E4A00354310 /* DDGDuckViewController.h */,
+				5B7A1BCC16E78E4A00354310 /* DDGDuckViewController.m */,
+				5B7A1BCD16E78E4A00354310 /* DDGDuckViewController.xib */,
+			);
+			name = "Duck Mode";
 			sourceTree = "<group>";
 		};
 		5BA321A816C904BA0066BCB0 /* AFNetworking */ = {
@@ -1258,7 +1272,6 @@
 			isa = PBXGroup;
 			children = (
 				4C0BC93515B8C2BE008C6FC4 /* quack.wav */,
-				83F3226E149290EF00A61BC5 /* iPhone.storyboard */,
 				838E906C149A76D400C11E41 /* Localizable.strings */,
 				8398DAC316419EB100A559C3 /* regions.json */,
 				4C5F81F3158F96D6007B745A /* bangs.json */,
@@ -1649,7 +1662,6 @@
 			files = (
 				4C3BF12515C4A82600EEA7BF /* ShareKit.bundle in Resources */,
 				83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */,
-				83F32270149290EF00A61BC5 /* iPhone.storyboard in Resources */,
 				838E9065149A763200C11E41 /* TwoLineTopicCell.xib in Resources */,
 				838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */,
 				838E906A149A76D400C11E41 /* Localizable.strings in Resources */,
@@ -1781,6 +1793,7 @@
 				5B7A1B6C16E4DCA900354310 /* toolbar_bg@2x.png in Resources */,
 				5B7A1B6F16E4DEDB00354310 /* toolbar_shadow.png in Resources */,
 				5B7A1B7016E4DEDB00354310 /* toolbar_shadow@2x.png in Resources */,
+				5B7A1BCF16E78E4A00354310 /* DDGDuckViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1851,6 +1864,7 @@
 				5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */,
 				5B88DBDA16DB9C84007A935D /* DDGPanLeftGestureRecognizer.m in Sources */,
 				5B7A1BC916E74C3500354310 /* DDGStoriesViewController.m in Sources */,
+				5B7A1BCE16E78E4A00354310 /* DDGDuckViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1909,14 +1923,6 @@
 				83F32266149290EF00A61BC5 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		83F3226E149290EF00A61BC5 /* iPhone.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				83F3226F149290EF00A61BC5 /* en */,
-			);
-			name = iPhone.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
