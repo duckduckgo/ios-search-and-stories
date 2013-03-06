@@ -13,7 +13,23 @@
 #import "DDGWebViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGBookmarksViewController.h"
+#import "DDGStoriesViewController.h"
 #import "DDGCache.h"
+
+typedef enum DDGViewControllerType {
+    DDGViewControllerTypeHome=0,
+    DDGViewControllerTypeSaved,
+    DDGViewControllerTypeStories,
+    DDGViewControllerTypeSettings
+} DDGViewControllerType;
+
+NSString * const DDGViewControllerTypeTitleKey = @"title";
+NSString * const DDGViewControllerTypeTypeKey = @"type";
+NSString * const DDGViewControllerTypeControllerKey = @"viewController";
+
+@interface DDGUnderViewController ()
+@property (nonatomic, strong) NSArray *viewControllerTypes;
+@end
 
 @implementation DDGUnderViewController
 
@@ -21,21 +37,23 @@
     self = [super initWithStyle:UITableViewStylePlain];
     if(self) {
         self.homeViewController = homeViewController;
-        viewControllers = @[
-            @{
-                @"title" : @"Home",
-                @"viewController" : homeViewController
-            },
-            @{
-                @"title" : @"Saved",
-                @"viewController" : [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]]
-            },
-            @{
-                @"title" : @"Settings",
-                @"viewController" : [[UINavigationController alloc] initWithRootViewController:[[DDGSettingsViewController alloc] initWithDefaults]]
-            }
-        ].mutableCopy;
-    
+        
+        self.viewControllerTypes = @[
+                                     @{DDGViewControllerTypeTitleKey : @"Home",
+                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome),
+                                       DDGViewControllerTypeControllerKey: homeViewController
+                                       },
+                                     @{DDGViewControllerTypeTitleKey : @"Saved",
+                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
+                                       },
+                                     @{DDGViewControllerTypeTitleKey : @"Stories",
+                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
+                                       },
+                                     @{DDGViewControllerTypeTitleKey : @"Settings",
+                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSettings)
+                                       },
+        ];        
+
         self.tableView.scrollsToTop = NO;
         
         self.tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];
@@ -100,7 +118,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     switch (section) {
         case 0:
-            return viewControllers.count;
+            return self.viewControllerTypes.count;
         case 1:
 		{
             return ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue] ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
@@ -134,26 +152,36 @@
 
 		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_menu-items.png"]];
 
-        lbl.text = [[viewControllers objectAtIndex:indexPath.row] objectForKey:@"title"];
+        lbl.text = [[self.viewControllerTypes objectAtIndex:indexPath.row] objectForKey:DDGViewControllerTypeTitleKey];
 		lbl.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
 		lbl.numberOfLines = 1;
 		lbl.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
 
-		switch (indexPath.row)
+        NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:indexPath.row];
+        DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];        
+        
+		switch (type)
 		{
-			case 0:
+			case DDGViewControllerTypeHome:
 			{
 				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
                 iv.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
 			}
 				break;
-			case 1:
+			case DDGViewControllerTypeSaved:
 			{
 				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
                 iv.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
 			}
 				break;
-			case 2:
+			case DDGViewControllerTypeStories:
+			{
+#warning need a home menu image for stories
+				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
+                iv.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
+			}
+				break;
+			case DDGViewControllerTypeSettings:
 			{
 				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
                 iv.highlightedImage = [UIImage imageNamed:@"icon_settings_selected.png"];
@@ -255,14 +283,36 @@
         if(indexPath.section == 0)
 		{
 			menuIndex = indexPath.row;
-            UIViewController *newTopViewController = [[viewControllers objectAtIndex:menuIndex] objectForKey:@"viewController"];
+            NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:menuIndex];
+            UIViewController *newTopViewController = [typeInfo objectForKey:DDGViewControllerTypeControllerKey];
             
-            CGRect frame = self.slidingViewController.topViewController.view.frame;
-            self.slidingViewController.topViewController = newTopViewController;
-            self.slidingViewController.topViewController.view.frame = frame;
-            [self.slidingViewController resetTopView];
+            if (nil == newTopViewController) {
+                DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];
+                switch (type) {
+                    case DDGViewControllerTypeSaved:
+                        newTopViewController = [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]];
+                        break;
+                    case DDGViewControllerTypeStories:
+                        newTopViewController = [[UINavigationController alloc] initWithRootViewController:[[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil]];                        
+                        break;
+                    case DDGViewControllerTypeSettings:
+                        newTopViewController = [[UINavigationController alloc] initWithRootViewController:[[DDGSettingsViewController alloc] initWithDefaults]];
+                        break;
+                    case DDGViewControllerTypeHome:
+                    default:
+                        break;
+                }
+                
+            }
             
-            [self configureViewController:newTopViewController];
+            if (nil != newTopViewController) {
+                CGRect frame = self.slidingViewController.topViewController.view.frame;
+                self.slidingViewController.topViewController = newTopViewController;
+                self.slidingViewController.topViewController.view.frame = frame;
+                [self.slidingViewController resetTopView];
+                
+                [self configureViewController:newTopViewController];                
+            }
         }
 		else if(indexPath.section == 1)
 		{

@@ -12,7 +12,6 @@
 
 @interface DDGUnderViewController : UITableViewController
 {
-    NSMutableArray		*viewControllers;
     UIViewController	*_homeViewController;
 	NSInteger			menuIndex;
 }
