@@ -65,7 +65,7 @@ static DDGHistoryProvider *sharedInstance;
 
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
     // there are certain cases in which we don't want to return any history
-    if([prefix isEqualToString:@""] || ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
+    if(nil == prefix || [prefix isEqualToString:@""] || ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
         return @[];
     
     NSMutableArray *results = [[NSMutableArray alloc] init];
