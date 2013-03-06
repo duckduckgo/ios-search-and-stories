@@ -37,7 +37,7 @@
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUILabel" id="156894758">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{20, 20}, {280, 508}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>

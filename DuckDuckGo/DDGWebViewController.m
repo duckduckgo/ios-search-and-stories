@@ -52,15 +52,18 @@
 	webViewLoadingDepth = 0;
     _webView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     
-	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" containerViewController:self];
-    
-	_searchController.searchHandler = self;
-    _searchController.state = DDGSearchControllerStateWeb;
-
     // if we already have a query or URL to load, load it.
 	viewsInitialized = YES;
     if(queryOrURLToLoad)
         [self loadQueryOrURL:queryOrURLToLoad];
+}
+
+- (void)setSearchController:(DDGSearchController *)searchController {
+    if (searchController == _searchController)
+        return;
+    
+    _searchController = searchController;
+    _searchController.state = DDGSearchControllerStateWeb;    
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -75,13 +78,12 @@
 
 - (void)dealloc
 {
-	_webView.delegate = nil;
-    
     if (_webView.isLoading) {
         [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
         [_webView stopLoading];
     }
-	
+    
+	_webView.delegate = nil;
 	self.webViewURL = nil;
 }
 
@@ -181,12 +183,11 @@
 
 #pragma mark - Search handler
 
--(void)searchControllerLeftButtonPressed {
-    
+-(void)searchControllerLeftButtonPressed {        
 	if(_webView.canGoBack)
         [_webView goBack];
 	else
-	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadHomeViewController];
+	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadSelectedViewController];
 }
 
 -(void)searchControllerStopOrReloadButtonPressed {
@@ -424,7 +425,7 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {
-    webViewLoadEvents++;
+    webViewLoadEvents--;
     [self updateProgressBar];
     
     [self updateBarWithRequest:theWebView.request];

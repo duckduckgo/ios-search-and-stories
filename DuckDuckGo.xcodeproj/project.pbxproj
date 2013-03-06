@@ -86,7 +86,6 @@
 		4C5F81F4158F96D6007B745A /* bangs.json in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F3158F96D6007B745A /* bangs.json */; };
 		4C5F81FA158FEA94007B745A /* bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F8158FEA94007B745A /* bang_button.png */; };
 		4C5F81FB158FEA94007B745A /* bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F9158FEA94007B745A /* bang_button@2x.png */; };
-		4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C6029DE15CED3E000EDA6E6 /* DDGPassthroughView.m */; };
 		4C660A7915914E73001AB510 /* empty_bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C660A7815914E73001AB510 /* empty_bang_button.png */; };
 		4C7A67BD15C5C9200087D548 /* OneLineTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */; };
 		4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */; };
@@ -222,7 +221,6 @@
 		83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 83F32265149290EF00A61BC5 /* InfoPlist.strings */; };
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
-		83F32276149290EF00A61BC5 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32275149290EF00A61BC5 /* DDGHomeViewController.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
 /* End PBXBuildFile section */
 
@@ -598,8 +596,6 @@
 		4C5F81F3158F96D6007B745A /* bangs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bangs.json; sourceTree = "<group>"; };
 		4C5F81F8158FEA94007B745A /* bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bang_button.png; sourceTree = "<group>"; };
 		4C5F81F9158FEA94007B745A /* bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button@2x.png"; sourceTree = "<group>"; };
-		4C6029DD15CED3E000EDA6E6 /* DDGPassthroughView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGPassthroughView.h; sourceTree = "<group>"; };
-		4C6029DE15CED3E000EDA6E6 /* DDGPassthroughView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGPassthroughView.m; sourceTree = "<group>"; };
 		4C660A7815914E73001AB510 /* empty_bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_bang_button.png; sourceTree = "<group>"; };
 		4C7A67BC15C5C9200087D548 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OneLineTopicCell.xib; sourceTree = "<group>"; };
 		4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBangsProvider.h; sourceTree = "<group>"; };
@@ -771,8 +767,6 @@
 		83F3226A149290EF00A61BC5 /* DuckDuckGo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DuckDuckGo-Prefix.pch"; sourceTree = "<group>"; };
 		83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGAppDelegate.h; sourceTree = "<group>"; };
 		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGAppDelegate.m; sourceTree = "<group>"; };
-		83F32274149290EF00A61BC5 /* DDGHomeViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
-		83F32275149290EF00A61BC5 /* DDGHomeViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1017,16 +1011,6 @@
 			name = Autocomplete;
 			sourceTree = "<group>";
 		};
-		4C573C1115B7311200790F60 /* Home screen */ = {
-			isa = PBXGroup;
-			children = (
-				83F32274149290EF00A61BC5 /* DDGHomeViewController.h */,
-				83F32275149290EF00A61BC5 /* DDGHomeViewController.m */,
-				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
-			);
-			name = "Home screen";
-			sourceTree = "<group>";
-		};
 		4C573C1215B7313E00790F60 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
@@ -1048,8 +1032,6 @@
 				83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */,
 				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
 				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
-				4C6029DD15CED3E000EDA6E6 /* DDGPassthroughView.h */,
-				4C6029DE15CED3E000EDA6E6 /* DDGPassthroughView.m */,
 				4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */,
 				4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */,
 				4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */,
@@ -1320,7 +1302,7 @@
 				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
 				83C2261D1676356200C9CF50 /* DDGUnderViewControllerCell.xib */,
 				5BB3F50F16D2313500281A2B /* ShareKit */,
-				4C573C1115B7311200790F60 /* Home screen */,
+				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
 				5B7A1BA516E74C0E00354310 /* Stories */,
 				4CD9249B15CD7DAB00EB062F /* Bookmarks */,
 				4C573C1215B7313E00790F60 /* Settings */,
@@ -1806,7 +1788,6 @@
 			files = (
 				83F32269149290EF00A61BC5 /* main.m in Sources */,
 				83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */,
-				83F32276149290EF00A61BC5 /* DDGHomeViewController.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
@@ -1834,7 +1815,6 @@
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
 				4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */,
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
-				4C6029DF15CED3E000EDA6E6 /* DDGPassthroughView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
 				4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */,

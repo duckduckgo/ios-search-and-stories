@@ -22,7 +22,7 @@
 }
 
 @property(nonatomic, strong) IBOutlet UIWebView *webView;
-@property(nonatomic, strong) IBOutlet DDGSearchController *searchController;
+@property(nonatomic, weak) DDGSearchController *searchController;
 @property(nonatomic, strong) NSDictionary *params;
 @property(nonatomic, strong) NSURL *webViewURL;
 

@@ -15,5 +15,4 @@
 
 @interface DDGStoriesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate>
 {}
-@property (nonatomic, strong) DDGSearchController *searchController;
 @end

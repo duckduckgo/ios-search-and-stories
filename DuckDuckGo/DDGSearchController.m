@@ -21,23 +21,17 @@
 
 #import "NSMutableString+DDGDumpView.h"
 
+@interface DDGSearchController ()
+@property(nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
+@end
+
 @implementation DDGSearchController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container {
-	self = [super initWithNibName:nibNameOrNil bundle:nil];
+-(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler {
+	self = [super initWithNibName:@"DDGSearchController" bundle:nil];
     
 	if (self) {
-        // this code is executed *after* viewDidLoad
-
-        [container addChildViewController:self];
-		[container.view addSubview:self.view];
-        [self didMoveToParentViewController:container];
-                
-        // expand the view's frame to fill the width of the screen
-        CGRect frame = self.view.frame;
-        frame.size.width = self.view.superview.bounds.size.width;
-        self.view.frame = frame;
-
+        self.searchHandler = searchHandler;
 	}
 	return self;
 }
@@ -46,6 +40,33 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self.view removeFromSuperview];
 }
+
+- (void)setContentController:(UIViewController *)contentController {
+    if (contentController == _contentController)
+        return;
+    
+    [_contentController willMoveToParentViewController:nil];
+    [contentController willMoveToParentViewController:self];
+    
+    [_contentController.view removeFromSuperview];
+    
+    [self view];
+    
+    CGRect searchbarRect = self.searchBar.frame;
+    CGRect frame = self.view.bounds;
+    CGRect intersection = CGRectIntersection(frame, searchbarRect);
+    frame.origin.y = intersection.origin.y + intersection.size.height;
+    frame.size.height = frame.size.height - frame.origin.y;
+    
+    contentController.view.frame = frame;
+    [self.view insertSubview:contentController.view belowSubview:self.background];
+    
+    [_contentController removeFromParentViewController];
+    [self addChildViewController:contentController];
+    
+    _contentController = contentController;
+}
+
 
 #pragma mark - View lifecycle
 
@@ -70,15 +91,14 @@
     
     backButtonVisible = YES;
     
-    // as a workaround for a UINavigationController bug we have to init with a nil root view controller and then push the view controller on later.
     DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
-    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:nil];
+    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:autocompleteVC];
     _autocompleteNavigationController.delegate = self;
     [self addChildViewController:_autocompleteNavigationController];
     [_background addSubview:_autocompleteNavigationController.view];
     _autocompleteNavigationController.view.frame = _background.bounds;
     [_autocompleteNavigationController didMoveToParentViewController:self];
-    [_autocompleteNavigationController pushViewController:autocompleteVC animated:NO];
+    // [_autocompleteNavigationController pushViewController:autocompleteVC animated:NO];
     
     [self revealBackground:NO animated:NO];
     
@@ -204,6 +224,8 @@
 
 -(void)setState:(DDGSearchControllerState)searchControllerState {
 	_state = searchControllerState;
+    
+    [self view];
     
     if(_state == DDGSearchControllerStateHome) {
         [_leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];

@@ -68,23 +68,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-	self.searchController = [[DDGSearchController alloc] initWithNibName:@"DDGSearchController" containerViewController:self];
-	_searchController.searchHandler = self;
-    _searchController.state = DDGSearchControllerStateHome;
-    
-    CGRect searchbarRect = [self.view convertRect:self.searchController.searchBar.frame fromView:self.searchController.searchBar.superview];
-    CGRect frame = self.view.bounds;
-    CGRect intersection = CGRectIntersection(frame, searchbarRect);
-    frame.origin.y = intersection.origin.y + intersection.size.height;
-    frame.size.height = frame.size.height - frame.origin.y;
-    
-    UITableView *tableView = [[UITableView alloc] initWithFrame:frame style:UITableViewStylePlain];
-    [self.view insertSubview:tableView belowSubview:self.searchController.view];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     tableView.separatorColor = [UIColor clearColor];
     tableView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.rowHeight = 135.0;
+    tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [self.view addSubview:tableView];
     self.tableView = tableView;
     
     topShadow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"table_view_shadow_top.png"]];
@@ -145,9 +136,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
-    [_searchController clearAddressBar];
-    
+    [super viewWillAppear:animated];    
     [self beginDownloadingStories];
 }
 
@@ -199,13 +188,6 @@
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	else
         return YES;
-}
-
--(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    
-    [_searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
 #pragma mark - Search handler

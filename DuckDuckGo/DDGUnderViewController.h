@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DDGSearchHandler.h"
 
-@class DDGHomeViewController, DDGSettingsViewController, DDGStory;
+@class DDGSettingsViewController, DDGStory;
 
-@interface DDGUnderViewController : UITableViewController
+@interface DDGUnderViewController : UITableViewController <DDGSearchHandler>
 {
     UIViewController	*_homeViewController;
 	NSInteger			menuIndex;
@@ -18,11 +19,10 @@
 
 @property(nonatomic,strong) UIViewController *homeViewController;
 
--(id)initWithHomeViewController:(UIViewController *)homeViewController;
 -(void)configureViewController:(UIViewController *)viewController;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL;
 -(void)loadStory:(DDGStory *)story;
--(void)loadHomeViewController;
+-(void)loadSelectedViewController;
 
 @end

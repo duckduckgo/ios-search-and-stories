@@ -82,7 +82,7 @@
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">3</int>
 							<bytes key="NSWhite">MAA</bytes>
-							<object class="NSColorSpace" key="NSCustomColorSpace" id="6875167">
+							<object class="NSColorSpace" key="NSCustomColorSpace">
 								<int key="NSID">2</int>
 							</object>
 						</object>
@@ -235,12 +235,9 @@
 				<reference key="NSNextKeyView" ref="745545155"/>
 				<string key="NSReuseIdentifierKey">_NS:410</string>
 				<object class="NSColor" key="IBUIBackgroundColor">
-					<int key="NSColorSpace">3</int>
-					<bytes key="NSWhite">MC43NSAwAA</bytes>
-					<reference key="NSCustomColorSpace" ref="6875167"/>
+					<int key="NSColorSpace">1</int>
+					<bytes key="NSRGB">MC4yIDAuMjE1Njg2Mjc0NSAwLjI1MDk4MDM5MjIAA</bytes>
 				</object>
-				<bool key="IBUIOpaque">NO</bool>
-				<bool key="IBUIClipsSubviews">YES</bool>
 				<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 			</object>
 		</array>
@@ -369,6 +366,7 @@
 							<reference ref="745545155"/>
 						</array>
 						<reference key="parent" ref="0"/>
+						<string key="objectName">View</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">10</int>
@@ -419,7 +417,6 @@
 				<string key="59.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 				<real value="1" key="59.IBUIButtonInspectorSelectedStateConfigurationMetadataKey"/>
 				<string key="64.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
-				<string key="8.CustomClassName">DDGPassthroughView</string>
 				<string key="8.IBPluginDependency">com.apple.InterfaceBuilder.IBCocoaTouchPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
@@ -436,14 +433,6 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/DDGAddressBarTextField.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">DDGPassthroughView</string>
-					<string key="superclassName">UIView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">./Classes/DDGPassthroughView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

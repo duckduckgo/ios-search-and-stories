@@ -8,7 +8,6 @@
 
 #import "DDGUnderViewController.h"
 #import "ECSlidingViewController.h"
-#import "DDGHomeViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGWebViewController.h"
 #import "DDGHistoryProvider.h"
@@ -33,25 +32,22 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 
 @implementation DDGUnderViewController
 
--(id)initWithHomeViewController:(UIViewController *)homeViewController {
+-(id)init {
     self = [super initWithStyle:UITableViewStylePlain];
     if(self) {
-        self.homeViewController = homeViewController;
-        
         self.viewControllerTypes = @[
-                                     @{DDGViewControllerTypeTitleKey : @"Home",
-                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome),
-                                       DDGViewControllerTypeControllerKey: homeViewController
-                                       },
-                                     @{DDGViewControllerTypeTitleKey : @"Saved",
+                                     [@{DDGViewControllerTypeTitleKey : @"Home",
+                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome)
+                                       } mutableCopy],
+                                     [@{DDGViewControllerTypeTitleKey : @"Saved",
                                        DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
-                                       },
-                                     @{DDGViewControllerTypeTitleKey : @"Stories",
+                                       } mutableCopy],
+                                     [@{DDGViewControllerTypeTitleKey : @"Stories",
                                        DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
-                                       },
-                                     @{DDGViewControllerTypeTitleKey : @"Settings",
+                                       } mutableCopy],
+                                     [@{DDGViewControllerTypeTitleKey : @"Settings",
                                        DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSettings)
-                                       },
+                                       } mutableCopy],
         ];        
 
         self.tableView.scrollsToTop = NO;
@@ -68,6 +64,22 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
     return self;
 }
 
+- (void)setHomeViewController:(UIViewController *)homeViewController {
+    if (homeViewController == _homeViewController)
+        return;
+    
+    _homeViewController = homeViewController;
+    
+    for (NSMutableDictionary *typeInfo in self.viewControllerTypes) {
+        if ([[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue] == DDGViewControllerTypeHome) {
+            if (nil == homeViewController)
+                [typeInfo removeObjectForKey:DDGViewControllerTypeControllerKey];
+            else
+                [typeInfo setObject:homeViewController forKey:DDGViewControllerTypeControllerKey];
+        }
+    }
+}
+
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -82,32 +94,48 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
     viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
+-(void)loadSelectedViewController; {
+    CGRect frame = self.slidingViewController.topViewController.view.frame;
+    
+    UIViewController *viewController = [self viewControllerForIndexPath:[NSIndexPath indexPathForRow:menuIndex inSection:0]];
+    
+    self.slidingViewController.topViewController = viewController;
+    viewController.view.frame = frame;
+    [self configureViewController:viewController];
+}
+
+#pragma mark - DDGSearchHandler
+
+-(void)searchControllerLeftButtonPressed {
+    [self.slidingViewController anchorTopViewTo:ECRight];
+}
+
 -(void)loadStory:(DDGStory *)story {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC];
+    webVC.searchController = searchController;
+    searchController.contentController = webVC;
     [webVC loadStory:story];
     
     CGRect frame = self.slidingViewController.topViewController.view.frame;
-    self.slidingViewController.topViewController = webVC;
+    self.slidingViewController.topViewController = searchController;
     self.slidingViewController.topViewController.view.frame = frame;
-    [self configureViewController:webVC];    
+    [self configureViewController:searchController];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC];
+    webVC.searchController = searchController;
+    searchController.contentController = webVC;
     [webVC loadQueryOrURL:queryOrURL];
     
     CGRect frame = self.slidingViewController.topViewController.view.frame;
-    self.slidingViewController.topViewController = webVC;
+    self.slidingViewController.topViewController = searchController;
     self.slidingViewController.topViewController.view.frame = frame;
-    [self configureViewController:webVC];
+    [self configureViewController:searchController];
 }
 
--(void)loadHomeViewController; {
-    CGRect frame = self.slidingViewController.topViewController.view.frame;
-    self.slidingViewController.topViewController = _homeViewController;
-    self.slidingViewController.topViewController.view.frame = frame;
-    [self configureViewController:_homeViewController];
-}
 
 #pragma mark - Table view data source
 
@@ -277,33 +305,49 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 	return indexPath;
 }
 
+- (UIViewController *)viewControllerForIndexPath:(NSIndexPath *)indexPath {
+    UIViewController *viewController = nil;
+    
+    if(indexPath.section == 0)
+    {
+        menuIndex = indexPath.row;
+        NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:menuIndex];
+        viewController = [typeInfo objectForKey:DDGViewControllerTypeControllerKey];
+        
+        if (nil == viewController) {
+            DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];
+            switch (type) {
+                case DDGViewControllerTypeSaved:
+                    viewController = [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]];
+                    break;
+                case DDGViewControllerTypeStories: {
+                    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
+                    searchController.state = DDGSearchControllerStateHome;
+                    searchController.contentController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
+                    viewController = searchController;
+                }
+                    break;
+                case DDGViewControllerTypeSettings:
+                    viewController = [[UINavigationController alloc] initWithRootViewController:[[DDGSettingsViewController alloc] initWithDefaults]];
+                    break;
+                case DDGViewControllerTypeHome:
+                default:
+                    break;
+            }
+            
+        }
+    }
+    
+    return viewController;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
         if(indexPath.section == 0)
 		{
-			menuIndex = indexPath.row;
-            NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:menuIndex];
-            UIViewController *newTopViewController = [typeInfo objectForKey:DDGViewControllerTypeControllerKey];
-            
-            if (nil == newTopViewController) {
-                DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];
-                switch (type) {
-                    case DDGViewControllerTypeSaved:
-                        newTopViewController = [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]];
-                        break;
-                    case DDGViewControllerTypeStories:
-                        newTopViewController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
-                        break;
-                    case DDGViewControllerTypeSettings:
-                        newTopViewController = [[UINavigationController alloc] initWithRootViewController:[[DDGSettingsViewController alloc] initWithDefaults]];
-                        break;
-                    case DDGViewControllerTypeHome:
-                    default:
-                        break;
-                }
-                
-            }
+			menuIndex = indexPath.row;            
+            UIViewController *newTopViewController = [self viewControllerForIndexPath:indexPath];
             
             if (nil != newTopViewController) {
                 CGRect frame = self.slidingViewController.topViewController.view.frame;

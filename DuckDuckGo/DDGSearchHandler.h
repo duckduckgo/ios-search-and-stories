@@ -8,13 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@class DDGStory;
 @protocol DDGSearchHandler <NSObject>
 
 -(void)searchControllerLeftButtonPressed;
 -(void)loadQueryOrURL:(NSString *)queryOrURLString;
 
 @optional
-
+-(void)loadStory:(DDGStory *)story;
 -(void)searchControllerActionButtonPressed;
 -(void)searchControllerStopOrReloadButtonPressed;
 -(void)searchControllerAddressBarWillOpen;

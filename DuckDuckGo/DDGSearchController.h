@@ -27,12 +27,13 @@ typedef enum {
     NSMutableArray *unusedBangButtons;
 }
 
-@property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
-@property(nonatomic, weak) IBOutlet UIButton *leftButton;
+@property (nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
+@property (nonatomic, weak) IBOutlet UIButton *leftButton;
 @property (weak, nonatomic) IBOutlet UIButton *actionButton;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
-@property(nonatomic, weak) IBOutlet UIView *background;
-@property(nonatomic, weak) IBOutlet UIView *searchBar;
+@property (nonatomic, weak) IBOutlet UIView *background;
+@property (nonatomic, weak) IBOutlet UIView *searchBar;
+@property (nonatomic, strong) UIViewController *contentController;
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(IBAction)actionButtonPressed:(id)sender;
@@ -40,9 +41,9 @@ typedef enum {
 
 @property(nonatomic, strong) UINavigationController *autocompleteNavigationController;
 @property(nonatomic, assign) DDGSearchControllerState state;
-@property(nonatomic, weak) id<DDGSearchHandler> searchHandler;
+@property(nonatomic, weak, readonly) id<DDGSearchHandler> searchHandler;
 
--(id)initWithNibName:(NSString *)nibNameOrNil containerViewController:(UIViewController *)container;
+-(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler;
 
 // managing the search controller
 -(void)updateBarWithURL:(NSURL *)url;
