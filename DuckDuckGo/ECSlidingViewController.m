@@ -494,9 +494,9 @@ NSString *const ECSlidingViewTopDidReset          = @"ECSlidingViewTopDidReset";
 
 - (void)underLeftWillAppear
 {
-  dispatch_async(dispatch_get_main_queue(), ^{
+//  dispatch_async(dispatch_get_main_queue(), ^{
     [[NSNotificationCenter defaultCenter] postNotificationName:ECSlidingViewUnderLeftWillAppear object:self userInfo:nil];
-  });
+//  });
   self.underRightView.hidden = YES;
   [self.underLeftViewController viewWillAppear:NO];
   self.underLeftView.hidden = NO;

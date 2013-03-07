@@ -23,6 +23,7 @@ NSString * const DDGSettingQuackOnRefresh = @"quack";
 NSString * const DDGSettingRegion = @"region";
 NSString * const DDGSettingAutocomplete = @"autocomplete";
 NSString * const DDGSettingStoriesReadView = @"stories_read_view";
+NSString * const DDGSettingHomeView = @"home_view";
 
 @implementation DDGSettingsViewController
 
@@ -33,6 +34,7 @@ NSString * const DDGSettingStoriesReadView = @"stories_read_view";
 		DDGSettingRegion: @"us-en",
 		DDGSettingAutocomplete: @(YES),
 		DDGSettingStoriesReadView: @(YES),
+        DDGSettingHomeView: @"Stories View",
     };
     
     for(NSString *key in defaults) {
@@ -41,6 +43,11 @@ NSString * const DDGSettingStoriesReadView = @"stories_read_view";
                          forKey:key 
                         inCache:DDGSettingsCacheName];
     }
+}
+
+- (void)dealloc
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewUnderLeftWillAppear object:nil];
 }
 
 #pragma mark - View lifecycle
@@ -71,6 +78,22 @@ NSString * const DDGSettingStoriesReadView = @"stories_read_view";
     [self.slidingViewController anchorTopViewTo:ECRight];
 }
 
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewUnderLeftWillAppear:) name:ECSlidingViewUnderLeftWillAppear object:self.slidingViewController];
+}
+
+- (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
+    [self saveAndExit];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewUnderLeftWillAppear object:nil];
+}
+
 - (void)viewWillLayoutSubviews
 {
 	CGPoint center = self.navigationItem.leftBarButtonItem.customView.center;
@@ -94,6 +117,12 @@ NSString * const DDGSettingStoriesReadView = @"stories_read_view";
     self.title = @"Settings";
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
+    
+    [self addSectionWithTitle:@"Home"];
+    
+    NSString *homeViewMode = [DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName];
+    [self addRadioOption:@"Home View" title:@"Stories View" enabled:[homeViewMode isEqual:@"Stories View"]];
+    [self addRadioOption:@"Home View" title:@"Duck Mode" enabled:[homeViewMode isEqual:@"Duck Mode"]];
     
     [self addSectionWithTitle:@"Stories"];
     [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
@@ -157,6 +186,10 @@ NSString * const DDGSettingStoriesReadView = @"stories_read_view";
 }
 
 -(void)saveData:(NSDictionary *)formData {
+    [DDGCache setObject:[formData objectForKey:@"Home View"]
+                 forKey:DDGSettingHomeView
+                inCache:DDGSettingsCacheName];
+    
     [DDGCache setObject:[formData objectForKey:@"Record Recent"]
                  forKey:DDGSettingRecordHistory
                 inCache:DDGSettingsCacheName];

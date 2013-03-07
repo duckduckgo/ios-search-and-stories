@@ -82,7 +82,7 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];
+    [super viewWillAppear:animated];    
     [self.tableView reloadData];
 }
 

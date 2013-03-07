@@ -15,6 +15,7 @@ extern NSString * const DDGSettingQuackOnRefresh;
 extern NSString * const DDGSettingRegion;
 extern NSString * const DDGSettingAutocomplete;
 extern NSString * const DDGSettingStoriesReadView;
+extern NSString * const DDGSettingHomeView;
 
 @interface DDGSettingsViewController : IGFormViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
 
