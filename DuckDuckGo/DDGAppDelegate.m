@@ -19,7 +19,6 @@
 #import "AFNetworking.h"
 #import "DDGUnderViewController.h"
 #import "DDGSearchController.h"
-#import "DDGDuckViewController.h"
 
 @implementation DDGAppDelegate
 
@@ -125,21 +124,18 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     // configure the sliding view controller
     DDGUnderViewController *under = [[DDGUnderViewController alloc] init];
-    DDGSearchController *searchContainer = [[DDGSearchController alloc] initWithSearchHandler:under];
     
-    under.homeViewController = searchContainer;
     
     ECSlidingViewController *slidingViewController = [[ECSlidingViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = slidingViewController;
     
     slidingViewController.underLeftViewController = under;
     slidingViewController.anchorRightRevealAmount = 255.0;
-    slidingViewController.topViewController = searchContainer;
     
-    searchContainer.contentController = [DDGDuckViewController duckViewController];
-    searchContainer.state = DDGSearchControllerStateHome;
+    UIViewController *homeController = [under viewControllerForType:DDGViewControllerTypeHome];
     
-    [under configureViewController:searchContainer];
+    slidingViewController.topViewController = homeController;
+    [under configureViewController:homeController];
     
     [self.window makeKeyAndVisible];
     

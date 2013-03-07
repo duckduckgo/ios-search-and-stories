@@ -9,15 +9,19 @@
 #import <UIKit/UIKit.h>
 #import "DDGSearchHandler.h"
 
+typedef enum DDGViewControllerType {
+    DDGViewControllerTypeHome=0,
+    DDGViewControllerTypeSaved,
+    DDGViewControllerTypeStories,
+    DDGViewControllerTypeSettings
+} DDGViewControllerType;
+
 @class DDGSettingsViewController, DDGStory;
 
 @interface DDGUnderViewController : UITableViewController <DDGSearchHandler>
 {
-    UIViewController	*_homeViewController;
 	NSInteger			menuIndex;
 }
-
-@property(nonatomic,strong) UIViewController *homeViewController;
 
 -(void)configureViewController:(UIViewController *)viewController;
 
@@ -25,4 +29,5 @@
 -(void)loadStory:(DDGStory *)story;
 -(void)loadSelectedViewController;
 
+- (UIViewController *)viewControllerForType:(DDGViewControllerType)type;
 @end

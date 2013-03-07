@@ -13,14 +13,8 @@
 #import "DDGHistoryProvider.h"
 #import "DDGBookmarksViewController.h"
 #import "DDGStoriesViewController.h"
+#import "DDGDuckViewController.h"
 #import "DDGCache.h"
-
-typedef enum DDGViewControllerType {
-    DDGViewControllerTypeHome=0,
-    DDGViewControllerTypeSaved,
-    DDGViewControllerTypeStories,
-    DDGViewControllerTypeSettings
-} DDGViewControllerType;
 
 NSString * const DDGViewControllerTypeTitleKey = @"title";
 NSString * const DDGViewControllerTypeTypeKey = @"type";
@@ -35,21 +29,8 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 -(id)init {
     self = [super initWithStyle:UITableViewStylePlain];
     if(self) {
-        self.viewControllerTypes = @[
-                                     [@{DDGViewControllerTypeTitleKey : @"Home",
-                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome)
-                                       } mutableCopy],
-                                     [@{DDGViewControllerTypeTitleKey : @"Saved",
-                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
-                                       } mutableCopy],
-                                     [@{DDGViewControllerTypeTitleKey : @"Stories",
-                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
-                                       } mutableCopy],
-                                     [@{DDGViewControllerTypeTitleKey : @"Settings",
-                                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSettings)
-                                       } mutableCopy],
-        ];        
-
+        [self setupViewControllerTypes];        
+        
         self.tableView.scrollsToTop = NO;
         
         self.tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];
@@ -58,32 +39,40 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
         self.clearsSelectionOnViewWillAppear = NO;
 		
 		self.tableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
-
-        [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];
     }
     return self;
 }
 
-- (void)setHomeViewController:(UIViewController *)homeViewController {
-    if (homeViewController == _homeViewController)
-        return;
+- (void)setupViewControllerTypes {
     
-    _homeViewController = homeViewController;
+    NSMutableArray *types = [NSMutableArray array];
     
-    for (NSMutableDictionary *typeInfo in self.viewControllerTypes) {
-        if ([[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue] == DDGViewControllerTypeHome) {
-            if (nil == homeViewController)
-                [typeInfo removeObjectForKey:DDGViewControllerTypeControllerKey];
-            else
-                [typeInfo setObject:homeViewController forKey:DDGViewControllerTypeControllerKey];
-        }
+    [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
+                      DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome)
+                      } mutableCopy]];
+    [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
+                      DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
+                      } mutableCopy]];
+    if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
+                          DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
+                          } mutableCopy]];
     }
+    
+    [types addObject:[@{DDGViewControllerTypeTitleKey : @"Settings",
+                      DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSettings)
+                      } mutableCopy]];
+    
+    self.viewControllerTypes = types;
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];    
+    [super viewWillAppear:animated];
+    [self setupViewControllerTypes];
     [self.tableView reloadData];
+    
+    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:menuIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];    
 }
 
 -(void)configureViewController:(UIViewController *)viewController {
@@ -305,6 +294,41 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 	return indexPath;
 }
 
+- (UIViewController *)viewControllerForType:(DDGViewControllerType)type {
+    UIViewController *viewController = nil;
+    
+    switch (type) {
+        case DDGViewControllerTypeSaved:
+            viewController = [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]];
+            break;
+        case DDGViewControllerTypeStories: {
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
+            searchController.state = DDGSearchControllerStateHome;
+            searchController.contentController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
+            viewController = searchController;
+        }
+            break;
+        case DDGViewControllerTypeSettings:
+            viewController = [[UINavigationController alloc] initWithRootViewController:[[DDGSettingsViewController alloc] initWithDefaults]];
+            break;
+        case DDGViewControllerTypeHome:
+        {
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
+            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
+                searchController.contentController = [DDGDuckViewController duckViewController];
+            } else {
+                searchController.contentController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
+            }
+            searchController.state = DDGSearchControllerStateHome;
+            viewController = searchController;
+        }
+        default:
+            break;
+    }
+    
+    return viewController;
+}
+
 - (UIViewController *)viewControllerForIndexPath:(NSIndexPath *)indexPath {
     UIViewController *viewController = nil;
     
@@ -316,25 +340,7 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
         
         if (nil == viewController) {
             DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];
-            switch (type) {
-                case DDGViewControllerTypeSaved:
-                    viewController = [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]];
-                    break;
-                case DDGViewControllerTypeStories: {
-                    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
-                    searchController.state = DDGSearchControllerStateHome;
-                    searchController.contentController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
-                    viewController = searchController;
-                }
-                    break;
-                case DDGViewControllerTypeSettings:
-                    viewController = [[UINavigationController alloc] initWithRootViewController:[[DDGSettingsViewController alloc] initWithDefaults]];
-                    break;
-                case DDGViewControllerTypeHome:
-                default:
-                    break;
-            }
-            
+            viewController = [self viewControllerForType:type];            
         }
     }
     

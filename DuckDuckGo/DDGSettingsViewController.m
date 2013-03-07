@@ -25,6 +25,9 @@ NSString * const DDGSettingAutocomplete = @"autocomplete";
 NSString * const DDGSettingStoriesReadView = @"stories_read_view";
 NSString * const DDGSettingHomeView = @"home_view";
 
+NSString * const DDGSettingHomeViewTypeStories = @"Stories View";
+NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
+
 @implementation DDGSettingsViewController
 
 +(void)loadDefaultSettings {
@@ -121,8 +124,8 @@ NSString * const DDGSettingHomeView = @"home_view";
     [self addSectionWithTitle:@"Home"];
     
     NSString *homeViewMode = [DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName];
-    [self addRadioOption:@"Home View" title:@"Stories View" enabled:[homeViewMode isEqual:@"Stories View"]];
-    [self addRadioOption:@"Home View" title:@"Duck Mode" enabled:[homeViewMode isEqual:@"Duck Mode"]];
+    [self addRadioOption:@"Home View" title:DDGSettingHomeViewTypeStories enabled:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
+    [self addRadioOption:@"Home View" title:DDGSettingHomeViewTypeDuck enabled:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
     
     [self addSectionWithTitle:@"Stories"];
     [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
