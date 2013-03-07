@@ -45,6 +45,11 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 
 - (void)setupViewControllerTypes {
     
+    DDGViewControllerType selectedType = DDGViewControllerTypeHome;
+    if (menuIndex < [self.viewControllerTypes count]) {
+        selectedType = [[[self.viewControllerTypes objectAtIndex:menuIndex] valueForKey:DDGViewControllerTypeTypeKey] integerValue];
+    }
+    
     NSMutableArray *types = [NSMutableArray array];
     
     [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
@@ -64,6 +69,12 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
                       } mutableCopy]];
     
     self.viewControllerTypes = types;
+    
+    for (NSDictionary *typeInfo in types) {
+        if ([[typeInfo valueForKey:DDGViewControllerTypeTypeKey] integerValue] == selectedType) {
+            menuIndex = [types indexOfObject:typeInfo];
+        }
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated
