@@ -130,7 +130,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     self.window.rootViewController = slidingViewController;
     
     slidingViewController.underLeftViewController = under;
-    slidingViewController.anchorRightRevealAmount = 255.0;
+    slidingViewController.anchorRightRevealAmount = 258.0;
     
     UIViewController *homeController = [under viewControllerForType:DDGViewControllerTypeHome];
     

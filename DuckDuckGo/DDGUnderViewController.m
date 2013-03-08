@@ -15,6 +15,7 @@
 #import "DDGStoriesViewController.h"
 #import "DDGDuckViewController.h"
 #import "DDGCache.h"
+#import "DDGUnderViewControllerCell.h"
 
 NSString * const DDGViewControllerTypeTitleKey = @"title";
 NSString * const DDGViewControllerTypeTypeKey = @"type";
@@ -159,31 +160,22 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"DDGUnderViewControllerCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-	UIImageView *iv;
-    if(!cell)
-	{
-        cell = [[[NSBundle mainBundle] loadNibNamed:CellIdentifier owner:self options:nil] objectAtIndex:0];
-        
-		iv = (UIImageView *)[cell viewWithTag:100];
-		iv.layer.cornerRadius = 2.0;
-    }
-	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-	iv = (UIImageView *)[cell viewWithTag:100];
-	iv.image = nil;
     
-	UILabel *lbl = (UILabel*)[cell.contentView viewWithTag:200];
+    DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    if(!cell)
+        cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    
+	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
+    cell.highlighted = (indexPath.section == 0 && indexPath.row == menuIndex);
+    
+	cell.imageView.image = nil;
+    cell.imageView.highlightedImage = nil;
+    
+	UILabel *lbl = cell.textLabel;
     if(indexPath.section == 0)
 	{
-		[cell.contentView viewWithTag:300].hidden = NO;
-		((UIImageView*)[cell.contentView viewWithTag:300]).image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_caret_onclick.png" : @"icon_caret.png"];
-
-		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_menu-items.png"]];
-
+        cell.cellMode = DDGUnderViewControllerCellModeNormal;        
         lbl.text = [[self.viewControllerTypes objectAtIndex:indexPath.row] objectForKey:DDGViewControllerTypeTitleKey];
-		lbl.textColor = (indexPath.row == menuIndex) ? [UIColor whiteColor] : [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
-		lbl.numberOfLines = 1;
-		lbl.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
 
         NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:indexPath.row];
         DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];        
@@ -192,67 +184,52 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 		{
 			case DDGViewControllerTypeHome:
 			{
-				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_home_selected.png" : @"icon_home.png"];
-                iv.highlightedImage = [UIImage imageNamed:@"icon_home_selected.png"];
+				cell.imageView.image = [UIImage imageNamed:@"icon_home"];
+                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected"];
 			}
 				break;
 			case DDGViewControllerTypeSaved:
 			{
-				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
-                iv.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
+				cell.imageView.image = [UIImage imageNamed:@"icon_saved-pages"];
+                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected"];
 			}
 				break;
 			case DDGViewControllerTypeStories:
 			{
 #warning need a home menu image for stories
-				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_saved-pages_selected.png" : @"icon_saved-pages.png"];
-                iv.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected.png"];
+				cell.imageView.image = [UIImage imageNamed:@"icon_saved-pages"];
+                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected"];
 			}
 				break;
 			case DDGViewControllerTypeSettings:
 			{
-				iv.image = [UIImage imageNamed:(indexPath.row == menuIndex) ? @"icon_settings_selected.png" : @"icon_settings.png"];
-                iv.highlightedImage = [UIImage imageNamed:@"icon_settings_selected.png"];
+				cell.imageView.image = [UIImage imageNamed:@"icon_settings"];
+                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected"];
 			}
 				break;
 		}
-		iv.frame = CGRectMake(0, 0, 24, 24);
-    }
-	else
-	{
-		[cell.contentView viewWithTag:300].hidden = YES;
-		
-		cell.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_history-items.png"]];
-		lbl.textColor = [UIColor  colorWithRed:0x97/255.0 green:0xA2/255.0 blue:0xB6/255.0 alpha:1.0];
-		lbl.font = [UIFont fontWithName:@"HelveticaNeue" size:17.0];
+    } else {
+        cell.cellMode = DDGUnderViewControllerCellModeRecent;
         
-		if ([[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
-		{
+		if ([[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue]) {
 			// we have history and it is enabled
 			NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
 			
 			if ([[item objectForKey:@"kind"] isEqualToString:@"search"] || [[item objectForKey:@"kind"] isEqualToString:@"suggestion"])
 			{
-				((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:@"search_icon.png"];
+				cell.imageView.image = [UIImage imageNamed:@"search_icon"];
 			}
 			else if ([[item objectForKey:@"kind"] isEqualToString:@"feed"])
 			{
-				((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
+				cell.imageView.image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
 			}
 			lbl.text = [item objectForKey:@"text"];
-		}
-		else
-		{
-			iv.image = [UIImage imageNamed:@"icon_notification.png"];
+		} else {
+			cell.imageView.image = [UIImage imageNamed:@"icon_notification"];
 			lbl.text = @"Recording recents is disabled.\nYou can enable it in settings.";
 			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
-		lbl.numberOfLines = 2;
-		lbl.font = [UIFont systemFontOfSize:14.0];
-		iv.frame = CGRectMake(0, 0, 16, 16);
     }
-	iv.center = CGPointMake(22, 22);
-	lbl.backgroundColor = cell.contentView.backgroundColor;
     
     return cell;
 }
