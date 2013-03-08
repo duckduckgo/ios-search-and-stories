@@ -23,8 +23,9 @@
 @property(nonatomic, readonly, getter = isImageDownloaded) BOOL imageDownloaded;
 @property(nonatomic, readonly, getter = isHTMLDownloaded) BOOL HTMLDownloaded;
 
--(void)unloadImage;
--(void)deleteImage;
+- (void)unloadImage;
+- (void)deleteImage;
+- (void)deleteHTML;
 
 - (NSURLRequest *)HTMLURLRequest;
 
