@@ -284,26 +284,28 @@
                 NSDictionary *dictionary = [stories objectAtIndex:0];
                 if ([dictionary isKindOfClass:[NSDictionary class]]) {
                     NSString *html = [dictionary objectForKey:@"html"];
-                    story.html = html;                    
-                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                        // mark the story as read
-                        [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];
-                    });                    
+                    
+                    [story writeHTMLString:html completion:^(BOOL success) {
+                        if (success) {
+                            self.webViewURL = [NSURL URLWithString:story.url];
+                            [_webView loadRequest:[story HTMLURLRequest]];
+                        } else {
+                            [self loadQueryOrURL:[story url]];
+                        }
+                    }];
                 }
             }
         }
         
-        NSString *html = story.html;
-        if (nil != html) {
-            self.webViewURL = [NSURL URLWithString:story.url];
-            [_webView loadHTMLString:story.html baseURL:[NSURL URLWithString:story.url]];
-            [_searchController updateBarWithURL:nil];            
-        } else {
+        if (!story.isHTMLDownloaded)
             [self loadQueryOrURL:[story url]];
-        }
+        
+        [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];        
     };
     
-    if (nil == story.html)
+    self.story = story;
+    
+    if (!story.isHTMLDownloaded)
         [self loadJSONForStory:story completion:completion];
     else
         completion(nil);    
@@ -389,6 +391,10 @@
             || [scheme isEqualToString:@"https"]) {
             [_searchController updateBarWithURL:request.URL];
             self.webViewURL = request.URL;
+        } else if ([[[self.story HTMLURLRequest].URL URLByStandardizingPath] isEqual:[url URLByStandardizingPath]]) {
+            NSURL *storyURL = [NSURL URLWithString:self.story.url];
+            [_searchController updateBarWithURL:storyURL];
+            self.webViewURL = storyURL;
         }
     }    
 }

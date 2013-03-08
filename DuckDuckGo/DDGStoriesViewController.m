@@ -665,6 +665,7 @@
         for(NSIndexPath *indexPath in removedStories) {
             DDGStory *removedStory = [oldStories objectAtIndex:indexPath.row];
             [removedStory deleteImage];
+            [removedStory deleteHTML];
         }
     });
     

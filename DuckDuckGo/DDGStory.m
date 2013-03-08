@@ -13,6 +13,7 @@
     UIImage *_image;
 }
 @property(nonatomic, readwrite, getter = isImageDownloaded) BOOL imageDownloaded;
+@property(nonatomic, readwrite, getter = isHTMLDownloaded) BOOL HTMLDownloaded;
 @property(nonatomic, readwrite, strong) UIImage *image;
 @end
 
@@ -28,9 +29,9 @@
         self.url = [aDecoder decodeObjectForKey:@"url"];
         self.feed = [aDecoder decodeObjectForKey:@"feed"];
         self.date = [aDecoder decodeObjectForKey:@"date"];
-        self.html = [aDecoder decodeObjectForKey:@"html"];
         self.imageURL = [NSURL URLWithString:[aDecoder decodeObjectForKey:@"imageURL"]];
         self.imageDownloaded = [aDecoder decodeBoolForKey:@"imageDownloaded"];
+        self.HTMLDownloaded = [aDecoder decodeBoolForKey:@"HTMLDownloaded"];
     }
     return self;
 }
@@ -41,10 +42,9 @@
     [encoder encodeObject:self.url forKey:@"url"];
     [encoder encodeObject:self.feed forKey:@"feed"];
     [encoder encodeObject:self.date forKey:@"date"];
-    if (nil != self.html)
-        [encoder encodeObject:self.html forKey:@"html"];
     [encoder encodeObject:[self.imageURL absoluteString] forKey:@"imageURL"];
     [encoder encodeBool:self.imageDownloaded forKey:@"imageDownloaded"];
+    [encoder encodeBool:self.HTMLDownloaded forKey:@"HTMLDownloaded"];
 }
 
 #pragma mark - Image
@@ -72,8 +72,31 @@
 
 -(void)deleteImage {
     self.image = nil;
-    [[NSFileManager defaultManager] removeItemAtPath:self.imageFilePath error:nil];
+    [[NSFileManager defaultManager] removeItemAtPath:[self imageFilePath] error:nil];
     self.imageDownloaded = NO;
+}
+
+- (void)deleteHTML {
+    [[NSFileManager defaultManager] removeItemAtPath:[self HTMLFilePath] error:nil];
+    self.HTMLDownloaded = NO;
+}
+
+- (NSURLRequest *)HTMLURLRequest {
+    if (!self.isHTMLDownloaded)
+        return nil;
+    
+    return [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[self HTMLFilePath]]];
+}
+
+- (void)writeHTMLString:(NSString *)html completion:(void (^)(BOOL success))completion {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL suceess = [html writeToFile:[self HTMLFilePath] atomically:NO encoding:NSUTF8StringEncoding error:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.HTMLDownloaded = YES;
+            if (completion)
+                completion(suceess);
+        });
+    });
 }
 
 - (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion {
@@ -87,8 +110,16 @@
     });
 }
 
+-(NSString *)baseFilePath {
+    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+}
+
+-(NSString *)HTMLFilePath {
+    return [[self baseFilePath] stringByAppendingPathComponent:[@"story" stringByAppendingFormat:@"%@.html",self.storyID]];
+}
+
 -(NSString *)imageFilePath {
-    return [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0] stringByAppendingPathComponent:[@"image" stringByAppendingFormat:@"%@.jpg",self.storyID]];
+    return [[self baseFilePath] stringByAppendingPathComponent:[@"image" stringByAppendingFormat:@"%@.jpg",self.storyID]];
 }
 
 @end
