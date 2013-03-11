@@ -200,7 +200,7 @@
 	{
 		[SVProgressHUD showErrorWithStatus:@"Mail send failed!"];
 	}
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 #pragma mark - Table view delegate
@@ -217,7 +217,7 @@
 			[mailVC setToRecipients:@[@"ios@duckduckgo.com"]];
 			[mailVC setSubject:@"suggestion: story source"];
 			[mailVC setMessageBody:@"Please provide a link here so we can investigate the source you would like to see us implement." isHTML:NO];
-			[self presentModalViewController:mailVC animated:YES];
+			[self presentViewController:mailVC animated:YES completion:NULL];
 		}
     }
 	else

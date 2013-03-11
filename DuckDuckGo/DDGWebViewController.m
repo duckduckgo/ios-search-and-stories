@@ -337,7 +337,7 @@
 	{
 		[SVProgressHUD showErrorWithStatus:@"Mail send failed!"];
 	}
-	[self dismissModalViewControllerAnimated:YES];
+	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 - (void)internalMailAction:(NSURL*)url
@@ -375,7 +375,7 @@
 			[mailVC setToRecipients:@[]];
 		[mailVC setSubject:[params objectForKey:@"subject"]];
 		[mailVC setMessageBody:[params objectForKey:@"body"] isHTML:YES];
-		[self presentModalViewController:mailVC animated:YES];
+		[self presentViewController:mailVC animated:YES completion:NULL];
 	}
 }
 

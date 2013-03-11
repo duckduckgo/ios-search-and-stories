@@ -164,7 +164,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
         [mailVC setSubject:@"DuckDuckGo app feedback"];
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
-        [weakSelf presentModalViewController:mailVC animated:YES];
+        [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
     [self addButton:@"Share This App" action:^{
         SHKItem *shareItem = [SHKItem URL:[NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"] title:@"Check out the DuckDuckGo app!" contentType:SHKURLContentTypeWebpage];
@@ -225,7 +225,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     } else if(result == MFMailComposeResultFailed) {
         [SVProgressHUD showErrorWithStatus:@"Feedback send failed!"];
     }
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
 -(NSString *)deviceInfo {
