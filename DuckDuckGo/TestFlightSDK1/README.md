@@ -52,15 +52,19 @@ This SDK can be run from both the iPhone Simulator and Device and has been teste
 
         section. This will give you access to the SDK across all files.
 
-    2. Get your Team Token which you can find at [http://testflightapp.com/dashboard/team/](http://testflightapp.com/dashboard/team/) select the team you are using from the team selection drop down list on the top of the page and then select Team Info.
+    2. Get your Application Token which you can find at [http://testflightapp.com/dashboard/applications/](http://testflightapp.com/dashboard/applications/) select the application you are using from the list choose the SDK option and the application token for this application will be there. To ensure that your testers do not show up as anonymous place the call to setDeviceIdentifer before calling takeOff. Remove #define TESTING 1 before building your release build for the App Store.
 
-    3. Launch TestFlight with your Team Token
+    3. Launch TestFlight with your Application Token
 
             -(BOOL)application:(UIApplication *)application 
                 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
             // start of your application:didFinishLaunchingWithOptions 
             // ...
-            [TestFlight takeOff:@"Insert your Team Token here"];
+            #define TESTING 1
+            #ifdef TESTING
+                [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+            #endif
+            [TestFlight takeOff:@"Insert your Application Token here"];
             // The rest of your application:didFinishLaunchingWithOptions method
             // ...
             }
@@ -75,7 +79,7 @@ This SDK can be run from both the iPhone Simulator and Device and has been teste
 
 ##Beta Testing and Release Differentiation
 
-In order to provide more information about your testers while beta testing you will need to provide the device's unique identifier. This identifier is not something that the SDK will collect from the device and we do not recommend using this in production. To send the device identifier to us put the following code before your call to takeOff.
+In order to provide more information about your testers while beta testing you will need to provide the device's unique identifier. This identifier is not something that the SDK will collect from the device and we do not recommend using this in production. To send the device identifier to us put the following code **before your call to takeOff**.
 
     #define TESTING 1
     #ifdef TESTING
@@ -165,7 +169,7 @@ An uncaught exception means that your application is in an unknown state and the
         sigaction(SIGILL, &newSignalAction, NULL);
         sigaction(SIGBUS, &newSignalAction, NULL);
         // Call takeOff after install your own unhandled exception and signal handlers
-        [TestFlight takeOff:@"Insert your Team Token here"];
+        [TestFlight takeOff:@"Insert your Application Token here"];
         // continue with your application initialization
       }
 

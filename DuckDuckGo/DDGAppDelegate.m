@@ -36,7 +36,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #pragma clang diagnostic pop
 #endif
-    [TestFlight takeOff:@"7ed983ce368c469fdc805f409ddd5230_Njk5NDUyMDEyLTAzLTA5IDEwOjExOjU1LjY0NzQ1Mg"];    
+    [TestFlight takeOff:@"a6dad165-a8d4-495c-89c6-f3812248d554"];
     
     // set the global URL cache to SDURLCache, which caches to disk
     SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
