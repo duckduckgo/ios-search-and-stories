@@ -59,11 +59,12 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
     [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                       } mutableCopy]];
-    if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
-        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
-                          DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
-                          } mutableCopy]];
-    }
+
+//    if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
+//        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
+//                          DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
+//                          } mutableCopy]];
+//    }
     
     [types addObject:[@{DDGViewControllerTypeTitleKey : @"Settings",
                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSettings)
@@ -301,11 +302,11 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
         case DDGViewControllerTypeHome:
         {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
-            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
-                searchController.contentController = [DDGDuckViewController duckViewController];
-            } else {
+//            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
+//                searchController.contentController = [DDGDuckViewController duckViewController];
+//            } else {
                 searchController.contentController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
-            }
+//            }
             searchController.state = DDGSearchControllerStateHome;
             viewController = searchController;
         }

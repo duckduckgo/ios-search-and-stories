@@ -121,11 +121,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
     
-    [self addSectionWithTitle:@"Home"];
-    
-    NSString *homeViewMode = [DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName];
-    [self addRadioOption:@"Home View" title:DDGSettingHomeViewTypeStories enabled:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
-    [self addRadioOption:@"Home View" title:DDGSettingHomeViewTypeDuck enabled:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
+//    [self addSectionWithTitle:@"Home"];
+//    
+//    NSString *homeViewMode = [DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName];
+//    [self addRadioOption:@"Home View" title:DDGSettingHomeViewTypeStories enabled:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
+//    [self addRadioOption:@"Home View" title:DDGSettingHomeViewTypeDuck enabled:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
     
     [self addSectionWithTitle:@"Stories"];
     [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
@@ -190,9 +190,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 -(void)saveData:(NSDictionary *)formData {
-    [DDGCache setObject:[formData objectForKey:@"Home View"]
-                 forKey:DDGSettingHomeView
-                inCache:DDGSettingsCacheName];
+//    [DDGCache setObject:[formData objectForKey:@"Home View"]
+//                 forKey:DDGSettingHomeView
+//                inCache:DDGSettingsCacheName];
     
     [DDGCache setObject:[formData objectForKey:@"Record Recent"]
                  forKey:DDGSettingRecordHistory
