@@ -386,16 +386,19 @@
         _searchField.frame = searchFieldFrame;
     }];
     
-    self.parentViewController.slidingViewController.panGesture.enabled = NO;
+    self.slidingViewController.panGesture.enabled = NO;
     
     autocompleteOpen = YES;
 }
 
 // cleans up the search field and dismisses
 -(void)dismissAutocomplete {
+    if (!autocompleteOpen)
+        return;
+    
     autocompleteOpen = NO;
 
-    self.parentViewController.slidingViewController.panGesture.enabled = YES;
+    self.slidingViewController.panGesture.enabled = YES;
     
     if(_state == DDGSearchControllerStateHome) {
         [_leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
@@ -709,6 +712,11 @@
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
         [_searchHandler searchControllerAddressBarWillOpen];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(dismissAutocomplete)
+                                                 name:ECSlidingViewUnderLeftWillAppear
+                                               object:self.slidingViewController];
+    
 	return YES;
 }
 
@@ -721,6 +729,12 @@
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
 	return YES;
+}
+
+- (void)textFieldDidEndEditing:(UITextField *)textField {
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:ECSlidingViewUnderLeftWillAppear
+                                                  object:nil];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
