@@ -133,7 +133,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
-    [self addSwitch:@"Reader View" enabled:[[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue]];
+    [self addSwitch:@"Readability View" enabled:[[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue]];
     
     [self addSectionWithTitle:@"Search Auto Complete"];
     [self addSwitch:@"Enable Auto Complete" enabled:[[DDGCache objectForKey:DDGSettingAutocomplete inCache:DDGSettingsCacheName] boolValue]];
