@@ -10,7 +10,7 @@
 #import "DDGCache.h"
 #import "DDGChooseSourcesViewController.h"
 #import "DDGChooseRegionViewController.h"
-#import "SHK.h"
+#import "DDGActivityViewController.h"
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
 #import "DDGHistoryProvider.h"
@@ -167,9 +167,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
     [self addButton:@"Share This App" action:^{
-        SHKItem *shareItem = [SHKItem URL:[NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"] title:@"Check out the DuckDuckGo app!" contentType:SHKURLContentTypeWebpage];
-        SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:shareItem];
-        [actionSheet showInView:weakSelf.view];
+        NSString *shareTitle = @"Check out the DuckDuckGo app!";        
+        NSURL *shareURL = [NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"];
+        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL]];
+        [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
     [self addButton:@"Rate This App" action:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=479988136&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];

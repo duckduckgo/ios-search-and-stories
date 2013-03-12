@@ -11,7 +11,6 @@
 #import "DDGBookmarksProvider.h"
 #import "DDGNewsProvider.h"
 #import "SVProgressHUD.h"
-#import "SHK.h"
 #import "ECSlidingViewController.h"
 #import "DDGUnderViewController.h"
 #import "DDGCache.h"
@@ -19,6 +18,7 @@
 #import "DDGStory.h"
 #import "AFNetworking.h"
 #import "DDGSettingsViewController.h"
+#import "DDGActivityViewController.h"
 
 @implementation NSString (URLPrivateDDG)
 
@@ -167,11 +167,9 @@
             query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
         }
-        
-        SHKItem *item = [SHKItem URL:shareURL title:pageTitle contentType:SHKURLContentTypeWebpage];
-        SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
-        [SHK setRootViewController:self];
-        [actionSheet showInView:self.view];
+
+        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareURL]];
+        [self presentViewController:avc animated:YES completion:NULL];
     }
 	else if (buttonIndex == 2)
 	{

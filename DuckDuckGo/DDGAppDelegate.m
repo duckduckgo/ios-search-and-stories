@@ -11,9 +11,6 @@
 #import "SDURLCache.h"
 #import "DDGCache.h"
 #import "DDGSettingsViewController.h"
-#import "DDGSHKConfigurator.h"
-#import "DDGSHKFormController.h"
-#import "SHKConfiguration.h"
 #import "DDGNewsProvider.h"
 #import "ECSlidingViewController.h"
 #import "AFNetworking.h"
@@ -71,11 +68,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     // load default settings
     [DDGSettingsViewController loadDefaultSettings];
-    
-    // initialize sharekit
-    DefaultSHKConfigurator *configurator = [[DDGSHKConfigurator alloc] init];
-    [SHKConfiguration sharedInstanceWithConfigurator:configurator];
-        
+            
     // theme
     
     [[UINavigationBar appearance] setShadowImage:[[UIImage imageNamed:@"toolbar_shadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0.0, 2.0)]];

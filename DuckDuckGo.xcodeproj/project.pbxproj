@@ -56,8 +56,6 @@
 		4C3BF10815C4A48300EEA7BF /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF10715C4A48200EEA7BF /* CFNetwork.framework */; };
 		4C3BF10A15C4A49000EEA7BF /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF10915C4A49000EEA7BF /* CoreLocation.framework */; };
 		4C3BF10C15C4A4A700EEA7BF /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF10B15C4A4A700EEA7BF /* CoreFoundation.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		4C3BF12415C4A81D00EEA7BF /* libShareKit.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF11B15C4A6E300EEA7BF /* libShareKit.a */; };
-		4C3BF12515C4A82600EEA7BF /* ShareKit.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C3BF11D15C4A6E300EEA7BF /* ShareKit.bundle */; };
 		4C3BF12615C4A86400EEA7BF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C3BF0DF15C4A01B00EEA7BF /* Security.framework */; };
 		4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C41359E15D5DAC200A9326C /* DDGStory.m */; };
 		4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C487FCD15CF87C700618747 /* DDGTier2ViewController.m */; };
@@ -65,7 +63,6 @@
 		4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE015DACE8B00B44342 /* ECSlidingViewController.m */; };
 		4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE215DACE8B00B44342 /* UIImage+ImageWithUIView.m */; };
 		4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */; };
-		4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */; };
 		4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */; };
 		4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */; };
 		4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8D15C4EC9E00340B59 /* SVProgressHUD.m */; };
@@ -170,9 +167,8 @@
 		5BB1599A16E0F31F00C2A0F9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BB1599916E0F31E00C2A0F9 /* Default-568h@2x.png */; };
 		5BB3F4DB16CA7AE100281A2B /* HomeSwipeView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BB3F4DA16CA7AE100281A2B /* HomeSwipeView.xib */; };
 		5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F50416CAA49300281A2B /* DDGStoryCell.m */; };
-		5BB3F50B16D22EA000281A2B /* DDGSHKFormController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F50A16D22E9F00281A2B /* DDGSHKFormController.m */; };
-		5BB3F51216D2318200281A2B /* DDGSHKShareMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F51116D2318200281A2B /* DDGSHKShareMenu.m */; };
 		5BB3F51B16D26AD300281A2B /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB3F51A16D26AD300281A2B /* CoreImage.framework */; };
+		5BD23C3816EE235800C2FBDA /* DDGActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */; };
 		8333D63716666CA100571C59 /* spacer23x23.png in Resources */ = {isa = PBXBuildFile; fileRef = 8333D63616666CA100571C59 /* spacer23x23.png */; };
 		8343A2E31672827100DDE73C /* icon_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E11672827100DDE73C /* icon_notification@2x.png */; };
 		8343A2E41672827100DDE73C /* icon_notification.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E21672827100DDE73C /* icon_notification.png */; };
@@ -223,268 +219,6 @@
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		4C02E2991623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A1AFCAE160E11810086B98A;
-			remoteInfo = JSONKit;
-		};
-		4C02E29B1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A1AFCC0160E11F90086B98A;
-			remoteInfo = SSKeyChain;
-		};
-		4C02E29D1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A16F37E161340DD0019645D;
-			remoteInfo = OAuth;
-		};
-		4C02E29F1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A1AFCD1160E123C0086B98A;
-			remoteInfo = Reachability;
-		};
-		4C02E2A11623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE0307160E1A3F00FEC06E;
-			remoteInfo = Print;
-		};
-		4C02E2A31623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE0318160E1A6300FEC06E;
-			remoteInfo = Logout;
-		};
-		4C02E2A51623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE0329160E1A8A00FEC06E;
-			remoteInfo = Copy;
-		};
-		4C02E2A71623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE02D9160E188400FEC06E;
-			remoteInfo = Email;
-		};
-		4C02E2A91623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE033A160E1ABC00FEC06E;
-			remoteInfo = "Open in Safari";
-		};
-		4C02E2AB1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE034B160E1AF400FEC06E;
-			remoteInfo = "Save to Album";
-		};
-		4C02E2AD1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE02EA160E18A700FEC06E;
-			remoteInfo = "Text Message";
-		};
-		4C02E2AF1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE035C160E1B3A00FEC06E;
-			remoteInfo = Kippt;
-		};
-		4C02E2B11623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE036C160E1B3D00FEC06E;
-			remoteInfo = Delicious;
-		};
-		4C02E2B31623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE038C160E1B4000FEC06E;
-			remoteInfo = Readability;
-		};
-		4C02E2B51623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE037C160E1B3E00FEC06E;
-			remoteInfo = Diigo;
-		};
-		4C02E2B71623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE039C160E1B4200FEC06E;
-			remoteInfo = VKontakte;
-		};
-		4C02E2B91623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE03B2160E1C0600FEC06E;
-			remoteInfo = Evernote;
-		};
-		4C02E2BB1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A1AFCE2160E127B0086B98A;
-			remoteInfo = "Evernote SDK";
-		};
-		4C02E2BD1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A1AFD4D160E14590086B98A;
-			remoteInfo = Facebook;
-		};
-		4C02E2C11623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE03C2160E1C0800FEC06E;
-			remoteInfo = FoursquareV2;
-		};
-		4C02E2C31623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE03D2160E1C0C00FEC06E;
-			remoteInfo = Flickr;
-		};
-		4C02E2C51623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A1AFD24160E13740086B98A;
-			remoteInfo = "Flickr SDK";
-		};
-		4C02E2C71623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE03E2160E1C0D00FEC06E;
-			remoteInfo = "Google Reader";
-		};
-		4C02E2C91623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A16F3C216134A890019645D;
-			remoteInfo = Instagram;
-		};
-		4C02E2CB1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE03F2160E1C0E00FEC06E;
-			remoteInfo = Instapaper;
-		};
-		4C02E2CD1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE040D160E1D5400FEC06E;
-			remoteInfo = LinkedIn;
-		};
-		4C02E2CF1623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE041D160E1D5800FEC06E;
-			remoteInfo = Pinboard;
-		};
-		4C02E2D11623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AEE042D160E1D5A00FEC06E;
-			remoteInfo = "Read It Later";
-		};
-		4C02E2D51623BD3F0010F06C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A1AFD3A160E14340086B98A;
-			remoteInfo = Twitter;
-		};
-		4C3BF11815C4A6E300EEA7BF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 1D6058910D05DD3D006BFB54;
-			remoteInfo = "Demo App";
-		};
-		4C3BF11A15C4A6E300EEA7BF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AB5342E1552AADD00171BCE;
-			remoteInfo = "Static Library";
-		};
-		4C3BF11C15C4A6E300EEA7BF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AB5360F1552E26800171BCE;
-			remoteInfo = "Resource Bundle";
-		};
-		4C3BF11E15C4A6E300EEA7BF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7A0F9246156BA2A0009CB40A;
-			remoteInfo = "Static Library No Submodules";
-		};
-		4C3BF12015C4A81200EEA7BF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 7AB5342D1552AADD00171BCE;
-			remoteInfo = "Static Library";
-		};
-		4C3BF12215C4A81200EEA7BF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 7AB5360E1552E26800171BCE;
-			remoteInfo = "Resource Bundle";
-		};
-		5B044EDE16D392B6005A9584 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = AABBED86162F0C4D009D46E4;
-			remoteInfo = Tumbl;
-		};
-		5B044EE016D392B6005A9584 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 7AC2A3A016597F4C0089ABE8;
-			remoteInfo = "Sina Weibo";
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		4C02E272162389CF0010F06C /* home_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home_button.png; sourceTree = "<group>"; };
@@ -547,7 +281,6 @@
 		4C3BF10715C4A48200EEA7BF /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		4C3BF10915C4A49000EEA7BF /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		4C3BF10B15C4A4A700EEA7BF /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ShareKit.xcodeproj; path = Submodules/ShareKit/ShareKit.xcodeproj; sourceTree = "<group>"; };
 		4C41359D15D5DAC200A9326C /* DDGStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStory.h; sourceTree = "<group>"; };
 		4C41359E15D5DAC200A9326C /* DDGStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStory.m; sourceTree = "<group>"; };
 		4C487FCC15CF87C700618747 /* DDGTier2ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTier2ViewController.h; sourceTree = "<group>"; };
@@ -708,6 +441,8 @@
 		5BB3F51016D2318200281A2B /* DDGSHKShareMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKShareMenu.h; sourceTree = "<group>"; };
 		5BB3F51116D2318200281A2B /* DDGSHKShareMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKShareMenu.m; sourceTree = "<group>"; };
 		5BB3F51A16D26AD300281A2B /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
+		5BD23C3616EE235800C2FBDA /* DDGActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGActivityViewController.h; sourceTree = "<group>"; };
+		5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGActivityViewController.m; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		8333D63616666CA100571C59 /* spacer23x23.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spacer23x23.png; sourceTree = "<group>"; };
 		833DB53D1494164F00509F2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -754,8 +489,6 @@
 		83CAD03F16397F8D0030C4FC /* icon_caret@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_caret@2x.png"; sourceTree = "<group>"; };
 		83CD212E16374042000220B0 /* section_tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = section_tile.png; sourceTree = "<group>"; };
 		83CD212F16374045000220B0 /* section_tile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "section_tile@2x.png"; sourceTree = "<group>"; };
-		83CEFDCD16695C4F003E50C5 /* ShareKit keys.numbers */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ShareKit keys.numbers"; sourceTree = "<group>"; };
-		83CEFDCE16695C4F003E50C5 /* ShareKit keys.xls */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ShareKit keys.xls"; sourceTree = "<group>"; };
 		83D3DE01164D60D00062D30B /* DDGWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGWebViewController.xib; sourceTree = "<group>"; };
 		83EFD3431656832C005E19CC /* search_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_icon.png; sourceTree = "<group>"; };
 		83EFD3441656832C005E19CC /* search_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_icon@2x.png"; sourceTree = "<group>"; };
@@ -786,7 +519,6 @@
 				5BB3F51B16D26AD300281A2B /* CoreImage.framework in Frameworks */,
 				5BA321F316C909700066BCB0 /* MobileCoreServices.framework in Frameworks */,
 				4C3BF12615C4A86400EEA7BF /* Security.framework in Frameworks */,
-				4C3BF12415C4A81D00EEA7BF /* libShareKit.a in Frameworks */,
 				4C3BF10C15C4A4A700EEA7BF /* CoreFoundation.framework in Frameworks */,
 				834E5002149418D400EABD6E /* Twitter.framework in Frameworks */,
 				4C3BF10A15C4A49000EEA7BF /* CoreLocation.framework in Frameworks */,
@@ -930,48 +662,6 @@
 				4C573D0715B759E100790F60 /* IGFormViewController.m */,
 			);
 			name = IGFormViewController;
-			sourceTree = "<group>";
-		};
-		4C3BF10E15C4A6E300EEA7BF /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				4C3BF11915C4A6E300EEA7BF /* ShareKitDemo.app */,
-				4C3BF11B15C4A6E300EEA7BF /* libShareKit.a */,
-				4C3BF11D15C4A6E300EEA7BF /* ShareKit.bundle */,
-				4C3BF11F15C4A6E300EEA7BF /* libShareKitCore.a */,
-				4C02E29A1623BD3F0010F06C /* libJSONKit.a */,
-				4C02E29C1623BD3F0010F06C /* libSSKeyChain.a */,
-				4C02E29E1623BD3F0010F06C /* libOAuth.a */,
-				4C02E2A01623BD3F0010F06C /* libReachability.a */,
-				4C02E2A21623BD3F0010F06C /* libPrint.a */,
-				4C02E2A41623BD3F0010F06C /* libLogout.a */,
-				4C02E2A61623BD3F0010F06C /* libCopy.a */,
-				4C02E2A81623BD3F0010F06C /* libEmail.a */,
-				4C02E2AA1623BD3F0010F06C /* libOpen in Safari.a */,
-				4C02E2AC1623BD3F0010F06C /* libSave to Album.a */,
-				4C02E2AE1623BD3F0010F06C /* libText Message.a */,
-				4C02E2B01623BD3F0010F06C /* libKippt.a */,
-				4C02E2B21623BD3F0010F06C /* libDelicious.a */,
-				4C02E2B61623BD3F0010F06C /* libDiigo.a */,
-				4C02E2B81623BD3F0010F06C /* libVKontakte.a */,
-				4C02E2BA1623BD3F0010F06C /* libEvernote.a */,
-				4C02E2BC1623BD3F0010F06C /* libEvernote SDK.a */,
-				4C02E2BE1623BD3F0010F06C /* libFacebook.a */,
-				4C02E2C21623BD3F0010F06C /* libFoursquareV2.a */,
-				4C02E2C41623BD3F0010F06C /* libFlickr.a */,
-				4C02E2C61623BD3F0010F06C /* libFlickr SDK.a */,
-				4C02E2C81623BD3F0010F06C /* libGoogle Reader.a */,
-				4C02E2CA1623BD3F0010F06C /* libInstagram.a */,
-				4C02E2CC1623BD3F0010F06C /* libInstapaper.a */,
-				4C02E2CE1623BD3F0010F06C /* libLinkedIn.a */,
-				4C02E2D01623BD3F0010F06C /* libPinboard.a */,
-				4C02E2D21623BD3F0010F06C /* libRead It Later.a */,
-				5B044EDF16D392B6005A9584 /* libTumblr.a */,
-				4C02E2D61623BD3F0010F06C /* libTwitter.a */,
-				5B044EE116D392B6005A9584 /* libSina Weibo.a */,
-				4C02E2B41623BD3F0010F06C /* libReadability.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		4C487FCB15CF879500618747 /* Tier 2 */ = {
@@ -1218,10 +908,17 @@
 				5BB3F51016D2318200281A2B /* DDGSHKShareMenu.h */,
 				5BB3F51116D2318200281A2B /* DDGSHKShareMenu.m */,
 				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
-				83CEFDCD16695C4F003E50C5 /* ShareKit keys.numbers */,
-				83CEFDCE16695C4F003E50C5 /* ShareKit keys.xls */,
 			);
 			name = ShareKit;
+			sourceTree = "<group>";
+		};
+		5BD23C3516EE233800C2FBDA /* Sharing */ = {
+			isa = PBXGroup;
+			children = (
+				5BD23C3616EE235800C2FBDA /* DDGActivityViewController.h */,
+				5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */,
+			);
+			name = Sharing;
 			sourceTree = "<group>";
 		};
 		833DB53C1494164F00509F2E /* Frameworks */ = {
@@ -1277,7 +974,6 @@
 			isa = PBXGroup;
 			children = (
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
-				4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
 			);
@@ -1309,6 +1005,7 @@
 				4CD9249B15CD7DAB00EB062F /* Bookmarks */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				4C660A741591487C001AB510 /* Search controller */,
+				5BD23C3516EE233800C2FBDA /* Sharing */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				83D3DE01164D60D00062D30B /* DDGWebViewController.xib */,
@@ -1351,8 +1048,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				4C3BF12115C4A81200EEA7BF /* PBXTargetDependency */,
-				4C3BF12315C4A81200EEA7BF /* PBXTargetDependency */,
 			);
 			name = DuckDuckGo;
 			productName = DuckDuckGo2;
@@ -1378,12 +1073,6 @@
 			mainGroup = 83F3224D149290EF00A61BC5;
 			productRefGroup = 83F32259149290EF00A61BC5 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 4C3BF10E15C4A6E300EEA7BF /* Products */;
-					ProjectRef = 4C3BF10D15C4A6E300EEA7BF /* ShareKit.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				83F32257149290EF00A61BC5 /* DuckDuckGo */,
@@ -1391,260 +1080,11 @@
 		};
 /* End PBXProject section */
 
-/* Begin PBXReferenceProxy section */
-		4C02E29A1623BD3F0010F06C /* libJSONKit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libJSONKit.a;
-			remoteRef = 4C02E2991623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E29C1623BD3F0010F06C /* libSSKeyChain.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libSSKeyChain.a;
-			remoteRef = 4C02E29B1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E29E1623BD3F0010F06C /* libOAuth.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libOAuth.a;
-			remoteRef = 4C02E29D1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2A01623BD3F0010F06C /* libReachability.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libReachability.a;
-			remoteRef = 4C02E29F1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2A21623BD3F0010F06C /* libPrint.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libPrint.a;
-			remoteRef = 4C02E2A11623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2A41623BD3F0010F06C /* libLogout.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLogout.a;
-			remoteRef = 4C02E2A31623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2A61623BD3F0010F06C /* libCopy.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libCopy.a;
-			remoteRef = 4C02E2A51623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2A81623BD3F0010F06C /* libEmail.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libEmail.a;
-			remoteRef = 4C02E2A71623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2AA1623BD3F0010F06C /* libOpen in Safari.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libOpen in Safari.a";
-			remoteRef = 4C02E2A91623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2AC1623BD3F0010F06C /* libSave to Album.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libSave to Album.a";
-			remoteRef = 4C02E2AB1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2AE1623BD3F0010F06C /* libText Message.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libText Message.a";
-			remoteRef = 4C02E2AD1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2B01623BD3F0010F06C /* libKippt.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libKippt.a;
-			remoteRef = 4C02E2AF1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2B21623BD3F0010F06C /* libDelicious.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libDelicious.a;
-			remoteRef = 4C02E2B11623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2B41623BD3F0010F06C /* libReadability.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libReadability.a;
-			remoteRef = 4C02E2B31623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2B61623BD3F0010F06C /* libDiigo.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libDiigo.a;
-			remoteRef = 4C02E2B51623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2B81623BD3F0010F06C /* libVKontakte.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libVKontakte.a;
-			remoteRef = 4C02E2B71623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2BA1623BD3F0010F06C /* libEvernote.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libEvernote.a;
-			remoteRef = 4C02E2B91623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2BC1623BD3F0010F06C /* libEvernote SDK.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libEvernote SDK.a";
-			remoteRef = 4C02E2BB1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2BE1623BD3F0010F06C /* libFacebook.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libFacebook.a;
-			remoteRef = 4C02E2BD1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2C21623BD3F0010F06C /* libFoursquareV2.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libFoursquareV2.a;
-			remoteRef = 4C02E2C11623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2C41623BD3F0010F06C /* libFlickr.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libFlickr.a;
-			remoteRef = 4C02E2C31623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2C61623BD3F0010F06C /* libFlickr SDK.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libFlickr SDK.a";
-			remoteRef = 4C02E2C51623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2C81623BD3F0010F06C /* libGoogle Reader.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libGoogle Reader.a";
-			remoteRef = 4C02E2C71623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2CA1623BD3F0010F06C /* libInstagram.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libInstagram.a;
-			remoteRef = 4C02E2C91623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2CC1623BD3F0010F06C /* libInstapaper.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libInstapaper.a;
-			remoteRef = 4C02E2CB1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2CE1623BD3F0010F06C /* libLinkedIn.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libLinkedIn.a;
-			remoteRef = 4C02E2CD1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2D01623BD3F0010F06C /* libPinboard.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libPinboard.a;
-			remoteRef = 4C02E2CF1623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2D21623BD3F0010F06C /* libRead It Later.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libRead It Later.a";
-			remoteRef = 4C02E2D11623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C02E2D61623BD3F0010F06C /* libTwitter.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libTwitter.a;
-			remoteRef = 4C02E2D51623BD3F0010F06C /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C3BF11915C4A6E300EEA7BF /* ShareKitDemo.app */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.application;
-			path = ShareKitDemo.app;
-			remoteRef = 4C3BF11815C4A6E300EEA7BF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C3BF11B15C4A6E300EEA7BF /* libShareKit.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libShareKit.a;
-			remoteRef = 4C3BF11A15C4A6E300EEA7BF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C3BF11D15C4A6E300EEA7BF /* ShareKit.bundle */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = ShareKit.bundle;
-			remoteRef = 4C3BF11C15C4A6E300EEA7BF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4C3BF11F15C4A6E300EEA7BF /* libShareKitCore.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libShareKitCore.a;
-			remoteRef = 4C3BF11E15C4A6E300EEA7BF /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5B044EDF16D392B6005A9584 /* libTumblr.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libTumblr.a;
-			remoteRef = 5B044EDE16D392B6005A9584 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5B044EE116D392B6005A9584 /* libSina Weibo.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = "libSina Weibo.a";
-			remoteRef = 5B044EE016D392B6005A9584 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
-
 /* Begin PBXResourcesBuildPhase section */
 		83F32256149290EF00A61BC5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C3BF12515C4A82600EEA7BF /* ShareKit.bundle in Resources */,
 				83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */,
 				838E9065149A763200C11E41 /* TwoLineTopicCell.xib in Resources */,
 				838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */,
@@ -1809,7 +1249,6 @@
 				4C573D1115B759E100790F60 /* IGFormViewController.m in Sources */,
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
 				4C2E001215B87C700096C994 /* DDGChooseSourcesViewController.m in Sources */,
-				4C4B7E8815C4C73E00340B59 /* DDGSHKConfigurator.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
 				4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */,
 				4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */,
@@ -1840,30 +1279,16 @@
 				5BA321ED16C905BA0066BCB0 /* EGORefreshTableHeaderView.m in Sources */,
 				5BA321F116C907650066BCB0 /* NSOperationStack.m in Sources */,
 				5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */,
-				5BB3F50B16D22EA000281A2B /* DDGSHKFormController.m in Sources */,
-				5BB3F51216D2318200281A2B /* DDGSHKShareMenu.m in Sources */,
 				5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */,
 				5B88DBDA16DB9C84007A935D /* DDGPanLeftGestureRecognizer.m in Sources */,
 				5B7A1BC916E74C3500354310 /* DDGStoriesViewController.m in Sources */,
 				5B7A1BCE16E78E4A00354310 /* DDGDuckViewController.m in Sources */,
 				5B7A1C3716E9EEB800354310 /* DDGUnderViewControllerCell.m in Sources */,
+				5BD23C3816EE235800C2FBDA /* DDGActivityViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		4C3BF12115C4A81200EEA7BF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Static Library";
-			targetProxy = 4C3BF12015C4A81200EEA7BF /* PBXContainerItemProxy */;
-		};
-		4C3BF12315C4A81200EEA7BF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "Resource Bundle";
-			targetProxy = 4C3BF12215C4A81200EEA7BF /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */ = {

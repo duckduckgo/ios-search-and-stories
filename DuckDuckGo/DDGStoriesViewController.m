@@ -14,13 +14,13 @@
 #import "DDGStoryCell.h"
 #import "NSArray+ConcurrentIteration.h"
 #import "ECSlidingViewController.h"
-#import "SHK.h"
 #import "DDGCache.h"
 #import "DDGHistoryProvider.h"
 #import "DDGNewsProvider.h"
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
 #import "AFNetworking.h"
+#import "DDGActivityViewController.h"
 
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
@@ -246,10 +246,10 @@
     DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
     
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-        SHKItem *item = [SHKItem URL:[NSURL URLWithString:story.url] title:story.title contentType:SHKURLContentTypeWebpage];
-        SHKActionSheet *actionSheet = [SHKActionSheet actionSheetForItem:item];
-        [SHK setRootViewController:self];
-        [actionSheet showInView:self.view];
+        NSString *shareTitle = story.title;
+        NSURL *shareURL = [NSURL URLWithString:story.url];
+        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL]];
+        [self presentViewController:avc animated:YES completion:NULL];
     }];
 }
 
