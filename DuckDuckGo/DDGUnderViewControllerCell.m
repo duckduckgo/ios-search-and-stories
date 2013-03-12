@@ -15,7 +15,7 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
 		self.imageView.layer.cornerRadius = 2.0;
-        self.imageView.contentMode = UIViewContentModeCenter;
+        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.opaque = NO;
     }
@@ -67,6 +67,8 @@
         self.textLabel.textColor = [UIColor colorWithRed:0.686 green:0.725 blue:0.800 alpha:1.000];
         self.textLabel.highlightedTextColor = [UIColor whiteColor];
     }
+    
+    [self setNeedsLayout];
 }
 
 - (void)layoutSubviews {
@@ -75,7 +77,14 @@
     CGRect bounds = self.contentView.bounds;
     
     CGRect imageRect = CGRectMake(0, 0, 36, bounds.size.height);
-    self.imageView.frame = imageRect;
+    if (self.imageView.image) {
+        CGSize size = (self.cellMode == DDGUnderViewControllerCellModeRecent) ? CGSizeMake(16.0, 16.0) : CGSizeMake(24.0, 24.0);
+        imageRect = CGRectMake(imageRect.origin.x + ((imageRect.size.width - size.width) / 2.0),
+                               imageRect.origin.y + ((imageRect.size.height - size.height) / 2.0),
+                               size.width,
+                               size.height);
+    }
+    self.imageView.frame = CGRectIntegral(imageRect);
     
     CGRect labelRect = CGRectMake(38, 0, 195, bounds.size.height);
     self.textLabel.frame = labelRect;
