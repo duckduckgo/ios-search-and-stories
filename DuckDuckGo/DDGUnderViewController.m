@@ -196,9 +196,8 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 				break;
 			case DDGViewControllerTypeStories:
 			{
-#warning need a home menu image for stories
-				cell.imageView.image = [UIImage imageNamed:@"icon_saved-pages"];
-                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected"];
+				cell.imageView.image = [UIImage imageNamed:@"icon_stories"];
+                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_stories_selected"];
 			}
 				break;
 			case DDGViewControllerTypeSettings:
