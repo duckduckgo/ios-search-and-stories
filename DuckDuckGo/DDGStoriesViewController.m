@@ -22,6 +22,8 @@
 #import "AFNetworking.h"
 #import "DDGActivityViewController.h"
 
+NSString * const DDGLastViewedStoryKey = @"last_story";
+
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
     UIImageView *topShadow;
@@ -136,7 +138,17 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
-    [super viewWillAppear:animated];    
+    [super viewWillAppear:animated];
+    
+    NSNumber *lastStoryID = [[NSUserDefaults standardUserDefaults] objectForKey:DDGLastViewedStoryKey];
+    if (nil != lastStoryID) {
+        NSArray *storyIDs = [self.stories valueForKey:@"storyID"];
+        NSInteger index = [storyIDs indexOfObject:lastStoryID];
+        if (index != NSNotFound) {
+            [self focusOnStory:[self.stories objectAtIndex:index] animated:NO];
+        }
+    }
+    
     [self beginDownloadingStories];
 }
 
@@ -256,6 +268,8 @@
 - (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
     if (nil != self.swipeViewIndexPath)
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
+    
+    [[NSUserDefaults standardUserDefaults] removeObjectForKey:DDGLastViewedStoryKey];
 }
 
 - (void)hideSwipeViewForIndexPath:(NSIndexPath *)indexPath completion:(void (^)())completion {
@@ -552,6 +566,8 @@
         });
     });
     
+    [[NSUserDefaults standardUserDefaults] setObject:story.storyID forKey:DDGLastViewedStoryKey];
+    
     BOOL showInReadView = [[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue];
     if (showInReadView) {
         [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadStory:story];
@@ -652,6 +668,16 @@
     return [indexPaths copy];
 }
 
+- (void)focusOnStory:(DDGStory *)story animated:(BOOL)animated {
+    if (nil != story) {
+        NSUInteger row = [self.stories indexOfObject:story];
+        if (row != NSNotFound) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animated];
+        }
+    }
+}
+
 - (void)replaceStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
     
     NSArray *oldStories = [self.stories copy];
@@ -677,13 +703,7 @@
                           withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
     
-    if (nil != story) {
-        NSUInteger row = [self.stories indexOfObject:story];
-        if (row != NSNotFound) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
-            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:YES];
-        }
-    }
+    [self focusOnStory:story animated:YES];
 }
 
 // downloads stories asynchronously
