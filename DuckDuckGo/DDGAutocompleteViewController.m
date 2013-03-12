@@ -16,6 +16,10 @@
 #import "DDGBookmarksViewController.h"
 #import "DDGTier2ViewController.h"
 
+@interface DDGAutocompleteViewController ()
+@property (nonatomic, copy) NSArray *suggestions;
+@end
+
 @implementation DDGAutocompleteViewController
 
 // static NSString *bookmarksCellID = @"BCell";
@@ -46,8 +50,14 @@ static NSString *historyCellID = @"HCell";
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     
-    [[DDGSearchSuggestionsProvider sharedProvider] downloadSuggestionsForSearchText:self.searchController.searchField.text success:^{
-        [self.tableView reloadData];
+    DDGSearchSuggestionsProvider *provider = [DDGSearchSuggestionsProvider sharedProvider];
+    NSString *searchText = self.searchController.searchField.text;
+    self.suggestions = @[];
+    [provider downloadSuggestionsForSearchText:searchText success:^{
+        if ([searchText isEqual:self.searchController.searchField.text]) {
+            self.suggestions = [provider suggestionsForSearchText:searchText];
+            [self.tableView reloadData];
+        }
     }];
 }
 
@@ -61,7 +71,7 @@ static NSString *historyCellID = @"HCell";
 
 - (void)searchFieldDidChange:(id)sender {
     NSString *newSearchText = self.searchController.searchField.text;
-    
+        
     if([newSearchText isEqualToString:[self.searchController validURLStringFromString:newSearchText]]) {
         // we're definitely editing a URL, don't bother with autocomplete.
         return;
@@ -69,8 +79,12 @@ static NSString *historyCellID = @"HCell";
     
 	if (newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
-        [[DDGSearchSuggestionsProvider sharedProvider] downloadSuggestionsForSearchText:newSearchText success:^{
-            [self.tableView reloadData];
+        DDGSearchSuggestionsProvider *provider = [DDGSearchSuggestionsProvider sharedProvider];
+        [provider downloadSuggestionsForSearchText:newSearchText success:^{
+            if ([newSearchText isEqual:self.searchController.searchField.text]) {
+                self.suggestions = [provider suggestionsForSearchText:newSearchText];
+                [self.tableView reloadData];
+            }
         }];
 	}
 	else
@@ -96,7 +110,7 @@ static NSString *historyCellID = @"HCell";
 {
 	if (!section && ![[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
 		return nil;
-	else if (section == 1 && ![[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count)
+	else if (section == 1 && !self.suggestions.count)
 		return nil;
 
 	UILabel *hv = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 23.0)];
@@ -119,7 +133,7 @@ static NSString *historyCellID = @"HCell";
 {
 	if (!section && [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
 		return 23.0;
-	if (section == 1 && [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count)
+	if (section == 1 && self.suggestions.count)
 		return 23.0;
 	
 	return 0.0;
@@ -132,7 +146,7 @@ static NSString *historyCellID = @"HCell";
         case 0:
             return [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
         case 1:
-            return [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count;
+            return self.suggestions.count;
     }
 	return 0;
 }
@@ -211,9 +225,9 @@ static NSString *historyCellID = @"HCell";
             iv = (UIImageView *)[cell.contentView viewWithTag:100];
         }
 		
-		lineHidden = (indexPath.row == [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count - 1) ? YES : NO;
+		lineHidden = (indexPath.row == self.suggestions.count - 1) ? YES : NO;
 
-        NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
+        NSArray *suggestions = self.suggestions;
 
         // the tableview sometimes requests rows that don't exist. in this case the table's reloading anyway so just return whatever and don't crash.
         NSDictionary *suggestionItem;
@@ -249,7 +263,7 @@ static NSString *historyCellID = @"HCell";
 {
 	if (!indexPath.section && [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
 		return kCellHeightHistory+1;
-	else if (indexPath.section == 1 && [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text].count)
+	else if (indexPath.section == 1 && self.suggestions.count)
 		return kCellHeightSuggestions+1;
 
 	return 0.0;
@@ -278,7 +292,7 @@ static NSString *historyCellID = @"HCell";
     }
 	else if (indexPath.section == 1)
 	{
-        NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
+        NSArray *suggestions = self.suggestions;
         NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
         if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
             [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text":[suggestionItem objectForKey:@"phrase"], @"kind": @"suggestion"}];
@@ -288,7 +302,7 @@ static NSString *historyCellID = @"HCell";
 }
 
 -(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
-    NSArray *suggestions = [[DDGSearchSuggestionsProvider sharedProvider] suggestionsForSearchText:self.searchController.searchField.text];
+    NSArray *suggestions = self.suggestions;
     NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
 
     DDGTier2ViewController *tier2VC = [[DDGTier2ViewController alloc] initWithSuggestionItem:suggestionItem];
