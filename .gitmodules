@@ -7,3 +7,6 @@
 [submodule "Submodules/SDURLCache"]
 	path = Submodules/SDURLCache
 	url = git://github.com/rs/SDURLCache.git
+[submodule "Submodules/IGFormViewController"]
+	path = Submodules/IGFormViewController
+	url = git@github.com:randomsequence/IGFormViewController.git

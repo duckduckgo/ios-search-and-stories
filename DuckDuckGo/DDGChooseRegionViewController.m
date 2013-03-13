@@ -11,6 +11,12 @@
 
 @implementation DDGChooseRegionViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+	self.navigationItem.rightBarButtonItem = nil;
+}
+
 - (void)configure
 {
 	self.title = @"Region";
@@ -31,19 +37,16 @@
 
     for(NSDictionary *regionSet in [DDGRegionProvider shared].regions) {
         for(NSString *regionKey in regionSet) {
-            [self addRadioOption:@"region" title:[[DDGRegionProvider shared] titleForRegion:regionKey] enabled:([regionKey isEqualToString:[DDGRegionProvider shared].region])];
+            NSString *value = [[DDGRegionProvider shared] titleForRegion:regionKey];
+            BOOL selected = [regionKey isEqualToString:[DDGRegionProvider shared].region];
+            [self addRadioOptionWithTitle:value value:regionKey key:@"region" selected:selected];
         }
     }
 }
 
 -(void)saveData:(NSDictionary *)formData {
-    NSString *regionTitle = [formData objectForKey:@"region"];
-    for(NSDictionary *regionSet in [DDGRegionProvider shared].regions) {
-        for(NSString *regionKey in regionSet) {
-            if([[regionSet objectForKey:regionKey] isEqualToString:regionTitle])
-                [[DDGRegionProvider shared] setRegion:regionKey];
-        }
-    }
+    NSString *regionKey = [formData objectForKey:@"region"];
+    [[DDGRegionProvider shared] setRegion:regionKey];
 }
 
 #pragma mark - Rotation

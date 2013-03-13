@@ -69,14 +69,6 @@
 		4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */; };
 		4C4B7E9515C4F1AA00340B59 /* DDGBookmarksViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */; };
 		4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */; };
-		4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CF915B759E100790F60 /* IGFormButton.m */; };
-		4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFB15B759E100790F60 /* IGFormElement.m */; };
-		4C573D0C15B759E100790F60 /* IGFormRadioOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFD15B759E100790F60 /* IGFormRadioOption.m */; };
-		4C573D0D15B759E100790F60 /* IGFormSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573CFF15B759E100790F60 /* IGFormSection.m */; };
-		4C573D0E15B759E100790F60 /* IGFormSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0115B759E100790F60 /* IGFormSwitch.m */; };
-		4C573D0F15B759E100790F60 /* IGFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0315B759E100790F60 /* IGFormTextField.m */; };
-		4C573D1015B759E100790F60 /* IGFormTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0515B759E100790F60 /* IGFormTextView.m */; };
-		4C573D1115B759E100790F60 /* IGFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D0715B759E100790F60 /* IGFormViewController.m */; };
 		4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */; };
 		4C57C10F158A8D6500E4C6BF /* refresh_arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */; };
 		4C57C112158A8F5400E4C6BF /* refresh_arrow@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C57C111158A8F5400E4C6BF /* refresh_arrow@2x.png */; };
@@ -139,6 +131,14 @@
 		5B7A1C8516EF5D2200354310 /* icon_stories_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8116EF5D2200354310 /* icon_stories_selected@2x.png */; };
 		5B7A1C8616EF5D2200354310 /* icon_stories.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8216EF5D2200354310 /* icon_stories.png */; };
 		5B7A1C8716EF5D2200354310 /* icon_stories@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8316EF5D2200354310 /* icon_stories@2x.png */; };
+		5B7A1C9816F0836400354310 /* IGFormButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8916F0836400354310 /* IGFormButton.m */; };
+		5B7A1C9916F0836400354310 /* IGFormElement.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8B16F0836400354310 /* IGFormElement.m */; };
+		5B7A1C9A16F0836400354310 /* IGFormRadioOption.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8D16F0836400354310 /* IGFormRadioOption.m */; };
+		5B7A1C9B16F0836400354310 /* IGFormSection.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8F16F0836400354310 /* IGFormSection.m */; };
+		5B7A1C9C16F0836400354310 /* IGFormSwitch.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C9116F0836400354310 /* IGFormSwitch.m */; };
+		5B7A1C9D16F0836400354310 /* IGFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C9316F0836400354310 /* IGFormTextField.m */; };
+		5B7A1C9E16F0836400354310 /* IGFormTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C9516F0836400354310 /* IGFormTextView.m */; };
+		5B7A1C9F16F0836400354310 /* IGFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C9716F0836400354310 /* IGFormViewController.m */; };
 		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
 		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
 		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
@@ -310,22 +310,6 @@
 		4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGBookmarksViewController.xib; sourceTree = "<group>"; };
 		4C4B7E9615C4F8E500340B59 /* DDGBookmarksProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBookmarksProvider.h; sourceTree = "<group>"; };
 		4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGBookmarksProvider.m; sourceTree = "<group>"; };
-		4C573CF815B759E100790F60 /* IGFormButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormButton.h; sourceTree = "<group>"; };
-		4C573CF915B759E100790F60 /* IGFormButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormButton.m; sourceTree = "<group>"; };
-		4C573CFA15B759E100790F60 /* IGFormElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormElement.h; sourceTree = "<group>"; };
-		4C573CFB15B759E100790F60 /* IGFormElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormElement.m; sourceTree = "<group>"; };
-		4C573CFC15B759E100790F60 /* IGFormRadioOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormRadioOption.h; sourceTree = "<group>"; };
-		4C573CFD15B759E100790F60 /* IGFormRadioOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormRadioOption.m; sourceTree = "<group>"; };
-		4C573CFE15B759E100790F60 /* IGFormSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormSection.h; sourceTree = "<group>"; };
-		4C573CFF15B759E100790F60 /* IGFormSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormSection.m; sourceTree = "<group>"; };
-		4C573D0015B759E100790F60 /* IGFormSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormSwitch.h; sourceTree = "<group>"; };
-		4C573D0115B759E100790F60 /* IGFormSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormSwitch.m; sourceTree = "<group>"; };
-		4C573D0215B759E100790F60 /* IGFormTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormTextField.h; sourceTree = "<group>"; };
-		4C573D0315B759E100790F60 /* IGFormTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormTextField.m; sourceTree = "<group>"; };
-		4C573D0415B759E100790F60 /* IGFormTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormTextView.h; sourceTree = "<group>"; };
-		4C573D0515B759E100790F60 /* IGFormTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormTextView.m; sourceTree = "<group>"; };
-		4C573D0615B759E100790F60 /* IGFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IGFormViewController.h; sourceTree = "<group>"; };
-		4C573D0715B759E100790F60 /* IGFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IGFormViewController.m; sourceTree = "<group>"; };
 		4C573D1315B75A2900790F60 /* DDGSettingsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSettingsViewController.h; sourceTree = "<group>"; };
 		4C573D1415B75A2900790F60 /* DDGSettingsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSettingsViewController.m; sourceTree = "<group>"; };
 		4C57C10D158A8D6500E4C6BF /* refresh_arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = refresh_arrow.png; sourceTree = "<group>"; };
@@ -402,6 +386,22 @@
 		5B7A1C8116EF5D2200354310 /* icon_stories_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_stories_selected@2x.png"; sourceTree = "<group>"; };
 		5B7A1C8216EF5D2200354310 /* icon_stories.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_stories.png; sourceTree = "<group>"; };
 		5B7A1C8316EF5D2200354310 /* icon_stories@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_stories@2x.png"; sourceTree = "<group>"; };
+		5B7A1C8816F0836400354310 /* IGFormButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormButton.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormButton.h; sourceTree = SOURCE_ROOT; };
+		5B7A1C8916F0836400354310 /* IGFormButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormButton.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormButton.m; sourceTree = SOURCE_ROOT; };
+		5B7A1C8A16F0836400354310 /* IGFormElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormElement.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormElement.h; sourceTree = SOURCE_ROOT; };
+		5B7A1C8B16F0836400354310 /* IGFormElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormElement.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormElement.m; sourceTree = SOURCE_ROOT; };
+		5B7A1C8C16F0836400354310 /* IGFormRadioOption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormRadioOption.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormRadioOption.h; sourceTree = SOURCE_ROOT; };
+		5B7A1C8D16F0836400354310 /* IGFormRadioOption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormRadioOption.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormRadioOption.m; sourceTree = SOURCE_ROOT; };
+		5B7A1C8E16F0836400354310 /* IGFormSection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormSection.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormSection.h; sourceTree = SOURCE_ROOT; };
+		5B7A1C8F16F0836400354310 /* IGFormSection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormSection.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormSection.m; sourceTree = SOURCE_ROOT; };
+		5B7A1C9016F0836400354310 /* IGFormSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormSwitch.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormSwitch.h; sourceTree = SOURCE_ROOT; };
+		5B7A1C9116F0836400354310 /* IGFormSwitch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormSwitch.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormSwitch.m; sourceTree = SOURCE_ROOT; };
+		5B7A1C9216F0836400354310 /* IGFormTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormTextField.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormTextField.h; sourceTree = SOURCE_ROOT; };
+		5B7A1C9316F0836400354310 /* IGFormTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormTextField.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormTextField.m; sourceTree = SOURCE_ROOT; };
+		5B7A1C9416F0836400354310 /* IGFormTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormTextView.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormTextView.h; sourceTree = SOURCE_ROOT; };
+		5B7A1C9516F0836400354310 /* IGFormTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormTextView.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormTextView.m; sourceTree = SOURCE_ROOT; };
+		5B7A1C9616F0836400354310 /* IGFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormViewController.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormViewController.h; sourceTree = SOURCE_ROOT; };
+		5B7A1C9716F0836400354310 /* IGFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormViewController.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormViewController.m; sourceTree = SOURCE_ROOT; };
 		5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari.png"; sourceTree = "<group>"; };
 		5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari@2x.png"; sourceTree = "<group>"; };
 		5B88DBA916DB7BA7007A935D /* swipe-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save.png"; sourceTree = "<group>"; };
@@ -656,22 +656,22 @@
 		4C3BEF8F15C47D5500EEA7BF /* IGFormViewController */ = {
 			isa = PBXGroup;
 			children = (
-				4C573CF815B759E100790F60 /* IGFormButton.h */,
-				4C573CF915B759E100790F60 /* IGFormButton.m */,
-				4C573CFA15B759E100790F60 /* IGFormElement.h */,
-				4C573CFB15B759E100790F60 /* IGFormElement.m */,
-				4C573CFC15B759E100790F60 /* IGFormRadioOption.h */,
-				4C573CFD15B759E100790F60 /* IGFormRadioOption.m */,
-				4C573CFE15B759E100790F60 /* IGFormSection.h */,
-				4C573CFF15B759E100790F60 /* IGFormSection.m */,
-				4C573D0015B759E100790F60 /* IGFormSwitch.h */,
-				4C573D0115B759E100790F60 /* IGFormSwitch.m */,
-				4C573D0215B759E100790F60 /* IGFormTextField.h */,
-				4C573D0315B759E100790F60 /* IGFormTextField.m */,
-				4C573D0415B759E100790F60 /* IGFormTextView.h */,
-				4C573D0515B759E100790F60 /* IGFormTextView.m */,
-				4C573D0615B759E100790F60 /* IGFormViewController.h */,
-				4C573D0715B759E100790F60 /* IGFormViewController.m */,
+				5B7A1C8816F0836400354310 /* IGFormButton.h */,
+				5B7A1C8916F0836400354310 /* IGFormButton.m */,
+				5B7A1C8A16F0836400354310 /* IGFormElement.h */,
+				5B7A1C8B16F0836400354310 /* IGFormElement.m */,
+				5B7A1C8C16F0836400354310 /* IGFormRadioOption.h */,
+				5B7A1C8D16F0836400354310 /* IGFormRadioOption.m */,
+				5B7A1C8E16F0836400354310 /* IGFormSection.h */,
+				5B7A1C8F16F0836400354310 /* IGFormSection.m */,
+				5B7A1C9016F0836400354310 /* IGFormSwitch.h */,
+				5B7A1C9116F0836400354310 /* IGFormSwitch.m */,
+				5B7A1C9216F0836400354310 /* IGFormTextField.h */,
+				5B7A1C9316F0836400354310 /* IGFormTextField.m */,
+				5B7A1C9416F0836400354310 /* IGFormTextView.h */,
+				5B7A1C9516F0836400354310 /* IGFormTextView.m */,
+				5B7A1C9616F0836400354310 /* IGFormViewController.h */,
+				5B7A1C9716F0836400354310 /* IGFormViewController.m */,
 			);
 			name = IGFormViewController;
 			sourceTree = "<group>";
@@ -1255,14 +1255,6 @@
 				4C19FFD71593B617003AC03F /* DDGCache.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
 				4C11C6AF15B5E4C200D046BA /* DDGNewsProvider.m in Sources */,
-				4C573D0A15B759E100790F60 /* IGFormButton.m in Sources */,
-				4C573D0B15B759E100790F60 /* IGFormElement.m in Sources */,
-				4C573D0C15B759E100790F60 /* IGFormRadioOption.m in Sources */,
-				4C573D0D15B759E100790F60 /* IGFormSection.m in Sources */,
-				4C573D0E15B759E100790F60 /* IGFormSwitch.m in Sources */,
-				4C573D0F15B759E100790F60 /* IGFormTextField.m in Sources */,
-				4C573D1015B759E100790F60 /* IGFormTextView.m in Sources */,
-				4C573D1115B759E100790F60 /* IGFormViewController.m in Sources */,
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
 				4C2E001215B87C700096C994 /* DDGChooseSourcesViewController.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
@@ -1301,6 +1293,14 @@
 				5B7A1BCE16E78E4A00354310 /* DDGDuckViewController.m in Sources */,
 				5B7A1C3716E9EEB800354310 /* DDGUnderViewControllerCell.m in Sources */,
 				5BD23C3816EE235800C2FBDA /* DDGActivityViewController.m in Sources */,
+				5B7A1C9816F0836400354310 /* IGFormButton.m in Sources */,
+				5B7A1C9916F0836400354310 /* IGFormElement.m in Sources */,
+				5B7A1C9A16F0836400354310 /* IGFormRadioOption.m in Sources */,
+				5B7A1C9B16F0836400354310 /* IGFormSection.m in Sources */,
+				5B7A1C9C16F0836400354310 /* IGFormSwitch.m in Sources */,
+				5B7A1C9D16F0836400354310 /* IGFormTextField.m in Sources */,
+				5B7A1C9E16F0836400354310 /* IGFormTextView.m in Sources */,
+				5B7A1C9F16F0836400354310 /* IGFormViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

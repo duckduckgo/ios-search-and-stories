@@ -33,7 +33,8 @@
     button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
     [button addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-	
+	self.navigationItem.rightBarButtonItem = nil;	
+    
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
 }

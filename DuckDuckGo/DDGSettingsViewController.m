@@ -70,7 +70,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-	
+	self.navigationItem.rightBarButtonItem = nil;
+    
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
 	
@@ -81,6 +82,17 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self.slidingViewController anchorTopViewTo:ECRight];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    NSArray *regionItems = [self elementsForKey:@"region"];
+    NSString *regionTitle = [[DDGRegionProvider shared] titleForRegion:[[DDGRegionProvider shared] region]];
+    for (IGFormElement *element in regionItems) {
+        if ([element isKindOfClass:[IGFormButton class]]) {
+            [(IGFormButton *)element setDetailTitle:regionTitle];
+        }
+    }
+    [self.tableView reloadData];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -88,7 +100,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 - (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
-    [self saveAndExit];
+	[self saveData:[self formData]];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -121,33 +133,33 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
     
-//    [self addSectionWithTitle:@"Home"];
+//    [self addSectionWithTitle:@"Home" footer:nil];
 //    
 //    NSString *homeViewMode = [DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName];
-//    [self addRadioOption:@"Home View" title:DDGSettingHomeViewTypeStories enabled:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
-//    [self addRadioOption:@"Home View" title:DDGSettingHomeViewTypeDuck enabled:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
+//    [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
+//    [self addRadioOptionWithTitle:@"Duck Mode" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
     
-    [self addSectionWithTitle:@"Stories"];
-    [self addSwitch:@"Quack on Refresh" enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
-    [self addButton:@"Change Sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:@"Stories" footer:nil];
+    [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
+    [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
-    [self addSwitch:@"Readability View" enabled:[[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue]];
+    [self addSwitch:@"Readability View" forKey:DDGSettingStoriesReadView enabled:[[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue]];
     
-    [self addSectionWithTitle:@"Search Auto Complete"];
-    [self addSwitch:@"Enable Auto Complete" enabled:[[DDGCache objectForKey:DDGSettingAutocomplete inCache:DDGSettingsCacheName] boolValue]];
+    [self addSectionWithTitle:@"Search Auto Complete" footer:nil];
+    [self addSwitch:@"Enable Auto Complete" forKey:DDGSettingAutocomplete enabled:[[DDGCache objectForKey:DDGSettingAutocomplete inCache:DDGSettingsCacheName] boolValue]];
     
-    [self addSectionWithTitle:@"Regions"];
-    [self addButton:@"Region" detailTitle:[[DDGRegionProvider shared] titleForRegion:[[DDGRegionProvider shared] region]] type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:@"Regions" footer:nil];
+    [self addButton:@"Region" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
         [weakSelf.navigationController pushViewController:rvc animated:YES];
     }];
     
-    [self addSectionWithTitle:@"Privacy"];
-    [self addSwitch:@"Record Recent" enabled:[[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue]];
+    [self addSectionWithTitle:@"Privacy" footer:nil];
+    [self addSwitch:@"Record Recent" forKey:DDGSettingRecordHistory enabled:[[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue]];
     [self addSectionWithTitle:nil footer:@"Recents are stored on your phone."];
-    [self addButton:@"Clear Recent" action:^{
+    [self addButton:@"Clear Recent" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
                                                                  delegate:weakSelf
                                                         cancelButtonTitle:@"Cancel"
@@ -156,9 +168,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [actionSheet showInView:weakSelf.view];
     }];
     
-    [self addSectionWithTitle:nil];
+    [self addSectionWithTitle:nil footer:nil];
     
-    [self addButton:@"Send Feedback" action:^{
+    [self addButton:@"Send Feedback" forKey:@"feedback" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
         mailVC.mailComposeDelegate = weakSelf;
         [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
@@ -166,13 +178,13 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
         [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
-    [self addButton:@"Share This App" action:^{
+    [self addButton:@"Share This App" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         NSString *shareTitle = @"Check out the DuckDuckGo app!";        
         NSURL *shareURL = [NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL]];
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
-    [self addButton:@"Rate This App" action:^{
+    [self addButton:@"Rate This App" forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=479988136&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
     }];
 
@@ -190,23 +202,23 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 -(void)saveData:(NSDictionary *)formData {
-//    [DDGCache setObject:[formData objectForKey:@"Home View"]
+//    [DDGCache setObject:[formData objectForKey:forKey:DDGSettingHomeView]
 //                 forKey:DDGSettingHomeView
 //                inCache:DDGSettingsCacheName];
     
-    [DDGCache setObject:[formData objectForKey:@"Record Recent"]
+    [DDGCache setObject:[formData objectForKey:DDGSettingRecordHistory]
                  forKey:DDGSettingRecordHistory
                 inCache:DDGSettingsCacheName];
 
-    [DDGCache setObject:[formData objectForKey:@"Reader View"]
+    [DDGCache setObject:[formData objectForKey:DDGSettingStoriesReadView]
                  forKey:DDGSettingStoriesReadView
                 inCache:DDGSettingsCacheName];
     
-    [DDGCache setObject:[formData objectForKey:@"Quack on Refresh"]
+    [DDGCache setObject:[formData objectForKey:DDGSettingQuackOnRefresh]
                  forKey:DDGSettingQuackOnRefresh
                 inCache:DDGSettingsCacheName];
     
-    [DDGCache setObject:[formData objectForKey:@"Enable Auto Complete"]
+    [DDGCache setObject:[formData objectForKey:DDGSettingAutocomplete]
                  forKey:DDGSettingAutocomplete
                 inCache:DDGSettingsCacheName];
 }
