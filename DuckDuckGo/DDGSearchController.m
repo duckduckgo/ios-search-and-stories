@@ -136,11 +136,18 @@
 
 #pragma mark - Keyboard notifications
 
+- (void)slidingViewTopDidAnchorRight:(NSNotification *)notification {
+    [self.searchField resignFirstResponder];
+}
+
 -(void)keyboardWillShow:(NSNotification *)notification {
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewTopDidAnchorRight:) name:ECSlidingViewTopDidAnchorRight object:self.slidingViewController];
     [self keyboardWillShow:YES notification:notification];
 }
 
 -(void)keyboardWillHide:(NSNotification *)notification {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewTopDidAnchorRight object:self.slidingViewController];
     [self keyboardWillShow:NO notification:notification];
 }
 
