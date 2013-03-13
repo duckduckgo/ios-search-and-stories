@@ -305,7 +305,7 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 //            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
 //                searchController.contentController = [DDGDuckViewController duckViewController];
 //            } else {
-                searchController.contentController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
+            searchController.contentController = [[DDGStoriesViewController alloc] initWithSearchHandler:self];
 //            }
             searchController.state = DDGSearchControllerStateHome;
             viewController = searchController;

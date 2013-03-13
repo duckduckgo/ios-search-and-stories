@@ -274,6 +274,15 @@
 -(void)loadStory:(DDGStory *)story {
     [self view];
     
+    void (^htmlDownloaded)(BOOL success) = ^(BOOL success){
+        if (success) {
+            self.webViewURL = [NSURL URLWithString:story.url];
+            [_webView loadRequest:[story HTMLURLRequest]];
+        } else {
+            [self loadQueryOrURL:[story url]];
+        }
+    };
+    
     void (^completion)(id JSON) = ^(id JSON) {
         if ([JSON isKindOfClass:[NSArray class]]) {
             
@@ -281,22 +290,13 @@
             if ([stories count] > 0) {
                 NSDictionary *dictionary = [stories objectAtIndex:0];
                 if ([dictionary isKindOfClass:[NSDictionary class]]) {
-                    NSString *html = [dictionary objectForKey:@"html"];
-                    
-                    [story writeHTMLString:html completion:^(BOOL success) {
-                        if (success) {
-                            self.webViewURL = [NSURL URLWithString:story.url];
-                            [_webView loadRequest:[story HTMLURLRequest]];
-                        } else {
-                            [self loadQueryOrURL:[story url]];
-                        }
-                    }];
+                    NSString *html = [dictionary objectForKey:@"html"];                    
+                    [story writeHTMLString:html completion:htmlDownloaded];
                 }
             }
+        } else {
+            htmlDownloaded(story.isHTMLDownloaded);
         }
-        
-        if (!story.isHTMLDownloaded)
-            [self loadQueryOrURL:[story url]];
         
         [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];        
     };

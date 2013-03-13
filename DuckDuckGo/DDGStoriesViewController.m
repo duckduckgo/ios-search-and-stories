@@ -39,11 +39,21 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
 @property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
+@property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @end
 
 @implementation DDGStoriesViewController
 
 #pragma mark - Memory Management
+
+- (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler
+{
+    self = [super initWithNibName:nil bundle:nil];
+    if (self) {
+        self.searchHandler = searchHandler;
+    }
+    return self;
+}
 
 - (void)dealloc
 {
@@ -570,10 +580,10 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     BOOL showInReadView = [[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue];
     if (showInReadView) {
-        [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadStory:story];
+        [self.searchHandler loadStory:story];
     } else {
         NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:escapedStoryURL];
+        [self.searchHandler loadQueryOrURL:escapedStoryURL];
     }
     
     [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": story.title, @"url": story.url, @"feed": story.feed, @"kind": @"feed"}];    

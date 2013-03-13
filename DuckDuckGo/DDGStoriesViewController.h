@@ -13,6 +13,9 @@
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface DDGStoriesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, DDGSearchHandler, EGORefreshTableHeaderDelegate, UIScrollViewDelegate>
+@interface DDGStoriesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIScrollViewDelegate>
 {}
+@property (nonatomic, readonly, weak) id <DDGSearchHandler> searchHandler;
+
+- (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler;
 @end
