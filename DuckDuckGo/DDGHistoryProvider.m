@@ -51,6 +51,7 @@ static DDGHistoryProvider *sharedInstance;
 				// add the new history item at the end to keep the array ordered
 				[history removeObjectAtIndex:i];
 				[history addObject:historyItemDictionary];
+                [self save];
 				return;
 			}
 		}
