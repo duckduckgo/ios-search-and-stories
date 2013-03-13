@@ -140,12 +140,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 //    [self addRadioOptionWithTitle:@"Duck Mode" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
     
     [self addSectionWithTitle:@"Stories" footer:nil];
-    [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
     [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
     [self addSwitch:@"Readability View" forKey:DDGSettingStoriesReadView enabled:[[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue]];
+    [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
     
     [self addSectionWithTitle:@"Search Auto Complete" footer:nil];
     [self addSwitch:@"Enable Auto Complete" forKey:DDGSettingAutocomplete enabled:[[DDGCache objectForKey:DDGSettingAutocomplete inCache:DDGSettingsCacheName] boolValue]];
