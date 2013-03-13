@@ -14,6 +14,7 @@
 @property(nonatomic, strong) NSString *storyID;
 @property(nonatomic, strong) NSString *title;
 @property(nonatomic, strong) NSString *url;
+@property(nonatomic, strong) NSString *article_url;
 @property(nonatomic, strong) NSString *feed;
 @property(nonatomic, strong) NSDate *date;
 

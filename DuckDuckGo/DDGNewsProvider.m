@@ -236,6 +236,10 @@ static DDGNewsProvider *sharedProvider;
                 story.imageURL = [NSURL URLWithString:[storyDict objectForKey:@"image"]];
                 if (![imageURL isEqual:story.imageURL])
                     [story deleteImage];
+                NSString *article_url = story.article_url;
+                story.article_url = [storyDict objectForKey:@"article_url"];
+                if (![article_url isEqual:story.article_url])
+                    [story deleteHTML];
             }
             [newStories replaceObjectAtIndex:i withObject:story];
         }
@@ -311,6 +315,7 @@ static DDGNewsProvider *sharedProvider;
                 story.storyID = [@"CustomSource" stringByAppendingString:[self sha1:[[newsItem allValues] componentsJoinedByString:@"~"]]];
                 story.title = [newsItem objectForKey:@"title"];
                 story.url = [newsItem objectForKey:@"url"];
+                story.article_url = [newsItem objectForKey:@"article_url"];
                 story.imageURL = [NSURL URLWithString:[newsItem objectForKey:@"image"]];
                 story.date = [NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)[[newsItem objectForKey:@"date"] intValue]];
                 

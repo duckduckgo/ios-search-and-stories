@@ -230,7 +230,16 @@
 }
 
 - (void)loadJSONForStory:(DDGStory *)story completion:(void (^)(id JSON))completion {
-    NSURL *url = [NSURL URLWithString:[NSString stringWithFormat:@"http://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&l=%@", story.storyID]];
+    
+    NSString *urlString = story.article_url;
+    
+    if (nil == urlString) {
+        if (completion)
+            completion(NULL);
+        return;
+    }
+    
+    NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
