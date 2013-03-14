@@ -695,16 +695,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:oldStories];
     NSArray *removedStories = [self indexPathsofStoriesInArray:oldStories andNotArray:newStories];
-    
-    // delete old story images
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-        for(NSIndexPath *indexPath in removedStories) {
-            DDGStory *removedStory = [oldStories objectAtIndex:indexPath.row];
-            [removedStory deleteImage];
-            [removedStory deleteHTML];
-        }
-    });
-    
+        
     // update the table view with added and removed stories
     [self.tableView beginUpdates];
     [self.tableView insertRowsAtIndexPaths:addedStories

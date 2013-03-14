@@ -49,6 +49,14 @@
     [encoder encodeBool:self.HTMLDownloaded forKey:@"HTMLDownloaded"];
 }
 
+-(NSString *)baseFilePath {
+    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+}
+
+- (NSString *)description {
+    return [[super description] stringByAppendingFormat:@" %@ - %@", self.storyID, self.title];
+}
+
 #pragma mark - Image
 
 - (void)setImage:(UIImage *)image {
@@ -78,6 +86,23 @@
     self.imageDownloaded = NO;
 }
 
+- (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion {
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        BOOL suceess = [data writeToFile:[self imageFilePath] atomically:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.imageDownloaded = YES;
+            if (completion)
+                completion(suceess);
+        });
+    });
+}
+
+-(NSString *)imageFilePath {
+    return [[self baseFilePath] stringByAppendingPathComponent:[@"image" stringByAppendingFormat:@"%@.jpg",self.storyID]];
+}
+
+#pragma mark - HTML
+
 - (void)deleteHTML {
     [[NSFileManager defaultManager] removeItemAtPath:[self HTMLFilePath] error:nil];
     self.HTMLDownloaded = NO;
@@ -101,27 +126,8 @@
     });
 }
 
-- (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        BOOL suceess = [data writeToFile:[self imageFilePath] atomically:NO];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.imageDownloaded = YES;
-            if (completion)
-                completion(suceess);
-        });
-    });
-}
-
--(NSString *)baseFilePath {
-    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
-}
-
 -(NSString *)HTMLFilePath {
     return [[self baseFilePath] stringByAppendingPathComponent:[@"story" stringByAppendingFormat:@"%@.html",self.storyID]];
-}
-
--(NSString *)imageFilePath {
-    return [[self baseFilePath] stringByAppendingPathComponent:[@"image" stringByAppendingFormat:@"%@.jpg",self.storyID]];
 }
 
 @end

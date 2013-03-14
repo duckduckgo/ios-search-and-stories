@@ -210,23 +210,27 @@ static DDGNewsProvider *sharedProvider;
             });
             return;
         }
+        
+        NSArray *oldStories = self.stories;
+        NSMutableDictionary *oldStoriesByID = [NSMutableDictionary dictionaryWithCapacity:self.stories.count];
+        for(DDGStory *oldStory in oldStories)
+            [oldStoriesByID setObject:oldStory forKey:oldStory.storyID];
 
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
         formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
         for(int i=0; i<newStories.count; i++) {
             NSDictionary *storyDict = [newStories objectAtIndex:i];
-            // if it exists, try to use an existing old story object because it has a preloaded image
-            DDGStory *story;
-            NSArray *stories = self.stories;
-            for(DDGStory *oldStory in stories) {
-                if([oldStory.storyID isEqualToString:[storyDict objectForKey:@"id"]]) {
-                    story = oldStory;
-                }
-            }
+
+            // if it exists, try to use an existing old story object because it has a preloaded image & html
+            NSString *storyID = [storyDict objectForKey:@"id"];
+            DDGStory *story = [oldStoriesByID objectForKey:storyID];
+            
+            [oldStoriesByID removeObjectForKey:storyID];
+            
             if(!story) {
                 story = [[DDGStory alloc] init];
-                story.storyID = [storyDict objectForKey:@"id"];
+                story.storyID = storyID;
                 story.title = [storyDict objectForKey:@"title"];
                 story.url = [storyDict objectForKey:@"url"];
                 if([storyDict objectForKey:@"feed"] && [storyDict objectForKey:@"feed"] != [NSNull null])
@@ -263,6 +267,15 @@ static DDGNewsProvider *sharedProvider;
            if(finished)
                finished();
         });
+                
+        // delete old story images & html
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+            for (DDGStory *removedStory in [oldStoriesByID allValues]) {
+                [removedStory deleteImage];
+                [removedStory deleteHTML];
+            }
+        });
+        
     });
 }
 

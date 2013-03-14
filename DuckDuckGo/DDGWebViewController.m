@@ -280,6 +280,23 @@
     });
 }
 
+- (NSString *)htmlFromJSON:(id)JSON {
+    if ([JSON isKindOfClass:[NSArray class]]) {
+        
+        NSArray *stories = JSON;
+        if ([stories count] > 0) {
+            NSDictionary *dictionary = [stories objectAtIndex:0];
+            if ([dictionary isKindOfClass:[NSDictionary class]]) {
+                NSString *html = [dictionary objectForKey:@"html"];
+                if ([html isKindOfClass:[NSString class]])
+                    return html;
+            }
+        }
+    }
+    
+    return nil;
+}
+
 -(void)loadStory:(DDGStory *)story {
     [self view];
     
@@ -293,16 +310,9 @@
     };
     
     void (^completion)(id JSON) = ^(id JSON) {
-        if ([JSON isKindOfClass:[NSArray class]]) {
-            
-            NSArray *stories = JSON;
-            if ([stories count] > 0) {
-                NSDictionary *dictionary = [stories objectAtIndex:0];
-                if ([dictionary isKindOfClass:[NSDictionary class]]) {
-                    NSString *html = [dictionary objectForKey:@"html"];                    
-                    [story writeHTMLString:html completion:htmlDownloaded];
-                }
-            }
+        NSString *html = [self htmlFromJSON:JSON];
+        if (nil != html) {
+            [story writeHTMLString:html completion:htmlDownloaded];
         } else {
             htmlDownloaded(story.isHTMLDownloaded);
         }
