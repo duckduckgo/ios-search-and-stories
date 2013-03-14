@@ -19,25 +19,7 @@
 #import "AFNetworking.h"
 #import "DDGSettingsViewController.h"
 #import "DDGActivityViewController.h"
-
-@implementation NSString (URLPrivateDDG)
-
-- (NSString *)URLDecodedStringDDG
-{
-    return (__bridge_transfer NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (__bridge CFStringRef)self, CFSTR(""), kCFStringEncodingUTF8);
-}
-
-- (NSString *)URLEncodedStringDDG
-{
-    NSString *s = (__bridge_transfer NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
-																						(__bridge CFStringRef)self,
-																						NULL,
-																						CFSTR("!*'();:@&=$,/?%#[]"), // BUT NOT + 'cause we'll take care of that
-																						kCFStringEncodingUTF8);
-	return [s stringByReplacingOccurrencesOfString:@"+" withString:@"%2B"];
-}
-
-@end
+#import "NSString+URLEncodingDDG.h"
 
 @implementation DDGWebViewController
 
@@ -180,6 +162,11 @@
 
 
 #pragma mark - Search handler
+
+-(void)prepareForUserInput {
+    if (self.searchController.searchField.window)
+        [self.searchController.searchField becomeFirstResponder];
+}
 
 -(void)searchControllerLeftButtonPressed {        
 	if(_webView.canGoBack)

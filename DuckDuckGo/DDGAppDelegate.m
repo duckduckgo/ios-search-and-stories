@@ -16,6 +16,12 @@
 #import "AFNetworking.h"
 #import "DDGUnderViewController.h"
 #import "DDGSearchController.h"
+#import "DDGSearchHandler.h"
+#import "NSString+URLEncodingDDG.h"
+
+@interface DDGAppDelegate ()
+@property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
+@end
 
 @implementation DDGAppDelegate
 
@@ -117,7 +123,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     // configure the sliding view controller
     DDGUnderViewController *under = [[DDGUnderViewController alloc] init];
-    
+    self.searchHandler = under;
     
     ECSlidingViewController *slidingViewController = [[ECSlidingViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = slidingViewController;
@@ -133,6 +139,30 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [self.window makeKeyAndVisible];
     
     return YES;
+}
+
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+    
+    if ([[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"]) {
+        NSString *query = nil;
+        NSArray *params = [[url query] componentsSeparatedByString:@"&"];
+        for (NSString *param in params) {
+            NSArray *pair = [param componentsSeparatedByString:@"="];
+            if ([pair count] > 1 && [[[pair objectAtIndex:0] lowercaseString] isEqualToString:@"q"]) {
+                query = [[pair objectAtIndex:1] URLDecodedStringDDG];
+            }
+        }
+        
+        if (nil != query) {
+            [self.searchHandler loadQueryOrURL:query];
+        } else {
+            [self.searchHandler prepareForUserInput];
+        }
+
+        return YES;
+    }
+    
+    return NO;
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application {

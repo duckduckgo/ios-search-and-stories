@@ -108,6 +108,20 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 
 #pragma mark - DDGSearchHandler
 
+- (void)prepareForUserInput {
+    DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC];
+    webVC.searchController = searchController;
+    searchController.contentController = webVC;
+    
+    CGRect frame = self.slidingViewController.topViewController.view.frame;
+    self.slidingViewController.topViewController = searchController;
+    self.slidingViewController.topViewController.view.frame = frame;
+    [self configureViewController:searchController];
+    
+    [searchController.searchField becomeFirstResponder];
+}
+
 -(void)searchControllerLeftButtonPressed {
     [self.slidingViewController anchorTopViewTo:ECRight];
 }

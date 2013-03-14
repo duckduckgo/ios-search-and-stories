@@ -13,6 +13,7 @@
 
 -(void)searchControllerLeftButtonPressed;
 -(void)loadQueryOrURL:(NSString *)queryOrURLString;
+-(void)prepareForUserInput;
 
 @optional
 -(void)loadStory:(DDGStory *)story;

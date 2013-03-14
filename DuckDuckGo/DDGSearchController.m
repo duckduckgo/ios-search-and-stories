@@ -9,7 +9,6 @@
 #import "DDGSearchController.h"
 #import "DDGSearchSuggestionsProvider.h"
 #import "AFNetworking.h"
-#import "DDGAddressBarTextField.h"
 #import "DDGBangsProvider.h"
 #import "DDGInputAccessoryView.h"
 #import "DDGBookmarksViewController.h"

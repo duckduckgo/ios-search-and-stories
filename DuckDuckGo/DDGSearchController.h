@@ -8,13 +8,14 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGSearchHandler.h"
+#import "DDGAddressBarTextField.h"
 
 typedef enum {
 	DDGSearchControllerStateHome = 0,
 	DDGSearchControllerStateWeb
 } DDGSearchControllerState;
 
-@class DDGSearchSuggestionsProvider, DDGHistoryProvider, DDGAddressBarTextField, DDGInputAccessoryView;
+@class DDGSearchSuggestionsProvider, DDGHistoryProvider, DDGInputAccessoryView;
 @interface DDGSearchController : UIViewController<UITextFieldDelegate, UINavigationControllerDelegate> {
     NSString *oldSearchText;
     BOOL barUpdated;
