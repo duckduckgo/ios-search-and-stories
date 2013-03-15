@@ -40,6 +40,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
 @property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
+@property (nonatomic, strong) NSString *sourceFilter;
 @end
 
 @implementation DDGStoriesViewController
@@ -104,7 +105,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 	
     [refreshHeaderView refreshLastUpdatedDate];
     
-    self.stories = [[DDGNewsProvider sharedProvider] filteredStories];
+    self.stories = [[DDGNewsProvider sharedProvider] stories];
     
     //    // force-decompress the first 10 images
     //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -444,13 +445,13 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             story = [self.stories objectAtIndex:indexPath.row];
         }
         
-        if (nil != newsProvider.sourceFilter) {
-            newsProvider.sourceFilter = nil;
+        if (nil != self.sourceFilter) {
+            self.sourceFilter = nil;
         } else if ([sender isKindOfClass:[UIButton class]]) {
-            newsProvider.sourceFilter = story.feed;
+            self.sourceFilter = story.feed;
         }
         
-        [self replaceStories:newsProvider.filteredStories focusOnStory:story];
+        [self replaceStories:[newsProvider storiesMatchingSourceFilter:self.sourceFilter] focusOnStory:story];
     };
     
     if (nil != self.swipeViewIndexPath)
@@ -715,7 +716,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     [newsProvider downloadSourcesFinished:^{
         [newsProvider downloadStoriesFinished:^{
-            [self replaceStories:newsProvider.filteredStories focusOnStory:nil];
+            [self replaceStories:[newsProvider storiesMatchingSourceFilter:self.sourceFilter] focusOnStory:nil];
             [self downloadStoryImages];
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];

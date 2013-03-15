@@ -121,13 +121,6 @@ static DDGNewsProvider *sharedProvider;
     });
 }
 
-- (void)setSourceFilter:(NSString *)sourceFilter {
-    if (sourceFilter == _sourceFilter)
-        return;
-    
-    _sourceFilter = [sourceFilter copy];
-}
-
 -(NSDictionary *)sources {
     return [DDGCache objectForKey:@"sources" inCache:@"misc"];
 }
@@ -152,20 +145,20 @@ static DDGNewsProvider *sharedProvider;
     return [DDGCache objectForKey:@"stories" inCache:@"misc"];
 }
 
--(NSArray *)filteredStories {
+- (NSArray *)storiesMatchingSourceFilter:(NSString *)sourceFilter {
     NSArray *stories = [self stories];
     
-    if (nil != self.sourceFilter) {
-        NSMutableArray *filteredStories = [NSMutableArray arrayWithCapacity:stories.count];
-        for (DDGStory *story in stories) {
-            if ([story.feed isEqual:self.sourceFilter]) {
-                [filteredStories addObject:story];
-            }
+    if (nil == sourceFilter)
+        return [stories copy];
+    
+    NSMutableArray *filteredStories = [NSMutableArray arrayWithCapacity:stories.count];
+    for (DDGStory *story in stories) {
+        if ([story.feed isEqual:sourceFilter]) {
+            [filteredStories addObject:story];
         }
-        stories = filteredStories;
     }
     
-    return [stories copy];
+    return filteredStories;
 }
 
 - (NSString*)feedForURL:(NSString*)url
