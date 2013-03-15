@@ -63,7 +63,6 @@
 		4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE015DACE8B00B44342 /* ECSlidingViewController.m */; };
 		4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE215DACE8B00B44342 /* UIImage+ImageWithUIView.m */; };
 		4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */; };
-		4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */; };
 		4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */; };
 		4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8D15C4EC9E00340B59 /* SVProgressHUD.m */; };
 		4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */; };
@@ -300,9 +299,6 @@
 		4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewController.m; sourceTree = "<group>"; };
 		4C4A0F0815DDC1DA00B44342 /* NSOperationStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSOperationStack.h; sourceTree = "<group>"; };
 		4C4A0F0915DDC1DA00B44342 /* NSOperationStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOperationStack.m; sourceTree = "<group>"; };
-		4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKConfigurator.h; sourceTree = "<group>"; };
-		4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKConfigurator.m; sourceTree = "<group>"; };
-		4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = DDGSHKSharers.plist; sourceTree = "<group>"; };
 		4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
 		4C4B7E8C15C4EC9E00340B59 /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		4C4B7E8D15C4EC9E00340B59 /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
@@ -447,10 +443,6 @@
 		5BB3F4DA16CA7AE100281A2B /* HomeSwipeView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeSwipeView.xib; sourceTree = "<group>"; };
 		5BB3F50316CAA49300281A2B /* DDGStoryCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryCell.h; sourceTree = "<group>"; };
 		5BB3F50416CAA49300281A2B /* DDGStoryCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryCell.m; sourceTree = "<group>"; };
-		5BB3F50916D22E9E00281A2B /* DDGSHKFormController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKFormController.h; sourceTree = "<group>"; };
-		5BB3F50A16D22E9F00281A2B /* DDGSHKFormController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKFormController.m; sourceTree = "<group>"; };
-		5BB3F51016D2318200281A2B /* DDGSHKShareMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSHKShareMenu.h; sourceTree = "<group>"; };
-		5BB3F51116D2318200281A2B /* DDGSHKShareMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSHKShareMenu.m; sourceTree = "<group>"; };
 		5BB3F51A16D26AD300281A2B /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		5BD23C3616EE235800C2FBDA /* DDGActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGActivityViewController.h; sourceTree = "<group>"; };
 		5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGActivityViewController.m; sourceTree = "<group>"; };
@@ -913,20 +905,6 @@
 			name = SVProgressHUD;
 			sourceTree = "<group>";
 		};
-		5BB3F50F16D2313500281A2B /* ShareKit */ = {
-			isa = PBXGroup;
-			children = (
-				4C4B7E8615C4C73E00340B59 /* DDGSHKConfigurator.h */,
-				4C4B7E8715C4C73E00340B59 /* DDGSHKConfigurator.m */,
-				5BB3F50916D22E9E00281A2B /* DDGSHKFormController.h */,
-				5BB3F50A16D22E9F00281A2B /* DDGSHKFormController.m */,
-				5BB3F51016D2318200281A2B /* DDGSHKShareMenu.h */,
-				5BB3F51116D2318200281A2B /* DDGSHKShareMenu.m */,
-				4C4B7E8915C4EAA300340B59 /* DDGSHKSharers.plist */,
-			);
-			name = ShareKit;
-			sourceTree = "<group>";
-		};
 		5BD23C3516EE233800C2FBDA /* Sharing */ = {
 			isa = PBXGroup;
 			children = (
@@ -1016,7 +994,6 @@
 				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
 				5B7A1C3516E9EEB700354310 /* DDGUnderViewControllerCell.h */,
 				5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */,
-				5BB3F50F16D2313500281A2B /* ShareKit */,
 				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
 				5B7A1BA516E74C0E00354310 /* Stories */,
 				4CD9249B15CD7DAB00EB062F /* Bookmarks */,
@@ -1138,7 +1115,6 @@
 				4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */,
 				4C24A75A15BA0946003DCB56 /* load_bar.png in Resources */,
 				4C24A75B15BA0946003DCB56 /* load_bar@2x.png in Resources */,
-				4C4B7E8A15C4EAA300340B59 /* DDGSHKSharers.plist in Resources */,
 				4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */,
 				4C4B7E9515C4F1AA00340B59 /* DDGBookmarksViewController.xib in Resources */,
 				4C7A67BD15C5C9200087D548 /* OneLineTopicCell.xib in Resources */,
