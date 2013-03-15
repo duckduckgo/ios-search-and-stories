@@ -13,9 +13,9 @@
 
 @implementation DDGActivityViewController
 
-- (id)initWithActivityItems:(NSArray *)activityItems
+- (id)initWithActivityItems:(NSArray *)activityItems applicationActivities:(NSArray *)applicationActivities
 {
-    self = [super initWithActivityItems:activityItems applicationActivities:@[]];
+    self = [super initWithActivityItems:activityItems applicationActivities:applicationActivities];
     if (self) {
         // Custom initialization
     }

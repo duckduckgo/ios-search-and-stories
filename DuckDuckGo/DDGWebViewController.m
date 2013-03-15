@@ -20,6 +20,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGActivityViewController.h"
 #import "NSString+URLEncodingDDG.h"
+#import "DDGBookmarkActivity.h"
 
 @implementation DDGWebViewController
 
@@ -150,7 +151,16 @@
             shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
         }
 
-        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareURL]];
+        NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+        NSString *feed = [_webViewURL absoluteString];
+        
+        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
+        
+        DDGBookmarkActivityItem *item = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:_webViewURL feed:feed];
+        DDGBookmarkActivity *bookmarkActivity = [[DDGBookmarkActivity alloc] init];
+        bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
+        
+        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareURL, item] applicationActivities:@[bookmarkActivity]];
         [self presentViewController:avc animated:YES completion:NULL];
     }
 	else if (buttonIndex == 2)

@@ -270,7 +270,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
         NSString *shareTitle = story.title;
         NSURL *shareURL = [NSURL URLWithString:story.url];
-        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL]];
+        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
         [self presentViewController:avc animated:YES completion:NULL];
     }];
 }

@@ -10,7 +10,7 @@
 
 @interface DDGActivityViewController : UIActivityViewController
 
-- (id)initWithActivityItems:(NSArray *)activityItems;
+- (id)initWithActivityItems:(NSArray *)activityItems applicationActivities:(NSArray *)applicationActivities;
 
 
 @end
