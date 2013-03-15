@@ -10,3 +10,6 @@
 [submodule "Submodules/IGFormViewController"]
 	path = Submodules/IGFormViewController
 	url = git://github.com/randomsequence/IGFormViewController.git
+[submodule "Submodules/TUSafariActivity"]
+	path = Submodules/TUSafariActivity
+	url = git://github.com/davbeck/TUSafariActivity.git
