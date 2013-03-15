@@ -104,6 +104,7 @@
 		5B2FCADB16F32BE10045A5FE /* Safari@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B2FCAD016F32BE10045A5FE /* Safari@2x~ipad.png */; };
 		5B2FCADC16F32BE10045A5FE /* Safari~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B2FCAD116F32BE10045A5FE /* Safari~ipad.png */; };
 		5B2FCADD16F32BE10045A5FE /* TUSafariActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCAD516F32BE10045A5FE /* TUSafariActivity.m */; };
+		5B2FCB5E16F3789F0045A5FE /* DDGReadabilityToggleActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */; };
 		5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66096F16D781B20006B5DE /* libTestFlight.a */; };
 		5B66097316D781D00006B5DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66097216D781D00006B5DE /* libz.dylib */; };
 		5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B66097716D7A3600006B5DE /* DDGFaviconButton.m */; };
@@ -378,6 +379,8 @@
 		5B2FCAD516F32BE10045A5FE /* TUSafariActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TUSafariActivity.m; sourceTree = "<group>"; };
 		5B2FCAD616F32BE10045A5FE /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/TUSafariActivity.strings; sourceTree = "<group>"; };
 		5B2FCAD716F32BE10045A5FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/TUSafariActivity.strings; sourceTree = "<group>"; };
+		5B2FCB5C16F3789F0045A5FE /* DDGReadabilityToggleActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGReadabilityToggleActivity.h; sourceTree = "<group>"; };
+		5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGReadabilityToggleActivity.m; sourceTree = "<group>"; };
 		5B66096F16D781B20006B5DE /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = TestFlightSDK1/libTestFlight.a; sourceTree = "<group>"; };
 		5B66097016D781B20006B5DE /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFlight.h; path = TestFlightSDK1/TestFlight.h; sourceTree = "<group>"; };
 		5B66097216D781D00006B5DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -816,6 +819,18 @@
 			path = Submodules/TUSafariActivity/TUSafariActivity;
 			sourceTree = SOURCE_ROOT;
 		};
+		5B2FCB5B16F3786D0045A5FE /* Web View */ = {
+			isa = PBXGroup;
+			children = (
+				839819411493C1DB0017A892 /* DDGWebViewController.h */,
+				839819421493C1DB0017A892 /* DDGWebViewController.m */,
+				83D3DE01164D60D00062D30B /* DDGWebViewController.xib */,
+				5B2FCB5C16F3789F0045A5FE /* DDGReadabilityToggleActivity.h */,
+				5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */,
+			);
+			name = "Web View";
+			sourceTree = "<group>";
+		};
 		5B66096E16D7817A0006B5DE /* TestFlight */ = {
 			isa = PBXGroup;
 			children = (
@@ -1049,9 +1064,7 @@
 				4C573C1215B7313E00790F60 /* Settings */,
 				4C660A741591487C001AB510 /* Search controller */,
 				5BD23C3516EE233800C2FBDA /* Sharing */,
-				839819411493C1DB0017A892 /* DDGWebViewController.h */,
-				839819421493C1DB0017A892 /* DDGWebViewController.m */,
-				83D3DE01164D60D00062D30B /* DDGWebViewController.xib */,
+				5B2FCB5B16F3786D0045A5FE /* Web View */,
 				4C19FFD51593B617003AC03F /* DDGCache.h */,
 				4C19FFD61593B617003AC03F /* DDGCache.m */,
 				4C184D0C15A3742A003AAD5E /* NSArray+ConcurrentIteration.h */,
@@ -1353,6 +1366,7 @@
 				5B2FCABC16F231150045A5FE /* NSString+URLEncodingDDG.m in Sources */,
 				5B2FCABF16F3235E0045A5FE /* DDGBookmarkActivity.m in Sources */,
 				5B2FCADD16F32BE10045A5FE /* TUSafariActivity.m in Sources */,
+				5B2FCB5E16F3789F0045A5FE /* DDGReadabilityToggleActivity.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

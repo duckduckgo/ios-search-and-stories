@@ -21,6 +21,7 @@
 #import "DDGActivityViewController.h"
 #import "NSString+URLEncodingDDG.h"
 #import "DDGBookmarkActivity.h"
+#import "DDGReadabilityToggleActivity.h"
 
 @implementation DDGWebViewController
 
@@ -111,7 +112,14 @@
     DDGBookmarkActivity *bookmarkActivity = [[DDGBookmarkActivity alloc] init];
     bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
     
-    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareURL, item] applicationActivities:@[bookmarkActivity]];
+    NSArray *applicationActivities = @[bookmarkActivity];
+    
+    if (nil != self.story) {
+        DDGReadabilityToggleActivity *toggleActivity = [[DDGReadabilityToggleActivity alloc] init];
+        applicationActivities = [applicationActivities arrayByAddingObject:toggleActivity];
+    }
+    
+    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareURL, item, self] applicationActivities:applicationActivities];
     [self presentViewController:avc animated:YES completion:NULL];
 }
 
