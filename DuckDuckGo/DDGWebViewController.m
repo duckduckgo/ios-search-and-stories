@@ -89,87 +89,31 @@
     [_searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
-#pragma mark - Action sheet
+#pragma mark - Actions
 
 -(void)searchControllerActionButtonPressed
 {
-    BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
-    UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:nil
-                                                             delegate:self
-                                                    cancelButtonTitle:@"Cancel"
-                                               destructiveButtonTitle:nil
-                                                    otherButtonTitles:
-                                  (bookmarked ? @"Unsave" : @"Save"),
-                                  @"Share",
-								  @"Open in Safari",
-                                  nil];
-    [actionSheet showInView:self.view];
-}
-
-/*
- 1) if article from watrcoolr add internal favicon
- 2) if search -- add the search favicon (not sure if this exists -- if not ask other chris)
- 3) if other site we have no favicon -- just omit.
- */
-
--(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    // strip extra params from DDG search URLs
+    NSURL *shareURL = _webViewURL;
+    NSString *query = [_searchController queryFromDDGURL:_webViewURL];
+    if(query)
+    {
+        query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
+    }
     
     NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    if(buttonIndex == 0)
-	{
-        // bookmark/unbookmark
-                
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
-        if(bookmarked)
-            [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:_webViewURL];
-        else
-		{
-			NSString *feed = [_webViewURL absoluteString];
-			
-			if ([feed hasPrefix:@"https://duckduckgo.com/?q="])
-				// this is clearly a direct DDG search
-				feed = @"search_icon.png";
-			else
-				// see if this is a news feed story that was bookmarked
-				feed = [[DDGNewsProvider sharedProvider] feedForURL:feed];				
-
-            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:pageTitle feed:feed URL:_webViewURL];
-		}
+    NSString *feed = [_webViewURL absoluteString];
     
-        [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unsaved!" : @"Saved!")];
-    }
-	else if (buttonIndex == 1)
-	{
-        // share
-        
-        // strip extra params from DDG search URLs
-        NSURL *shareURL = _webViewURL;
-        NSString *query = [_searchController queryFromDDGURL:_webViewURL];
-        if(query)
-		{
-            query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
-        }
-
-        NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-        NSString *feed = [_webViewURL absoluteString];
-        
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
-        
-        DDGBookmarkActivityItem *item = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:_webViewURL feed:feed];
-        DDGBookmarkActivity *bookmarkActivity = [[DDGBookmarkActivity alloc] init];
-        bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
-        
-        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareURL, item] applicationActivities:@[bookmarkActivity]];
-        [self presentViewController:avc animated:YES completion:NULL];
-    }
-	else if (buttonIndex == 2)
-	{
-		// open in Safari
-		[[UIApplication sharedApplication] openURL:_webViewURL];
-	}
+    BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
+    
+    DDGBookmarkActivityItem *item = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:_webViewURL feed:feed];
+    DDGBookmarkActivity *bookmarkActivity = [[DDGBookmarkActivity alloc] init];
+    bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
+    
+    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareURL, item] applicationActivities:@[bookmarkActivity]];
+    [self presentViewController:avc animated:YES completion:NULL];
 }
-
 
 #pragma mark - Search handler
 
