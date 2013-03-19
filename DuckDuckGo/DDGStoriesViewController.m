@@ -11,16 +11,16 @@
 #import "DDGSettingsViewController.h"
 #import "DDGPanLeftGestureRecognizer.h"
 #import "DDGStory.h"
+#import "DDGStoryFeed.h"
 #import "DDGStoryCell.h"
 #import "NSArray+ConcurrentIteration.h"
 #import "ECSlidingViewController.h"
-#import "DDGCache.h"
 #import "DDGHistoryProvider.h"
-#import "DDGNewsProvider.h"
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
 #import "AFNetworking.h"
 #import "DDGActivityViewController.h"
+#import "DDGStoryFetcher.h"
 
 NSString * const DDGLastViewedStoryKey = @"last_story";
 
@@ -29,29 +29,34 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     UIImageView *topShadow;
     EGORefreshTableHeaderView *refreshHeaderView;    
 }
+@property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
 @property (nonatomic, strong) NSOperationQueue *imageDecompressionQueue;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
 @property (nonatomic, strong) DDGPanLeftGestureRecognizer *panLeftGestureRecognizer;
-@property (nonatomic, copy) NSArray *stories;
 @property (nonatomic, strong) IBOutlet DDGStoryCell *loadedCell;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
 @property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
-@property (nonatomic, strong) NSString *sourceFilter;
+@property (nonatomic, strong) DDGStoryFeed *sourceFilter;
+@property (nonatomic, strong) NSMutableDictionary *decompressedImages;
+@property (nonatomic, strong) NSMutableSet *enqueuedDecompressionOperations;
+@property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
 @end
 
 @implementation DDGStoriesViewController
 
 #pragma mark - Memory Management
 
-- (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler
+- (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.searchHandler = searchHandler;
+        self.managedObjectContext = managedObjectContext;
     }
     return self;
 }
@@ -68,10 +73,15 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     
+    self.decompressedImages = nil;
+    
     if (nil == self.view) {
         [self.imageDownloadQueue cancelAllOperations];
         self.imageDownloadQueue = nil;
         self.enqueuedDownloadOperations = nil;
+        [self.imageDecompressionQueue cancelAllOperations];
+        self.imageDecompressionQueue = nil;
+        self.enqueuedDecompressionOperations = nil;
     }
 }
 
@@ -104,9 +114,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 	}
 	
     [refreshHeaderView refreshLastUpdatedDate];
-    
-    self.stories = [[DDGNewsProvider sharedProvider] stories];
-    
+        
     //    // force-decompress the first 10 images
     //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
     //        NSArray *stories = self.stories;
@@ -129,16 +137,23 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     decompressionQueue.name = @"DDG Watercooler Image Decompression Queue";
     self.imageDecompressionQueue = decompressionQueue;
     
+    self.decompressedImages = [NSMutableDictionary dictionaryWithCapacity:50];
     self.enqueuedDownloadOperations = [NSMutableSet new];
+    self.enqueuedDecompressionOperations = [NSMutableSet set];    
 }
 
 - (void)viewDidUnload {
     [self setSwipeView:nil];
     [super viewDidUnload];
     
+    self.decompressedImages = nil;
+    
     [self.imageDownloadQueue cancelAllOperations];
     self.imageDownloadQueue = nil;
+    [self.imageDecompressionQueue cancelAllOperations];
+    self.imageDecompressionQueue = nil;
     self.enqueuedDownloadOperations = nil;
+    self.enqueuedDecompressionOperations = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:ECSlidingViewUnderLeftWillAppear
@@ -153,14 +168,15 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     NSNumber *lastStoryID = [[NSUserDefaults standardUserDefaults] objectForKey:DDGLastViewedStoryKey];
     if (nil != lastStoryID) {
-        NSArray *storyIDs = [self.stories valueForKey:@"storyID"];
+        NSArray *stories = self.fetchedResultsController.fetchedObjects;
+        NSArray *storyIDs = [stories valueForKey:@"id"];
         NSInteger index = [storyIDs indexOfObject:lastStoryID];
         if (index != NSNotFound) {
-            [self focusOnStory:[self.stories objectAtIndex:index] animated:NO];
+            [self focusOnStory:[stories objectAtIndex:index] animated:NO];
         }
     }
     
-    [self beginDownloadingStories];
+    [self refreshSources];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -213,6 +229,85 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         return YES;
 }
 
+#pragma mark - Filtering
+
+- (IBAction)filter:(id)sender {
+    
+    void (^completion)() = ^() {
+        DDGStory *story = nil;
+        
+        if ([sender isKindOfClass:[UIButton class]]) {
+            UIButton *button = (UIButton *)sender;
+            CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
+            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+            story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        }
+        
+        if (nil != self.sourceFilter) {
+            self.sourceFilter = nil;
+        } else if ([sender isKindOfClass:[UIButton class]]) {
+            self.sourceFilter = story.feed;
+        }
+        
+        NSPredicate *predicate = nil;
+        if (nil != self.sourceFilter)
+            predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
+        
+        NSArray *oldStories = [self.fetchedResultsController fetchedObjects];
+        
+        [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
+        self.fetchedResultsController.delegate = nil;
+        self.fetchedResultsController = nil;
+        
+        NSArray *newStories = [self.fetchedResultsController fetchedObjects];
+        
+        [self replaceStories:oldStories withStories:newStories focusOnStory:story];
+    };
+    
+    if (nil != self.swipeViewIndexPath)
+        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:completion];
+    else
+        completion();
+}
+
+-(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
+    NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[newStories count]];
+    
+    for(int i=0;i<newStories.count;i++) {
+        DDGStory *story = [newStories objectAtIndex:i];
+        NSString *storyID = story.id;
+        
+        BOOL matchFound = NO;
+        for(DDGStory *oldStory in oldStories) {
+            if([storyID isEqualToString:[oldStory id]]) {
+                matchFound = YES;
+                break;
+            }
+        }
+        
+        if(!matchFound)
+            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+    }
+    return [indexPaths copy];
+}
+
+- (void)replaceStories:(NSArray *)oldStories withStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
+    
+    NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:oldStories];
+    NSArray *removedStories = [self indexPathsofStoriesInArray:oldStories andNotArray:newStories];
+    
+    // update the table view with added and removed stories
+    [self.tableView beginUpdates];
+    [self.tableView insertRowsAtIndexPaths:addedStories
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView deleteRowsAtIndexPaths:removedStories
+                          withRowAnimation:UITableViewRowAnimationAutomatic];
+    [self.tableView endUpdates];
+    
+    [self focusOnStory:story animated:YES];
+}
+
+
 #pragma mark - Search handler
 
 -(void)searchControllerLeftButtonPressed {
@@ -229,11 +324,12 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     if (nil == self.swipeViewIndexPath)
         return;
     
-    DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
+    NSArray *stories = self.fetchedResultsController.fetchedObjects;
+    DDGStory *story = [stories objectAtIndex:self.swipeViewIndexPath.row];
     
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
     
-    NSURL *storyURL = [NSURL URLWithString:story.url];
+    NSURL *storyURL = story.URL;
     
     if (nil == storyURL)
         return;
@@ -245,8 +341,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     if (nil == self.swipeViewIndexPath)
         return;
     
-    DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
-    NSURL *storyURL = [NSURL URLWithString:story.url];
+    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
+    NSURL *storyURL = story.URL;
     
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
         if (nil == storyURL)
@@ -256,7 +352,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         if(bookmarked)
             [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:storyURL];
         else
-            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:story.title feed:story.feed URL:storyURL];
+            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:story.title feed:story.feed.urlString URL:storyURL];
         
         [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unsaved!" : @"Saved!")];
     }];
@@ -266,11 +362,11 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     if (nil == self.swipeViewIndexPath)
         return;
     
-    DDGStory *story = [self.stories objectAtIndex:self.swipeViewIndexPath.row];
+    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
     
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
         NSString *shareTitle = story.title;
-        NSURL *shareURL = [NSURL URLWithString:story.url];
+        NSURL *shareURL = story.URL;
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
         [self presentViewController:avc animated:YES completion:NULL];
     }];
@@ -306,9 +402,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         if (nil == self.swipeView)
             [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
         
-        
-        DDGStory *story = [self.stories objectAtIndex:indexPath.row];
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:[NSURL URLWithString:story.url]];
+        DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:story.URL];
         
         NSString *imageName = (bookmarked) ? @"swipe-un-save" : @"swipe-save";
         [self.swipeViewSaveButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
@@ -432,41 +527,12 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
 }
 
-- (IBAction)filter:(id)sender {
-    
-    void (^completion)() = ^() {
-        DDGNewsProvider *newsProvider = [DDGNewsProvider sharedProvider];
-        DDGStory *story = nil;
-        
-        if ([sender isKindOfClass:[UIButton class]]) {
-            UIButton *button = (UIButton *)sender;
-            CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
-            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-            story = [self.stories objectAtIndex:indexPath.row];
-        }
-        
-        if (nil != self.sourceFilter) {
-            self.sourceFilter = nil;
-        } else if ([sender isKindOfClass:[UIButton class]]) {
-            self.sourceFilter = story.feed;
-        }
-        
-        [self replaceStories:[newsProvider storiesMatchingSourceFilter:self.sourceFilter] focusOnStory:story];
-    };
-    
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:completion];
-    else
-        completion();
-}
-
-
 #pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
-    [self beginDownloadingStories];
+    [self refreshStories];
     
-    if([[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]) {
+    if([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
         SystemSoundID quack;
         NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
         NSURL *url = [NSURL URLWithString:path];
@@ -480,33 +546,28 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 }
 
 - (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view {
-    return [DDGCache objectForKey:@"storiesUpdated" inCache:@"misc"];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];;
 }
-
-#pragma mark - DDGNewsProviderDelegate
-
-- (void)newsProviderDidRefreshStories:(DDGNewsProvider *)newsProvider {
-    
-}
-
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-	return 1;
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return [[self.fetchedResultsController sections] count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.stories.count;
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    return [sectionInfo numberOfObjects];
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
 	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
     
-    DDGStory *story = [self.stories objectAtIndex:indexPath.row];
+    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
     
     NSString *cellID = nil;
     if([story.title sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width-38, 60) lineBreakMode:NSLineBreakByWordWrapping].height < 19)
@@ -528,28 +589,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         cell.overlayImageView.image = [UIImage imageNamed:@"topic_cell_background.png"];
     }
     
-    cell.textLabel.text = story.title;
-    
-    if([[DDGCache objectForKey:story.storyID inCache:@"readStories"] boolValue])
-        cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    else
-        cell.textLabel.textColor = [UIColor whiteColor];
-    
-    if (nil != story.decompressedImage) {
-        cell.imageView.image = story.decompressedImage;
-    } else {
-        cell.imageView.image = nil;
-        if (story.isImageDownloaded) {
-            [self decompressAndDisplayImageForStory:story];
-        } else  {
-            [self loadImageForStory:story];
-        }
-    }
-    
-    UIImage *image = nil;
-    if(story.feed)
-        image = [DDGCache objectForKey:story.feed inCache:@"sourceImages"];
-    [cell.faviconButton setImage:image forState:UIControlStateNormal];
+    [self configureCell:cell atIndexPath:indexPath];
     
 	return cell;
 }
@@ -566,65 +606,47 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 }
 
 - (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    DDGStory *story = [self.stories objectAtIndex:indexPath.row];
+    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+
+    story.readValue = YES;
     
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        // mark the story as read
-        [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [_tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-        });
-    });
+//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+//        // mark the story as read
+//        [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];
+//        
+//        dispatch_async(dispatch_get_main_queue(), ^{
+//            [_tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+//        });
+//    });
     
-    [[NSUserDefaults standardUserDefaults] setObject:story.storyID forKey:DDGLastViewedStoryKey];
+    [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:DDGLastViewedStoryKey];
     
-    BOOL showInReadView = [[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue];
+    BOOL showInReadView = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView];
     if (showInReadView) {
         [self.searchHandler loadStory:story];
     } else {
-        NSString *escapedStoryURL = [story.url stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        NSString *escapedStoryURL = [story.urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         [self.searchHandler loadQueryOrURL:escapedStoryURL];
     }
     
-    [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": story.title, @"url": story.url, @"feed": story.feed, @"kind": @"feed"}];    
+    [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": story.title, @"url": story.urlString, @"feed": story.feed, @"kind": @"feed"}];
 }
 
 #pragma mark - Loading popular stories
-
-- (void)loadImageForStory:(DDGStory *)story {
-    NSURL *imageURL = story.imageURL;
-    if (!story.imageDownloaded && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
-        NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
-        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSData *responseData = (NSData *)responseObject;
-            [story writeImageData:responseData completion:^(BOOL success) {
-                if (success)
-                    [self decompressAndDisplayImageForStory:story];
-            }];
-            [self.enqueuedDownloadOperations removeObject:imageURL];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [self.enqueuedDownloadOperations removeObject:imageURL];
-        }];
-        
-        [operation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
-            [self.enqueuedDownloadOperations removeObject:imageURL];
-        }];
-        
-        [self.enqueuedDownloadOperations addObject:imageURL];
-        [self.imageDownloadQueue addOperation:operation];
-    }
-}
 
 - (void)decompressAndDisplayImageForStory:(DDGStory *)story {
     if (nil == story.image)
         return;
     
+    NSString *storyID = story.id;
+    
+    if ([self.enqueuedDecompressionOperations containsObject:storyID])
+        return;
+    
     void (^completionBlock)() = ^() {
-        NSUInteger row = [self.stories indexOfObject:story];
-        if (row != NSNotFound) {
-            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:row inSection:0]] withRowAnimation:UITableViewRowAnimationFade];
+        NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:story];
+        if (nil != indexPath) {
+            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         }
     };
     
@@ -633,95 +655,202 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     if (nil == image)
         completionBlock();
     else {
+        [self.enqueuedDecompressionOperations addObject:storyID];
         [self.imageDecompressionQueue addOperationWithBlock:^{
-            if (nil == story.decompressedImage) {
-                UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
-                [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
-                UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
-                UIGraphicsEndImageContext();
-                [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                    story.decompressedImage = decompressed;
-                }];
-            }
+            UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
+            [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
+            UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
+            UIGraphicsEndImageContext();
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self.decompressedImages setObject:decompressed forKey:storyID];
+            }];
+            
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                [self.enqueuedDecompressionOperations removeObject:storyID];
                 completionBlock();
             }];
         }];
     }
 }
 
-- (void)downloadStoryImages {
-    NSArray *stories = [[self stories] copy];
-    for (DDGStory *story in stories) {
-        [self loadImageForStory:story];
-    }
-}
-
-// this method ignores stories from custom sources
--(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
-    NSMutableArray *indexPaths = [[NSMutableArray alloc] init];
-    
-    for(int i=0;i<newStories.count;i++) {
-        NSString *storyID = [[newStories objectAtIndex:i] storyID];
-        
-        BOOL matchFound = NO;
-        for(DDGStory *oldStory in oldStories) {
-            if([storyID isEqualToString:[oldStory storyID]]) {
-                matchFound = YES;
-                break;
-            }
-        }
-        
-        if(!matchFound)
-            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
-    }
-    return [indexPaths copy];
-}
-
 - (void)focusOnStory:(DDGStory *)story animated:(BOOL)animated {
     if (nil != story) {
-        NSUInteger row = [self.stories indexOfObject:story];
-        if (row != NSNotFound) {
-            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:0];
+        NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:story];
+        if (nil != indexPath)
             [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animated];
-        }
     }
 }
 
-- (void)replaceStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
+- (DDGStoryFetcher *)storyFetcher {
+    if (nil == _storyFetcher)
+        _storyFetcher = [[DDGStoryFetcher alloc] initWithParentManagedObjectContext:self.managedObjectContext];
     
-    NSArray *oldStories = [self.stories copy];
-    self.stories = newStories;
-    
-    NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:oldStories];
-    NSArray *removedStories = [self indexPathsofStoriesInArray:oldStories andNotArray:newStories];
-        
-    // update the table view with added and removed stories
-    [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:addedStories
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView deleteRowsAtIndexPaths:removedStories
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView endUpdates];
-    
-    [self focusOnStory:story animated:YES];
+    return _storyFetcher;
 }
 
-// downloads stories asynchronously
--(void)beginDownloadingStories {
-    isRefreshing = YES;
-    
-    DDGNewsProvider *newsProvider = [DDGNewsProvider sharedProvider];
-    
-    [newsProvider downloadSourcesFinished:^{
-        [newsProvider downloadStoriesFinished:^{
-            [self replaceStories:[newsProvider storiesMatchingSourceFilter:self.sourceFilter] focusOnStory:nil];
-            [self downloadStoryImages];
+- (void)refreshSources {
+    if (!self.storyFetcher.isRefreshing) {
+        [self.storyFetcher refreshSources:^{
+            
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
+            NSPredicate *iconPredicate = [NSPredicate predicateWithFormat:@"imageDownloaded == %@", @(NO)];
+            [request setPredicate:iconPredicate];
+            NSError *error = nil;
+            NSArray *feeds = [self.managedObjectContext executeFetchRequest:request error:&error];
+            if (nil == feeds)
+                NSLog(@"failed to fetch story feeds. Error: %@", error);
+            
+            for (DDGStoryFeed *feed in feeds)
+                if (!feed.imageDownloadedValue)
+                    [self.storyFetcher downloadIconForFeed:feed];
+            
+            [self refreshStories];
+        }];
+    }
+}
+
+- (void)refreshStories {
+    if (!self.storyFetcher.isRefreshing) {
+        [self.storyFetcher refreshStories:^{
+            
+            for (DDGStory *story in [self.fetchedResultsController fetchedObjects]) {
+                if (!story.isImageDownloaded)
+                    [self.storyFetcher downloadImageForStory:story];
+            }
+            
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
         }];
-    }];
+    }
+}
+
+#pragma mark - NSFetchedResultsController
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    // Edit the entity name as appropriate.
+    NSEntityDescription *entity = [DDGStory entityInManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    
+    // Set the batch size to a suitable number.
+    [fetchRequest setFetchBatchSize:20];
+    
+    // Edit the sort key as appropriate.
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
+    NSArray *sortDescriptors = @[sortDescriptor];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    NSPredicate *predicate = nil;
+    if (nil != self.sourceFilter)
+        predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
+    
+    [fetchRequest setPredicate:predicate];
+    
+    // Edit the section name key path and cache name if appropriate.
+    // nil for section name key path means "no sections".
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    aFetchedResultsController.delegate = self;
+    self.fetchedResultsController = aFetchedResultsController;
+    
+	NSError *error = nil;
+	if (![self.fetchedResultsController performFetch:&error]) {
+        // Replace this implementation with code to handle the error appropriately.
+        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+	}
+    
+    return _fetchedResultsController;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+{
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+    UITableView *tableView = self.tableView;
+    
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+}
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    DDGStoryCell *storyCell = ([cell isKindOfClass:[DDGStoryCell class]]) ? (DDGStoryCell *) cell : nil;
+    
+    cell.textLabel.text = story.title;
+    
+    cell.textLabel.text = story.title;
+    
+    if(story.readValue)
+        cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
+    else
+        cell.textLabel.textColor = [UIColor whiteColor];    
+    
+    UIImage *image = nil;
+    if(story.feed)
+        image = story.feed.image;
+    [storyCell.faviconButton setImage:image forState:UIControlStateNormal];
+    
+    UIImage *decompressedImage = [self.decompressedImages objectForKey:story.id];
+    
+    if (nil != decompressedImage) {
+        cell.imageView.image = decompressedImage;
+    } else {
+        cell.imageView.image = nil;
+        if (story.isImageDownloaded) {
+            [self decompressAndDisplayImageForStory:story];
+        } else  {
+            [self.storyFetcher downloadImageForStory:story];
+        }
+    }
+    
 }
 
 

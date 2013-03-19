@@ -8,7 +8,6 @@
 
 #import "DDGSearchSuggestionsProvider.h"
 #import "AFNetworking.h"
-#import "DDGCache.h"
 #import "Constants.h"
 #import "DDGUtility.h"
 

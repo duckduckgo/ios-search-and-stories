@@ -9,6 +9,6 @@
 #import <UIKit/UIKit.h>
 #import <MessageUI/MessageUI.h>
 
-@interface DDGChooseSourcesViewController : UITableViewController <UIAlertViewDelegate, MFMailComposeViewControllerDelegate>
-
+@interface DDGChooseSourcesViewController : UITableViewController <UIAlertViewDelegate, MFMailComposeViewControllerDelegate, NSFetchedResultsControllerDelegate>
+@property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 @end

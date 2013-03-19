@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const DDGBookmarksKey;
+
 @interface DDGBookmarksProvider : NSObject
 
 +(DDGBookmarksProvider *)sharedProvider;

@@ -14,7 +14,6 @@
 #import "DDGBookmarksViewController.h"
 #import "DDGStoriesViewController.h"
 #import "DDGDuckViewController.h"
-#import "DDGCache.h"
 #import "DDGUnderViewControllerCell.h"
 
 NSString * const DDGViewControllerTypeTitleKey = @"title";
@@ -165,7 +164,7 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
             return self.viewControllerTypes.count;
         case 1:
 		{
-            return ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue] ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
+            return ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory] ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
 		}
         default:
             return 0;
@@ -225,7 +224,7 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
     } else {
         cell.cellMode = DDGUnderViewControllerCellModeRecent;
         
-		if ([[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue]) {
+		if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) {
 			// we have history and it is enabled
 			NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
 			
@@ -235,7 +234,8 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 			}
 			else if ([[item objectForKey:@"kind"] isEqualToString:@"feed"])
 			{
-				cell.imageView.image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
+#warning feed favicon
+//				cell.imageView.image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
 			}
 			lbl.text = [item objectForKey:@"text"];
 		} else {
@@ -290,7 +290,7 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 
 - (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (indexPath.section == 1 && ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
+	if (indexPath.section == 1 && ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
 		return nil;
 	
 	return indexPath;
@@ -310,16 +310,19 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
             viewController = searchController;
         }
             break;
-        case DDGViewControllerTypeSettings:
-            viewController = [[UINavigationController alloc] initWithRootViewController:[[DDGSettingsViewController alloc] initWithDefaults]];
-            break;
+        case DDGViewControllerTypeSettings: {
+            DDGSettingsViewController *settings = [[DDGSettingsViewController alloc] initWithDefaults];
+            settings.managedObjectContext = self.managedObjectContext;
+            viewController = [[UINavigationController alloc] initWithRootViewController:settings];
+            break;            
+        }
         case DDGViewControllerTypeHome:
         {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
 //            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
 //                searchController.contentController = [DDGDuckViewController duckViewController];
 //            } else {
-            searchController.contentController = [[DDGStoriesViewController alloc] initWithSearchHandler:self];
+            searchController.contentController = [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
 //            }
             searchController.state = DDGSearchControllerStateHome;
             viewController = searchController;

@@ -7,10 +7,13 @@
 //
 
 #import "DDGChooseSourcesViewController.h"
-#import "DDGNewsProvider.h"
-#import "DDGCache.h"
+#import "DDGStoryFeed.h"
 #import "UIImageView+AFNetworking.h"
 #import "SVProgressHUD.h"
+
+@interface DDGChooseSourcesViewController ()
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+@end
 
 @implementation DDGChooseSourcesViewController
 
@@ -23,7 +26,6 @@
 	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 	self.tableView.allowsSelectionDuringEditing = YES;
     self.title = @"Sources";
-    
     
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
@@ -38,7 +40,6 @@
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
 }
-
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
@@ -79,23 +80,25 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 1+[[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] count];
+    return [[self.fetchedResultsController sections] count] + 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if(section==0)
-        return 1+[DDGNewsProvider sharedProvider].customSources.count;
+        return 1;
     else {
-        NSString *category = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
-        return [[[[DDGNewsProvider sharedProvider] sources] objectForKey:category] count];
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section-1];
+        return [sectionInfo numberOfObjects];
     }
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
     if(section==0)
-        return @"Custom sources";
-    else
-        return [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:section-1];
+        return @"Suggest a News Source";
+    else {
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section-1];
+        return [sectionInfo name];
+    }
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -117,13 +120,14 @@
     
     static NSString *SourceCellIdentifier = @"SourceCell";
     static NSString *ButtonCellIdentifier = @"ButtonCell";
-    static NSString *CustomSourceCellIdentifier = @"CustomSourceCell";
+    
+    UITableViewCell *cell = nil;
     
     if(indexPath.section == 0)
 	{
         if(indexPath.row == 0)
 		{
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
+            cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
             if(!cell)
 			{
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ButtonCellIdentifier];
@@ -132,23 +136,9 @@
                 cell.accessoryType = UITableViewCellAccessoryNone;
 				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
             }
-            return cell;
-        }
-		else
-		{
-            UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CustomSourceCellIdentifier];
-            if(!cell)
-			{
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CustomSourceCellIdentifier];
-				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
-            }
-            cell.textLabel.text = [[DDGNewsProvider sharedProvider].customSources objectAtIndex:indexPath.row-1];
-            return cell;
-        }
-    }
-	else
-	{
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
+        }        
+    } else {
+        cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
         if(!cell)
 		{
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
@@ -163,30 +153,10 @@
             [cell addSubview:imageView];
         }
         
-        NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
-        NSArray *category = [[[DDGNewsProvider sharedProvider] sources] objectForKey:categoryName];
-        NSDictionary *source = [category objectAtIndex:indexPath.row];
-        
-        cell.textLabel.text = [source objectForKey:@"title"];
-        cell.detailTextLabel.text = [source objectForKey:@"description"];
-        
-        if([source objectForKey:@"link"] && [source objectForKey:@"link"] != [NSNull null]) {
-            UIImage *image = [DDGCache objectForKey:[source objectForKey:@"link"] inCache:@"sourceImages"];
-            cell.imageView.image = image;
-            [(UIImageView *)[cell viewWithTag:100] setImage:image];
-        } else {
-            cell.imageView.image = nil;
-            [(UIImageView *)[cell viewWithTag:100] setImage:nil];
-
-        }
-        
-        if([[DDGCache objectForKey:[source objectForKey:@"id"] inCache:@"enabledSources"] boolValue])
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        else
-            cell.accessoryType = UITableViewCellAccessoryNone;
-        
-        return cell;
+        [self configureCell:cell atIndexPath:indexPath];
     }
+    
+    return cell;
 }
 
 #pragma mark - Mail sender deleagte
@@ -223,30 +193,145 @@
     }
 	else
 	{
-        NSString *categoryName = [[DDGCache objectForKey:@"sourceCategories" inCache:@"misc"] objectAtIndex:indexPath.section-1];
-        NSArray *category = [[[DDGNewsProvider sharedProvider] sources] objectForKey:categoryName];
-        NSDictionary *source = [category objectAtIndex:indexPath.row];
+        DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:[self fetchedResultIndexPathForTableViewIndexPath:indexPath]];
+        feed.enabledValue = (!feed.enabledValue);
         
-        UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-        if(cell.accessoryType == UITableViewCellAccessoryCheckmark) {
-            if([[DDGNewsProvider sharedProvider] enabledSourceIDs].count == 1) {
-                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Whoa, there!"
-                                                                message:@"You must select at least one source."
-                                                               delegate:nil
-                                                      cancelButtonTitle:@"OK"
-                                                      otherButtonTitles:nil];
-                [alert show];
-            } else {
-                cell.accessoryType = UITableViewCellAccessoryNone;
-                [[DDGNewsProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:NO];
-            }
-        } else {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-            [[DDGNewsProvider sharedProvider] setSourceWithID:[source objectForKey:@"id"] enabled:YES];
-        }
+        NSManagedObjectContext *context = feed.managedObjectContext;
+        [context performBlock:^{
+            NSError *error = nil;
+            BOOL success = [context save:&error];
+            if (!success)
+                NSLog(@"error: %@", error);
+        }];
     }
     
     [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+#pragma mark - NSFetchedResultsController
+
+- (NSFetchedResultsController *)fetchedResultsController
+{
+    if (_fetchedResultsController != nil) {
+        return _fetchedResultsController;
+    }
+ 
+    NSAssert((nil != self.managedObjectContext), @"DDGChooseSourcesViewController requires a managed object context");
+    
+    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
+    NSEntityDescription *entity = [DDGStoryFeed entityInManagedObjectContext:self.managedObjectContext];
+    [fetchRequest setEntity:entity];
+    [fetchRequest setFetchBatchSize:20];
+    
+    NSSortDescriptor *categoryDescriptor = [[NSSortDescriptor alloc] initWithKey:@"category" ascending:YES];
+    NSSortDescriptor *titleDescriptor = [[NSSortDescriptor alloc] initWithKey:@"title" ascending:YES];
+    NSArray *sortDescriptors = @[categoryDescriptor, titleDescriptor];
+    
+    [fetchRequest setSortDescriptors:sortDescriptors];
+    
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+                                                                                                managedObjectContext:self.managedObjectContext
+                                                                                                  sectionNameKeyPath:@"category"
+                                                                                                           cacheName:nil];
+    aFetchedResultsController.delegate = self;
+    self.fetchedResultsController = aFetchedResultsController;
+    
+	NSError *error = nil;
+	if (![self.fetchedResultsController performFetch:&error]) {
+	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+	}
+    
+    return _fetchedResultsController;
+}
+
+- (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView beginUpdates];
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+{
+    NSUInteger tableViewSectionIndex = sectionIndex+1;
+    
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:tableViewSectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:tableViewSectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
+       atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
+      newIndexPath:(NSIndexPath *)newIndexPath
+{
+    UITableView *tableView = self.tableView;
+    
+    NSIndexPath *tableViewIndexPath = [self tableViewIndexPathForFetchedResultsIndexPath:indexPath];
+    NSIndexPath *tableViewNewIndexPath = [self tableViewIndexPathForFetchedResultsIndexPath:newIndexPath];
+    
+    switch(type) {
+        case NSFetchedResultsChangeInsert:
+            [tableView insertRowsAtIndexPaths:@[tableViewNewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeDelete:
+            [tableView deleteRowsAtIndexPaths:@[tableViewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+            
+        case NSFetchedResultsChangeUpdate:
+            [self configureCell:[tableView cellForRowAtIndexPath:tableViewIndexPath] atIndexPath:tableViewIndexPath];
+            break;
+            
+        case NSFetchedResultsChangeMove:
+            [tableView deleteRowsAtIndexPaths:@[tableViewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[tableViewNewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            break;
+    }
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+{
+    [self.tableView endUpdates];
+}
+
+/*
+ // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
+ 
+ - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
+ {
+ // In the simplest, most efficient, case, reload the table view.
+ [self.tableView reloadData];
+ }
+ */
+
+- (NSIndexPath *)fetchedResultIndexPathForTableViewIndexPath:(NSIndexPath *)indexPath {
+    return [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
+}
+
+- (NSIndexPath *)tableViewIndexPathForFetchedResultsIndexPath:(NSIndexPath *)indexPath {
+    return [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1];
+}
+
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:[self fetchedResultIndexPathForTableViewIndexPath:indexPath]];
+
+    cell.textLabel.text = feed.title;
+    cell.detailTextLabel.text = feed.descriptionString;
+    
+    UIImage *image = feed.image;    
+    cell.imageView.image = image;
+    ((UIImageView *)[cell viewWithTag:100]).image = image;
+    
+    if(feed.enabledValue)
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    else
+        cell.accessoryType = UITableViewCellAccessoryNone;    
 }
 
 @end

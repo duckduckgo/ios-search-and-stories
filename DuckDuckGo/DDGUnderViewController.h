@@ -18,10 +18,10 @@ typedef enum DDGViewControllerType {
 
 @class DDGSettingsViewController, DDGStory;
 
-@interface DDGUnderViewController : UITableViewController <DDGSearchHandler>
-{
+@interface DDGUnderViewController : UITableViewController <DDGSearchHandler> {
 	NSInteger			menuIndex;
 }
+@property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 
 -(void)configureViewController:(UIViewController *)viewController;
 

@@ -7,7 +7,6 @@
 //
 
 #import "DDGTier2ViewController.h"
-#import "DDGNewsProvider.h"
 #import "DDGSearchController.h"
 #import "DDGStory.h"
 #import "DDGJSONViewController.h"

@@ -79,7 +79,7 @@
                 break;
             case DDGReadabilityToggleModeOff:
             default:
-                [webViewController loadQueryOrURL:story.url];
+        [webViewController loadQueryOrURL:story.urlString];
                 break;
         }
     }

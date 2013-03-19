@@ -7,7 +7,6 @@
 //
 
 #import "DDGSettingsViewController.h"
-#import "DDGCache.h"
 #import "DDGChooseSourcesViewController.h"
 #import "DDGChooseRegionViewController.h"
 #import "DDGActivityViewController.h"
@@ -17,7 +16,6 @@
 #import "ECSlidingViewController.h"
 #import "DDGRegionProvider.h"
 
-NSString * const DDGSettingsCacheName = @"settings";
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
 NSString * const DDGSettingRegion = @"region";
@@ -37,15 +35,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 		DDGSettingRegion: @"us-en",
 		DDGSettingAutocomplete: @(YES),
 		DDGSettingStoriesReadView: @(YES),
-        DDGSettingHomeView: @"Stories View",
+        DDGSettingHomeView: DDGSettingHomeViewTypeStories,
     };
     
-    for(NSString *key in defaults) {
-        if(![DDGCache objectForKey:key inCache:DDGSettingsCacheName])
-            [DDGCache setObject:[defaults objectForKey:key] 
-                         forKey:key 
-                        inCache:DDGSettingsCacheName];
-    }
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
 - (void)dealloc
@@ -140,16 +133,19 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 //    [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
 //    [self addRadioOptionWithTitle:@"Duck Mode" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
     
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    
     [self addSectionWithTitle:@"Stories" footer:nil];
     [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
-    [self addSwitch:@"Readability View" forKey:DDGSettingStoriesReadView enabled:[[DDGCache objectForKey:DDGSettingStoriesReadView inCache:DDGSettingsCacheName] boolValue]];
-    [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[DDGCache objectForKey:DDGSettingQuackOnRefresh inCache:DDGSettingsCacheName] boolValue]];
+    [self addSwitch:@"Readability View" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
+    [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
     [self addSectionWithTitle:@"Search Auto Complete" footer:nil];
-    [self addSwitch:@"Enable Auto Complete" forKey:DDGSettingAutocomplete enabled:[[DDGCache objectForKey:DDGSettingAutocomplete inCache:DDGSettingsCacheName] boolValue]];
+    [self addSwitch:@"Enable Auto Complete" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
     
     [self addSectionWithTitle:@"Regions" footer:nil];
     [self addButton:@"Region" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
@@ -158,7 +154,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     }];
     
     [self addSectionWithTitle:@"Privacy" footer:nil];
-    [self addSwitch:@"Record Recent" forKey:DDGSettingRecordHistory enabled:[[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue]];
+    [self addSwitch:@"Record Recent" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
     [self addSectionWithTitle:nil footer:@"Recents are stored on your phone."];
     [self addButton:@"Clear Recent" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
@@ -203,25 +199,14 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 -(void)saveData:(NSDictionary *)formData {
-//    [DDGCache setObject:[formData objectForKey:forKey:DDGSettingHomeView]
-//                 forKey:DDGSettingHomeView
-//                inCache:DDGSettingsCacheName];
-    
-    [DDGCache setObject:[formData objectForKey:DDGSettingRecordHistory]
-                 forKey:DDGSettingRecordHistory
-                inCache:DDGSettingsCacheName];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-    [DDGCache setObject:[formData objectForKey:DDGSettingStoriesReadView]
-                 forKey:DDGSettingStoriesReadView
-                inCache:DDGSettingsCacheName];
+//    [defaults setObject:[formData objectForKey:forKey:DDGSettingHomeView] forKey:DDGSettingHomeView];
     
-    [DDGCache setObject:[formData objectForKey:DDGSettingQuackOnRefresh]
-                 forKey:DDGSettingQuackOnRefresh
-                inCache:DDGSettingsCacheName];
-    
-    [DDGCache setObject:[formData objectForKey:DDGSettingAutocomplete]
-                 forKey:DDGSettingAutocomplete
-                inCache:DDGSettingsCacheName];
+    [defaults setObject:[formData objectForKey:DDGSettingRecordHistory] forKey:DDGSettingRecordHistory];
+    [defaults setObject:[formData objectForKey:DDGSettingStoriesReadView] forKey:DDGSettingStoriesReadView];
+    [defaults setObject:[formData objectForKey:DDGSettingQuackOnRefresh] forKey:DDGSettingQuackOnRefresh];
+    [defaults setObject:[formData objectForKey:DDGSettingAutocomplete] forKey:DDGSettingAutocomplete];
 }
 
 #pragma mark - Helper methods

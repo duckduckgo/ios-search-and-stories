@@ -6,25 +6,24 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import "_DDGStory.h"
 
-@interface DDGStory : NSObject <NSCoding> {
+@interface DDGStory : _DDGStory {
 }
 
-@property(nonatomic, strong) NSString *storyID;
-@property(nonatomic, strong) NSString *title;
-@property(nonatomic, strong) NSString *url;
-@property(nonatomic, strong) NSString *article_url;
-@property(nonatomic, strong) NSString *feed;
-@property(nonatomic, strong) NSDate *date;
+//@property(nonatomic, strong) NSString *storyID;
+//@property(nonatomic, strong) NSString *title;
+//@property(nonatomic, strong) NSString *url;
+//@property(nonatomic, strong) NSString *article_url;
+//@property(nonatomic, strong) NSString *feed;
+//@property(nonatomic, strong) NSDate *date;
 
+@property(nonatomic, strong) NSURL *URL;
 @property(nonatomic, strong) NSURL *imageURL;
-@property(nonatomic, readonly, strong) UIImage *image;
-@property(nonatomic, strong) UIImage *decompressedImage;
-@property(nonatomic, readonly, getter = isImageDownloaded) BOOL imageDownloaded;
-@property(nonatomic, readonly, getter = isHTMLDownloaded) BOOL HTMLDownloaded;
+@property(nonatomic, readonly) UIImage *image;
+@property(nonatomic, readonly) BOOL isImageDownloaded;
+@property(nonatomic, readonly) BOOL isHTMLDownloaded;
 
-- (void)unloadImage;
 - (void)deleteImage;
 - (void)deleteHTML;
 

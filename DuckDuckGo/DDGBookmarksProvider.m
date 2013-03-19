@@ -7,7 +7,8 @@
 //
 
 #import "DDGBookmarksProvider.h"
-#import "DDGCache.h"
+
+NSString * const DDGBookmarksKey = @"bookmarks";
 
 @implementation DDGBookmarksProvider
 static DDGBookmarksProvider *sharedProvider;
@@ -19,9 +20,9 @@ static DDGBookmarksProvider *sharedProvider;
 }
 
 -(NSArray *)bookmarks {
-    if(![DDGCache objectForKey:@"bookmarks" inCache:@"misc"])
-        [DDGCache setObject:@[] forKey:@"bookmarks" inCache:@"misc"];
-    return [DDGCache objectForKey:@"bookmarks" inCache:@"misc"];
+    if(![[NSUserDefaults standardUserDefaults] objectForKey:DDGBookmarksKey])
+        [[NSUserDefaults standardUserDefaults] setObject:@[] forKey:DDGBookmarksKey];
+    return [[NSUserDefaults standardUserDefaults] objectForKey:DDGBookmarksKey];
 }
 
 -(BOOL)bookmarkExistsForPageWithURL:(NSURL *)url {
@@ -43,7 +44,7 @@ static DDGBookmarksProvider *sharedProvider;
                  @"url": url,
 				 @"feed": feed ? feed : @""
                  }];
-    [DDGCache setObject:bookmarks forKey:@"bookmarks" inCache:@"misc"];
+    [[NSUserDefaults standardUserDefaults] setObject:bookmarks forKey:DDGBookmarksKey];
 }
 
 -(void)unbookmarkPageWithURL:(NSURL *)url {
@@ -59,7 +60,7 @@ static DDGBookmarksProvider *sharedProvider;
 -(void)deleteBookmarkAtIndex:(NSInteger)index {
     NSMutableArray *bookmarks = self.bookmarks.mutableCopy;
     [bookmarks removeObjectAtIndex:index];
-    [DDGCache setObject:bookmarks.copy forKey:@"bookmarks" inCache:@"misc"];
+    [[NSUserDefaults standardUserDefaults] setObject:bookmarks.copy forKey:DDGBookmarksKey];
 }
 
 -(void)moveBookmarkAtIndex:(NSInteger)from toIndex:(NSInteger)to {
@@ -67,7 +68,7 @@ static DDGBookmarksProvider *sharedProvider;
     NSDictionary *bookmark = [bookmarks objectAtIndex:from];
     [bookmarks removeObjectAtIndex:from];
     [bookmarks insertObject:bookmark atIndex:to];
-    [DDGCache setObject:bookmarks.copy forKey:@"bookmarks" inCache:@"misc"];
+    [[NSUserDefaults standardUserDefaults] setObject:bookmarks.copy forKey:DDGBookmarksKey];
 }
 
 @end

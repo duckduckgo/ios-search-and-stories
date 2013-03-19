@@ -1,20 +1,8 @@
-//
-//  DDGStory.m
-//  DuckDuckGo
-//
-//  Created by Ishaan Gulrajani on 8/10/12.
-//
-//
+#import "DDGStoryFeed.h"
 
-#import "DDGStory.h"
-#import "NSOperationStack.h"
+@implementation DDGStoryFeed
 
-@interface DDGStory () {
-    UIImage *_image;
-}
-@end
-
-@implementation DDGStory
+// Custom logic goes here.
 
 - (void)setURL:(NSURL *)URL {
     self.urlString = [URL absoluteString];
@@ -52,17 +40,6 @@
     return self.imageDownloadedValue;
 }
 
-- (BOOL)isHTMLDownloaded {
-    return self.htmlDownloadedValue;
-}
-
-- (void)prepareForDeletion {
-    [super prepareForDeletion];
-    
-    [self deleteImage];
-    [self deleteHTML];
-}
-
 #pragma mark - Image
 
 -(UIImage *)image {
@@ -77,14 +54,12 @@
 
 -(void)deleteImage {
     [[NSFileManager defaultManager] removeItemAtPath:[self imageFilePath] error:nil];
-    self.imageDownloadedValue = NO;
+    self.imageDownloaded = NO;
 }
 
 - (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL suceess = [data writeToFile:[self imageFilePath] atomically:NO];
-        if (suceess)
-            self.imageDownloadedValue = YES;
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completion)
                 completion(suceess);
@@ -93,36 +68,7 @@
 }
 
 -(NSString *)imageFilePath {
-    return [[self baseFilePath] stringByAppendingPathComponent:[@"image" stringByAppendingFormat:@"%@.jpg",self.id]];
-}
-
-#pragma mark - HTML
-
-- (void)deleteHTML {
-    [[NSFileManager defaultManager] removeItemAtPath:[self HTMLFilePath] error:nil];
-    self.htmlDownloadedValue = NO;
-}
-
-- (NSURLRequest *)HTMLURLRequest {
-    if (!self.htmlDownloadedValue)
-        return nil;
-    
-    return [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[self HTMLFilePath]]];
-}
-
-- (void)writeHTMLString:(NSString *)html completion:(void (^)(BOOL success))completion {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        BOOL suceess = [html writeToFile:[self HTMLFilePath] atomically:NO encoding:NSUTF8StringEncoding error:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.htmlDownloadedValue = YES;
-            if (completion)
-                completion(suceess);
-        });
-    });
-}
-
--(NSString *)HTMLFilePath {
-    return [[self baseFilePath] stringByAppendingPathComponent:[@"story" stringByAppendingFormat:@"%@.html",self.id]];
+    return [[self baseFilePath] stringByAppendingPathComponent:[@"feed-image-" stringByAppendingFormat:@"%@.png",self.id]];
 }
 
 @end

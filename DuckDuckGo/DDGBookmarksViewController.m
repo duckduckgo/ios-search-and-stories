@@ -12,8 +12,6 @@
 #import "DDGUnderViewController.h"
 #import "ECSlidingViewController.h"
 
-#import "DDGCache.h"
-
 @interface DDGBookmarksViewController ()
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
@@ -141,7 +139,8 @@
 	}
 	else if (feed)
 	{
-		((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:feed inCache:@"sourceImages"];
+#warning favicon for feed
+//		((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:feed inCache:@"sourceImages"];
 	}
 	else
 		((UIImageView *)[cell viewWithTag:100]).image = nil;

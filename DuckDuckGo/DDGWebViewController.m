@@ -9,11 +9,9 @@
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
-#import "DDGNewsProvider.h"
 #import "SVProgressHUD.h"
 #import "ECSlidingViewController.h"
 #import "DDGUnderViewController.h"
-#import "DDGCache.h"
 #import "DDGUtility.h"
 #import "DDGStory.h"
 #import "AFNetworking.h"
@@ -159,7 +157,7 @@
 			// direct query
             urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
 						 [queryOrURLString URLEncodedStringDDG], 
-						 [DDGCache objectForKey:DDGSettingRegion inCache:DDGSettingsCacheName]];
+						 [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingRegion]];
         }
 		else
 		{
@@ -180,7 +178,7 @@
 
 - (void)loadJSONForStory:(DDGStory *)story completion:(void (^)(id JSON))completion {
     
-    NSString *urlString = story.article_url;
+    NSString *urlString = story.articleURLString;
     
     if (nil == urlString) {
         if (completion)
@@ -208,7 +206,7 @@
             webViewLoadingDepth = 0;
             webViewLoadEvents = 0;
         }
-        [self loadQueryOrURL:[story url]];
+        [self loadQueryOrURL:story.urlString];
     }];
     
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
@@ -251,10 +249,10 @@
     
     void (^htmlDownloaded)(BOOL success) = ^(BOOL success){
         if (success) {
-            self.webViewURL = [NSURL URLWithString:story.url];
+            self.webViewURL = story.URL;
             [_webView loadRequest:[story HTMLURLRequest]];
         } else {
-            [self loadQueryOrURL:[story url]];
+            [self loadQueryOrURL:story.urlString];
         }
     };
     
@@ -266,7 +264,15 @@
             htmlDownloaded(story.isHTMLDownloaded);
         }
         
-        [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];        
+        story.readValue = YES;
+        
+        NSManagedObjectContext *context = story.managedObjectContext;
+        [context performBlock:^{
+            NSError *error = nil;
+            BOOL success = [context save:&error];
+            if (!success)
+                NSLog(@"error: %@", error);
+        }];
     };
     
     self.story = story;
@@ -358,7 +364,7 @@
             [_searchController updateBarWithURL:request.URL];
             self.webViewURL = request.URL;
         } else if ([[[self.story HTMLURLRequest].URL URLByStandardizingPath] isEqual:[url URLByStandardizingPath]]) {
-            NSURL *storyURL = [NSURL URLWithString:self.story.url];
+            NSURL *storyURL = self.story.URL;
             [_searchController updateBarWithURL:storyURL];
             self.webViewURL = storyURL;
         }

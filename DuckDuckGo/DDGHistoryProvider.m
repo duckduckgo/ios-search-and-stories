@@ -6,7 +6,6 @@
 //  Copyright (c) 2012 DuckDuckGo, Inc. All rights reserved.
 //
 
-#import "DDGCache.h"
 #import "DDGAppDelegate.h"
 #import "DDGHistoryProvider.h"
 #import "DDGSettingsViewController.h"
@@ -38,7 +37,7 @@ static DDGHistoryProvider *sharedInstance;
 
 -(void)logHistoryItem:(NSDictionary *)historyItem
 {
-    if ([[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
     {
 		NSMutableDictionary *historyItemDictionary = [NSMutableDictionary dictionaryWithDictionary:historyItem];
 		
@@ -66,7 +65,7 @@ static DDGHistoryProvider *sharedInstance;
 
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
     // there are certain cases in which we don't want to return any history
-    if(nil == prefix || [prefix isEqualToString:@""] || ![[DDGCache objectForKey:DDGSettingRecordHistory inCache:DDGSettingsCacheName] boolValue])
+    if(nil == prefix || [prefix isEqualToString:@""] || ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
         return @[];
     
     NSMutableArray *results = [[NSMutableArray alloc] init];
