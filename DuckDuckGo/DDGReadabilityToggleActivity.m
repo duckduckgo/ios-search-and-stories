@@ -25,8 +25,7 @@
 }
 
 - (UIImage *)activityImage {
-#warning DDGReadabilityToggleActivity requires an image
-    return nil;
+    return [UIImage imageNamed:@"ui-activity_readability-off"];
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
