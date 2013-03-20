@@ -60,12 +60,12 @@
 - (UIImage *)activityImage {
     switch (self.bookmarkActivityState) {
         case DDGBookmarkActivityStateUnsave:
-            return [UIImage imageNamed:@"swipe-un-save"];
+            return [UIImage imageNamed:@"ui-activity_un-save"];
             break;
             
         case DDGBookmarkActivityStateSave:
         default:
-            return [UIImage imageNamed:@"swipe-save"];
+            return [UIImage imageNamed:@"ui-activity_save"];
             break;
     }
 }
