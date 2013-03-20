@@ -15,13 +15,14 @@
 {
     [super viewDidLoad];
 	self.navigationItem.rightBarButtonItem = nil;
+    
+    self.tableView.backgroundView = nil;
+	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];    
 }
 
 - (void)configure
 {
 	self.title = @"Region";
-
-    self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];

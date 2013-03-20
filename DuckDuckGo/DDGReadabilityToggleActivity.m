@@ -21,11 +21,32 @@
 }
 
 - (NSString *)activityTitle {
-    return NSLocalizedString(@"Readability Off", @"Activity title: switch off readability mode");
+    
+    switch (self.toggleMode) {
+        case DDGReadabilityToggleModeOn:
+            return NSLocalizedString(@"Readability On", @"Activity title: switch on readability mode");
+            break;
+        case DDGReadabilityToggleModeOff:
+        default:
+            return NSLocalizedString(@"Readability Off", @"Activity title: switch off readability mode");
+            break;
+    }
+    
+    return nil;
 }
 
-- (UIImage *)activityImage {
-    return [UIImage imageNamed:@"ui-activity_readability-off"];
+- (UIImage *)activityImage {    
+    switch (self.toggleMode) {
+        case DDGReadabilityToggleModeOn:
+            return [UIImage imageNamed:@"ui-activity_readability-on"];
+            break;
+        case DDGReadabilityToggleModeOff:
+        default:
+            return [UIImage imageNamed:@"ui-activity_readability-off"];
+            break;
+    }
+    
+    return nil;
 }
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
@@ -52,8 +73,15 @@
     
     for (DDGWebViewController *webViewController in self.webViewControllers) {
         DDGStory *story = webViewController.story;
-        webViewController.story = nil;
-        [webViewController loadQueryOrURL:story.url];
+        switch (self.toggleMode) {
+            case DDGReadabilityToggleModeOn:
+                [webViewController loadStory:story];
+                break;
+            case DDGReadabilityToggleModeOff:
+            default:
+                [webViewController loadQueryOrURL:story.url];
+                break;
+        }
     }
     
     [self activityDidFinish:YES];

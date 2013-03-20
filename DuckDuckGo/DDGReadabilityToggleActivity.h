@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGReadabilityToggleActivity : UIActivity
+typedef enum DDGReadabilityToggleMode {
+    DDGReadabilityToggleModeOff = 0,
+    DDGReadabilityToggleModeOn
+} DDGReadabilityToggleMode;
 
+@interface DDGReadabilityToggleActivity : UIActivity
+@property (nonatomic) DDGReadabilityToggleMode toggleMode;
 @end
