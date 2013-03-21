@@ -72,14 +72,14 @@
 - (void)performActivity {
     
     for (DDGWebViewController *webViewController in self.webViewControllers) {
-        DDGStory *story = webViewController.story;
         switch (self.toggleMode) {
             case DDGReadabilityToggleModeOn:
-                [webViewController loadStory:story];
+                if ([webViewController canSwitchToReadabilityMode])
+                    [webViewController switchReadabilityMode:YES];
                 break;
             case DDGReadabilityToggleModeOff:
             default:
-        [webViewController loadQueryOrURL:story.urlString];
+                [webViewController switchReadabilityMode:NO];
                 break;
         }
     }

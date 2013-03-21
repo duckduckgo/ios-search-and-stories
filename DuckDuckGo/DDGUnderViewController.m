@@ -125,12 +125,12 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
     [self.slidingViewController anchorTopViewTo:ECRight];
 }
 
--(void)loadStory:(DDGStory *)story {
+-(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
     DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC];
     webVC.searchController = searchController;
     searchController.contentController = webVC;
-    [webVC loadStory:story];
+    [webVC loadStory:story readabilityMode:readabilityMode];
     
     CGRect frame = self.slidingViewController.topViewController.view.frame;
     self.slidingViewController.topViewController = searchController;

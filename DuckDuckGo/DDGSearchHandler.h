@@ -16,7 +16,7 @@
 -(void)prepareForUserInput;
 
 @optional
--(void)loadStory:(DDGStory *)story;
+-(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode;
 -(void)searchControllerActionButtonPressed;
 -(void)searchControllerStopOrReloadButtonPressed;
 -(void)searchControllerAddressBarWillOpen;

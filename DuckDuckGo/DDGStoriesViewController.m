@@ -610,24 +610,9 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
     story.readValue = YES;
     
-//    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-//        // mark the story as read
-//        [DDGCache setObject:@(YES) forKey:story.storyID inCache:@"readStories"];
-//        
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//            [_tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
-//        });
-//    });
-    
     [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:DDGLastViewedStoryKey];
     
-    BOOL showInReadView = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView];
-    if (showInReadView) {
-        [self.searchHandler loadStory:story];
-    } else {
-        NSString *escapedStoryURL = [story.urlString stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        [self.searchHandler loadQueryOrURL:escapedStoryURL];
-    }
+    [self.searchHandler loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
     
     [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": story.title, @"url": story.urlString, @"feed": story.feed, @"kind": @"feed"}];
 }

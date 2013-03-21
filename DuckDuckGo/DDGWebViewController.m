@@ -21,6 +21,11 @@
 #import "DDGBookmarkActivity.h"
 #import "DDGReadabilityToggleActivity.h"
 
+@interface DDGWebViewController ()
+@property (nonatomic, readwrite) BOOL inReadabilityMode;
+@property (nonatomic, copy) NSURLRequest *lastLoadedRequest;
+@end
+
 @implementation DDGWebViewController
 
 #pragma mark - View lifecycle
@@ -88,6 +93,43 @@
     [_searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
+#pragma mark - Readability Mode
+
+- (BOOL)canSwitchToReadabilityMode {
+    if (self.inReadabilityMode)
+        return NO;
+
+    BOOL readabilityAvailable = (nil != self.story.articleURLString);
+    BOOL currentURLIsNonReadabilityURL = [self.webView.request.URL isEqual:self.story.URL];
+    
+    NSURL *readbilityURL = [[self.story HTMLURLRequest].URL URLByStandardizingPath];
+    NSURL *lastRequestURL = [self.lastLoadedRequest.URL URLByStandardizingPath];
+    BOOL previousRequestURLIsReadabilityURL = [readbilityURL isEqual:lastRequestURL];
+    
+    return (readabilityAvailable && (currentURLIsNonReadabilityURL || previousRequestURLIsReadabilityURL));
+}
+
+- (void)switchReadabilityMode:(BOOL)on {
+    if (on) {
+        if (![self canSwitchToReadabilityMode])
+            return;
+        
+        NSURL *readbilityURL = [[self.story HTMLURLRequest].URL URLByStandardizingPath];
+        if ([readbilityURL isEqual:[self.lastLoadedRequest.URL URLByStandardizingPath]])
+            [self.webView goBack];
+        else
+            [self loadStory:self.story readabilityMode:YES];
+    } else {
+        if (!self.inReadabilityMode)
+            return;
+        
+        if ([self.lastLoadedRequest.URL isEqual:self.story.URL])
+            [self.webView goBack];
+        else
+            [self loadStory:self.story readabilityMode:NO];
+    }
+}
+
 #pragma mark - Actions
 
 -(void)searchControllerActionButtonPressed
@@ -112,8 +154,13 @@
     
     NSArray *applicationActivities = @[bookmarkActivity];
     
-    if (nil != self.story) {
+    if (self.inReadabilityMode) {
         DDGReadabilityToggleActivity *toggleActivity = [[DDGReadabilityToggleActivity alloc] init];
+        toggleActivity.toggleMode = DDGReadabilityToggleModeOff;
+        applicationActivities = [applicationActivities arrayByAddingObject:toggleActivity];
+    } else if ([self canSwitchToReadabilityMode]) {
+        DDGReadabilityToggleActivity *toggleActivity = [[DDGReadabilityToggleActivity alloc] init];
+        toggleActivity.toggleMode = DDGReadabilityToggleModeOn;
         applicationActivities = [applicationActivities arrayByAddingObject:toggleActivity];
     }
     
@@ -244,11 +291,11 @@
     return nil;
 }
 
--(void)loadStory:(DDGStory *)story {
+-(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
     [self view];
     
     void (^htmlDownloaded)(BOOL success) = ^(BOOL success){
-        if (success) {
+        if (readabilityMode && success) {
             self.webViewURL = story.URL;
             [_webView loadRequest:[story HTMLURLRequest]];
         } else {
@@ -277,7 +324,7 @@
     
     self.story = story;
     
-    if (!story.isHTMLDownloaded)
+    if (readabilityMode && !story.isHTMLDownloaded)
         [self loadJSONForStory:story completion:completion];
     else
         completion(nil);    
@@ -363,10 +410,12 @@
             || [scheme isEqualToString:@"https"]) {
             [_searchController updateBarWithURL:request.URL];
             self.webViewURL = request.URL;
+            self.inReadabilityMode = NO;
         } else if ([[[self.story HTMLURLRequest].URL URLByStandardizingPath] isEqual:[url URLByStandardizingPath]]) {
             NSURL *storyURL = self.story.URL;
             [_searchController updateBarWithURL:storyURL];
             self.webViewURL = storyURL;
+            self.inReadabilityMode = YES;
         }
     }    
 }
@@ -382,9 +431,12 @@
 			return NO;
 		}
 	}
-    
+        
     [self updateBarWithRequest:request];
-	
+
+    if ([request.URL isEqual:request.mainDocumentURL])
+        self.lastLoadedRequest = webView.request;
+    
 	return YES;
 }
 
@@ -402,13 +454,13 @@
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
-{
+{    
     webViewLoadEvents--;
     [self updateProgressBar];
     
     [self updateBarWithRequest:theWebView.request];
     [_searchController webViewCanGoBack:theWebView.canGoBack];
-    
+        
 	if (--webViewLoadingDepth <= 0) {
         [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
         [_searchController webViewFinishedLoading];

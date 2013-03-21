@@ -24,9 +24,6 @@ typedef enum DDGViewControllerType {
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 
 -(void)configureViewController:(UIViewController *)viewController;
-
--(void)loadQueryOrURL:(NSString *)queryOrURL;
--(void)loadStory:(DDGStory *)story;
 -(void)loadSelectedViewController;
 
 - (UIViewController *)viewControllerForType:(DDGViewControllerType)type;

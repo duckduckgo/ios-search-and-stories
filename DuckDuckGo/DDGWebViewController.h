@@ -26,8 +26,12 @@
 @property (nonatomic, strong) NSDictionary *params;
 @property (nonatomic, strong) NSURL *webViewURL;
 @property (nonatomic, strong) DDGStory *story;
+@property (nonatomic, readonly) BOOL inReadabilityMode;
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString;
--(void)loadStory:(DDGStory *)story;
+-(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode;
+
+- (BOOL)canSwitchToReadabilityMode;
+- (void)switchReadabilityMode:(BOOL)on;
 
 @end
