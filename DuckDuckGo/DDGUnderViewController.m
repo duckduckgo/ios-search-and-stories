@@ -165,7 +165,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             return self.viewControllerTypes.count;
         case 1:
 		{
-            return ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory] ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
+            return (![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
 		}
         default:
             return 0;
