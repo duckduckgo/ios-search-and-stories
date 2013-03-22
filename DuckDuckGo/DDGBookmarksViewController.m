@@ -130,7 +130,9 @@
 	{
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
 		cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
-		UIImageView *iv  = [[UIImageView alloc] initWithFrame:CGRectMake(11, 16, cell.imageView.image.size.width, cell.imageView.image.size.height)];
+        UIImageView *iv = (UIImageView *)[cell viewWithTag:100];
+        if (nil == iv)
+            iv  = [[UIImageView alloc] initWithFrame:CGRectMake(11, 16, cell.imageView.image.size.width, cell.imageView.image.size.height)];
 		[cell.contentView addSubview:iv];
 		iv.tag = 100;
 		iv.contentMode = UIViewContentModeScaleAspectFit;
@@ -140,22 +142,14 @@
     cell.textLabel.text = [bookmark objectForKey:@"title"];
     cell.detailTextLabel.text = [bookmark objectForKey:@"url"];
 
-	NSString *feed = [bookmark objectForKey:@"feed"];
-	if ([feed isEqualToString:@"search_icon.png"])
-	{
-		((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:feed];
-	}
-	else if (feed)
-	{
-#warning favicon for feed
-//		((UIImageView *)[cell viewWithTag:100]).image = [DDGCache objectForKey:feed inCache:@"sourceImages"];
-	}
-	else
-		((UIImageView *)[cell viewWithTag:100]).image = nil;
+    ((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:@"search_icon"];    
 
     return cell;
 }
 
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {

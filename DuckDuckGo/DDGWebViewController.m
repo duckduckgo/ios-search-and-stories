@@ -151,19 +151,27 @@
     NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     NSString *feed = [_webViewURL absoluteString];
     
-    DDGBookmarkActivity *bookmarkActivity = [[DDGBookmarkActivity alloc] init];
-    DDGBookmarkActivityItem *item;
+    NSArray *applicationActivities = @[];
+    NSArray *items = @[shareURL, self];
+    
+    DDGBookmarkActivity *bookmarkActivity = nil;
+    DDGBookmarkActivityItem *bookmarkItem = nil;
     
     if (self.story && (self.inReadabilityMode || [self currentURLIsNonReadabilityURL] || [self lastLoadedURLMatchesStoryReadabilityURL])) {
-        item = [DDGBookmarkActivityItem itemWithStory:self.story];
+        bookmarkActivity = [[DDGBookmarkActivity alloc] init];
+        bookmarkItem = [DDGBookmarkActivityItem itemWithStory:self.story];
         bookmarkActivity.bookmarkActivityState = (self.story.savedValue) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
-    } else {
+    } else if ([self.searchController isQuery:self.searchController.searchField.text]) {
+        bookmarkActivity = [[DDGBookmarkActivity alloc] init];        
+        bookmarkItem = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:_webViewURL feed:feed];
         BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
-        item = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:_webViewURL feed:feed];
         bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
     }
     
-    NSArray *applicationActivities = @[bookmarkActivity];
+    if (nil != bookmarkActivity && bookmarkItem != nil) {
+        applicationActivities = [applicationActivities arrayByAddingObject:bookmarkActivity];
+        items = [items arrayByAddingObject:bookmarkItem];
+    }
     
     if (self.inReadabilityMode) {
         DDGReadabilityToggleActivity *toggleActivity = [[DDGReadabilityToggleActivity alloc] init];
@@ -175,7 +183,7 @@
         applicationActivities = [applicationActivities arrayByAddingObject:toggleActivity];
     }
     
-    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareURL, item, self] applicationActivities:applicationActivities];
+    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:applicationActivities];
     [self presentViewController:avc animated:YES completion:NULL];
 }
 
