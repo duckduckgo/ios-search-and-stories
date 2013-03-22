@@ -27,6 +27,7 @@
 - (void)deleteImage;
 - (void)deleteHTML;
 
+- (NSString *)HTML;
 - (NSURLRequest *)HTMLURLRequest;
 
 - (void)writeHTMLString:(NSString *)html completion:(void (^)(BOOL success))completion;

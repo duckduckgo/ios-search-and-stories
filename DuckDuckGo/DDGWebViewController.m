@@ -111,7 +111,7 @@
 
     BOOL readabilityAvailable = (nil != self.story.articleURLString);
     
-    return (readabilityAvailable && ([self currentURLIsNonReadabilityURL] || [self lastLoadedURLMatchesStoryReadabilityURL]));
+    return (readabilityAvailable && !self.webView.canGoBack);
 }
 
 - (void)switchReadabilityMode:(BOOL)on {
@@ -157,7 +157,7 @@
     DDGBookmarkActivity *bookmarkActivity = nil;
     DDGBookmarkActivityItem *bookmarkItem = nil;
     
-    if (self.story && (self.inReadabilityMode || [self currentURLIsNonReadabilityURL] || [self lastLoadedURLMatchesStoryReadabilityURL])) {
+    if (nil != self.story && !self.webView.canGoBack) {
         bookmarkActivity = [[DDGBookmarkActivity alloc] init];
         bookmarkItem = [DDGBookmarkActivityItem itemWithStory:self.story];
         bookmarkActivity.bookmarkActivityState = (self.story.savedValue) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
@@ -316,7 +316,8 @@
     void (^htmlDownloaded)(BOOL success) = ^(BOOL success){
         if (readabilityMode && success) {
             self.webViewURL = story.URL;
-            [_webView loadRequest:[story HTMLURLRequest]];
+//            [_webView loadRequest:[story HTMLURLRequest]];
+            [_webView loadHTMLString:[story HTML] baseURL:nil];
         } else {
             [self loadQueryOrURL:story.urlString];
         }
@@ -430,7 +431,8 @@
             [_searchController updateBarWithURL:request.URL];
             self.webViewURL = request.URL;
             self.inReadabilityMode = NO;
-        } else if ([[[self.story HTMLURLRequest].URL URLByStandardizingPath] isEqual:[url URLByStandardizingPath]]) {
+        } else if ((self.story && !self.webView.canGoBack)
+                   || [[[self.story HTMLURLRequest].URL URLByStandardizingPath] isEqual:[url URLByStandardizingPath]]) {
             NSURL *storyURL = self.story.URL;
             [_searchController updateBarWithURL:storyURL];
             self.webViewURL = storyURL;
@@ -450,7 +452,9 @@
 			return NO;
 		}
 	}
-        
+    
+    // NSLog(@"shouldStartLoadWithRequest: %@ navigationType: %i", request, navigationType);
+    
     [self updateBarWithRequest:request];
 
     if ([request.URL isEqual:request.mainDocumentURL])
@@ -463,6 +467,8 @@
 {
     webViewLoadEvents++;
     [self updateProgressBar];
+    
+//    NSLog(@"webViewDidStartLoad events: %i", webViewLoadEvents);
     
     [_searchController webViewCanGoBack:theWebView.canGoBack];
     
@@ -486,11 +492,13 @@
 		webViewLoadingDepth = 0;
         webViewLoadEvents = 0;
 	}
+    
+//    NSLog(@"webViewDidFinishLoad events: %i", webViewLoadEvents);           
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    webViewLoadEvents++;
+    webViewLoadEvents--;
     [self updateProgressBar];
 
 	if (--webViewLoadingDepth <= 0) {
@@ -499,6 +507,8 @@
 		webViewLoadingDepth = 0;
         webViewLoadEvents = 0;
 	}
+    
+//    NSLog(@"didFailLoadWithError events: %i", webViewLoadEvents);
 }
 
 -(void)updateProgressBar {

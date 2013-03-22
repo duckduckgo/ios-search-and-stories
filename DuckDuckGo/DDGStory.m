@@ -103,6 +103,10 @@
     self.htmlDownloadedValue = NO;
 }
 
+- (NSString *)HTML {
+    return [NSString stringWithContentsOfFile:[self HTMLFilePath] encoding:NSUTF8StringEncoding error:nil];
+}
+
 - (NSURLRequest *)HTMLURLRequest {
     if (!self.htmlDownloadedValue)
         return nil;
