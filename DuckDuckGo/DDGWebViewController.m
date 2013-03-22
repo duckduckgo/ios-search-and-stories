@@ -95,18 +95,23 @@
 
 #pragma mark - Readability Mode
 
+- (BOOL)currentURLIsNonReadabilityURL {
+    return [self.story.URL isEqual:self.webView.request.URL];
+}
+
+- (BOOL)lastLoadedURLMatchesStoryReadabilityURL {
+    NSURL *readbilityURL = [[self.story HTMLURLRequest].URL URLByStandardizingPath];
+    NSURL *lastRequestURL = [self.lastLoadedRequest.URL URLByStandardizingPath];
+    return [readbilityURL isEqual:lastRequestURL];
+}
+
 - (BOOL)canSwitchToReadabilityMode {
     if (self.inReadabilityMode)
         return NO;
 
     BOOL readabilityAvailable = (nil != self.story.articleURLString);
-    BOOL currentURLIsNonReadabilityURL = [self.webView.request.URL isEqual:self.story.URL];
     
-    NSURL *readbilityURL = [[self.story HTMLURLRequest].URL URLByStandardizingPath];
-    NSURL *lastRequestURL = [self.lastLoadedRequest.URL URLByStandardizingPath];
-    BOOL previousRequestURLIsReadabilityURL = [readbilityURL isEqual:lastRequestURL];
-    
-    return (readabilityAvailable && (currentURLIsNonReadabilityURL || previousRequestURLIsReadabilityURL));
+    return (readabilityAvailable && ([self currentURLIsNonReadabilityURL] || [self lastLoadedURLMatchesStoryReadabilityURL]));
 }
 
 - (void)switchReadabilityMode:(BOOL)on {
@@ -146,11 +151,17 @@
     NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     NSString *feed = [_webViewURL absoluteString];
     
-    BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
-    
-    DDGBookmarkActivityItem *item = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:_webViewURL feed:feed];
     DDGBookmarkActivity *bookmarkActivity = [[DDGBookmarkActivity alloc] init];
-    bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
+    DDGBookmarkActivityItem *item;
+    
+    if (self.story && (self.inReadabilityMode || [self currentURLIsNonReadabilityURL] || [self lastLoadedURLMatchesStoryReadabilityURL])) {
+        item = [DDGBookmarkActivityItem itemWithStory:self.story];
+        bookmarkActivity.bookmarkActivityState = (self.story.savedValue) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
+    } else {
+        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
+        item = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:_webViewURL feed:feed];
+        bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
+    }
     
     NSArray *applicationActivities = @[bookmarkActivity];
     

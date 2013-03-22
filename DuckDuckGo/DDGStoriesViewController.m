@@ -55,6 +55,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
+        self.title = NSLocalizedString(@"Stories", @"View controller title: Stories");
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
     }
@@ -106,7 +107,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     topShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     // shadow gets added to table view in scrollViewDidScroll
     
-    if (refreshHeaderView == nil) {
+    if (!self.savedStoriesOnly && refreshHeaderView == nil) {
 		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
 		refreshHeaderView.delegate = self;
 		[self.tableView addSubview:refreshHeaderView];
@@ -176,7 +177,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         }
     }
     
-    [self refreshSources];
+    if (!self.savedStoriesOnly)
+        [self refreshSources];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -342,19 +344,20 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         return;
     
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
-    NSURL *storyURL = story.URL;
     
     [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-        if (nil == storyURL)
-            return;
+
+        BOOL saved = story.savedValue;
+        story.savedValue = !story.savedValue;
         
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:storyURL];
-        if(bookmarked)
-            [[DDGBookmarksProvider sharedProvider] unbookmarkPageWithURL:storyURL];
-        else
-            [[DDGBookmarksProvider sharedProvider] bookmarkPageWithTitle:story.title feed:story.feed.urlString URL:storyURL];
+        NSManagedObjectContext *context = story.managedObjectContext;
+        [context performBlock:^{
+            NSError *error = nil;
+            if (![context save:&error])
+                NSLog(@"error: %@", error);
+        }];
         
-        [SVProgressHUD showSuccessWithStatus:(bookmarked ? @"Unsaved!" : @"Saved!")];
+        [SVProgressHUD showSuccessWithStatus:(saved ? @"Unsaved!" : @"Saved!")];
     }];
 }
 
@@ -403,9 +406,9 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
         
         DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:story.URL];
+        BOOL saved = story.savedValue;
         
-        NSString *imageName = (bookmarked) ? @"swipe-un-save" : @"swipe-save";
+        NSString *imageName = (saved) ? @"swipe-un-save" : @"swipe-save";
         [self.swipeViewSaveButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
         
         self.swipeView.frame = swipeFrame;
@@ -735,6 +738,11 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     NSPredicate *predicate = nil;
     if (nil != self.sourceFilter)
         predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
+    
+    if (self.savedStoriesOnly) {
+        NSPredicate *savedPredicate = [NSPredicate predicateWithFormat:@"saved == %@", @(YES)];
+        predicate = (predicate == nil) ? savedPredicate : [NSCompoundPredicate andPredicateWithSubpredicates:@[predicate, savedPredicate]];
+    }
     
     [fetchRequest setPredicate:predicate];
     

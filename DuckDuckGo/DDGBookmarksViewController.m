@@ -19,9 +19,17 @@
 
 @implementation DDGBookmarksViewController
 
+- (id)initWithStyle:(UITableViewStyle)style
+{
+    self = [super initWithStyle:style];
+    if (self) {
+        self.title = NSLocalizedString(@"Bookmarks", @"View controller title: Bookmarks");
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.title = @"Saved";
 
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
@@ -130,7 +138,7 @@
     
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
     cell.textLabel.text = [bookmark objectForKey:@"title"];
-    cell.detailTextLabel.text = [[bookmark objectForKey:@"url"] absoluteString];
+    cell.detailTextLabel.text = [bookmark objectForKey:@"url"];
 
 	NSString *feed = [bookmark objectForKey:@"feed"];
 	if ([feed isEqualToString:@"search_icon.png"])
@@ -166,7 +174,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
-    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:[[bookmark objectForKey:@"url"] absoluteString]];
+    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:[bookmark objectForKey:@"url"]];
 }
 
 @end

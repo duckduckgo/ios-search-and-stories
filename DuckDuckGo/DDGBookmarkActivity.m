@@ -9,11 +9,13 @@
 #import "DDGBookmarkActivity.h"
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
+#import "DDGStory.h"
 
 @interface DDGBookmarkActivityItem ()
 @property (nonatomic, copy, readwrite) NSURL *URL;
 @property (nonatomic, copy, readwrite) NSString *title;
 @property (nonatomic, copy, readwrite) NSString *feed;
+@property (nonatomic, strong, readwrite) DDGStory *story;
 @end
 
 @interface DDGBookmarkActivity ()
@@ -21,6 +23,10 @@
 @end
 
 @implementation DDGBookmarkActivityItem
+
++ (id)itemWithStory:(DDGStory *)story {
+    return [[DDGBookmarkActivityItem alloc] initWithStory:story];
+}
 
 + (id)itemWithTitle:(NSString *)title URL:(NSURL *)URL feed:(NSString *)feed {
     return [[DDGBookmarkActivityItem alloc] initWithTitle:title URL:URL feed:feed];
@@ -32,6 +38,15 @@
         self.title = title;
         self.URL = URL;
         self.feed = feed;
+    }
+    return self;
+}
+
+- (id)initWithStory:(DDGStory *)story {
+    self = [super init];
+    if (self) {
+        self.title = story.title;
+        self.story = story;
     }
     return self;
 }
@@ -90,19 +105,36 @@
     self.items = items;
 }
 
-- (void)performActivity {    
+- (void)performActivity {
     DDGBookmarksProvider *provider = [DDGBookmarksProvider sharedProvider];
     
     for (DDGBookmarkActivityItem *item in self.items) {
         switch (self.bookmarkActivityState) {
             case DDGBookmarkActivityStateUnsave:
-                [provider unbookmarkPageWithURL:item.URL];
+                if (item.story) {
+                    item.story.savedValue = NO;
+                } else {
+                    [provider unbookmarkPageWithURL:item.URL];
+                }
                 break;
                 
             case DDGBookmarkActivityStateSave:
             default:
-                [provider bookmarkPageWithTitle:item.title feed:item.feed URL:item.URL];
+                if (item.story) {
+                    item.story.savedValue = YES;
+                } else {
+                    [provider bookmarkPageWithTitle:item.title feed:item.feed URL:item.URL];
+                }
                 break;
+        }
+        
+        if (nil != item.story) {
+            NSManagedObjectContext *context = item.story.managedObjectContext;
+            [context performBlock:^{
+                NSError *error = nil;
+                if (![context save:&error])
+                    NSLog(@"error: %@", error);
+            }];
         }
     }        
     

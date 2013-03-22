@@ -17,6 +17,7 @@
 {}
 @property (nonatomic, readonly, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic) BOOL savedStoriesOnly;
 
 - (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 @end

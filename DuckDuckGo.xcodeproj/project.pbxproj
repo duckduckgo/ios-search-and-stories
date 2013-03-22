@@ -199,8 +199,9 @@
 		5BFF24CC16F7803400844D3B /* _DDGStory.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24C916F7803400844D3B /* _DDGStory.m */; };
 		5BFF24CD16F7803400844D3B /* _DDGStoryFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24CB16F7803400844D3B /* _DDGStoryFeed.m */; };
 		5BFF24CE16F7803900844D3B /* DDGStoryFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24C616F7801500844D3B /* DDGStoryFeed.m */; };
-		5BFF24DD16FA0C1600844D3B /* ui-activity_readability-on.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BFF24D916FA0C1600844D3B /* ui-activity_readability-on.png */; };
-		5BFF24DE16FA0C1600844D3B /* ui-activity_readability-on@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BFF24DA16FA0C1600844D3B /* ui-activity_readability-on@2x.png */; };
+		5BFF24DD16FA0C1600844D3B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		5BFF24DE16FA0C1600844D3B /* (null) in Resources */ = {isa = PBXBuildFile; };
+		5BFF24F116FB53D800844D3B /* DDGTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24F016FB53D800844D3B /* DDGTabViewController.m */; };
 		8333D63716666CA100571C59 /* spacer23x23.png in Resources */ = {isa = PBXBuildFile; fileRef = 8333D63616666CA100571C59 /* spacer23x23.png */; };
 		8343A2E31672827100DDE73C /* icon_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E11672827100DDE73C /* icon_notification@2x.png */; };
 		8343A2E41672827100DDE73C /* icon_notification.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E21672827100DDE73C /* icon_notification.png */; };
@@ -516,6 +517,8 @@
 		5BFF24C916F7803400844D3B /* _DDGStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _DDGStory.m; sourceTree = "<group>"; };
 		5BFF24CA16F7803400844D3B /* _DDGStoryFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _DDGStoryFeed.h; sourceTree = "<group>"; };
 		5BFF24CB16F7803400844D3B /* _DDGStoryFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _DDGStoryFeed.m; sourceTree = "<group>"; };
+		5BFF24EF16FB53D800844D3B /* DDGTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTabViewController.h; sourceTree = "<group>"; };
+		5BFF24F016FB53D800844D3B /* DDGTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTabViewController.m; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		8333D63616666CA100571C59 /* spacer23x23.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spacer23x23.png; sourceTree = "<group>"; };
 		833DB53D1494164F00509F2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -715,14 +718,6 @@
 				5B88DBAC16DB7BA7007A935D /* swipe-share@2x.png */,
 				5B88DBAD16DB7BA7007A935D /* swipe-un-save.png */,
 				5B88DBAE16DB7BA7007A935D /* swipe-un-save@2x.png */,
-				5BFF24CF16FA098800844D3B /* ui-activity_save.png */,
-				5BFF24D016FA098800844D3B /* ui-activity_save@2x.png */,
-				5BFF24D116FA098800844D3B /* ui-activity_un-save.png */,
-				5BFF24D216FA098800844D3B /* ui-activity_un-save@2x.png */,
-				5BFF24D716FA0C1600844D3B /* ui-activity_readability-off.png */,
-				5BFF24D816FA0C1600844D3B /* ui-activity_readability-off@2x.png */,
-				5BFF24D916FA0C1600844D3B /* ui-activity_readability-on.png */,
-				5BFF24DA16FA0C1600844D3B /* ui-activity_readability-on@2x.png */,
 			);
 			name = Images;
 			sourceTree = "<group>";
@@ -840,6 +835,8 @@
 		4CD9249B15CD7DAB00EB062F /* Bookmarks */ = {
 			isa = PBXGroup;
 			children = (
+				5BFF24EF16FB53D800844D3B /* DDGTabViewController.h */,
+				5BFF24F016FB53D800844D3B /* DDGTabViewController.m */,
 				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
 				4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */,
 				4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */,
@@ -1356,14 +1353,8 @@
 				5B2FCADA16F32BE10045A5FE /* Safari@2x.png in Resources */,
 				5B2FCADB16F32BE10045A5FE /* Safari@2x~ipad.png in Resources */,
 				5B2FCADC16F32BE10045A5FE /* Safari~ipad.png in Resources */,
-				5BFF24D316FA098800844D3B /* ui-activity_save.png in Resources */,
-				5BFF24D416FA098800844D3B /* ui-activity_save@2x.png in Resources */,
-				5BFF24D516FA098800844D3B /* ui-activity_un-save.png in Resources */,
-				5BFF24D616FA098800844D3B /* ui-activity_un-save@2x.png in Resources */,
-				5BFF24DB16FA0C1600844D3B /* ui-activity_readability-off.png in Resources */,
-				5BFF24DC16FA0C1600844D3B /* ui-activity_readability-off@2x.png in Resources */,
-				5BFF24DD16FA0C1600844D3B /* ui-activity_readability-on.png in Resources */,
-				5BFF24DE16FA0C1600844D3B /* ui-activity_readability-on@2x.png in Resources */,
+				5BFF24DD16FA0C1600844D3B /* (null) in Resources */,
+				5BFF24DE16FA0C1600844D3B /* (null) in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1455,6 +1446,7 @@
 				5BFF24CC16F7803400844D3B /* _DDGStory.m in Sources */,
 				5BFF24CD16F7803400844D3B /* _DDGStoryFeed.m in Sources */,
 				5BFF24CE16F7803900844D3B /* DDGStoryFeed.m in Sources */,
+				5BFF24F116FB53D800844D3B /* DDGTabViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1742,6 +1734,7 @@
 				5BFF24BE16F77EF900844D3B /* Release (Testflight) */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		83F32252149290EF00A61BC5 /* Build configuration list for PBXProject "DuckDuckGo" */ = {
 			isa = XCConfigurationList;

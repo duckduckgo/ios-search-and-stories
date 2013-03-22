@@ -27,8 +27,9 @@ static DDGBookmarksProvider *sharedProvider;
 
 -(BOOL)bookmarkExistsForPageWithURL:(NSURL *)url {
     NSArray *bookmarks = self.bookmarks;
+    NSString *urlString = [url absoluteString];
     for(NSDictionary *bookmark in bookmarks) {
-        if([[bookmark objectForKey:@"url"] isEqual:url])
+        if([[bookmark objectForKey:@"url"] isEqual:urlString])
             return YES;
     }
     
@@ -41,7 +42,7 @@ static DDGBookmarksProvider *sharedProvider;
     bookmarks = [bookmarks arrayByAddingObject:
 				 @{
                  @"title": title,
-                 @"url": url,
+                 @"url": [url absoluteString],
 				 @"feed": feed ? feed : @""
                  }];
     [[NSUserDefaults standardUserDefaults] setObject:bookmarks forKey:DDGBookmarksKey];
@@ -49,8 +50,9 @@ static DDGBookmarksProvider *sharedProvider;
 
 -(void)unbookmarkPageWithURL:(NSURL *)url {
     NSArray *bookmarks = self.bookmarks;
+    NSString *urlString = [url absoluteString];
     for(int i=0; i < bookmarks.count; i++) {
-        if([[[bookmarks objectAtIndex:i] objectForKey:@"url"] isEqual:url]) {
+        if([[[bookmarks objectAtIndex:i] objectForKey:@"url"] isEqual:urlString]) {
             [self deleteBookmarkAtIndex:i];
             return;
         }

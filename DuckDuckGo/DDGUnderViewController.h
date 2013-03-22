@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGSearchHandler.h"
+#import "DDGTabViewController.h"
 
 typedef enum DDGViewControllerType {
     DDGViewControllerTypeHome=0,
@@ -18,7 +19,7 @@ typedef enum DDGViewControllerType {
 
 @class DDGSettingsViewController, DDGStory;
 
-@interface DDGUnderViewController : UITableViewController <DDGSearchHandler> {
+@interface DDGUnderViewController : UITableViewController <DDGSearchHandler, DDGTabViewControllerDelegate> {
 	NSInteger			menuIndex;
 }
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;

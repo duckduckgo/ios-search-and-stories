@@ -19,6 +19,7 @@
 NSString * const DDGViewControllerTypeTitleKey = @"title";
 NSString * const DDGViewControllerTypeTypeKey = @"type";
 NSString * const DDGViewControllerTypeControllerKey = @"viewController";
+NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 @interface DDGUnderViewController ()
 @property (nonatomic, strong) NSArray *viewControllerTypes;
@@ -301,12 +302,46 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
     
     switch (type) {
         case DDGViewControllerTypeSaved:
-            viewController = [[UINavigationController alloc] initWithRootViewController:[[DDGBookmarksViewController alloc] initWithNibName:nil bundle:nil]];
+        {
+            DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithStyle:UITableViewStylePlain];
+            bookmarks.title = NSLocalizedString(@"Saved Pages", @"View controller title: Saved Pages");
+            
+            DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            stories.savedStoriesOnly = YES;
+            stories.title = NSLocalizedString(@"Saved Stories", @"View controller title: Saved Stories");
+            
+            DDGTabViewController *tabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[bookmarks, stories]];
+
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
+            searchController.state = DDGSearchControllerStateHome;
+            searchController.contentController = tabViewController;
+            
+            tabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
+            tabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+            [tabViewController.segmentedControl sizeToFit];
+
+            CGRect controlBounds = tabViewController.controlView.bounds;
+            CGSize segmentSize = tabViewController.segmentedControl.frame.size;
+            segmentSize.width = controlBounds.size.width - 10.0;
+            CGRect controlRect = CGRectMake(controlBounds.origin.x + ((controlBounds.size.width - segmentSize.width) / 2.0),
+                                            controlBounds.origin.y + ((controlBounds.size.height - segmentSize.height) / 2.0),
+                                            segmentSize.width,
+                                            segmentSize.height);
+            tabViewController.segmentedControl.frame = CGRectIntegral(controlRect);
+            tabViewController.segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
+            
+            [tabViewController.controlView addSubview:tabViewController.segmentedControl];
+            tabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
+            tabViewController.delegate = self;
+            
+            viewController = searchController;
+        }
+            
             break;
         case DDGViewControllerTypeStories: {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
             searchController.state = DDGSearchControllerStateHome;
-            searchController.contentController = [[DDGStoriesViewController alloc] initWithNibName:nil bundle:nil];
+            searchController.contentController = [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             viewController = searchController;
         }
             break;
@@ -402,5 +437,10 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
     [self.slidingViewController setAnchorRightRevealAmount:width - 65.0];
 }
 
+#pragma mark - DDGTabViewControllerDelegate
+
+- (void)tabViewController:(DDGTabViewController *)tabViewController didSwitchToViewController:(UIViewController *)viewController atIndex:(NSInteger)tabIndex {
+    [[NSUserDefaults standardUserDefaults] setInteger:tabIndex forKey:DDGSavedViewLastSelectedTabIndex];
+}
 
 @end
