@@ -23,26 +23,37 @@
 
 @interface DDGWebViewController ()
 @property (nonatomic, readwrite) BOOL inReadabilityMode;
-@property (nonatomic, copy) NSURLRequest *lastLoadedRequest;
 @end
 
 @implementation DDGWebViewController
 
 #pragma mark - View lifecycle
 
+- (void)loadView {
+    self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
+    self.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);    
+}
+
+- (UIWebView *)webView {
+    if (nil == _webView) {
+        UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+        webView.delegate = self;
+        
+        webView.scalesPageToFit = YES;
+        _webViewLoadingDepth = 0;
+        webView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
+        
+        [self.view addSubview:webView];
+        _webView = webView;
+    }
+        
+    return _webView;
+}
+
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-	_webView.delegate = self;
-	_webView.scalesPageToFit = YES;
-	webViewLoadingDepth = 0;
-    _webView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
-    
-    // if we already have a query or URL to load, load it.
-	viewsInitialized = YES;
-    if(queryOrURLToLoad)
-        [self loadQueryOrURL:queryOrURLToLoad];
 }
 
 - (void)setSearchController:(DDGSearchController *)searchController {
@@ -65,12 +76,13 @@
 
 - (void)dealloc
 {
-    if (_webView.isLoading) {
+    if (self.webView.isLoading) {
         [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
-        [_webView stopLoading];
+        [self.webView stopLoading];
     }
     
-	_webView.delegate = nil;
+	self.webView.delegate = nil;
+    self.webView = nil;
 	self.webViewURL = nil;
 }
 
@@ -99,12 +111,6 @@
     return [self.story.URL isEqual:self.webView.request.URL];
 }
 
-- (BOOL)lastLoadedURLMatchesStoryReadabilityURL {
-    NSURL *readbilityURL = [[self.story HTMLURLRequest].URL URLByStandardizingPath];
-    NSURL *lastRequestURL = [self.lastLoadedRequest.URL URLByStandardizingPath];
-    return [readbilityURL isEqual:lastRequestURL];
-}
-
 - (BOOL)canSwitchToReadabilityMode {
     if (self.inReadabilityMode)
         return NO;
@@ -119,18 +125,11 @@
         if (![self canSwitchToReadabilityMode])
             return;
         
-        NSURL *readbilityURL = [[self.story HTMLURLRequest].URL URLByStandardizingPath];
-        if ([readbilityURL isEqual:[self.lastLoadedRequest.URL URLByStandardizingPath]])
-            [self.webView goBack];
-        else
             [self loadStory:self.story readabilityMode:YES];
     } else {
         if (!self.inReadabilityMode)
             return;
         
-        if ([self.lastLoadedRequest.URL isEqual:self.story.URL])
-            [self.webView goBack];
-        else
             [self loadStory:self.story readabilityMode:NO];
     }
 }
@@ -140,16 +139,16 @@
 -(void)searchControllerActionButtonPressed
 {
     // strip extra params from DDG search URLs
-    NSURL *shareURL = _webViewURL;
-    NSString *query = [_searchController queryFromDDGURL:_webViewURL];
+    NSURL *shareURL = self.webViewURL;
+    NSString *query = [_searchController queryFromDDGURL:shareURL];
     if(query)
     {
         query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
     }
     
-    NSString *pageTitle = [_webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    NSString *feed = [_webViewURL absoluteString];
+    NSString *pageTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    NSString *feed = [self.webViewURL absoluteString];
     
     NSArray *applicationActivities = @[];
     NSArray *items = @[shareURL, self];
@@ -163,8 +162,8 @@
         bookmarkActivity.bookmarkActivityState = (self.story.savedValue) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
     } else if ([self.searchController isQuery:self.searchController.searchField.text]) {
         bookmarkActivity = [[DDGBookmarkActivity alloc] init];        
-        bookmarkItem = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:_webViewURL feed:feed];
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:_webViewURL];
+        bookmarkItem = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:self.webViewURL feed:feed];
+        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:self.webViewURL];
         bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
     }
     
@@ -195,51 +194,45 @@
 }
 
 -(void)searchControllerLeftButtonPressed {        
-	if(_webView.canGoBack)
-        [_webView goBack];
+	if(self.webView.canGoBack)
+        [self.webView goBack];
 	else
 	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadSelectedViewController];
 }
 
 -(void)searchControllerStopOrReloadButtonPressed {
-    if(_webView.isLoading)
-        [_webView stopLoading];
+    if(self.webView.isLoading)
+        [self.webView stopLoading];
     else
-        [_webView reload];
+        [self.webView reload];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString
 {
-    if(!viewsInitialized)
-	{
-        // if views haven't loaded yet, nothing below work, so we need to save the URL/query to load later
-        queryOrURLToLoad = queryOrURLString;
+    [self view];
+    
+    NSString *urlString;
+    if([_searchController isQuery:queryOrURLString])
+    {
+        // direct query
+        urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
+                     [queryOrURLString URLEncodedStringDDG], 
+                     [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingRegion]];
     }
-	else if (queryOrURLString)
-	{
-        NSString *urlString;
-        if([_searchController isQuery:queryOrURLString])
-		{
-			// direct query
-            urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
-						 [queryOrURLString URLEncodedStringDDG], 
-						 [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingRegion]];
-        }
-		else
-		{
-			// a URL entered by user
-            urlString = [_searchController validURLStringFromString:queryOrURLString];
-		}
+    else
+    {
+        // a URL entered by user
+        urlString = [_searchController validURLStringFromString:queryOrURLString];
+    }
+    
+    NSURL *url = [NSURL URLWithString:urlString];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    if ([[url host] hasSuffix:@"duckduckgo.com"])
+        [request setValue:[DDGUtility agentDDG] forHTTPHeaderField:@"User-Agent"];
         
-        NSURL *url = [NSURL URLWithString:urlString];
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-		if ([[url host] hasSuffix:@"duckduckgo.com"])
-			[request setValue:[DDGUtility agentDDG] forHTTPHeaderField:@"User-Agent"];
-			
-        [_webView loadRequest:request];
-        [_searchController updateBarWithURL:url];
-        self.webViewURL = url;
-    }
+    [self.webView loadRequest:request];
+    [_searchController updateBarWithURL:url];
+    self.webViewURL = url;
 }
 
 - (void)loadJSONForStory:(DDGStory *)story completion:(void (^)(id JSON))completion {
@@ -258,27 +251,27 @@
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (completion)
             completion(responseObject);
-        if (--webViewLoadingDepth <= 0) {
+        if (--_webViewLoadingDepth <= 0) {
             [_searchController webViewFinishedLoading];
-            webViewLoadingDepth = 0;
-            webViewLoadEvents = 0;
+            _webViewLoadingDepth = 0;
+            _webViewLoadEvents = 0;
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completion)
             completion(nil);
         [_searchController webViewFinishedLoading];
-        if (--webViewLoadingDepth <= 0) {
+        if (--_webViewLoadingDepth <= 0) {
             [_searchController webViewFinishedLoading];
-            webViewLoadingDepth = 0;
-            webViewLoadEvents = 0;
+            _webViewLoadingDepth = 0;
+            _webViewLoadEvents = 0;
         }
         [self loadQueryOrURL:story.urlString];
     }];
     
     [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        if (webViewLoadingDepth == 0) {
-            webViewLoadingDepth++;
-            webViewLoadEvents++;
+        if (_webViewLoadingDepth == 0) {
+            _webViewLoadingDepth++;
+            _webViewLoadEvents++;
             [_searchController webViewCanGoBack:NO];            
             [_searchController webViewStartedLoading];
         }
@@ -313,11 +306,22 @@
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
     [self view];
     
+    if (nil != self.webView.request) {
+        [self.webView removeFromSuperview];
+        
+        if (self.webView.isLoading) {
+            [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
+            [self.webView stopLoading];
+        }
+        
+        self.webView.delegate = nil;
+        self.webView = nil;        
+    }
+    
     void (^htmlDownloaded)(BOOL success) = ^(BOOL success){
         if (readabilityMode && success) {
             self.webViewURL = story.URL;
-//            [_webView loadRequest:[story HTMLURLRequest]];
-            [_webView loadHTMLString:[story HTML] baseURL:nil];
+            [self.webView loadHTMLString:[story HTML] baseURL:nil];
         } else {
             [self loadQueryOrURL:story.urlString];
         }
@@ -456,23 +460,20 @@
     // NSLog(@"shouldStartLoadWithRequest: %@ navigationType: %i", request, navigationType);
     
     [self updateBarWithRequest:request];
-
-    if ([request.URL isEqual:request.mainDocumentURL])
-        self.lastLoadedRequest = webView.request;
     
 	return YES;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)theWebView
 {
-    webViewLoadEvents++;
+    _webViewLoadEvents++;
     [self updateProgressBar];
     
-//    NSLog(@"webViewDidStartLoad events: %i", webViewLoadEvents);
+//    NSLog(@"webViewDidStartLoad events: %i", _webViewLoadEvents);
     
     [_searchController webViewCanGoBack:theWebView.canGoBack];
     
-	if (++webViewLoadingDepth == 1) {
+	if (++_webViewLoadingDepth == 1) {
         [[AFNetworkActivityIndicatorManager sharedManager] incrementActivityCount];
         [_searchController webViewStartedLoading];
     }
@@ -480,41 +481,41 @@
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {    
-    webViewLoadEvents--;
+    _webViewLoadEvents--;
     [self updateProgressBar];
     
     [self updateBarWithRequest:theWebView.request];
     [_searchController webViewCanGoBack:theWebView.canGoBack];
         
-	if (--webViewLoadingDepth <= 0) {
+	if (--_webViewLoadingDepth <= 0) {
         [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
         [_searchController webViewFinishedLoading];
-		webViewLoadingDepth = 0;
-        webViewLoadEvents = 0;
+		_webViewLoadingDepth = 0;
+        _webViewLoadEvents = 0;
 	}
     
-//    NSLog(@"webViewDidFinishLoad events: %i", webViewLoadEvents);           
+//    NSLog(@"webViewDidFinishLoad events: %i", _webViewLoadEvents);
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    webViewLoadEvents--;
+    _webViewLoadEvents--;
     [self updateProgressBar];
 
-	if (--webViewLoadingDepth <= 0) {
+	if (--_webViewLoadingDepth <= 0) {
         [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
         [_searchController webViewFinishedLoading];
-		webViewLoadingDepth = 0;
-        webViewLoadEvents = 0;
+		_webViewLoadingDepth = 0;
+        _webViewLoadEvents = 0;
 	}
     
-//    NSLog(@"didFailLoadWithError events: %i", webViewLoadEvents);
+//    NSLog(@"didFailLoadWithError events: %i", _webViewLoadEvents);
 }
 
 -(void)updateProgressBar {
-    if(webViewLoadEvents == 1)
+    if(_webViewLoadEvents == 1)
         [_searchController setProgress:0.15];
-    else if(webViewLoadEvents == 2)
+    else if(_webViewLoadEvents == 2)
         [_searchController setProgress:0.7];
 }
 

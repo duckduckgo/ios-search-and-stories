@@ -252,7 +252,6 @@
 		83CAD04316397F8D0030C4FC /* icon_caret@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CAD03F16397F8D0030C4FC /* icon_caret@2x.png */; };
 		83CD213016374049000220B0 /* section_tile.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD212E16374042000220B0 /* section_tile.png */; };
 		83CD213116374049000220B0 /* section_tile@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83CD212F16374045000220B0 /* section_tile@2x.png */; };
-		83D3DE02164D60D00062D30B /* DDGWebViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 83D3DE01164D60D00062D30B /* DDGWebViewController.xib */; };
 		83EFD3451656832C005E19CC /* search_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 83EFD3431656832C005E19CC /* search_icon.png */; };
 		83EFD3461656832C005E19CC /* search_icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83EFD3441656832C005E19CC /* search_icon@2x.png */; };
 		83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F3225C149290EF00A61BC5 /* UIKit.framework */; };
@@ -585,7 +584,6 @@
 		83CAD03F16397F8D0030C4FC /* icon_caret@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_caret@2x.png"; sourceTree = "<group>"; };
 		83CD212E16374042000220B0 /* section_tile.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = section_tile.png; sourceTree = "<group>"; };
 		83CD212F16374045000220B0 /* section_tile@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "section_tile@2x.png"; sourceTree = "<group>"; };
-		83D3DE01164D60D00062D30B /* DDGWebViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGWebViewController.xib; sourceTree = "<group>"; };
 		83EFD3431656832C005E19CC /* search_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = search_icon.png; sourceTree = "<group>"; };
 		83EFD3441656832C005E19CC /* search_icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "search_icon@2x.png"; sourceTree = "<group>"; };
 		83F32258149290EF00A61BC5 /* DuckDuckGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DuckDuckGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -894,7 +892,6 @@
 			children = (
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
-				83D3DE01164D60D00062D30B /* DDGWebViewController.xib */,
 				5B2FCB5C16F3789F0045A5FE /* DDGReadabilityToggleActivity.h */,
 				5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */,
 			);
@@ -1323,7 +1320,6 @@
 				4C1D95EA163F3D2100F7A0B9 /* bg_menu-items.png in Resources */,
 				4C1D95EC163F3F0300F7A0B9 /* settings_bg_tile.png in Resources */,
 				8398DAC416419EB100A559C3 /* regions.json in Resources */,
-				83D3DE02164D60D00062D30B /* DDGWebViewController.xib in Resources */,
 				83EFD3451656832C005E19CC /* search_icon.png in Resources */,
 				83EFD3461656832C005E19CC /* search_icon@2x.png in Resources */,
 				8333D63716666CA100571C59 /* spacer23x23.png in Resources */,

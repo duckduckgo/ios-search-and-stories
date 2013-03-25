@@ -14,14 +14,11 @@
 
 @interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 {
-    BOOL viewsInitialized;
-    NSString *queryOrURLToLoad;
-    
-    NSUInteger webViewLoadingDepth;
-    NSUInteger webViewLoadEvents;
+    NSUInteger _webViewLoadingDepth;
+    NSUInteger _webViewLoadEvents;
 }
 
-@property (nonatomic, strong) IBOutlet UIWebView *webView;
+@property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, weak) DDGSearchController *searchController;
 @property (nonatomic, strong) NSDictionary *params;
 @property (nonatomic, strong) NSURL *webViewURL;
