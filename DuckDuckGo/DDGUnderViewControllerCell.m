@@ -18,50 +18,97 @@
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.opaque = NO;
+        
+        UIImageView *backgroundImageView = [[UIImageView alloc] initWithFrame:self.bounds];;
+        backgroundImageView.contentMode = UIViewContentModeScaleToFill;
+        backgroundImageView.opaque = NO;
+        backgroundImageView.backgroundColor = [UIColor clearColor];
+        self.backgroundView = backgroundImageView;
+
+        UIImageView *selectedBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];;
+        selectedBackgroundView.contentMode = UIViewContentModeScaleToFill;
+        selectedBackgroundView.opaque = NO;
+        selectedBackgroundView.backgroundColor = [UIColor clearColor];
+        self.selectedBackgroundView = selectedBackgroundView;
+        
+        self.selectionStyle = UITableViewCellSelectionStyleBlue;
+        
+        self.backgroundColor = [UIColor redColor];
     }
     return self;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
+    BOOL highlight = (selected || self.isActive || self.highlighted);
+    
     [super setSelected:selected animated:animated];
 
     UIImageView *imageView = (UIImageView *)self.accessoryView;
     if ([imageView isKindOfClass:[UIImageView class]]) {
-        [imageView setHighlighted:selected];
+        [imageView setHighlighted:highlight];
     }
+    
+    [self.textLabel setHighlighted:highlight];
+    [self.imageView setHighlighted:highlight];
 }
 
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
     [super setHighlighted:highlighted animated:animated];
     
+    BOOL highlight = (highlighted || self.isActive || self.selected);
+    
     UIImageView *imageView = (UIImageView *)self.accessoryView;
     if ([imageView isKindOfClass:[UIImageView class]]) {
-        [imageView setHighlighted:highlighted];
+        [imageView setHighlighted:highlight];
     }
+    
+    [self.textLabel setHighlighted:highlight];
+    [self.imageView setHighlighted:highlight];
+}
+
+- (void)setActive:(BOOL)active {
+    
+    _active = active;
+    
+    UIImageView *imageView = (UIImageView *)self.accessoryView;
+    if ([imageView isKindOfClass:[UIImageView class]]) {
+        [imageView setHighlighted:active];
+    }
+    
+    [self.textLabel setHighlighted:active];
+    [self.imageView setHighlighted:active];
+    
+    [self setNeedsDisplay];
 }
 
 - (void)setCellMode:(DDGUnderViewControllerCellMode)cellMode {
     
     _cellMode = cellMode;
     
+    UIImageView *backgroundImageView = (UIImageView *)self.backgroundView;
+    UIImageView *selectedBackgroundImageView = (UIImageView *)self.selectedBackgroundView;
+    
     if (cellMode == DDGUnderViewControllerCellModeRecent) {
         
         self.accessoryView = nil;
         
-        self.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_history-items"]];
+        backgroundImageView.image = [UIImage imageNamed:@"new_bg_history-items"];
+        selectedBackgroundImageView.image = nil;        
+        
 		self.textLabel.numberOfLines = 2;
 		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
         self.textLabel.textColor = [UIColor colorWithRed:0.490 green:0.522 blue:0.576 alpha:1.000];
         self.textLabel.highlightedTextColor = [UIColor whiteColor];
-    } else {
-        
+    } else {        
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_caret"]];
         imageView.highlightedImage = [UIImage imageNamed:@"icon_caret_onclick"];
         imageView.contentMode = UIViewContentModeLeft;
         self.accessoryView = imageView;
         
-		self.contentView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"new_bg_menu-items"]];
+        backgroundImageView.image = [UIImage imageNamed:@"new_bg_menu-items"];
+		selectedBackgroundImageView.image = [UIImage imageNamed:@"new_bg_menu-items-highlighted"];
+        
 		self.textLabel.numberOfLines = 1;
 		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
         self.textLabel.textColor = [UIColor colorWithRed:0.686 green:0.725 blue:0.800 alpha:1.000];

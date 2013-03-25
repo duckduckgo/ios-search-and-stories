@@ -84,8 +84,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     [super viewWillAppear:animated];
     [self setupViewControllerTypes];
     [self.tableView reloadData];
-    
-    [self.tableView selectRowAtIndexPath:[NSIndexPath indexPathForRow:menuIndex inSection:0] animated:NO scrollPosition:UITableViewScrollPositionNone];    
 }
 
 -(void)configureViewController:(UIViewController *)viewController {
@@ -180,8 +178,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     if(!cell)
         cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
-	cell.selectionStyle = UITableViewCellSelectionStyleBlue;
-    cell.highlighted = (indexPath.section == 0 && indexPath.row == menuIndex);
+    cell.active = (indexPath.section == 0 && indexPath.row == menuIndex);
     
 	cell.imageView.image = nil;
     cell.imageView.highlightedImage = nil;
@@ -242,7 +239,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 		} else {
 			cell.imageView.image = [UIImage imageNamed:@"icon_notification"];
 			lbl.text = @"Recording recents is disabled.\nYou can enable it in settings.";
-			cell.selectionStyle = UITableViewCellSelectionStyleNone;
 		}
     }
     
@@ -294,6 +290,17 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 	if (indexPath.section == 1 && ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
 		return nil;
 	
+    if (indexPath.section == 0) {
+        DDGUnderViewControllerCell *oldMenuCell;
+        DDGUnderViewControllerCell *newMenuCell;
+        
+        oldMenuCell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:menuIndex inSection:0]];
+        oldMenuCell.active = NO;
+        
+        newMenuCell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        newMenuCell.active = YES;
+    }
+    
 	return indexPath;
 }
 
@@ -416,6 +423,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             [self.slidingViewController resetTopView];
         }
     }];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 #pragma mark - Rotation
