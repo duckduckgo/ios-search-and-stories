@@ -329,14 +329,19 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     NSArray *stories = self.fetchedResultsController.fetchedObjects;
     DDGStory *story = [stories objectAtIndex:self.swipeViewIndexPath.row];
     
-    [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
     
-    NSURL *storyURL = story.URL;
-    
-    if (nil == storyURL)
-        return;
-    
-    [[UIApplication sharedApplication] openURL:storyURL];
+    double delayInSeconds = 0.2;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
+        
+        NSURL *storyURL = story.URL;
+        
+        if (nil == storyURL)
+            return;
+        
+        [[UIApplication sharedApplication] openURL:storyURL];
+    });
 }
 
 - (void)save:(id)sender {
@@ -345,20 +350,24 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
     
-    [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-
-        BOOL saved = story.savedValue;
-        story.savedValue = !story.savedValue;
-        
-        NSManagedObjectContext *context = story.managedObjectContext;
-        [context performBlock:^{
-            NSError *error = nil;
-            if (![context save:&error])
-                NSLog(@"error: %@", error);
+    double delayInSeconds = 0.2;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
+            
+            BOOL saved = story.savedValue;
+            story.savedValue = !story.savedValue;
+            
+            NSManagedObjectContext *context = story.managedObjectContext;
+            [context performBlock:^{
+                NSError *error = nil;
+                if (![context save:&error])
+                    NSLog(@"error: %@", error);
+            }];
+            
+            [SVProgressHUD showSuccessWithStatus:(saved ? @"Unsaved!" : @"Saved!")];
         }];
-        
-        [SVProgressHUD showSuccessWithStatus:(saved ? @"Unsaved!" : @"Saved!")];
-    }];
+    });    
 }
 
 - (void)share:(id)sender {
@@ -367,12 +376,16 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
     
-    [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-        NSString *shareTitle = story.title;
-        NSURL *shareURL = story.URL;
-        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
-        [self presentViewController:avc animated:YES completion:NULL];
-    }];
+    double delayInSeconds = 0.2;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
+            NSString *shareTitle = story.title;
+            NSURL *shareURL = story.URL;
+            DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
+            [self presentViewController:avc animated:YES completion:NULL];
+        }];
+    });
 }
 
 - (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
