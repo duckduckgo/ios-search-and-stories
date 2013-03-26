@@ -141,21 +141,21 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
         [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
     }];
-    [self addSwitch:@"Readability View" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
+    [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
     [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
-    [self addSectionWithTitle:@"Search Auto Complete" footer:nil];
-    [self addSwitch:@"Enable Auto Complete" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
+    [self addSectionWithTitle:@"Autocomplete" footer:nil];
+    [self addSwitch:@"Status" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
     
-    [self addSectionWithTitle:@"Regions" footer:nil];
-    [self addButton:@"Region" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:@"Search Results" footer:nil];
+    [self addButton:@"Region Boost" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
         [weakSelf.navigationController pushViewController:rvc animated:YES];
     }];
     
     [self addSectionWithTitle:@"Privacy" footer:nil];
-    [self addSwitch:@"Record Recent" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
-    [self addSectionWithTitle:nil footer:@"Recents are stored on your phone."];
+    [self addSwitch:@"Save Recent" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
+    [self addSectionWithTitle:nil footer:@"Only stored on your phone."];
     [self addButton:@"Clear Recent" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
                                                                  delegate:weakSelf
@@ -175,13 +175,13 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
         [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
-    [self addButton:@"Share This App" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:@"Share App" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         NSString *shareTitle = @"Check out the DuckDuckGo app!";        
         NSURL *shareURL = [NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
-    [self addButton:@"Rate This App" forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:@"Rate App" forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=479988136&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
     }];
 

@@ -255,7 +255,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 			lbl.text = item.title;
 		} else {
 			cell.imageView.image = [UIImage imageNamed:@"icon_notification"];
-			lbl.text = @"Recording recents is disabled.\nYou can enable it in settings.";
+			lbl.text = @"Saving recents is disabled.\nYou can enable it in settings.";
 		}
     }
     
