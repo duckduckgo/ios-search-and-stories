@@ -186,7 +186,7 @@
 			mailVC.mailComposeDelegate = self;
 			[mailVC setToRecipients:@[@"stories@duckduckgo.com"]];
 			[mailVC setSubject:@"Suggestion: Story Source"];
-			[mailVC setMessageBody:@"Please let us know the source you would like us to investigate adding and why. Note that we will only consider sources that have some form of social proof like \"most up-voted\" or \"most shared\". Also, if you have any feedback about the Stories feature, we would love to hear it!" isHTML:NO];
+			[mailVC setMessageBody:@"Please let us know the source you would like us to investigate adding and why. Note that we will only consider sources that have some sort of aggregated feed like \"most up-voted\" or \"most shared\". Also, if you have any feedback about the Stories feature, we would love to hear it!" isHTML:NO];
 			[self presentViewController:mailVC animated:YES completion:NULL];
 		}
     }
