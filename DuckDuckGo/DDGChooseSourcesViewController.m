@@ -131,7 +131,7 @@
             if(!cell)
 			{
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ButtonCellIdentifier];
-                cell.textLabel.text = @"Suggest a source.";
+                cell.textLabel.text = @"Tell us about a cool source.";
                 cell.accessoryType = UITableViewCellAccessoryNone;
 				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
             }
