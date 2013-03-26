@@ -171,12 +171,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
         mailVC.mailComposeDelegate = weakSelf;
         [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
-        [mailVC setSubject:@"DuckDuckGo app feedback"];
+        [mailVC setSubject:@"DuckDuckGo for iOS feedback"];
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
         [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
     [self addButton:@"Share App" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
-        NSString *shareTitle = @"Check out the DuckDuckGo app!";        
+        NSString *shareTitle = @"Check out the DuckDuckGo iOS app!";
         NSURL *shareURL = [NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
         [weakSelf presentViewController:avc animated:YES completion:NULL];
