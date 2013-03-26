@@ -44,7 +44,7 @@ typedef enum {
 @property(nonatomic, assign) DDGSearchControllerState state;
 @property(nonatomic, weak, readonly) id<DDGSearchHandler> searchHandler;
 
--(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler;
+-(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 // managing the search controller
 -(void)updateBarWithURL:(NSURL *)url;

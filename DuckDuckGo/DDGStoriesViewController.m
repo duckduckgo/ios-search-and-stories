@@ -45,6 +45,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 @property (nonatomic, strong) NSMutableDictionary *decompressedImages;
 @property (nonatomic, strong) NSMutableSet *enqueuedDecompressionOperations;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
+@property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @end
 
 @implementation DDGStoriesViewController
@@ -69,6 +70,14 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     [[NSNotificationCenter defaultCenter] removeObserver:self
                                                     name:ECSlidingViewUnderLeftWillAppear
                                                   object:self.slidingViewController];
+}
+
+- (DDGHistoryProvider *)historyProvider {
+    if (nil == _historyProvider) {
+        _historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    }
+    
+    return _historyProvider;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -630,7 +639,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     [self.searchHandler loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
     
-    [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": story.title, @"url": story.urlString, @"feed": story.feed, @"kind": @"feed"}];
+    [self.historyProvider logStory:story];
 }
 
 #pragma mark - Loading popular stories

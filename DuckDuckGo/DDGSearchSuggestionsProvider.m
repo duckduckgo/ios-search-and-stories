@@ -8,9 +8,8 @@
 
 #import "DDGSearchSuggestionsProvider.h"
 #import "AFNetworking.h"
-#import "Constants.h"
 #import "DDGUtility.h"
-
+#import "DDGSettingsViewController.h"
 
 @implementation DDGSearchSuggestionsProvider
 

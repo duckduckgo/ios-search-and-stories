@@ -20,6 +20,7 @@ const struct DDGStoryAttributes DDGStoryAttributes = {
 
 const struct DDGStoryRelationships DDGStoryRelationships = {
 	.feed = @"feed",
+	.recent = @"recent",
 };
 
 const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
@@ -236,6 +237,19 @@ const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
 
 @dynamic feed;
 
+	
+
+@dynamic recent;
+
+	
+- (NSMutableSet*)recentSet {
+	[self willAccessValueForKey:@"recent"];
+  
+	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"recent"];
+  
+	[self didAccessValueForKey:@"recent"];
+	return result;
+}
 	
 
 

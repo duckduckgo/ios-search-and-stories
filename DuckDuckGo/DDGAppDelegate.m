@@ -124,8 +124,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     self.window.backgroundColor = [UIColor redColor];
     
     // configure the sliding view controller
-    DDGUnderViewController *under = [[DDGUnderViewController alloc] init];
-    under.managedObjectContext = self.managedObjectContext;
+    DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.searchHandler = under;
     
     ECSlidingViewController *slidingViewController = [[ECSlidingViewController alloc] initWithNibName:nil bundle:nil];
@@ -191,25 +190,43 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     [[NSUserDefaults standardUserDefaults] synchronize];
     
-    if (self.managedObjectContext.hasChanges) {
-        [self.managedObjectContext performBlock:^{
+
+    [self.managedObjectContext performBlock:^{
+        if (self.managedObjectContext.hasChanges) {
             NSError *error = nil;
             BOOL success = [self.managedObjectContext save:&error];
             if (!success && nil != error)
                 NSLog(@"error: %@", error);
-            
+        }
+        
+        [self.masterManagedObjectContext performBlock:^{
             if (self.masterManagedObjectContext.hasChanges) {
-                [self.masterManagedObjectContext performBlock:^{
-                    NSError *error = nil;
-                    BOOL success = [self.masterManagedObjectContext save:&error];
-                    if (!success && nil != error)
-                        NSLog(@"error: %@", error);
-                    
-                    [[UIApplication sharedApplication] endBackgroundTask:identfier];
-                }];
+                NSError *error = nil;
+                BOOL success = [self.masterManagedObjectContext save:&error];
+                if (!success && nil != error)
+                    NSLog(@"error: %@", error);
             }
+            [[UIApplication sharedApplication] endBackgroundTask:identfier];
         }];
-    }
+    }];
+}
+
+- (void)managedObjectContextDidSave:(NSNotification *)notification {
+    __block UIBackgroundTaskIdentifier identfier = UIBackgroundTaskInvalid;
+    
+    identfier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
+        identfier = UIBackgroundTaskInvalid;
+    }];
+    
+    [self.masterManagedObjectContext performBlock:^{
+        if (self.masterManagedObjectContext.hasChanges) {
+            NSError *error = nil;
+            BOOL success = [self.masterManagedObjectContext save:&error];
+            if (!success && nil != error)
+                NSLog(@"error: %@", error);
+        }
+        [[UIApplication sharedApplication] endBackgroundTask:identfier];
+    }];
 }
 
 // Returns the managed object context for the application.
@@ -230,6 +247,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
     if (coordinator != nil) {
         _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
         [_managedObjectContext setParentContext:_masterManagedObjectContext];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(managedObjectContextDidSave:)
+                                                     name:NSManagedObjectContextDidSaveNotification
+                                                   object:_managedObjectContext];
     }
     
     return _managedObjectContext;

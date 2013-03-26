@@ -15,9 +15,11 @@
 #import "AFNetworking.h"
 #import "DDGBookmarksViewController.h"
 #import "DDGTier2ViewController.h"
+#import "DDGSettingsViewController.h"
 
 @interface DDGAutocompleteViewController ()
 @property (nonatomic, copy) NSArray *suggestions;
+@property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @end
 
 @implementation DDGAutocompleteViewController
@@ -108,7 +110,7 @@ static NSString *historyCellID = @"HCell";
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-	if (!section && ![[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
+	if (!section && ![self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
 		return nil;
 	else if (section == 1 && !self.suggestions.count)
 		return nil;
@@ -131,7 +133,7 @@ static NSString *historyCellID = @"HCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-	if (!section && [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
+	if (!section && [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
 		return 23.0;
 	if (section == 1 && self.suggestions.count)
 		return 23.0;
@@ -144,7 +146,7 @@ static NSString *historyCellID = @"HCell";
     switch (section)
 	{
         case 0:
-            return [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
+            return [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
         case 1:
             return self.suggestions.count;
     }
@@ -174,12 +176,12 @@ static NSString *historyCellID = @"HCell";
 			[cell.contentView addSubview:separatorLine];
         }
         
-        NSArray *history = [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
+        NSArray *history = [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text];
         NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
         
         cell.textLabel.text = [historyItem objectForKey:@"text"];
         
-		lineHidden = (indexPath.row == [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count - 1) ? YES : NO;
+		lineHidden = (indexPath.row == [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count - 1) ? YES : NO;
     }
 	else if(indexPath.section == 1)
 	{
@@ -261,7 +263,7 @@ static NSString *historyCellID = @"HCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (!indexPath.section && [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
+	if (!indexPath.section && [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
 		return kCellHeightHistory+1;
 	else if (indexPath.section == 1 && self.suggestions.count)
 		return kCellHeightSuggestions+1;
@@ -284,10 +286,16 @@ static NSString *historyCellID = @"HCell";
 {
     if(indexPath.section == 0)
 	{
-        NSArray *history = [[DDGHistoryProvider sharedProvider] pastHistoryItemsForPrefix:self.searchController.searchField.text];
-        NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
-        [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": [historyItem objectForKey:@"text"], @"kind": @"history"}];
-        [self.searchController.searchHandler loadQueryOrURL:[historyItem objectForKey:@"text"]];
+        NSArray *history = [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text];        
+        DDGHistoryItem *item = [history objectAtIndex:indexPath.row];
+        [self.historyProvider relogHistoryItem:item];
+        DDGStory *story = item.story;
+        if (item.story) {
+            [self.searchController.searchHandler loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
+        } else {
+            [self.searchController.searchHandler loadQueryOrURL:item.urlString];
+        }
+        
         [self.searchController dismissAutocomplete];
     }
 	else if (indexPath.section == 1)
@@ -295,7 +303,7 @@ static NSString *historyCellID = @"HCell";
         NSArray *suggestions = self.suggestions;
         NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
         if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
-            [[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text":[suggestionItem objectForKey:@"phrase"], @"kind": @"suggestion"}];
+            [self.historyProvider logSearchResultWithTitle:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController.searchHandler loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController dismissAutocomplete];
     }

@@ -7,7 +7,6 @@
 //
 
 #import "DDGStoryFetcher.h"
-#import "Constants.h"
 #import "AFNetworking.h"
 #import "DDGStory.h"
 #import "DDGStoryFeed.h"

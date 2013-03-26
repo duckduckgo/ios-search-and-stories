@@ -15,6 +15,9 @@
 #import "DDGStoriesViewController.h"
 #import "DDGDuckViewController.h"
 #import "DDGUnderViewControllerCell.h"
+#import "DDGStory.h"
+#import "DDGStoryFeed.h"
+#import "DDGHistoryItem.h"
 
 NSString * const DDGViewControllerTypeTitleKey = @"title";
 NSString * const DDGViewControllerTypeTypeKey = @"type";
@@ -23,13 +26,17 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 @interface DDGUnderViewController ()
 @property (nonatomic, strong) NSArray *viewControllerTypes;
+@property (nonatomic, strong) DDGHistoryProvider *historyProvider;
+@property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 @end
 
 @implementation DDGUnderViewController
 
--(id)init {
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc {
     self = [super initWithStyle:UITableViewStylePlain];
     if(self) {
+        self.managedObjectContext = moc;        
+        
         [self setupViewControllerTypes];        
         
         self.tableView.scrollsToTop = NO;
@@ -42,6 +49,19 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 		self.tableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     }
     return self;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    
+    if (![self isViewLoaded] || nil == self.view.superview) {
+        self.historyProvider = nil;
+    }
 }
 
 - (void)setupViewControllerTypes {
@@ -108,7 +128,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 - (void)prepareForUserInput {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
     searchController.contentController = webVC;
     
@@ -126,7 +146,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
     searchController.contentController = webVC;
     [webVC loadStory:story readabilityMode:readabilityMode];
@@ -139,7 +159,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
     searchController.contentController = webVC;
     [webVC loadQueryOrURL:queryOrURL];
@@ -163,7 +183,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             return self.viewControllerTypes.count;
         case 1:
 		{
-            return (![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) ? 1 : [[DDGHistoryProvider sharedProvider] allHistoryItems].count;
+            return ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) ? [self.historyProvider allHistoryItems].count : 1;
 		}
         default:
             return 0;
@@ -224,18 +244,15 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) {
 			// we have history and it is enabled
-			NSDictionary *item = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
-			
-			if ([[item objectForKey:@"kind"] isEqualToString:@"search"] || [[item objectForKey:@"kind"] isEqualToString:@"suggestion"])
-			{
-				cell.imageView.image = [UIImage imageNamed:@"search_icon"];
+			DDGHistoryItem *item = [[self.historyProvider allHistoryItems] objectAtIndex:indexPath.row];
+			DDGStory *story = item.story;
+            
+			if (nil != story) {
+				cell.imageView.image = story.feed.image;
+			} else {
+                cell.imageView.image = [UIImage imageNamed:@"search_icon"];
 			}
-			else if ([[item objectForKey:@"kind"] isEqualToString:@"feed"])
-			{
-#warning feed favicon
-//				cell.imageView.image = [DDGCache objectForKey:[item objectForKey:@"feed"] inCache:@"sourceImages"];
-			}
-			lbl.text = [item objectForKey:@"text"];
+			lbl.text = item.title;
 		} else {
 			cell.imageView.image = [UIImage imageNamed:@"icon_notification"];
 			lbl.text = @"Recording recents is disabled.\nYou can enable it in settings.";
@@ -319,7 +336,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             
             DDGTabViewController *tabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[bookmarks, stories]];
 
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.state = DDGSearchControllerStateHome;
             searchController.contentController = tabViewController;
             
@@ -346,7 +363,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             
             break;
         case DDGViewControllerTypeStories: {
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.state = DDGSearchControllerStateHome;
             searchController.contentController = [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             viewController = searchController;
@@ -360,7 +377,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         }
         case DDGViewControllerTypeHome:
         {
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
 //            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
 //                searchController.contentController = [DDGDuckViewController duckViewController];
 //            } else {
@@ -413,13 +430,12 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         }
 		else if(indexPath.section == 1)
 		{
-			NSDictionary *historyItem = [[[DDGHistoryProvider sharedProvider] allHistoryItems] objectAtIndex:indexPath.row];
-			NSString *queryOrURL;
-			if ([[historyItem objectForKey:@"kind"] isEqualToString:@"feed"])
-				queryOrURL = [historyItem objectForKey:@"url"];
+			DDGHistoryItem *historyItem = [[self.historyProvider allHistoryItems] objectAtIndex:indexPath.row];
+            DDGStory *story = historyItem.story;
+			if (nil != story)
+				[self loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
 			else
-				queryOrURL = [historyItem objectForKey:@"text"];
-            [self loadQueryOrURL:queryOrURL];
+				[self loadQueryOrURL:historyItem.title];
             [self.slidingViewController resetTopView];
         }
     }];

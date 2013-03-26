@@ -118,6 +118,8 @@
 		5B07085E16FC74800058718F /* ui-activity_un-save@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B07085616FC74800058718F /* ui-activity_un-save@2x.png */; };
 		5B070864170056730058718F /* new_bg_menu-items-highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B070862170056730058718F /* new_bg_menu-items-highlighted.png */; };
 		5B070865170056730058718F /* new_bg_menu-items-highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B070863170056730058718F /* new_bg_menu-items-highlighted@2x.png */; };
+		5B07086A17008ECE0058718F /* _DDGHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B07086717008ECD0058718F /* _DDGHistoryItem.m */; };
+		5B07086B17008ECE0058718F /* DDGHistoryItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B07086917008ECE0058718F /* DDGHistoryItem.m */; };
 		5B2FCABC16F231150045A5FE /* NSString+URLEncodingDDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCABB16F231150045A5FE /* NSString+URLEncodingDDG.m */; };
 		5B2FCABF16F3235E0045A5FE /* DDGBookmarkActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCABE16F3235E0045A5FE /* DDGBookmarkActivity.m */; };
 		5B2FCAD816F32BE10045A5FE /* TUSafariActivity.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5B2FCAC116F32BE10045A5FE /* TUSafariActivity.strings */; };
@@ -399,6 +401,10 @@
 		5B07085616FC74800058718F /* ui-activity_un-save@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ui-activity_un-save@2x.png"; sourceTree = "<group>"; };
 		5B070862170056730058718F /* new_bg_menu-items-highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new_bg_menu-items-highlighted.png"; sourceTree = "<group>"; };
 		5B070863170056730058718F /* new_bg_menu-items-highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "new_bg_menu-items-highlighted@2x.png"; sourceTree = "<group>"; };
+		5B07086617008ECD0058718F /* _DDGHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _DDGHistoryItem.h; sourceTree = "<group>"; };
+		5B07086717008ECD0058718F /* _DDGHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _DDGHistoryItem.m; sourceTree = "<group>"; };
+		5B07086817008ECE0058718F /* DDGHistoryItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHistoryItem.h; sourceTree = "<group>"; };
+		5B07086917008ECE0058718F /* DDGHistoryItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHistoryItem.m; sourceTree = "<group>"; };
 		5B2FCABA16F231150045A5FE /* NSString+URLEncodingDDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncodingDDG.h"; sourceTree = "<group>"; };
 		5B2FCABB16F231150045A5FE /* NSString+URLEncodingDDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncodingDDG.m"; sourceTree = "<group>"; };
 		5B2FCABD16F3235E0045A5FE /* DDGBookmarkActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBookmarkActivity.h; sourceTree = "<group>"; };
@@ -872,6 +878,19 @@
 			name = Bookmarks;
 			sourceTree = "<group>";
 		};
+		5B07086C17008ED30058718F /* History */ = {
+			isa = PBXGroup;
+			children = (
+				4CCDC2AD1527B18C00CB6907 /* DDGHistoryProvider.h */,
+				4CCDC2AE1527B18C00CB6907 /* DDGHistoryProvider.m */,
+				5B07086617008ECD0058718F /* _DDGHistoryItem.h */,
+				5B07086717008ECD0058718F /* _DDGHistoryItem.m */,
+				5B07086817008ECE0058718F /* DDGHistoryItem.h */,
+				5B07086917008ECE0058718F /* DDGHistoryItem.m */,
+			);
+			name = History;
+			sourceTree = "<group>";
+		};
 		5B2FCAC016F32BE10045A5FE /* TUSafariActivity */ = {
 			isa = PBXGroup;
 			children = (
@@ -1141,8 +1160,7 @@
 				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
 				5B7A1C3516E9EEB700354310 /* DDGUnderViewControllerCell.h */,
 				5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */,
-				4CCDC2AD1527B18C00CB6907 /* DDGHistoryProvider.h */,
-				4CCDC2AE1527B18C00CB6907 /* DDGHistoryProvider.m */,
+				5B07086C17008ED30058718F /* History */,
 				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
 				5B7A1BA516E74C0E00354310 /* Stories */,
 				4CD9249B15CD7DAB00EB062F /* Bookmarks */,
@@ -1483,6 +1501,8 @@
 				5BFF24CD16F7803400844D3B /* _DDGStoryFeed.m in Sources */,
 				5BFF24CE16F7803900844D3B /* DDGStoryFeed.m in Sources */,
 				5BFF24F116FB53D800844D3B /* DDGTabViewController.m in Sources */,
+				5B07086A17008ECE0058718F /* _DDGHistoryItem.m in Sources */,
+				5B07086B17008ECE0058718F /* DDGHistoryItem.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

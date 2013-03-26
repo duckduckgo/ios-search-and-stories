@@ -213,7 +213,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if(buttonIndex == 0) {
-        [[DDGHistoryProvider sharedProvider] clearHistory];
+        DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+        [historyProvider clearHistory];
         [SVProgressHUD showSuccessWithStatus:@"Recents cleared!"];
     }
 }

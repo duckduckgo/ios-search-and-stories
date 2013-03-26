@@ -15,20 +15,24 @@
 #import "DDGAutocompleteViewController.h"
 #import "ECSlidingViewController.h"
 #import "DDGSettingsViewController.h"
+#import "DDGHistoryProvider.h"
 
 #import "NSMutableString+DDGDumpView.h"
 
 @interface DDGSearchController ()
-@property(nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
+@property (nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
+@property (nonatomic, strong) DDGHistoryProvider *historyProvider;
+@property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @end
 
 @implementation DDGSearchController
 
--(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler {
+-(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext; {
 	self = [super initWithNibName:@"DDGSearchController" bundle:nil];
     
 	if (self) {
         self.searchHandler = searchHandler;
+        self.managedObjectContext = managedObjectContext;
 	}
 	return self;
 }
@@ -62,6 +66,14 @@
     [self addChildViewController:contentController];
     
     _contentController = contentController;
+}
+
+- (DDGHistoryProvider *)historyProvider {
+    if (nil == _historyProvider) {
+        _historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    }
+    
+    return _historyProvider;
 }
 
 
@@ -751,7 +763,7 @@
 	[textField resignFirstResponder];
 	
 	if ([_searchField.text length])
-		[[DDGHistoryProvider sharedProvider] logHistoryItem:@{@"text": _searchField.text, @"kind": @"search"}];
+        [self.historyProvider logSearchResultWithTitle:_searchField.text];
 
     [self.searchHandler loadQueryOrURL:([_searchField.text length] ? _searchField.text : nil)];
     [self dismissAutocomplete];

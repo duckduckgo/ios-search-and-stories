@@ -13,6 +13,15 @@
         <attribute name="urlString" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="stories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Story" inverseName="feed" inverseEntity="Story" syncable="YES"/>
     </entity>
+    <entity name="HistoryItem" representedClassName="DDGHistoryItem" syncable="YES">
+        <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="urlString" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="story" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Story" inverseName="recent" inverseEntity="Story" syncable="YES"/>
+        <fetchedProperty name="fetchedProperty" optional="YES" syncable="YES">
+            <fetchRequest name="fetchedPropertyFetchRequest" entity="HistoryItem"/>
+        </fetchedProperty>
+    </entity>
     <entity name="Story" representedClassName="DDGStory">
         <attribute name="articleURLString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descriptionString" optional="YES" attributeType="String" syncable="YES"/>
@@ -29,10 +38,13 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="urlString" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="feed" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Feed" inverseName="stories" inverseEntity="Feed" syncable="YES"/>
+        <relationship name="recent" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HistoryItem" inverseName="story" inverseEntity="HistoryItem" syncable="YES"/>
         <userInfo/>
     </entity>
+    <fetchRequest name="historyItemsWithPrefix" entity="HistoryItem" predicateString="title BEGINSWITH &quot;*prefix*&quot;"/>
     <elements>
         <element name="Feed" positionX="160" positionY="192" width="128" height="210"/>
-        <element name="Story" positionX="261" positionY="189" width="128" height="240"/>
+        <element name="Story" positionX="261" positionY="189" width="128" height="255"/>
+        <element name="HistoryItem" positionX="160" positionY="192" width="128" height="134"/>
     </elements>
 </model>

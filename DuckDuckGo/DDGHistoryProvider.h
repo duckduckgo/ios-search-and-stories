@@ -7,14 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DDGHistoryItem.h"
 
-@interface DDGHistoryProvider : NSObject {
-    NSMutableArray *history;
-}
+@class DDGStory;
+@interface DDGHistoryProvider : NSObject {}
+@property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
 
-+(id)sharedProvider;
--(void)clearHistory;
--(void)logHistoryItem:(NSDictionary *)historyItem;
+- (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
+
+- (void)clearHistory;
+- (void)relogHistoryItem:(DDGHistoryItem *)item;
+- (void)logSearchResultWithTitle:(NSString *)title;
+- (void)logStory:(DDGStory *)story;
+
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix;
 -(NSArray *)allHistoryItems;
 @end

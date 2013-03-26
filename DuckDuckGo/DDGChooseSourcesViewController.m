@@ -218,9 +218,7 @@
  
     NSAssert((nil != self.managedObjectContext), @"DDGChooseSourcesViewController requires a managed object context");
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    NSEntityDescription *entity = [DDGStoryFeed entityInManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
+    NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
     [fetchRequest setFetchBatchSize:20];
     
     NSSortDescriptor *categoryDescriptor = [[NSSortDescriptor alloc] initWithKey:@"category" ascending:YES];
