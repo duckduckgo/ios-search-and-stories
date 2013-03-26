@@ -248,7 +248,8 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStory entityName]];
         NSPredicate *datePredicate = [NSPredicate predicateWithFormat:@"feedDate < %@", date];
         NSPredicate *savedPredicate = [NSPredicate predicateWithFormat:@"saved == %@", @(NO)];
-        NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[datePredicate, savedPredicate]];
+        NSPredicate *recentPredicate = [NSPredicate predicateWithFormat:@"recents.@count == %@", @(0)];
+        NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[datePredicate, savedPredicate, recentPredicate]];
         [request setPredicate:predicate];
         
         NSError *error = nil;

@@ -17,7 +17,7 @@
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="urlString" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="story" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Story" inverseName="recent" inverseEntity="Story" syncable="YES"/>
+        <relationship name="story" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Story" inverseName="recents" inverseEntity="Story" syncable="YES"/>
         <fetchedProperty name="fetchedProperty" optional="YES" syncable="YES">
             <fetchRequest name="fetchedPropertyFetchRequest" entity="HistoryItem"/>
         </fetchedProperty>
@@ -38,7 +38,7 @@
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="urlString" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="feed" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Feed" inverseName="stories" inverseEntity="Feed" syncable="YES"/>
-        <relationship name="recent" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HistoryItem" inverseName="story" inverseEntity="HistoryItem" syncable="YES"/>
+        <relationship name="recents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="HistoryItem" inverseName="story" inverseEntity="HistoryItem" syncable="YES"/>
         <userInfo/>
     </entity>
     <fetchRequest name="historyItemsWithPrefix" entity="HistoryItem" predicateString="title BEGINSWITH &quot;*prefix*&quot;"/>

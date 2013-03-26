@@ -431,6 +431,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 		else if(indexPath.section == 1)
 		{
 			DDGHistoryItem *historyItem = [[self.historyProvider allHistoryItems] objectAtIndex:indexPath.row];
+            [self.historyProvider relogHistoryItem:historyItem];
             DDGStory *story = historyItem.story;
 			if (nil != story)
 				[self loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];

@@ -21,7 +21,7 @@ extern const struct DDGStoryAttributes {
 
 extern const struct DDGStoryRelationships {
 	__unsafe_unretained NSString *feed;
-	__unsafe_unretained NSString *recent;
+	__unsafe_unretained NSString *recents;
 } DDGStoryRelationships;
 
 extern const struct DDGStoryFetchedProperties {
@@ -175,9 +175,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet* recent;
+@property (nonatomic, strong) NSSet* recents;
 
-- (NSMutableSet*)recentSet;
+- (NSMutableSet*)recentsSet;
 
 
 
@@ -187,10 +187,10 @@ extern const struct DDGStoryFetchedProperties {
 
 @interface _DDGStory (CoreDataGeneratedAccessors)
 
-- (void)addRecent:(NSSet*)value_;
-- (void)removeRecent:(NSSet*)value_;
-- (void)addRecentObject:(DDGHistoryItem*)value_;
-- (void)removeRecentObject:(DDGHistoryItem*)value_;
+- (void)addRecents:(NSSet*)value_;
+- (void)removeRecents:(NSSet*)value_;
+- (void)addRecentsObject:(DDGHistoryItem*)value_;
+- (void)removeRecentsObject:(DDGHistoryItem*)value_;
 
 @end
 
@@ -287,8 +287,8 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
-- (NSMutableSet*)primitiveRecent;
-- (void)setPrimitiveRecent:(NSMutableSet*)value;
+- (NSMutableSet*)primitiveRecents;
+- (void)setPrimitiveRecents:(NSMutableSet*)value;
 
 
 @end
