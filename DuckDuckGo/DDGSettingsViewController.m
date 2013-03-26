@@ -145,7 +145,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
     [self addSectionWithTitle:@"Autocomplete" footer:nil];
-    [self addSwitch:@"Status" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
+    [self addSwitch:@"Suggestions" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
     
     [self addSectionWithTitle:@"Search Results" footer:nil];
     [self addButton:@"Region Boost" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
