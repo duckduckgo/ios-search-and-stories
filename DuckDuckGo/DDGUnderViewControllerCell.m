@@ -14,8 +14,7 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-		self.imageView.layer.cornerRadius = 2.0;
-        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
+		self.imageView.layer.cornerRadius = 2.0;        
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.opaque = NO;
         
@@ -96,6 +95,7 @@
         backgroundImageView.image = [UIImage imageNamed:@"new_bg_history-items"];
         selectedBackgroundImageView.image = nil;        
         
+        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.textLabel.numberOfLines = 2;
 		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
         self.textLabel.textColor = [UIColor colorWithRed:0.490 green:0.522 blue:0.576 alpha:1.000];
@@ -109,6 +109,7 @@
         backgroundImageView.image = [UIImage imageNamed:@"new_bg_menu-items"];
 		selectedBackgroundImageView.image = [UIImage imageNamed:@"new_bg_menu-items-highlighted"];
         
+        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.textLabel.numberOfLines = 1;
 		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
         self.textLabel.textColor = [UIColor colorWithRed:0.686 green:0.725 blue:0.800 alpha:1.000];

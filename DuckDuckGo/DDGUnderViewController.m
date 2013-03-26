@@ -256,6 +256,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 		} else {
 			cell.imageView.image = [UIImage imageNamed:@"icon_notification"];
 			lbl.text = @"Saving recents is disabled.\nYou can enable it in settings.";
+            cell.imageView.contentMode = UIViewContentModeCenter;
 		}
     }
     

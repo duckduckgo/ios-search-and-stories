@@ -36,6 +36,8 @@
 }
 
 - (void)logSearchResultWithTitle:(NSString *)title {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
+        return;
     NSArray *existingItems = [self itemsWithTitle:title];
     if ([existingItems count] > 0) {
         [self relogHistoryItem:[existingItems objectAtIndex:0]];
@@ -51,6 +53,8 @@
 }
 
 - (void)logStory:(DDGStory *)story {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
+        return;    
     NSArray *existingItems = [self itemsForStory:story];
     if ([existingItems count] > 0) {
         [self relogHistoryItem:[existingItems objectAtIndex:0]];
@@ -67,6 +71,8 @@
 }
 
 - (void)relogHistoryItem:(DDGHistoryItem *)item {
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
+        return;    
     NSManagedObjectContext *context = self.managedObjectContext;
     [context performBlock:^{
         item.timeStamp = [NSDate date];
