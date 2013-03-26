@@ -68,6 +68,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     if (!ok)
         NSLog(@"%s setCategoryError=%@", __PRETTY_FUNCTION__, error);
     
+    UInt32 allowMixing = true;
+    AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(allowMixing), &allowMixing);
+    
     // Active your audio session
     ok = [audioSession setActive:YES error:&error];
     if (!ok)
