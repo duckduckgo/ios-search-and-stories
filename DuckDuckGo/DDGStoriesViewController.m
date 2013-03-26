@@ -111,6 +111,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     [self.view addSubview:tableView];
     self.tableView = tableView;
     
+    self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
+    
     topShadow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"table_view_shadow_top.png"]];
     topShadow.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 5.0);
     topShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -269,6 +271,9 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
+        
+        NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
+        self.fetchedResultsController = [self fetchedResultsController:feedDate];
         
         NSArray *newStories = [self.fetchedResultsController fetchedObjects];
         
@@ -701,7 +706,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 - (void)refreshSources {
     if (!self.storyFetcher.isRefreshing) {
-        [self.storyFetcher refreshSources:^{
+        [self.storyFetcher refreshSources:^(NSDate *feedDate){
             
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
             NSPredicate *iconPredicate = [NSPredicate predicateWithFormat:@"imageDownloaded == %@", @(NO)];
@@ -722,22 +727,41 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 - (void)refreshStories {
     if (!self.storyFetcher.isRefreshing) {
-        [self.storyFetcher refreshStories:^{
+        
+        __block NSArray *oldStories = nil;
+        
+        void (^willSave)() = ^() {
+            oldStories = [self.fetchedResultsController fetchedObjects];
             
-            for (DDGStory *story in [self.fetchedResultsController fetchedObjects]) {
+            [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
+            self.fetchedResultsController.delegate = nil;
+        };
+        
+        void (^completion)(NSDate *lastFetchDate) = ^(NSDate *feedDate) {
+            NSArray *oldStories = [self.fetchedResultsController fetchedObjects];
+
+            self.fetchedResultsController = nil;            
+            self.fetchedResultsController = [self fetchedResultsController:feedDate];
+            
+            NSArray *newStories = [self.fetchedResultsController fetchedObjects];
+            [self replaceStories:oldStories withStories:newStories focusOnStory:nil];
+            
+            for (DDGStory *story in newStories) {
                 if (!story.isImageDownloaded)
                     [self.storyFetcher downloadImageForStory:story];
             }
             
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
-        }];
+        };
+        
+        [self.storyFetcher refreshStories:willSave completion:completion];
     }
 }
 
 #pragma mark - NSFetchedResultsController
 
-- (NSFetchedResultsController *)fetchedResultsController
+- (NSFetchedResultsController *)fetchedResultsController:(NSDate *)feedDate
 {
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
@@ -757,16 +781,16 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    NSPredicate *predicate = nil;
+    NSMutableArray *predicates = [NSMutableArray array];
+    
     if (nil != self.sourceFilter)
-        predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
-    
-    if (self.savedStoriesOnly) {
-        NSPredicate *savedPredicate = [NSPredicate predicateWithFormat:@"saved == %@", @(YES)];
-        predicate = (predicate == nil) ? savedPredicate : [NSCompoundPredicate andPredicateWithSubpredicates:@[predicate, savedPredicate]];
-    }
-    
-    [fetchRequest setPredicate:predicate];
+        [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
+    if (self.savedStoriesOnly)
+        [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
+    if (nil != feedDate)
+        [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];    
+    if ([predicates count] > 0)
+        [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
@@ -780,6 +804,11 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
 	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 	}
+    
+//    NSLog(@"feedDate: %@", feedDate);
+//    for (DDGStory *story in [_fetchedResultsController fetchedObjects]) {
+//        NSLog(@"story.feedDate: %@ (isEqual: %i)", story.feedDate, [feedDate isEqual:story.feedDate]);
+//    }
     
     return _fetchedResultsController;
 }

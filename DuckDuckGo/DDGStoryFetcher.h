@@ -17,8 +17,12 @@ extern NSString * const DDGStoryFetcherSourcesLastUpdatedKey;
 @property (nonatomic, readonly, getter = isRefreshing) BOOL refreshing;
 
 - (id)initWithParentManagedObjectContext:(NSManagedObjectContext *)context;
-- (void)refreshSources:(void (^)())completion;
-- (void)refreshStories:(void (^)())completion;
+- (void)refreshSources:(void (^)(NSDate *lastFetchDate))completion;
+
+// async, runs on a private queue
+// willSave is called synchronously on the main queue
+// didSave is called asynchronously on the main queue
+- (void)refreshStories:(void (^)())willSave completion:(void (^)(NSDate *lastFetchDate))completion;
 
 - (void)downloadImageForStory:(DDGStory *)story;
 - (void)downloadIconForFeed:(DDGStoryFeed *)feed;

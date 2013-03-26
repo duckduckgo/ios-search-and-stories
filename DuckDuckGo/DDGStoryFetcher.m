@@ -47,7 +47,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     self.networkOperationQueue = nil;
 }
 
-- (void)refreshSources:(void (^)())completion {
+- (void)refreshSources:(void (^)(NSDate *lastFetchDate))completion {
     
     dispatch_async(_queue, ^{
         NSURL *sourcesURL = [NSURL URLWithString:kDDGTypeInfoURLString];
@@ -58,10 +58,12 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
         [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
         
         void (^success)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            NSDate *feedDate = nil;
+            
             if ([JSON isKindOfClass:[NSArray class]]) {
                 NSArray *items = (NSArray *)JSON;
                 
-                NSDate *feedDate = [NSDate date];
+                feedDate = [NSDate date];
                 
                 for (NSDictionary *feedDict in items) {
                     
@@ -105,15 +107,16 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                         NSLog(@"error: %@", error);
                 }];
                 
-                if (completion)
-                    dispatch_async(dispatch_get_main_queue(), completion);
             }
+            
+            if (completion)
+                dispatch_async(dispatch_get_main_queue(), ^{completion(feedDate);});            
         };
         
         void (^failure)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
             NSLog(@"error: %@", error);
             if (completion)
-                dispatch_async(dispatch_get_main_queue(), completion);
+                dispatch_async(dispatch_get_main_queue(), ^{completion(nil);});
         };
         
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
@@ -142,7 +145,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     }];
 }
 
-- (void)refreshStories:(void (^)())completion {
+- (void)refreshStories:(void (^)())willSave completion:(void (^)(NSDate *lastFetchDate))completion {
     dispatch_async(_queue, ^{
 
         NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
@@ -155,16 +158,18 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
         NSURLRequest *request = [NSURLRequest requestWithURL:storiesURL];
         
         void (^success)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            NSDate *feedDate= nil;
+            
             if ([JSON isKindOfClass:[NSArray class]]) {
                 NSArray *items = (NSArray *)JSON;
                                 
                 NSDictionary *feedsByID = [self feedsByIDInContext:context enabledFeedsOnly:NO];
                 
+                feedDate = [NSDate date];
+                
                 NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
                 formatter.locale = [[NSLocale alloc] initWithLocaleIdentifier:@"en_US_POSIX"];
                 formatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-                
-                NSDate *feedDate = [NSDate date];
                 
                 for (id storyDict in items) {
                     
@@ -207,6 +212,9 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                 
                 [self purgeStoriesOlderThanDate:feedDate inContext:context];
                 
+                if (willSave)
+                    dispatch_sync(dispatch_get_main_queue(), willSave);
+                
                 [context performBlockAndWait:^{
                     NSError *error = nil;
                     BOOL success = [context save:&error];
@@ -218,13 +226,13 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
             }
             
             if (completion)
-                dispatch_async(dispatch_get_main_queue(), completion);
+                dispatch_async(dispatch_get_main_queue(), ^{completion(feedDate);});
         };
         
         void (^failure)(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) = ^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
             NSLog(@"error: %@", error);
             if (completion)
-                dispatch_async(dispatch_get_main_queue(), completion);
+                dispatch_async(dispatch_get_main_queue(), ^{completion(nil);});
         };
         
         AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request
