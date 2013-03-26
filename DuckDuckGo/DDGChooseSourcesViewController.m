@@ -185,9 +185,9 @@
 		{
 			MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
 			mailVC.mailComposeDelegate = self;
-			[mailVC setToRecipients:@[@"ios@duckduckgo.com"]];
-			[mailVC setSubject:@"suggestion: story source"];
-			[mailVC setMessageBody:@"Please provide a link here so we can investigate the source you would like to see us implement." isHTML:NO];
+			[mailVC setToRecipients:@[@"stories@duckduckgo.com"]];
+			[mailVC setSubject:@"Suggestion: Story Source"];
+			[mailVC setMessageBody:@"Please let us know the source you'd like us to investigate adding and why. Also, if you have any feedback about the Stories feature, we would love to hear it!" isHTML:NO];
 			[self presentViewController:mailVC animated:YES completion:NULL];
 		}
     }
