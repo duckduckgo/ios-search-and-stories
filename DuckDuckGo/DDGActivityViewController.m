@@ -7,7 +7,7 @@
 //
 
 #import "DDGActivityViewController.h"
-#import "TUSafariActivity.h"
+#import "DDGSafariActivity.h"
 
 @interface DDGActivityViewController ()
 @end
@@ -16,7 +16,7 @@
 
 - (id)initWithActivityItems:(NSArray *)activityItems applicationActivities:(NSArray *)applicationActivities
 {
-    TUSafariActivity *safariActivity = [[TUSafariActivity alloc] init];
+    DDGSafariActivity *safariActivity = [[DDGSafariActivity alloc] init];
     applicationActivities = [applicationActivities arrayByAddingObjectsFromArray:@[safariActivity]];
     
     self = [super initWithActivityItems:activityItems applicationActivities:applicationActivities];

@@ -20,6 +20,8 @@
 #import "NSString+URLEncodingDDG.h"
 #import "DDGBookmarkActivity.h"
 #import "DDGReadabilityToggleActivity.h"
+#import "DDGActivityItemProvider.h"
+#import "DDGSafariActivity.h"
 
 @interface DDGWebViewController ()
 @property (nonatomic, readwrite) BOOL inReadabilityMode;
@@ -150,8 +152,13 @@
     NSString *pageTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     NSString *feed = [self.webViewURL absoluteString];
     
+    DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
+    [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", pageTitle, shareURL] forActivityType:UIActivityTypeMail];
+
+    DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];    
+    
     NSArray *applicationActivities = @[];
-    NSArray *items = @[shareURL, self];
+    NSArray *items = @[titleProvider, urlItem, self];
     
     DDGBookmarkActivity *bookmarkActivity = nil;
     DDGBookmarkActivityItem *bookmarkItem = nil;
