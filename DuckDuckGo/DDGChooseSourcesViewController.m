@@ -84,36 +84,25 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(section==0)
+    if(section==[[self.fetchedResultsController sections] count])
         return 1;
     else {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section-1];
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
         return [sectionInfo numberOfObjects];
     }
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(section==0)
-        return @"Source Suggestions";
+    if(section==[[self.fetchedResultsController sections] count])
+        return nil;
     else {
-        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section-1];
+        id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
         return [sectionInfo name];
     }
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return (indexPath.section == 0);
-}
-
--(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    if(indexPath.section == 0) {
-        if(indexPath.row == 0)
-            return UITableViewCellEditingStyleInsert;
-        else
-            return UITableViewCellEditingStyleDelete;
-    } else {
-        return UITableViewCellEditingStyleNone;
-    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -123,15 +112,16 @@
     
     UITableViewCell *cell = nil;
     
-    if(indexPath.section == 0)
+    if(indexPath.section == [[self.fetchedResultsController sections] count])
 	{
         if(indexPath.row == 0)
 		{
             cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
             if(!cell)
 			{
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:ButtonCellIdentifier];
-                cell.textLabel.text = @"Suggest a new story source.";
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
+                cell.textLabel.text = @"Suggest a Story Source";
+                cell.textLabel.textAlignment = NSTextAlignmentCenter;
                 cell.accessoryType = UITableViewCellAccessoryNone;
 				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
             }
@@ -146,6 +136,7 @@
             cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
             cell.imageView.alpha = 0;
 			cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
+            cell.textLabel.textAlignment = NSTextAlignmentLeft;
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 34, 34)];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.tag = 100;
@@ -177,7 +168,7 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == 0)
+    if(indexPath.section == [[self.fetchedResultsController sections] count])
 	{
 		// send an email to make a suggestion for a new source
 		if ([MFMailComposeViewController canSendMail])
@@ -192,7 +183,7 @@
     }
 	else
 	{
-        DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:[self fetchedResultIndexPathForTableViewIndexPath:indexPath]];
+        DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
         feed.enabledValue = (!feed.enabledValue);
         
         NSManagedObjectContext *context = feed.managedObjectContext;
@@ -267,26 +258,23 @@
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     UITableView *tableView = self.tableView;
-    
-    NSIndexPath *tableViewIndexPath = [self tableViewIndexPathForFetchedResultsIndexPath:indexPath];
-    NSIndexPath *tableViewNewIndexPath = [self tableViewIndexPathForFetchedResultsIndexPath:newIndexPath];
-    
+        
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[tableViewNewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[tableViewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:tableViewIndexPath] atIndexPath:tableViewIndexPath];
+            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[tableViewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[tableViewNewIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -296,27 +284,9 @@
     [self.tableView endUpdates];
 }
 
-/*
- // Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed.
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
- {
- // In the simplest, most efficient, case, reload the table view.
- [self.tableView reloadData];
- }
- */
-
-- (NSIndexPath *)fetchedResultIndexPathForTableViewIndexPath:(NSIndexPath *)indexPath {
-    return [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
-}
-
-- (NSIndexPath *)tableViewIndexPathForFetchedResultsIndexPath:(NSIndexPath *)indexPath {
-    return [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1];
-}
-
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:[self fetchedResultIndexPathForTableViewIndexPath:indexPath]];
+    DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
     cell.textLabel.text = feed.title;
     cell.detailTextLabel.text = feed.descriptionString;
