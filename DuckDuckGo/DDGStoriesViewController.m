@@ -787,7 +787,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
     if (self.savedStoriesOnly)
         [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
-    if (nil != feedDate)
+    if (nil != feedDate && !self.savedStoriesOnly)
         [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];    
     if ([predicates count] > 0)
         [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
