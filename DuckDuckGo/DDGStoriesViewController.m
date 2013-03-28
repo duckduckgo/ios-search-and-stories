@@ -21,6 +21,8 @@
 #import "AFNetworking.h"
 #import "DDGActivityViewController.h"
 #import "DDGStoryFetcher.h"
+#import "DDGSafariActivity.h"
+#import "DDGActivityItemProvider.h"
 
 NSString * const DDGLastViewedStoryKey = @"last_story";
 
@@ -396,7 +398,14 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
             NSString *shareTitle = story.title;
             NSURL *shareURL = story.URL;
-            DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
+            
+            DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
+            [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", shareTitle, shareURL] forActivityType:UIActivityTypeMail];
+            
+            DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];            
+            NSArray *items = @[titleProvider, urlItem];
+            
+            DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:@[]];
             [self presentViewController:avc animated:YES completion:NULL];
         }];
     });
@@ -787,7 +796,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
     if (self.savedStoriesOnly)
         [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
-    if (nil != feedDate)
+    if (nil != feedDate && !self.savedStoriesOnly)
         [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];    
     if ([predicates count] > 0)
         [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
