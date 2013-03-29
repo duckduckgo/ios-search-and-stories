@@ -126,8 +126,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     [super viewDidLoad];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    tableView.separatorColor = [UIColor whiteColor];
-    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     tableView.dataSource = self;
     tableView.delegate = self;

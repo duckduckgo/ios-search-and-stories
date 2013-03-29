@@ -36,6 +36,14 @@
         [faviconButton addTarget:nil action:@selector(filter:) forControlEvents:UIControlEventTouchUpInside];
         [self.contentView addSubview:faviconButton];
         self.faviconButton = faviconButton;
+        
+        CGRect bounds = self.contentView.bounds;
+        UIView *gratituousWhiteStripe = [[UIView alloc] initWithFrame:CGRectMake(0, bounds.size.height-1, bounds.size.width, 1.0)];
+        gratituousWhiteStripe.backgroundColor = [UIColor whiteColor];
+        gratituousWhiteStripe.opaque = YES;
+        gratituousWhiteStripe.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+        [self.contentView addSubview:gratituousWhiteStripe];
+                                         
     }
     return self;
 }
