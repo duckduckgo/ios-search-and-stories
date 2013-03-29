@@ -15,6 +15,7 @@
 @interface DDGBookmarksViewController ()
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
+@property (nonatomic, strong) UIImage *searchIcon;
 @end
 
 @implementation DDGBookmarksViewController
@@ -51,6 +52,23 @@
                                                               style:UIBarButtonItemStyleBordered
                                                              target:self
                                                              action:@selector(editAction:)];
+
+    UIImage *searchIcon = [UIImage imageNamed:@"search_icon"];
+    CGFloat height = self.tableView.rowHeight;
+    CGSize iconSize = searchIcon.size;
+    CGSize imageSize = CGSizeMake(iconSize.width + 6.0, height);
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
+    
+    [searchIcon drawInRect:CGRectMake((imageSize.width - iconSize.width),
+                                      floor((imageSize.height - iconSize.height) / 2.0),
+                                      iconSize.width,
+                                      iconSize.height)];
+    
+    self.searchIcon = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+    
+//    [UIImage imageNamed:@"search_icon"]
     
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
@@ -134,21 +152,27 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(!cell)
 	{
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:CellIdentifier];
-		cell.imageView.image = [UIImage imageNamed:@"spacer23x23.png"];
-        UIImageView *iv = (UIImageView *)[cell viewWithTag:100];
-        if (nil == iv)
-            iv  = [[UIImageView alloc] initWithFrame:CGRectMake(11, 16, cell.imageView.image.size.width, cell.imageView.image.size.height)];
-		[cell.contentView addSubview:iv];
-		iv.tag = 100;
-		iv.contentMode = UIViewContentModeScaleAspectFit;
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        
+        UIView *backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
+        backgroundView.opaque = YES;
+        backgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_searches_background"]];
+        cell.backgroundView = backgroundView;
+        
+        cell.contentView.backgroundColor = [UIColor clearColor];
+        cell.contentView.opaque = NO;
+        cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
+        cell.textLabel.textColor = [UIColor colorWithRed:0.780 green:0.808 blue:0.851 alpha:1.000];
+        cell.textLabel.numberOfLines = 2;
+        cell.textLabel.backgroundColor = [UIColor clearColor];
+        cell.textLabel.opaque = NO;
+        cell.textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
     }
     
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
     cell.textLabel.text = [bookmark objectForKey:@"title"];
-    cell.detailTextLabel.text = [bookmark objectForKey:@"url"];
-
-    ((UIImageView *)[cell viewWithTag:100]).image = [UIImage imageNamed:@"search_icon"];    
+    cell.imageView.image = self.searchIcon;
+//    cell.detailTextLabel.text = [bookmark objectForKey:@"url"];
 
     return cell;
 }

@@ -145,8 +145,8 @@
     NSString *query = [_searchController queryFromDDGURL:shareURL];
     if(query)
     {
-        query = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:query]];
+        NSString *escapedQuery = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+        shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:escapedQuery]];
     }
     
     NSString *pageTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
@@ -167,9 +167,9 @@
         bookmarkActivity = [[DDGBookmarkActivity alloc] init];
         bookmarkItem = [DDGBookmarkActivityItem itemWithStory:self.story];
         bookmarkActivity.bookmarkActivityState = (self.story.savedValue) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
-    } else if ([self.searchController isQuery:self.searchController.searchField.text]) {
+    } else if (query) {
         bookmarkActivity = [[DDGBookmarkActivity alloc] init];        
-        bookmarkItem = [DDGBookmarkActivityItem itemWithTitle:pageTitle URL:self.webViewURL feed:feed];
+        bookmarkItem = [DDGBookmarkActivityItem itemWithTitle:query URL:self.webViewURL feed:feed];
         BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:self.webViewURL];
         bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
     }

@@ -137,6 +137,14 @@ static void uncaughtExceptionHandler(NSException *exception) {
                                    rightSegmentState:UIControlStateNormal
                                           barMetrics:UIBarMetricsDefault];
     
+    [[UISegmentedControl appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.827 green:0.855 blue:0.898 alpha:1.000],
+                           UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, -1)],
+                            UITextAttributeTextShadowColor : [UIColor blackColor]
+	 } forState:UIControlStateNormal];
+    
+    [[UISegmentedControl appearance] setContentPositionAdjustment:UIOffsetMake(4.0, 0.0) forSegmentType:UISegmentedControlSegmentLeft barMetrics:UIBarMetricsDefault];
+    [[UISegmentedControl appearance] setContentPositionAdjustment:UIOffsetMake(-4.0, 0.0) forSegmentType:UISegmentedControlSegmentRight barMetrics:UIBarMetricsDefault];
+
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor redColor];
