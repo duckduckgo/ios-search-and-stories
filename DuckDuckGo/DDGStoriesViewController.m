@@ -38,7 +38,6 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
 @property (nonatomic, strong) DDGPanLeftGestureRecognizer *panLeftGestureRecognizer;
-@property (nonatomic, strong) IBOutlet DDGStoryCell *loadedCell;
 @property (nonatomic, weak) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
 @property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
@@ -104,7 +103,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     [super viewDidLoad];
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    tableView.separatorColor = [UIColor clearColor];
+    tableView.separatorColor = [UIColor whiteColor];
+    tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     tableView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     tableView.dataSource = self;
     tableView.delegate = self;
@@ -603,26 +603,13 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	static NSString *TwoLineCellIdentifier = @"TwoLineTopicCell";
-	static NSString *OneLineCellIdentifier = @"OneLineTopicCell";
+	static NSString *CellIdentifier = @"TopicCell";
     
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    
-    NSString *cellID = nil;
-    if([story.title sizeWithFont:[UIFont systemFontOfSize:14.0] constrainedToSize:CGSizeMake(tv.bounds.size.width-38, 60) lineBreakMode:NSLineBreakByWordWrapping].height < 19)
-        cellID = OneLineCellIdentifier;
-    else
-        cellID = TwoLineCellIdentifier;
-    
-    
-	DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:cellID];
+	DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
 	{
-        [[NSBundle mainBundle] loadNibNamed:cellID owner:self options:nil];
-        cell = _loadedCell;
-        self.loadedCell = nil;
-        
+        cell = [[DDGStoryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.imageView.backgroundColor = self.tableView.backgroundColor;
         cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
         cell.overlayImageView.image = [UIImage imageNamed:@"topic_cell_background.png"];
@@ -878,8 +865,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     DDGStoryCell *storyCell = ([cell isKindOfClass:[DDGStoryCell class]]) ? (DDGStoryCell *) cell : nil;
     
     cell.textLabel.text = story.title;
-    
-    cell.textLabel.text = story.title;
+    [cell setNeedsLayout];
     
     if(story.readValue)
         cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];

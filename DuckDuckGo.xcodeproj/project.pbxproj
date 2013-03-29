@@ -87,7 +87,6 @@
 		4C5F81FA158FEA94007B745A /* bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F8158FEA94007B745A /* bang_button.png */; };
 		4C5F81FB158FEA94007B745A /* bang_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C5F81F9158FEA94007B745A /* bang_button@2x.png */; };
 		4C660A7915914E73001AB510 /* empty_bang_button.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C660A7815914E73001AB510 /* empty_bang_button.png */; };
-		4C7A67BD15C5C9200087D548 /* OneLineTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */; };
 		4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */; };
 		4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C967F5115CDB3FB009A3A52 /* DDGAutocompleteTableView.m */; };
 		4C9A9773154DEAED00286619 /* reload@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C9A9771154DEAED00286619 /* reload@2x.png */; };
@@ -251,7 +250,6 @@
 		83864C581638421000F66AAA /* icon_settings_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 83864C521638420F00F66AAA /* icon_settings_selected.png */; };
 		83864C591638421000F66AAA /* icon_settings_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 83864C531638420F00F66AAA /* icon_settings_selected@2x.png */; };
 		838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9063149A75D700C11E41 /* DDGSearchController.xib */; };
-		838E9065149A763200C11E41 /* TwoLineTopicCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 838E9067149A763200C11E41 /* TwoLineTopicCell.xib */; };
 		838E906A149A76D400C11E41 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 838E906C149A76D400C11E41 /* Localizable.strings */; };
 		8390A3F51677CB3500336DE7 /* DDGUtility.m in Sources */ = {isa = PBXBuildFile; fileRef = 8390A3F41677CB3400336DE7 /* DDGUtility.m */; };
 		8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */; };
@@ -373,7 +371,6 @@
 		4C5F81F8158FEA94007B745A /* bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bang_button.png; sourceTree = "<group>"; };
 		4C5F81F9158FEA94007B745A /* bang_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang_button@2x.png"; sourceTree = "<group>"; };
 		4C660A7815914E73001AB510 /* empty_bang_button.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = empty_bang_button.png; sourceTree = "<group>"; };
-		4C7A67BC15C5C9200087D548 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/OneLineTopicCell.xib; sourceTree = "<group>"; };
 		4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGBangsProvider.h; sourceTree = "<group>"; };
 		4C7DA6D715890A6900D95585 /* DDGBangsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGBangsProvider.m; sourceTree = "<group>"; };
 		4C967F5015CDB3FB009A3A52 /* DDGAutocompleteTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAutocompleteTableView.h; sourceTree = "<group>"; };
@@ -596,7 +593,6 @@
 		83864C521638420F00F66AAA /* icon_settings_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_settings_selected.png; sourceTree = "<group>"; };
 		83864C531638420F00F66AAA /* icon_settings_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_settings_selected@2x.png"; sourceTree = "<group>"; };
 		838E9062149A75D700C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/DDGSearchController.xib; sourceTree = "<group>"; };
-		838E9066149A763200C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/TwoLineTopicCell.xib; sourceTree = "<group>"; };
 		838E906B149A76D400C11E41 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8390A3F31677CB3400336DE7 /* DDGUtility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUtility.h; sourceTree = "<group>"; };
 		8390A3F41677CB3400336DE7 /* DDGUtility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUtility.m; sourceTree = "<group>"; };
@@ -1012,8 +1008,6 @@
 				5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */,
 				5B7A1BC716E74C3500354310 /* DDGStoriesViewController.h */,
 				5B7A1BC816E74C3500354310 /* DDGStoriesViewController.m */,
-				838E9067149A763200C11E41 /* TwoLineTopicCell.xib */,
-				4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */,
 				5BB3F4DA16CA7AE100281A2B /* HomeSwipeView.xib */,
 				5BB3F50316CAA49300281A2B /* DDGStoryCell.h */,
 				5BB3F50416CAA49300281A2B /* DDGStoryCell.m */,
@@ -1307,7 +1301,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				83F32267149290EF00A61BC5 /* InfoPlist.strings in Resources */,
-				838E9065149A763200C11E41 /* TwoLineTopicCell.xib in Resources */,
 				838E9061149A75D700C11E41 /* DDGSearchController.xib in Resources */,
 				838E906A149A76D400C11E41 /* Localizable.strings in Resources */,
 				4C1FD7EE1548FF65006B2511 /* arrowRight18x18.png in Resources */,
@@ -1344,7 +1337,6 @@
 				4C24A75B15BA0946003DCB56 /* load_bar@2x.png in Resources */,
 				4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */,
 				4C4B7E9515C4F1AA00340B59 /* DDGBookmarksViewController.xib in Resources */,
-				4C7A67BD15C5C9200087D548 /* OneLineTopicCell.xib in Resources */,
 				4CA9C46A15CC6972001F3231 /* refresh_dotted_line@2x.png in Resources */,
 				4CA9C46B15CC6972001F3231 /* refresh_dotted_line.png in Resources */,
 				4CA9C48615CC7E41001F3231 /* table_view_shadow_top.png in Resources */,
@@ -1577,14 +1569,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		4C7A67BB15C5C9200087D548 /* OneLineTopicCell.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4C7A67BC15C5C9200087D548 /* en */,
-			);
-			name = OneLineTopicCell.xib;
-			sourceTree = "<group>";
-		};
 		5B2FCAC116F32BE10045A5FE /* TUSafariActivity.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1614,14 +1598,6 @@
 				838E9062149A75D700C11E41 /* en */,
 			);
 			name = DDGSearchController.xib;
-			sourceTree = "<group>";
-		};
-		838E9067149A763200C11E41 /* TwoLineTopicCell.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				838E9066149A763200C11E41 /* en */,
-			);
-			name = TwoLineTopicCell.xib;
 			sourceTree = "<group>";
 		};
 		838E906C149A76D400C11E41 /* Localizable.strings */ = {
