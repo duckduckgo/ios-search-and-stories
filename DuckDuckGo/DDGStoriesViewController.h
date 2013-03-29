@@ -15,6 +15,7 @@
 
 @interface DDGStoriesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, NSFetchedResultsControllerDelegate>
 {}
+@property (nonatomic, strong) IBOutlet UIView *noStoriesView;
 @property (nonatomic, readonly, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic) BOOL savedStoriesOnly;

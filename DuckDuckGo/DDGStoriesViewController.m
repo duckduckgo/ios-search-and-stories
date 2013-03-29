@@ -38,7 +38,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
 @property (nonatomic, strong) DDGPanLeftGestureRecognizer *panLeftGestureRecognizer;
-@property (nonatomic, weak) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
 @property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
@@ -96,6 +96,29 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     }
 }
 
+#pragma mark - No Stories
+
+- (void)showNoStoriesView {
+    if (nil == self.noStoriesView)
+        [[NSBundle mainBundle] loadNibNamed:@"NoStoriesView" owner:self options:nil];
+    
+    [UIView animateWithDuration:0 animations:^{
+        [self.tableView removeFromSuperview];
+        self.noStoriesView.frame = self.view.bounds;
+        [self.view addSubview:self.noStoriesView];
+    }];
+}
+
+- (void)hideNoStoriesView {
+    if (nil == self.tableView.superview) {
+        [UIView animateWithDuration:0 animations:^{
+            [self.noStoriesView removeFromSuperview];
+            self.noStoriesView = nil;
+            self.tableView.frame = self.view.bounds;
+            [self.view addSubview:self.tableView];
+        }];        
+    }
+}
 
 #pragma mark - UIViewController
 
@@ -194,6 +217,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     if (!self.savedStoriesOnly)
         [self refreshSources];
+    else if ([self.fetchedResultsController.fetchedObjects count] == 0)
+        [self showNoStoriesView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -324,6 +349,12 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
                           withRowAnimation:UITableViewRowAnimationAutomatic];
     [self.tableView endUpdates];
     
+    if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0) {
+        [self showNoStoriesView];
+    } else {
+        [self hideNoStoriesView];
+    }
+    
     [self focusOnStory:story animated:YES];
 }
 
@@ -432,6 +463,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
                          if (NULL != completion)
                              completion();
                      }];
+    
+    [self.slidingViewController.panGesture setEnabled:YES];
 }
 
 - (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath {
@@ -499,6 +532,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             CGFloat percent = offset / contentFrame.size.width;
             
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
+            
+            [self.slidingViewController.panGesture setEnabled:NO];
             
             if (velocity.x < 0 && percent > 0.25) {
                 CGFloat distanceRemaining = contentFrame.size.width - offset;
@@ -870,7 +905,12 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             break;
             
         case NSFetchedResultsChangeDelete:
+        {
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0)
+                [self performSelector:@selector(showNoStoriesView) withObject:nil afterDelay:0.2];
+            
+        }
             break;
             
         case NSFetchedResultsChangeUpdate:
