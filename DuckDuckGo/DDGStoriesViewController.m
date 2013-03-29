@@ -115,6 +115,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
+    [self prepareUpcomingCellContent];
+    
     topShadow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"table_view_shadow_top.png"]];
     topShadow.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 5.0);
     topShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -541,6 +543,35 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 #pragma mark - Scroll view delegate
 
+- (void)prepareUpcomingCellContent {
+    NSArray *stories = [self.fetchedResultsController fetchedObjects];
+    NSInteger count = [stories count];
+    
+    NSInteger lowestIndex = count;
+    NSInteger highestIndex = 0;
+    
+    for (NSIndexPath *indexPath in [self.tableView indexPathsForVisibleRows]) {
+        lowestIndex = MIN(lowestIndex, indexPath.row);
+        highestIndex = MAX(highestIndex, indexPath.row);
+    }
+    
+    lowestIndex = MAX(0, lowestIndex-2);
+    highestIndex = MIN(count, highestIndex+3);
+    
+    for (NSInteger i = lowestIndex; i<highestIndex; i++) {
+        DDGStory *story = [stories objectAtIndex:i];
+        UIImage *decompressedImage = [self.decompressedImages objectForKey:story.id];
+        
+        if (nil == decompressedImage) {
+            if (story.isImageDownloaded) {
+                [self decompressAndDisplayImageForStory:story];
+            } else  {
+                [self.storyFetcher downloadImageForStory:story];
+            }
+        }
+    }
+}
+
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     
     if (nil != self.swipeViewIndexPath)
@@ -555,6 +586,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         
         [_tableView insertSubview:topShadow atIndex:0];
     }
+    
+    [self prepareUpcomingCellContent];
 }
 
 -(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
@@ -742,10 +775,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             NSArray *newStories = [self.fetchedResultsController fetchedObjects];
             [self replaceStories:oldStories withStories:newStories focusOnStory:nil];
             
-            for (DDGStory *story in newStories) {
-                if (!story.isImageDownloaded)
-                    [self.storyFetcher downloadImageForStory:story];
-            }
+            [self prepareUpcomingCellContent];
             
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
