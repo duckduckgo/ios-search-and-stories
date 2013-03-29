@@ -20,9 +20,9 @@
 
 @implementation DDGBookmarksViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
+- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
-    self = [super initWithStyle:style];
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
         self.title = NSLocalizedString(@"Bookmarks", @"View controller title: Bookmarks");
     }
@@ -32,6 +32,24 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    self.tableView.frame = self.view.bounds;
+    [self.view addSubview:self.tableView];    
+    
+    UIImage *searchIcon = [UIImage imageNamed:@"search_icon"];
+    CGFloat height = self.tableView.rowHeight;
+    CGSize iconSize = searchIcon.size;
+    CGSize imageSize = CGSizeMake(iconSize.width + 6.0, height);
+    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
+    
+    [searchIcon drawInRect:CGRectMake((imageSize.width - iconSize.width),
+                                      floor((imageSize.height - iconSize.height) / 2.0),
+                                      iconSize.width,
+                                      iconSize.height)];
+    
+    self.searchIcon = UIGraphicsGetImageFromCurrentImageContext();
+    
+    UIGraphicsEndImageContext();
+        
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
@@ -51,25 +69,7 @@
     self.editBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"Menu button label: Edit")
                                                               style:UIBarButtonItemStyleBordered
                                                              target:self
-                                                             action:@selector(editAction:)];
-
-    UIImage *searchIcon = [UIImage imageNamed:@"search_icon"];
-    CGFloat height = self.tableView.rowHeight;
-    CGSize iconSize = searchIcon.size;
-    CGSize imageSize = CGSizeMake(iconSize.width + 6.0, height);
-    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
-    
-    [searchIcon drawInRect:CGRectMake((imageSize.width - iconSize.width),
-                                      floor((imageSize.height - iconSize.height) / 2.0),
-                                      iconSize.width,
-                                      iconSize.height)];
-    
-    self.searchIcon = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-    
-//    [UIImage imageNamed:@"search_icon"]
-    
+                                                             action:@selector(editAction:)];    
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
 }
@@ -85,6 +85,9 @@
     }
     
     self.navigationItem.rightBarButtonItem = ([DDGBookmarksProvider sharedProvider].bookmarks.count)  ? self.editBarButtonItem : nil;
+    
+    if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0)
+        [self showNoBookmarksView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -128,15 +131,52 @@
     [self.slidingViewController anchorTopViewTo:ECRight];
 }
 
+#pragma mark - No Bookmarks
+
+- (void)showNoBookmarksView {
+    
+    [UIView animateWithDuration:0 animations:^{
+        [self.tableView removeFromSuperview];
+        self.noBookmarksView.frame = self.view.bounds;
+        [self.view addSubview:self.noBookmarksView];
+    }];
+}
+
+- (void)hideNoBookmarksView {
+    if (nil == self.tableView.superview) {
+        [UIView animateWithDuration:0 animations:^{
+            [self.noBookmarksView removeFromSuperview];
+            self.tableView.frame = self.view.bounds;
+            [self.view addSubview:self.tableView];
+        }];
+    }
+}
+
+/*
+ 
+ [UIView animateWithDuration:0 animations:^{
+ [self.tableView removeFromSuperview];
+ self.noStoriesView.frame = self.view.bounds;
+ [self.view addSubview:self.noStoriesView];
+ }];
+ }
+ 
+ - (void)hideNoStoriesView {
+ if (nil == self.tableView.superview) {
+ [UIView animateWithDuration:0 animations:^{
+ [self.noStoriesView removeFromSuperview];
+ self.noStoriesView = nil;
+ self.tableView.frame = self.view.bounds;
+ [self.view addSubview:self.tableView];
+ }];
+ }
+ 
+ */
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return 1;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	return 54.0;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -157,7 +197,14 @@
         UIView *backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
         backgroundView.opaque = YES;
         backgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_searches_background"]];
+        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         cell.backgroundView = backgroundView;
+        
+        UIView *selectedBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
+        selectedBackgroundView.opaque = YES;
+        selectedBackgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_searches_background_highlighted"]];
+        selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        cell.selectedBackgroundView = selectedBackgroundView;
         
         cell.contentView.backgroundColor = [UIColor clearColor];
         cell.contentView.opaque = NO;
@@ -186,6 +233,9 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [[DDGBookmarksProvider sharedProvider] deleteBookmarkAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0)
+            [self performSelector:@selector(showNoBookmarksView) withObject:nil afterDelay:0.2];
     }
 }
 

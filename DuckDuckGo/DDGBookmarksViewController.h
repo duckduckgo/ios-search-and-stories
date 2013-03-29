@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGBookmarksViewController : UITableViewController
-
+@interface DDGBookmarksViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) IBOutlet UIView *noBookmarksView;
 @end

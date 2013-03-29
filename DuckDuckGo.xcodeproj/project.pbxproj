@@ -191,6 +191,8 @@
 		5B7A1C9D16F0836400354310 /* IGFormTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C9316F0836400354310 /* IGFormTextField.m */; };
 		5B7A1C9E16F0836400354310 /* IGFormTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C9516F0836400354310 /* IGFormTextView.m */; };
 		5B7A1C9F16F0836400354310 /* IGFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C9716F0836400354310 /* IGFormViewController.m */; };
+		5B7C3BCC170601F200B9E009 /* saved_searches_background_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BCA170601F200B9E009 /* saved_searches_background_highlighted.png */; };
+		5B7C3BCD170601F200B9E009 /* saved_searches_background_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BCB170601F200B9E009 /* saved_searches_background_highlighted@2x.png */; };
 		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
 		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
 		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
@@ -528,6 +530,8 @@
 		5B7A1C9516F0836400354310 /* IGFormTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormTextView.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormTextView.m; sourceTree = SOURCE_ROOT; };
 		5B7A1C9616F0836400354310 /* IGFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IGFormViewController.h; path = Submodules/IGFormViewController/IGFormViewController/IGFormViewController.h; sourceTree = SOURCE_ROOT; };
 		5B7A1C9716F0836400354310 /* IGFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormViewController.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormViewController.m; sourceTree = SOURCE_ROOT; };
+		5B7C3BCA170601F200B9E009 /* saved_searches_background_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = saved_searches_background_highlighted.png; sourceTree = "<group>"; };
+		5B7C3BCB170601F200B9E009 /* saved_searches_background_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saved_searches_background_highlighted@2x.png"; sourceTree = "<group>"; };
 		5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari.png"; sourceTree = "<group>"; };
 		5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari@2x.png"; sourceTree = "<group>"; };
 		5B88DBA916DB7BA7007A935D /* swipe-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save.png"; sourceTree = "<group>"; };
@@ -736,6 +740,8 @@
 				5B0708941705EE8F0058718F /* saved_header_background@2x.png */,
 				5B0708951705EE8F0058718F /* saved_searches_background@2x.png */,
 				5B0708961705EE8F0058718F /* saved_searches_background.png */,
+				5B7C3BCA170601F200B9E009 /* saved_searches_background_highlighted.png */,
+				5B7C3BCB170601F200B9E009 /* saved_searches_background_highlighted@2x.png */,
 				4C02E2DA1623BD9A0010F06C /* share.png */,
 				4C02E2D81623BD970010F06C /* share@2x.png */,
 				4C02E2D91623BD990010F06C /* share-click.png */,
@@ -1495,6 +1501,8 @@
 				5B0708981705EE900058718F /* saved_header_background@2x.png in Resources */,
 				5B0708991705EE900058718F /* saved_searches_background@2x.png in Resources */,
 				5B07089A1705EE900058718F /* saved_searches_background.png in Resources */,
+				5B7C3BCC170601F200B9E009 /* saved_searches_background_highlighted.png in Resources */,
+				5B7C3BCD170601F200B9E009 /* saved_searches_background_highlighted@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

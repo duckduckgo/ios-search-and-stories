@@ -328,7 +328,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     switch (type) {
         case DDGViewControllerTypeSaved:
         {
-            DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithStyle:UITableViewStylePlain];
+            DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
             bookmarks.title = NSLocalizedString(@"Saved Searches", @"View controller title: Saved Searches");
             
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
