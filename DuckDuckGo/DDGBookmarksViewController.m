@@ -60,6 +60,12 @@
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     
+    UIGestureRecognizer *panGesture = [self.slidingViewController panGesture];
+    for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
+        if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
+            [panGesture requireGestureRecognizerToFail:gr];
+    }
+    
     self.navigationItem.rightBarButtonItem = ([DDGBookmarksProvider sharedProvider].bookmarks.count)  ? self.editBarButtonItem : nil;
 }
 
