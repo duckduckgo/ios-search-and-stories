@@ -193,6 +193,11 @@
 		5B7A1C9F16F0836400354310 /* IGFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C9716F0836400354310 /* IGFormViewController.m */; };
 		5B7C3BCC170601F200B9E009 /* saved_searches_background_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BCA170601F200B9E009 /* saved_searches_background_highlighted.png */; };
 		5B7C3BCD170601F200B9E009 /* saved_searches_background_highlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BCB170601F200B9E009 /* saved_searches_background_highlighted@2x.png */; };
+		5B7C3BD2170AF18900B9E009 /* btn-bg_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BCE170AF18900B9E009 /* btn-bg_plus.png */; };
+		5B7C3BD3170AF18900B9E009 /* btn-bg_plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BCF170AF18900B9E009 /* btn-bg_plus@2x.png */; };
+		5B7C3BD4170AF18900B9E009 /* btn-icon_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD0170AF18900B9E009 /* btn-icon_plus.png */; };
+		5B7C3BD5170AF18900B9E009 /* btn-icon_plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD1170AF18900B9E009 /* btn-icon_plus@2x.png */; };
+		5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD7170AF1AA00B9E009 /* DDGPlusButton.m */; };
 		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
 		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
 		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
@@ -532,6 +537,12 @@
 		5B7A1C9716F0836400354310 /* IGFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IGFormViewController.m; path = Submodules/IGFormViewController/IGFormViewController/IGFormViewController.m; sourceTree = SOURCE_ROOT; };
 		5B7C3BCA170601F200B9E009 /* saved_searches_background_highlighted.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = saved_searches_background_highlighted.png; sourceTree = "<group>"; };
 		5B7C3BCB170601F200B9E009 /* saved_searches_background_highlighted@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "saved_searches_background_highlighted@2x.png"; sourceTree = "<group>"; };
+		5B7C3BCE170AF18900B9E009 /* btn-bg_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_plus.png"; sourceTree = "<group>"; };
+		5B7C3BCF170AF18900B9E009 /* btn-bg_plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_plus@2x.png"; sourceTree = "<group>"; };
+		5B7C3BD0170AF18900B9E009 /* btn-icon_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-icon_plus.png"; sourceTree = "<group>"; };
+		5B7C3BD1170AF18900B9E009 /* btn-icon_plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-icon_plus@2x.png"; sourceTree = "<group>"; };
+		5B7C3BD6170AF1AA00B9E009 /* DDGPlusButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGPlusButton.h; sourceTree = "<group>"; };
+		5B7C3BD7170AF1AA00B9E009 /* DDGPlusButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGPlusButton.m; sourceTree = "<group>"; };
 		5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari.png"; sourceTree = "<group>"; };
 		5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari@2x.png"; sourceTree = "<group>"; };
 		5B88DBA916DB7BA7007A935D /* swipe-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save.png"; sourceTree = "<group>"; };
@@ -701,6 +712,10 @@
 				5B070863170056730058718F /* new_bg_menu-items-highlighted@2x.png */,
 				8383E8DE167245BA008160E5 /* new_bg_menu-items.png */,
 				8383E8DF167245BA008160E5 /* new_bg_menu-items@2x.png */,
+				5B7C3BCE170AF18900B9E009 /* btn-bg_plus.png */,
+				5B7C3BCF170AF18900B9E009 /* btn-bg_plus@2x.png */,
+				5B7C3BD0170AF18900B9E009 /* btn-icon_plus.png */,
+				5B7C3BD1170AF18900B9E009 /* btn-icon_plus@2x.png */,
 				83EFD3431656832C005E19CC /* search_icon.png */,
 				83EFD3441656832C005E19CC /* search_icon@2x.png */,
 				4C1D95EB163F3F0300F7A0B9 /* settings_bg_tile.png */,
@@ -929,6 +944,8 @@
 				4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */,
 				4C4B7E9615C4F8E500340B59 /* DDGBookmarksProvider.h */,
 				4C4B7E9715C4F8E500340B59 /* DDGBookmarksProvider.m */,
+				5B7C3BD6170AF1AA00B9E009 /* DDGPlusButton.h */,
+				5B7C3BD7170AF1AA00B9E009 /* DDGPlusButton.m */,
 			);
 			name = Bookmarks;
 			sourceTree = "<group>";
@@ -1503,6 +1520,10 @@
 				5B07089A1705EE900058718F /* saved_searches_background.png in Resources */,
 				5B7C3BCC170601F200B9E009 /* saved_searches_background_highlighted.png in Resources */,
 				5B7C3BCD170601F200B9E009 /* saved_searches_background_highlighted@2x.png in Resources */,
+				5B7C3BD2170AF18900B9E009 /* btn-bg_plus.png in Resources */,
+				5B7C3BD3170AF18900B9E009 /* btn-bg_plus@2x.png in Resources */,
+				5B7C3BD4170AF18900B9E009 /* btn-icon_plus.png in Resources */,
+				5B7C3BD5170AF18900B9E009 /* btn-icon_plus@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1599,6 +1620,7 @@
 				5B07086B17008ECE0058718F /* DDGHistoryItem.m in Sources */,
 				5B070884170460250058718F /* DDGActivityItemProvider.m in Sources */,
 				5B0708871704A3BE0058718F /* DDGSafariActivity.m in Sources */,
+				5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

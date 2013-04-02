@@ -341,6 +341,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             searchController.state = DDGSearchControllerStateHome;
             searchController.contentController = tabViewController;
             
+            bookmarks.searchController = searchController;
+            
             tabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
             tabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
             tabViewController.controlView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_header_background"]];

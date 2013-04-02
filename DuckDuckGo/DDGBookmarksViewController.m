@@ -11,6 +11,7 @@
 #import "DDGSearchController.h"
 #import "DDGUnderViewController.h"
 #import "ECSlidingViewController.h"
+#import "DDGPlusButton.h"
 
 @interface DDGBookmarksViewController ()
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
@@ -32,6 +33,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
+    NSParameterAssert(nil != self.searchController);
+    
     self.tableView.frame = self.view.bounds;
     [self.view addSubview:self.tableView];    
     
@@ -173,6 +176,19 @@
  
  */
 
+- (IBAction)plus:(id)sender {
+    UIButton *button = nil;
+    if ([sender isKindOfClass:[UIButton class]])
+        button = (UIButton *)sender;
+    
+    if (button) {
+        CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button];
+        NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];        
+        NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:tappedIndex.row];
+        self.searchController.searchField.text = [bookmark objectForKey:@"title"];
+    }
+}
+
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -214,6 +230,8 @@
         cell.textLabel.backgroundColor = [UIColor clearColor];
         cell.textLabel.opaque = NO;
         cell.textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        
+        cell.accessoryView = [DDGPlusButton plusButton];
     }
     
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];

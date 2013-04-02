@@ -154,7 +154,8 @@
     
     DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
     [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", pageTitle, shareURL] forActivityType:UIActivityTypeMail];
-
+    // [NSString stringWithFormat:@"mailto:?subject=%@&body=%@", [pageTitle URLEncodedStringDDG], [[shareURL absoluteString] URLEncodedStringDDG]]
+    
     DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];    
     
     NSArray *applicationActivities = @[];
