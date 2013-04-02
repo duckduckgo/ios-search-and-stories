@@ -210,8 +210,12 @@
 -(void)searchControllerStopOrReloadButtonPressed {
     if(self.webView.isLoading)
         [self.webView stopLoading];
-    else
-        [self.webView reload];
+    else {
+        if (self.inReadabilityMode)
+            [self loadStory:self.story readabilityMode:YES];
+        else
+            [self.webView reload];
+    }
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString
