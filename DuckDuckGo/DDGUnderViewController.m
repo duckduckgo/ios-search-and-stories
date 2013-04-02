@@ -18,6 +18,7 @@
 #import "DDGStory.h"
 #import "DDGStoryFeed.h"
 #import "DDGHistoryItem.h"
+#import "DDGPlusButton.h"
 
 NSString * const DDGViewControllerTypeTitleKey = @"title";
 NSString * const DDGViewControllerTypeTypeKey = @"type";
@@ -122,6 +123,29 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     self.slidingViewController.topViewController = viewController;
     viewController.view.frame = frame;
     [self configureViewController:viewController];
+}
+
+- (IBAction)plus:(id)sender {
+    UIButton *button = nil;
+    if ([sender isKindOfClass:[UIButton class]])
+        button = (UIButton *)sender;
+    
+    if (button) {
+        CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
+        NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];
+        DDGHistoryItem *item = [[self.historyProvider allHistoryItems] objectAtIndex:tappedIndex.row];
+        
+        UIViewController *topViewController = self.slidingViewController.topViewController;
+        if ([topViewController isKindOfClass:[DDGSearchController class]]) {
+            DDGSearchController *searchController = (DDGSearchController *)topViewController;
+            searchController.searchField.text = item.title;
+            [self.slidingViewController resetTopViewWithAnimations:nil onComplete:^{
+                [searchController.searchField becomeFirstResponder];
+            }];
+        } else {
+            [self loadQueryOrURL:item.title];
+        }
+    }
 }
 
 #pragma mark - DDGSearchHandler
@@ -249,14 +273,17 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             
 			if (nil != story) {
 				cell.imageView.image = story.feed.image;
+                cell.accessoryView = nil;                
 			} else {
                 cell.imageView.image = [UIImage imageNamed:@"search_icon"];
+                cell.accessoryView = [DDGPlusButton plusButton];
 			}
 			lbl.text = item.title;
 		} else {
 			cell.imageView.image = [UIImage imageNamed:@"icon_notification"];
 			lbl.text = @"Saving recents is disabled.\nYou can enable it in settings.";
             cell.imageView.contentMode = UIViewContentModeCenter;
+            cell.accessoryView = nil;
 		}
     }
     

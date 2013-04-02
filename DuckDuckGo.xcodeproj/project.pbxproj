@@ -198,6 +198,14 @@
 		5B7C3BD4170AF18900B9E009 /* btn-icon_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD0170AF18900B9E009 /* btn-icon_plus.png */; };
 		5B7C3BD5170AF18900B9E009 /* btn-icon_plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD1170AF18900B9E009 /* btn-icon_plus@2x.png */; };
 		5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD7170AF1AA00B9E009 /* DDGPlusButton.m */; };
+		5B7C3BDF170B098C00B9E009 /* DDGFirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BDD170B098C00B9E009 /* DDGFirstRunViewController.m */; };
+		5B7C3BE0170B098C00B9E009 /* DDGFirstRunViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BDE170B098C00B9E009 /* DDGFirstRunViewController.xib */; };
+		5B7C3BE3170B0C0100B9E009 /* ddg-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE1170B0C0100B9E009 /* ddg-logo.png */; };
+		5B7C3BE4170B0C0100B9E009 /* ddg-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE2170B0C0100B9E009 /* ddg-logo@2x.png */; };
+		5B7C3BE7170B0C1000B9E009 /* btn_get-started.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */; };
+		5B7C3BE8170B0C1000B9E009 /* btn_get-started@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */; };
+		5B7C3BEB170B0C1A00B9E009 /* icon_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE9170B0C1A00B9E009 /* icon_close.png */; };
+		5B7C3BEC170B0C1A00B9E009 /* icon_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */; };
 		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
 		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
 		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
@@ -543,6 +551,15 @@
 		5B7C3BD1170AF18900B9E009 /* btn-icon_plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-icon_plus@2x.png"; sourceTree = "<group>"; };
 		5B7C3BD6170AF1AA00B9E009 /* DDGPlusButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGPlusButton.h; sourceTree = "<group>"; };
 		5B7C3BD7170AF1AA00B9E009 /* DDGPlusButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGPlusButton.m; sourceTree = "<group>"; };
+		5B7C3BDC170B098C00B9E009 /* DDGFirstRunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGFirstRunViewController.h; sourceTree = "<group>"; };
+		5B7C3BDD170B098C00B9E009 /* DDGFirstRunViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGFirstRunViewController.m; sourceTree = "<group>"; };
+		5B7C3BDE170B098C00B9E009 /* DDGFirstRunViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGFirstRunViewController.xib; sourceTree = "<group>"; };
+		5B7C3BE1170B0C0100B9E009 /* ddg-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ddg-logo.png"; sourceTree = "<group>"; };
+		5B7C3BE2170B0C0100B9E009 /* ddg-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ddg-logo@2x.png"; sourceTree = "<group>"; };
+		5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_get-started.png"; sourceTree = "<group>"; };
+		5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_get-started@2x.png"; sourceTree = "<group>"; };
+		5B7C3BE9170B0C1A00B9E009 /* icon_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_close.png; sourceTree = "<group>"; };
+		5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_close@2x.png"; sourceTree = "<group>"; };
 		5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari.png"; sourceTree = "<group>"; };
 		5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari@2x.png"; sourceTree = "<group>"; };
 		5B88DBA916DB7BA7007A935D /* swipe-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save.png"; sourceTree = "<group>"; };
@@ -1079,6 +1096,42 @@
 			name = "Duck Mode";
 			sourceTree = "<group>";
 		};
+		5B7C3BD9170B092D00B9E009 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */,
+				83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
+		5B7C3BDA170B093300B9E009 /* Main Menu */ = {
+			isa = PBXGroup;
+			children = (
+				4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */,
+				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
+				5B7A1C3516E9EEB700354310 /* DDGUnderViewControllerCell.h */,
+				5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */,
+			);
+			name = "Main Menu";
+			sourceTree = "<group>";
+		};
+		5B7C3BDB170B096A00B9E009 /* First Run */ = {
+			isa = PBXGroup;
+			children = (
+				5B7C3BE1170B0C0100B9E009 /* ddg-logo.png */,
+				5B7C3BE2170B0C0100B9E009 /* ddg-logo@2x.png */,
+				5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */,
+				5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */,
+				5B7C3BE9170B0C1A00B9E009 /* icon_close.png */,
+				5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */,
+				5B7C3BDC170B098C00B9E009 /* DDGFirstRunViewController.h */,
+				5B7C3BDD170B098C00B9E009 /* DDGFirstRunViewController.m */,
+				5B7C3BDE170B098C00B9E009 /* DDGFirstRunViewController.xib */,
+			);
+			name = "First Run";
+			sourceTree = "<group>";
+		};
 		5BA321A816C904BA0066BCB0 /* AFNetworking */ = {
 			isa = PBXGroup;
 			children = (
@@ -1213,8 +1266,12 @@
 		8392E22F1668E106004263B6 /* Utility */ = {
 			isa = PBXGroup;
 			children = (
+				4CD9247C15C9ED0900EB062F /* Constants.h */,
+				4CD9247D15C9ED0900EB062F /* Constants.m */,
 				8390A3F31677CB3400336DE7 /* DDGUtility.h */,
 				8390A3F41677CB3400336DE7 /* DDGUtility.m */,
+				4C184D0C15A3742A003AAD5E /* NSArray+ConcurrentIteration.h */,
+				4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */,
 				8392E2301668E148004263B6 /* NSMutableString+DDGDumpView.h */,
 				8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */,
 				5B2FCABA16F231150045A5FE /* NSString+URLEncodingDDG.h */,
@@ -1243,15 +1300,10 @@
 		83F32262149290EF00A61BC5 /* DuckDuckGo */ = {
 			isa = PBXGroup;
 			children = (
-				4CD9247C15C9ED0900EB062F /* Constants.h */,
-				4CD9247D15C9ED0900EB062F /* Constants.m */,
 				4C6AC43514DDA95500A1ACA1 /* 3rd Party */,
-				83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */,
-				83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */,
-				4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */,
-				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
-				5B7A1C3516E9EEB700354310 /* DDGUnderViewControllerCell.h */,
-				5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */,
+				5B7C3BD9170B092D00B9E009 /* App */,
+				5B7C3BDB170B096A00B9E009 /* First Run */,
+				5B7C3BDA170B093300B9E009 /* Main Menu */,
 				5B07086C17008ED30058718F /* History */,
 				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
 				5B7A1BA516E74C0E00354310 /* Stories */,
@@ -1260,8 +1312,6 @@
 				4C660A741591487C001AB510 /* Search controller */,
 				5BD23C3516EE233800C2FBDA /* Sharing */,
 				5B2FCB5B16F3786D0045A5FE /* Web View */,
-				4C184D0C15A3742A003AAD5E /* NSArray+ConcurrentIteration.h */,
-				4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */,
 				8392E22F1668E106004263B6 /* Utility */,
 				838E906D149A794F00C11E41 /* Resources */,
 				4C1FD7D31548FF5B006B2511 /* Images */,
@@ -1524,6 +1574,13 @@
 				5B7C3BD3170AF18900B9E009 /* btn-bg_plus@2x.png in Resources */,
 				5B7C3BD4170AF18900B9E009 /* btn-icon_plus.png in Resources */,
 				5B7C3BD5170AF18900B9E009 /* btn-icon_plus@2x.png in Resources */,
+				5B7C3BE0170B098C00B9E009 /* DDGFirstRunViewController.xib in Resources */,
+				5B7C3BE3170B0C0100B9E009 /* ddg-logo.png in Resources */,
+				5B7C3BE4170B0C0100B9E009 /* ddg-logo@2x.png in Resources */,
+				5B7C3BE7170B0C1000B9E009 /* btn_get-started.png in Resources */,
+				5B7C3BE8170B0C1000B9E009 /* btn_get-started@2x.png in Resources */,
+				5B7C3BEB170B0C1A00B9E009 /* icon_close.png in Resources */,
+				5B7C3BEC170B0C1A00B9E009 /* icon_close@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1621,6 +1678,7 @@
 				5B070884170460250058718F /* DDGActivityItemProvider.m in Sources */,
 				5B0708871704A3BE0058718F /* DDGSafariActivity.m in Sources */,
 				5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */,
+				5B7C3BDF170B098C00B9E009 /* DDGFirstRunViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

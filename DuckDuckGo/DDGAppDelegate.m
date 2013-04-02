@@ -16,6 +16,7 @@
 #import "DDGSearchController.h"
 #import "DDGSearchHandler.h"
 #import "NSString+URLEncodingDDG.h"
+#import "DDGFirstRunViewController.h"
 
 @interface DDGAppDelegate ()
 @property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
@@ -165,6 +166,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [under configureViewController:homeController];
     
     [self.window makeKeyAndVisible];
+    
+    if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey])
+        [self.window.rootViewController presentViewController:[[DDGFirstRunViewController alloc] init] animated:YES completion:NULL];
     
     return YES;
 }

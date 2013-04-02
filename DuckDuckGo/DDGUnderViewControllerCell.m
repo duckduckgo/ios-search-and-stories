@@ -103,7 +103,7 @@
     } else {        
         UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_caret"]];
         imageView.highlightedImage = [UIImage imageNamed:@"icon_caret_onclick"];
-        imageView.contentMode = UIViewContentModeLeft;
+        imageView.contentMode = UIViewContentModeCenter;
         self.accessoryView = imageView;
         
         backgroundImageView.image = [UIImage imageNamed:@"new_bg_menu-items"];
@@ -134,10 +134,12 @@
     }
     self.imageView.frame = CGRectIntegral(imageRect);
     
-    CGRect labelRect = CGRectMake(38, 0, 195, bounds.size.height);
+    CGRect labelRect = CGRectMake(38, 0, 185, bounds.size.height);
     self.textLabel.frame = labelRect;
     
-    CGRect accessoryRect = CGRectMake(233, 0, bounds.size.width - 223, bounds.size.height);
+    CGRect accessoryRect = self.accessoryView.frame;
+    accessoryRect.origin.x = 223 + floor((24.0 - accessoryRect.size.width) / 2.0);
+    accessoryRect.origin.y = floor((bounds.size.height - accessoryRect.size.height) / 2.0);
     self.accessoryView.frame = accessoryRect;
 }
 
