@@ -397,6 +397,18 @@
 
 #pragma mark - DDGSearchHandler
 
+-(void)searchControllerStopOrReloadButtonPressed {
+    UIViewController *contentViewController = [self.controllers lastObject];
+    if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
+        UIViewController <DDGSearchHandler> *searchHandler = (UIViewController <DDGSearchHandler> *)contentViewController;
+        if([searchHandler respondsToSelector:@selector(searchControllerStopOrReloadButtonPressed)])
+            [searchHandler searchControllerStopOrReloadButtonPressed];
+    } else {
+        if([_searchHandler respondsToSelector:@selector(searchControllerStopOrReloadButtonPressed)])
+            [_searchHandler searchControllerStopOrReloadButtonPressed];
+    }
+}
+
 -(void)searchControllerActionButtonPressed {
     UIViewController *contentViewController = [self.controllers lastObject];
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
@@ -493,6 +505,7 @@
         _cancelButton.frame = f;
         
         _actionButton.hidden = NO;
+        _searchField.rightView = stopOrReloadButton;
     }
     
     CGRect searchFrame = _searchField.frame;
@@ -506,8 +519,7 @@
 }
 
 -(void)stopOrReloadButtonPressed {
-    if([_searchHandler respondsToSelector:@selector(searchControllerStopOrReloadButtonPressed)])
-        [_searchHandler performSelector:@selector(searchControllerStopOrReloadButtonPressed)];
+    [self searchControllerStopOrReloadButtonPressed];
 }
 
 -(void)webViewStartedLoading {
