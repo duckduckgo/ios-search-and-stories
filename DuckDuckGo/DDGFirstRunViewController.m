@@ -32,4 +32,8 @@ NSString * const DDGUserDefaultHasShownFirstRunKey = @"DDGUserDefaultHasShownFir
     [self.presentingViewController dismissViewControllerAnimated:YES completion:NULL];
 }
 
+- (NSUInteger)supportedInterfaceOrientations {
+    return UIInterfaceOrientationMaskPortrait;
+}
+
 @end
