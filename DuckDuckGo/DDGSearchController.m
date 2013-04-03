@@ -79,7 +79,9 @@
     [incommingViewController viewWillAppear:animated];
     
     [self.controllers addObject:incommingViewController];
-    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
+    [UIView animateWithDuration:duration animations:^{
+        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
+    }];
     
     [UIView animateWithDuration:duration
                      animations:^{
@@ -110,7 +112,9 @@
         [incommingViewController viewWillAppear:animated];
         
         [self.controllers removeLastObject];
-        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
+        [UIView animateWithDuration:duration animations:^{
+            [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
+        }];
         
         [UIView animateWithDuration:duration
                          animations:^{
@@ -280,7 +284,9 @@
                 outgoingRect.origin.x += contentRect.size.width;
                 
                 [self.controllers removeLastObject];
-                [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];                
+                [UIView animateWithDuration:duration animations:^{
+                    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
+                }];
                 
                 [UIView animateWithDuration:duration animations:^{
                     currentViewController.view.frame = outgoingRect;
