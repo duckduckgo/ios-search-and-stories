@@ -185,8 +185,8 @@
         CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
         NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];        
         NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:tappedIndex.row];
-        self.searchController.searchField.text = [bookmark objectForKey:@"title"];
         [self.searchController.searchField becomeFirstResponder];
+        self.searchController.searchField.text = [bookmark objectForKey:@"title"];
     }
 }
 
