@@ -778,6 +778,7 @@
 
 -(void)clearAddressBar {
     _searchField.text = @"";
+    _searchField.rightView = nil;
 }
 
 #pragma mark - Input accessory (the bang button/bar)
