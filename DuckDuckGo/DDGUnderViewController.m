@@ -156,6 +156,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
+    searchController.state = DDGSearchControllerStateWeb;    
     
     CGRect frame = self.slidingViewController.topViewController.view.frame;
     self.slidingViewController.topViewController = searchController;
@@ -175,6 +176,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
+    searchController.state = DDGSearchControllerStateWeb;    
     
     [webVC loadStory:story readabilityMode:readabilityMode];
     
@@ -190,6 +192,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
+    searchController.state = DDGSearchControllerStateWeb;    
     
     [webVC loadQueryOrURL:queryOrURL];
     

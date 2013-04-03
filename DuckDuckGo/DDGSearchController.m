@@ -214,6 +214,8 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
+    NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
+    
     [self.slidingViewController.panGesture requireGestureRecognizerToFail:self.panGesture];
 }
 
@@ -395,6 +397,18 @@
 
 #pragma mark - DDGSearchHandler
 
+-(void)searchControllerActionButtonPressed {
+    UIViewController *contentViewController = [self.controllers lastObject];
+    if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
+        UIViewController <DDGSearchHandler> *searchHandler = (UIViewController <DDGSearchHandler> *)contentViewController;
+        if([searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
+            [searchHandler searchControllerActionButtonPressed];
+    } else {
+        if([_searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
+            [_searchHandler searchControllerActionButtonPressed];
+    }
+}
+
 -(void)searchControllerLeftButtonPressed {
     [_searchField resignFirstResponder];
     UIViewController *contentViewController = [self.controllers lastObject];
@@ -444,8 +458,7 @@
 #pragma mark - Interactions with search handler
 
 - (IBAction)actionButtonPressed:(id)sender {
-    if([_searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
-        [_searchHandler searchControllerActionButtonPressed];
+    [self searchControllerActionButtonPressed];
 }
 
 - (IBAction)leftButtonPressed:(UIButton*)sender {
@@ -995,7 +1008,7 @@
 	if ([_searchField.text length])
         [self.historyProvider logSearchResultWithTitle:_searchField.text];
 
-    [self.searchHandler loadQueryOrURL:([_searchField.text length] ? _searchField.text : nil)];
+    [self loadQueryOrURL:([_searchField.text length] ? _searchField.text : nil)];
     [self dismissAutocomplete];
 
     oldSearchText = nil;
