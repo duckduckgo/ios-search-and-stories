@@ -16,6 +16,7 @@
 #import "ECSlidingViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
+#import "DDGWebViewController.h"
 
 #import "NSMutableString+DDGDumpView.h"
 
@@ -23,6 +24,8 @@
 @property (nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSMutableArray *controllers;
+@property (nonatomic, weak) UIPanGestureRecognizer *panGesture;
 @end
 
 @implementation DDGSearchController
@@ -33,6 +36,7 @@
 	if (self) {
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
+        self.controllers = [NSMutableArray arrayWithCapacity:2];
 	}
 	return self;
 }
@@ -42,15 +46,7 @@
 	[self.view removeFromSuperview];
 }
 
-- (void)setContentController:(UIViewController *)contentController {
-    if (contentController == _contentController)
-        return;
-    
-    [_contentController willMoveToParentViewController:nil];
-    [contentController willMoveToParentViewController:self];
-    
-    [_contentController.view removeFromSuperview];
-    
+- (CGRect)contentRect {
     [self view];
     
     CGRect searchbarRect = self.searchBar.frame;
@@ -59,13 +55,80 @@
     frame.origin.y = intersection.origin.y + intersection.size.height;
     frame.size.height = frame.size.height - frame.origin.y;
     
-    contentController.view.frame = frame;
-    [self.view insertSubview:contentController.view belowSubview:self.background];
+    return frame;
+}
+
+- (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
+    NSTimeInterval duration = (animated) ? 0.3 : 0.0;
     
-    [_contentController removeFromParentViewController];
-    [self addChildViewController:contentController];
+    UIViewController *incommingViewController = contentController;
+    UIViewController *outgoingViewController = [self.controllers lastObject];
     
-    _contentController = contentController;
+    CGRect contentRect = [self contentRect];
+    CGRect incommingRect = contentRect;
+    incommingRect.origin.x += contentRect.size.width;
+    CGRect outgoingRect = contentRect;
+    outgoingRect.origin.x -= contentRect.size.width;
+
+    incommingViewController.view.frame = incommingRect;
+
+    [incommingViewController willMoveToParentViewController:self];
+    [self.view insertSubview:incommingViewController.view belowSubview:self.background];
+    [self addChildViewController:incommingViewController];
+    [outgoingViewController viewWillDisappear:animated];
+    [incommingViewController viewWillAppear:animated];
+    
+    [self.controllers addObject:incommingViewController];
+    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
+    
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         incommingViewController.view.frame = contentRect;
+                         outgoingViewController.view.frame = outgoingRect;
+                     }
+                     completion:^(BOOL finished) {
+                         [outgoingViewController viewDidDisappear:animated];
+                         [incommingViewController viewDidAppear:animated];
+                     }];
+}
+
+- (BOOL)canPopContentViewController {
+    return ([self.controllers count] > 1);
+}
+
+- (void)popContentViewControllerAnimated:(BOOL)animated {
+    if ([self canPopContentViewController]) {
+        NSTimeInterval duration = (animated) ? 0.3 : 0.0;
+        UIViewController *outgoingViewController = [self.controllers lastObject];
+        UIViewController *incommingViewController = [self.controllers objectAtIndex:self.controllers.count-2];
+        
+        CGRect contentRect = [self contentRect];
+        CGRect outgoingRect = contentRect;
+        outgoingRect.origin.x += contentRect.size.width;
+        
+        [outgoingViewController viewWillDisappear:animated];
+        [incommingViewController viewWillAppear:animated];
+        
+        [self.controllers removeLastObject];
+        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
+        
+        [UIView animateWithDuration:duration
+                         animations:^{
+                             incommingViewController.view.frame = contentRect;
+                             outgoingViewController.view.frame = outgoingRect;
+                         }
+                         completion:^(BOOL finished) {
+                             [outgoingViewController viewDidDisappear:animated];
+                             [incommingViewController viewDidAppear:animated];
+                             [outgoingViewController willMoveToParentViewController:nil];
+                             [outgoingViewController.view removeFromSuperview];
+                             [outgoingViewController removeFromParentViewController];
+                         }];
+    }
+}
+
+- (NSArray *)contentControllers {
+    return [self.controllers copy];
 }
 
 - (DDGHistoryProvider *)historyProvider {
@@ -127,6 +190,11 @@
 	_searchField.leftViewMode = UITextFieldViewModeAlways;
 	_searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	
+    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+    panGesture.delegate = self;
+    [self.view addGestureRecognizer:panGesture];
+    self.panGesture = panGesture;
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 }
@@ -141,6 +209,109 @@
     [self setAutocompleteNavigationController:nil];
     [self setCancelButton:nil];
     [super viewDidUnload];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    
+    [self.slidingViewController.panGesture requireGestureRecognizerToFail:self.panGesture];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (void)panGesture:(UIPanGestureRecognizer *)panGesture {
+    
+    switch (panGesture.state) {
+        case UIGestureRecognizerStateChanged:
+        {
+            CGPoint transation = [panGesture translationInView:self.view];
+            [panGesture setTranslation:CGPointZero inView:self.view];
+            
+            UIViewController *currentViewController = [self.controllers lastObject];
+            UIViewController *previousViewController = nil;
+            if ([self canPopContentViewController])
+                previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
+            
+            CGPoint currentCenter = currentViewController.view.center;
+            CGPoint previousCenter = previousViewController.view.center;
+            
+            currentCenter.x += transation.x;
+            previousCenter.x += transation.x;
+            
+            [UIView animateWithDuration:0 animations:^{
+                currentViewController.view.center = currentCenter;
+                previousViewController.view.center = previousCenter;
+            }];            
+        }
+            break;
+        case UIGestureRecognizerStateBegan:
+        {
+            UIViewController *previousViewController = nil;
+            if ([self canPopContentViewController])
+                previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
+            [previousViewController viewWillAppear:YES];
+            [previousViewController viewDidAppear:YES];
+        }
+            break;
+        case UIGestureRecognizerStateEnded:
+        case UIGestureRecognizerStateCancelled:
+        {
+            CGRect contentRect = [self contentRect];
+            CGFloat contentMidX = CGRectGetMidX(contentRect);
+            UIViewController *currentViewController = [self.controllers lastObject];
+            
+            CGFloat offset = currentViewController.view.center.x - contentMidX;
+            CGPoint velocity = [panGesture velocityInView:panGesture.view];
+            CGFloat percent = (offset) / (self.view.bounds.size.width / 2.0);
+            
+            BOOL pop = (velocity.x > 0 && percent > 0.25);
+            
+            UIViewController *previousViewController = nil;
+            if ([self canPopContentViewController])
+                previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
+            
+            CGFloat distanceRemaining = contentRect.size.width - offset;
+            CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);            
+            
+            if (pop) {
+                CGRect outgoingRect = contentRect;
+                outgoingRect.origin.x += contentRect.size.width;
+                
+                [self.controllers removeLastObject];
+                [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];                
+                
+                [UIView animateWithDuration:duration animations:^{
+                    currentViewController.view.frame = outgoingRect;
+                    previousViewController.view.frame = contentRect;
+                    [currentViewController viewWillDisappear:YES];
+                } completion:^(BOOL finished) {
+                    [currentViewController viewDidDisappear:YES];
+                    [currentViewController willMoveToParentViewController:nil];
+                    [currentViewController.view removeFromSuperview];
+                    [currentViewController removeFromParentViewController];                    
+                }];
+                
+            } else {
+                CGRect previousRect = contentRect;
+                previousRect.origin.x -= contentRect.size.width;
+                
+                [UIView animateWithDuration:duration animations:^{
+                    currentViewController.view.frame = contentRect;
+                    previousViewController.view.frame = previousRect;
+                    [previousViewController viewWillDisappear:YES];
+                } completion:^(BOOL finished) {
+                    [previousViewController viewDidDisappear:YES];
+                }];                
+            }
+        }
+            break;
+        default:
+            break;
+    }
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    return [self canPopContentViewController];
 }
 
 #pragma mark - Keyboard notifications
@@ -222,6 +393,54 @@
     }
 }
 
+#pragma mark - DDGSearchHandler
+
+-(void)searchControllerLeftButtonPressed {
+    [_searchField resignFirstResponder];
+    UIViewController *contentViewController = [self.controllers lastObject];
+    if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
+        [(UIViewController <DDGSearchHandler> *)contentViewController searchControllerLeftButtonPressed];
+    } else {
+        if ([self.controllers count] > 1)
+            [self popContentViewControllerAnimated:YES];
+        else
+            [_searchHandler searchControllerLeftButtonPressed];
+    }
+}
+
+-(void)loadQueryOrURL:(NSString *)queryOrURLString {
+    UIViewController *contentViewController = [self.controllers lastObject];
+    if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
+        [(UIViewController <DDGSearchHandler> *)contentViewController loadQueryOrURL:queryOrURLString];
+    } else {
+        DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+        webViewController.searchController = self;
+        [self pushContentViewController:webViewController animated:YES];
+        [webViewController loadQueryOrURL:queryOrURLString];
+    }
+}
+
+-(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
+    UIViewController *contentViewController = [self.controllers lastObject];
+    if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
+        [(UIViewController <DDGSearchHandler> *)contentViewController loadStory:story readabilityMode:readabilityMode];
+    } else {
+        DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+        webViewController.searchController = self;
+        [self pushContentViewController:webViewController animated:YES];
+        [webViewController loadStory:story readabilityMode:readabilityMode];
+    }
+}
+
+-(void)prepareForUserInput {
+    UIViewController *contentViewController = [self.controllers lastObject];
+    if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
+        [(UIViewController <DDGSearchHandler> *)contentViewController prepareForUserInput];
+    } else {
+        [_searchHandler prepareForUserInput];
+    }
+}
+
 #pragma mark - Interactions with search handler
 
 - (IBAction)actionButtonPressed:(id)sender {
@@ -233,12 +452,14 @@
     if(autocompleteOpen) {
         [_autocompleteNavigationController popViewControllerAnimated:YES];
     } else {
-        [_searchField resignFirstResponder];
-        [_searchHandler searchControllerLeftButtonPressed];
+        [self searchControllerLeftButtonPressed];
     }
 }
 
--(void)setState:(DDGSearchControllerState)searchControllerState {
+-(void)setState:(DDGSearchControllerState)searchControllerState {    
+    if (_state == searchControllerState)
+        return;
+    
 	_state = searchControllerState;
     
     [self view];
@@ -246,20 +467,29 @@
     if(_state == DDGSearchControllerStateHome) {
         [_leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
         [_leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
+        
+        _actionButton.hidden = YES;
+        [self clearAddressBar];
+        
     } else if (_state == DDGSearchControllerStateWeb) {
         [_leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
         [_leftButton setImage:nil forState:UIControlStateHighlighted];
-
-        CGRect f = _searchField.frame;
-        f.size.width -= _actionButton.frame.size.width + 5;
-        _searchField.frame = f;
         
-        f = _cancelButton.frame;
+        CGRect f = _cancelButton.frame;
         f.origin.x -= _actionButton.frame.size.width + 5;
         _cancelButton.frame = f;
         
         _actionButton.hidden = NO;
     }
+    
+    CGRect searchFrame = _searchField.frame;
+    CGRect leftFrame = _leftButton.frame;
+    CGFloat rightInset = (_actionButton.hidden) ? 0.0 : _actionButton.frame.size.width + 5.0;
+    
+    searchFrame.origin.x = leftFrame.origin.x + leftFrame.size.width + 5.0;
+    searchFrame.size.width = self.view.bounds.size.width - (searchFrame.origin.x + rightInset + 5.0);
+    
+    _searchField.frame = searchFrame;
 }
 
 -(void)stopOrReloadButtonPressed {

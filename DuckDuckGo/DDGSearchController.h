@@ -11,12 +11,13 @@
 #import "DDGAddressBarTextField.h"
 
 typedef enum {
-	DDGSearchControllerStateHome = 0,
+	DDGSearchControllerStateUnknown = 0,
+    DDGSearchControllerStateHome,
 	DDGSearchControllerStateWeb
 } DDGSearchControllerState;
 
 @class DDGSearchSuggestionsProvider, DDGHistoryProvider, DDGInputAccessoryView;
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UINavigationControllerDelegate> {
+@interface DDGSearchController : UIViewController<UITextFieldDelegate, UINavigationControllerDelegate, DDGSearchHandler, UIGestureRecognizerDelegate> {
     NSString *oldSearchText;
     BOOL barUpdated;
     BOOL autocompleteOpen;
@@ -34,7 +35,11 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (nonatomic, weak) IBOutlet UIView *background;
 @property (nonatomic, weak) IBOutlet UIView *searchBar;
-@property (nonatomic, strong) UIViewController *contentController;
+@property (nonatomic, strong) NSArray *contentControllers;
+
+- (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated;
+- (void)popContentViewControllerAnimated:(BOOL)animated;
+- (BOOL)canPopContentViewController;
 
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(IBAction)actionButtonPressed:(id)sender;

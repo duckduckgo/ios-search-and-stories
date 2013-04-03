@@ -81,6 +81,7 @@
     if (self.webView.isLoading) {
         [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
         [self.webView stopLoading];
+        [_searchController webViewFinishedLoading];
     }
     
 	self.webView.delegate = nil;
@@ -204,6 +205,8 @@
 -(void)searchControllerLeftButtonPressed {        
 	if(self.webView.canGoBack)
         [self.webView goBack];
+    else if ([self.searchController canPopContentViewController])
+        [self.searchController popContentViewControllerAnimated:YES];    
 	else
 	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadSelectedViewController];
 }
@@ -324,6 +327,7 @@
         if (self.webView.isLoading) {
             [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
             [self.webView stopLoading];
+            [_searchController webViewFinishedLoading];
         }
         
         self.webView.delegate = nil;

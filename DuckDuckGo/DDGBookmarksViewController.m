@@ -267,7 +267,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
-    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:[bookmark objectForKey:@"url"]];
+    [self.searchHandler loadQueryOrURL:[bookmark objectForKey:@"url"]];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

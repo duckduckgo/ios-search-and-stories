@@ -708,6 +708,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     [self.searchHandler loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
     
     [self.historyProvider logStory:story];
+    
+    [theTableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
 #pragma mark - Loading popular stories

@@ -154,7 +154,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
     DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
-    searchController.contentController = webVC;
+    
+    [searchController pushContentViewController:webVC animated:NO];
     
     CGRect frame = self.slidingViewController.topViewController.view.frame;
     self.slidingViewController.topViewController = searchController;
@@ -172,7 +173,9 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
     DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
-    searchController.contentController = webVC;
+    
+    [searchController pushContentViewController:webVC animated:NO];
+    
     [webVC loadStory:story readabilityMode:readabilityMode];
     
     CGRect frame = self.slidingViewController.topViewController.view.frame;
@@ -185,7 +188,9 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
     DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
-    searchController.contentController = webVC;
+    
+    [searchController pushContentViewController:webVC animated:NO];
+    
     [webVC loadQueryOrURL:queryOrURL];
     
     CGRect frame = self.slidingViewController.topViewController.view.frame;
@@ -358,17 +363,18 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
             bookmarks.title = NSLocalizedString(@"Saved Searches", @"View controller title: Saved Searches");
             
-            DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            searchController.state = DDGSearchControllerStateHome;
+
+            DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
             stories.savedStoriesOnly = YES;
             stories.title = NSLocalizedString(@"Saved Stories", @"View controller title: Saved Stories");
             
-            DDGTabViewController *tabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[bookmarks, stories]];
-
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
-            searchController.state = DDGSearchControllerStateHome;
-            searchController.contentController = tabViewController;
+            DDGTabViewController *tabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[bookmarks, stories]];            
+            [searchController pushContentViewController:tabViewController animated:NO];            
             
             bookmarks.searchController = searchController;
+            bookmarks.searchHandler = self;
             
             tabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
             tabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
@@ -396,7 +402,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         case DDGViewControllerTypeStories: {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.state = DDGSearchControllerStateHome;
-            searchController.contentController = [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
+            [searchController pushContentViewController:stories animated:NO];
             viewController = searchController;
         }
             break;
@@ -412,7 +419,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 //            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
 //                searchController.contentController = [DDGDuckViewController duckViewController];
 //            } else {
-            searchController.contentController = [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];            
+            [searchController pushContentViewController:stories animated:NO];
 //            }
             searchController.state = DDGSearchControllerStateHome;
             viewController = searchController;
