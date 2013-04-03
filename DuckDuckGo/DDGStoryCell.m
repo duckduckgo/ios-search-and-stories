@@ -92,6 +92,8 @@
     self.textLabel.frame = textFrame;
 }
 
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {}
+
 - (void)prepareForReuse {
     [super prepareForReuse];
     [self setNeedsLayout];
