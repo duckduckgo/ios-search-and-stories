@@ -453,12 +453,15 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 - (void)hideSwipeViewForIndexPath:(NSIndexPath *)indexPath completion:(void (^)())completion {
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     self.swipeViewIndexPath = nil;
+    
+    UIView *swipeView = self.swipeView;
+    self.swipeView = nil;
+    
     [UIView animateWithDuration:0.1
                      animations:^{
-                         cell.contentView.frame = self.swipeView.frame;
+                         cell.contentView.frame = swipeView.frame;
                      } completion:^(BOOL finished) {
-                         if (nil == self.swipeViewIndexPath)
-                             [self.swipeView removeFromSuperview];
+                         [swipeView removeFromSuperview];
                          if (NULL != completion)
                              completion();
                      }];
