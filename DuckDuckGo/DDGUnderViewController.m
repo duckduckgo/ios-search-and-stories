@@ -379,7 +379,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             bookmarks.searchController = searchController;
             bookmarks.searchHandler = self;
             
-            tabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
+            tabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionBottom;
             tabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
             tabViewController.controlView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_header_background"]];
             [tabViewController.segmentedControl sizeToFit];
