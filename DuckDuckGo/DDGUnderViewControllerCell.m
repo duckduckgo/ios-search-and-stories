@@ -122,9 +122,18 @@
 - (void)layoutSubviews {
     [super layoutSubviews];    
     
-    CGRect bounds = self.contentView.bounds;
+    CGFloat overhang = 74.0;
+    CGRect bounds = self.bounds;
     
-    CGRect imageRect = CGRectMake(0, 0, 36, bounds.size.height);
+    CGRect accessoryRect = self.accessoryView.frame;
+    accessoryRect.origin.x = bounds.size.width - overhang - accessoryRect.size.width;
+    accessoryRect.origin.y = floor((bounds.size.height - accessoryRect.size.height) / 2.0);
+    self.accessoryView.frame = accessoryRect;
+    
+    self.contentView.frame = CGRectMake(0, 0, bounds.size.width - overhang - accessoryRect.size.width, bounds.size.height);
+    CGRect contentBounds = self.contentView.bounds;
+    
+    CGRect imageRect = CGRectMake(0, 0, 36, contentBounds.size.height);
     if (self.imageView.image) {
         CGSize size = (self.cellMode == DDGUnderViewControllerCellModeRecent) ? CGSizeMake(16.0, 16.0) : CGSizeMake(24.0, 24.0);
         imageRect = CGRectMake(imageRect.origin.x + ((imageRect.size.width - size.width) / 2.0),
@@ -134,13 +143,8 @@
     }
     self.imageView.frame = CGRectIntegral(imageRect);
     
-    CGRect labelRect = CGRectMake(38, 0, 185, bounds.size.height);
-    self.textLabel.frame = labelRect;
-    
-    CGRect accessoryRect = self.accessoryView.frame;
-    accessoryRect.origin.x = 223 + floor((24.0 - accessoryRect.size.width) / 2.0);
-    accessoryRect.origin.y = floor((bounds.size.height - accessoryRect.size.height) / 2.0);
-    self.accessoryView.frame = accessoryRect;
+    CGRect labelRect = CGRectMake(38, 0, contentBounds.size.width - 38, bounds.size.height);
+    self.textLabel.frame = labelRect;    
 }
 
 @end
