@@ -234,7 +234,7 @@
 					<object class="IBUILabel" id="86856467">
 						<reference key="NSNextResponder" ref="191373211"/>
 						<int key="NSvFlags">293</int>
-						<string key="NSFrame">{{20, 281}, {280, 126}}</string>
+						<string key="NSFrame">{{28, 281}, {264, 144}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="1016479864"/>
@@ -244,7 +244,12 @@
 						<int key="IBUIContentMode">7</int>
 						<bool key="IBUIUserInteractionEnabled">NO</bool>
 						<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-						<string key="IBUIText">Whether you're settling a bet or have five minutes to kill, DuckDuckGo has you covered. Our search results are packed with instant answers and our home screen shows you the most talked about stories. Best of all: it's completely private – unlike other search and stories apps, we don't track you.</string>
+						<string type="base64-UTF8" key="IBUIText">V2hldGhlciB5b3UncmUgc2V0dGxpbmcgYSBiZXQgb3IgaGF2ZSBhIGZldyBmcmVlIG1pbnV0ZXMsIER1
+Y2tEdWNrR28gaGFzIHlvdSAKY292ZXJlZC4gT3VyIHNlYXJjaCByZXN1bHRzIGFyZSBwYWNrZWQgd2l0
+aCBpbnN0YW50IGFuc3dlcnMgYW5kIG91ciBob21lIHNjcmVlbiBvbmx5IHNob3dzIHlvdSB0aGUgbW9z
+dCBpbnRlcmVzdGluZyBzdG9yaWVzLiBCZXN0IG9mIGFsbDogaXQncyBjb21wbGV0ZWx5IHByaXZhdGUg
+4oCTIHVubGlrZSBvdGhlciBzZWFyY2ggYW5kIHN0b3JpZXMgYXBwcywgd2UgZG9uJ3QgdHJhY2sgeW91
+Lg</string>
 						<object class="NSColor" key="IBUITextColor">
 							<int key="NSColorSpace">1</int>
 							<bytes key="NSRGB">MC4zNjA3ODQzMTM3IDAuMzcyNTQ5MDE5NiAwLjQAA</bytes>
@@ -265,7 +270,7 @@
 							<int key="NSfFlags">16</int>
 						</object>
 						<bool key="IBUIAdjustsFontSizeToFit">NO</bool>
-						<double key="preferredMaxLayoutWidth">280</double>
+						<double key="preferredMaxLayoutWidth">264</double>
 					</object>
 				</array>
 				<string key="NSFrame">{{0, 20}, {320, 548}}</string>
@@ -369,6 +374,16 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
+						<int key="objectID">19</int>
+						<reference key="object" ref="1016479864"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">20</int>
+						<reference key="object" ref="86856467"/>
+						<reference key="parent" ref="191373211"/>
+					</object>
+					<object class="IBObjectRecord">
 						<int key="objectID">15</int>
 						<reference key="object" ref="173915896"/>
 						<reference key="parent" ref="191373211"/>
@@ -379,23 +394,13 @@
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">17</int>
-						<reference key="object" ref="242449276"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
-					<object class="IBObjectRecord">
 						<int key="objectID">18</int>
 						<reference key="object" ref="567098126"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 					<object class="IBObjectRecord">
-						<int key="objectID">19</int>
-						<reference key="object" ref="1016479864"/>
-						<reference key="parent" ref="191373211"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">20</int>
-						<reference key="object" ref="86856467"/>
+						<int key="objectID">17</int>
+						<reference key="object" ref="242449276"/>
 						<reference key="parent" ref="191373211"/>
 					</object>
 				</array>
@@ -418,7 +423,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">21</int>
+			<int key="maxID">23</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
