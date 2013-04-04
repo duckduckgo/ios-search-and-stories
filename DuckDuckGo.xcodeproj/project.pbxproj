@@ -206,6 +206,7 @@
 		5B7C3BE8170B0C1000B9E009 /* btn_get-started@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */; };
 		5B7C3BEB170B0C1A00B9E009 /* icon_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE9170B0C1A00B9E009 /* icon_close.png */; };
 		5B7C3BEC170B0C1A00B9E009 /* icon_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */; };
+		5B7C3BEF170DA03E00B9E009 /* DDGSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BEE170DA03E00B9E009 /* DDGSearchBar.m */; };
 		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
 		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
 		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
@@ -560,6 +561,8 @@
 		5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_get-started@2x.png"; sourceTree = "<group>"; };
 		5B7C3BE9170B0C1A00B9E009 /* icon_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_close.png; sourceTree = "<group>"; };
 		5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_close@2x.png"; sourceTree = "<group>"; };
+		5B7C3BED170DA03E00B9E009 /* DDGSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchBar.h; sourceTree = "<group>"; };
+		5B7C3BEE170DA03E00B9E009 /* DDGSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchBar.m; sourceTree = "<group>"; };
 		5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari.png"; sourceTree = "<group>"; };
 		5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari@2x.png"; sourceTree = "<group>"; };
 		5B88DBA916DB7BA7007A935D /* swipe-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save.png"; sourceTree = "<group>"; };
@@ -920,6 +923,8 @@
 		4C660A741591487C001AB510 /* Search controller */ = {
 			isa = PBXGroup;
 			children = (
+				5B7C3BED170DA03E00B9E009 /* DDGSearchBar.h */,
+				5B7C3BEE170DA03E00B9E009 /* DDGSearchBar.m */,
 				83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */,
 				83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */,
 				838E9063149A75D700C11E41 /* DDGSearchController.xib */,
@@ -1679,6 +1684,7 @@
 				5B0708871704A3BE0058718F /* DDGSafariActivity.m in Sources */,
 				5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */,
 				5B7C3BDF170B098C00B9E009 /* DDGFirstRunViewController.m in Sources */,
+				5B7C3BEF170DA03E00B9E009 /* DDGSearchBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

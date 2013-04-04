@@ -139,8 +139,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         if ([topViewController isKindOfClass:[DDGSearchController class]]) {
             DDGSearchController *searchController = (DDGSearchController *)topViewController;
             [self.slidingViewController resetTopViewWithAnimations:nil onComplete:^{
-                [searchController.searchField becomeFirstResponder];
-                searchController.searchField.text = item.title;
+                [searchController.searchBar.searchField becomeFirstResponder];
+                searchController.searchBar.searchField.text = item.title;
             }];
         } else {
             [self loadQueryOrURL:item.title];
@@ -163,7 +163,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     self.slidingViewController.topViewController.view.frame = frame;
     [self configureViewController:searchController];
     
-    [searchController.searchField becomeFirstResponder];
+    [searchController.searchBar.searchField becomeFirstResponder];
 }
 
 -(void)searchControllerLeftButtonPressed {

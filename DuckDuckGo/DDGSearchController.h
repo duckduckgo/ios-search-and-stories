@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGSearchHandler.h"
-#import "DDGAddressBarTextField.h"
+#import "DDGSearchBar.h"
 
 typedef enum {
 	DDGSearchControllerStateUnknown = 0,
@@ -21,7 +21,6 @@ typedef enum {
     NSString *oldSearchText;
     BOOL barUpdated;
     BOOL autocompleteOpen;
-    BOOL backButtonVisible;
     
     UIButton *stopOrReloadButton;
     DDGInputAccessoryView *inputAccessory;
@@ -29,12 +28,8 @@ typedef enum {
     NSMutableArray *unusedBangButtons;
 }
 
-@property (nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
-@property (nonatomic, weak) IBOutlet UIButton *leftButton;
-@property (weak, nonatomic) IBOutlet UIButton *actionButton;
-@property (weak, nonatomic) IBOutlet UIButton *cancelButton;
+@property (nonatomic, weak) IBOutlet DDGSearchBar *searchBar;
 @property (nonatomic, weak) IBOutlet UIView *background;
-@property (nonatomic, weak) IBOutlet UIView *searchBar;
 @property (nonatomic, strong) NSArray *contentControllers;
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated;

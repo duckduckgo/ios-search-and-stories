@@ -63,7 +63,6 @@
         return;
     
     _searchController = searchController;
-    _searchController.state = DDGSearchControllerStateWeb;    
 }
 
 -(void)viewDidAppear:(BOOL)animated {
@@ -198,8 +197,8 @@
 #pragma mark - Search handler
 
 -(void)prepareForUserInput {
-    if (self.searchController.searchField.window)
-        [self.searchController.searchField becomeFirstResponder];
+    if (self.searchController.searchBar.searchField.window)
+        [self.searchController.searchBar.searchField becomeFirstResponder];
 }
 
 -(void)searchControllerLeftButtonPressed {        
@@ -374,7 +373,7 @@
 
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     if(action == @selector(search:))
-        return ![_searchController.searchField isFirstResponder];
+        return ![_searchController.searchBar.searchField isFirstResponder];
     else
         return [super canPerformAction:action withSender:sender];
 }

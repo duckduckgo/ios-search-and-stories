@@ -53,10 +53,10 @@ static NSString *historyCellID = @"HCell";
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     
     DDGSearchSuggestionsProvider *provider = [DDGSearchSuggestionsProvider sharedProvider];
-    NSString *searchText = self.searchController.searchField.text;
+    NSString *searchText = self.searchController.searchBar.searchField.text;
     self.suggestions = @[];
     [provider downloadSuggestionsForSearchText:searchText success:^{
-        if ([searchText isEqual:self.searchController.searchField.text]) {
+        if ([searchText isEqual:self.searchController.searchBar.searchField.text]) {
             self.suggestions = [provider suggestionsForSearchText:searchText];
             [self.tableView reloadData];
         }
@@ -72,7 +72,7 @@ static NSString *historyCellID = @"HCell";
 }
 
 - (void)searchFieldDidChange:(id)sender {
-    NSString *newSearchText = self.searchController.searchField.text;
+    NSString *newSearchText = self.searchController.searchBar.searchField.text;
         
     if([newSearchText isEqualToString:[self.searchController validURLStringFromString:newSearchText]]) {
         // we're definitely editing a URL, don't bother with autocomplete.
@@ -83,7 +83,7 @@ static NSString *historyCellID = @"HCell";
 		// load our new best cached result, and download new autocomplete suggestions.
         DDGSearchSuggestionsProvider *provider = [DDGSearchSuggestionsProvider sharedProvider];
         [provider downloadSuggestionsForSearchText:newSearchText success:^{
-            if ([newSearchText isEqual:self.searchController.searchField.text]) {
+            if ([newSearchText isEqual:self.searchController.searchBar.searchField.text]) {
                 self.suggestions = [provider suggestionsForSearchText:newSearchText];
                 [self.tableView reloadData];
             }
@@ -110,7 +110,7 @@ static NSString *historyCellID = @"HCell";
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-	if (!section && ![self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
+	if (!section && ![self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text].count)
 		return nil;
 	else if (section == 1 && !self.suggestions.count)
 		return nil;
@@ -133,7 +133,7 @@ static NSString *historyCellID = @"HCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-	if (!section && [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
+	if (!section && [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text].count)
 		return 23.0;
 	if (section == 1 && self.suggestions.count)
 		return 23.0;
@@ -146,7 +146,7 @@ static NSString *historyCellID = @"HCell";
     switch (section)
 	{
         case 0:
-            return [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count;
+            return [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text].count;
         case 1:
             return self.suggestions.count;
     }
@@ -176,12 +176,12 @@ static NSString *historyCellID = @"HCell";
 			[cell.contentView addSubview:separatorLine];
         }
         
-        NSArray *history = [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text];
+        NSArray *history = [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text];
         NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
         
         cell.textLabel.text = [historyItem objectForKey:@"text"];
         
-		lineHidden = (indexPath.row == [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count - 1) ? YES : NO;
+		lineHidden = (indexPath.row == [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text].count - 1) ? YES : NO;
     }
 	else if(indexPath.section == 1)
 	{
@@ -263,7 +263,7 @@ static NSString *historyCellID = @"HCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (!indexPath.section && [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text].count)
+	if (!indexPath.section && [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text].count)
 		return kCellHeightHistory+1;
 	else if (indexPath.section == 1 && self.suggestions.count)
 		return kCellHeightSuggestions+1;
@@ -286,7 +286,7 @@ static NSString *historyCellID = @"HCell";
 {
     if(indexPath.section == 0)
 	{
-        NSArray *history = [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchField.text];        
+        NSArray *history = [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text];        
         DDGHistoryItem *item = [history objectAtIndex:indexPath.row];
         [self.historyProvider relogHistoryItem:item];
         DDGStory *story = item.story;
@@ -324,7 +324,7 @@ static NSString *historyCellID = @"HCell";
     double delayInSeconds = 0.4;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self.searchController.searchField resignFirstResponder];
+        [self.searchController.searchBar.searchField resignFirstResponder];
     });
 }
 

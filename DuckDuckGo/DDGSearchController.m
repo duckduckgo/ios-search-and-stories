@@ -79,9 +79,7 @@
     [incommingViewController viewWillAppear:animated];
     
     [self.controllers addObject:incommingViewController];
-    [UIView animateWithDuration:duration animations:^{
-        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
-    }];
+    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
     
     [UIView animateWithDuration:duration
                      animations:^{
@@ -112,9 +110,7 @@
         [incommingViewController viewWillAppear:animated];
         
         [self.controllers removeLastObject];
-        [UIView animateWithDuration:duration animations:^{
-            [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
-        }];
+        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
         
         [UIView animateWithDuration:duration
                          animations:^{
@@ -165,8 +161,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    backButtonVisible = YES;
-    
     DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
     self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:autocompleteVC];
     _autocompleteNavigationController.delegate = self;
@@ -178,22 +172,24 @@
     
     [self revealBackground:NO animated:NO];
     
-    _searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
-    [_searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    DDGAddressBarTextField *searchField = self.searchBar.searchField;
+    
+    searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
+    [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     
     stopOrReloadButton = [[UIButton alloc] init];
     stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
     [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    _searchField.rightView = stopOrReloadButton;
     
     unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];    
     
     [self createInputAccessory];
     
-	_searchField.rightViewMode = UITextFieldViewModeAlways;
-	_searchField.leftViewMode = UITextFieldViewModeAlways;
-	_searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
-	
+	searchField.rightViewMode = UITextFieldViewModeAlways;
+	searchField.leftViewMode = UITextFieldViewModeAlways;
+	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
+	searchField.delegate = self;
+    
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
     panGesture.delegate = self;
     [self.view addGestureRecognizer:panGesture];
@@ -209,9 +205,7 @@
 }
 
 - (void)viewDidUnload {
-    [self setActionButton:nil];
     [self setAutocompleteNavigationController:nil];
-    [self setCancelButton:nil];
     [super viewDidUnload];
 }
 
@@ -284,9 +278,7 @@
                 outgoingRect.origin.x += contentRect.size.width;
                 
                 [self.controllers removeLastObject];
-                [UIView animateWithDuration:duration animations:^{
-                    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome];
-                }];
+                [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
                 
                 [UIView animateWithDuration:duration animations:^{
                     currentViewController.view.frame = outgoingRect;
@@ -325,7 +317,7 @@
 #pragma mark - Keyboard notifications
 
 - (void)slidingViewTopDidAnchorRight:(NSNotification *)notification {
-    [self.searchField resignFirstResponder];
+    [self.searchBar.searchField resignFirstResponder];
 }
 
 -(void)keyboardWillShow:(NSNotification *)notification {
@@ -428,7 +420,7 @@
 }
 
 -(void)searchControllerLeftButtonPressed {
-    [_searchField resignFirstResponder];
+    [self.searchBar.searchField resignFirstResponder];
     UIViewController *contentViewController = [self.controllers lastObject];
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController searchControllerLeftButtonPressed];
@@ -487,7 +479,11 @@
     }
 }
 
--(void)setState:(DDGSearchControllerState)searchControllerState {    
+-(void)setState:(DDGSearchControllerState)searchControllerState {
+    [self setState:searchControllerState animationDuration:0];
+}
+
+-(void)setState:(DDGSearchControllerState)searchControllerState animationDuration:(NSTimeInterval)duration {
     if (_state == searchControllerState)
         return;
     
@@ -496,32 +492,30 @@
     [self view];
     
     if(_state == DDGSearchControllerStateHome) {
-        [_leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-        [_leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
+        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
+        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
         
-        _actionButton.hidden = YES;
+        self.searchBar.showsCancelButton = NO;
+        self.searchBar.showsRightButton = NO;
+        self.searchBar.showsLeftButton = YES;
+
+        if (duration > 0)
+            [self.searchBar layoutIfNeeded:duration];
+        
         [self clearAddressBar];
         
     } else if (_state == DDGSearchControllerStateWeb) {
-        [_leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
-        [_leftButton setImage:nil forState:UIControlStateHighlighted];
+        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
+        [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
         
-        CGRect f = _cancelButton.frame;
-        f.origin.x -= _actionButton.frame.size.width + 5;
-        _cancelButton.frame = f;
+        self.searchBar.showsCancelButton = NO;
+        self.searchBar.showsLeftButton = YES;
+        self.searchBar.showsRightButton = YES;        
+        self.searchBar.searchField.rightView = stopOrReloadButton;
         
-        _actionButton.hidden = NO;
-        _searchField.rightView = stopOrReloadButton;
+        if (duration > 0)
+            [self.searchBar layoutIfNeeded:duration];        
     }
-    
-    CGRect searchFrame = _searchField.frame;
-    CGRect leftFrame = _leftButton.frame;
-    CGFloat rightInset = (_actionButton.hidden) ? 0.0 : _actionButton.frame.size.width + 5.0;
-    
-    searchFrame.origin.x = leftFrame.origin.x + leftFrame.size.width + 5.0;
-    searchFrame.size.width = self.view.bounds.size.width - (searchFrame.origin.x + rightInset + 5.0);
-    
-    _searchField.frame = searchFrame;
 }
 
 -(void)stopOrReloadButtonPressed {
@@ -534,18 +528,18 @@
 
 -(void)webViewFinishedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
-    [_searchField finish];
+    [self.searchBar.searchField finish];
 }
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
     if(canGoBack)
-        [_leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
     else
-        [_leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
+        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
 }
 
 -(void)setProgress:(CGFloat)progress {
-    [_searchField setProgress:progress];
+    [self.searchBar.searchField setProgress:progress];
 }
 
 #pragma mark - Helper methods
@@ -620,11 +614,7 @@
         return;
     
     BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
-    NSLog(@"bbv %i",backButtonVisible);
-    if(showBackButton != backButtonVisible)
-        [UIView animateWithDuration:0.25 animations:^{
-            _searchField.frame = [self showBackButton:showBackButton];
-        }];
+    [self.searchBar setShowsLeftButton:showBackButton animated:YES];
 }
 
 #pragma mark - View management
@@ -633,35 +623,20 @@
 -(void)revealAutocomplete {    
     // save search text in case user cancels input without navigating somewhere
     if(!oldSearchText)
-        oldSearchText = _searchField.text;
+        oldSearchText = self.searchBar.searchField.text;
     barUpdated = NO;
     
-    if(![self isQuery:_searchField.text]) {
+    if(![self isQuery:self.searchBar.searchField.text]) {
         [self clearAddressBar];
     }
     
-    _searchField.rightView = nil;
+    self.searchBar.searchField.rightView = nil;
     [self revealBackground:YES animated:YES];
     
-    [UIView animateWithDuration:0.25 animations:^{        
-        CGRect f;
-        CGRect searchFieldFrame = [self showBackButton:NO];
-        
-        if(_state == DDGSearchControllerStateWeb) {
-            _actionButton.alpha = 0;
-            searchFieldFrame.size.width += _actionButton.frame.size.width + 5;
-        }
-        
-        _cancelButton.alpha = 1;
-        
-        f = _cancelButton.frame;
-        f.origin.x = self.view.bounds.size.width - _cancelButton.frame.size.width - 5;
-        _cancelButton.frame = f;
-        
-        searchFieldFrame.size.width -= _cancelButton.frame.size.width + 5;
-        
-        _searchField.frame = searchFieldFrame;
-    }];
+    self.searchBar.showsLeftButton = NO;
+    self.searchBar.showsRightButton = NO;
+    self.searchBar.showsCancelButton = YES;
+    [self.searchBar layoutIfNeeded:0.25];
     
     self.slidingViewController.panGesture.enabled = NO;
     
@@ -678,67 +653,26 @@
     self.slidingViewController.panGesture.enabled = YES;
     
     if(_state == DDGSearchControllerStateHome) {
-        [_leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-        [_leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
+        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
+        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
     }
 
-    [_searchField resignFirstResponder];
+    [self.searchBar.searchField resignFirstResponder];
     if(!barUpdated) {
-        _searchField.text = oldSearchText;
+        self.searchBar.searchField.text = oldSearchText;
         oldSearchText = nil;
     }
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
         [_searchHandler searchControllerAddressBarWillCancel];
     
     [self revealBackground:NO animated:YES];
-    if(_state==DDGSearchControllerStateWeb)
-        _searchField.rightView = stopOrReloadButton;
-    
-    [UIView animateWithDuration:0.25 animations:^{        
-        CGRect f;
-        CGRect searchFieldFrame = [self showBackButton:YES];
+    if(self.state == DDGSearchControllerStateWeb)
+        self.searchBar.searchField.rightView = stopOrReloadButton;
         
-        if(_state == DDGSearchControllerStateWeb) {
-            _actionButton.alpha = 1;
-            searchFieldFrame.size.width -= _actionButton.frame.size.width + 5;
-        
-            f = _cancelButton.frame;
-            f.origin.x = self.view.bounds.size.width - (_actionButton.frame.size.width + 5);
-            _cancelButton.frame = f;
-        } else {
-            f = _cancelButton.frame;
-            f.origin.x = self.view.bounds.size.width;
-            _cancelButton.frame = f;
-        }
-        
-        _cancelButton.alpha = 0;
-        
-        searchFieldFrame.size.width += _cancelButton.frame.size.width + 5;
-        
-        _searchField.frame = searchFieldFrame;
-    }];
-}
-
-// this returns the updated searchFieldFrame instead of setting it because sometimes we want to make further changes to it
--(CGRect)showBackButton:(BOOL)show {
-    if(backButtonVisible == show)
-        return _searchField.frame;
-    
-    backButtonVisible = show;
-    
-    _leftButton.alpha = (show ? 1 : 0);
-    
-    CGFloat direction = (show ? 1 : -1);
-    
-    CGRect f = _leftButton.frame;
-    f.origin.x += direction*(_leftButton.frame.size.width + 5);
-    _leftButton.frame = f;
-    
-    CGRect searchFieldFrame = _searchField.frame;
-    searchFieldFrame.origin.x += direction*(_leftButton.frame.size.width + 5);
-    searchFieldFrame.size.width -= direction*(_leftButton.frame.size.width + 5);
-    
-    return searchFieldFrame;
+    self.searchBar.showsLeftButton = YES;
+    self.searchBar.showsRightButton = (self.state == DDGSearchControllerStateWeb);
+    self.searchBar.showsCancelButton = NO;
+    [self.searchBar layoutIfNeeded:0.25];
 }
 
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
@@ -791,12 +725,12 @@
 -(void)updateBarWithURL:(NSURL *)url {
     barUpdated = YES;
     NSString *query = [self queryFromDDGURL:url];
-    _searchField.text = (query ? query : url.absoluteString);
+    self.searchBar.searchField.text = (query ? query : url.absoluteString);
 }
 
 -(void)clearAddressBar {
-    _searchField.text = @"";
-    _searchField.rightView = nil;
+    self.searchBar.searchField.text = @"";
+    self.searchBar.searchField.rightView = nil;
 }
 
 #pragma mark - Input accessory (the bang button/bar)
@@ -839,26 +773,29 @@
 }
 
 -(void)bangButtonPressed {
+    DDGAddressBarTextField *searchField = self.searchBar.searchField;
     NSString *textToAdd;
-    if(_searchField.text.length==0 || [_searchField.text characterAtIndex:_searchField.text.length-1]==' ')
+    NSString *text = searchField.text;
+    if(text.length==0 || [text characterAtIndex:text.length-1]==' ')
         textToAdd = @"!";
     else
         textToAdd = @" !";
 
-    [self textField:_searchField 
-          shouldChangeCharactersInRange:NSMakeRange(_searchField.text.length, 0) 
+    [self textField:searchField
+          shouldChangeCharactersInRange:NSMakeRange(text.length, 0)
           replacementString:textToAdd];
-    _searchField.text = [_searchField.text stringByAppendingString:textToAdd];
+    searchField.text = [searchField.text stringByAppendingString:textToAdd];
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
+    DDGAddressBarTextField *searchField = self.searchBar.searchField;
     if(currentWordRange.location == NSNotFound) {
-        if(_searchField.text.length == 0)
-            _searchField.text = sender.titleLabel.text;
+        if(searchField.text.length == 0)
+            searchField.text = sender.titleLabel.text;
         else
-            [_searchField setText:[_searchField.text stringByAppendingFormat:@" %@",sender.titleLabel.text]];
+            [searchField setText:[searchField.text stringByAppendingFormat:@" %@",sender.titleLabel.text]];
     } else {
-        [_searchField setText:[_searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
+        [searchField setText:[searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
     }
 }
 
@@ -931,7 +868,7 @@
 		if(_autocompleteNavigationController.topViewController != autocompleteViewController)
 			[_autocompleteNavigationController popToRootViewControllerAnimated:NO];
 		
-		[autocompleteViewController searchFieldDidChange:_searchField];
+		[autocompleteViewController searchFieldDidChange:self.searchBar.searchField];
 	}
 }
 
@@ -1024,10 +961,12 @@
 	}
 	[textField resignFirstResponder];
 	
-	if ([_searchField.text length])
-        [self.historyProvider logSearchResultWithTitle:_searchField.text];
+    DDGAddressBarTextField *searchField = self.searchBar.searchField;
+    
+	if ([searchField.text length])
+        [self.historyProvider logSearchResultWithTitle:searchField.text];
 
-    [self loadQueryOrURL:([_searchField.text length] ? _searchField.text : nil)];
+    [self loadQueryOrURL:([searchField.text length] ? searchField.text : nil)];
     [self dismissAutocomplete];
 
     oldSearchText = nil;
