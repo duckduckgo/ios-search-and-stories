@@ -291,9 +291,9 @@ static NSString *historyCellID = @"HCell";
         [self.historyProvider relogHistoryItem:item];
         DDGStory *story = item.story;
         if (item.story) {
-            [self.searchController.searchHandler loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
+            [self.searchController loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
         } else {
-            [self.searchController.searchHandler loadQueryOrURL:item.urlString];
+            [self.searchController loadQueryOrURL:item.urlString];
         }
         
         [self.searchController dismissAutocomplete];
@@ -304,7 +304,7 @@ static NSString *historyCellID = @"HCell";
         NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
         if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
             [self.historyProvider logSearchResultWithTitle:[suggestionItem objectForKey:@"phrase"]];
-        [self.searchController.searchHandler loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
+        [self.searchController loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
         [self.searchController dismissAutocomplete];
     }
 }

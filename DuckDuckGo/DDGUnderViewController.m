@@ -40,7 +40,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         
         [self setupViewControllerTypes];        
         
-        self.tableView.scrollsToTop = YES;
+        self.tableView.scrollsToTop = NO;
         
         self.tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];
         self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
