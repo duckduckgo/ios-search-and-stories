@@ -58,6 +58,21 @@
     return frame;
 }
 
+- (void)setSearchBarLeftButtonImage {
+    
+    UIImage *image = nil;
+    
+    if ([self canPopContentViewController]) {
+        UIViewController *incommingViewController = [self.controllers objectAtIndex:self.controllers.count-2];
+        image = [incommingViewController searchControllerBackButtonIconDDG];
+    }
+    
+    if (image == nil)
+        image = [UIImage imageNamed:@"button_menu_glyph_under"];
+    
+    [self.searchBar.leftButton setImage:image forState:UIControlStateNormal];
+}
+
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
     NSTimeInterval duration = (animated) ? 0.3 : 0.0;
     
@@ -80,6 +95,7 @@
     
     [self.controllers addObject:incommingViewController];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
+    [self setSearchBarLeftButtonImage];
     
     [UIView animateWithDuration:duration
                      animations:^{
@@ -111,6 +127,7 @@
         
         [self.controllers removeLastObject];
         [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
+        [self setSearchBarLeftButtonImage];        
         
         [UIView animateWithDuration:duration
                          animations:^{
@@ -247,11 +264,14 @@
             break;
         case UIGestureRecognizerStateBegan:
         {
+            UIViewController *currentViewController = [self.controllers lastObject];
+            [currentViewController viewMightDisappearDDG];
+            
             UIViewController *previousViewController = nil;
             if ([self canPopContentViewController])
                 previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
             [previousViewController viewWillAppear:YES];
-            [previousViewController viewDidAppear:YES];
+            [previousViewController viewDidAppear:YES];            
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -280,6 +300,7 @@
                 
                 [self.controllers removeLastObject];
                 [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
+                [self setSearchBarLeftButtonImage];
                 
                 [UIView animateWithDuration:duration animations:^{
                     currentViewController.view.frame = outgoingRect;
@@ -438,10 +459,14 @@
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController loadQueryOrURL:queryOrURLString];
     } else {
-        DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-        webViewController.searchController = self;
-        [self pushContentViewController:webViewController animated:YES];
-        [webViewController loadQueryOrURL:queryOrURLString];
+        if (self.shouldPushSearchHandlerEvents) {
+            DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+            webViewController.searchController = self;
+            [self pushContentViewController:webViewController animated:YES];
+            [webViewController loadQueryOrURL:queryOrURLString];
+        } else {
+            [_searchHandler loadQueryOrURL:queryOrURLString];
+        }
     }
 }
 
@@ -450,10 +475,14 @@
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController loadStory:story readabilityMode:readabilityMode];
     } else {
-        DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-        webViewController.searchController = self;
-        [self pushContentViewController:webViewController animated:YES];
-        [webViewController loadStory:story readabilityMode:readabilityMode];
+        if (self.shouldPushSearchHandlerEvents) {
+            DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+            webViewController.searchController = self;
+            [self pushContentViewController:webViewController animated:YES];
+            [webViewController loadStory:story readabilityMode:readabilityMode];
+        } else {
+            [_searchHandler loadStory:story readabilityMode:readabilityMode];
+        }
     }
 }
 
@@ -493,8 +522,8 @@
     [self view];
     
     if(_state == DDGSearchControllerStateHome) {
-        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
+//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
+//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
         
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsRightButton = NO;
@@ -506,12 +535,15 @@
         [self clearAddressBar];
         
     } else if (_state == DDGSearchControllerStateWeb) {
-        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
-        [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
+//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
+//        [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
+        
+        UIViewController *topViewController = [self.controllers lastObject];
+        BOOL showsRightButton = [topViewController respondsToSelector:@selector(searchControllerActionButtonPressed)];
         
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = YES;
-        self.searchBar.showsRightButton = YES;        
+        self.searchBar.showsRightButton = showsRightButton;        
         self.searchBar.searchField.rightView = stopOrReloadButton;
         
         if (duration > 0)
@@ -534,9 +566,9 @@
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
     if(canGoBack)
-        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu_glyph_back"] forState:UIControlStateNormal];
     else
-        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
+        [self setSearchBarLeftButtonImage];
 }
 
 -(void)setProgress:(CGFloat)progress {
@@ -653,10 +685,8 @@
 
     self.slidingViewController.panGesture.enabled = YES;
     
-    if(_state == DDGSearchControllerStateHome) {
-        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
-    }
+    if(_state == DDGSearchControllerStateHome)
+        [self setSearchBarLeftButtonImage];
 
     [self.searchBar.searchField resignFirstResponder];
     if(!barUpdated) {

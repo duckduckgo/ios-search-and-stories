@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIViewController+DDGSearchController.h"
 #import "DDGSearchHandler.h"
 #import "DDGSearchBar.h"
 
@@ -31,6 +32,10 @@ typedef enum {
 @property (nonatomic, weak) IBOutlet DDGSearchBar *searchBar;
 @property (nonatomic, weak) IBOutlet UIView *background;
 @property (nonatomic, strong) NSArray *contentControllers;
+@property (nonatomic, strong) UINavigationController *autocompleteNavigationController;
+@property (nonatomic, assign) DDGSearchControllerState state;
+@property (nonatomic, weak, readonly) id<DDGSearchHandler> searchHandler;
+@property (nonatomic) BOOL shouldPushSearchHandlerEvents;
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated;
 - (void)popContentViewControllerAnimated:(BOOL)animated;
@@ -39,10 +44,6 @@ typedef enum {
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(IBAction)actionButtonPressed:(id)sender;
 -(IBAction)cancelButtonPressed:(id)sender;
-
-@property(nonatomic, strong) UINavigationController *autocompleteNavigationController;
-@property(nonatomic, assign) DDGSearchControllerState state;
-@property(nonatomic, weak, readonly) id<DDGSearchHandler> searchHandler;
 
 -(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 

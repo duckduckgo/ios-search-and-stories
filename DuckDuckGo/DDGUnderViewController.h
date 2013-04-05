@@ -20,14 +20,12 @@ typedef enum DDGViewControllerType {
 @class DDGSettingsViewController, DDGStory;
 
 @interface DDGUnderViewController : UITableViewController <DDGSearchHandler, DDGTabViewControllerDelegate> {
-	NSInteger			menuIndex;
 }
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
 
 -(void)configureViewController:(UIViewController *)viewController;
--(void)loadSelectedViewController;
 
 - (UIViewController *)viewControllerForType:(DDGViewControllerType)type;
 @end

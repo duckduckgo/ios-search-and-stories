@@ -29,6 +29,7 @@ typedef enum DDGTabViewControllerToolbarPosition {
 @property (nonatomic, strong) UIView *controlView;
 @property (nonatomic) DDGTabViewControllerControlViewPosition controlViewPosition;
 @property (nonatomic, weak) id <DDGTabViewControllerDelegate> delegate;
+@property (nonatomic, strong) UIImage *searchControllerBackButtonIconDDG;
 
 - (id)initWithViewControllers:(NSArray *)viewControllers;
 @end

@@ -207,7 +207,7 @@
     else if ([self.searchController canPopContentViewController])
         [self.searchController popContentViewControllerAnimated:YES];    
 	else
-	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadSelectedViewController];
+	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController searchControllerLeftButtonPressed];
 }
 
 -(void)searchControllerStopOrReloadButtonPressed {

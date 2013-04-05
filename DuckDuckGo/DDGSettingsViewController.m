@@ -15,6 +15,7 @@
 #import "DDGHistoryProvider.h"
 #import "ECSlidingViewController.h"
 #import "DDGRegionProvider.h"
+#import "DDGSearchController.h"
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
@@ -113,6 +114,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 	self.navigationItem.leftBarButtonItem.customView.center = center;
 }
 
+- (UIImage *)searchControllerBackButtonIconDDG {
+    return [UIImage imageNamed:@"button_menu_glyph_settings"];
+}
+
 #pragma mark - Rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -139,7 +144,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
-        [weakSelf.navigationController pushViewController:sourcesVC animated:YES];
+        [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
     }];
     [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
     [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
@@ -150,7 +155,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self addSectionWithTitle:@"Search Results" footer:nil];
     [self addButton:@"Region Boost" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
-        [weakSelf.navigationController pushViewController:rvc animated:YES];
+        [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
     }];
     
     [self addSectionWithTitle:@"Privacy" footer:nil];
@@ -255,5 +260,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     NSString *osVersion = [[UIDevice currentDevice] systemVersion];
     
     return [NSString stringWithFormat:@"DuckDuckGo v%@ on an %@ (iOS %@)",appVersion,device,osVersion];
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    [self saveData:[self formData]];
 }
 @end

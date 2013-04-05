@@ -20,11 +20,6 @@
 	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];    
 }
 
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];    
-    [self saveData:[self formData]];
-}
-
 - (void)configure
 {
 	self.title = @"Region";
@@ -72,5 +67,9 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    [self saveData:[self formData]];    
+}
 
 @end

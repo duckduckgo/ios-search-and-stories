@@ -26,6 +26,7 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 @interface DDGUnderViewController ()
+@property (nonatomic, strong) NSIndexPath *menuIndexPath;
 @property (nonatomic, strong) NSArray *viewControllerTypes;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
@@ -68,8 +69,10 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 - (void)setupViewControllerTypes {
     
     DDGViewControllerType selectedType = DDGViewControllerTypeHome;
-    if (menuIndex < [self.viewControllerTypes count]) {
-        selectedType = [[[self.viewControllerTypes objectAtIndex:menuIndex] valueForKey:DDGViewControllerTypeTypeKey] integerValue];
+    NSIndexPath *menuIndexPath = self.menuIndexPath;
+    
+    if (menuIndexPath.section == 0 && menuIndexPath.row < [self.viewControllerTypes count]) {
+        selectedType = [[[self.viewControllerTypes objectAtIndex:menuIndexPath.row] valueForKey:DDGViewControllerTypeTypeKey] integerValue];
     }
     
     NSMutableArray *types = [NSMutableArray array];
@@ -95,7 +98,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     for (NSDictionary *typeInfo in types) {
         if ([[typeInfo valueForKey:DDGViewControllerTypeTypeKey] integerValue] == selectedType) {
-            menuIndex = [types indexOfObject:typeInfo];
+            self.menuIndexPath = [NSIndexPath indexPathForRow:[types indexOfObject:typeInfo] inSection:0];
         }
     }
 }
@@ -113,16 +116,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     viewController.view.layer.shadowOpacity = 0.75f;
     viewController.view.layer.shadowRadius = 10.0f;
     viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
-}
-
--(void)loadSelectedViewController; {
-    CGRect frame = self.slidingViewController.topViewController.view.frame;
-    
-    UIViewController *viewController = [self viewControllerForIndexPath:[NSIndexPath indexPathForRow:menuIndex inSection:0]];
-    
-    self.slidingViewController.topViewController = viewController;
-    viewController.view.frame = frame;
-    [self configureViewController:viewController];
 }
 
 - (IBAction)plus:(id)sender {
@@ -230,7 +223,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     if(!cell)
         cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
-    cell.active = (indexPath.section == 0 && indexPath.row == menuIndex);
+    cell.active = ([indexPath isEqual:self.menuIndexPath]);
     
 	cell.imageView.image = nil;
     cell.imageView.highlightedImage = nil;
@@ -343,16 +336,13 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 	if (indexPath.section == 1 && ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
 		return nil;
 	
-    if (indexPath.section == 0) {
-        DDGUnderViewControllerCell *oldMenuCell;
-        DDGUnderViewControllerCell *newMenuCell;
-        
-        oldMenuCell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:menuIndex inSection:0]];
-        oldMenuCell.active = NO;
-        
-        newMenuCell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        newMenuCell.active = YES;
-    }
+    DDGUnderViewControllerCell *oldMenuCell;
+    oldMenuCell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:self.menuIndexPath];
+    oldMenuCell.active = NO;
+    
+    DDGUnderViewControllerCell *newMenuCell;
+    newMenuCell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    newMenuCell.active = YES;
     
 	return indexPath;
 }
@@ -368,7 +358,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.state = DDGSearchControllerStateHome;
-
+            searchController.shouldPushSearchHandlerEvents = YES;
+            
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
             stories.savedStoriesOnly = YES;
             stories.title = NSLocalizedString(@"Saved Stories", @"View controller title: Saved Stories");
@@ -393,7 +384,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
                                             segmentSize.height);
             tabViewController.segmentedControl.frame = CGRectIntegral(controlRect);
             tabViewController.segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-            
+            tabViewController.searchControllerBackButtonIconDDG = [UIImage imageNamed:@"button_menu_glyph_saved"];
+
             [tabViewController.controlView addSubview:tabViewController.segmentedControl];
             tabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
             tabViewController.delegate = self;
@@ -411,14 +403,19 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         }
             break;
         case DDGViewControllerTypeSettings: {
+            
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            searchController.state = DDGSearchControllerStateHome;
             DDGSettingsViewController *settings = [[DDGSettingsViewController alloc] initWithDefaults];
             settings.managedObjectContext = self.managedObjectContext;
-            viewController = [[UINavigationController alloc] initWithRootViewController:settings];
-            break;            
+            [searchController pushContentViewController:settings animated:NO];
+            viewController = searchController;
+            break;
         }
         case DDGViewControllerTypeHome:
         {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            searchController.shouldPushSearchHandlerEvents = YES;
 //            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
 //                searchController.contentController = [DDGDuckViewController duckViewController];
 //            } else {
@@ -440,8 +437,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     if(indexPath.section == 0)
     {
-        menuIndex = indexPath.row;
-        NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:menuIndex];
+        NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:indexPath.row];
         viewController = [typeInfo objectForKey:DDGViewControllerTypeControllerKey];
         
         if (nil == viewController) {
@@ -456,9 +452,11 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
+        
+        self.menuIndexPath = indexPath;
+        
         if(indexPath.section == 0)
 		{
-			menuIndex = indexPath.row;            
             UIViewController *newTopViewController = [self viewControllerForIndexPath:indexPath];
             
             if (nil != newTopViewController) {
