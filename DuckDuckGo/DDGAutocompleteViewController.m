@@ -19,7 +19,6 @@
 
 @interface DDGAutocompleteViewController ()
 @property (nonatomic, copy) NSArray *suggestions;
-@property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @end
 
 @implementation DDGAutocompleteViewController
@@ -177,9 +176,9 @@ static NSString *historyCellID = @"HCell";
         }
         
         NSArray *history = [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text];
-        NSDictionary *historyItem = [history objectAtIndex:indexPath.row];
+        DDGHistoryItem *historyItem = [history objectAtIndex:indexPath.row];
         
-        cell.textLabel.text = [historyItem objectForKey:@"text"];
+        cell.textLabel.text = historyItem.title;
         
 		lineHidden = (indexPath.row == [self.historyProvider pastHistoryItemsForPrefix:self.searchController.searchBar.searchField.text].count - 1) ? YES : NO;
     }
@@ -293,7 +292,7 @@ static NSString *historyCellID = @"HCell";
         if (item.story) {
             [self.searchController loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
         } else {
-            [self.searchController loadQueryOrURL:item.urlString];
+            [self.searchController loadQueryOrURL:item.title];
         }
         
         [self.searchController dismissAutocomplete];

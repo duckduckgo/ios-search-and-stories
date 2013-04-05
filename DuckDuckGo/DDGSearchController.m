@@ -162,6 +162,7 @@
     [super viewDidLoad];
     
     DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
+    autocompleteVC.historyProvider = self.historyProvider;
     self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:autocompleteVC];
     _autocompleteNavigationController.delegate = self;
     [self addChildViewController:_autocompleteNavigationController];

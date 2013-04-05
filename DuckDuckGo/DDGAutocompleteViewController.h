@@ -12,6 +12,7 @@
 
 @interface DDGAutocompleteViewController : UITableViewController {
 }
+@property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 
 -(void)searchFieldDidChange:(id)sender;
 
