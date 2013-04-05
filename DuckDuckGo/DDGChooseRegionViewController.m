@@ -20,6 +20,11 @@
 	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];    
 }
 
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];    
+    [self saveData:[self formData]];
+}
+
 - (void)configure
 {
 	self.title = @"Region";
