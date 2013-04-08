@@ -77,6 +77,16 @@
     [UIMenuController sharedMenuController].menuItems = nil;
 }
 
+-(void)viewDidDisappear:(BOOL)animated {
+    if (self.webView.isLoading) {
+        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
+        [self.webView stopLoading];
+        [_searchController webViewFinishedLoading];
+    }
+    
+    [super viewDidDisappear:animated];        
+}
+
 - (void)dealloc
 {
     if (self.webView.isLoading) {

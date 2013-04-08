@@ -104,7 +104,10 @@
                      }
                      completion:^(BOOL finished) {
                          [outgoingViewController viewDidDisappear:animated];
-                         [incommingViewController viewDidAppear:animated];
+                         [incommingViewController viewDidAppear:animated];                         
+                         [outgoingViewController willMoveToParentViewController:nil];
+                         [outgoingViewController.view removeFromSuperview];
+                         [outgoingViewController removeFromParentViewController];
                      }];
 }
 
@@ -123,7 +126,12 @@
         outgoingRect.origin.x += contentRect.size.width;
         
         [outgoingViewController viewWillDisappear:animated];
-        [incommingViewController viewWillAppear:animated];
+        
+        [incommingViewController willMoveToParentViewController:self];
+        [self.view insertSubview:incommingViewController.view belowSubview:self.background];
+        [self addChildViewController:incommingViewController];
+        
+        [incommingViewController viewWillAppear:animated];        
         
         [self.controllers removeLastObject];
         [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
@@ -270,8 +278,13 @@
             UIViewController *previousViewController = nil;
             if ([self canPopContentViewController])
                 previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
+            
+            
+            [previousViewController willMoveToParentViewController:self];
+            [self.view insertSubview:previousViewController.view belowSubview:self.background];
+            [self addChildViewController:previousViewController];            
             [previousViewController viewWillAppear:YES];
-            [previousViewController viewDidAppear:YES];            
+            [previousViewController viewDidAppear:YES];
         }
             break;
         case UIGestureRecognizerStateEnded:
@@ -323,6 +336,9 @@
                     [previousViewController viewWillDisappear:YES];
                 } completion:^(BOOL finished) {
                     [previousViewController viewDidDisappear:YES];
+                    [previousViewController willMoveToParentViewController:nil];
+                    [previousViewController.view removeFromSuperview];
+                    [previousViewController removeFromParentViewController];                    
                 }];                
             }
         }
