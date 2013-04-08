@@ -131,9 +131,11 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         UIViewController *topViewController = self.slidingViewController.topViewController;
         if ([topViewController isKindOfClass:[DDGSearchController class]]) {
             DDGSearchController *searchController = (DDGSearchController *)topViewController;
+            DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
             [self.slidingViewController resetTopViewWithAnimations:nil onComplete:^{
-                [searchController.searchBar.searchField becomeFirstResponder];
-                searchController.searchBar.searchField.text = item.title;
+                [searchField becomeFirstResponder];
+                searchField.text = item.title;
+                [searchController searchFieldDidChange:nil];
             }];
         } else {
             [self loadQueryOrURL:item.title];

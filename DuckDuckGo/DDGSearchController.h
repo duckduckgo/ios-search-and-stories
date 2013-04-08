@@ -63,4 +63,6 @@ typedef enum {
 -(BOOL)isQuery:(NSString *)queryOrURL;
 -(NSString *)queryFromDDGURL:(NSURL *)url;
 
+-(void)searchFieldDidChange:(id)sender;
+
 @end
