@@ -259,6 +259,8 @@
         return;
     }
     
+    DDGWebViewController *weakSelf = self;
+    
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
@@ -266,7 +268,7 @@
         if (completion)
             completion(responseObject);
         if (--_webViewLoadingDepth <= 0) {
-            [_searchController webViewFinishedLoading];
+            [weakSelf.searchController webViewFinishedLoading];
             _webViewLoadingDepth = 0;
             _webViewLoadEvents = 0;
         }
@@ -275,7 +277,7 @@
             completion(nil);
         [_searchController webViewFinishedLoading];
         if (--_webViewLoadingDepth <= 0) {
-            [_searchController webViewFinishedLoading];
+            [weakSelf.searchController webViewFinishedLoading];
             _webViewLoadingDepth = 0;
             _webViewLoadEvents = 0;
         }
@@ -286,11 +288,11 @@
         if (_webViewLoadingDepth == 0) {
             _webViewLoadingDepth++;
             _webViewLoadEvents++;
-            [_searchController webViewCanGoBack:NO];            
-            [_searchController webViewStartedLoading];
+            [weakSelf.searchController webViewCanGoBack:NO];
+            [weakSelf.searchController webViewStartedLoading];
         }
         
-        [_searchController setProgress:(float) totalBytesRead / totalBytesExpectedToRead];
+        [weakSelf.searchController setProgress:(float) totalBytesRead / totalBytesExpectedToRead];
     }];
     
     [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"application/javascript"]];
