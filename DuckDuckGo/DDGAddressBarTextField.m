@@ -50,6 +50,11 @@
     progressView.hidden = NO;
 }
 
+-(void)cancel {
+    [self setProgress:0.0 animationDuration:0.0];
+    [progressView.layer removeAllAnimations];    
+}
+
 -(void)finish {
     [self setProgress:1.0 animationDuration:0.5];
     // the fade-out needs to happen before the width animation happens, otherwise the width animation will try to continue itself and render the setProgress:0 below useless

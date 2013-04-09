@@ -73,27 +73,27 @@
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
+    if (self.webView.isLoading)
+        [self.webView stopLoading];
+
+    [self resetLoadingDepth];
+    
     [super viewWillDisappear:animated];
+    
     [UIMenuController sharedMenuController].menuItems = nil;
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
-    if (self.webView.isLoading) {
-        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
-        [self.webView stopLoading];
-        [_searchController webViewFinishedLoading];
-    }
-    
-    [super viewDidDisappear:animated];        
+    [super viewDidDisappear:animated];    
+    [_searchController clearAddressBar];
 }
 
 - (void)dealloc
 {
-    if (self.webView.isLoading) {
-        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
+    if (self.webView.isLoading)
         [self.webView stopLoading];
-        [_searchController webViewFinishedLoading];
-    }
+    
+    [self resetLoadingDepth];    
     
 	self.webView.delegate = nil;
     self.webView = nil;
@@ -271,7 +271,7 @@
         return;
     }
     
-    DDGWebViewController *weakSelf = self;
+    __weak DDGWebViewController *weakSelf = self;
     
     NSURL *url = [NSURL URLWithString:urlString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
@@ -279,36 +279,18 @@
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (completion)
             completion(responseObject);
-        if (--_webViewLoadingDepth <= 0) {
-            [weakSelf.searchController webViewFinishedLoading];
-            _webViewLoadingDepth = 0;
-            _webViewLoadEvents = 0;
-        }
+        [weakSelf decrementLoadingDepthCancelled:NO];
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completion)
             completion(nil);
         [_searchController webViewFinishedLoading];
-        if (--_webViewLoadingDepth <= 0) {
-            [weakSelf.searchController webViewFinishedLoading];
-            _webViewLoadingDepth = 0;
-            _webViewLoadEvents = 0;
-        }
-        [self loadQueryOrURL:story.urlString];
-    }];
-    
-    [operation setDownloadProgressBlock:^(NSUInteger bytesRead, long long totalBytesRead, long long totalBytesExpectedToRead) {
-        if (_webViewLoadingDepth == 0) {
-            _webViewLoadingDepth++;
-            _webViewLoadEvents++;
-            [weakSelf.searchController webViewCanGoBack:NO];
-            [weakSelf.searchController webViewStartedLoading];
-        }
-        
-        [weakSelf.searchController setProgress:(float) totalBytesRead / totalBytesExpectedToRead];
+        [weakSelf decrementLoadingDepthCancelled:YES];
+        [weakSelf loadQueryOrURL:story.urlString];
     }];
     
     [AFJSONRequestOperation addAcceptableContentTypes:[NSSet setWithObject:@"application/javascript"]];
     
+    [self incrementLoadingDepth];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [operation start];
     });
@@ -337,11 +319,9 @@
     if (nil != self.webView.request) {
         [self.webView removeFromSuperview];
         
-        if (self.webView.isLoading) {
-            [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
+        if (self.webView.isLoading)
             [self.webView stopLoading];
-            [_searchController webViewFinishedLoading];
-        }
+        [self resetLoadingDepth];
         
         self.webView.delegate = nil;
         self.webView = nil;        
@@ -495,57 +475,69 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)theWebView
 {
-    _webViewLoadEvents++;
-    [self updateProgressBar];
-    
 //    NSLog(@"webViewDidStartLoad events: %i", _webViewLoadEvents);
     
     [_searchController webViewCanGoBack:theWebView.canGoBack];
-    
-	if (++_webViewLoadingDepth == 1) {
-        [[AFNetworkActivityIndicatorManager sharedManager] incrementActivityCount];
-        [_searchController webViewStartedLoading];
-    }
+    [self incrementLoadingDepth];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {    
-    _webViewLoadEvents--;
-    [self updateProgressBar];
-    
     [self updateBarWithRequest:theWebView.request];
     [_searchController webViewCanGoBack:theWebView.canGoBack];
         
-	if (--_webViewLoadingDepth <= 0) {
-        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
-        [_searchController webViewFinishedLoading];
-		_webViewLoadingDepth = 0;
-        _webViewLoadEvents = 0;
-	}
+    [self decrementLoadingDepthCancelled:NO];
     
 //    NSLog(@"webViewDidFinishLoad events: %i", _webViewLoadEvents);
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
 {
-    _webViewLoadEvents--;
-    [self updateProgressBar];
-
-	if (--_webViewLoadingDepth <= 0) {
-        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
-        [_searchController webViewFinishedLoading];
-		_webViewLoadingDepth = 0;
-        _webViewLoadEvents = 0;
-	}
+    [self decrementLoadingDepthCancelled:YES];
     
 //    NSLog(@"didFailLoadWithError events: %i", _webViewLoadEvents);
 }
 
 -(void)updateProgressBar {
-    if(_webViewLoadEvents == 1)
+    if(_webViewLoadingDepth == 1)
         [_searchController setProgress:0.15];
-    else if(_webViewLoadEvents == 2)
+    else if(_webViewLoadingDepth == 2)
         [_searchController setProgress:0.7];
 }
+
+- (NSUInteger)incrementLoadingDepth {
+	if (++_webViewLoadingDepth == 1) {
+        [[AFNetworkActivityIndicatorManager sharedManager] incrementActivityCount];
+        [_searchController webViewStartedLoading];
+    }
+    
+    [self updateProgressBar];        
+    
+    NSLog(@"incrementLoadingDepth _webViewLoadingDepth: %i", _webViewLoadingDepth);
+    
+    return _webViewLoadingDepth;
+}
+
+- (NSUInteger)decrementLoadingDepthCancelled:(BOOL)cancelled {
+	if (--_webViewLoadingDepth <= 0) {
+        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
+        if (cancelled)
+            [_searchController webViewCancelledLoading];
+        else
+            [_searchController webViewFinishedLoading];
+		_webViewLoadingDepth = 0;
+	}
+    return _webViewLoadingDepth;    
+}
+
+- (void)resetLoadingDepth {
+    if (_webViewLoadingDepth > 0) {
+        [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
+        [_searchController webViewCancelledLoading];
+    }
+    
+    _webViewLoadingDepth = 0;
+}
+
 
 @end

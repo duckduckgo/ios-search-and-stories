@@ -55,6 +55,7 @@ typedef enum {
 // the web view needs to call these at the appropriate times
 -(void)webViewStartedLoading;
 -(void)webViewFinishedLoading;
+-(void)webViewCancelledLoading;
 -(void)setProgress:(CGFloat)progress;
 -(void)webViewCanGoBack:(BOOL)canGoBack;
 

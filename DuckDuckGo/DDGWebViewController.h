@@ -15,7 +15,6 @@
 @interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
 {
     NSUInteger _webViewLoadingDepth;
-    NSUInteger _webViewLoadEvents;
 }
 
 @property (nonatomic, strong) UIWebView *webView;

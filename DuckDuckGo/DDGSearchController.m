@@ -575,8 +575,13 @@
     [stopOrReloadButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
 }
 
+-(void)webViewCancelledLoading {
+    [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];
+    [self.searchBar.searchField cancel];
+}
+
 -(void)webViewFinishedLoading {
-    [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];    
+    [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];
     [self.searchBar.searchField finish];
 }
 
