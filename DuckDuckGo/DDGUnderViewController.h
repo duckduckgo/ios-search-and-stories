@@ -19,7 +19,7 @@ typedef enum DDGViewControllerType {
 
 @class DDGSettingsViewController, DDGStory;
 
-@interface DDGUnderViewController : UITableViewController <DDGSearchHandler, DDGTabViewControllerDelegate> {
+@interface DDGUnderViewController : UITableViewController <DDGSearchHandler, DDGTabViewControllerDelegate, NSFetchedResultsControllerDelegate> {
 }
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
 

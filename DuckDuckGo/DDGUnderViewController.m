@@ -30,6 +30,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 @property (nonatomic, strong) NSArray *viewControllerTypes;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @end
 
 @implementation DDGUnderViewController
@@ -56,6 +57,23 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
+    NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
+    NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"story" ascending:YES];
+    [request setSortDescriptors:@[sectionSort, timeSort]];    
+    
+    NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                                               managedObjectContext:self.managedObjectContext
+                                                                                                 sectionNameKeyPath:@"section"
+                                                                                                          cacheName:nil];    
+    fetchedResultsController.delegate = self;
+    
+	NSError *error = nil;
+	if (![fetchedResultsController performFetch:&error])
+	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+
+    self.fetchedResultsController = fetchedResultsController;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -63,6 +81,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     if (![self isViewLoaded] || nil == self.view.superview) {
         self.historyProvider = nil;
+        self.fetchedResultsController = nil;
     }
 }
 
@@ -126,7 +145,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     if (button) {
         CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
         NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];
-        DDGHistoryItem *item = [[self.historyProvider allHistoryItems] objectAtIndex:tappedIndex.row];
+        DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:tappedIndex.row inSection:tappedIndex.section-1]];
         
         UIViewController *topViewController = self.slidingViewController.topViewController;
         if ([topViewController isKindOfClass:[DDGSearchController class]]) {
@@ -201,20 +220,26 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return 2;
+    BOOL showHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
+    if (showHistory) {
+        return 1 + [[self.fetchedResultsController sections] count];
+    } else {
+        return 2;
+    }
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    switch (section) {
-        case 0:
-            return self.viewControllerTypes.count;
-        case 1:
-		{
-            return ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) ? [self.historyProvider allHistoryItems].count : 1;
-		}
-        default:
-            return 0;
-    };
+    if (section == 0) {
+        return self.viewControllerTypes.count;
+    } else {
+        BOOL showHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
+        if (showHistory) {
+            NSArray *sections = [self.fetchedResultsController sections];
+            return [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section-1] numberOfObjects];
+        } else {
+            return 1;
+        }
+    }
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -225,6 +250,12 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     if(!cell)
         cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
     
+    [self configureCell:cell atIndexPath:indexPath];
+    
+    return cell;
+}
+
+- (void)configureCell:(DDGUnderViewControllerCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     cell.active = ([indexPath isEqual:self.menuIndexPath]);
     
 	cell.imageView.image = nil;
@@ -233,11 +264,11 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 	UILabel *lbl = cell.textLabel;
     if(indexPath.section == 0)
 	{
-        cell.cellMode = DDGUnderViewControllerCellModeNormal;        
+        cell.cellMode = DDGUnderViewControllerCellModeNormal;
         lbl.text = [[self.viewControllerTypes objectAtIndex:indexPath.row] objectForKey:DDGViewControllerTypeTitleKey];
-
+        
         NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:indexPath.row];
-        DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];        
+        DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];
         
 		switch (type)
 		{
@@ -271,12 +302,12 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) {
 			// we have history and it is enabled
-			DDGHistoryItem *item = [[self.historyProvider allHistoryItems] objectAtIndex:indexPath.row];
+			DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
 			DDGStory *story = item.story;
             
 			if (nil != story) {
 				cell.imageView.image = story.feed.image;
-                cell.accessoryView = nil;                
+                cell.accessoryView = nil;
 			} else {
                 cell.imageView.image = [UIImage imageNamed:@"search_icon"];
                 cell.accessoryView = [DDGPlusButton plusButton];
@@ -288,9 +319,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             cell.imageView.contentMode = UIViewContentModeCenter;
             cell.accessoryView = nil;
 		}
-    }
-    
-    return cell;
+    }    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -308,10 +337,20 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
     [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
     
-    if (section == 1)
+    if (section > 0)
 	{
+        NSArray *sections = [self.fetchedResultsController sections];
+        
         UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
-        title.text = @"Recent";
+        
+        if (section == 1) {
+            title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");            
+        } else if (section == 2) {
+            title.text = NSLocalizedString(@"Recent Stories", @"Table section header title");
+        } else {
+            title.text = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section-1] name];
+        }
+        
         title.textColor = [UIColor whiteColor];
         title.opaque = NO;
         title.backgroundColor = [UIColor clearColor];
@@ -472,7 +511,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         }
 		else if(indexPath.section == 1)
 		{
-			DDGHistoryItem *historyItem = [[self.historyProvider allHistoryItems] objectAtIndex:indexPath.row];
+            DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
             [self.historyProvider relogHistoryItem:historyItem];
             DDGStory *story = historyItem.story;
 			if (nil != story)
@@ -509,6 +548,10 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 - (void)tabViewController:(DDGTabViewController *)tabViewController didSwitchToViewController:(UIViewController *)viewController atIndex:(NSInteger)tabIndex {
     [[NSUserDefaults standardUserDefaults] setInteger:tabIndex forKey:DDGSavedViewLastSelectedTabIndex];
+}
+
+- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
+    [self.tableView reloadData];
 }
 
 @end

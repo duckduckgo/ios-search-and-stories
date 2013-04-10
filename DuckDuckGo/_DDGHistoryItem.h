@@ -5,6 +5,7 @@
 
 
 extern const struct DDGHistoryItemAttributes {
+	__unsafe_unretained NSString *section;
 	__unsafe_unretained NSString *timeStamp;
 	__unsafe_unretained NSString *title;
 	__unsafe_unretained NSString *urlString;
@@ -24,6 +25,7 @@ extern const struct DDGHistoryItemFetchedProperties {
 
 
 
+
 @interface DDGHistoryItemID : NSManagedObjectID {}
 @end
 
@@ -32,6 +34,18 @@ extern const struct DDGHistoryItemFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (DDGHistoryItemID*)objectID;
+
+
+
+
+@property (nonatomic, strong) NSNumber* section;
+
+
+@property int16_t sectionValue;
+- (int16_t)sectionValue;
+- (void)setSectionValue:(int16_t)value_;
+
+//- (BOOL)validateSection:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -83,6 +97,15 @@ extern const struct DDGHistoryItemFetchedProperties {
 @end
 
 @interface _DDGHistoryItem (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveSection;
+- (void)setPrimitiveSection:(NSNumber*)value;
+
+- (int16_t)primitiveSectionValue;
+- (void)setPrimitiveSectionValue:(int16_t)value_;
+
+
 
 
 - (NSDate*)primitiveTimeStamp;

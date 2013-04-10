@@ -14,6 +14,7 @@
         <relationship name="stories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Story" inverseName="feed" inverseEntity="Story" syncable="YES"/>
     </entity>
     <entity name="HistoryItem" representedClassName="DDGHistoryItem" syncable="YES">
+        <attribute name="section" optional="YES" transient="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="urlString" optional="YES" attributeType="String" syncable="YES"/>
@@ -44,7 +45,7 @@
     <fetchRequest name="historyItemsWithPrefix" entity="HistoryItem" predicateString="title BEGINSWITH &quot;*prefix*&quot;"/>
     <elements>
         <element name="Feed" positionX="160" positionY="192" width="128" height="210"/>
+        <element name="HistoryItem" positionX="160" positionY="192" width="128" height="149"/>
         <element name="Story" positionX="261" positionY="189" width="128" height="255"/>
-        <element name="HistoryItem" positionX="160" positionY="192" width="128" height="134"/>
     </elements>
 </model>
