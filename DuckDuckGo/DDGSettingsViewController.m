@@ -25,6 +25,7 @@ NSString * const DDGSettingStoriesReadView = @"stories_read_view";
 NSString * const DDGSettingHomeView = @"home_view";
 
 NSString * const DDGSettingHomeViewTypeStories = @"Stories View";
+NSString * const DDGSettingHomeViewTypeRecents = @"Recents";
 NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 @implementation DDGSettingsViewController
@@ -132,13 +133,13 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
     
-//    [self addSectionWithTitle:@"Home" footer:nil];
-//    
-//    NSString *homeViewMode = [DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName];
-//    [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
-//    [self addRadioOptionWithTitle:@"Duck Mode" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
+    [self addSectionWithTitle:@"Home" footer:nil];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];    
+    
+    NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
+    [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
+    [self addRadioOptionWithTitle:@"Recents" value:DDGSettingHomeViewTypeRecents key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeRecents]];
     
     [self addSectionWithTitle:@"Stories" footer:nil];
     [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
@@ -206,7 +207,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 -(void)saveData:(NSDictionary *)formData {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 
-//    [defaults setObject:[formData objectForKey:forKey:DDGSettingHomeView] forKey:DDGSettingHomeView];
+    if ([formData objectForKey:DDGSettingHomeView])
+        [defaults setObject:[formData objectForKey:DDGSettingHomeView] forKey:DDGSettingHomeView];
     
     [defaults setObject:[formData objectForKey:DDGSettingRecordHistory] forKey:DDGSettingRecordHistory];
     [defaults setObject:[formData objectForKey:DDGSettingStoriesReadView] forKey:DDGSettingStoriesReadView];

@@ -17,4 +17,5 @@ typedef enum DDGUnderViewControllerCellMode {
 @interface DDGUnderViewControllerCell : UITableViewCell
 @property (nonatomic) DDGUnderViewControllerCellMode cellMode;
 @property (nonatomic, getter = isActive) BOOL active;
+@property (nonatomic) CGFloat overhangWidth;
 @end

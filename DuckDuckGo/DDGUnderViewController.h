@@ -14,6 +14,7 @@ typedef enum DDGViewControllerType {
     DDGViewControllerTypeHome=0,
     DDGViewControllerTypeSaved,
     DDGViewControllerTypeStories,
+    DDGViewControllerTypeHistory,
     DDGViewControllerTypeSettings
 } DDGViewControllerType;
 

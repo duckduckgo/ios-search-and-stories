@@ -122,7 +122,7 @@
 - (void)layoutSubviews {
     [super layoutSubviews];    
     
-    CGFloat overhang = 74.0;
+    CGFloat overhang = self.overhangWidth;
     CGRect bounds = self.bounds;
     
     CGRect accessoryRect = self.accessoryView.frame;

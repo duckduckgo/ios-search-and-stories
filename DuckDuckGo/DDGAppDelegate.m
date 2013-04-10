@@ -159,8 +159,13 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     slidingViewController.underLeftViewController = under;
     slidingViewController.anchorRightRevealAmount = 258.0;
+  
+    int type = DDGViewControllerTypeHome;
+    NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
+    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents])
+        type = DDGViewControllerTypeHistory;
     
-    UIViewController *homeController = [under viewControllerForType:DDGViewControllerTypeHome];
+    UIViewController *homeController = [under viewControllerForType:type];
     
     slidingViewController.topViewController = homeController;
     [under configureViewController:homeController];

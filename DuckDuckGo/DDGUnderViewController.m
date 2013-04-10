@@ -19,6 +19,7 @@
 #import "DDGStoryFeed.h"
 #import "DDGHistoryItem.h"
 #import "DDGPlusButton.h"
+#import "DDGHistoryViewController.h"
 
 NSString * const DDGViewControllerTypeTitleKey = @"title";
 NSString * const DDGViewControllerTypeTypeKey = @"type";
@@ -96,18 +97,21 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     NSMutableArray *types = [NSMutableArray array];
     
-    [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
-                      DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome)
-                      } mutableCopy]];
+    NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
+    
+    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents]) {
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
+                          DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHistory)
+                          } mutableCopy]];
+    } else {
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
+                          DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome)
+                          } mutableCopy]];
+    }
+
     [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                       } mutableCopy]];
-
-//    if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
-//        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
-//                          DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
-//                          } mutableCopy]];
-//    }
     
     [types addObject:[@{DDGViewControllerTypeTitleKey : @"Settings",
                       DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSettings)
@@ -220,7 +224,13 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    BOOL showHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
+    
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+
+    if ([[defaults objectForKey:DDGSettingHomeView] isEqualToString:DDGSettingHomeViewTypeRecents])
+        return 1;    
+    
+    BOOL showHistory = [defaults boolForKey:DDGSettingRecordHistory];
     if (showHistory) {
         return 1 + [[self.fetchedResultsController sections] count];
     } else {
@@ -260,6 +270,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
 	cell.imageView.image = nil;
     cell.imageView.highlightedImage = nil;
+    cell.overhangWidth = 74;
     
 	UILabel *lbl = cell.textLabel;
     if(indexPath.section == 0)
@@ -273,6 +284,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 		switch (type)
 		{
 			case DDGViewControllerTypeHome:
+			case DDGViewControllerTypeHistory:
 			{
 				cell.imageView.image = [UIImage imageNamed:@"icon_home"];
                 cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected"];
@@ -434,6 +446,15 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             viewController = searchController;
         }
             
+            break;
+        case DDGViewControllerTypeHistory: {
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            searchController.shouldPushSearchHandlerEvents = YES;
+            searchController.state = DDGSearchControllerStateHome;
+            DDGHistoryViewController *history = [[DDGHistoryViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
+            [searchController pushContentViewController:history animated:NO];
+            viewController = searchController;
+        }
             break;
         case DDGViewControllerTypeStories: {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
