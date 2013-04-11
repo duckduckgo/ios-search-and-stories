@@ -19,7 +19,6 @@
 @interface DDGHistoryViewController ()
 @property (nonatomic, weak, readwrite) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong, readwrite) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @end
 
@@ -51,26 +50,34 @@
         self.tableView = tableView;
     }
     
-    BOOL showHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
-    
-    if (showHistory) {
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
-        NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
-        NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
-        [request setSortDescriptors:@[sectionSort, timeSort]];
+    [self fetchedResultsController];
+}
+
+- (NSFetchedResultsController *)fetchedResultsController {
+    if (nil == _fetchedResultsController) {
         
-        NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                                                                   managedObjectContext:self.managedObjectContext
-                                                                                                     sectionNameKeyPath:@"section"
-                                                                                                              cacheName:nil];
-        fetchedResultsController.delegate = self;
-        
-        NSError *error = nil;
-        if (![fetchedResultsController performFetch:&error])
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        
-        self.fetchedResultsController = fetchedResultsController;
+        BOOL showHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
+        if (showHistory) {
+            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
+            NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
+            NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
+            [request setSortDescriptors:@[sectionSort, timeSort]];
+            
+            NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                                                       managedObjectContext:self.managedObjectContext
+                                                                                                         sectionNameKeyPath:@"section"
+                                                                                                                  cacheName:nil];
+            fetchedResultsController.delegate = self;
+            
+            NSError *error = nil;
+            if (![fetchedResultsController performFetch:&error])
+                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            
+            self.fetchedResultsController = fetchedResultsController;            
+        }
     }
+    
+    return _fetchedResultsController;
 }
 
 - (void)didReceiveMemoryWarning
