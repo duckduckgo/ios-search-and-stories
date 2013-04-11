@@ -341,7 +341,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
-    return (section == 0 ? 0 : 1);
+    NSInteger sections = [self numberOfSectionsInTableView:tableView];
+    return (section == (sections-1)) ? 1.0 : 0.0;
 }
 
 -(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -354,13 +355,14 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         NSArray *sections = [self.fetchedResultsController sections];
         
         UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
+        NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section-1] name];
         
-        if (section == 1) {
+        if ([name isEqualToString:@"searches"]) {
             title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");            
-        } else if (section == 2) {
+        } else if ([name isEqualToString:@"stories"]) {
             title.text = NSLocalizedString(@"Recent Stories", @"Table section header title");
         } else {
-            title.text = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section-1] name];
+            title.text = name;
         }
         
         title.textColor = [UIColor whiteColor];

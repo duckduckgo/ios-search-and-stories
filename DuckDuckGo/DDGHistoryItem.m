@@ -3,10 +3,10 @@
 
 @implementation DDGHistoryItem
 
-- (NSNumber *)section {
+- (NSString *)section {
     if (nil != self.story)
-        return @(1);
-    return @(0);
+        return @"stories";
+    return @"searches";
 }
 
 @end

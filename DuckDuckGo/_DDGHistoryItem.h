@@ -38,12 +38,8 @@ extern const struct DDGHistoryItemFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSNumber* section;
+@property (nonatomic, strong) NSString* section;
 
-
-@property int16_t sectionValue;
-- (int16_t)sectionValue;
-- (void)setSectionValue:(int16_t)value_;
 
 //- (BOOL)validateSection:(id*)value_ error:(NSError**)error_;
 
@@ -99,11 +95,8 @@ extern const struct DDGHistoryItemFetchedProperties {
 @interface _DDGHistoryItem (CoreDataGeneratedPrimitiveAccessors)
 
 
-- (NSNumber*)primitiveSection;
-- (void)setPrimitiveSection:(NSNumber*)value;
-
-- (int16_t)primitiveSectionValue;
-- (void)setPrimitiveSectionValue:(int16_t)value_;
+- (NSString*)primitiveSection;
+- (void)setPrimitiveSection:(NSString*)value;
 
 
 

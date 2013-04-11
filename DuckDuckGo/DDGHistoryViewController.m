@@ -155,6 +155,12 @@
     return 23;
 }
 
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    NSInteger sections = [self numberOfSectionsInTableView:tableView];
+    return (section == (sections-1)) ? 1.0 : 0.0;
+}
+
 -(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
@@ -179,6 +185,14 @@
     [headerView addSubview:title];
     
     return headerView;
+}
+
+-(UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
+    [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
+    
+    return footerView;
 }
 
 #pragma mark - NSFetchedResultsControllerDelegate

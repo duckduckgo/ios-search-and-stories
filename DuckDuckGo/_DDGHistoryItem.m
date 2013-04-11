@@ -44,10 +44,6 @@ const struct DDGHistoryItemFetchedProperties DDGHistoryItemFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
-	if ([key isEqualToString:@"sectionValue"]) {
-		NSSet *affectingKey = [NSSet setWithObject:@"section"];
-		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
-	}
 
 	return keyPaths;
 }
@@ -57,25 +53,6 @@ const struct DDGHistoryItemFetchedProperties DDGHistoryItemFetchedProperties = {
 
 @dynamic section;
 
-
-
-- (int16_t)sectionValue {
-	NSNumber *result = [self section];
-	return [result shortValue];
-}
-
-- (void)setSectionValue:(int16_t)value_ {
-	[self setSection:[NSNumber numberWithShort:value_]];
-}
-
-- (int16_t)primitiveSectionValue {
-	NSNumber *result = [self primitiveSection];
-	return [result shortValue];
-}
-
-- (void)setPrimitiveSectionValue:(int16_t)value_ {
-	[self setPrimitiveSection:[NSNumber numberWithShort:value_]];
-}
 
 
 
