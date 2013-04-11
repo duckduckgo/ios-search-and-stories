@@ -12,11 +12,13 @@
 - (void)willSave {
     [super willSave];
     
-    BOOL oldValue = self.isStoryItemValue;
-    BOOL isStoryItemValue = (nil != self.story);
-    
-    if (isStoryItemValue != oldValue)
-        self.isStoryItemValue = isStoryItemValue;
+    if (![self isDeleted]) {
+        BOOL oldValue = self.isStoryItemValue;
+        BOOL isStoryItemValue = (nil != self.story);
+        
+        if (isStoryItemValue != oldValue)
+            self.isStoryItemValue = isStoryItemValue;        
+    }
 }
 
 @end
