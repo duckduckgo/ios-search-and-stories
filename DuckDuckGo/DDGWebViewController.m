@@ -513,8 +513,6 @@
     
     [self updateProgressBar];        
     
-    NSLog(@"incrementLoadingDepth _webViewLoadingDepth: %i", _webViewLoadingDepth);
-    
     return _webViewLoadingDepth;
 }
 
