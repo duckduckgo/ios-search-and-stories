@@ -330,7 +330,8 @@
     void (^htmlDownloaded)(BOOL success) = ^(BOOL success){
         if (readabilityMode && success) {
             self.webViewURL = story.URL;
-            [self.webView loadHTMLString:[story HTML] baseURL:nil];
+            [self.webView loadRequest:[story HTMLURLRequest]];
+//            [self.webView loadHTMLString:[story HTML] baseURL:nil];
         } else {
             [self loadQueryOrURL:story.urlString];
         }
