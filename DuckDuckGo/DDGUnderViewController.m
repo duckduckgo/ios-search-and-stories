@@ -61,7 +61,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
     NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
-    NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"story" ascending:YES];
+    NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
     [request setSortDescriptors:@[sectionSort, timeSort]];    
     
     NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request

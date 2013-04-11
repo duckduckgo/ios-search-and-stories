@@ -14,6 +14,7 @@
 #import "DDGStory.h"
 #import "DDGSettingsViewController.h"
 #import "DDGSearchController.h"
+#import "ECSlidingViewController.h"
 
 @interface DDGHistoryViewController ()
 @property (nonatomic, weak, readwrite) id <DDGSearchHandler> searchHandler;
@@ -55,7 +56,7 @@
     if (showHistory) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
         NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
-        NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"story" ascending:YES];
+        NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
         [request setSortDescriptors:@[sectionSort, timeSort]];
         
         NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
@@ -100,6 +101,16 @@
         [searchField becomeFirstResponder];
         searchField.text = historyItem.title;
         [searchController searchFieldDidChange:nil];
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    UIGestureRecognizer *panGesture = [self.slidingViewController panGesture];
+    for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
+        if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
+            [panGesture requireGestureRecognizerToFail:gr];
     }
 }
 
@@ -195,6 +206,19 @@
     
     return footerView;
 }
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [self.managedObjectContext deleteObject:item];
+    }
+}
+
 
 #pragma mark - NSFetchedResultsControllerDelegate
 

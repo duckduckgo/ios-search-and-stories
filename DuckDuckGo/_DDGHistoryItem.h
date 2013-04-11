@@ -5,6 +5,7 @@
 
 
 extern const struct DDGHistoryItemAttributes {
+	__unsafe_unretained NSString *isStoryItem;
 	__unsafe_unretained NSString *section;
 	__unsafe_unretained NSString *timeStamp;
 	__unsafe_unretained NSString *title;
@@ -16,10 +17,10 @@ extern const struct DDGHistoryItemRelationships {
 } DDGHistoryItemRelationships;
 
 extern const struct DDGHistoryItemFetchedProperties {
-	__unsafe_unretained NSString *fetchedProperty;
 } DDGHistoryItemFetchedProperties;
 
 @class DDGStory;
+
 
 
 
@@ -34,6 +35,18 @@ extern const struct DDGHistoryItemFetchedProperties {
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
 - (DDGHistoryItemID*)objectID;
+
+
+
+
+@property (nonatomic, strong) NSNumber* isStoryItem;
+
+
+@property BOOL isStoryItemValue;
+- (BOOL)isStoryItemValue;
+- (void)setIsStoryItemValue:(BOOL)value_;
+
+//- (BOOL)validateIsStoryItem:(id*)value_ error:(NSError**)error_;
 
 
 
@@ -83,8 +96,6 @@ extern const struct DDGHistoryItemFetchedProperties {
 
 
 
-@property (nonatomic, readonly) NSArray *fetchedProperty;
-
 
 @end
 
@@ -93,6 +104,15 @@ extern const struct DDGHistoryItemFetchedProperties {
 @end
 
 @interface _DDGHistoryItem (CoreDataGeneratedPrimitiveAccessors)
+
+
+- (NSNumber*)primitiveIsStoryItem;
+- (void)setPrimitiveIsStoryItem:(NSNumber*)value;
+
+- (BOOL)primitiveIsStoryItemValue;
+- (void)setPrimitiveIsStoryItemValue:(BOOL)value_;
+
+
 
 
 - (NSString*)primitiveSection;

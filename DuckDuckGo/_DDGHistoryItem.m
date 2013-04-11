@@ -4,6 +4,7 @@
 #import "_DDGHistoryItem.h"
 
 const struct DDGHistoryItemAttributes DDGHistoryItemAttributes = {
+	.isStoryItem = @"isStoryItem",
 	.section = @"section",
 	.timeStamp = @"timeStamp",
 	.title = @"title",
@@ -15,7 +16,6 @@ const struct DDGHistoryItemRelationships DDGHistoryItemRelationships = {
 };
 
 const struct DDGHistoryItemFetchedProperties DDGHistoryItemFetchedProperties = {
-	.fetchedProperty = @"fetchedProperty",
 };
 
 @implementation DDGHistoryItemID
@@ -44,9 +44,39 @@ const struct DDGHistoryItemFetchedProperties DDGHistoryItemFetchedProperties = {
 + (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
+	if ([key isEqualToString:@"isStoryItemValue"]) {
+		NSSet *affectingKey = [NSSet setWithObject:@"isStoryItem"];
+		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+	}
 
 	return keyPaths;
 }
+
+
+
+
+@dynamic isStoryItem;
+
+
+
+- (BOOL)isStoryItemValue {
+	NSNumber *result = [self isStoryItem];
+	return [result boolValue];
+}
+
+- (void)setIsStoryItemValue:(BOOL)value_ {
+	[self setIsStoryItem:[NSNumber numberWithBool:value_]];
+}
+
+- (BOOL)primitiveIsStoryItemValue {
+	NSNumber *result = [self primitiveIsStoryItem];
+	return [result boolValue];
+}
+
+- (void)setPrimitiveIsStoryItemValue:(BOOL)value_ {
+	[self setPrimitiveIsStoryItem:[NSNumber numberWithBool:value_]];
+}
+
 
 
 
@@ -84,8 +114,6 @@ const struct DDGHistoryItemFetchedProperties DDGHistoryItemFetchedProperties = {
 	
 
 
-
-@dynamic fetchedProperty;
 
 
 

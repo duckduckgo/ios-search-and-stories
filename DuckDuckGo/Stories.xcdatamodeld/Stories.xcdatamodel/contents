@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model name="" userDefinedModelVersionIdentifier="1" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2061" systemVersion="12D78" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Feed" representedClassName="DDGStoryFeed" syncable="YES">
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descriptionString" optional="YES" attributeType="String" syncable="YES"/>
@@ -14,14 +14,12 @@
         <relationship name="stories" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Story" inverseName="feed" inverseEntity="Story" syncable="YES"/>
     </entity>
     <entity name="HistoryItem" representedClassName="DDGHistoryItem" syncable="YES">
-        <attribute name="section" optional="YES" transient="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isStoryItem" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="section" optional="YES" transient="YES" attributeType="String" indexed="YES" syncable="YES"/>
         <attribute name="timeStamp" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="urlString" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="story" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Story" inverseName="recents" inverseEntity="Story" syncable="YES"/>
-        <fetchedProperty name="fetchedProperty" optional="YES" syncable="YES">
-            <fetchRequest name="fetchedPropertyFetchRequest" entity="HistoryItem"/>
-        </fetchedProperty>
     </entity>
     <entity name="Story" representedClassName="DDGStory">
         <attribute name="articleURLString" optional="YES" attributeType="String" syncable="YES"/>
@@ -45,7 +43,7 @@
     <fetchRequest name="historyItemsWithPrefix" entity="HistoryItem" predicateString="title BEGINSWITH &quot;*prefix*&quot;"/>
     <elements>
         <element name="Feed" positionX="160" positionY="192" width="128" height="210"/>
-        <element name="HistoryItem" positionX="160" positionY="192" width="128" height="149"/>
+        <element name="HistoryItem" positionX="160" positionY="192" width="128" height="135"/>
         <element name="Story" positionX="261" positionY="189" width="128" height="255"/>
     </elements>
 </model>
