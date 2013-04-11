@@ -427,7 +427,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             [searchController pushContentViewController:tabViewController animated:NO];            
             
             bookmarks.searchController = searchController;
-            bookmarks.searchHandler = self;
+            bookmarks.searchHandler = searchController;
             
             tabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionBottom;
             tabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
@@ -464,6 +464,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             break;
         case DDGViewControllerTypeStories: {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            searchController.shouldPushSearchHandlerEvents = YES;
             searchController.state = DDGSearchControllerStateHome;
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
             [searchController pushContentViewController:stories animated:NO];
