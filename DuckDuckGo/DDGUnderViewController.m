@@ -103,6 +103,10 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHistory)
                           } mutableCopy]];
+        
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
+                          DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
+                          } mutableCopy]];
     } else {
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome)

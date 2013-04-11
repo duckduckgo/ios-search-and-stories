@@ -169,13 +169,14 @@
     NSArray *sections = [self.fetchedResultsController sections];
     
     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
+    NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section] name];
     
-    if (section == 0) {
+    if ([name isEqualToString:@"searches"]) {
         title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");
-    } else if (section == 1) {
+    } else if ([name isEqualToString:@"stories"]) {
         title.text = NSLocalizedString(@"Recent Stories", @"Table section header title");
     } else {
-        title.text = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section-1] name];
+        title.text = name;
     }
     
     title.textColor = [UIColor whiteColor];
