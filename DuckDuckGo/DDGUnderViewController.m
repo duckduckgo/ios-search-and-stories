@@ -537,7 +537,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
                 [self configureViewController:newTopViewController];                
             }
         }
-		else if(indexPath.section == 1)
+		else if(indexPath.section > 1)
 		{
             DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
             [self.historyProvider relogHistoryItem:historyItem];
