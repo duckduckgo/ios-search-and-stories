@@ -16,10 +16,11 @@
 #import "DDGSearchController.h"
 #import "ECSlidingViewController.h"
 
-@interface DDGHistoryViewController ()
+@interface DDGHistoryViewController () <UIGestureRecognizerDelegate>
 @property (nonatomic, weak, readwrite) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong, readwrite) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, strong) NSMutableSet *deletingIndexPaths;
 @end
 
 @implementation DDGHistoryViewController
@@ -30,6 +31,7 @@
     if (self) {
         self.managedObjectContext = managedObjectContext;
         self.searchHandler = searchHandler;
+        self.deletingIndexPaths = [NSMutableSet set];
     }
     return self;
 }
@@ -50,7 +52,64 @@
         self.tableView = tableView;
     }
     
+    UISwipeGestureRecognizer *swipeLeft = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeLeft:)];
+    swipeLeft.direction = (UISwipeGestureRecognizerDirectionLeft);
+    swipeLeft.delegate = self;
+    
+    UISwipeGestureRecognizer *swipeRight = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(swipeRight:)];
+    swipeRight.direction = (UISwipeGestureRecognizerDirectionRight);
+    swipeRight.delegate = self;
+    
+    [self.tableView addGestureRecognizer:swipeLeft];
+    [self.tableView addGestureRecognizer:swipeRight];    
+    
     [self fetchedResultsController];
+}
+
+- (void)cancelDeletingIndexPathsAnimated:(BOOL)animated {
+    for (NSIndexPath *indexPath in self.deletingIndexPaths) {
+        DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        [cell setDeleting:NO animated:animated];
+    }
+    [self.deletingIndexPaths removeAllObjects];
+}
+
+- (void)swipeLeft:(UISwipeGestureRecognizer *)swipe {
+    [self swipe:swipe direction:UISwipeGestureRecognizerDirectionLeft];
+}
+
+- (void)swipeRight:(UISwipeGestureRecognizer *)swipe {
+    [self swipe:swipe direction:UISwipeGestureRecognizerDirectionRight];
+}
+
+- (void)swipe:(UISwipeGestureRecognizer *)swipe direction:(UISwipeGestureRecognizerDirection)direction {
+    if (swipe.state == UIGestureRecognizerStateRecognized) {
+        CGPoint point = [swipe locationInView:self.tableView];
+        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+        if (nil != indexPath) {
+            [self.deletingIndexPaths removeObject:indexPath];
+            
+            [self cancelDeletingIndexPathsAnimated:YES];
+            
+            BOOL deleting = (direction == UISwipeGestureRecognizerDirectionLeft);
+            
+            DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            [cell setDeleting:deleting animated:YES];
+            
+            if (deleting)
+                [self.deletingIndexPaths addObject:indexPath];            
+        }
+    }
+}
+
+- (IBAction)delete:(id)sender {
+    NSSet *indexPaths = [self.deletingIndexPaths copy];
+    [self cancelDeletingIndexPathsAnimated:YES];
+    
+    for (NSIndexPath *indexPath in indexPaths) {
+        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        [historyItem.managedObjectContext deleteObject:historyItem];
+    }
 }
 
 - (NSFetchedResultsController *)fetchedResultsController {
@@ -111,8 +170,8 @@
     }
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
     
     UIGestureRecognizer *panGesture = [self.slidingViewController panGesture];
     for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
@@ -121,10 +180,29 @@
     }
 }
 
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
+    CGPoint point = [gestureRecognizer locationInView:self.tableView];
+    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+    return (nil != indexPath);
+}
+
+#pragma mark - UIScrollViewDelegate
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
+    [self cancelDeletingIndexPathsAnimated:YES];
+}
+
+- (void)scrollViewDidScrollToTop:(UIScrollView *)scrollView {
+    [self cancelDeletingIndexPathsAnimated:YES];
+}
 
 #pragma mark - UITableViewDelegate
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    [self cancelDeletingIndexPathsAnimated:YES];    
     
     DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
 //    [self.historyProvider relogHistoryItem:historyItem];
@@ -214,18 +292,22 @@
     return footerView;
 }
 
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        [self.managedObjectContext deleteObject:item];
-    }
-}
-
+//- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+//    return UITableViewCellEditingStyleDelete;
+//}
+//
+////- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+////    return YES;
+////}
+//
+//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    if (editingStyle == UITableViewCellEditingStyleDelete) {
+//        DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//        [self.managedObjectContext deleteObject:item];
+//    }
+//}
+//
 
 #pragma mark - NSFetchedResultsControllerDelegate
 

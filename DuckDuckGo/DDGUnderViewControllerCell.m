@@ -7,6 +7,11 @@
 //
 
 #import "DDGUnderViewControllerCell.h"
+#import "DDGDeleteButton.h"
+
+@interface DDGUnderViewControllerCell ()
+@property (nonatomic, weak, readwrite) UIButton *deleteButton;
+@end
 
 @implementation DDGUnderViewControllerCell
 
@@ -81,6 +86,55 @@
     [self setNeedsDisplay];
 }
 
+- (void)setDeleting:(BOOL)deleting {
+    [self setDeleting:deleting animated:NO];
+}
+
+- (void)setDeleting:(BOOL)deleting animated:(BOOL)animated {
+    
+    if (_deleting != deleting) {
+        _deleting = deleting;
+        [self setNeedsLayout];
+    }
+    
+    if (deleting && nil == self.deleteButton) {
+        UIButton *deleteButton = [DDGDeleteButton deleteButton];
+        [deleteButton addTarget:nil action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
+        [deleteButton setTitle:NSLocalizedString(@"Delete", @"button title") forState:UIControlStateNormal];
+        [deleteButton sizeToFit];
+        
+        CGRect buttonFrame = CGRectInset(deleteButton.frame, -8.0, -8.0);
+        
+        CGRect bounds = self.bounds;
+        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width,
+                                 bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
+                                 buttonFrame.size.width,
+                                 buttonFrame.size.height);
+        deleteButton.frame = buttonFrame;
+        deleteButton.alpha = 0.0;
+        
+        [self addSubview:deleteButton];
+        self.deleteButton = deleteButton;
+    }
+    
+    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         [self layoutIfNeeded];
+                     } completion:^(BOOL finished) {
+                         if (!deleting)
+                             [self.deleteButton removeFromSuperview];
+                     }];
+    
+    [self setNeedsLayout];
+}
+
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    [self setDeleting:NO animated:NO];
+    [self setActive:NO];
+}
+
 - (void)setCellMode:(DDGUnderViewControllerCellMode)cellMode {
     
     _cellMode = cellMode;
@@ -119,8 +173,18 @@
     [self setNeedsLayout];
 }
 
+- (void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    [self setNeedsLayout];
+}
+
+- (void)setEditing:(BOOL)editing {
+    [super setEditing:editing];
+    [self setNeedsLayout];
+}
+
 - (void)layoutSubviews {
-    [super layoutSubviews];    
+//    [super layoutSubviews];    
     
     CGFloat overhang = self.overhangWidth;
     CGRect bounds = self.bounds;
@@ -129,6 +193,11 @@
     accessoryRect.origin.x = bounds.size.width - overhang - accessoryRect.size.width;
     accessoryRect.origin.y = floor((bounds.size.height - accessoryRect.size.height) / 2.0);
     self.accessoryView.frame = accessoryRect;
+    
+    CGRect editingRect = self.editingAccessoryView.frame;
+    editingRect.origin.x = bounds.size.width - overhang - editingRect.size.width;
+    editingRect.origin.y = floor((bounds.size.height - editingRect.size.height) / 2.0);
+    self.editingAccessoryView.frame = editingRect;
     
     self.contentView.frame = CGRectMake(0, 0, bounds.size.width - overhang - accessoryRect.size.width, bounds.size.height);
     CGRect contentBounds = self.contentView.bounds;
@@ -144,7 +213,47 @@
     self.imageView.frame = CGRectIntegral(imageRect);
     
     CGRect labelRect = CGRectMake(38, 0, contentBounds.size.width - 38, bounds.size.height);
-    self.textLabel.frame = labelRect;    
+    self.textLabel.frame = labelRect;
+    
+    if (self.isDeleting) {
+        CGRect bounds = self.bounds;
+        CGRect frame = self.contentView.frame;
+        CGRect buttonFrame = self.deleteButton.frame;
+        
+        CGFloat buttonPadding = 6.0;
+        CGFloat buttonInset = buttonFrame.size.width + buttonPadding + buttonPadding - self.accessoryView.frame.size.width;
+        
+        frame.size.width -= buttonInset;
+        self.contentView.frame = frame;
+        
+        self.accessoryView.alpha = 0.0;
+        
+        CGRect textFrame = self.textLabel.frame;
+        textFrame.size.width -= buttonInset;
+        self.textLabel.frame = textFrame;
+        
+        textFrame = self.detailTextLabel.frame;
+        textFrame.size.width -= buttonInset;
+        self.detailTextLabel.frame = textFrame;
+        
+        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width - buttonFrame.size.width - buttonPadding,
+                                 bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
+                                 buttonFrame.size.width, buttonFrame.size.height);
+        self.deleteButton.frame = buttonFrame;
+        self.deleteButton.alpha = 1.0;
+    } else {
+        CGRect bounds = self.bounds;
+        CGRect buttonFrame = self.deleteButton.frame;
+        
+        self.accessoryView.alpha = 1.0;
+        
+        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width,
+                                 bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
+                                 buttonFrame.size.width,
+                                 buttonFrame.size.height);
+        self.deleteButton.frame = buttonFrame;
+        self.deleteButton.alpha = 0.0;
+    }
 }
 
 @end

@@ -18,4 +18,7 @@ typedef enum DDGUnderViewControllerCellMode {
 @property (nonatomic) DDGUnderViewControllerCellMode cellMode;
 @property (nonatomic, getter = isActive) BOOL active;
 @property (nonatomic) CGFloat overhangWidth;
+@property (nonatomic, getter = isDeleting) BOOL deleting;
+@property (nonatomic, weak, readonly) UIButton *deleteButton;
+- (void)setDeleting:(BOOL)deleting animated:(BOOL)animated;
 @end
