@@ -25,7 +25,7 @@
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSMutableArray *controllers;
-@property (nonatomic, weak) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
 @end
 
 @implementation DDGSearchController
@@ -79,6 +79,8 @@
     UIViewController *incommingViewController = contentController;
     UIViewController *outgoingViewController = [self.controllers lastObject];
     
+    [self view];
+    
     CGRect contentRect = [self contentRect];
     CGRect incommingRect = contentRect;
     incommingRect.origin.x += contentRect.size.width;
@@ -96,6 +98,9 @@
     [self.controllers addObject:incommingViewController];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
     [self setSearchBarLeftButtonImage];
+    
+    if ([self.controllers count] > 1)
+        [incommingViewController.view addGestureRecognizer:self.panGesture];
     
     [UIView animateWithDuration:duration
                      animations:^{
@@ -218,7 +223,6 @@
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
     panGesture.delegate = self;
-    [self.view addGestureRecognizer:panGesture];
     self.panGesture = panGesture;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
