@@ -10,7 +10,9 @@
 #import "DDGDeleteButton.h"
 
 @interface DDGUnderViewControllerCell ()
-@property (nonatomic, weak, readwrite) UIButton *deleteButton;
+@property (nonatomic, weak, readwrite) DDGFixedSizeImageView *fixedSizeImageView;
+@property (nonatomic, weak, readwrite) UIImageView *backgroundImageView;
+@property (nonatomic, weak, readwrite) UIImageView *selectedBackgroundImageView;
 @end
 
 @implementation DDGUnderViewControllerCell
@@ -19,7 +21,13 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-		self.imageView.layer.cornerRadius = 2.0;        
+        
+        DDGFixedSizeImageView *fixedSizeImageView = [[DDGFixedSizeImageView alloc] initWithFrame:CGRectZero];
+        fixedSizeImageView.layer.cornerRadius = 2.0;
+        fixedSizeImageView.size = CGSizeMake(24.0, 24.0);
+        [self addSubview:fixedSizeImageView];
+        self.fixedSizeImageView = fixedSizeImageView;        
+        
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.opaque = NO;
         
@@ -28,18 +36,35 @@
         backgroundImageView.opaque = NO;
         backgroundImageView.backgroundColor = [UIColor clearColor];
         self.backgroundView = backgroundImageView;
+        self.backgroundImageView = backgroundImageView;
 
         UIImageView *selectedBackgroundView = [[UIImageView alloc] initWithFrame:self.bounds];;
         selectedBackgroundView.contentMode = UIViewContentModeScaleToFill;
         selectedBackgroundView.opaque = NO;
         selectedBackgroundView.backgroundColor = [UIColor clearColor];
         self.selectedBackgroundView = selectedBackgroundView;
+        self.selectedBackgroundImageView = selectedBackgroundView;
         
         self.selectionStyle = UITableViewCellSelectionStyleBlue;
+                
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_caret"]];
+        imageView.highlightedImage = [UIImage imageNamed:@"icon_caret_onclick"];
+        imageView.contentMode = UIViewContentModeCenter;
+        self.accessoryView = imageView;
         
-        self.backgroundColor = [UIColor redColor];
+        backgroundImageView.image = [UIImage imageNamed:@"new_bg_menu-items"];
+		selectedBackgroundView.image = [UIImage imageNamed:@"new_bg_menu-items-highlighted"];
+        
+		self.textLabel.numberOfLines = 1;
+		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
+        self.textLabel.textColor = [UIColor colorWithRed:0.686 green:0.725 blue:0.800 alpha:1.000];
+        self.textLabel.highlightedTextColor = [UIColor whiteColor];        
     }
     return self;
+}
+
+- (UIImageView *)imageView {
+    return nil;
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
@@ -54,7 +79,7 @@
     }
     
     [self.textLabel setHighlighted:highlight];
-    [self.imageView setHighlighted:highlight];
+    [self.fixedSizeImageView setHighlighted:highlight];
 }
 
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {
@@ -68,7 +93,7 @@
     }
     
     [self.textLabel setHighlighted:highlight];
-    [self.imageView setHighlighted:highlight];
+    [self.fixedSizeImageView setHighlighted:highlight];
 }
 
 - (void)setActive:(BOOL)active {
@@ -81,96 +106,14 @@
     }
     
     [self.textLabel setHighlighted:active];
-    [self.imageView setHighlighted:active];
+    [self.fixedSizeImageView setHighlighted:active];
     
     [self setNeedsDisplay];
 }
 
-- (void)setDeleting:(BOOL)deleting {
-    [self setDeleting:deleting animated:NO];
-}
-
-- (void)setDeleting:(BOOL)deleting animated:(BOOL)animated {
-    
-    if (_deleting != deleting) {
-        _deleting = deleting;
-        [self setNeedsLayout];
-    }
-    
-    if (deleting && nil == self.deleteButton) {
-        UIButton *deleteButton = [DDGDeleteButton deleteButton];
-        [deleteButton addTarget:nil action:@selector(delete:) forControlEvents:UIControlEventTouchUpInside];
-        [deleteButton setTitle:NSLocalizedString(@"Delete", @"button title") forState:UIControlStateNormal];
-        [deleteButton sizeToFit];
-        
-        CGRect buttonFrame = CGRectInset(deleteButton.frame, -8.0, -8.0);
-        
-        CGRect bounds = self.bounds;
-        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width,
-                                 bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
-                                 buttonFrame.size.width,
-                                 buttonFrame.size.height);
-        deleteButton.frame = buttonFrame;
-        deleteButton.alpha = 0.0;
-        
-        [self addSubview:deleteButton];
-        self.deleteButton = deleteButton;
-    }
-    
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         [self layoutIfNeeded];
-                     } completion:^(BOOL finished) {
-                         if (!deleting)
-                             [self.deleteButton removeFromSuperview];
-                     }];
-    
-    [self setNeedsLayout];
-}
-
 - (void)prepareForReuse {
     [super prepareForReuse];
-    [self setDeleting:NO animated:NO];
     [self setActive:NO];
-}
-
-- (void)setCellMode:(DDGUnderViewControllerCellMode)cellMode {
-    
-    _cellMode = cellMode;
-    
-    UIImageView *backgroundImageView = (UIImageView *)self.backgroundView;
-    UIImageView *selectedBackgroundImageView = (UIImageView *)self.selectedBackgroundView;
-    
-    if (cellMode == DDGUnderViewControllerCellModeRecent) {
-        
-        self.accessoryView = nil;
-        
-        backgroundImageView.image = [UIImage imageNamed:@"new_bg_history-items"];
-        selectedBackgroundImageView.image = nil;        
-        
-        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		self.textLabel.numberOfLines = 2;
-		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
-        self.textLabel.textColor = [UIColor colorWithRed:0.490 green:0.522 blue:0.576 alpha:1.000];
-        self.textLabel.highlightedTextColor = [UIColor whiteColor];
-    } else {        
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"icon_caret"]];
-        imageView.highlightedImage = [UIImage imageNamed:@"icon_caret_onclick"];
-        imageView.contentMode = UIViewContentModeCenter;
-        self.accessoryView = imageView;
-        
-        backgroundImageView.image = [UIImage imageNamed:@"new_bg_menu-items"];
-		selectedBackgroundImageView.image = [UIImage imageNamed:@"new_bg_menu-items-highlighted"];
-        
-        self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		self.textLabel.numberOfLines = 1;
-		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
-        self.textLabel.textColor = [UIColor colorWithRed:0.686 green:0.725 blue:0.800 alpha:1.000];
-        self.textLabel.highlightedTextColor = [UIColor whiteColor];
-    }
-    
-    [self setNeedsLayout];
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {
@@ -184,7 +127,7 @@
 }
 
 - (void)layoutSubviews {
-//    [super layoutSubviews];    
+    [super layoutSubviews];    
     
     CGFloat overhang = self.overhangWidth;
     CGRect bounds = self.bounds;
@@ -203,57 +146,17 @@
     CGRect contentBounds = self.contentView.bounds;
     
     CGRect imageRect = CGRectMake(0, 0, 36, contentBounds.size.height);
-    if (self.imageView.image) {
-        CGSize size = (self.cellMode == DDGUnderViewControllerCellModeRecent) ? CGSizeMake(16.0, 16.0) : CGSizeMake(24.0, 24.0);
+    if (self.fixedSizeImageView.image) {
+        CGSize size = CGSizeMake(24.0, 24.0);
         imageRect = CGRectMake(imageRect.origin.x + ((imageRect.size.width - size.width) / 2.0),
                                imageRect.origin.y + ((imageRect.size.height - size.height) / 2.0),
                                size.width,
                                size.height);
     }
-    self.imageView.frame = CGRectIntegral(imageRect);
+    self.fixedSizeImageView.frame = CGRectIntegral(imageRect);
     
     CGRect labelRect = CGRectMake(38, 0, contentBounds.size.width - 38, bounds.size.height);
     self.textLabel.frame = labelRect;
-    
-    if (self.isDeleting) {
-        CGRect bounds = self.bounds;
-        CGRect frame = self.contentView.frame;
-        CGRect buttonFrame = self.deleteButton.frame;
-        
-        CGFloat buttonPadding = 6.0;
-        CGFloat buttonInset = buttonFrame.size.width + buttonPadding + buttonPadding - self.accessoryView.frame.size.width;
-        
-        frame.size.width -= buttonInset;
-        self.contentView.frame = frame;
-        
-        self.accessoryView.alpha = 0.0;
-        
-        CGRect textFrame = self.textLabel.frame;
-        textFrame.size.width -= buttonInset;
-        self.textLabel.frame = textFrame;
-        
-        textFrame = self.detailTextLabel.frame;
-        textFrame.size.width -= buttonInset;
-        self.detailTextLabel.frame = textFrame;
-        
-        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width - buttonFrame.size.width - buttonPadding,
-                                 bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
-                                 buttonFrame.size.width, buttonFrame.size.height);
-        self.deleteButton.frame = buttonFrame;
-        self.deleteButton.alpha = 1.0;
-    } else {
-        CGRect bounds = self.bounds;
-        CGRect buttonFrame = self.deleteButton.frame;
-        
-        self.accessoryView.alpha = 1.0;
-        
-        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width,
-                                 bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
-                                 buttonFrame.size.width,
-                                 buttonFrame.size.height);
-        self.deleteButton.frame = buttonFrame;
-        self.deleteButton.alpha = 0.0;
-    }
 }
 
 @end

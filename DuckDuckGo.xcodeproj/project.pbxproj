@@ -220,6 +220,8 @@
 		5B7C3CA3171851F800B9E009 /* DDGDeleteButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3CA2171851F700B9E009 /* DDGDeleteButton.m */; };
 		5B7C3CA6171852BC00B9E009 /* btn-list_delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3CA4171852BB00B9E009 /* btn-list_delete.png */; };
 		5B7C3CA7171852BC00B9E009 /* btn-list_delete@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3CA5171852BB00B9E009 /* btn-list_delete@2x.png */; };
+		5B7C3CAA171C4B1800B9E009 /* DDGFixedSizeImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */; };
+		5B7C3CAD171C4D1E00B9E009 /* DDGHistoryItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3CAC171C4D1E00B9E009 /* DDGHistoryItemCell.m */; };
 		5B88DBAF16DB7BA7007A935D /* swipe-open-in-safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */; };
 		5B88DBB016DB7BA7007A935D /* swipe-open-in-safari@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */; };
 		5B88DBB116DB7BA7007A935D /* swipe-save.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B88DBA916DB7BA7007A935D /* swipe-save.png */; };
@@ -588,6 +590,10 @@
 		5B7C3CA2171851F700B9E009 /* DDGDeleteButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGDeleteButton.m; sourceTree = "<group>"; };
 		5B7C3CA4171852BB00B9E009 /* btn-list_delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-list_delete.png"; sourceTree = "<group>"; };
 		5B7C3CA5171852BB00B9E009 /* btn-list_delete@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-list_delete@2x.png"; sourceTree = "<group>"; };
+		5B7C3CA8171C4B1800B9E009 /* DDGFixedSizeImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGFixedSizeImageView.h; sourceTree = "<group>"; };
+		5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGFixedSizeImageView.m; sourceTree = "<group>"; };
+		5B7C3CAB171C4D1E00B9E009 /* DDGHistoryItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHistoryItemCell.h; sourceTree = "<group>"; };
+		5B7C3CAC171C4D1E00B9E009 /* DDGHistoryItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHistoryItemCell.m; sourceTree = "<group>"; };
 		5B88DBA716DB7BA7007A935D /* swipe-open-in-safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari.png"; sourceTree = "<group>"; };
 		5B88DBA816DB7BA7007A935D /* swipe-open-in-safari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-open-in-safari@2x.png"; sourceTree = "<group>"; };
 		5B88DBA916DB7BA7007A935D /* swipe-save.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "swipe-save.png"; sourceTree = "<group>"; };
@@ -999,6 +1005,10 @@
 				5B07086917008ECE0058718F /* DDGHistoryItem.m */,
 				5B7C3C2E1715AF8900B9E009 /* DDGHistoryViewController.h */,
 				5B7C3C2F1715AF8900B9E009 /* DDGHistoryViewController.m */,
+				5B7C3CAB171C4D1E00B9E009 /* DDGHistoryItemCell.h */,
+				5B7C3CAC171C4D1E00B9E009 /* DDGHistoryItemCell.m */,
+				5B7C3CA1171851F700B9E009 /* DDGDeleteButton.h */,
+				5B7C3CA2171851F700B9E009 /* DDGDeleteButton.m */,
 			);
 			name = History;
 			sourceTree = "<group>";
@@ -1135,8 +1145,8 @@
 				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
 				5B7A1C3516E9EEB700354310 /* DDGUnderViewControllerCell.h */,
 				5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */,
-				5B7C3CA1171851F700B9E009 /* DDGDeleteButton.h */,
-				5B7C3CA2171851F700B9E009 /* DDGDeleteButton.m */,
+				5B7C3CA8171C4B1800B9E009 /* DDGFixedSizeImageView.h */,
+				5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */,
 			);
 			name = "Main Menu";
 			sourceTree = "<group>";
@@ -1735,6 +1745,8 @@
 				5B7C3BF5170EECFF00B9E009 /* UIViewController+DDGSearchController.m in Sources */,
 				5B7C3C301715AF8900B9E009 /* DDGHistoryViewController.m in Sources */,
 				5B7C3CA3171851F800B9E009 /* DDGDeleteButton.m in Sources */,
+				5B7C3CAA171C4B1800B9E009 /* DDGFixedSizeImageView.m in Sources */,
+				5B7C3CAD171C4D1E00B9E009 /* DDGHistoryItemCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

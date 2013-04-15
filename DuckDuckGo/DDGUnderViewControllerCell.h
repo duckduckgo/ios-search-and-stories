@@ -8,17 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
-
-typedef enum DDGUnderViewControllerCellMode {
-    DDGUnderViewControllerCellModeNormal = 0,
-    DDGUnderViewControllerCellModeRecent
-} DDGUnderViewControllerCellMode;
+#import "DDGFixedSizeImageView.h"
 
 @interface DDGUnderViewControllerCell : UITableViewCell
-@property (nonatomic) DDGUnderViewControllerCellMode cellMode;
 @property (nonatomic, getter = isActive) BOOL active;
 @property (nonatomic) CGFloat overhangWidth;
-@property (nonatomic, getter = isDeleting) BOOL deleting;
-@property (nonatomic, weak, readonly) UIButton *deleteButton;
-- (void)setDeleting:(BOOL)deleting animated:(BOOL)animated;
+@property (nonatomic, weak, readonly) DDGFixedSizeImageView *fixedSizeImageView;
+@property (nonatomic, weak, readonly) UIImageView *backgroundImageView;
+@property (nonatomic, weak, readonly) UIImageView *selectedBackgroundImageView;
 @end

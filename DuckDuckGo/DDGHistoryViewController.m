@@ -7,7 +7,6 @@
 //
 
 #import "DDGHistoryViewController.h"
-#import "DDGUnderViewControllerCell.h"
 #import "DDGHistoryItem.h"
 #import "DDGPlusButton.h"
 #import "DDGStoryFeed.h"
@@ -15,6 +14,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGSearchController.h"
 #import "ECSlidingViewController.h"
+#import "DDGHistoryItemCell.h"
 
 @interface DDGHistoryViewController () <UIGestureRecognizerDelegate>
 @property (nonatomic, weak, readwrite) id <DDGSearchHandler> searchHandler;
@@ -68,7 +68,7 @@
 
 - (void)cancelDeletingIndexPathsAnimated:(BOOL)animated {
     for (NSIndexPath *indexPath in self.deletingIndexPaths) {
-        DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
         [cell setDeleting:NO animated:animated];
     }
     [self.deletingIndexPaths removeAllObjects];
@@ -93,7 +93,7 @@
             
             BOOL deleting = (direction == UISwipeGestureRecognizerDirectionLeft);
             
-            DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
             [cell setDeleting:deleting animated:YES];
             
             if (deleting)
@@ -232,11 +232,11 @@
 {
 	static NSString *CellIdentifier = @"HistoryCell";
     
-	DDGUnderViewControllerCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
+	DDGHistoryItemCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
 	{
-        cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        cell = [[DDGHistoryItemCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell.imageView.backgroundColor = self.tableView.backgroundColor;
         cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
     }
@@ -363,7 +363,7 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    DDGUnderViewControllerCell *underCell = (DDGUnderViewControllerCell *)cell;
+    DDGHistoryItemCell *underCell = (DDGHistoryItemCell *)cell;
     
     underCell.active = NO;
     
@@ -373,17 +373,15 @@
     
 	UILabel *lbl = cell.textLabel;
 
-    underCell.cellMode = DDGUnderViewControllerCellModeRecent;
-
     // we have history and it is enabled
     DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
     DDGStory *story = item.story;
 
     if (nil != story) {
-        cell.imageView.image = story.feed.image;
+        underCell.fixedSizeImageView.image = story.feed.image;
         cell.accessoryView = nil;
     } else {
-        cell.imageView.image = [UIImage imageNamed:@"search_icon"];
+        underCell.fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
         cell.accessoryView = [DDGPlusButton plusButton];
     }
     lbl.text = item.title;

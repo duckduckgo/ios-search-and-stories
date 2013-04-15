@@ -15,6 +15,7 @@
 #import "DDGStoriesViewController.h"
 #import "DDGDuckViewController.h"
 #import "DDGUnderViewControllerCell.h"
+#import "DDGHistoryItemCell.h"
 #import "DDGStory.h"
 #import "DDGStoryFeed.h"
 #import "DDGHistoryItem.h"
@@ -258,28 +259,38 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"DDGUnderViewControllerCell";
-    
-    DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(!cell)
-        cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+    static NSString *CellIdentifier = @"cell";
+    static NSString *HistoryCellIdentifier = @"history";
+
+    NSString *identifier = (indexPath.section == 0) ? CellIdentifier : HistoryCellIdentifier;
+        
+    DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+    if(!cell) {
+        if (indexPath.section == 0)
+            cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        else
+            cell = [[DDGHistoryItemCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:HistoryCellIdentifier];
+    }
     
     [self configureCell:cell atIndexPath:indexPath];
     
     return cell;
 }
 
-- (void)configureCell:(DDGUnderViewControllerCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    cell.active = ([indexPath isEqual:self.menuIndexPath]);
+- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
     
-	cell.imageView.image = nil;
-    cell.imageView.highlightedImage = nil;
-    cell.overhangWidth = 74;
+    DDGUnderViewControllerCell *underCell = (DDGUnderViewControllerCell *)cell;
+    DDGFixedSizeImageView *fixedSizeImageView = underCell.fixedSizeImageView;
     
-	UILabel *lbl = cell.textLabel;
+    underCell.active = ([indexPath isEqual:self.menuIndexPath]);
+    
+	underCell.imageView.image = nil;
+    underCell.imageView.highlightedImage = nil;
+    underCell.overhangWidth = 74;
+    
+	UILabel *lbl = underCell.textLabel;
     if(indexPath.section == 0)
 	{
-        cell.cellMode = DDGUnderViewControllerCellModeNormal;
         lbl.text = [[self.viewControllerTypes objectAtIndex:indexPath.row] objectForKey:DDGViewControllerTypeTitleKey];
         
         NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:indexPath.row];
@@ -290,49 +301,46 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 			case DDGViewControllerTypeHome:
 			case DDGViewControllerTypeHistory:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"icon_home"];
-                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected"];
+				fixedSizeImageView.image = [UIImage imageNamed:@"icon_home"];
+                fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected"];
 			}
 				break;
 			case DDGViewControllerTypeSaved:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"icon_saved-pages"];
-                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected"];
+				fixedSizeImageView.image = [UIImage imageNamed:@"icon_saved-pages"];
+                fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected"];
 			}
 				break;
 			case DDGViewControllerTypeStories:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"icon_stories"];
-                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_stories_selected"];
+				fixedSizeImageView.image = [UIImage imageNamed:@"icon_stories"];
+                fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_stories_selected"];
 			}
 				break;
 			case DDGViewControllerTypeSettings:
 			{
-				cell.imageView.image = [UIImage imageNamed:@"icon_settings"];
-                cell.imageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected"];
+				fixedSizeImageView.image = [UIImage imageNamed:@"icon_settings"];
+                fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected"];
 			}
 				break;
 		}
     } else {
-        cell.cellMode = DDGUnderViewControllerCellModeRecent;
-        
 		if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) {
 			// we have history and it is enabled
 			DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
 			DDGStory *story = item.story;
             
 			if (nil != story) {
-				cell.imageView.image = story.feed.image;
+				fixedSizeImageView.image = story.feed.image;
                 cell.accessoryView = nil;
 			} else {
-                cell.imageView.image = [UIImage imageNamed:@"search_icon"];
+                fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
                 cell.accessoryView = [DDGPlusButton plusButton];
 			}
 			lbl.text = item.title;
 		} else {
-			cell.imageView.image = [UIImage imageNamed:@"icon_notification"];
+			fixedSizeImageView.image = [UIImage imageNamed:@"icon_notification"];
 			lbl.text = @"Saving recents is disabled.\nYou can enable it in settings.";
-            cell.imageView.contentMode = UIViewContentModeCenter;
             cell.accessoryView = nil;
 		}
     }    
