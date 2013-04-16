@@ -143,6 +143,8 @@
 		5B2FCADC16F32BE10045A5FE /* Safari~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B2FCAD116F32BE10045A5FE /* Safari~ipad.png */; };
 		5B2FCADD16F32BE10045A5FE /* TUSafariActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCAD516F32BE10045A5FE /* TUSafariActivity.m */; };
 		5B2FCB5E16F3789F0045A5FE /* DDGReadabilityToggleActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */; };
+		5B375C34171D3F9A00C53772 /* button_menu_glyph_stories.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B375C32171D3F9A00C53772 /* button_menu_glyph_stories.png */; };
+		5B375C35171D3F9A00C53772 /* button_menu_glyph_stories@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B375C33171D3F9A00C53772 /* button_menu_glyph_stories@2x.png */; };
 		5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66096F16D781B20006B5DE /* libTestFlight.a */; };
 		5B66097316D781D00006B5DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66097216D781D00006B5DE /* libz.dylib */; };
 		5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B66097716D7A3600006B5DE /* DDGFaviconButton.m */; };
@@ -495,6 +497,8 @@
 		5B2FCAD716F32BE10045A5FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = zh_CN.lproj/TUSafariActivity.strings; sourceTree = "<group>"; };
 		5B2FCB5C16F3789F0045A5FE /* DDGReadabilityToggleActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGReadabilityToggleActivity.h; sourceTree = "<group>"; };
 		5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGReadabilityToggleActivity.m; sourceTree = "<group>"; };
+		5B375C32171D3F9A00C53772 /* button_menu_glyph_stories.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_menu_glyph_stories.png; sourceTree = "<group>"; };
+		5B375C33171D3F9A00C53772 /* button_menu_glyph_stories@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_menu_glyph_stories@2x.png"; sourceTree = "<group>"; };
 		5B66096F16D781B20006B5DE /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = TestFlightSDK1/libTestFlight.a; sourceTree = "<group>"; };
 		5B66097016D781B20006B5DE /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFlight.h; path = TestFlightSDK1/TestFlight.h; sourceTree = "<group>"; };
 		5B66097216D781D00006B5DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -760,6 +764,8 @@
 				5B7C3BCF170AF18900B9E009 /* btn-bg_plus@2x.png */,
 				5B7C3BD0170AF18900B9E009 /* btn-icon_plus.png */,
 				5B7C3BD1170AF18900B9E009 /* btn-icon_plus@2x.png */,
+				5B375C32171D3F9A00C53772 /* button_menu_glyph_stories.png */,
+				5B375C33171D3F9A00C53772 /* button_menu_glyph_stories@2x.png */,
 				5B7C3CA4171852BB00B9E009 /* btn-list_delete.png */,
 				5B7C3CA5171852BB00B9E009 /* btn-list_delete@2x.png */,
 				83EFD3431656832C005E19CC /* search_icon.png */,
@@ -1643,6 +1649,8 @@
 				5B7C3C2A170F009D00B9E009 /* button_menu_glyph_saved@2x.png in Resources */,
 				5B7C3CA6171852BC00B9E009 /* btn-list_delete.png in Resources */,
 				5B7C3CA7171852BC00B9E009 /* btn-list_delete@2x.png in Resources */,
+				5B375C34171D3F9A00C53772 /* button_menu_glyph_stories.png in Resources */,
+				5B375C35171D3F9A00C53772 /* button_menu_glyph_stories@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

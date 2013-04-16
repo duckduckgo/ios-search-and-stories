@@ -270,10 +270,6 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         return YES;
 }
 
-- (UIImage *)searchControllerBackButtonIconDDG {
-    return [UIImage imageNamed:@"button_menu_glyph_home"];
-}
-
 #pragma mark - Filtering
 
 - (IBAction)filter:(id)sender {

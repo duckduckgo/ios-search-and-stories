@@ -475,6 +475,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             searchController.shouldPushSearchHandlerEvents = YES;
             searchController.state = DDGSearchControllerStateHome;
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
+            stories.searchControllerBackButtonIconDDG = [UIImage imageNamed:@"button_menu_glyph_stories"];
             [searchController pushContentViewController:stories animated:NO];
             viewController = searchController;
         }
@@ -496,7 +497,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 //            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
 //                searchController.contentController = [DDGDuckViewController duckViewController];
 //            } else {
-            DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];            
+            DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
+            stories.searchControllerBackButtonIconDDG = [UIImage imageNamed:@"button_menu_glyph_home"];
             [searchController pushContentViewController:stories animated:NO];
 //            }
             searchController.state = DDGSearchControllerStateHome;
