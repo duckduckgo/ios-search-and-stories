@@ -127,10 +127,12 @@
 }
 
 - (void)layoutSubviews {
-    [super layoutSubviews];    
     
     CGFloat overhang = self.overhangWidth;
     CGRect bounds = self.bounds;
+    
+    if (nil != self.accessoryView)
+        [self addSubview:self.accessoryView];
     
     CGRect accessoryRect = self.accessoryView.frame;
     accessoryRect.origin.x = bounds.size.width - overhang - accessoryRect.size.width;
