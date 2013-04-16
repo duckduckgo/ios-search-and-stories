@@ -46,6 +46,7 @@
         tableView.dataSource = self;
         tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         [self.view addSubview:tableView];
         
@@ -86,6 +87,10 @@
     if (swipe.state == UIGestureRecognizerStateRecognized) {
         CGPoint point = [swipe locationInView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+        NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+        if (indexPath.section < additionalSections)
+            return;
+        
         if (nil != indexPath) {
             [self.deletingIndexPaths removeObject:indexPath];
             
@@ -102,12 +107,29 @@
     }
 }
 
+- (NSInteger)historySectionForTableSection:(NSInteger)section {
+    return section - [self.additionalSectionsDelegate numberOfAdditionalSections];
+}
+
+- (NSInteger)tableSectionForHistorySection:(NSInteger)section {
+    return section + [self.additionalSectionsDelegate numberOfAdditionalSections];
+}
+
+- (NSIndexPath *)historyIndexPathForTableIndexPath:(NSIndexPath *)indexPath {
+    return [NSIndexPath indexPathForRow:indexPath.row inSection:[self historySectionForTableSection:indexPath.section]];
+}
+
+- (NSIndexPath *)tableIndexPathForHistoryIndexPath:(NSIndexPath *)indexPath {
+    return [NSIndexPath indexPathForRow:indexPath.row inSection:[self tableSectionForHistorySection:indexPath.section]];
+}
+
 - (IBAction)delete:(id)sender {
     NSSet *indexPaths = [self.deletingIndexPaths copy];
     [self cancelDeletingIndexPathsAnimated:YES];
     
     for (NSIndexPath *indexPath in indexPaths) {
-        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
+        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
         [historyItem.managedObjectContext deleteObject:historyItem];
     }
 }
@@ -160,7 +182,8 @@
     if (button) {
         CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
         NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];
-        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:tappedIndex];        
+        NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:tappedIndex];
+        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
         DDGSearchController *searchController = [self searchControllerDDG];
         DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
         
@@ -202,9 +225,16 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
-    [self cancelDeletingIndexPathsAnimated:YES];    
+    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+    if (indexPath.section < additionalSections) {
+        if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)])
+            [self.additionalSectionsDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
+        return;
+    }
     
-    DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    [self cancelDeletingIndexPathsAnimated:YES];    
+    NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
+    DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
 //    [self.historyProvider relogHistoryItem:historyItem];
     DDGStory *story = historyItem.story;
     if (nil != story)
@@ -219,17 +249,26 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[self.fetchedResultsController sections] count];
+    return [[self.fetchedResultsController sections] count] + [self.additionalSectionsDelegate numberOfAdditionalSections];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
+    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+    if (section < additionalSections)
+        return [self.additionalSectionsDelegate tableView:tableView numberOfRowsInSection:(NSInteger)section];
+    
+    NSInteger historySection = [self historySectionForTableSection:section];
+    id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][historySection];
     return [sectionInfo numberOfObjects];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+    if (indexPath.section < additionalSections)
+        return [self.additionalSectionsDelegate tableView:tv cellForRowAtIndexPath:indexPath];
+    
 	static NSString *CellIdentifier = @"HistoryCell";
     
 	DDGHistoryItemCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -248,24 +287,44 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+    if (section < additionalSections) {
+        if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:heightForHeaderInSection:)])
+            return [self.additionalSectionsDelegate tableView:tableView heightForHeaderInSection:section];
+    }
+    
     return 23;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
 {
+    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+    if (section < additionalSections) {
+        if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:heightForFooterInSection:)])
+            return [self.additionalSectionsDelegate tableView:tableView heightForFooterInSection:section];
+    }
+    
     NSInteger sections = [self numberOfSectionsInTableView:tableView];
     return (section == (sections-1)) ? 1.0 : 0.0;
 }
 
 -(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+    if (section < additionalSections) {
+        if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:viewForHeaderInSection:)])
+            return [self.additionalSectionsDelegate tableView:tableView viewForHeaderInSection:section];
+        return nil;
+    }
+    
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
     [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
     
     NSArray *sections = [self.fetchedResultsController sections];
+    NSInteger historySection = [self historySectionForTableSection:section];
     
     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
-    NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section] name];
+    NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:historySection] name];
     
     if ([name isEqualToString:@"searches"]) {
         title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");
@@ -286,6 +345,13 @@
 
 -(UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
+    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+    if (section < additionalSections) {
+        if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:viewForFooterInSection:)])
+            return [self.additionalSectionsDelegate tableView:tableView viewForFooterInSection:section];
+        return nil;
+    }
+    
     UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
     [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
     
@@ -319,13 +385,15 @@
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    NSInteger tableSectionIndex = [self tableSectionForHistorySection:sectionIndex];
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:tableSectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:tableSectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -336,22 +404,25 @@
 {
     UITableView *tableView = self.tableView;
     
+    NSIndexPath *tableIndexPath = [self tableIndexPathForHistoryIndexPath:indexPath];
+    NSIndexPath *newTableIndexPath = [self tableIndexPathForHistoryIndexPath:newIndexPath];
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[newTableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[tableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell:[tableView cellForRowAtIndexPath:tableIndexPath] atIndexPath:tableIndexPath];
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[tableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[newTableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -363,6 +434,8 @@
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
+    NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];    
+    
     DDGHistoryItemCell *underCell = (DDGHistoryItemCell *)cell;
     
     underCell.active = NO;
@@ -374,7 +447,7 @@
 	UILabel *lbl = cell.textLabel;
 
     // we have history and it is enabled
-    DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
     DDGStory *story = item.story;
 
     if (nil != story) {
