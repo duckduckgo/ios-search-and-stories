@@ -67,7 +67,7 @@
         CGRect buttonFrame = CGRectInset(deleteButton.frame, -8.0, -8.0);
         
         CGRect bounds = self.bounds;
-        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width,
+        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width - self.overhangWidth,
                                  bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
                                  buttonFrame.size.width,
                                  buttonFrame.size.height);
@@ -99,7 +99,7 @@
         CGRect buttonFrame = self.deleteButton.frame;
         
         CGFloat buttonPadding = 6.0;
-        CGFloat buttonInset = buttonFrame.size.width + buttonPadding + buttonPadding - self.accessoryView.frame.size.width;
+        CGFloat buttonInset = buttonFrame.size.width + buttonPadding - self.accessoryView.frame.size.width;
         
         frame.size.width -= buttonInset;
         self.contentView.frame = frame;
@@ -114,7 +114,7 @@
         textFrame.size.width -= buttonInset;
         self.detailTextLabel.frame = textFrame;
         
-        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width - buttonFrame.size.width - buttonPadding,
+        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width - buttonFrame.size.width - self.overhangWidth,
                                  bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
                                  buttonFrame.size.width, buttonFrame.size.height);
         self.deleteButton.frame = buttonFrame;
@@ -125,7 +125,7 @@
         
         self.accessoryView.alpha = 1.0;
         
-        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width,
+        buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width - self.overhangWidth,
                                  bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
                                  buttonFrame.size.width,
                                  buttonFrame.size.height);

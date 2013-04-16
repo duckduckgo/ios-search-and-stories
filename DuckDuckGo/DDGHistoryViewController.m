@@ -32,6 +32,7 @@
         self.managedObjectContext = managedObjectContext;
         self.searchHandler = searchHandler;
         self.deletingIndexPaths = [NSMutableSet set];
+        self.overhangWidth = 6.0;
     }
     return self;
 }
@@ -135,27 +136,23 @@
 }
 
 - (NSFetchedResultsController *)fetchedResultsController {
-    if (nil == _fetchedResultsController) {
+    if (nil == _fetchedResultsController) {        
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
+        NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
+        NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
+        [request setSortDescriptors:@[sectionSort, timeSort]];
         
-        BOOL showHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
-        if (showHistory) {
-            NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
-            NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
-            NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
-            [request setSortDescriptors:@[sectionSort, timeSort]];
-            
-            NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                                                                       managedObjectContext:self.managedObjectContext
-                                                                                                         sectionNameKeyPath:@"section"
-                                                                                                                  cacheName:nil];
-            fetchedResultsController.delegate = self;
-            
-            NSError *error = nil;
-            if (![fetchedResultsController performFetch:&error])
-                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            
-            self.fetchedResultsController = fetchedResultsController;            
-        }
+        NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
+                                                                                                   managedObjectContext:self.managedObjectContext
+                                                                                                     sectionNameKeyPath:@"section"
+                                                                                                              cacheName:nil];
+        fetchedResultsController.delegate = self;
+        
+        NSError *error = nil;
+        if (![fetchedResultsController performFetch:&error])
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        
+        self.fetchedResultsController = fetchedResultsController;
     }
     
     return _fetchedResultsController;
@@ -185,11 +182,14 @@
         NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:tappedIndex];
         DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
         DDGSearchController *searchController = [self searchControllerDDG];
-        DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
-        
-        [searchField becomeFirstResponder];
-        searchField.text = historyItem.title;
-        [searchController searchFieldDidChange:nil];
+        if (searchController) {
+            DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
+            [searchField becomeFirstResponder];
+            searchField.text = historyItem.title;
+            [searchController searchFieldDidChange:nil];            
+        } else if ([self.searchHandler respondsToSelector:@selector(beginSearchInputWithString:)]) {
+            [self.searchHandler beginSearchInputWithString:historyItem.title];
+        }
     }
 }
 
@@ -222,6 +222,16 @@
 }
 
 #pragma mark - UITableViewDelegate
+
+- (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+    if (indexPath.section < additionalSections) {
+        if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:willSelectRowAtIndexPath:)])
+            return [self.additionalSectionsDelegate tableView:tableView willSelectRowAtIndexPath:indexPath];
+    }
+    
+    return indexPath;
+}
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     
@@ -442,7 +452,7 @@
     
 	underCell.imageView.image = nil;
     underCell.imageView.highlightedImage = nil;
-    underCell.overhangWidth = 6.0;
+    underCell.overhangWidth = self.overhangWidth;
     
 	UILabel *lbl = cell.textLabel;
 

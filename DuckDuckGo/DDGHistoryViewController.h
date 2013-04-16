@@ -19,6 +19,7 @@
 @property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, weak) id <DDGTableViewAdditionalSectionsDelegate> additionalSectionsDelegate;
+@property (nonatomic) CGFloat overhangWidth;
 -(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end

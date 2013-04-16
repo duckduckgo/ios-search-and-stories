@@ -16,6 +16,7 @@
 -(void)prepareForUserInput;
 
 @optional
+-(void)beginSearchInputWithString:(NSString *)string;
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode;
 -(void)searchControllerActionButtonPressed;
 -(void)searchControllerStopOrReloadButtonPressed;

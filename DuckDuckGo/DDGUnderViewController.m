@@ -27,63 +27,48 @@ NSString * const DDGViewControllerTypeTypeKey = @"type";
 NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
-@interface DDGUnderViewController ()
+@interface DDGUnderViewController () <DDGTableViewAdditionalSectionsDelegate>
 @property (nonatomic, strong) NSIndexPath *menuIndexPath;
 @property (nonatomic, strong) NSArray *viewControllerTypes;
-@property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
+@property (nonatomic, strong) DDGHistoryViewController *historyViewController;
 @end
 
 @implementation DDGUnderViewController
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc {
-    self = [super initWithStyle:UITableViewStylePlain];
+    self = [super initWithNibName:nil bundle:nil];
     if(self) {
         self.managedObjectContext = moc;        
-        
-        [self setupViewControllerTypes];        
-        
-        self.tableView.scrollsToTop = NO;
-        
-        self.tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];
-        self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-        
-        self.clearsSelectionOnViewWillAppear = NO;
-		
-		self.tableView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin|UIViewAutoresizingFlexibleTopMargin|UIViewAutoresizingFlexibleLeftMargin|UIViewAutoresizingFlexibleRightMargin|UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
+        [self setupViewControllerTypes];
     }
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
-    
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
-    NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
-    NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
-    [request setSortDescriptors:@[sectionSort, timeSort]];    
-    
-    NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-                                                                                               managedObjectContext:self.managedObjectContext
-                                                                                                 sectionNameKeyPath:@"section"
-                                                                                                          cacheName:nil];    
-    fetchedResultsController.delegate = self;
-    
-	NSError *error = nil;
-	if (![fetchedResultsController performFetch:&error])
-	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 
-    self.fetchedResultsController = fetchedResultsController;
+    DDGHistoryViewController *historyViewController = [[DDGHistoryViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+    historyViewController.additionalSectionsDelegate = self;
+    
+    historyViewController.view.frame = self.view.bounds;
+    historyViewController.tableView.scrollsToTop = NO;
+    historyViewController.overhangWidth = 74;
+    
+    [self.view addSubview:historyViewController.view];
+    [self addChildViewController:historyViewController];
+    
+    self.historyViewController = historyViewController;
+    
+    [historyViewController didMoveToParentViewController:self];
+    
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     
     if (![self isViewLoaded] || nil == self.view.superview) {
-        self.historyProvider = nil;
-        self.fetchedResultsController = nil;
+        self.historyViewController = nil;
     }
 }
 
@@ -135,7 +120,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 {
     [super viewWillAppear:animated];
     [self setupViewControllerTypes];
-    [self.tableView reloadData];
 }
 
 -(void)configureViewController:(UIViewController *)viewController {
@@ -146,32 +130,28 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
-- (IBAction)plus:(id)sender {
-    UIButton *button = nil;
-    if ([sender isKindOfClass:[UIButton class]])
-        button = (UIButton *)sender;
-    
-    if (button) {
-        CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
-        NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];
-        DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:tappedIndex.row inSection:tappedIndex.section-1]];
-        
-        UIViewController *topViewController = self.slidingViewController.topViewController;
-        if ([topViewController isKindOfClass:[DDGSearchController class]]) {
-            DDGSearchController *searchController = (DDGSearchController *)topViewController;
-            DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
-            [self.slidingViewController resetTopViewWithAnimations:nil onComplete:^{
-                [searchField becomeFirstResponder];
-                searchField.text = item.title;
-                [searchController searchFieldDidChange:nil];
-            }];
-        } else {
-            [self loadQueryOrURL:item.title];
-        }
-    }
+#pragma mark - DDGTableViewAdditionalSectionsDelegate
+
+- (NSInteger)numberOfAdditionalSections {
+    return 1;
 }
 
 #pragma mark - DDGSearchHandler
+
+- (void)beginSearchInputWithString:(NSString *)string {
+    UIViewController *topViewController = self.slidingViewController.topViewController;
+    if ([topViewController isKindOfClass:[DDGSearchController class]]) {
+        DDGSearchController *searchController = (DDGSearchController *)topViewController;
+        DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
+        [self.slidingViewController resetTopViewWithAnimations:nil onComplete:^{
+            [searchField becomeFirstResponder];
+            searchField.text = string;
+            [searchController searchFieldDidChange:nil];
+        }];
+    } else {
+        [self loadQueryOrURL:string];
+    }
+}
 
 - (void)prepareForUserInput {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
@@ -203,10 +183,15 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     [webVC loadStory:story readabilityMode:readabilityMode];
     
-    CGRect frame = self.slidingViewController.topViewController.view.frame;
-    self.slidingViewController.topViewController = searchController;
-    self.slidingViewController.topViewController.view.frame = frame;
-    [self configureViewController:searchController];
+    [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
+        CGRect frame = self.slidingViewController.topViewController.view.frame;
+        self.slidingViewController.topViewController = searchController;
+        self.slidingViewController.topViewController.view.frame = frame;
+        [self configureViewController:searchController];
+        
+        [self.slidingViewController resetTopView];
+    }];
+    
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
@@ -219,57 +204,35 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     [webVC loadQueryOrURL:queryOrURL];
     
-    CGRect frame = self.slidingViewController.topViewController.view.frame;
-    self.slidingViewController.topViewController = searchController;
-    self.slidingViewController.topViewController.view.frame = frame;
-    [self configureViewController:searchController];
+    [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
+        CGRect frame = self.slidingViewController.topViewController.view.frame;
+        self.slidingViewController.topViewController = searchController;
+        self.slidingViewController.topViewController.view.frame = frame;
+        [self configureViewController:searchController];
+        
+        [self.slidingViewController resetTopView];
+    }];
 }
 
 
 #pragma mark - Table view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
-    if ([[defaults objectForKey:DDGSettingHomeView] isEqualToString:DDGSettingHomeViewTypeRecents])
-        return 1;    
-    
-    BOOL showHistory = [defaults boolForKey:DDGSettingRecordHistory];
-    if (showHistory) {
-        return 1 + [[self.fetchedResultsController sections] count];
-    } else {
-        return 2;
-    }
-}
-
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     if (section == 0) {
         return self.viewControllerTypes.count;
-    } else {
-        BOOL showHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
-        if (showHistory) {
-            NSArray *sections = [self.fetchedResultsController sections];
-            return [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section-1] numberOfObjects];
-        } else {
-            return 1;
-        }
     }
+    
+    return 0;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"cell";
-    static NSString *HistoryCellIdentifier = @"history";
 
-    NSString *identifier = (indexPath.section == 0) ? CellIdentifier : HistoryCellIdentifier;
-        
-    DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[tableView dequeueReusableCellWithIdentifier:identifier];
+    DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(!cell) {
         if (indexPath.section == 0)
             cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        else
-            cell = [[DDGHistoryItemCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:HistoryCellIdentifier];
     }
     
     [self configureCell:cell atIndexPath:indexPath];
@@ -324,26 +287,30 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 			}
 				break;
 		}
-    } else {
-		if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) {
-			// we have history and it is enabled
-			DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-			DDGStory *story = item.story;
-            
-			if (nil != story) {
-				fixedSizeImageView.image = story.feed.image;
-                cell.accessoryView = nil;
-			} else {
-                fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
-                cell.accessoryView = [DDGPlusButton plusButton];
-			}
-			lbl.text = item.title;
-		} else {
-			fixedSizeImageView.image = [UIImage imageNamed:@"icon_notification"];
-			lbl.text = @"Saving recents is disabled.\nYou can enable it in settings.";
-            cell.accessoryView = nil;
-		}
-    }    
+    }
+
+#warning show this silly extra cell if history is off
+    
+//    else {
+//		if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) {
+//			// we have history and it is enabled
+//			DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
+//			DDGStory *story = item.story;
+//            
+//			if (nil != story) {
+//				fixedSizeImageView.image = story.feed.image;
+//                cell.accessoryView = nil;
+//			} else {
+//                fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
+//                cell.accessoryView = [DDGPlusButton plusButton];
+//			}
+//			lbl.text = item.title;
+//		} else {
+//			fixedSizeImageView.image = [UIImage imageNamed:@"icon_notification"];
+//			lbl.text = @"Saving recents is disabled.\nYou can enable it in settings.";
+//            cell.accessoryView = nil;
+//		}
+//    }    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -351,50 +318,13 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     return (section == 0 ? 0 : 23);
 }
 
--(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    NSInteger sections = [self numberOfSectionsInTableView:tableView];
-    return (section == (sections-1)) ? 1.0 : 0.0;
-}
-
 -(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
-    [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
-    
-    if (section > 0)
-	{
-        NSArray *sections = [self.fetchedResultsController sections];
-        
-        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
-        NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:section-1] name];
-        
-        if ([name isEqualToString:@"searches"]) {
-            title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");            
-        } else if ([name isEqualToString:@"stories"]) {
-            title.text = NSLocalizedString(@"Recent Stories", @"Table section header title");
-        } else {
-            title.text = name;
-        }
-        
-        title.textColor = [UIColor whiteColor];
-        title.opaque = NO;
-        title.backgroundColor = [UIColor clearColor];
-        title.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:13.0];
-        [headerView addSubview:title];
-    }
+    [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];    
     
     return headerView;
 }
-
--(UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
-    [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
-    
-    return footerView;
-}
-
 
 #pragma mark - Table view delegate
 
@@ -404,11 +334,11 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 		return nil;
 	
     DDGUnderViewControllerCell *oldMenuCell;
-    oldMenuCell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:self.menuIndexPath];
+    oldMenuCell = (DDGUnderViewControllerCell *)[tableView cellForRowAtIndexPath:self.menuIndexPath];
     oldMenuCell.active = NO;
     
     DDGUnderViewControllerCell *newMenuCell;
-    newMenuCell = (DDGUnderViewControllerCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+    newMenuCell = (DDGUnderViewControllerCell *)[tableView cellForRowAtIndexPath:indexPath];
     newMenuCell.active = YES;
     
 	return indexPath;
@@ -546,37 +476,11 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
                 
                 [self configureViewController:newTopViewController];                
             }
-        } else {
-            DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-            [self.historyProvider relogHistoryItem:historyItem];
-            DDGStory *story = historyItem.story;
-			if (nil != story)
-				[self loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
-			else
-				[self loadQueryOrURL:historyItem.title];
-            [self.slidingViewController resetTopView];
         }
     }];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewCellEditingStyleDelete;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return (indexPath.section > 0);
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-        [self.managedObjectContext deleteObject:item];
-    }
-}
-
 
 #pragma mark - Rotation
 
@@ -601,10 +505,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 - (void)tabViewController:(DDGTabViewController *)tabViewController didSwitchToViewController:(UIViewController *)viewController atIndex:(NSInteger)tabIndex {
     [[NSUserDefaults standardUserDefaults] setInteger:tabIndex forKey:DDGSavedViewLastSelectedTabIndex];
-}
-
-- (void)controllerDidChangeContent:(NSFetchedResultsController *)controller {
-    [self.tableView reloadData];
 }
 
 @end
