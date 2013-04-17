@@ -96,7 +96,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 - (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
-	[self saveData:[self formData]];
+    [self save:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -147,11 +147,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
         [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
     }];
-    [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
-    [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
+    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
+    IGFormSwitch *quackSwitch = [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
     [self addSectionWithTitle:@"Autocomplete" footer:nil];
-    [self addSwitch:@"Suggestions" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
+    IGFormSwitch *suggestionsSwitch = [self addSwitch:@"Suggestions" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
     
     [self addSectionWithTitle:@"Search Results" footer:nil];
     [self addButton:@"Region Boost" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
@@ -160,7 +160,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     }];
     
     [self addSectionWithTitle:@"Privacy" footer:nil];
-    [self addSwitch:@"Save Recent" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
+    IGFormSwitch *recentSwitch = [self addSwitch:@"Save Recent" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
     [self addSectionWithTitle:nil footer:@"Only stored on your phone"];
     [self addButton:@"Clear Recent" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
@@ -170,6 +170,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
                                                         otherButtonTitles:@"Clear Recent", nil];
         [actionSheet showInView:weakSelf.view];
     }];
+    
+    for (IGFormSwitch *s in @[readabilitySwitch, quackSwitch, suggestionsSwitch, recentSwitch])
+        [s.switchControl addTarget:self action:@selector(save:) forControlEvents:UIControlEventValueChanged];
     
     [self addSectionWithTitle:nil footer:nil];
     
@@ -202,6 +205,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         versionInfo = [versionInfo stringByAppendingFormat:@" (%@)", bundleVersion];
     
     [self addSectionWithTitle:nil footer:versionInfo];
+}
+
+-(IBAction)save:(id)sender {
+    [self saveData:[self formData]];
 }
 
 -(void)saveData:(NSDictionary *)formData {
@@ -266,6 +273,6 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    [self saveData:[self formData]];
+    [self save:nil];
 }
 @end

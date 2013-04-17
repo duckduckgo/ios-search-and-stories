@@ -24,5 +24,6 @@ extern NSString * const DDGSettingHomeViewTypeDuck;
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 
 +(void)loadDefaultSettings;
+-(IBAction)save:(id)sender;
 
 @end
