@@ -26,6 +26,7 @@
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSMutableArray *controllers;
 @property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
 @end
 
 @implementation DDGSearchController
@@ -42,6 +43,9 @@
 }
 
 - (void)dealloc {
+    if (nil != self.keyboardDidHideBlock)
+        self.keyboardDidHideBlock(NO);
+    self.keyboardDidHideBlock = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[self.view removeFromSuperview];
 }
@@ -227,6 +231,7 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -371,6 +376,12 @@
 -(void)keyboardWillHide:(NSNotification *)notification {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewTopDidAnchorRight object:self.slidingViewController];
     [self keyboardWillShow:NO notification:notification];
+}
+
+-(void)keyboardDidHide:(NSNotification *)notification {
+    if (self.keyboardDidHideBlock)
+        self.keyboardDidHideBlock(YES);
+    self.keyboardDidHideBlock = nil;
 }
 
 -(void)keyboardWillShow:(BOOL)show notification:(NSNotification*)notification {
@@ -1015,19 +1026,29 @@
 		textField.text = nil;
 		return NO;
 	}
-	[textField resignFirstResponder];
 	
-    DDGAddressBarTextField *searchField = self.searchBar.searchField;
+    NSString *searchText = self.searchBar.searchField.text;
     
-	if ([searchField.text length])
-        [self.historyProvider logSearchResultWithTitle:searchField.text];
+	if ([searchText length])
+        [self.historyProvider logSearchResultWithTitle:searchText];
 
-#warning do this after the keyboard animation completes (and check that happens with no physical keyboard)
-    [self loadQueryOrURL:([searchField.text length] ? searchField.text : nil)];
-    [self dismissAutocomplete];
-
+    __weak DDGSearchController *weakSelf = self;
+    [self dismissKeyboard:^(BOOL completed) {
+        [weakSelf loadQueryOrURL:([searchText length] ? searchText : nil)];
+        [weakSelf dismissAutocomplete];
+    }];
+    
     oldSearchText = nil;
 	return YES;
+}
+
+-(void)dismissKeyboard:(void (^)(BOOL completed))completion {
+    if ([self.searchBar.searchField isFirstResponder]) {
+        self.keyboardDidHideBlock = completion;
+        [self.searchBar.searchField resignFirstResponder];
+    } else {
+        completion(YES);
+    }
 }
 
 @end

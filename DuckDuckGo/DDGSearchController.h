@@ -65,5 +65,6 @@ typedef enum {
 -(NSString *)queryFromDDGURL:(NSURL *)url;
 
 -(void)searchFieldDidChange:(id)sender;
+-(void)dismissKeyboard:(void (^)(BOOL completed))completion;
 
 @end
