@@ -120,6 +120,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 {
     [super viewWillAppear:animated];
     [self setupViewControllerTypes];
+    [self.historyViewController.tableView reloadData];
 }
 
 -(void)configureViewController:(UIViewController *)viewController {

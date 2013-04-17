@@ -1022,6 +1022,7 @@
 	if ([searchField.text length])
         [self.historyProvider logSearchResultWithTitle:searchField.text];
 
+#warning do this after the keyboard animation completes (and check that happens with no physical keyboard)
     [self loadQueryOrURL:([searchField.text length] ? searchField.text : nil)];
     [self dismissAutocomplete];
 
