@@ -15,21 +15,36 @@
 
 @implementation DDGHistoryItemCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+    NSAssert(NO, @"Use - (id)initWithCellMode:(DDGHistoryItemCellMode)mode reuseIdentifier:(NSString *)reuseIdentifier");
+    return nil;
+}
+
+- (id)initWithCellMode:(DDGHistoryItemCellMode)mode reuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
         self.accessoryView = nil;
         
         self.fixedSizeImageView.size = CGSizeMake(16.0, 16.0);
         
-        self.backgroundImageView.image = [UIImage imageNamed:@"new_bg_history-items"];
-        self.selectedBackgroundImageView.image = nil;
+        switch (mode) {
+            case DDGHistoryItemCellModeUnder:
+                self.backgroundImageView.image = [UIImage imageNamed:@"new_bg_history-items"];
+                self.selectedBackgroundImageView.image = nil;
+                self.textLabel.textColor = [UIColor colorWithRed:0.490 green:0.522 blue:0.576 alpha:1.000];                
+                break;
+                
+            default:
+                self.backgroundImageView.image = [UIImage imageNamed:@"saved_searches_background"];
+                self.selectedBackgroundImageView.image = [UIImage imageNamed:@"saved_searches_background_highlighted"];
+                self.textLabel.textColor = [UIColor colorWithRed:0.780 green:0.808 blue:0.851 alpha:1.000];
+                break;
+        }
         
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.textLabel.numberOfLines = 2;
-		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
-        self.textLabel.textColor = [UIColor colorWithRed:0.490 green:0.522 blue:0.576 alpha:1.000];
+		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
         self.textLabel.highlightedTextColor = [UIColor whiteColor];
     }
     return self;

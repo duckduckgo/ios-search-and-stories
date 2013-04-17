@@ -21,11 +21,12 @@
 @property (nonatomic, strong, readwrite) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, strong) NSMutableSet *deletingIndexPaths;
+@property (nonatomic) DDGHistoryViewControllerMode mode;
 @end
 
 @implementation DDGHistoryViewController
 
--(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+-(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext mode:(DDGHistoryViewControllerMode)mode;
 {
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
@@ -34,6 +35,7 @@
         self.deletingIndexPaths = [NSMutableSet set];
         self.overhangWidth = 6.0;
         self.showsHistory = YES;
+        self.mode = mode;
     }
     return self;
 }
@@ -302,7 +304,9 @@
     
     if (cell == nil)
 	{
-        cell = [[DDGHistoryItemCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        DDGHistoryItemCellMode mode = (self.mode == DDGHistoryViewControllerModeUnder) ? DDGHistoryItemCellModeUnder : DDGHistoryItemCellModeNormal;
+        
+        cell = [[DDGHistoryItemCell alloc] initWithCellMode:mode reuseIdentifier:CellIdentifier];
         cell.imageView.backgroundColor = self.tableView.backgroundColor;
         cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
     }

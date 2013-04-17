@@ -48,7 +48,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    DDGHistoryViewController *historyViewController = [[DDGHistoryViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+    DDGHistoryViewController *historyViewController = [[DDGHistoryViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext  mode:DDGHistoryViewControllerModeUnder];
     historyViewController.additionalSectionsDelegate = self;
     
     historyViewController.view.frame = self.view.bounds;
@@ -401,7 +401,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.shouldPushSearchHandlerEvents = YES;
             searchController.state = DDGSearchControllerStateHome;
-            DDGHistoryViewController *history = [[DDGHistoryViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
+            DDGHistoryViewController *history = [[DDGHistoryViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext mode:DDGHistoryViewControllerModeNormal];
             [searchController pushContentViewController:history animated:NO];
             viewController = searchController;
         }

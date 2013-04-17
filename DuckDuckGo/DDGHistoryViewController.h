@@ -13,6 +13,11 @@
 - (NSInteger)numberOfAdditionalSections;
 @end
 
+typedef enum DDGHistoryViewControllerMode {
+    DDGHistoryViewControllerModeNormal = 0,
+    DDGHistoryViewControllerModeUnder
+} DDGHistoryViewControllerMode;
+
 @class DDGUnderViewControllerCell;
 @interface DDGHistoryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate>
 @property (nonatomic, weak, readonly) id <DDGSearchHandler> searchHandler;
@@ -21,6 +26,6 @@
 @property (nonatomic, weak) id <DDGTableViewAdditionalSectionsDelegate> additionalSectionsDelegate;
 @property (nonatomic) CGFloat overhangWidth;
 @property (nonatomic) BOOL showsHistory;
--(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+-(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext mode:(DDGHistoryViewControllerMode)mode;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end

@@ -12,6 +12,7 @@
 #import "DDGUnderViewController.h"
 #import "ECSlidingViewController.h"
 #import "DDGPlusButton.h"
+#import "DDGHistoryItemCell.h"
 
 @interface DDGBookmarksViewController ()
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
@@ -38,21 +39,8 @@
     self.tableView.frame = self.view.bounds;
     [self.view addSubview:self.tableView];    
     
-    UIImage *searchIcon = [UIImage imageNamed:@"search_icon"];
-    CGFloat height = self.tableView.rowHeight;
-    CGSize iconSize = searchIcon.size;
-    CGSize imageSize = CGSizeMake(iconSize.width + 6.0, height);
-    UIGraphicsBeginImageContextWithOptions(imageSize, NO, 0);
-    
-    [searchIcon drawInRect:CGRectMake((imageSize.width - iconSize.width),
-                                      floor((imageSize.height - iconSize.height) / 2.0),
-                                      iconSize.width,
-                                      iconSize.height)];
-    
-    self.searchIcon = UIGraphicsGetImageFromCurrentImageContext();
-    
-    UIGraphicsEndImageContext();
-        
+    self.searchIcon = [UIImage imageNamed:@"search_icon"];
+            
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
@@ -209,38 +197,17 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     static NSString *CellIdentifier = @"Cell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    DDGHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if(!cell)
 	{
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        
-        UIView *backgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-        backgroundView.opaque = YES;
-        backgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_searches_background"]];
-        backgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        cell.backgroundView = backgroundView;
-        
-        UIView *selectedBackgroundView = [[UIView alloc] initWithFrame:cell.bounds];
-        selectedBackgroundView.opaque = YES;
-        selectedBackgroundView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_searches_background_highlighted"]];
-        selectedBackgroundView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        cell.selectedBackgroundView = selectedBackgroundView;
-        
-        cell.contentView.backgroundColor = [UIColor clearColor];
-        cell.contentView.opaque = NO;
-        cell.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
-        cell.textLabel.textColor = [UIColor colorWithRed:0.780 green:0.808 blue:0.851 alpha:1.000];
-        cell.textLabel.numberOfLines = 2;
-        cell.textLabel.backgroundColor = [UIColor clearColor];
-        cell.textLabel.opaque = NO;
-        cell.textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        
+        cell = [[DDGHistoryItemCell alloc] initWithCellMode:DDGHistoryItemCellModeNormal reuseIdentifier:CellIdentifier];
+        cell.fixedSizeImageView.size = CGSizeMake(16.0, 16.0);
         cell.accessoryView = [DDGPlusButton plusButton];
     }
     
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
     cell.textLabel.text = [bookmark objectForKey:@"title"];
-    cell.imageView.image = self.searchIcon;
+    cell.fixedSizeImageView.image = self.searchIcon;
 //    cell.detailTextLabel.text = [bookmark objectForKey:@"url"];
 
     return cell;
