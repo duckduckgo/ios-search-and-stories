@@ -33,6 +33,7 @@
         self.searchHandler = searchHandler;
         self.deletingIndexPaths = [NSMutableSet set];
         self.overhangWidth = 6.0;
+        self.showsHistory = YES;
     }
     return self;
 }
@@ -49,6 +50,10 @@
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
+        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
+        [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
+        tableView.tableFooterView = footerView;
+        
         [self.view addSubview:tableView];
         
         self.tableView = tableView;
@@ -64,7 +69,7 @@
     
     [self.tableView addGestureRecognizer:swipeLeft];
     [self.tableView addGestureRecognizer:swipeRight];    
-    
+        
     [self fetchedResultsController];
 }
 
@@ -136,7 +141,7 @@
 }
 
 - (NSFetchedResultsController *)fetchedResultsController {
-    if (nil == _fetchedResultsController) {        
+    if (nil == _fetchedResultsController && self.showsHistory) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
         NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
         NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
@@ -201,6 +206,18 @@
         if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
             [panGesture requireGestureRecognizerToFail:gr];
     }
+}
+
+- (void)setShowsHistory:(BOOL)showsHistory {
+    if (showsHistory == _showsHistory)
+        return;
+    
+    _showsHistory = showsHistory;
+    
+    if (!showsHistory)
+        self.fetchedResultsController = nil;
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark - UIGestureRecognizerDelegate
@@ -314,8 +331,7 @@
             return [self.additionalSectionsDelegate tableView:tableView heightForFooterInSection:section];
     }
     
-    NSInteger sections = [self numberOfSectionsInTableView:tableView];
-    return (section == (sections-1)) ? 1.0 : 0.0;
+    return 0.0;
 }
 
 -(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -361,11 +377,8 @@
             return [self.additionalSectionsDelegate tableView:tableView viewForFooterInSection:section];
         return nil;
     }
-    
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
-    [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
-    
-    return footerView;
+        
+    return nil;
 }
 
 //- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {

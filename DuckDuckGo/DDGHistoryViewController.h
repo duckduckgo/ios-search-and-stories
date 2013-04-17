@@ -20,6 +20,7 @@
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, weak) id <DDGTableViewAdditionalSectionsDelegate> additionalSectionsDelegate;
 @property (nonatomic) CGFloat overhangWidth;
+@property (nonatomic) BOOL showsHistory;
 -(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
 @end

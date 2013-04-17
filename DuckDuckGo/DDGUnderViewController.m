@@ -120,6 +120,9 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 {
     [super viewWillAppear:animated];
     [self setupViewControllerTypes];
+    
+    NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
+    self.historyViewController.showsHistory = ![homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents];
     [self.historyViewController.tableView reloadData];
 }
 
