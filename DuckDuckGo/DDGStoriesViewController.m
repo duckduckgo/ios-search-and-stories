@@ -130,7 +130,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     tableView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     tableView.dataSource = self;
     tableView.delegate = self;
-    tableView.rowHeight = 135.0;
+    tableView.rowHeight = 155.0;
     tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:tableView];
     self.tableView = tableView;
