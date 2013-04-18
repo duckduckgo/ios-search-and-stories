@@ -131,6 +131,9 @@
     CGFloat overhang = self.overhangWidth;
     CGRect bounds = self.bounds;
     
+    self.backgroundView.frame = bounds;
+    self.selectedBackgroundView.frame = bounds;
+    
     if (nil != self.accessoryView)
         [self addSubview:self.accessoryView];
     

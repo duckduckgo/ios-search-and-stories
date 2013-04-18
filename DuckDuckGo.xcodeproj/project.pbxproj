@@ -145,6 +145,7 @@
 		5B2FCB5E16F3789F0045A5FE /* DDGReadabilityToggleActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */; };
 		5B375C34171D3F9A00C53772 /* button_menu_glyph_stories.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B375C32171D3F9A00C53772 /* button_menu_glyph_stories.png */; };
 		5B375C35171D3F9A00C53772 /* button_menu_glyph_stories@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B375C33171D3F9A00C53772 /* button_menu_glyph_stories@2x.png */; };
+		5B375C4917201DA600C53772 /* DDGCustomDeleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B375C4817201DA500C53772 /* DDGCustomDeleteViewController.m */; };
 		5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66096F16D781B20006B5DE /* libTestFlight.a */; };
 		5B66097316D781D00006B5DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66097216D781D00006B5DE /* libz.dylib */; };
 		5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B66097716D7A3600006B5DE /* DDGFaviconButton.m */; };
@@ -499,6 +500,8 @@
 		5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGReadabilityToggleActivity.m; sourceTree = "<group>"; };
 		5B375C32171D3F9A00C53772 /* button_menu_glyph_stories.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = button_menu_glyph_stories.png; sourceTree = "<group>"; };
 		5B375C33171D3F9A00C53772 /* button_menu_glyph_stories@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_menu_glyph_stories@2x.png"; sourceTree = "<group>"; };
+		5B375C4717201DA500C53772 /* DDGCustomDeleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = DDGCustomDeleteViewController.h; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; wrapsLines = 0; };
+		5B375C4817201DA500C53772 /* DDGCustomDeleteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = DDGCustomDeleteViewController.m; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; wrapsLines = 0; };
 		5B66096F16D781B20006B5DE /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = TestFlightSDK1/libTestFlight.a; sourceTree = "<group>"; };
 		5B66097016D781B20006B5DE /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFlight.h; path = TestFlightSDK1/TestFlight.h; sourceTree = "<group>"; };
 		5B66097216D781D00006B5DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -989,6 +992,8 @@
 			children = (
 				5BFF24EF16FB53D800844D3B /* DDGTabViewController.h */,
 				5BFF24F016FB53D800844D3B /* DDGTabViewController.m */,
+				5B375C4717201DA500C53772 /* DDGCustomDeleteViewController.h */,
+				5B375C4817201DA500C53772 /* DDGCustomDeleteViewController.m */,
 				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
 				4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */,
 				4C4B7E9315C4F1AA00340B59 /* DDGBookmarksViewController.xib */,
@@ -1755,6 +1760,7 @@
 				5B7C3CA3171851F800B9E009 /* DDGDeleteButton.m in Sources */,
 				5B7C3CAA171C4B1800B9E009 /* DDGFixedSizeImageView.m in Sources */,
 				5B7C3CAD171C4D1E00B9E009 /* DDGHistoryItemCell.m in Sources */,
+				5B375C4917201DA600C53772 /* DDGCustomDeleteViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

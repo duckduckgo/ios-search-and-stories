@@ -53,8 +53,10 @@
         
         if (self.mode == DDGHistoryViewControllerModeUnder) {
             tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];            
+            tableView.rowHeight = 44.0;
         } else {
             tableView.backgroundColor = [UIColor colorWithRed:0.212 green:0.224 blue:0.251 alpha:1.000];
+            tableView.rowHeight = 51.0;
         }
         
         UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];

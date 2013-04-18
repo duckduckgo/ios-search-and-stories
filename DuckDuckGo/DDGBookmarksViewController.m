@@ -164,6 +164,19 @@
  
  */
 
+- (IBAction)delete:(id)sender {
+    NSSet *indexPaths = [self.deletingIndexPaths copy];
+    [self cancelDeletingIndexPathsAnimated:YES];
+    
+    for (NSIndexPath *indexPath in indexPaths) {
+        [[DDGBookmarksProvider sharedProvider] deleteBookmarkAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0)
+            [self performSelector:@selector(showNoBookmarksView) withObject:nil afterDelay:0.2];
+    }
+}
+
 - (IBAction)plus:(id)sender {
     UIButton *button = nil;
     if ([sender isKindOfClass:[UIButton class]])
@@ -202,6 +215,7 @@
 	{
         cell = [[DDGHistoryItemCell alloc] initWithCellMode:DDGHistoryItemCellModeNormal reuseIdentifier:CellIdentifier];
         cell.fixedSizeImageView.size = CGSizeMake(16.0, 16.0);
+        cell.overhangWidth = 6.0;
         cell.accessoryView = [DDGPlusButton plusButton];
     }
     
@@ -212,26 +226,6 @@
 
     return cell;
 }
-
-- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewCellEditingStyleDelete;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [[DDGBookmarksProvider sharedProvider] deleteBookmarkAtIndex:indexPath.row];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
-        if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0)
-            [self performSelector:@selector(showNoBookmarksView) withObject:nil afterDelay:0.2];
-    }
-}
-
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-    [[DDGBookmarksProvider sharedProvider] moveBookmarkAtIndex:fromIndexPath.row toIndex:toIndexPath.row];
-}
-
 
 #pragma mark - Table view delegate
 

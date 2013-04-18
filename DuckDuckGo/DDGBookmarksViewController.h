@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGSearchHandler.h"
+#import "DDGCustomDeleteViewController.h"
 
 @class DDGSearchController;
-@interface DDGBookmarksViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+
+@interface DDGBookmarksViewController : DDGCustomDeleteViewController <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (nonatomic, strong) IBOutlet UIView *noBookmarksView;
 @property (nonatomic, weak) DDGSearchController *searchController;
