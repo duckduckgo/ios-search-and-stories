@@ -8,6 +8,7 @@
 
 #import "DDGChooseRegionViewController.h"
 #import "DDGRegionProvider.h"
+#import "DDGSearchController.h"
 
 @implementation DDGChooseRegionViewController
 
@@ -69,7 +70,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
-    [self saveData:[self formData]];    
+    [self saveData:[self formData]];
+    
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [[self searchControllerDDG] popContentViewControllerAnimated:YES];
 }
 
 @end

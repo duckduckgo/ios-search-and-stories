@@ -9,7 +9,7 @@
 #import "DDGStoriesViewController.h"
 #import "DDGUnderViewController.h"
 #import "DDGSettingsViewController.h"
-#import "DDGPanLeftGestureRecognizer.h"
+#import "DDGPanGestureRecognizer.h"
 #import "DDGStory.h"
 #import "DDGStoryFeed.h"
 #import "DDGStoryCell.h"
@@ -37,7 +37,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 @property (nonatomic, strong) NSOperationQueue *imageDecompressionQueue;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
-@property (nonatomic, strong) DDGPanLeftGestureRecognizer *panLeftGestureRecognizer;
+@property (nonatomic, strong) DDGPanGestureRecognizer *panLeftGestureRecognizer;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
 @property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
@@ -160,7 +160,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     //            [[stories objectAtIndex:i] prefetchAndDecompressImage];
     //    });
         
-    DDGPanLeftGestureRecognizer* panLeftGestureRecognizer = [[DDGPanLeftGestureRecognizer alloc] initWithTarget:self action:@selector(panLeft:)];
+    DDGPanGestureRecognizer* panLeftGestureRecognizer = [[DDGPanGestureRecognizer alloc] initWithTarget:self action:@selector(panLeft:)];
     panLeftGestureRecognizer.maximumNumberOfTouches = 1;
     
     self.panLeftGestureRecognizer = panLeftGestureRecognizer;
@@ -519,7 +519,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 // Called when a left swipe occurred
 
-- (void)panLeft:(DDGPanLeftGestureRecognizer *)recognizer {
+- (void)panLeft:(DDGPanGestureRecognizer *)recognizer {
     
     if (recognizer.state == UIGestureRecognizerStateFailed) {
         

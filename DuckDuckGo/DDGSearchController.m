@@ -17,6 +17,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
+#import "DDGPanGestureRecognizer.h"
 
 #import "NSMutableString+DDGDumpView.h"
 
@@ -25,7 +26,7 @@
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSMutableArray *controllers;
-@property (nonatomic, strong) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) DDGPanGestureRecognizer *panGesture;
 @property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
 @end
 
@@ -103,8 +104,12 @@
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
     [self setSearchBarLeftButtonImage];
     
-    if ([self.controllers count] > 1)
+    if ([self.controllers count] > 1) {
         [incommingViewController.view addGestureRecognizer:self.panGesture];
+        for (UIGestureRecognizer *gr in incommingViewController.view.gestureRecognizers)
+            if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
+                [self.panGesture requireGestureRecognizerToFail:gr];
+    }
     
     [UIView animateWithDuration:duration
                      animations:^{
@@ -225,7 +230,8 @@
 	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	searchField.delegate = self;
     
-    UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+    DDGPanGestureRecognizer *panGesture = [[DDGPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
+    panGesture.direction = DDGPanGestureRecognizerDirectionRight;
     panGesture.delegate = self;
     self.panGesture = panGesture;
     

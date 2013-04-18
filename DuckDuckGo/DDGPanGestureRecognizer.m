@@ -6,14 +6,14 @@
 //
 //
 
-#import "DDGPanLeftGestureRecognizer.h"
+#import "DDGPanGestureRecognizer.h"
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
-@interface DDGPanLeftGestureRecognizer ()
+@interface DDGPanGestureRecognizer ()
 @property (nonatomic) BOOL hasBegun;
 @end
 
-@implementation DDGPanLeftGestureRecognizer
+@implementation DDGPanGestureRecognizer
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
     [super touchesMoved:touches withEvent:event];
@@ -24,13 +24,23 @@
     } else {
         if (translation.x < 0) {
             // left
-            self.hasBegun = YES;
+            if (self.direction == DDGPanGestureRecognizerDirectionLeft) {
+                self.hasBegun = YES;
+            } else {
+                if (!self.hasBegun) {
+                    self.state = UIGestureRecognizerStateFailed;
+                }                
+            }
         } else if (translation.x > 0) {
             // right
-            if (!self.hasBegun) {
-                self.state = UIGestureRecognizerStateFailed;
+            if (self.direction == DDGPanGestureRecognizerDirectionLeft) {
+                if (!self.hasBegun) {
+                    self.state = UIGestureRecognizerStateFailed;
+                }
+            } else {
+                self.hasBegun = YES;                
             }
-        }        
+        }
     }
 }
 

@@ -44,7 +44,7 @@
         
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
 		self.textLabel.numberOfLines = 2;
-		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
+		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
         self.textLabel.highlightedTextColor = [UIColor whiteColor];
     }
     return self;
