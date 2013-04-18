@@ -726,10 +726,12 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     if ([self.enqueuedDecompressionOperations containsObject:storyID])
         return;
     
+    __weak DDGStoriesViewController *weakSelf = self;
+    
     void (^completionBlock)() = ^() {
-        NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:story];
+        NSIndexPath *indexPath = [weakSelf.fetchedResultsController indexPathForObject:story];
         if (nil != indexPath) {
-            [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         }
     };
     
@@ -746,11 +748,11 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             UIGraphicsEndImageContext();
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [self.decompressedImages setObject:decompressed forKey:storyID];
+                [weakSelf.decompressedImages setObject:decompressed forKey:storyID];
             }];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [self.enqueuedDecompressionOperations removeObject:storyID];
+                [weakSelf.enqueuedDecompressionOperations removeObject:storyID];
                 completionBlock();
             }];
         }];
@@ -774,21 +776,22 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 - (void)refreshSources {
     if (!self.storyFetcher.isRefreshing) {
+        __weak DDGStoriesViewController *weakSelf = self;
         [self.storyFetcher refreshSources:^(NSDate *feedDate){
             
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
             NSPredicate *iconPredicate = [NSPredicate predicateWithFormat:@"imageDownloaded == %@", @(NO)];
             [request setPredicate:iconPredicate];
             NSError *error = nil;
-            NSArray *feeds = [self.managedObjectContext executeFetchRequest:request error:&error];
+            NSArray *feeds = [weakSelf.managedObjectContext executeFetchRequest:request error:&error];
             if (nil == feeds)
                 NSLog(@"failed to fetch story feeds. Error: %@", error);
             
             for (DDGStoryFeed *feed in feeds)
                 if (!feed.imageDownloadedValue)
-                    [self.storyFetcher downloadIconForFeed:feed];
+                    [weakSelf.storyFetcher downloadIconForFeed:feed];
             
-            [self refreshStories];
+            [weakSelf refreshStories];
         }];
     }
 }
@@ -796,28 +799,29 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 - (void)refreshStories {
     if (!self.storyFetcher.isRefreshing) {
         
-        __block NSArray *oldStories = nil;
+        __block NSArray *oldStories = nil;        
+        __weak DDGStoriesViewController *weakSelf = self;
         
         void (^willSave)() = ^() {
             oldStories = [self.fetchedResultsController fetchedObjects];
             
-            [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
-            self.fetchedResultsController.delegate = nil;
+            [NSFetchedResultsController deleteCacheWithName:weakSelf.fetchedResultsController.cacheName];
+            weakSelf.fetchedResultsController.delegate = nil;
         };
         
         void (^completion)(NSDate *lastFetchDate) = ^(NSDate *feedDate) {
-            NSArray *oldStories = [self.fetchedResultsController fetchedObjects];
+            NSArray *oldStories = [weakSelf.fetchedResultsController fetchedObjects];
 
-            self.fetchedResultsController = nil;            
-            self.fetchedResultsController = [self fetchedResultsController:feedDate];
+            weakSelf.fetchedResultsController = nil;
+            weakSelf.fetchedResultsController = [self fetchedResultsController:feedDate];
             
             NSArray *newStories = [self.fetchedResultsController fetchedObjects];
-            [self replaceStories:oldStories withStories:newStories focusOnStory:nil];
+            [weakSelf replaceStories:oldStories withStories:newStories focusOnStory:nil];
             
-            [self prepareUpcomingCellContent];
+            [weakSelf prepareUpcomingCellContent];
             
             isRefreshing = NO;
-            [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:self.tableView];
+            [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:weakSelf.tableView];
         };
         
         [self.storyFetcher refreshStories:willSave completion:completion];
