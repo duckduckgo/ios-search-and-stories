@@ -84,7 +84,9 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL suceess = [data writeToFile:[self imageFilePath] atomically:NO];
         if (suceess)
-            self.imageDownloadedValue = YES;
+            [self.managedObjectContext performBlockAndWait:^{
+                self.imageDownloadedValue = YES;
+            }];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (completion)
                 completion(suceess);
@@ -118,7 +120,9 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL suceess = [html writeToFile:[self HTMLFilePath] atomically:NO encoding:NSUTF8StringEncoding error:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.htmlDownloadedValue = YES;
+            [self.managedObjectContext performBlockAndWait:^{
+                self.htmlDownloadedValue = YES;
+            }];
             if (completion)
                 completion(suceess);
         });
