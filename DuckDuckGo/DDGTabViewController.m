@@ -135,19 +135,17 @@
     [self willChangeValueForKey:@"currentViewControllerIndex"];    
 
     if (nextViewController != self.currentViewController) {
-        [nextViewController willMoveToParentViewController:self];
         [self addChildViewController:nextViewController];    
         [nextViewController.view setFrame:[self _viewControllerFrameForControlViewPosition:self.controlViewPosition]];
         if (self.currentViewController.view) 
             [self.view insertSubview:nextViewController.view belowSubview:self.currentViewController.view]; 
         else
-            [self.view insertSubview:nextViewController.view belowSubview:self.controlView]; 
+            [self.view insertSubview:nextViewController.view belowSubview:self.controlView];
         [nextViewController didMoveToParentViewController:self];    
         
         [self.currentViewController willMoveToParentViewController:nil];
         [self.currentViewController.view removeFromSuperview];
         [self.currentViewController removeFromParentViewController];
-        [self.currentViewController didMoveToParentViewController:nil];    
         self.currentViewController = nil;    
         
         self.currentViewController = nextViewController;        
