@@ -85,7 +85,7 @@
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];    
-    [_searchController clearAddressBar];
+    [self.searchController clearAddressBar];
 }
 
 - (void)dealloc
@@ -116,7 +116,7 @@
 }
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
-    [_searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self.searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
 #pragma mark - Readability Mode
@@ -154,7 +154,7 @@
 {
     // strip extra params from DDG search URLs
     NSURL *shareURL = self.webViewURL;
-    NSString *query = [_searchController queryFromDDGURL:shareURL];
+    NSString *query = [self.searchController queryFromDDGURL:shareURL];
     if(query)
     {
         NSString *escapedQuery = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -238,7 +238,7 @@
     [self view];
     
     NSString *urlString;
-    if([_searchController isQuery:queryOrURLString])
+    if([self.searchController isQuery:queryOrURLString])
     {
         // direct query
         urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
@@ -248,7 +248,7 @@
     else
     {
         // a URL entered by user
-        urlString = [_searchController validURLStringFromString:queryOrURLString];
+        urlString = [self.searchController validURLStringFromString:queryOrURLString];
     }
     
     NSURL *url = [NSURL URLWithString:urlString];
@@ -257,7 +257,7 @@
         [request setValue:[DDGUtility agentDDG] forHTTPHeaderField:@"User-Agent"];
         
     [self.webView loadRequest:request];
-    [_searchController updateBarWithURL:url];
+    [self.searchController updateBarWithURL:url];
     self.webViewURL = url;
 }
 
@@ -283,7 +283,7 @@
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
         if (completion)
             completion(nil);
-        [_searchController webViewFinishedLoading];
+        [weakSelf.searchController webViewFinishedLoading];
         [weakSelf decrementLoadingDepthCancelled:YES];
         [weakSelf loadQueryOrURL:story.urlString];
     }];
@@ -368,7 +368,7 @@
 
 -(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
     if(action == @selector(search:))
-        return ![_searchController.searchBar.searchField isFirstResponder];
+        return ![self.searchController.searchBar.searchField isFirstResponder];
     else
         return [super canPerformAction:action withSender:sender];
 }
@@ -442,13 +442,13 @@
         NSString *scheme = [[url scheme] lowercaseString];
         if ([scheme isEqualToString:@"http"]
             || [scheme isEqualToString:@"https"]) {
-            [_searchController updateBarWithURL:request.URL];
+            [self.searchController updateBarWithURL:request.URL];
             self.webViewURL = request.URL;
             self.inReadabilityMode = NO;
         } else if ((self.story && !self.webView.canGoBack)
                    || [[[self.story HTMLURLRequest].URL URLByStandardizingPath] isEqual:[url URLByStandardizingPath]]) {
             NSURL *storyURL = self.story.URL;
-            [_searchController updateBarWithURL:storyURL];
+            [self.searchController updateBarWithURL:storyURL];
             self.webViewURL = storyURL;
             self.inReadabilityMode = YES;
         }
@@ -478,14 +478,14 @@
 {
 //    NSLog(@"webViewDidStartLoad events: %i", _webViewLoadEvents);
     
-    [_searchController webViewCanGoBack:theWebView.canGoBack];
+    [self.searchController webViewCanGoBack:theWebView.canGoBack];
     [self incrementLoadingDepth];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {    
     [self updateBarWithRequest:theWebView.request];
-    [_searchController webViewCanGoBack:theWebView.canGoBack];
+    [self.searchController webViewCanGoBack:theWebView.canGoBack];
         
     [self decrementLoadingDepthCancelled:NO];
     
@@ -501,15 +501,15 @@
 
 -(void)updateProgressBar {
     if(_webViewLoadingDepth == 1)
-        [_searchController setProgress:0.15];
+        [self.searchController setProgress:0.15];
     else if(_webViewLoadingDepth == 2)
-        [_searchController setProgress:0.7];
+        [self.searchController setProgress:0.7];
 }
 
 - (NSUInteger)incrementLoadingDepth {
 	if (++_webViewLoadingDepth == 1) {
         [[AFNetworkActivityIndicatorManager sharedManager] incrementActivityCount];
-        [_searchController webViewStartedLoading];
+        [self.searchController webViewStartedLoading];
     }
     
     [self updateProgressBar];        
@@ -521,9 +521,9 @@
 	if (--_webViewLoadingDepth <= 0) {
         [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
         if (cancelled)
-            [_searchController webViewCancelledLoading];
+            [self.searchController webViewCancelledLoading];
         else
-            [_searchController webViewFinishedLoading];
+            [self.searchController webViewFinishedLoading];
 		_webViewLoadingDepth = 0;
 	}
     return _webViewLoadingDepth;    
@@ -532,7 +532,7 @@
 - (void)resetLoadingDepth {
     if (_webViewLoadingDepth > 0) {
         [[AFNetworkActivityIndicatorManager sharedManager] decrementActivityCount];
-        [_searchController webViewCancelledLoading];
+        [self.searchController webViewCancelledLoading];
     }
     
     _webViewLoadingDepth = 0;
