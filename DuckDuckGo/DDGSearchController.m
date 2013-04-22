@@ -94,11 +94,10 @@
 
     incommingViewController.view.frame = incommingRect;
 
-    [incommingViewController willMoveToParentViewController:self];
-    [self.view insertSubview:incommingViewController.view belowSubview:self.background];
     [self addChildViewController:incommingViewController];
+    [self.view insertSubview:incommingViewController.view belowSubview:self.background];
+    
     [outgoingViewController viewWillDisappear:animated];
-    [incommingViewController viewWillAppear:animated];
     
     [self.controllers addObject:incommingViewController];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
@@ -117,8 +116,7 @@
                          outgoingViewController.view.frame = outgoingRect;
                      }
                      completion:^(BOOL finished) {
-                         [outgoingViewController viewDidDisappear:animated];
-                         [incommingViewController viewDidAppear:animated];                         
+                         [incommingViewController didMoveToParentViewController:self];
                          [outgoingViewController willMoveToParentViewController:nil];
                          [outgoingViewController.view removeFromSuperview];
                          [outgoingViewController removeFromParentViewController];
@@ -141,11 +139,8 @@
         
         [outgoingViewController viewWillDisappear:animated];
         
-        [incommingViewController willMoveToParentViewController:self];
-        [self.view insertSubview:incommingViewController.view belowSubview:self.background];
         [self addChildViewController:incommingViewController];
-        
-        [incommingViewController viewWillAppear:animated];        
+        [self.view insertSubview:incommingViewController.view belowSubview:self.background];
         
         [self.controllers removeLastObject];
         [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
@@ -157,8 +152,7 @@
                              outgoingViewController.view.frame = outgoingRect;
                          }
                          completion:^(BOOL finished) {
-                             [outgoingViewController viewDidDisappear:animated];
-                             [incommingViewController viewDidAppear:animated];
+                             [incommingViewController didMoveToParentViewController:self];
                              [outgoingViewController willMoveToParentViewController:nil];
                              [outgoingViewController.view removeFromSuperview];
                              [outgoingViewController removeFromParentViewController];
@@ -295,11 +289,9 @@
                 previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
             
             
-            [previousViewController willMoveToParentViewController:self];
+            [self addChildViewController:previousViewController];
             [self.view insertSubview:previousViewController.view belowSubview:self.background];
-            [self addChildViewController:previousViewController];            
-            [previousViewController viewWillAppear:YES];
-            [previousViewController viewDidAppear:YES];
+            [previousViewController didMoveToParentViewController:self];
         }
             break;
         case UIGestureRecognizerStateEnded:
