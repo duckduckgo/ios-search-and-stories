@@ -207,6 +207,34 @@
     }
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    if ([[self.fetchedResultsController fetchedObjects] count] == 0) {
+        [self showNoResultsView];
+    } else {
+        [self.noResultsView removeFromSuperview];
+        self.noResultsView = nil;
+    }
+}
+
+- (void)showNoResultsView {
+    if (nil == self.additionalSectionsDelegate) {
+        // show no results view
+        if (nil == self.noResultsView) {
+            if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
+                [[NSBundle mainBundle] loadNibNamed:@"DDGHistoryNoResultsView" owner:self options:nil];
+            else
+                [[NSBundle mainBundle] loadNibNamed:@"DDGHistoryNoResultsDisabledView" owner:self options:nil];
+        }
+        
+        [self.view addSubview:self.noResultsView];
+        
+    } else {
+        // show an extra cell
+    }
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
@@ -444,10 +472,21 @@
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [tableView insertRowsAtIndexPaths:@[newTableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            
+            if ([[self.fetchedResultsController fetchedObjects] count] > 0) {
+                [self.noResultsView removeFromSuperview];
+                self.noResultsView = nil;
+            }
             break;
             
         case NSFetchedResultsChangeDelete:
+        {
             [tableView deleteRowsAtIndexPaths:@[tableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            
+            if ([[self.fetchedResultsController fetchedObjects] count] == 0) {
+                [self showNoResultsView];
+            }
+        }
             break;
             
         case NSFetchedResultsChangeUpdate:

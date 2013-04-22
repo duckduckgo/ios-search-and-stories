@@ -20,6 +20,7 @@ typedef enum DDGHistoryViewControllerMode {
 
 @class DDGUnderViewControllerCell;
 @interface DDGHistoryViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate>
+@property (nonatomic, strong) IBOutlet UIView *noResultsView;
 @property (nonatomic, weak, readonly) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong, readonly) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, weak) UITableView *tableView;
