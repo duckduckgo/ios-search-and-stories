@@ -54,12 +54,7 @@
 								<int key="IBUIContentMode">7</int>
 								<bool key="IBUIUserInteractionEnabled">NO</bool>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<string type="base64-UTF8" key="IBUIText">V2hldGhlciB5b3UncmUgc2V0dGxpbmcgYSBiZXQgb3IgaGF2ZSBhIGZldyBmcmVlIG1pbnV0ZXMsIER1
-Y2tEdWNrR28gaGFzIHlvdSAKY292ZXJlZC4gT3VyIHNlYXJjaCByZXN1bHRzIGFyZSBwYWNrZWQgd2l0
-aCBpbnN0YW50IGFuc3dlcnMgYW5kIG91ciBob21lIHNjcmVlbiBvbmx5IHNob3dzIHlvdSB0aGUgbW9z
-dCBpbnRlcmVzdGluZyBzdG9yaWVzLiBCZXN0IG9mIGFsbDogaXQncyBjb21wbGV0ZWx5IHByaXZhdGUg
-4oCTIHVubGlrZSBvdGhlciBzZWFyY2ggYW5kIHN0b3JpZXMgYXBwcywgd2UgZG9uJ3QgdHJhY2sgeW91
-Lg</string>
+								<string key="IBUIText">Whether you're settling a bet or have a few free minutes, DuckDuckGo has you covered. Our search results are packed with instant answers and our home screen has the most talked about stories. Also, DuckDuckGo is completely private!  We don't track you.</string>
 								<object class="NSColor" key="IBUITextColor">
 									<int key="NSColorSpace">1</int>
 									<bytes key="NSRGB">MC4zNjA3ODQzMTM3IDAuMzcyNTQ5MDE5NiAwLjQAA</bytes>
