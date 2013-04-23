@@ -16,7 +16,9 @@
 #import "ECSlidingViewController.h"
 #import "DDGHistoryItemCell.h"
 
-@interface DDGHistoryViewController () <UIGestureRecognizerDelegate>
+@interface DDGHistoryViewController () <UIGestureRecognizerDelegate> {
+    BOOL _showingNoResultsSection;
+}
 @property (nonatomic, weak, readwrite) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong, readwrite) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
@@ -103,7 +105,11 @@
         CGPoint point = [swipe locationInView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
         NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+
         if (indexPath.section < additionalSections)
+            return;
+
+        if (indexPath.section == additionalSections + [[self.fetchedResultsController sections] count])
             return;
         
         if (nil != indexPath) {
@@ -153,7 +159,7 @@
     if (nil == _fetchedResultsController && self.showsHistory) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
         NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
-        NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"isStoryItem" ascending:YES];
+        NSSortDescriptor *sectionSort = [NSSortDescriptor sortDescriptorWithKey:@"section" ascending:YES];
         [request setSortDescriptors:@[sectionSort, timeSort]];
         
         NSFetchedResultsController *fetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
@@ -210,12 +216,62 @@
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if ([[self.fetchedResultsController fetchedObjects] count] == 0) {
+    [self.tableView reloadData];
+    
+    if ([self shouldShowNoHistoryView]) {
         [self showNoResultsView];
     } else {
         [self.noResultsView removeFromSuperview];
         self.noResultsView = nil;
     }
+    
+    if ([self shouldShowNoHistorySection]) {
+        [self showNoResultsSection];
+    }
+}
+
+- (BOOL)shouldShowNoHistorySection {
+    return ([[self.fetchedResultsController fetchedObjects] count] == 0)
+    && nil != self.additionalSectionsDelegate
+    && self.showsHistory;
+}
+
+- (void)showNoResultsSection {
+    if (!_showingNoResultsSection) {
+        _showingNoResultsSection = YES;
+        [self.tableView beginUpdates];
+        
+        NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+        NSInteger sections = [[self.fetchedResultsController sections] count];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:(sections + additionalSections)];
+        
+        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        [self.tableView endUpdates];
+    }
+}
+
+- (void)hideNoResultsSection {
+    if (_showingNoResultsSection) {
+        _showingNoResultsSection = NO;
+        [self.tableView beginUpdates];
+        
+        NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
+        NSInteger sections = [[self.fetchedResultsController sections] count];
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:(sections + additionalSections)];
+        
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
+        
+        [self.tableView endUpdates];        
+    }
+}
+
+- (BOOL)shouldShowNoHistoryView {
+    return ([[self.fetchedResultsController fetchedObjects] count] == 0)
+    && nil == self.additionalSectionsDelegate
+    && self.showsHistory;
 }
 
 - (void)showNoResultsView {
@@ -313,7 +369,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return [[self.fetchedResultsController sections] count] + [self.additionalSectionsDelegate numberOfAdditionalSections];
+    NSInteger fetchedSections = [[self.fetchedResultsController sections] count];
+    NSInteger sections = fetchedSections + [self.additionalSectionsDelegate numberOfAdditionalSections];
+    
+    if (_showingNoResultsSection)
+        sections += 1;
+    
+    return sections;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -321,6 +383,11 @@
     NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
     if (section < additionalSections)
         return [self.additionalSectionsDelegate tableView:tableView numberOfRowsInSection:(NSInteger)section];
+    
+    NSArray *sections = [self.fetchedResultsController sections];
+    
+    if (_showingNoResultsSection && section == (additionalSections + [sections count]))
+        return 1;
     
     NSInteger historySection = [self historySectionForTableSection:section];
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][historySection];
@@ -387,16 +454,20 @@
     
     NSArray *sections = [self.fetchedResultsController sections];
     NSInteger historySection = [self historySectionForTableSection:section];
-    
     UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
-    NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:historySection] name];
     
-    if ([name isEqualToString:@"searches"]) {
-        title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");
-    } else if ([name isEqualToString:@"stories"]) {
-        title.text = NSLocalizedString(@"Recent Stories", @"Table section header title");
+    if (_showingNoResultsSection && section == ([sections count] + additionalSections)) {
+        title.text = NSLocalizedString(@"Recent Searches & Stories", @"Table section header title");
     } else {
-        title.text = name;
+        NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:historySection] name];
+        
+        if ([name isEqualToString:@"searches"]) {
+            title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");
+        } else if ([name isEqualToString:@"stories"]) {
+            title.text = NSLocalizedString(@"Recent Stories", @"Table section header title");
+        } else {
+            title.text = name;
+        }
     }
     
     title.textColor = [UIColor whiteColor];
@@ -420,23 +491,6 @@
     return nil;
 }
 
-//- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
-//    return UITableViewCellEditingStyleDelete;
-//}
-//
-////- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-////    return YES;
-////}
-//
-//- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    if (editingStyle == UITableViewCellEditingStyleDelete) {
-//        DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
-//        [self.managedObjectContext deleteObject:item];
-//    }
-//}
-//
-
 #pragma mark - NSFetchedResultsControllerDelegate
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
@@ -449,11 +503,13 @@
 {
     NSInteger tableSectionIndex = [self tableSectionForHistorySection:sectionIndex];
     
+//    NSLog(@"didChangeSection: %i change type: %i", tableSectionIndex, type);
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
             [self.tableView insertSections:[NSIndexSet indexSetWithIndex:tableSectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
-            
+                        
         case NSFetchedResultsChangeDelete:
             [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:tableSectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
@@ -469,24 +525,15 @@
     NSIndexPath *tableIndexPath = [self tableIndexPathForHistoryIndexPath:indexPath];
     NSIndexPath *newTableIndexPath = [self tableIndexPathForHistoryIndexPath:newIndexPath];
     
+//    NSLog(@"didChangeObject atIndexPath: %@ newIndexPath: %@ change type: %i", tableIndexPath, newTableIndexPath, type);    
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newTableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            
-            if ([[self.fetchedResultsController fetchedObjects] count] > 0) {
-                [self.noResultsView removeFromSuperview];
-                self.noResultsView = nil;
-            }
+            [tableView insertRowsAtIndexPaths:@[newTableIndexPath] withRowAnimation:UITableViewRowAnimationFade];        
             break;
             
         case NSFetchedResultsChangeDelete:
-        {
             [tableView deleteRowsAtIndexPaths:@[tableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
-            
-            if ([[self.fetchedResultsController fetchedObjects] count] == 0) {
-                [self showNoResultsView];
-            }
-        }
             break;
             
         case NSFetchedResultsChangeUpdate:
@@ -503,6 +550,17 @@
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
+    
+    if ([self shouldShowNoHistoryView]) {
+        [self.noResultsView removeFromSuperview];
+        self.noResultsView = nil;
+    } else if ([self shouldShowNoHistorySection]) {
+        [self showNoResultsSection];
+    } else {
+        [self hideNoResultsSection];
+        [self.noResultsView removeFromSuperview];
+        self.noResultsView = nil;        
+    }
 }
 
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
@@ -519,19 +577,33 @@
     
 	UILabel *lbl = cell.textLabel;
 
-    // we have history and it is enabled
-    DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
-    DDGStory *story = item.story;
-
-    if (nil != story) {
-        underCell.fixedSizeImageView.image = story.feed.image;
+    NSArray *sections = [self.fetchedResultsController sections];
+    
+    if (_showingNoResultsSection && historyIndexPath.section == [sections count]) {
+        
+        underCell.fixedSizeImageView.image = [UIImage imageNamed:@"icon_notification"];
+        
+        if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
+            lbl.text = @"Your history is empty";
+        else
+            lbl.text = @"Saving recents is disabled.\nYou can re-enable it in settings";
+        
         cell.accessoryView = nil;
+        
     } else {
-        underCell.fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
-        cell.accessoryView = [DDGPlusButton plusButton];
+        // we have history and it is enabled
+        DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
+        DDGStory *story = item.story;
+        
+        if (nil != story) {
+            underCell.fixedSizeImageView.image = story.feed.image;
+            cell.accessoryView = nil;
+        } else {
+            underCell.fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
+            cell.accessoryView = [DDGPlusButton plusButton];
+        }
+        lbl.text = item.title;        
     }
-    lbl.text = item.title;
-
 }
 
 @end

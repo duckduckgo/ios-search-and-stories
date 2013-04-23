@@ -294,29 +294,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 				break;
 		}
     }
-
-#warning show this silly extra cell if history is off
-    
-//    else {
-//		if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) {
-//			// we have history and it is enabled
-//			DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1]];
-//			DDGStory *story = item.story;
-//            
-//			if (nil != story) {
-//				fixedSizeImageView.image = story.feed.image;
-//                cell.accessoryView = nil;
-//			} else {
-//                fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
-//                cell.accessoryView = [DDGPlusButton plusButton];
-//			}
-//			lbl.text = item.title;
-//		} else {
-//			fixedSizeImageView.image = [UIImage imageNamed:@"icon_notification"];
-//			lbl.text = @"Saving recents is disabled.\nYou can enable it in settings.";
-//            cell.accessoryView = nil;
-//		}
-//    }    
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

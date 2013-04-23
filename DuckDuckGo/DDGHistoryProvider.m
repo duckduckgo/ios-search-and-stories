@@ -46,6 +46,7 @@
         [context performBlock:^{
             DDGHistoryItem *item = [DDGHistoryItem insertInManagedObjectContext:self.managedObjectContext];
             item.title = title;
+            item.section = DDGHistoryItemSectionNameSearches;
             item.timeStamp = [NSDate date];
             [self save];
         }];        
@@ -64,6 +65,7 @@
             DDGHistoryItem *item = [DDGHistoryItem insertInManagedObjectContext:self.managedObjectContext];
             item.story = story;
             item.title = story.title;
+            item.section = DDGHistoryItemSectionNameStories;
             item.timeStamp = [NSDate date];
             [self save];
         }];

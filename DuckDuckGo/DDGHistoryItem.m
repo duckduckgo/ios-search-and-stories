@@ -1,24 +1,9 @@
 #import "DDGHistoryItem.h"
 #import "DDGStory.h"
 
+NSString * const DDGHistoryItemSectionNameSearches = @"searches";
+NSString * const DDGHistoryItemSectionNameStories = @"stories";
+
 @implementation DDGHistoryItem
-
-- (NSString *)section {
-    if (nil != self.story)
-        return @"stories";
-    return @"searches";
-}
-
-- (void)willSave {
-    [super willSave];
-    
-    if (![self isDeleted]) {
-        BOOL oldValue = self.isStoryItemValue;
-        BOOL isStoryItemValue = (nil != self.story);
-        
-        if (isStoryItemValue != oldValue)
-            self.isStoryItemValue = isStoryItemValue;        
-    }
-}
 
 @end
