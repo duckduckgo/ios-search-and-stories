@@ -25,6 +25,7 @@ NSString * const DDGSettingStoriesReadView = @"stories_read_view";
 NSString * const DDGSettingHomeView = @"home_view";
 
 NSString * const DDGSettingHomeViewTypeStories = @"Stories View";
+NSString * const DDGSettingHomeViewTypeSaved = @"Saved View";
 NSString * const DDGSettingHomeViewTypeRecents = @"Recents";
 NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
@@ -140,6 +141,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
     [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
     [self addRadioOptionWithTitle:@"Recents" value:DDGSettingHomeViewTypeRecents key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeRecents]];
+    [self addRadioOptionWithTitle:@"Saved" value:DDGSettingHomeViewTypeSaved key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];    
     
     [self addSectionWithTitle:@"Stories" footer:nil];
     [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{

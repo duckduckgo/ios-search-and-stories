@@ -17,6 +17,7 @@ extern NSString * const DDGSettingStoriesReadView;
 extern NSString * const DDGSettingHomeView;
 
 extern NSString * const DDGSettingHomeViewTypeStories;
+extern NSString * const DDGSettingHomeViewTypeSaved;
 extern NSString * const DDGSettingHomeViewTypeRecents;
 extern NSString * const DDGSettingHomeViewTypeDuck;
 

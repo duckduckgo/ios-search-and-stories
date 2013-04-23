@@ -164,7 +164,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
     if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents])
         type = DDGViewControllerTypeHistory;
-    
+    else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved])
+        type = DDGViewControllerTypeSaved;
+        
     UIViewController *homeController = [under viewControllerForType:type];
     
     slidingViewController.topViewController = homeController;
