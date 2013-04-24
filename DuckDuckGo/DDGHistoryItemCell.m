@@ -64,6 +64,7 @@
 - (void)prepareForReuse {
     [super prepareForReuse];
     [self setDeleting:NO animated:NO];
+    self.fixedSizeImageView.size = CGSizeMake(16.0, 16.0);
 }
 
 - (void)setDeleting:(BOOL)deleting animated:(BOOL)animated {

@@ -114,6 +114,7 @@
 - (void)prepareForReuse {
     [super prepareForReuse];
     [self setActive:NO];
+    self.fixedSizeImageView.size = CGSizeMake(24.0, 24.0);
 }
 
 - (void)setEditing:(BOOL)editing animated:(BOOL)animated {

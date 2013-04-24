@@ -582,9 +582,10 @@
     if (_showingNoResultsSection && historyIndexPath.section == [sections count]) {
         
         underCell.fixedSizeImageView.image = [UIImage imageNamed:@"icon_notification"];
+        underCell.fixedSizeImageView.size = CGSizeMake(24.0, 24.0);
         
         if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
-            lbl.text = @"Your history is empty";
+            lbl.text = @"No recent searches or stories.";
         else
             lbl.text = @"Saving recents is disabled.\nYou can re-enable it in settings";
         
