@@ -16,6 +16,7 @@
 #import "DDGBookmarksViewController.h"
 #import "DDGTier2ViewController.h"
 #import "DDGSettingsViewController.h"
+#import "DDGPlusButton.h"
 
 @interface DDGAutocompleteViewController ()
 @property (nonatomic, copy) NSArray *suggestions;
@@ -61,6 +62,26 @@ static NSString *historyCellID = @"HCell";
         }
     }];
 }
+
+- (IBAction)plus:(id)sender {
+    UIButton *button = nil;
+    if ([sender isKindOfClass:[UIButton class]])
+        button = (UIButton *)sender;
+    
+    if (button) {
+        CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
+        NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];
+        NSDictionary *suggestionItem = [self.suggestions objectAtIndex:tappedIndex.row];
+        DDGSearchController *searchController = [self searchControllerDDG];
+        if (searchController) {
+            DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
+            [searchField becomeFirstResponder];
+            searchField.text = [suggestionItem objectForKey:@"phrase"];
+            [searchController searchFieldDidChange:nil];
+        }
+    }
+}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
@@ -219,7 +240,7 @@ static NSString *historyCellID = @"HCell";
 			separatorLine.backgroundColor = [UIColor lightGrayColor];
 			separatorLine.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
 			separatorLine.tag = 200;
-			[cell.contentView addSubview:separatorLine];
+			[cell addSubview:separatorLine];
         }
 		else
 		{
@@ -237,6 +258,9 @@ static NSString *historyCellID = @"HCell";
         
         cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
         cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
+        UIButton *button = [DDGPlusButton lightPlusButton];
+        [button addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
+        cell.accessoryView = button;
         
         if([suggestionItem objectForKey:@"image"])
 		{

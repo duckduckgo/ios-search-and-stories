@@ -10,4 +10,5 @@
 
 @interface DDGPlusButton : UIButton
 + (id)plusButton;
++ (id)lightPlusButton;
 @end
