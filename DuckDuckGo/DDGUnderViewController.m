@@ -98,7 +98,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                           } mutableCopy]];
         
-    } if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                           } mutableCopy]];
