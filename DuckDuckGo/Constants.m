@@ -14,7 +14,14 @@
 //NSString * const kDDGCustomStoriesURLString = @"http://localhost:8000/custom.js?";
 //NSString * const kDDGSuggestionsURLString = @"http://localhost:8000/suggestions.json?";
 
+NSString * const kDDGCustomStoriesURLString = @"https://duckduckgo.com/news.js?o=json&t=m&q=";
+
+#if DEBUG == 1
+NSString * const kDDGTypeInfoURLString = @"https://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
+NSString * const kDDGStoriesURLString = @"https://caine.duckduckgo.com/watrcoolr.js?o=json&s=";
+NSString * const kDDGSuggestionsURLString = @"http://rundmc.duckduckgo.com:6767/?q=";
+#else
 NSString * const kDDGTypeInfoURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
 NSString * const kDDGStoriesURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&s=";
-NSString * const kDDGCustomStoriesURLString = @"https://duckduckgo.com/news.js?o=json&t=m&q=";
 NSString * const kDDGSuggestionsURLString = @"https://duckduckgo.com/ac/?q=";
+#endif
