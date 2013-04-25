@@ -76,6 +76,7 @@
         image = [UIImage imageNamed:@"button_menu_glyph_under"];
     
     [self.searchBar.leftButton setImage:image forState:UIControlStateNormal];
+    [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
 }
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
@@ -533,6 +534,7 @@
 - (IBAction)leftButtonPressed:(UIButton*)sender {
     if(autocompleteOpen) {
         [_autocompleteNavigationController popViewControllerAnimated:YES];
+        [self bangButtonPressed];
     } else {
         [self searchControllerLeftButtonPressed];
     }
@@ -700,7 +702,13 @@
     self.searchBar.searchField.rightView = nil;
     [self revealBackground:YES animated:YES];
     
-    self.searchBar.showsLeftButton = NO;
+    [self.searchBar.leftButton setImage:[UIImage imageNamed:@"menu_bang-default"] forState:UIControlStateNormal];
+    [self.searchBar.leftButton setImage:[UIImage imageNamed:@"menu_bang-active"] forState:UIControlStateHighlighted];
+
+    [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"btn-bg_bang-default"] forState:UIControlStateNormal];
+    [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"btn-bg_bang-active"] forState:UIControlStateHighlighted];
+        
+    self.searchBar.showsLeftButton = YES;    
     self.searchBar.showsRightButton = NO;
     self.searchBar.showsCancelButton = YES;
     [self.searchBar layoutIfNeeded:0.25];
@@ -733,7 +741,11 @@
     [self revealBackground:NO animated:YES];
     if(self.state == DDGSearchControllerStateWeb)
         self.searchBar.searchField.rightView = stopOrReloadButton;
-        
+    
+    [self setSearchBarLeftButtonImage];    
+    [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"button_menu_bg"] forState:UIControlStateNormal];
+    [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"button_menu_bg-highlighted"] forState:UIControlStateHighlighted];    
+    
     self.searchBar.showsLeftButton = YES;
     self.searchBar.showsRightButton = (self.state == DDGSearchControllerStateWeb);
     self.searchBar.showsCancelButton = NO;
@@ -769,18 +781,18 @@
 
 // fade in or out the input accessory– to be used on keyboard show/hide
 -(void)revealInputAccessory:(BOOL)reveal animationDuration:(CGFloat)animationDuration {
-    if(reveal) {
-        [UIView animateWithDuration:animationDuration animations:^{
-            inputAccessory.alpha = 1.0;
-        } completion:^(BOOL finished) {
-            [self positionNavControllerForInputAccessoryForceHidden:NO];
-        }];
-    } else {
-        [self positionNavControllerForInputAccessoryForceHidden:YES];
-        [UIView animateWithDuration:animationDuration animations:^{
-            inputAccessory.alpha = 0.0;
-        }];
-    }
+//    if(reveal) {
+//        [UIView animateWithDuration:animationDuration animations:^{
+//            inputAccessory.alpha = 1.0;
+//        } completion:^(BOOL finished) {
+//            [self positionNavControllerForInputAccessoryForceHidden:NO];
+//        }];
+//    } else {
+//        [self positionNavControllerForInputAccessoryForceHidden:YES];
+//        [UIView animateWithDuration:animationDuration animations:^{
+//            inputAccessory.alpha = 0.0;
+//        }];
+//    }
 }
 
 -(IBAction)cancelButtonPressed:(id)sender {
