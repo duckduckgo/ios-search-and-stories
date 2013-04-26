@@ -862,6 +862,7 @@
           shouldChangeCharactersInRange:NSMakeRange(text.length, 0)
           replacementString:textToAdd];
     searchField.text = [searchField.text stringByAppendingString:textToAdd];
+    [(DDGAutocompleteViewController *)searchField.delegate searchFieldDidChange:nil];
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
