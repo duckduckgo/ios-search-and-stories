@@ -354,13 +354,19 @@
     
     [self cancelDeletingIndexPathsAnimated:YES];    
     NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
-    DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
-//    [self.historyProvider relogHistoryItem:historyItem];
-    DDGStory *story = historyItem.story;
-    if (nil != story)
-        [self.searchHandler loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
-    else
-        [self.searchHandler loadQueryOrURL:historyItem.title];
+    
+    NSArray *sections = [self.fetchedResultsController sections];
+    if ([sections count] > historyIndexPath.section
+        && [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:historyIndexPath.section] numberOfObjects] > historyIndexPath.row) {
+        
+        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
+        //    [self.historyProvider relogHistoryItem:historyItem];
+        DDGStory *story = historyItem.story;
+        if (nil != story)
+            [self.searchHandler loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
+        else
+            [self.searchHandler loadQueryOrURL:historyItem.title];        
+    }
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
