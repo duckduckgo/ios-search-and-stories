@@ -335,10 +335,11 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     return [indexPaths copy];
 }
 
-- (void)replaceStories:(NSArray *)oldStories withStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
+- (NSInteger)replaceStories:(NSArray *)oldStories withStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
     
     NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:oldStories];
     NSArray *removedStories = [self indexPathsofStoriesInArray:oldStories andNotArray:newStories];
+    NSInteger changes = [addedStories count] + [removedStories count];
     
     // update the table view with added and removed stories
     [self.tableView beginUpdates];
@@ -355,6 +356,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     }
     
     [self focusOnStory:story animated:YES];
+    
+    return changes;
 }
 
 
@@ -640,14 +643,6 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
     [self refreshStories];
-    
-    if([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
-        SystemSoundID quack;
-        NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
-        NSURL *url = [NSURL URLWithString:path];
-        AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &quack);
-        AudioServicesPlaySystemSound(quack);
-    }
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
@@ -816,12 +811,19 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             weakSelf.fetchedResultsController = [self fetchedResultsController:feedDate];
             
             NSArray *newStories = [self.fetchedResultsController fetchedObjects];
-            [weakSelf replaceStories:oldStories withStories:newStories focusOnStory:nil];
-            
+            NSInteger changes = [weakSelf replaceStories:oldStories withStories:newStories focusOnStory:nil];
             [weakSelf prepareUpcomingCellContent];
             
             isRefreshing = NO;
             [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:weakSelf.tableView];
+            
+            if(changes > 0 && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
+                SystemSoundID quack;
+                NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
+                NSURL *url = [NSURL URLWithString:path];
+                AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &quack);
+                AudioServicesPlaySystemSound(quack);
+            }
         };
         
         [self.storyFetcher refreshStories:willSave completion:completion];
