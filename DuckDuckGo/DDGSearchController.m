@@ -661,10 +661,10 @@
         } else if(![[url pathExtension] isEqualToString:@"html"]) {
             // article page
             NSString *query = [url path];
-            query = [query substringFromIndex:1]; // strip the leading '/' in the URL
+            if ([query length] > 1)
+                query = [query substringFromIndex:1]; // strip the leading '/' in the URL
             query = [query stringByReplacingOccurrencesOfString:@"_" withString:@"%20"];
-            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-            
+            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];            
             return query;
         } else {
             // a URL on DDG.com, but not a search query
