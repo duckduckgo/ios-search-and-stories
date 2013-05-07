@@ -20,6 +20,7 @@
 #import "DDGPanGestureRecognizer.h"
 
 #import "NSMutableString+DDGDumpView.h"
+#import "DDGPopoverViewController.h"
 
 @interface DDGSearchController ()
 @property (nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
@@ -28,6 +29,8 @@
 @property (nonatomic, strong) NSMutableArray *controllers;
 @property (nonatomic, strong) DDGPanGestureRecognizer *panGesture;
 @property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
+@property (nonatomic, strong) DDGPopoverViewController *bangInfoPopover;
+@property (nonatomic) BOOL showBangTooltip;
 @end
 
 @implementation DDGSearchController
@@ -39,6 +42,7 @@
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
         self.controllers = [NSMutableArray arrayWithCapacity:2];
+        self.showBangTooltip = ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingSuppressBangTooltip];
 	}
 	return self;
 }
@@ -620,6 +624,7 @@
         // it has a scheme, so it's probably a valid URL
         return urlString;
     } else {
+#warning this method treats email addresses as URLs
         // check whether adding a scheme makes it a valid URL
         NSString *urlStringWithSchema = [NSString stringWithFormat:@"http://%@",urlString];
         url = [NSURL URLWithString:urlStringWithSchema];
@@ -746,6 +751,9 @@
     [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"button_menu_bg"] forState:UIControlStateNormal];
     [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"button_menu_bg-highlighted"] forState:UIControlStateHighlighted];    
     
+    [self.bangInfoPopover dismissPopoverAnimated:YES];
+    self.bangInfoPopover = nil;
+    
     self.searchBar.showsLeftButton = YES;
     self.searchBar.showsRightButton = (self.state == DDGSearchControllerStateWeb);
     self.searchBar.showsCancelButton = NO;
@@ -849,20 +857,44 @@
     _autocompleteNavigationController.view.frame = f;
 }
 
+- (IBAction)hideBangTooltipForever:(id)sender {
+    self.showBangTooltip = NO;
+    [self.bangInfoPopover dismissPopoverAnimated:YES];
+    self.bangInfoPopover = nil;
+    
+    [[NSUserDefaults standardUserDefaults] setBool:YES forKey:DDGSettingSuppressBangTooltip];
+}
+
 -(void)bangButtonPressed {
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
-    NSString *textToAdd;
     NSString *text = searchField.text;
-    if(text.length==0 || [text characterAtIndex:text.length-1]==' ')
-        textToAdd = @"!";
-    else
-        textToAdd = @" !";
-
-    [self textField:searchField
-          shouldChangeCharactersInRange:NSMakeRange(text.length, 0)
-          replacementString:textToAdd];
-    searchField.text = [searchField.text stringByAppendingString:textToAdd];
-    [(DDGAutocompleteViewController *)searchField.delegate searchFieldDidChange:nil];
+    
+    if (self.showBangTooltip && text.length == 0 && nil == self.bangInfoPopover) {
+        if (nil == self.bangInfo)
+            [[NSBundle mainBundle] loadNibNamed:@"DDGBangInfo" owner:self options:nil];
+        
+        UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
+        viewController.view = self.bangInfo;
+        viewController.contentSizeForViewInPopover = self.bangInfo.frame.size;
+        
+        DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
+        CGRect rect = [self.view convertRect:self.searchBar.leftButton.frame fromView:self.searchBar.leftButton.superview];
+        [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        self.bangInfoPopover = popover;        
+    } else {
+        [self.bangInfoPopover dismissPopoverAnimated:YES];
+        self.bangInfoPopover = nil;
+        
+        NSString *textToAdd;
+        if(text.length==0 || [text characterAtIndex:text.length-1]==' ')
+            textToAdd = @"!";
+        else
+            textToAdd = @" !";
+        
+        [self textField:searchField shouldChangeCharactersInRange:NSMakeRange(text.length, 0) replacementString:textToAdd];
+        searchField.text = [searchField.text stringByAppendingString:textToAdd];
+        [(DDGAutocompleteViewController *)searchField.delegate searchFieldDidChange:nil];
+    }
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
@@ -939,6 +971,14 @@
 
 -(void)searchFieldDidChange:(id)sender
 {
+    DDGAddressBarTextField *searchField = self.searchBar.searchField;
+    NSString *text = searchField.text;    
+    
+    if (text.length > 0) {
+        [self.bangInfoPopover dismissPopoverAnimated:YES];
+        self.bangInfoPopover = nil;        
+    }
+    
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete])
 	{
 		// autocomplete only when enabled

@@ -11,6 +11,7 @@
 
 extern NSString * const DDGSettingRecordHistory;
 extern NSString * const DDGSettingQuackOnRefresh;
+extern NSString * const DDGSettingSuppressBangTooltip;
 extern NSString * const DDGSettingRegion;
 extern NSString * const DDGSettingAutocomplete;
 extern NSString * const DDGSettingStoriesReadView;

@@ -21,6 +21,7 @@ NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
 NSString * const DDGSettingRegion = @"region";
 NSString * const DDGSettingAutocomplete = @"autocomplete";
+NSString * const DDGSettingSuppressBangTooltip = @"suppress_bang_tooltip";
 NSString * const DDGSettingStoriesReadView = @"stories_read_view";
 NSString * const DDGSettingHomeView = @"home_view";
 

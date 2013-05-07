@@ -65,7 +65,7 @@
 								<reference key="NSNextKeyView" ref="230810519"/>
 								<string key="NSReuseIdentifierKey">_NS:9</string>
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
-								<array class="NSMutableArray" key="IBUIItems"/>
+								<array key="IBUIItems" id="0"/>
 							</object>
 							<object class="IBUIButton" id="1039822440">
 								<reference key="NSNextResponder" ref="305221808"/>
@@ -364,7 +364,7 @@
 				<array key="orderedObjects">
 					<object class="IBObjectRecord">
 						<int key="objectID">0</int>
-						<array key="object" id="0"/>
+						<reference key="object" ref="0"/>
 						<reference key="children" ref="1000"/>
 						<nil key="parent"/>
 					</object>
@@ -528,11 +528,16 @@
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="background">UIView</string>
+						<string key="bangInfo">UIView</string>
 						<string key="searchBar">DDGSearchBar</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="background">
 							<string key="name">background</string>
+							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="bangInfo">
+							<string key="name">bangInfo</string>
 							<string key="candidateClassName">UIView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="searchBar">

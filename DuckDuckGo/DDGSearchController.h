@@ -31,6 +31,7 @@ typedef enum {
 
 @property (nonatomic, weak) IBOutlet DDGSearchBar *searchBar;
 @property (nonatomic, weak) IBOutlet UIView *background;
+@property (nonatomic, weak) IBOutlet UIView *bangInfo;
 @property (nonatomic, strong) NSArray *contentControllers;
 @property (nonatomic, strong) UINavigationController *autocompleteNavigationController;
 @property (nonatomic, assign) DDGSearchControllerState state;
@@ -44,6 +45,7 @@ typedef enum {
 -(IBAction)leftButtonPressed:(UIButton*)sender;
 -(IBAction)actionButtonPressed:(id)sender;
 -(IBAction)cancelButtonPressed:(id)sender;
+- (IBAction)hideBangTooltipForever:(id)sender;
 
 -(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
