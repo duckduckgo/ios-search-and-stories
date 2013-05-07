@@ -22,6 +22,15 @@
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
 
+NSString * const emailRegEx =
+@"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
+@"~-]+)*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\"
+@"x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-"
+@"z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5"
+@"]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-"
+@"9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21"
+@"-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+
 @interface DDGSearchController ()
 @property (nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
@@ -30,6 +39,7 @@
 @property (nonatomic, strong) DDGPanGestureRecognizer *panGesture;
 @property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
 @property (nonatomic, strong) DDGPopoverViewController *bangInfoPopover;
+@property (nonatomic, strong) NSPredicate *emailPredicate;
 @property (nonatomic) BOOL showBangTooltip;
 @end
 
@@ -624,10 +634,18 @@
         // it has a scheme, so it's probably a valid URL
         return urlString;
     } else {
-#warning this method treats email addresses as URLs
         // check whether adding a scheme makes it a valid URL
         NSString *urlStringWithSchema = [NSString stringWithFormat:@"http://%@",urlString];
         url = [NSURL URLWithString:urlStringWithSchema];
+        
+        if (nil == self.emailPredicate) {
+            NSPredicate *regExPredicate = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", emailRegEx];
+            self.emailPredicate = regExPredicate;
+        }
+        
+        if ([self.emailPredicate evaluateWithObject:urlString]) {
+            return nil;            
+        }
         
         if(url && url.host && [url.host rangeOfString:@"."].location != NSNotFound) {
             // it has a host with a dot ("xyz.com"), so it's probably a URL
