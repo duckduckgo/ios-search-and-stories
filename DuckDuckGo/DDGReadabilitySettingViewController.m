@@ -14,11 +14,21 @@ NSString * const DDGReadabilityModeKey = @"readability";
 
 @implementation DDGReadabilitySettingViewController
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    self.tableView.backgroundView = nil;
+	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
+}
+
 - (void)configure
 {
 	self.title = NSLocalizedString(@"Region", @"View controller title");
     
     NSInteger readabilitySetting = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+    
+    [self addSectionWithTitle:@"Readability" footer:nil];
     
     [self addRadioOptionWithTitle:@"Off" value:@(DDGReadabilityModeOff) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOff)];
     [self addRadioOptionWithTitle:@"On if available" value:@(DDGReadabilityModeOnIfAvailable) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnIfAvailable)];
