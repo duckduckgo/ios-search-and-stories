@@ -264,7 +264,6 @@ static NSString *historyCellID = @"HCell";
         
         if([suggestionItem objectForKey:@"image"])
 		{
-            NSLog(@"imageURL: %@", [suggestionItem objectForKey:@"image"]);
             [iv setImageWithURL:[NSURL URLWithString:[suggestionItem objectForKey:@"image"]]];
 			iv.hidden = NO;
 		}
