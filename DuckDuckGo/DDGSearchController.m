@@ -77,7 +77,7 @@ NSString * const emailRegEx =
     return frame;
 }
 
-- (void)setSearchBarLeftButtonImage {
+- (void)setSearchBarOrangeButtonImage {
     
     UIImage *image = nil;
     
@@ -89,8 +89,8 @@ NSString * const emailRegEx =
     if (image == nil)
         image = [UIImage imageNamed:@"button_menu_glyph_under"];
     
-    [self.searchBar.leftButton setImage:image forState:UIControlStateNormal];
-    [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
+    [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
+    [self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];
 }
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
@@ -116,7 +116,7 @@ NSString * const emailRegEx =
     
     [self.controllers addObject:incommingViewController];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
-    [self setSearchBarLeftButtonImage];
+    [self setSearchBarOrangeButtonImage];
     
     if ([self.controllers count] > 1) {
         [incommingViewController.view addGestureRecognizer:self.panGesture];
@@ -159,7 +159,7 @@ NSString * const emailRegEx =
         
         [self.controllers removeLastObject];
         [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
-        [self setSearchBarLeftButtonImage];        
+        [self setSearchBarOrangeButtonImage];        
         
         [UIView animateWithDuration:duration
                          animations:^{
@@ -335,7 +335,7 @@ NSString * const emailRegEx =
                 
                 [self.controllers removeLastObject];
                 [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
-                [self setSearchBarLeftButtonImage];
+                [self setSearchBarOrangeButtonImage];
                 
                 [UIView animateWithDuration:duration animations:^{
                     currentViewController.view.frame = outgoingRect;
@@ -545,13 +545,13 @@ NSString * const emailRegEx =
     [self searchControllerActionButtonPressed];
 }
 
-- (IBAction)leftButtonPressed:(UIButton*)sender {
-    if(autocompleteOpen) {
-        [_autocompleteNavigationController popViewControllerAnimated:YES];
-        [self bangButtonPressed];
-    } else {
-        [self searchControllerLeftButtonPressed];
-    }
+-(IBAction)bangButtonPressed:(UIButton*)sender {
+    [_autocompleteNavigationController popViewControllerAnimated:YES];
+    [self bangButtonPressed];
+}
+
+-(IBAction)orangeButtonPressed:(UIButton*)sender {
+    [self searchControllerLeftButtonPressed];
 }
 
 -(void)setState:(DDGSearchControllerState)searchControllerState {
@@ -616,9 +616,9 @@ NSString * const emailRegEx =
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
     if(canGoBack)
-        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu_glyph_back"] forState:UIControlStateNormal];
+        [self.searchBar.orangeButton setImage:[UIImage imageNamed:@"button_menu_glyph_back"] forState:UIControlStateNormal];
     else
-        [self setSearchBarLeftButtonImage];
+        [self setSearchBarOrangeButtonImage];
 }
 
 -(void)setProgress:(CGFloat)progress {
@@ -725,12 +725,8 @@ NSString * const emailRegEx =
     self.searchBar.searchField.rightView = nil;
     [self revealBackground:YES animated:YES];
     
-    [self.searchBar.leftButton setImage:[UIImage imageNamed:@"menu_bang-default"] forState:UIControlStateNormal];
-    [self.searchBar.leftButton setImage:[UIImage imageNamed:@"menu_bang-active"] forState:UIControlStateHighlighted];
-
-    [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"btn-bg_bang-default"] forState:UIControlStateNormal];
-    [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"btn-bg_bang-active"] forState:UIControlStateHighlighted];
-        
+    [self.searchBar setShowsBangButton:YES animated:YES];
+            
     self.searchBar.showsLeftButton = YES;    
     self.searchBar.showsRightButton = NO;
     self.searchBar.showsCancelButton = YES;
@@ -750,9 +746,6 @@ NSString * const emailRegEx =
 
     self.slidingViewController.panGesture.enabled = YES;
     
-    if(_state == DDGSearchControllerStateHome)
-        [self setSearchBarLeftButtonImage];
-
     [self.searchBar.searchField resignFirstResponder];
     if(!barUpdated) {
         self.searchBar.searchField.text = oldSearchText;
@@ -764,10 +757,8 @@ NSString * const emailRegEx =
     [self revealBackground:NO animated:YES];
     if(self.state == DDGSearchControllerStateWeb)
         self.searchBar.searchField.rightView = stopOrReloadButton;
-    
-    [self setSearchBarLeftButtonImage];    
-    [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"button_menu_bg"] forState:UIControlStateNormal];
-    [self.searchBar.leftButton setBackgroundImage:[UIImage imageNamed:@"button_menu_bg-highlighted"] forState:UIControlStateHighlighted];    
+        
+    [self.searchBar setShowsBangButton:NO animated:YES];
     
     [self.bangInfoPopover dismissPopoverAnimated:YES];
     self.bangInfoPopover = nil;
@@ -896,7 +887,7 @@ NSString * const emailRegEx =
         viewController.contentSizeForViewInPopover = self.bangInfo.frame.size;
         
         DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
-        CGRect rect = [self.view convertRect:self.searchBar.leftButton.frame fromView:self.searchBar.leftButton.superview];
+        CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
         [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
         self.bangInfoPopover = popover;        
     } else {

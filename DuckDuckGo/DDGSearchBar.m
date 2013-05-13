@@ -52,6 +52,32 @@
     [self setNeedsLayout];    
 }
 
+- (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated {
+    
+    UIButton *incomming;
+    UIButton *outgoing;
+    
+    if (show) {
+        incomming = self.bangButton;
+        outgoing = self.orangeButton;
+    } else {
+        outgoing = self.bangButton;
+        incomming = self.orangeButton;
+    }
+    
+    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
+    [UIView animateWithDuration:duration
+                     animations:^{
+                         incomming.alpha = 1.0;
+                         outgoing.alpha = 0.0;
+                     }
+     
+     ];
+    
+    self.leftButton = incomming;
+    [self setNeedsLayout];
+}
+
 - (void)layoutIfNeeded:(NSTimeInterval)animationDuration {
     [UIView animateWithDuration:animationDuration animations:^{
         [self layoutIfNeeded];

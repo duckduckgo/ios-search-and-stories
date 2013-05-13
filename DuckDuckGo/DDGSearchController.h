@@ -42,7 +42,8 @@ typedef enum {
 - (void)popContentViewControllerAnimated:(BOOL)animated;
 - (BOOL)canPopContentViewController;
 
--(IBAction)leftButtonPressed:(UIButton*)sender;
+-(IBAction)bangButtonPressed:(UIButton*)sender;
+-(IBAction)orangeButtonPressed:(UIButton*)sender;
 -(IBAction)actionButtonPressed:(id)sender;
 -(IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)hideBangTooltipForever:(id)sender;
