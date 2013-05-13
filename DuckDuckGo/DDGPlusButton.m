@@ -17,7 +17,6 @@
     [button setBackgroundImage:[[UIImage imageNamed:backgroundImageName] resizableImageWithCapInsets:insets] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
     [button addTarget:nil action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
-    button.backgroundColor = [UIColor redColor];
     [button sizeToFit];
     
     return button;
@@ -29,6 +28,11 @@
 
 + (id)lightPlusButton {
     return [self plusButtonWithImageName:@"btn-icon_plus_search-suggestions" BackgroundImageNamed:@"btn-bg_plus_search-suggestions"];
+}
+
+- (void)sizeToFit {
+    [super sizeToFit];
+    self.frame = CGRectInset(self.bounds, -6.0, -6.0);
 }
 
 - (CGRect)backgroundRectForBounds:(CGRect)bounds {
