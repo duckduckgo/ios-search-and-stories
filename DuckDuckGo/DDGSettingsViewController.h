@@ -14,13 +14,19 @@ extern NSString * const DDGSettingQuackOnRefresh;
 extern NSString * const DDGSettingSuppressBangTooltip;
 extern NSString * const DDGSettingRegion;
 extern NSString * const DDGSettingAutocomplete;
-extern NSString * const DDGSettingStoriesReadView;
+extern NSString * const DDGSettingStoriesReadabilityMode;
 extern NSString * const DDGSettingHomeView;
 
 extern NSString * const DDGSettingHomeViewTypeStories;
 extern NSString * const DDGSettingHomeViewTypeSaved;
 extern NSString * const DDGSettingHomeViewTypeRecents;
 extern NSString * const DDGSettingHomeViewTypeDuck;
+
+typedef enum DDGReadabilityMode {
+    DDGReadabilityModeOff,
+    DDGReadabilityModeOnIfAvailable,
+    DDGReadabilityModeOnExclusive
+} DDGReadabilityMode;
 
 @interface DDGSettingsViewController : IGFormViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;

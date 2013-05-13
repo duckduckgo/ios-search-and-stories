@@ -166,6 +166,7 @@
 		5B375C34171D3F9A00C53772 /* button_menu_glyph_stories.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B375C32171D3F9A00C53772 /* button_menu_glyph_stories.png */; };
 		5B375C35171D3F9A00C53772 /* button_menu_glyph_stories@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B375C33171D3F9A00C53772 /* button_menu_glyph_stories@2x.png */; };
 		5B375C4917201DA600C53772 /* DDGCustomDeleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B375C4817201DA500C53772 /* DDGCustomDeleteViewController.m */; };
+		5B3896F41740F368009582C8 /* DDGReadabilitySettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B3896F31740F368009582C8 /* DDGReadabilitySettingViewController.m */; };
 		5B5C844A1725439C00EBD62E /* DDGHistoryNoResultsView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B5C84491725439C00EBD62E /* DDGHistoryNoResultsView.xib */; };
 		5B5C844D172543F400EBD62E /* icon-notification_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5C844B172543F400EBD62E /* icon-notification_large.png */; };
 		5B5C844E172543F400EBD62E /* icon-notification_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5C844C172543F400EBD62E /* icon-notification_large@2x.png */; };
@@ -547,6 +548,8 @@
 		5B375C33171D3F9A00C53772 /* button_menu_glyph_stories@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_menu_glyph_stories@2x.png"; sourceTree = "<group>"; };
 		5B375C4717201DA500C53772 /* DDGCustomDeleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.h; path = DDGCustomDeleteViewController.h; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; wrapsLines = 0; };
 		5B375C4817201DA500C53772 /* DDGCustomDeleteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.c.objc; path = DDGCustomDeleteViewController.m; sourceTree = "<group>"; tabWidth = 4; usesTabs = 0; wrapsLines = 0; };
+		5B3896F21740F367009582C8 /* DDGReadabilitySettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGReadabilitySettingViewController.h; sourceTree = "<group>"; };
+		5B3896F31740F368009582C8 /* DDGReadabilitySettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGReadabilitySettingViewController.m; sourceTree = "<group>"; };
 		5B5C84491725439C00EBD62E /* DDGHistoryNoResultsView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGHistoryNoResultsView.xib; sourceTree = "<group>"; };
 		5B5C844B172543F400EBD62E /* icon-notification_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-notification_large.png"; sourceTree = "<group>"; };
 		5B5C844C172543F400EBD62E /* icon-notification_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-notification_large@2x.png"; sourceTree = "<group>"; };
@@ -1000,6 +1003,8 @@
 				8398DAC616419FFD00A559C3 /* DDGChooseRegionViewController.m */,
 				8398DACA1641DA9F00A559C3 /* DDGRegionProvider.h */,
 				8398DACB1641DA9F00A559C3 /* DDGRegionProvider.m */,
+				5B3896F21740F367009582C8 /* DDGReadabilitySettingViewController.h */,
+				5B3896F31740F368009582C8 /* DDGReadabilitySettingViewController.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1867,6 +1872,7 @@
 				5B7C3CAD171C4D1E00B9E009 /* DDGHistoryItemCell.m in Sources */,
 				5B375C4917201DA600C53772 /* DDGCustomDeleteViewController.m in Sources */,
 				5B15F3D017394CC100912482 /* DDGPopoverViewController.m in Sources */,
+				5B3896F41740F368009582C8 /* DDGReadabilitySettingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

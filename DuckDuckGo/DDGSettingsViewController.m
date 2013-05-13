@@ -16,13 +16,14 @@
 #import "ECSlidingViewController.h"
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
+#import "DDGReadabilitySettingViewController.h"
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
 NSString * const DDGSettingRegion = @"region";
 NSString * const DDGSettingAutocomplete = @"autocomplete";
 NSString * const DDGSettingSuppressBangTooltip = @"suppress_bang_tooltip";
-NSString * const DDGSettingStoriesReadView = @"stories_read_view";
+NSString * const DDGSettingStoriesReadabilityMode = @"readability_mode";
 NSString * const DDGSettingHomeView = @"home_view";
 
 NSString * const DDGSettingHomeViewTypeStories = @"Stories View";
@@ -38,7 +39,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         DDGSettingQuackOnRefresh: @(NO),
 		DDGSettingRegion: @"us-en",
 		DDGSettingAutocomplete: @(YES),
-		DDGSettingStoriesReadView: @(YES),
+		DDGSettingStoriesReadabilityMode: @(DDGReadabilityModeOnIfAvailable),
         DDGSettingHomeView: DDGSettingHomeViewTypeStories,
     };
     
@@ -150,7 +151,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
         [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
     }];
-    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
+    
+    [self addButton:@"Readability" forKey:@"readability" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+        DDGReadabilitySettingViewController *rvc = [[DDGReadabilitySettingViewController alloc] initWithDefaults];
+        [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
+    }];
+//    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
     IGFormSwitch *quackSwitch = [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
     [self addSectionWithTitle:@"Autocomplete" footer:nil];
@@ -174,7 +180,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [actionSheet showInView:weakSelf.view];
     }];
     
-    for (IGFormSwitch *s in @[readabilitySwitch, quackSwitch, suggestionsSwitch, recentSwitch])
+    for (IGFormSwitch *s in @[quackSwitch, suggestionsSwitch, recentSwitch])
         [s.switchControl addTarget:self action:@selector(save:) forControlEvents:UIControlEventValueChanged];
     
     [self addSectionWithTitle:nil footer:nil];
@@ -221,7 +227,6 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [defaults setObject:[formData objectForKey:DDGSettingHomeView] forKey:DDGSettingHomeView];
     
     [defaults setObject:[formData objectForKey:DDGSettingRecordHistory] forKey:DDGSettingRecordHistory];
-    [defaults setObject:[formData objectForKey:DDGSettingStoriesReadView] forKey:DDGSettingStoriesReadView];
     [defaults setObject:[formData objectForKey:DDGSettingQuackOnRefresh] forKey:DDGSettingQuackOnRefresh];
     [defaults setObject:[formData objectForKey:DDGSettingAutocomplete] forKey:DDGSettingAutocomplete];
 }

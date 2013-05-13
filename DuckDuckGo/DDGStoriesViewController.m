@@ -703,7 +703,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:DDGLastViewedStoryKey];
     
-    [self.searchHandler loadStory:story readabilityMode:[[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingStoriesReadView]];
+    int readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+    [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
     
     [self.historyProvider logStory:story];
     
@@ -854,6 +855,10 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     NSMutableArray *predicates = [NSMutableArray array];
     
+    int readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+    if (readabilityMode == DDGReadabilityModeOnExclusive && !self.savedStoriesOnly)
+        [predicates addObject:[NSPredicate predicateWithFormat:@"articleURLString.length > 0"]];
+    
     if (nil != self.sourceFilter)
         [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
     if (self.savedStoriesOnly)
@@ -968,8 +973,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         } else  {
             [self.storyFetcher downloadImageForStory:story];
         }
-    }
-    
+    }    
 }
 
 
