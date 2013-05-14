@@ -899,20 +899,17 @@ NSString * const emailRegEx =
         CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
         [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
         self.bangInfoPopover = popover;
-    } else {
-        [self.bangInfoPopover dismissPopoverAnimated:YES];
-        self.bangInfoPopover = nil;
-        
-        NSString *textToAdd;
-        if(text.length==0 || [text characterAtIndex:text.length-1]==' ')
-            textToAdd = @"!";
-        else
-            textToAdd = @" !";
-        
-        [self textField:searchField shouldChangeCharactersInRange:NSMakeRange(text.length, 0) replacementString:textToAdd];
-        searchField.text = [searchField.text stringByAppendingString:textToAdd];
-        [(DDGAutocompleteViewController *)searchField.delegate searchFieldDidChange:nil];
     }
+    
+    NSString *textToAdd;
+    if(text.length==0 || [text characterAtIndex:text.length-1]==' ')
+        textToAdd = @"!";
+    else
+        textToAdd = @" !";
+    
+    [self textField:searchField shouldChangeCharactersInRange:NSMakeRange(text.length, 0) replacementString:textToAdd];
+    searchField.text = [searchField.text stringByAppendingString:textToAdd];
+    [(DDGAutocompleteViewController *)searchField.delegate searchFieldDidChange:nil];
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
@@ -989,14 +986,6 @@ NSString * const emailRegEx =
 
 -(void)searchFieldDidChange:(id)sender
 {
-    DDGAddressBarTextField *searchField = self.searchBar.searchField;
-    NSString *text = searchField.text;    
-    
-    if (text.length > 0) {
-        [self.bangInfoPopover dismissPopoverAnimated:YES];
-        self.bangInfoPopover = nil;        
-    }
-    
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete])
 	{
 		// autocomplete only when enabled
