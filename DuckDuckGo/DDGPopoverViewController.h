@@ -9,8 +9,14 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
+@class DDGPopoverViewController;
+@protocol DDGPopoverViewControllerDelegate <NSObject>
+- (void)popoverControllerDidDismissPopover:(DDGPopoverViewController *)popoverController;
+@end
+
 @interface DDGPopoverViewController : UIViewController
 @property (nonatomic, strong, readonly) UIViewController *contentViewController;
+@property (nonatomic, weak) id <DDGPopoverViewControllerDelegate> delegate;
 
 - (id)initWithContentViewController:(UIViewController *)viewController;
 

@@ -31,7 +31,7 @@ NSString * const emailRegEx =
 @"9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21"
 @"-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 
-@interface DDGSearchController ()
+@interface DDGSearchController () <DDGPopoverViewControllerDelegate>
 @property (nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
@@ -827,6 +827,12 @@ NSString * const emailRegEx =
     self.searchBar.searchField.rightView = nil;
 }
 
+#pragma mark - DDGPopoverViewControllerDelegate
+
+- (void)popoverControllerDidDismissPopover:(DDGPopoverViewController *)popoverController {
+    self.bangInfoPopover = nil;    
+}
+
 #pragma mark - Input accessory (the bang button/bar)
 
 -(void)createInputAccessory {
@@ -887,9 +893,10 @@ NSString * const emailRegEx =
         viewController.contentSizeForViewInPopover = self.bangInfo.frame.size;
         
         DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
+        popover.delegate = self;
         CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
         [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-        self.bangInfoPopover = popover;        
+        self.bangInfoPopover = popover;
     } else {
         [self.bangInfoPopover dismissPopoverAnimated:YES];
         self.bangInfoPopover = nil;

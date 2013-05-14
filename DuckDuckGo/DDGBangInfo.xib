@@ -38,7 +38,7 @@
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="IBUILabel" id="22727929">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">290</int>
 						<string key="NSFrame">{{0, 20}, {300, 31}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -74,7 +74,7 @@
 					</object>
 					<object class="IBUILabel" id="88467801">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">258</int>
 						<string key="NSFrame">{{20, 53}, {260, 93}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -110,7 +110,7 @@
 					</object>
 					<object class="IBUIButton" id="768876297">
 						<reference key="NSNextResponder" ref="191373211"/>
-						<int key="NSvFlags">292</int>
+						<int key="NSvFlags">289</int>
 						<string key="NSFrame">{{256, 0}, {44, 44}}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
@@ -262,18 +262,28 @@
 					<string key="className">DDGSearchBar</string>
 					<string key="superclassName">UIView</string>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="bangButton">UIButton</string>
 						<string key="cancelButton">UIButton</string>
 						<string key="leftButton">UIButton</string>
+						<string key="orangeButton">UIButton</string>
 						<string key="rightButton">UIButton</string>
 						<string key="searchField">DDGAddressBarTextField</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="bangButton">
+							<string key="name">bangButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="cancelButton">
 							<string key="name">cancelButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="leftButton">
 							<string key="name">leftButton</string>
+							<string key="candidateClassName">UIButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="orangeButton">
+							<string key="name">orangeButton</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="rightButton">
@@ -295,14 +305,19 @@
 					<string key="superclassName">UIViewController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="actionButtonPressed:">id</string>
+						<string key="bangButtonPressed:">UIButton</string>
 						<string key="cancelButtonPressed:">id</string>
 						<string key="hideBangTooltipForever:">id</string>
-						<string key="leftButtonPressed:">UIButton</string>
+						<string key="orangeButtonPressed:">UIButton</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="actionButtonPressed:">
 							<string key="name">actionButtonPressed:</string>
 							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="bangButtonPressed:">
+							<string key="name">bangButtonPressed:</string>
+							<string key="candidateClassName">UIButton</string>
 						</object>
 						<object class="IBActionInfo" key="cancelButtonPressed:">
 							<string key="name">cancelButtonPressed:</string>
@@ -312,8 +327,8 @@
 							<string key="name">hideBangTooltipForever:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="leftButtonPressed:">
-							<string key="name">leftButtonPressed:</string>
+						<object class="IBActionInfo" key="orangeButtonPressed:">
+							<string key="name">orangeButtonPressed:</string>
 							<string key="candidateClassName">UIButton</string>
 						</object>
 					</dictionary>

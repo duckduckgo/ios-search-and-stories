@@ -59,6 +59,14 @@
     self.view.opaque = NO;    
 }
 
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    
+    [self.delegate popoverControllerDidDismissPopover:self];
+    
+    [self dismissPopoverAnimated:(duration > 0.0)];
+}
+
 - (void)presentPopoverFromRect:(CGRect)rect inView:(UIView *)view permittedArrowDirections:(UIPopoverArrowDirection)arrowDirections animated:(BOOL)animated
 {
     CGSize contentSize = self.contentViewController.contentSizeForViewInPopover;
@@ -86,7 +94,10 @@
     if (frame.origin.x + frame.size.width > bounds.origin.x + bounds.size.width) {
         frame.origin.x = bounds.origin.x + bounds.size.width - frame.size.width;
     }
-    self.view.frame = frame;
+
+    UIViewController *rootViewController = view.window.rootViewController;    
+    CGRect rootRect = [rootViewController.view convertRect:frame fromView:view];    
+    self.view.frame = rootRect;
 
     UIView *contentView = self.contentViewController.view;
     contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -101,7 +112,10 @@
     self.view.layer.shouldRasterize = YES;
     self.view.layer.rasterizationScale = [[UIScreen mainScreen] scale];
     
-    [view addSubview:self.view];        
+    [rootViewController addChildViewController:self];
+    [rootViewController.view addSubview:self.view];
+    [self didMoveToParentViewController:rootViewController];
+//    [view addSubview:self.view];
     
     CGRect backgroundBounds = self.view.bounds;
     CGRect backgroundButtonRect = [self.view convertRect:rect fromView:view];
@@ -132,7 +146,10 @@
                      animations:^{
                          self.view.alpha = 0.0;
     } completion:^(BOOL finished) {
+        [self willMoveToParentViewController:nil];
         [self.view removeFromSuperview];
+        [self removeFromParentViewController];
+        
         [self.contentViewController willMoveToParentViewController:nil];
         [self.contentViewController.view removeFromSuperview];
         [self.contentViewController removeFromParentViewController]; // calls [childViewController didMoveToParentViewController:nil]        
