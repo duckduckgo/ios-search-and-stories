@@ -890,7 +890,9 @@ NSString * const emailRegEx =
         
         UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
         viewController.view = self.bangInfo;
-        viewController.contentSizeForViewInPopover = self.bangInfo.frame.size;
+        CGRect frame = self.bangInfo.frame;
+        frame.size.width = self.view.bounds.size.width - 20.0;
+        viewController.contentSizeForViewInPopover = frame.size;
         
         DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
         popover.delegate = self;
