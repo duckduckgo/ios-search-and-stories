@@ -329,9 +329,19 @@ static NSString *historyCellID = @"HCell";
         NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
         if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
             [self.historyProvider logSearchResultWithTitle:[suggestionItem objectForKey:@"phrase"]];
-        [self.searchController loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
-        [self.searchController dismissAutocomplete];
+        
+        DDGAddressBarTextField *searchField = self.searchController.searchBar.searchField;
+        NSString *searchText = searchField.text;
+        NSArray *words = [searchText componentsSeparatedByString:@" "];
+        if ([words count] == 1 && [[[words objectAtIndex:0] substringToIndex:1] isEqualToString:@"!"]) {
+            searchField.text = [[suggestionItem objectForKey:@"phrase"] stringByAppendingString:@" "];
+        } else {
+            [self.searchController loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
+            [self.searchController dismissAutocomplete];
+        }
     }
+    
+    [tv deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 -(void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath {
