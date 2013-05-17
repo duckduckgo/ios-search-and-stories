@@ -37,6 +37,7 @@ NSString * const emailRegEx =
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSMutableArray *controllers;
 @property (nonatomic, strong) DDGPanGestureRecognizer *panGesture;
+@property (nonatomic, getter = isDraggingTopViewController) BOOL draggingTopViewController;
 @property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
 @property (nonatomic, strong) DDGPopoverViewController *bangInfoPopover;
 @property (nonatomic, strong) NSPredicate *emailPredicate;
@@ -271,14 +272,29 @@ NSString * const emailRegEx =
 
 - (void)panGesture:(UIPanGestureRecognizer *)panGesture {
     
+    if (panGesture != self.panGesture)
+        return;
+    
     switch (panGesture.state) {
         case UIGestureRecognizerStateChanged:
         {
+            UIViewController *currentViewController = [self.controllers lastObject];
+            [currentViewController viewMightDisappearDDG];
+            
+            UIViewController *previousViewController = nil;
+            if ([self canPopContentViewController])
+                previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
+            
+            self.draggingTopViewController = NO;
+            
+            [self addChildViewController:previousViewController];
+            [self.view insertSubview:previousViewController.view belowSubview:self.background];
+            [previousViewController didMoveToParentViewController:self];
+            
+            
             CGPoint transation = [panGesture translationInView:self.view];
             [panGesture setTranslation:CGPointZero inView:self.view];
             
-            UIViewController *currentViewController = [self.controllers lastObject];
-            UIViewController *previousViewController = nil;
             if ([self canPopContentViewController])
                 previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
             
@@ -288,6 +304,8 @@ NSString * const emailRegEx =
             currentCenter.x += transation.x;
             previousCenter.x += transation.x;
             
+            self.draggingTopViewController = YES;
+            
             [UIView animateWithDuration:0 animations:^{
                 currentViewController.view.center = currentCenter;
                 previousViewController.view.center = previousCenter;
@@ -296,73 +314,68 @@ NSString * const emailRegEx =
             break;
         case UIGestureRecognizerStateBegan:
         {
-            UIViewController *currentViewController = [self.controllers lastObject];
-            [currentViewController viewMightDisappearDDG];
-            
-            UIViewController *previousViewController = nil;
-            if ([self canPopContentViewController])
-                previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
-            
-            
-            [self addChildViewController:previousViewController];
-            [self.view insertSubview:previousViewController.view belowSubview:self.background];
-            [previousViewController didMoveToParentViewController:self];
         }
             break;
         case UIGestureRecognizerStateEnded:
         case UIGestureRecognizerStateCancelled:
         {
-            CGRect contentRect = [self contentRect];
-            CGFloat contentMidX = CGRectGetMidX(contentRect);
-            UIViewController *currentViewController = [self.controllers lastObject];
-            
-            CGFloat offset = currentViewController.view.center.x - contentMidX;
-            CGPoint velocity = [panGesture velocityInView:panGesture.view];
-            CGFloat percent = (offset) / (self.view.bounds.size.width / 2.0);
-            
-            BOOL pop = (velocity.x > 0 && percent > 0.25);
-            
-            UIViewController *previousViewController = nil;
-            if ([self canPopContentViewController])
-                previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
-            
-            CGFloat distanceRemaining = contentRect.size.width - offset;
-            CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);            
-            
-            if (pop) {
-                CGRect outgoingRect = contentRect;
-                outgoingRect.origin.x += contentRect.size.width;
+            if (self.isDraggingTopViewController) {
                 
-                [self.controllers removeLastObject];
-                [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
-                [self setSearchBarOrangeButtonImage];
+                CGRect contentRect = [self contentRect];
+                CGFloat contentMidX = CGRectGetMidX(contentRect);
+                UIViewController *currentViewController = [self.controllers lastObject];
                 
-                [UIView animateWithDuration:duration animations:^{
-                    currentViewController.view.frame = outgoingRect;
-                    previousViewController.view.frame = contentRect;
-                    [currentViewController viewWillDisappear:YES];
-                } completion:^(BOOL finished) {
-                    [currentViewController viewDidDisappear:YES];
-                    [currentViewController willMoveToParentViewController:nil];
-                    [currentViewController.view removeFromSuperview];
-                    [currentViewController removeFromParentViewController];                    
-                }];
+                CGFloat offset = currentViewController.view.center.x - contentMidX;
+                CGPoint velocity = [panGesture velocityInView:panGesture.view];
+                CGFloat percent = (offset) / (self.view.bounds.size.width / 2.0);
                 
-            } else {
-                CGRect previousRect = contentRect;
-                previousRect.origin.x -= contentRect.size.width;
+                BOOL pop = (velocity.x > 0 && percent > 0.25);
                 
-                [UIView animateWithDuration:duration animations:^{
-                    currentViewController.view.frame = contentRect;
-                    previousViewController.view.frame = previousRect;
-                    [previousViewController viewWillDisappear:YES];
-                } completion:^(BOOL finished) {
-                    [previousViewController viewDidDisappear:YES];
-                    [previousViewController willMoveToParentViewController:nil];
-                    [previousViewController.view removeFromSuperview];
-                    [previousViewController removeFromParentViewController];                    
-                }];                
+                UIViewController *previousViewController = nil;
+                if ([self canPopContentViewController])
+                    previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
+                
+                CGFloat distanceRemaining = contentRect.size.width - offset;
+                CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);
+                
+                if (pop) {
+                    CGRect outgoingRect = contentRect;
+                    outgoingRect.origin.x += contentRect.size.width;
+                    
+                    [self.controllers removeLastObject];
+                    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
+                    [self setSearchBarOrangeButtonImage];
+                    
+                    [UIView animateWithDuration:duration animations:^{
+                        currentViewController.view.frame = outgoingRect;
+                        previousViewController.view.frame = contentRect;
+                        [currentViewController viewWillDisappear:YES];
+                    } completion:^(BOOL finished) {
+                        [currentViewController viewDidDisappear:YES];
+                        [currentViewController willMoveToParentViewController:nil];
+                        [currentViewController.view removeFromSuperview];
+                        [currentViewController removeFromParentViewController];
+                    }];
+                    
+                } else {
+                    // snapping back into position
+                    CGRect previousRect = contentRect;
+                    previousRect.origin.x -= contentRect.size.width;
+                    
+                    [UIView animateWithDuration:duration animations:^{
+                        currentViewController.view.frame = contentRect;
+                        previousViewController.view.frame = previousRect;
+                        [previousViewController viewWillDisappear:YES];
+                    } completion:^(BOOL finished) {
+                        [previousViewController viewDidDisappear:YES];
+                        [previousViewController willMoveToParentViewController:nil];
+                        [previousViewController.view removeFromSuperview];
+                        [previousViewController removeFromParentViewController];
+                    }];                
+                }
             }
+            
+            self.draggingTopViewController = NO;
         }
             break;
         default:
