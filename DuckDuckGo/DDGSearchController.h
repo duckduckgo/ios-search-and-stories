@@ -32,6 +32,7 @@ typedef enum {
 @property (nonatomic, weak) IBOutlet DDGSearchBar *searchBar;
 @property (nonatomic, weak) IBOutlet UIView *background;
 @property (nonatomic, weak) IBOutlet UIView *bangInfo;
+@property (weak, nonatomic) IBOutlet UITextView *bangTextView;
 @property (nonatomic, strong) NSArray *contentControllers;
 @property (nonatomic, strong) UINavigationController *autocompleteNavigationController;
 @property (nonatomic, assign) DDGSearchControllerState state;

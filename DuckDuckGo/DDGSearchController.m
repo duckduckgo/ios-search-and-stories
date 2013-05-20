@@ -905,6 +905,13 @@ NSString * const emailRegEx =
         viewController.view = self.bangInfo;
         CGRect frame = self.bangInfo.frame;
         frame.size.width = self.view.bounds.size.width - 20.0;
+        
+        CGRect textRect = CGRectInset(frame, 12.0, 0.0);
+        CGSize textSize = [self.bangTextView.text sizeWithFont:self.bangTextView.font
+                                             constrainedToSize:CGSizeMake(textRect.size.width, MAXFLOAT)
+                                                 lineBreakMode:NSLineBreakByWordWrapping];
+        
+        frame.size.height = textSize.height + 28.0;
         viewController.contentSizeForViewInPopover = frame.size;
         
         DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
