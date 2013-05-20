@@ -16,10 +16,9 @@
 
 NSString * const kDDGCustomStoriesURLString = @"https://duckduckgo.com/news.js?o=json&t=m&q=";
 
-NSString * const kDDGTypeInfoURLString = @"https://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
-NSString * const kDDGStoriesURLString = @"https://caine.duckduckgo.com/watrcoolr.js?o=json&s=";
-NSString * const kDDGSuggestionsURLString = @"http://rundmc.duckduckgo.com:6767/?q=";
-
-//NSString * const kDDGTypeInfoURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
-//NSString * const kDDGStoriesURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&s=";
+//NSString * const kDDGTypeInfoURLString = @"https://caine.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
+//NSString * const kDDGStoriesURLString = @"https://caine.duckduckgo.com/watrcoolr.js?o=json&s=";
+NSString * const kDDGTypeInfoURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
+NSString * const kDDGStoriesURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&s=";
 //NSString * const kDDGSuggestionsURLString = @"https://duckduckgo.com/ac/?q=";
+NSString * const kDDGSuggestionsURLString = @"http://rundmc.duckduckgo.com:6767/?q=";
