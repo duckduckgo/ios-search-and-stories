@@ -225,7 +225,7 @@ static NSString *historyCellID = @"HCell";
             
             iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 53, 53)];
             iv.tag = 100;
-            iv.contentMode = UIViewContentModeScaleAspectFill;
+            iv.contentMode = UIViewContentModeScaleAspectFit;
             iv.clipsToBounds = YES;
             iv.backgroundColor = [UIColor whiteColor];
 
