@@ -222,8 +222,6 @@
 		5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD7170AF1AA00B9E009 /* DDGPlusButton.m */; };
 		5B7C3BDF170B098C00B9E009 /* DDGFirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BDD170B098C00B9E009 /* DDGFirstRunViewController.m */; };
 		5B7C3BE0170B098C00B9E009 /* DDGFirstRunViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BDE170B098C00B9E009 /* DDGFirstRunViewController.xib */; };
-		5B7C3BE3170B0C0100B9E009 /* ddg-logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE1170B0C0100B9E009 /* ddg-logo.png */; };
-		5B7C3BE4170B0C0100B9E009 /* ddg-logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE2170B0C0100B9E009 /* ddg-logo@2x.png */; };
 		5B7C3BE7170B0C1000B9E009 /* btn_get-started.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */; };
 		5B7C3BE8170B0C1000B9E009 /* btn_get-started@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */; };
 		5B7C3BEB170B0C1A00B9E009 /* icon_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE9170B0C1A00B9E009 /* icon_close.png */; };
@@ -281,6 +279,8 @@
 		5BB3F51B16D26AD300281A2B /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB3F51A16D26AD300281A2B /* CoreImage.framework */; };
 		5BD23C3816EE235800C2FBDA /* DDGActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */; };
 		5BDC6A4E174B99940065BB8D /* DDGSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC6A4D174B99940065BB8D /* DDGSlidingViewController.m */; };
+		5BDC6A51174BB1AA0065BB8D /* welcome_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6A4F174BB1AA0065BB8D /* welcome_logo.png */; };
+		5BDC6A52174BB1AA0065BB8D /* welcome_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6A50174BB1AA0065BB8D /* welcome_logo@2x.png */; };
 		5BFF24AE16F77C0D00844D3B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BFF24AD16F77C0D00844D3B /* CoreData.framework */; };
 		5BFF24B316F77E0900844D3B /* DDGStoryFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */; };
 		5BFF24C416F77F9F00844D3B /* Stories.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24C216F77F9E00844D3B /* Stories.xcdatamodeld */; };
@@ -620,8 +620,6 @@
 		5B7C3BDC170B098C00B9E009 /* DDGFirstRunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGFirstRunViewController.h; sourceTree = "<group>"; };
 		5B7C3BDD170B098C00B9E009 /* DDGFirstRunViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGFirstRunViewController.m; sourceTree = "<group>"; };
 		5B7C3BDE170B098C00B9E009 /* DDGFirstRunViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGFirstRunViewController.xib; sourceTree = "<group>"; };
-		5B7C3BE1170B0C0100B9E009 /* ddg-logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ddg-logo.png"; sourceTree = "<group>"; };
-		5B7C3BE2170B0C0100B9E009 /* ddg-logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ddg-logo@2x.png"; sourceTree = "<group>"; };
 		5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_get-started.png"; sourceTree = "<group>"; };
 		5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_get-started@2x.png"; sourceTree = "<group>"; };
 		5B7C3BE9170B0C1A00B9E009 /* icon_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_close.png; sourceTree = "<group>"; };
@@ -697,6 +695,8 @@
 		5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGActivityViewController.m; sourceTree = "<group>"; };
 		5BDC6A4C174B99940065BB8D /* DDGSlidingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSlidingViewController.h; sourceTree = "<group>"; };
 		5BDC6A4D174B99940065BB8D /* DDGSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlidingViewController.m; sourceTree = "<group>"; };
+		5BDC6A4F174BB1AA0065BB8D /* welcome_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welcome_logo.png; sourceTree = "<group>"; };
+		5BDC6A50174BB1AA0065BB8D /* welcome_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome_logo@2x.png"; sourceTree = "<group>"; };
 		5BFF24AD16F77C0D00844D3B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		5BFF24B116F77E0900844D3B /* DDGStoryFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryFetcher.h; sourceTree = "<group>"; };
 		5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryFetcher.m; sourceTree = "<group>"; };
@@ -1257,10 +1257,10 @@
 		5B7C3BDB170B096A00B9E009 /* First Run */ = {
 			isa = PBXGroup;
 			children = (
-				5B7C3BE1170B0C0100B9E009 /* ddg-logo.png */,
-				5B7C3BE2170B0C0100B9E009 /* ddg-logo@2x.png */,
 				5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */,
 				5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */,
+				5BDC6A4F174BB1AA0065BB8D /* welcome_logo.png */,
+				5BDC6A50174BB1AA0065BB8D /* welcome_logo@2x.png */,
 				5B7C3BE9170B0C1A00B9E009 /* icon_close.png */,
 				5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */,
 				5B7C3BDC170B098C00B9E009 /* DDGFirstRunViewController.h */,
@@ -1724,8 +1724,6 @@
 				5B7C3BD4170AF18900B9E009 /* btn-icon_plus.png in Resources */,
 				5B7C3BD5170AF18900B9E009 /* btn-icon_plus@2x.png in Resources */,
 				5B7C3BE0170B098C00B9E009 /* DDGFirstRunViewController.xib in Resources */,
-				5B7C3BE3170B0C0100B9E009 /* ddg-logo.png in Resources */,
-				5B7C3BE4170B0C0100B9E009 /* ddg-logo@2x.png in Resources */,
 				5B7C3BE7170B0C1000B9E009 /* btn_get-started.png in Resources */,
 				5B7C3BE8170B0C1000B9E009 /* btn_get-started@2x.png in Resources */,
 				5B7C3BEB170B0C1A00B9E009 /* icon_close.png in Resources */,
@@ -1771,6 +1769,8 @@
 				5B15F3DC17394CDF00912482 /* bang-info_indicator.png in Resources */,
 				5B15F3DD17394CDF00912482 /* bang-info_indicator@2x.png in Resources */,
 				5B15F3DF17394E2C00912482 /* DDGBangInfo.xib in Resources */,
+				5BDC6A51174BB1AA0065BB8D /* welcome_logo.png in Resources */,
+				5BDC6A52174BB1AA0065BB8D /* welcome_logo@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
