@@ -793,9 +793,8 @@ NSString * const emailRegEx =
 
 -(void)bangButtonPressed {
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
-    NSString *text = searchField.text;
     
-    if (self.showBangTooltip && text.length == 0 && nil == self.bangInfoPopover) {
+    if (self.showBangTooltip && nil == self.bangInfoPopover) {
         if (nil == self.bangInfo)
             [[NSBundle mainBundle] loadNibNamed:@"DDGBangInfo" owner:self options:nil];
         
@@ -819,6 +818,7 @@ NSString * const emailRegEx =
         self.bangInfoPopover = popover;
     }
     
+    NSString *text = searchField.text;
     NSString *textToAdd;
     if(text.length==0 || [text characterAtIndex:text.length-1]==' ')
         textToAdd = @"!";
