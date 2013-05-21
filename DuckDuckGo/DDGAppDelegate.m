@@ -10,7 +10,7 @@
 #import "DDGHistoryProvider.h"
 #import "SDURLCache.h"
 #import "DDGSettingsViewController.h"
-#import "ECSlidingViewController.h"
+#import "DDGSlidingViewController.h"
 #import "AFNetworking.h"
 #import "DDGUnderViewController.h"
 #import "DDGSearchController.h"
@@ -154,7 +154,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.searchHandler = under;
     
-    ECSlidingViewController *slidingViewController = [[ECSlidingViewController alloc] initWithNibName:nil bundle:nil];
+    DDGSlidingViewController *slidingViewController = [[DDGSlidingViewController alloc] initWithNibName:nil bundle:nil];
     self.window.rootViewController = slidingViewController;
     
     slidingViewController.underLeftViewController = under;

@@ -36,11 +36,11 @@ NSString * const emailRegEx =
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSMutableArray *controllers;
-@property (nonatomic, strong) DDGPanGestureRecognizer *panGesture;
 @property (nonatomic, getter = isDraggingTopViewController) BOOL draggingTopViewController;
 @property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
 @property (nonatomic, strong) DDGPopoverViewController *bangInfoPopover;
 @property (nonatomic, strong) NSPredicate *emailPredicate;
+@property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic) BOOL showBangTooltip;
 @end
 
@@ -95,48 +95,31 @@ NSString * const emailRegEx =
 }
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
-    NSTimeInterval duration = (animated) ? 0.3 : 0.0;
+    NSTimeInterval duration = (animated) ? 0.3 : 0.0;    
     
-    UIViewController *incommingViewController = contentController;
-    UIViewController *outgoingViewController = [self.controllers lastObject];
-    
-    [self view];
-    
-    CGRect contentRect = [self contentRect];
-    CGRect incommingRect = contentRect;
-    incommingRect.origin.x += contentRect.size.width;
-    CGRect outgoingRect = contentRect;
-    outgoingRect.origin.x -= contentRect.size.width;
-
-    incommingViewController.view.frame = incommingRect;
-
-    [self addChildViewController:incommingViewController];
-    [self.view insertSubview:incommingViewController.view belowSubview:self.background];
-    
-    [outgoingViewController viewWillDisappear:animated];
-    
-    [self.controllers addObject:incommingViewController];
+    [self.controllers addObject:contentController];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
     [self setSearchBarOrangeButtonImage];
     
-    if ([self.controllers count] > 1) {
-        [incommingViewController.view addGestureRecognizer:self.panGesture];
-        for (UIGestureRecognizer *gr in incommingViewController.view.gestureRecognizers)
-            if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
-                [self.panGesture requireGestureRecognizerToFail:gr];
-    }
+    [self.pageViewController setViewControllers:@[contentController]
+                                      direction:UIPageViewControllerNavigationDirectionForward
+                                       animated:animated
+                                     completion:NULL];
     
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         incommingViewController.view.frame = contentRect;
-                         outgoingViewController.view.frame = outgoingRect;
-                     }
-                     completion:^(BOOL finished) {
-                         [incommingViewController didMoveToParentViewController:self];
-                         [outgoingViewController willMoveToParentViewController:nil];
-                         [outgoingViewController.view removeFromSuperview];
-                         [outgoingViewController removeFromParentViewController];
-                     }];
+    if (self.controllers.count == 1)
+        [self configurePanGestureForViewController:contentController];
+}
+
+- (void)configurePanGestureForViewController:(UIViewController *)viewController {
+    UIGestureRecognizer *panGesture = self.slidingViewController.panGesture;
+    if (nil == panGesture)
+        return;
+    
+    for (UIGestureRecognizer *g in viewController.view.gestureRecognizers) {
+        if ([g isKindOfClass:[UIPanGestureRecognizer class]])
+            [g requireGestureRecognizerToFail:panGesture];
+    }
+    [viewController.view addGestureRecognizer:panGesture];
 }
 
 - (BOOL)canPopContentViewController {
@@ -146,33 +129,15 @@ NSString * const emailRegEx =
 - (void)popContentViewControllerAnimated:(BOOL)animated {
     if ([self canPopContentViewController]) {
         NSTimeInterval duration = (animated) ? 0.3 : 0.0;
-        UIViewController *outgoingViewController = [self.controllers lastObject];
-        UIViewController *incommingViewController = [self.controllers objectAtIndex:self.controllers.count-2];
-        
-        CGRect contentRect = [self contentRect];
-        CGRect outgoingRect = contentRect;
-        outgoingRect.origin.x += contentRect.size.width;
-        
-        [outgoingViewController viewWillDisappear:animated];
-        
-        [self addChildViewController:incommingViewController];
-        [self.view insertSubview:incommingViewController.view belowSubview:self.background];
         
         [self.controllers removeLastObject];
         [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
         [self setSearchBarOrangeButtonImage];        
         
-        [UIView animateWithDuration:duration
-                         animations:^{
-                             incommingViewController.view.frame = contentRect;
-                             outgoingViewController.view.frame = outgoingRect;
-                         }
-                         completion:^(BOOL finished) {
-                             [incommingViewController didMoveToParentViewController:self];
-                             [outgoingViewController willMoveToParentViewController:nil];
-                             [outgoingViewController.view removeFromSuperview];
-                             [outgoingViewController removeFromParentViewController];
-                         }];
+        [self.pageViewController setViewControllers:@[[self.controllers lastObject]]
+                                          direction:UIPageViewControllerNavigationDirectionReverse
+                                           animated:animated
+                                         completion:NULL];
     }
 }
 
@@ -238,16 +203,28 @@ NSString * const emailRegEx =
 	searchField.rightViewMode = UITextFieldViewModeAlways;
 	searchField.leftViewMode = UITextFieldViewModeAlways;
 	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
-	searchField.delegate = self;
-    
-    DDGPanGestureRecognizer *panGesture = [[DDGPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGesture:)];
-    panGesture.direction = DDGPanGestureRecognizerDirectionRight;
-    panGesture.delegate = self;
-    self.panGesture = panGesture;
+	searchField.delegate = self;    
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
+    
+    UIPageViewController *pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
+                                                                               navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
+                                                                                             options:@{
+                                                       UIPageViewControllerOptionInterPageSpacingKey: @10.f
+                                                }];
+    pageViewController.delegate = self;
+    pageViewController.dataSource = self;
+    
+    pageViewController.view.backgroundColor = [UIColor colorWithRed:0.200 green:0.212 blue:0.251 alpha:1.000];
+    pageViewController.view.frame = [self contentRect];
+    
+    [self addChildViewController:pageViewController];
+    [self.view insertSubview:pageViewController.view belowSubview:self.searchBar];
+    [pageViewController didMoveToParentViewController:self];
+    
+    self.pageViewController = pageViewController;    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -265,126 +242,47 @@ NSString * const emailRegEx =
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
     
-    [self.slidingViewController.panGesture requireGestureRecognizerToFail:self.panGesture];
+    [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
 }
 
-#pragma mark - UIGestureRecognizerDelegate
+#pragma mark - UIPageViewControllerDelegate, UIPageViewControllerDataSource
 
-- (void)panGesture:(UIPanGestureRecognizer *)panGesture {
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
+      viewControllerBeforeViewController:(UIViewController *)viewController {
     
-    if (panGesture != self.panGesture)
-        return;
-    
-    switch (panGesture.state) {
-        case UIGestureRecognizerStateChanged:
-        {
-            UIViewController *currentViewController = [self.controllers lastObject];
-            [currentViewController viewMightDisappearDDG];
-            
-            UIViewController *previousViewController = nil;
-            if ([self canPopContentViewController])
-                previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
-            
-            self.draggingTopViewController = NO;
-            
-            [self addChildViewController:previousViewController];
-            [self.view insertSubview:previousViewController.view belowSubview:self.background];
-            [previousViewController didMoveToParentViewController:self];
-            
-            
-            CGPoint transation = [panGesture translationInView:self.view];
-            [panGesture setTranslation:CGPointZero inView:self.view];
-            
-            if ([self canPopContentViewController])
-                previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
-            
-            CGPoint currentCenter = currentViewController.view.center;
-            CGPoint previousCenter = previousViewController.view.center;
-            
-            currentCenter.x += transation.x;
-            previousCenter.x += transation.x;
-            
-            self.draggingTopViewController = YES;
-            
-            [UIView animateWithDuration:0 animations:^{
-                currentViewController.view.center = currentCenter;
-                previousViewController.view.center = previousCenter;
-            }];            
-        }
-            break;
-        case UIGestureRecognizerStateBegan:
-        {
-        }
-            break;
-        case UIGestureRecognizerStateEnded:
-        case UIGestureRecognizerStateCancelled:
-        {
-            if (self.isDraggingTopViewController) {
-                
-                CGRect contentRect = [self contentRect];
-                CGFloat contentMidX = CGRectGetMidX(contentRect);
-                UIViewController *currentViewController = [self.controllers lastObject];
-                
-                CGFloat offset = currentViewController.view.center.x - contentMidX;
-                CGPoint velocity = [panGesture velocityInView:panGesture.view];
-                CGFloat percent = (offset) / (self.view.bounds.size.width / 2.0);
-                
-                BOOL pop = (velocity.x > 0 && percent > 0.25);
-                
-                UIViewController *previousViewController = nil;
-                if ([self canPopContentViewController])
-                    previousViewController = [self.controllers objectAtIndex:[self.controllers count]-2];
-                
-                CGFloat distanceRemaining = contentRect.size.width - offset;
-                CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);
-                
-                if (pop) {
-                    CGRect outgoingRect = contentRect;
-                    outgoingRect.origin.x += contentRect.size.width;
-                    
-                    [self.controllers removeLastObject];
-                    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
-                    [self setSearchBarOrangeButtonImage];
-                    
-                    [UIView animateWithDuration:duration animations:^{
-                        currentViewController.view.frame = outgoingRect;
-                        previousViewController.view.frame = contentRect;
-                        [currentViewController viewWillDisappear:YES];
-                    } completion:^(BOOL finished) {
-                        [currentViewController viewDidDisappear:YES];
-                        [currentViewController willMoveToParentViewController:nil];
-                        [currentViewController.view removeFromSuperview];
-                        [currentViewController removeFromParentViewController];
-                    }];
-                    
-                } else {
-                    // snapping back into position
-                    CGRect previousRect = contentRect;
-                    previousRect.origin.x -= contentRect.size.width;
-                    
-                    [UIView animateWithDuration:duration animations:^{
-                        currentViewController.view.frame = contentRect;
-                        previousViewController.view.frame = previousRect;
-                        [previousViewController viewWillDisappear:YES];
-                    } completion:^(BOOL finished) {
-                        [previousViewController viewDidDisappear:YES];
-                        [previousViewController willMoveToParentViewController:nil];
-                        [previousViewController.view removeFromSuperview];
-                        [previousViewController removeFromParentViewController];
-                    }];                
-                }
-            }
-            
-            self.draggingTopViewController = NO;
-        }
-            break;
-        default:
-            break;
+    NSUInteger i = [self.controllers indexOfObject:viewController];
+    if (i==NSNotFound || i == 0) {
+        return nil;
     }
+    
+    return self.controllers[i-1];
 }
 
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    return [self canPopContentViewController];
+- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
+       viewControllerAfterViewController:(UIViewController *)viewController {
+    
+    NSUInteger i = [self.controllers indexOfObject:viewController];
+    if (i==NSNotFound || i == self.controllers.count -1) {
+        return nil;
+    }
+    
+    return self.controllers[i+1];
+}
+
+- (void)pageViewController:(UIPageViewController *)pageViewController
+        didFinishAnimating:(BOOL)finished
+   previousViewControllers:(NSArray *)previousViewControllers
+       transitionCompleted:(BOOL)completed {
+    if (completed) {
+        UIViewController *viewController = [previousViewControllers lastObject];
+        NSUInteger index = [self.controllers indexOfObject:viewController];
+        if (index != NSNotFound) {
+            [self.controllers removeObjectsInRange:NSMakeRange(index, self.controllers.count - index)];
+        }
+        
+        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:0.2];
+        [self setSearchBarOrangeButtonImage];
+    }
 }
 
 #pragma mark - Keyboard notifications

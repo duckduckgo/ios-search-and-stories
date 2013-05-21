@@ -18,7 +18,7 @@ typedef enum {
 } DDGSearchControllerState;
 
 @class DDGSearchSuggestionsProvider, DDGHistoryProvider, DDGInputAccessoryView;
-@interface DDGSearchController : UIViewController<UITextFieldDelegate, UINavigationControllerDelegate, DDGSearchHandler, UIGestureRecognizerDelegate> {
+@interface DDGSearchController : UIViewController <UITextFieldDelegate, UINavigationControllerDelegate, DDGSearchHandler, UIGestureRecognizerDelegate, UIPageViewControllerDelegate, UIPageViewControllerDataSource> {
     NSString *oldSearchText;
     BOOL barUpdated;
     BOOL autocompleteOpen;

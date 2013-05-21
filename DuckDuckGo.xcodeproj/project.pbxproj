@@ -280,6 +280,7 @@
 		5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F50416CAA49300281A2B /* DDGStoryCell.m */; };
 		5BB3F51B16D26AD300281A2B /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB3F51A16D26AD300281A2B /* CoreImage.framework */; };
 		5BD23C3816EE235800C2FBDA /* DDGActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */; };
+		5BDC6A4E174B99940065BB8D /* DDGSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC6A4D174B99940065BB8D /* DDGSlidingViewController.m */; };
 		5BFF24AE16F77C0D00844D3B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BFF24AD16F77C0D00844D3B /* CoreData.framework */; };
 		5BFF24B316F77E0900844D3B /* DDGStoryFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */; };
 		5BFF24C416F77F9F00844D3B /* Stories.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24C216F77F9E00844D3B /* Stories.xcdatamodeld */; };
@@ -694,6 +695,8 @@
 		5BB3F51A16D26AD300281A2B /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		5BD23C3616EE235800C2FBDA /* DDGActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGActivityViewController.h; sourceTree = "<group>"; };
 		5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGActivityViewController.m; sourceTree = "<group>"; };
+		5BDC6A4C174B99940065BB8D /* DDGSlidingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSlidingViewController.h; sourceTree = "<group>"; };
+		5BDC6A4D174B99940065BB8D /* DDGSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlidingViewController.m; sourceTree = "<group>"; };
 		5BFF24AD16F77C0D00844D3B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		5BFF24B116F77E0900844D3B /* DDGStoryFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryFetcher.h; sourceTree = "<group>"; };
 		5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryFetcher.m; sourceTree = "<group>"; };
@@ -1245,6 +1248,8 @@
 				5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */,
 				5B7C3CA8171C4B1800B9E009 /* DDGFixedSizeImageView.h */,
 				5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */,
+				5BDC6A4C174B99940065BB8D /* DDGSlidingViewController.h */,
+				5BDC6A4D174B99940065BB8D /* DDGSlidingViewController.m */,
 			);
 			name = "Main Menu";
 			sourceTree = "<group>";
@@ -1873,6 +1878,7 @@
 				5B375C4917201DA600C53772 /* DDGCustomDeleteViewController.m in Sources */,
 				5B15F3D017394CC100912482 /* DDGPopoverViewController.m in Sources */,
 				5B3896F41740F368009582C8 /* DDGReadabilitySettingViewController.m in Sources */,
+				5BDC6A4E174B99940065BB8D /* DDGSlidingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
