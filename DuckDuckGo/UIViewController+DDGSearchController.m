@@ -20,10 +20,6 @@
     return (DDGSearchController *)viewController;
 }
 
-- (void)viewMightDisappearDDG {
-    
-}
-
 - (UIImage *)searchControllerBackButtonIconDDG {
     return nil;
 }

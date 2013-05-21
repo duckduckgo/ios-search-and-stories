@@ -14,5 +14,4 @@
 }
 - (DDGSearchController *)searchControllerDDG;
 - (UIImage *)searchControllerBackButtonIconDDG;
-- (void)viewMightDisappearDDG;
 @end
