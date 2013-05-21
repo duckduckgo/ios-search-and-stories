@@ -19,7 +19,7 @@
     [super touchesMoved:touches withEvent:event];
     
     CGPoint translation = [self translationInView:self.view];
-    if (abs(translation.y)/2.0 > abs(translation.x)) {
+    if (abs(translation.y) > abs(translation.x)) {
         self.state = UIGestureRecognizerStateFailed;
     }
 }
@@ -28,6 +28,7 @@
 
 @interface DDGSlidingViewController ()
 @property (nonatomic, strong) DDGHorizontalPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) UIPanGestureRecognizer *oldPanGesture;
 @end
 
 @implementation DDGSlidingViewController
@@ -35,7 +36,31 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.oldPanGesture = [super panGesture];    
     self.panGesture = [[DDGHorizontalPanGestureRecognizer alloc] initWithTarget:self action:@selector(updateTopViewHorizontalCenterWithRecognizer:)];
 }
+
+- (void)anchorTopViewTo:(ECSide)side animations:(void (^)())animations onComplete:(void (^)())complete {
+    
+    void(^newCompletion)() = ^ {
+        [self.topViewController.view addGestureRecognizer:self.oldPanGesture];
+        if (complete)
+            complete();
+    };
+    
+    [super anchorTopViewTo:side animations:animations onComplete:newCompletion];
+}
+
+- (void)resetTopViewWithAnimations:(void(^)())animations onComplete:(void(^)())complete {
+    
+    void(^newCompletion)() = ^ {
+        [self.topViewController.view removeGestureRecognizer:self.oldPanGesture];
+        if (complete)
+            complete();
+    };
+    
+    [super resetTopViewWithAnimations:animations onComplete:newCompletion];
+};
 
 @end
