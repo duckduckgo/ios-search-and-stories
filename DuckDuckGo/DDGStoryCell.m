@@ -24,6 +24,9 @@
         [self.contentView addSubview:overlayImageView];
         self.overlayImageView = overlayImageView;
         
+        self.contentView.opaque = YES;
+        self.contentView.backgroundColor = [UIColor colorWithRed:0.247 green:0.267 blue:0.302 alpha:1.000];
+        
         self.textLabel.backgroundColor = [UIColor clearColor];
         self.textLabel.opaque = NO;
         self.textLabel.numberOfLines = 2;
@@ -53,7 +56,9 @@
     
     CGRect bounds = self.contentView.bounds;
     
+    self.imageView.hidden = NO;
     self.imageView.frame = bounds;
+    self.imageView.alpha = 1.0;
     [self.contentView sendSubviewToBack:self.imageView];
     
     CGRect faviconFrame = self.faviconButton.frame;    
