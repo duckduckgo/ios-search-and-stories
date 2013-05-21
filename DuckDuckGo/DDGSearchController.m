@@ -221,7 +221,7 @@ NSString * const emailRegEx =
     pageViewController.view.frame = [self contentRect];
     
     [self addChildViewController:pageViewController];
-    [self.view insertSubview:pageViewController.view belowSubview:self.searchBar];
+    [self.view insertSubview:pageViewController.view belowSubview:self.background];
     [pageViewController didMoveToParentViewController:self];
     
     self.pageViewController = pageViewController;    
