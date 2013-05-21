@@ -17,6 +17,12 @@
 
 @implementation DDGChooseSourcesViewController
 
+
+- (void)dealloc
+{
+    NSLog(@"dealloc");
+}
+
 #pragma mark - View controller methods
 
 - (void)viewDidLoad

@@ -14,4 +14,6 @@
 }
 - (DDGSearchController *)searchControllerDDG;
 - (UIImage *)searchControllerBackButtonIconDDG;
+- (void)reenableScrollsToTop;   // overridden by subclasses who want scrollsToTop
+- (void)clearScrollsToTop:(UIView *)view;
 @end

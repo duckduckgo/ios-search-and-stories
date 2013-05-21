@@ -84,6 +84,10 @@
     [self fetchedResultsController];
 }
 
+- (void)reenableScrollsToTop {
+    self.tableView.scrollsToTop = YES;
+}
+
 - (void)cancelDeletingIndexPathsAnimated:(BOOL)animated {
     for (NSIndexPath *indexPath in self.deletingIndexPaths) {
         DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];

@@ -96,6 +96,10 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     }
 }
 
+- (void)reenableScrollsToTop {
+    self.tableView.scrollsToTop = YES;
+}
+
 #pragma mark - No Stories
 
 - (void)showNoStoriesView {

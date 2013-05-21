@@ -101,6 +101,11 @@ NSString * const emailRegEx =
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
     [self setSearchBarOrangeButtonImage];
     
+    NSInteger count = self.controllers.count-1;
+    for (NSInteger i=0; i<count; i++)
+        [self clearScrollsToTop:[[self.controllers objectAtIndex:i] view]];
+    [contentController reenableScrollsToTop];
+    
     [self.pageViewController setViewControllers:@[contentController]
                                       direction:UIPageViewControllerNavigationDirectionForward
                                        animated:animated
@@ -130,14 +135,22 @@ NSString * const emailRegEx =
     if ([self canPopContentViewController]) {
         NSTimeInterval duration = (animated) ? 0.3 : 0.0;
         
+        UIViewController *popped = [self.controllers lastObject];
+        [self clearScrollsToTop:popped.view];
+        
         [self.controllers removeLastObject];
         [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
         [self setSearchBarOrangeButtonImage];        
         
-        [self.pageViewController setViewControllers:@[[self.controllers lastObject]]
+        UIViewController *contentController = [self.controllers lastObject];
+        [contentController reenableScrollsToTop];
+        
+        [self.pageViewController setViewControllers:@[contentController]
                                           direction:UIPageViewControllerNavigationDirectionReverse
                                            animated:animated
                                          completion:NULL];
+        
+        [contentController reenableScrollsToTop];
     }
 }
 
@@ -277,9 +290,14 @@ NSString * const emailRegEx =
         UIViewController *viewController = [previousViewControllers lastObject];
         NSUInteger index = [self.controllers indexOfObject:viewController];
         if (index != NSNotFound) {
-            [self.controllers removeObjectsInRange:NSMakeRange(index, self.controllers.count - index)];
-        }
-        
+            NSRange range = NSMakeRange(index, self.controllers.count - index);
+            NSArray *poppedControllers = [self.controllers subarrayWithRange:range];
+            for (UIViewController *v in poppedControllers) {
+                [self clearScrollsToTop:v.view];
+            }
+            [self.controllers removeObjectsInRange:range];
+        }        
+        [[self.controllers lastObject] reenableScrollsToTop];
         [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:0.2];
         [self setSearchBarOrangeButtonImage];
     }

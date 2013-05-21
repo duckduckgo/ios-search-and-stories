@@ -23,4 +23,17 @@
 - (UIImage *)searchControllerBackButtonIconDDG {
     return nil;
 }
+
+- (void)reenableScrollsToTop {
+    for (UIViewController *v in self.childViewControllers)
+        [v reenableScrollsToTop];
+}
+
+- (void)clearScrollsToTop:(UIView *)view {
+    if([view isKindOfClass:[UIScrollView class]])
+        ((UIScrollView *)view).scrollsToTop = NO;
+    
+    for(UIView *subview in view.subviews)
+        [self clearScrollsToTop:subview];
+}
 @end

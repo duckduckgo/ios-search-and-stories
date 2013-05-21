@@ -98,6 +98,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewUnderLeftWillAppear:) name:ECSlidingViewUnderLeftWillAppear object:self.slidingViewController];
 }
 
+- (void)reenableScrollsToTop {
+    self.tableView.scrollsToTop = YES;
+}
+
 - (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
     [self save:nil];
 }

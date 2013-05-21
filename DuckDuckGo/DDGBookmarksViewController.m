@@ -122,6 +122,10 @@
     [self.slidingViewController anchorTopViewTo:ECRight];
 }
 
+- (void)reenableScrollsToTop {
+    self.tableView.scrollsToTop = YES;
+}
+
 #pragma mark - No Bookmarks
 
 - (void)showNoBookmarksView {
