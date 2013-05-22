@@ -327,8 +327,6 @@ static NSString *historyCellID = @"HCell";
 	{
         NSArray *suggestions = self.suggestions;
         NSDictionary *suggestionItem = [suggestions objectAtIndex:indexPath.row];
-        if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
-            [self.historyProvider logSearchResultWithTitle:[suggestionItem objectForKey:@"phrase"]];
         
         DDGAddressBarTextField *searchField = self.searchController.searchBar.searchField;
         NSString *searchText = searchField.text;
@@ -336,6 +334,9 @@ static NSString *historyCellID = @"HCell";
         if ([words count] == 1 && [[[words objectAtIndex:0] substringToIndex:1] isEqualToString:@"!"]) {
             searchField.text = [[suggestionItem objectForKey:@"phrase"] stringByAppendingString:@" "];
         } else {
+            if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
+                [self.historyProvider logSearchResultWithTitle:[suggestionItem objectForKey:@"phrase"]];            
+            
             [self.searchController loadQueryOrURL:[suggestionItem objectForKey:@"phrase"]];
             [self.searchController dismissAutocomplete];
         }
