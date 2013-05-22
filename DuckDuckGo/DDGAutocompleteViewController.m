@@ -17,10 +17,13 @@
 #import "DDGTier2ViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGPlusButton.h"
+#import "DDGAutocompleteCell.h"
 
 @interface DDGAutocompleteViewController ()
 @property (nonatomic, copy) NSArray *history;
 @property (nonatomic, copy) NSArray *suggestions;
+@property (nonatomic, strong) NSOperationQueue *imageRequestQueue;
+@property (nonatomic, strong) NSCache *imageCache;
 @end
 
 @implementation DDGAutocompleteViewController
@@ -30,7 +33,13 @@ static NSString *suggestionCellID = @"SCell";
 static NSString *historyCellID = @"HCell";
 
 #define kCellHeightHistory			44.0
-#define kCellHeightSuggestions		62.0
+#define kCellHeightSuggestions		66.0
+
+- (void)dealloc
+{
+    [self.imageRequestQueue cancelAllOperations];
+    self.imageRequestQueue = nil;
+}
 
 -(void)viewDidLoad {
     [super viewDidLoad];
@@ -47,11 +56,17 @@ static NSString *historyCellID = @"HCell";
 	self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     
     self.tableView.scrollsToTop = NO;
+    
+    self.imageCache = [NSCache new];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
+    
+    NSOperationQueue *queue = [NSOperationQueue new];
+    queue.maxConcurrentOperationCount = 4;
+    self.imageRequestQueue = queue;
     
     DDGSearchSuggestionsProvider *provider = [DDGSearchSuggestionsProvider sharedProvider];
     NSString *searchText = self.searchController.searchBar.searchField.text;
@@ -62,6 +77,15 @@ static NSString *historyCellID = @"HCell";
             [self.tableView reloadData];
         }
     }];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+    
+    [self.imageCache removeAllObjects];
+    
+    [self.imageRequestQueue cancelAllOperations];
+    self.imageRequestQueue = nil;
 }
 
 - (IBAction)plus:(id)sender {
@@ -83,6 +107,37 @@ static NSString *historyCellID = @"HCell";
     }
 }
 
+- (void)setSuggestions:(NSArray *)suggestions {
+    if (suggestions == _suggestions)
+        return;
+    
+    [self.imageRequestQueue cancelAllOperations];
+    
+    _suggestions = [suggestions copy];    
+    [self.tableView reloadData];
+    
+    for (NSDictionary *suggestionItem in suggestions) {
+        if([suggestionItem objectForKey:@"image"]) {
+            NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
+            if (nil != URL && nil == [self.imageCache objectForKey:URL]) {                
+                __weak DDGAutocompleteViewController *weakSelf = self;
+                void (^success)(UIImage *image) = ^(UIImage *image) {
+                    [weakSelf.imageCache setObject:image forKey:URL];
+                    NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
+                    if (row != NSNotFound) {
+                        DDGAutocompleteCell *cell = (DDGAutocompleteCell *)[weakSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:1]];
+                        cell.roundedImageView.image = image;
+                        [cell setNeedsLayout];
+                    }
+                };
+                
+                AFImageRequestOperation *imageOperation = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:URL]
+                                                                                                            success:success];
+                [self.imageRequestQueue addOperation:imageOperation];
+            }
+        }
+    }
+}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
@@ -105,10 +160,11 @@ static NSString *historyCellID = @"HCell";
         DDGSearchSuggestionsProvider *provider = [DDGSearchSuggestionsProvider sharedProvider];
         self.history = [self.historyProvider pastHistoryItemsForPrefix:newSearchText];
         
+        __weak DDGAutocompleteViewController *weakSelf = self;
+        
         [provider downloadSuggestionsForSearchText:newSearchText success:^{
             if ([newSearchText isEqual:self.searchController.searchBar.searchField.text]) {
-                self.suggestions = [provider suggestionsForSearchText:newSearchText];
-                [self.tableView reloadData];
+                weakSelf.suggestions = [provider suggestionsForSearchText:newSearchText];
             }
         }];
 	}
@@ -178,26 +234,13 @@ static NSString *historyCellID = @"HCell";
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell;
+    DDGAutocompleteCell *cell;
 	BOOL lineHidden = NO;
     
     if(indexPath.section == 0) {
         cell = [tv dequeueReusableCellWithIdentifier:historyCellID];
-        if(!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:historyCellID];
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:16.0];
-            cell.textLabel.textColor = [UIColor  colorWithRed:0x9F/255.0 green:0xA7/255.0 blue:0xB4/255.0 alpha:1.0]; // #9FA7B4
-            cell.selectionStyle = UITableViewCellSelectionStyleGray;
-            cell.backgroundView = [[UIView alloc] init];
-            [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
-
-			// self contained separator lines
-			UIView *separatorLine = [[UIView alloc] initWithFrame:CGRectMake(0, kCellHeightHistory, tv.frame.size.width, 1.0)];
-			separatorLine.clipsToBounds = YES;
-			separatorLine.backgroundColor = [UIColor lightGrayColor];
-			separatorLine.tag = 200;
-			[cell.contentView addSubview:separatorLine];
-        }
+        if(!cell)
+            cell = [[DDGAutocompleteCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:historyCellID];
         
         DDGHistoryItem *historyItem = [self.history objectAtIndex:indexPath.row];
         
@@ -208,45 +251,9 @@ static NSString *historyCellID = @"HCell";
 	else if(indexPath.section == 1)
 	{
         cell = [tv dequeueReusableCellWithIdentifier:suggestionCellID];
-        UIImageView *iv;
-        if(!cell)
-		{
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:suggestionCellID];
-            cell.textLabel.font = [UIFont boldSystemFontOfSize:16.0];
-            cell.textLabel.textColor = [UIColor  colorWithRed:0x54/255.0 green:0x59/255.0 blue:0x5F/255.0 alpha:1.0];
-            cell.selectionStyle = UITableViewCellSelectionStyleGray;
+        if(!cell) {
+            cell = [[DDGAutocompleteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:suggestionCellID];
             cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
-			
-			cell.detailTextLabel.numberOfLines = 2;
-			cell.detailTextLabel.textColor = [UIColor colorWithRed:0x7C/255.0 green:0x85/255.0 blue:0x94/255.0 alpha:1.0];
-			
-            cell.backgroundView = [[UIView alloc] init];
-            [cell.backgroundView setBackgroundColor:[UIColor whiteColor]];
-            
-            iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 53, 53)];
-            iv.tag = 100;
-            iv.contentMode = UIViewContentModeScaleAspectFit;
-            iv.clipsToBounds = YES;
-            iv.backgroundColor = [UIColor whiteColor];
-
-			CALayer *layer = iv.layer;
-			layer.borderWidth = 0.5;
-			layer.borderColor = [UIColor lightGrayColor].CGColor;
-			layer.cornerRadius = 3.0;
-			
-            [cell.contentView addSubview:iv];
-			
-			// self contained separator lines
-			UIView *separatorLine = [[UIView alloc] initWithFrame:CGRectMake(0, kCellHeightSuggestions, tv.frame.size.width, 1.0)];
-			separatorLine.clipsToBounds = YES;
-			separatorLine.backgroundColor = [UIColor lightGrayColor];
-			separatorLine.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth;
-			separatorLine.tag = 200;
-			[cell addSubview:separatorLine];
-        }
-		else
-		{
-            iv = (UIImageView *)[cell.contentView viewWithTag:100];
         }
 		
 		lineHidden = (indexPath.row == self.suggestions.count - 1) ? YES : NO;
@@ -260,20 +267,18 @@ static NSString *historyCellID = @"HCell";
         
         cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
         cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
+        
         UIButton *button = [DDGPlusButton lightPlusButton];
         [button addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
         cell.accessoryView = button;
         
-        if([suggestionItem objectForKey:@"image"])
-		{
-            [iv setImageWithURL:[NSURL URLWithString:[suggestionItem objectForKey:@"image"]]];
-			iv.hidden = NO;
+        UIImage *image = nil;
+        if([suggestionItem objectForKey:@"image"]) {
+            NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
+            image = [self.imageCache objectForKey:URL];
 		}
-        else
-		{
-            [iv setImage:nil]; // wipe out any image that used to be there
-			iv.hidden = YES;
-		}
+             
+        cell.roundedImageView.image = image;
         
         if([suggestionItem objectForKey:@"calls"] && [[suggestionItem objectForKey:@"calls"] count])
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
@@ -297,15 +302,6 @@ static NSString *historyCellID = @"HCell";
 }
 
 #pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-	if (indexPath.section == 1)
-	{
-		UIView *iv = [cell.contentView viewWithTag:100];
-		iv.center = cell.imageView.center;
-	}
-}
 
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {

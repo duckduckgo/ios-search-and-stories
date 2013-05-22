@@ -280,6 +280,7 @@
 		5BDC6A4E174B99940065BB8D /* DDGSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC6A4D174B99940065BB8D /* DDGSlidingViewController.m */; };
 		5BDC6A51174BB1AA0065BB8D /* welcome_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6A4F174BB1AA0065BB8D /* welcome_logo.png */; };
 		5BDC6A52174BB1AA0065BB8D /* welcome_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6A50174BB1AA0065BB8D /* welcome_logo@2x.png */; };
+		5BDC6A55174CF5790065BB8D /* DDGAutocompleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC6A54174CF5790065BB8D /* DDGAutocompleteCell.m */; };
 		5BFF24AE16F77C0D00844D3B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BFF24AD16F77C0D00844D3B /* CoreData.framework */; };
 		5BFF24B316F77E0900844D3B /* DDGStoryFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */; };
 		5BFF24C416F77F9F00844D3B /* Stories.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24C216F77F9E00844D3B /* Stories.xcdatamodeld */; };
@@ -695,6 +696,8 @@
 		5BDC6A4D174B99940065BB8D /* DDGSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlidingViewController.m; sourceTree = "<group>"; };
 		5BDC6A4F174BB1AA0065BB8D /* welcome_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welcome_logo.png; sourceTree = "<group>"; };
 		5BDC6A50174BB1AA0065BB8D /* welcome_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome_logo@2x.png"; sourceTree = "<group>"; };
+		5BDC6A53174CF5790065BB8D /* DDGAutocompleteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAutocompleteCell.h; sourceTree = "<group>"; };
+		5BDC6A54174CF5790065BB8D /* DDGAutocompleteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAutocompleteCell.m; sourceTree = "<group>"; };
 		5BFF24AD16F77C0D00844D3B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		5BFF24B116F77E0900844D3B /* DDGStoryFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryFetcher.h; sourceTree = "<group>"; };
 		5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryFetcher.m; sourceTree = "<group>"; };
@@ -983,6 +986,8 @@
 			children = (
 				4CD9249815CD7D8C00EB062F /* DDGAutocompleteViewController.h */,
 				4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */,
+				5BDC6A53174CF5790065BB8D /* DDGAutocompleteCell.h */,
+				5BDC6A54174CF5790065BB8D /* DDGAutocompleteCell.m */,
 				4C967F5015CDB3FB009A3A52 /* DDGAutocompleteTableView.h */,
 				4C967F5115CDB3FB009A3A52 /* DDGAutocompleteTableView.m */,
 				4CCEA041150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.h */,
@@ -1875,6 +1880,7 @@
 				5B15F3D017394CC100912482 /* DDGPopoverViewController.m in Sources */,
 				5B3896F41740F368009582C8 /* DDGReadabilitySettingViewController.m in Sources */,
 				5BDC6A4E174B99940065BB8D /* DDGSlidingViewController.m in Sources */,
+				5BDC6A55174CF5790065BB8D /* DDGAutocompleteCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
