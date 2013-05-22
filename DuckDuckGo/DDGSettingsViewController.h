@@ -28,6 +28,8 @@ typedef enum DDGReadabilityMode {
     DDGReadabilityModeOnExclusive
 } DDGReadabilityMode;
 
+#define DDG_SETTINGS_BACKGROUND_COLOR [UIColor colorWithRed:0.910 green:0.914 blue:0.922 alpha:1.000]
+
 @interface DDGSettingsViewController : IGFormViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 

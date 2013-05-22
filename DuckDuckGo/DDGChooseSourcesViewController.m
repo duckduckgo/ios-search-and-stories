@@ -10,6 +10,7 @@
 #import "DDGStoryFeed.h"
 #import "UIImageView+AFNetworking.h"
 #import "SVProgressHUD.h"
+#import "DDGSettingsViewController.h"
 
 @interface DDGChooseSourcesViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
@@ -29,7 +30,7 @@
 {
     [super viewDidLoad];
 	self.tableView.backgroundView = nil;
-	self.tableView.backgroundColor =  [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
+	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
 	self.tableView.allowsSelectionDuringEditing = YES;
     self.title = @"Sources";
     

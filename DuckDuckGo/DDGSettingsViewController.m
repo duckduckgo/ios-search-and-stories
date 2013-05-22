@@ -74,7 +74,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 	[self viewWillLayoutSubviews];
 	
     self.tableView.backgroundView = nil;
-	self.tableView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"settings_bg_tile.png"]];
+	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
 }
 
 -(void)leftButtonPressed {
