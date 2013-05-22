@@ -69,8 +69,8 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
         
         CALayer *layer = iv.layer;
         layer.borderWidth = 0.5;
-        layer.borderColor = [UIColor lightGrayColor].CGColor;
-        layer.cornerRadius = 3.0;
+        layer.borderColor = [UIColor colorWithRed:0.812 green:0.820 blue:0.835 alpha:1.000].CGColor;
+        layer.cornerRadius = 4.0;
         
         [self.contentView insertSubview:iv aboveSubview:self.imageView];
         self.roundedImageView = iv;
