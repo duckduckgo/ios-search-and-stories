@@ -63,4 +63,13 @@ NSString * const DDGReadabilityModeKey = @"readability";
     
     return cell;
 }
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    UIView *view = nil;
+    NSString *title = [self tableView:tableView titleForFooterInSection:section];
+    if (nil != title) {
+        DDG_SETTINGS_FOOTER(view, title)
+    }
+    return view;
+}
 @end

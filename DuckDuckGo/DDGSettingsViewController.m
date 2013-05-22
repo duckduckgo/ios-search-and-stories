@@ -289,6 +289,15 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     return view;
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    UIView *view = nil;
+    NSString *title = [self tableView:tableView titleForFooterInSection:section];
+    if (nil != title) {
+        DDG_SETTINGS_FOOTER(view, title)
+    }
+    return view;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     [self save:nil];
