@@ -60,7 +60,7 @@ titleLabel.textColor = [UIColor colorWithRed:0.341 green:0.376 blue:0.424 alpha:
 [view addSubview:titleLabel];}
 
 #define DDG_SETTINGS_TITLE_LABEL(titleLabel) \
-titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0]; \
+titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0]; \
 titleLabel.textColor = [UIColor colorWithRed:0.267 green:0.278 blue:0.310 alpha:1.000];
 
 #define DDG_SETTINGS_DETAIL_LABEL(detailTextLabel) \
