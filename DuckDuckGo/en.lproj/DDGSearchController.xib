@@ -44,7 +44,6 @@
 						<string key="NSFrame">{{0, 44}, {320, 416}}</string>
 						<reference key="NSSuperview" ref="398799709"/>
 						<reference key="NSWindow"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:196</string>
 						<object class="NSColor" key="IBUIBackgroundColor">
 							<int key="NSColorSpace">1</int>
@@ -85,6 +84,7 @@
 								<string key="targetRuntimeIdentifier">IBCocoaTouchFramework</string>
 								<int key="IBUIContentHorizontalAlignment">0</int>
 								<int key="IBUIContentVerticalAlignment">0</int>
+								<bool key="IBUIAdjustsImageWhenHighlighted">NO</bool>
 								<object class="NSColor" key="IBUIHighlightedTitleColor" id="268531486">
 									<int key="NSColorSpace">3</int>
 									<bytes key="NSWhite">MQA</bytes>
@@ -624,6 +624,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="background">UIView</string>
 						<string key="bangInfo">UIView</string>
+						<string key="bangTextView">UITextView</string>
 						<string key="searchBar">DDGSearchBar</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -634,6 +635,10 @@
 						<object class="IBToOneOutletInfo" key="bangInfo">
 							<string key="name">bangInfo</string>
 							<string key="candidateClassName">UIView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="bangTextView">
+							<string key="name">bangTextView</string>
+							<string key="candidateClassName">UITextView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="searchBar">
 							<string key="name">searchBar</string>
@@ -660,8 +665,8 @@
 			<string key="btn-bg_bang-default.png">{36, 36}</string>
 			<string key="button_bg">{16, 16}</string>
 			<string key="button_bg_highlighted">{16, 16}</string>
-			<string key="button_menu_bg-highlighted.png">{36, 36}</string>
-			<string key="button_menu_bg.png">{36, 36}</string>
+			<string key="button_menu_bg-highlighted.png">{38, 34}</string>
+			<string key="button_menu_bg.png">{38, 34}</string>
 			<string key="menu_bang-active.png">{24, 24}</string>
 			<string key="menu_bang-default.png">{24, 24}</string>
 			<string key="share-click.png">{40, 35}</string>
