@@ -197,10 +197,10 @@ static NSString *historyCellID = @"HCell";
 	UILabel *hv = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 23.0)];
 	
 	hv.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"section_tile.png"]];
-	hv.textColor = [UIColor  colorWithRed:0x77/255.0 green:0x74/255.0 blue:0x7E/255.0 alpha:1.0];
-	hv.shadowColor = [UIColor whiteColor];
+	hv.textColor = [UIColor colorWithRed:0.329 green:0.341 blue:0.373 alpha:1.000];
+	hv.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
 	hv.shadowOffset = CGSizeMake(0.5, 0.5);
-	hv.font = [UIFont boldSystemFontOfSize:14.0];
+	hv.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:12.0];
 	hv.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 
 	if (!section)
