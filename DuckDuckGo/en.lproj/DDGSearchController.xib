@@ -183,7 +183,7 @@
 								</object>
 								<int key="IBUIClearButtonMode">3</int>
 								<object class="IBUIFontDescription" key="IBUIFontDescription">
-									<string key="name">HelveticaNeue-Medium</string>
+									<string key="name">HelveticaNeue</string>
 									<string key="family">Helvetica Neue</string>
 									<int key="traits">0</int>
 									<double key="pointSize">13</double>
