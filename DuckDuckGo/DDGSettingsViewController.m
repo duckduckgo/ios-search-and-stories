@@ -254,6 +254,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
+-(IGFormSwitch *)addSwitch:(NSString *)title forKey:(NSString *)key enabled:(BOOL)enabled {
+    IGFormSwitch *formSwitch = [super addSwitch:title forKey:key enabled:enabled];
+    formSwitch.switchControl.onTintColor = [UIColor colorWithRed:0.212 green:0.455 blue:0.698 alpha:1.000];
+    return formSwitch;
+}
+
 -(NSString *)deviceInfo {
     struct utsname systemInfo;
     uname(&systemInfo);
