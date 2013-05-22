@@ -293,4 +293,13 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     [self save:nil];
 }
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    
+    DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
+    DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)
+    
+    return cell;
+}
 @end

@@ -54,4 +54,13 @@ NSString * const DDGReadabilityModeKey = @"readability";
     DDG_SETTINGS_HEADER(view, [self tableView:tableView titleForHeaderInSection:section])
     return view;
 }
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
+    
+    DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
+    DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)
+    
+    return cell;
+}
 @end

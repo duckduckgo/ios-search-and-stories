@@ -139,6 +139,9 @@
 		{
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
             
+            DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
+            DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)            
+            
             // keep using the default imageview for layout/spacing purposes, but use our own one for displaying the image
             cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
             cell.imageView.alpha = 0;
