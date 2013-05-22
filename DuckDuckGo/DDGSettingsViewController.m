@@ -283,6 +283,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     return [NSString stringWithFormat:@"DuckDuckGo v%@ on an %@ (iOS %@)",appVersion,device,osVersion];
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *view;
+    DDG_SETTINGS_HEADER(view, [self tableView:tableView titleForHeaderInSection:section])
+    return view;
+}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     [self save:nil];

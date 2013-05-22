@@ -77,4 +77,9 @@
     [[self searchControllerDDG] popContentViewControllerAnimated:YES];
 }
 
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *view;
+    DDG_SETTINGS_HEADER(view, [self tableView:tableView titleForHeaderInSection:section])
+    return view;
+}
 @end

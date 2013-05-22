@@ -29,6 +29,19 @@ typedef enum DDGReadabilityMode {
 } DDGReadabilityMode;
 
 #define DDG_SETTINGS_BACKGROUND_COLOR [UIColor colorWithRed:0.910 green:0.914 blue:0.922 alpha:1.000]
+#define DDG_SETTINGS_HEADER(view, title) view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];           \
+view.opaque = NO;   \
+view.backgroundColor = [UIColor clearColor];    \
+{UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectInset(view.bounds, 16.0, 0.0)];  \
+titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;   \
+titleLabel.opaque = NO; \
+titleLabel.backgroundColor = [UIColor clearColor];  \
+titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0];    \
+titleLabel.text = title;   \
+titleLabel.shadowColor = [UIColor whiteColor];  \
+titleLabel.shadowOffset = CGSizeMake(0, 1.0);   \
+titleLabel.textColor = [UIColor colorWithRed:0.435 green:0.475 blue:0.522 alpha:1.000]; \
+[view addSubview:titleLabel];}
 
 @interface DDGSettingsViewController : IGFormViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
