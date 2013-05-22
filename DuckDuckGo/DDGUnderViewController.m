@@ -358,7 +358,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             stories.title = NSLocalizedString(@"Saved Stories", @"View controller title: Saved Stories");
             
             DDGTabViewController *tabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[bookmarks, stories]];            
-            [searchController pushContentViewController:tabViewController animated:NO];            
             
             bookmarks.searchController = searchController;
             bookmarks.searchHandler = searchController;
@@ -382,6 +381,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             [tabViewController.controlView addSubview:tabViewController.segmentedControl];
             tabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
             tabViewController.delegate = self;
+            
+            [searchController pushContentViewController:tabViewController animated:NO];            
             
             viewController = searchController;
         }
