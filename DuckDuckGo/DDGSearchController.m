@@ -980,7 +980,6 @@ NSString * const emailRegEx =
         oldSearchText = textField.text;
     
     [self clearBangSuggestions];
-    [self searchFieldDidChange:nil];
     
     return YES;
 }
