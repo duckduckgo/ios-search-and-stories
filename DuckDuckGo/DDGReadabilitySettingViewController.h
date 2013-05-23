@@ -6,8 +6,8 @@
 //
 //
 
-#import "IGFormViewController.h"
+#import "DDGFormViewController.h"
 
-@interface DDGReadabilitySettingViewController : IGFormViewController
+@interface DDGReadabilitySettingViewController : DDGFormViewController
 
 @end

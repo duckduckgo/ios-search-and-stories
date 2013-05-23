@@ -11,6 +11,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "SVProgressHUD.h"
 #import "DDGSettingsViewController.h"
+#import "DDGGroupedTableViewCell.h"
 
 @interface DDGChooseSourcesViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
@@ -29,6 +30,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
 	self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
 	self.tableView.allowsSelectionDuringEditing = YES;
@@ -126,18 +128,20 @@
             cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
             if(!cell)
 			{
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
+                cell = [[DDGGroupedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
                 cell.textLabel.text = @"Suggest a Story Source";
                 cell.textLabel.textAlignment = NSTextAlignmentCenter;
                 cell.accessoryType = UITableViewCellAccessoryNone;
 				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
+                
+                ((DDGGroupedTableViewCell *)cell).position = GroupedTableViewCellPositionFull;
             }
         }        
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
         if(!cell)
 		{
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
+            cell = [[DDGGroupedTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
             
             DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
             
@@ -315,7 +319,30 @@
     if(feed.enabledValue)
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     else
-        cell.accessoryType = UITableViewCellAccessoryNone;    
+        cell.accessoryType = UITableViewCellAccessoryNone;
+    
+    if ([cell isKindOfClass:[DDGGroupedTableViewCell class]]) {
+        
+        DDGGroupedTableViewCell *groupedCell = (DDGGroupedTableViewCell *)cell;
+        
+        NSInteger rows = [self tableView:self.tableView numberOfRowsInSection:indexPath.section];
+        
+        if (indexPath.row == 0 && rows == 1) {
+            groupedCell.position = GroupedTableViewCellPositionFull;
+        }
+        
+        if (indexPath.row == 0 && rows > 1) {
+            groupedCell.position = GroupedTableViewCellPositionTop;
+        }
+        
+        if (indexPath.row > 0 && rows > 1) {
+            groupedCell.position = GroupedTableViewCellPositionMiddle;
+        }
+        
+        if (indexPath.row == (rows -1) && rows > 1) {
+            groupedCell.position = GroupedTableViewCellPositionBottom;
+        }
+    }
 }
 
 @end

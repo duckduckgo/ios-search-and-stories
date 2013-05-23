@@ -17,6 +17,7 @@
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
 #import "DDGReadabilitySettingViewController.h"
+#import "DDGGroupedTableViewCell.h"
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
@@ -70,11 +71,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 	self.navigationItem.rightBarButtonItem = nil;
     
-	// force 1st time through for iOS < 6.0
-	[self viewWillLayoutSubviews];
-	
     self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
+        
+	// force 1st time through for iOS < 6.0
+	[self viewWillLayoutSubviews];
 }
 
 -(void)leftButtonPressed {
@@ -313,7 +314,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
     DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
-    DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)
+    DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)    
     
     return cell;
 }

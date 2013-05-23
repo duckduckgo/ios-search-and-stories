@@ -7,8 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "IGFormViewController.h"
+#import "DDGFormViewController.h"
 
-@interface DDGChooseRegionViewController : IGFormViewController
+@interface DDGChooseRegionViewController : DDGFormViewController
 
 @end

@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 DuckDuckGo, Inc. All rights reserved.
 //
 
-#import "IGFormViewController.h"
+#import "DDGFormViewController.h"
 #import <MessageUI/MessageUI.h>
 
 extern NSString * const DDGSettingRecordHistory;
@@ -67,7 +67,7 @@ titleLabel.textColor = [UIColor colorWithRed:0.267 green:0.278 blue:0.310 alpha:
 detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];    \
 detailTextLabel.textColor = [UIColor colorWithRed:0.212 green:0.455 blue:0.698 alpha:1.000];
 
-@interface DDGSettingsViewController : IGFormViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
+@interface DDGSettingsViewController : DDGFormViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 
 +(void)loadDefaultSettings;
