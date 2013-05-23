@@ -31,9 +31,9 @@
     [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
     [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
     
-    self.background = [[UIImage imageNamed:@"search_field.png"] stretchableImageWithLeftCapWidth:20.0 topCapHeight:0];
+    self.background = [[UIImage imageNamed:@"search_field.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0, 2.0)];
     
-    progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"load_bar.png"] stretchableImageWithLeftCapWidth:2 topCapHeight:0]];
+    progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"load_bar.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0, 2.0)]];
     progressView.frame = CGRectMake(2, 2, 100, 27);
     [self insertSubview:progressView atIndex:1];
     

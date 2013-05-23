@@ -288,6 +288,7 @@
 		5BDC6B15174E2FAA0065BB8D /* SettingsTopCellBackgroundHighlighted@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6B05174E2FAA0065BB8D /* SettingsTopCellBackgroundHighlighted@2x.png */; };
 		5BDC6B18174E34D40065BB8D /* DDGGroupedTableViewCellValue1.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6B17174E34D40065BB8D /* DDGGroupedTableViewCellValue1.xib */; };
 		5BDC6B1B174E36E90065BB8D /* DDGFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC6B1A174E36E80065BB8D /* DDGFormViewController.m */; };
+		5BDC6B23174E697E0065BB8D /* DDGSearchBarButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC6B22174E697D0065BB8D /* DDGSearchBarButton.m */; };
 		5BFF24AE16F77C0D00844D3B /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BFF24AD16F77C0D00844D3B /* CoreData.framework */; };
 		5BFF24B316F77E0900844D3B /* DDGStoryFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */; };
 		5BFF24C416F77F9F00844D3B /* Stories.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24C216F77F9E00844D3B /* Stories.xcdatamodeld */; };
@@ -714,6 +715,8 @@
 		5BDC6B17174E34D40065BB8D /* DDGGroupedTableViewCellValue1.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGGroupedTableViewCellValue1.xib; sourceTree = "<group>"; };
 		5BDC6B19174E36E80065BB8D /* DDGFormViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGFormViewController.h; sourceTree = "<group>"; };
 		5BDC6B1A174E36E80065BB8D /* DDGFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGFormViewController.m; sourceTree = "<group>"; };
+		5BDC6B21174E697C0065BB8D /* DDGSearchBarButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchBarButton.h; sourceTree = "<group>"; };
+		5BDC6B22174E697D0065BB8D /* DDGSearchBarButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchBarButton.m; sourceTree = "<group>"; };
 		5BFF24AD16F77C0D00844D3B /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		5BFF24B116F77E0900844D3B /* DDGStoryFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryFetcher.h; sourceTree = "<group>"; };
 		5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryFetcher.m; sourceTree = "<group>"; };
@@ -1048,6 +1051,8 @@
 				5B7C3BF3170EECFE00B9E009 /* UIViewController+DDGSearchController.h */,
 				5B7C3BF4170EECFF00B9E009 /* UIViewController+DDGSearchController.m */,
 				4CA7ED3814D3BFB000A83E77 /* DDGSearchHandler.h */,
+				5BDC6B21174E697C0065BB8D /* DDGSearchBarButton.h */,
+				5BDC6B22174E697D0065BB8D /* DDGSearchBarButton.m */,
 				4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */,
 				4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */,
 				4C7DA6D615890A6900D95585 /* DDGBangsProvider.h */,
@@ -1921,6 +1926,7 @@
 				5BDC6A55174CF5790065BB8D /* DDGAutocompleteCell.m in Sources */,
 				5BDC6AF5174E2F520065BB8D /* DDGGroupedTableViewCell.m in Sources */,
 				5BDC6B1B174E36E90065BB8D /* DDGFormViewController.m in Sources */,
+				5BDC6B23174E697E0065BB8D /* DDGSearchBarButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
