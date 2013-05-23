@@ -117,7 +117,7 @@ static NSString *historyCellID = @"HCell";
     [self.tableView reloadData];
     
     for (NSDictionary *suggestionItem in suggestions) {
-        if([suggestionItem objectForKey:@"image"]) {
+        if([[suggestionItem objectForKey:@"image"] length]) {
             NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
             if (nil != URL && nil == [self.imageCache objectForKey:URL]) {                
                 __weak DDGAutocompleteViewController *weakSelf = self;
@@ -273,10 +273,12 @@ static NSString *historyCellID = @"HCell";
         cell.accessoryView = button;
         
         UIImage *image = nil;
-        if([suggestionItem objectForKey:@"image"]) {
+        if([[suggestionItem objectForKey:@"image"] length]) {
             NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
             image = [self.imageCache objectForKey:URL];
-		}
+		} else {
+            image = [UIImage imageNamed:@"search_generic.png"];
+        }
              
         cell.roundedImageView.image = image;
         
