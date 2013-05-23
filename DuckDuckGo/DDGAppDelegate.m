@@ -99,12 +99,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg_highlighted"] resizableImageWithCapInsets:insets]
                                             forState:UIControlStateHighlighted
                                           barMetrics:UIBarMetricsDefault];
-    [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg_32"] resizableImageWithCapInsets:insets]
-                                            forState:UIControlStateNormal
-                                          barMetrics:UIBarMetricsLandscapePhone];
-    [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg_highlighted_32"] resizableImageWithCapInsets:insets]
-                                            forState:UIControlStateHighlighted
-                                          barMetrics:UIBarMetricsLandscapePhone];
     
 //    [[UIBarButtonItem appearance] setBackgroundVerticalPositionAdjustment:1.0 forBarMetrics:UIBarMetricsDefault];
     [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsDefault];
