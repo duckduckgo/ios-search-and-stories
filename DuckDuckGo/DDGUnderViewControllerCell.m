@@ -139,7 +139,7 @@
         [self addSubview:self.accessoryView];
     
     CGRect accessoryRect = self.accessoryView.frame;
-    accessoryRect.origin.x = bounds.size.width - overhang - accessoryRect.size.width;
+    accessoryRect.origin.x = bounds.size.width - overhang - 2.0 - accessoryRect.size.width;
     accessoryRect.origin.y = floor((bounds.size.height - accessoryRect.size.height) / 2.0);
     self.accessoryView.frame = accessoryRect;
     

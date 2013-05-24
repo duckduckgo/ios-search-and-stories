@@ -137,10 +137,15 @@
         self.deleteButton.alpha = 1.0;
     } else {
         CGRect bounds = self.bounds;
-        CGRect buttonFrame = self.deleteButton.frame;
+        CGRect accessoryRect = self.accessoryView.frame;
         
         self.accessoryView.alpha = 1.0;
+        self.accessoryView.frame = CGRectMake(accessoryRect.origin.x + 4.0,
+                                              accessoryRect.origin.y,
+                                              accessoryRect.size.width,
+                                              accessoryRect.size.height);
         
+        CGRect buttonFrame = self.deleteButton.frame;
         buttonFrame = CGRectMake(bounds.origin.x + bounds.size.width - self.overhangWidth,
                                  bounds.origin.y + floor((bounds.size.height - buttonFrame.size.height)/2.0),
                                  buttonFrame.size.width,
