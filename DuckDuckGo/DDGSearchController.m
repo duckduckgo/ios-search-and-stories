@@ -42,6 +42,7 @@ NSString * const emailRegEx =
 @property (nonatomic, strong) NSPredicate *emailPredicate;
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic) BOOL showBangTooltip;
+@property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
 @end
 
 @implementation DDGSearchController
@@ -95,6 +96,10 @@ NSString * const emailRegEx =
 }
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
+    
+    if (self.isTransitioningViewControllers)
+        return;
+    
     NSTimeInterval duration = (animated) ? 0.3 : 0.0;    
     
     [self.controllers addObject:contentController];
@@ -106,10 +111,14 @@ NSString * const emailRegEx =
         [self clearScrollsToTop:[[self.controllers objectAtIndex:i] view]];
     [contentController reenableScrollsToTop];
     
+    self.transitioningViewControllers = YES;
+    __weak DDGSearchController *weakSelf = self;
     [self.pageViewController setViewControllers:@[contentController]
                                       direction:UIPageViewControllerNavigationDirectionForward
                                        animated:animated
-                                     completion:NULL];
+                                     completion:^(BOOL finished) {
+                                         weakSelf.transitioningViewControllers = NO;
+                                     }];
     
     if (self.controllers.count == 1)
         [self configurePanGestureForViewController:contentController];
@@ -128,7 +137,7 @@ NSString * const emailRegEx =
 }
 
 - (BOOL)canPopContentViewController {
-    return ([self.controllers count] > 1);
+    return ([self.controllers count] > 1 && !self.isTransitioningViewControllers);
 }
 
 - (void)popContentViewControllerAnimated:(BOOL)animated {
@@ -145,10 +154,14 @@ NSString * const emailRegEx =
         UIViewController *contentController = [self.controllers lastObject];
         [contentController reenableScrollsToTop];
         
+        self.transitioningViewControllers = YES;        
+        __weak DDGSearchController *weakSelf = self;
         [self.pageViewController setViewControllers:@[contentController]
                                           direction:UIPageViewControllerNavigationDirectionReverse
                                            animated:animated
-                                         completion:NULL];
+                                         completion:^(BOOL finished) {
+                                             weakSelf.transitioningViewControllers = NO;
+                                         }];
         
         [contentController reenableScrollsToTop];
     }
@@ -282,10 +295,15 @@ NSString * const emailRegEx =
     return self.controllers[i+1];
 }
 
+- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
+    self.transitioningViewControllers = YES;
+}
+
 - (void)pageViewController:(UIPageViewController *)pageViewController
         didFinishAnimating:(BOOL)finished
    previousViewControllers:(NSArray *)previousViewControllers
        transitionCompleted:(BOOL)completed {
+    self.transitioningViewControllers = NO;
     if (completed) {
         UIViewController *viewController = [previousViewControllers lastObject];
         NSUInteger index = [self.controllers indexOfObject:viewController];
