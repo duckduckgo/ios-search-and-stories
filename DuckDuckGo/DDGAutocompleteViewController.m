@@ -262,9 +262,8 @@ static NSString *historyCellID = @"HCell";
         cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
         cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
         
-        UIButton *button = [DDGPlusButton lightPlusButton];
-        [button addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
-        cell.accessoryView = button;
+        cell.showsPlusButton = YES;
+        [cell.plusButton addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
         
         UIImage *image = nil;
         if([[suggestionItem objectForKey:@"image"] length]) {

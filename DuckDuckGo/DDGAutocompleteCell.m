@@ -104,8 +104,7 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
     if (showsPlusButton) {
         if (nil == self.plusButton)
             self.plusButton = [DDGPlusButton lightPlusButton];
-        [self.contentView addSubview:self.plusButton];
-        self.accessoryView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 24.0, self.contentView.bounds.size.height)];
+        self.accessoryView = self.plusButton;
     } else {
         [self.plusButton removeFromSuperview];
         self.accessoryView = nil;
@@ -122,11 +121,38 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
     CGSize fitSize = AspectFitSizeInSize(size, CGSizeMake(53, 53), NO);
     self.roundedImageView.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
     self.roundedImageView.center = self.imageView.center;
+    
+//    CGRect bounds = self.bounds;
+//    CGRect accessoryRect = self.accessoryView.frame;
+//    CGRect contentRect = self.contentView.frame;
+//    CGRect textRect = self.textLabel.frame;
+//    CGRect detailRect = self.detailTextLabel.frame;
+//    
+//    self.accessoryView.frame = CGRectMake(bounds.size.width - accessoryRect.size.width + 6.0,
+//                                          accessoryRect.origin.y,
+//                                          accessoryRect.size.width,
+//                                          accessoryRect.size.height);
+//    
+//    self.contentView.frame = CGRectMake(contentRect.origin.x,
+//                                        contentRect.origin.y,
+//                                        bounds.size.width - contentRect.origin.x - accessoryRect.size.width - 6.0,
+//                                        contentRect.size.height);
+//
+//    self.textLabel.frame = CGRectMake(textRect.origin.x,
+//                                      textRect.origin.y,
+//                                      contentRect.size.width - textRect.origin.x,
+//                                      textRect.size.height);
+//    
+//    self.detailTextLabel.frame = CGRectMake(detailRect.origin.x,
+//                                            detailRect.origin.y,
+//                                            contentRect.size.width - detailRect.origin.x,
+//                                            detailRect.size.height);
 }
 
 -(void)prepareForReuse {
     [super prepareForReuse];
     self.showsPlusButton = NO;
+    [self.plusButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
 }
 
 @end
