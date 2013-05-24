@@ -18,6 +18,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGPlusButton.h"
 #import "DDGAutocompleteCell.h"
+#import "DDGAutocompleteHeaderView.h"
 
 @interface DDGAutocompleteViewController ()
 @property (nonatomic, copy) NSArray *history;
@@ -194,28 +195,21 @@ static NSString *historyCellID = @"HCell";
 	else if (section == 1 && !self.suggestions.count)
 		return nil;
 
-	UILabel *hv = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 23.0)];
+	DDGAutocompleteHeaderView *hv = [[DDGAutocompleteHeaderView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 25.0)];
 	
-	hv.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"section_tile.png"]];
-	hv.textColor = [UIColor colorWithRed:0.329 green:0.341 blue:0.373 alpha:1.000];
-	hv.shadowColor = [[UIColor whiteColor] colorWithAlphaComponent:0.5];
-	hv.shadowOffset = CGSizeMake(0.5, 0.5);
-	hv.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:12.0];
-	hv.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-
 	if (!section)
-		hv.text = @" Recent";
+		hv.textLabel.text = @"Recent";
 	else
-		hv.text = @" Suggestions";
+		hv.textLabel.text = @"Suggestions";
 	return hv;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
 	if (!section && self.history.count)
-		return 23.0;
+		return 25.0;
 	if (section == 1 && self.suggestions.count)
-		return 23.0;
+		return 25.0;
 	
 	return 0.0;
 }
@@ -288,7 +282,7 @@ static NSString *historyCellID = @"HCell";
             cell.accessoryType = UITableViewCellAccessoryNone;
     }
 	
-	[cell.contentView viewWithTag:200].hidden = lineHidden;
+    cell.showsSeparatorLine = !lineHidden;
     
     return cell;
 }

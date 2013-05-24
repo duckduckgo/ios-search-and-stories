@@ -14,4 +14,5 @@
 @property (nonatomic, strong, readonly) DDGPlusButton *plusButton;
 @property (nonatomic, weak, readonly) UIImageView *roundedImageView;
 @property (nonatomic, readwrite) BOOL showsPlusButton;
+@property (nonatomic, readwrite) BOOL showsSeparatorLine;
 @end

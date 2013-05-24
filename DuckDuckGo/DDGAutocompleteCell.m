@@ -12,6 +12,7 @@
 @interface DDGAutocompleteCell ()
 @property (nonatomic, strong, readwrite) DDGPlusButton *plusButton;
 @property (nonatomic, weak, readwrite) UIImageView *roundedImageView;
+@property (nonatomic, weak, readwrite) UIView *separatorLine;
 @end
 
 @implementation DDGAutocompleteCell
@@ -81,11 +82,19 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
         separatorLine.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
         separatorLine.clipsToBounds = YES;
         separatorLine.backgroundColor = [UIColor lightGrayColor];
-        separatorLine.tag = 200;
         [self addSubview:separatorLine];
+        self.separatorLine = separatorLine;
         
     }
     return self;
+}
+
+- (BOOL)showsSeparatorLine {
+    return (!self.separatorLine.isHidden);
+}
+
+- (void)setShowsSeparatorLine:(BOOL)showsSeparatorLine {
+    self.separatorLine.hidden = (!showsSeparatorLine);
 }
 
 - (void)setShowsPlusButton:(BOOL)showsPlusButton {
