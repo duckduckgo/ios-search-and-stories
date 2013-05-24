@@ -32,7 +32,7 @@
             case DDGHistoryItemCellModeUnder:
                 self.backgroundImageView.image = [UIImage imageNamed:@"new_bg_history-items"];
                 self.selectedBackgroundImageView.image = nil;
-                self.textLabel.textColor = [UIColor colorWithRed:0.490 green:0.522 blue:0.576 alpha:1.000];                
+                self.textLabel.textColor = [UIColor colorWithRed:0.686 green:0.725 blue:0.800 alpha:1.000];                
                 break;
                 
             default:
