@@ -123,6 +123,7 @@ static NSString *historyCellID = @"HCell";
             if (nil != URL && nil == [self.imageCache objectForKey:URL]) {                
                 __weak DDGAutocompleteViewController *weakSelf = self;
                 void (^success)(UIImage *image) = ^(UIImage *image) {
+                  if(image==nil || URL==nil) return; // avoid crash if image is nil (it happened!)
                     [weakSelf.imageCache setObject:image forKey:URL];
                     NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
                     if (row != NSNotFound) {
