@@ -83,7 +83,7 @@ NSString * const emailRegEx =
     
     UIImage *image = nil;
     
-    if ([self canPopContentViewController]) {
+    if ([self.controllers count] > 1) {
         UIViewController *incommingViewController = [self.controllers objectAtIndex:self.controllers.count-2];
         image = [incommingViewController searchControllerBackButtonIconDDG];
     }
