@@ -825,6 +825,9 @@ NSString * const emailRegEx =
     self.bangInfoPopover = nil;
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:DDGSettingSuppressBangTooltip];
+    
+    //Perform an example query.
+    [self performSearch:@"!amazon lego"];
 }
 
 -(void)bangButtonPressed {
@@ -1039,19 +1042,23 @@ NSString * const emailRegEx =
 		return NO;
 	}
 	
-    NSString *searchText = self.searchBar.searchField.text;
-    
-	if ([searchText length])
-        [self.historyProvider logSearchResultWithTitle:searchText];
+    [self performSearch:self.searchBar.searchField.text];
+	
+	return YES;
+}
 
+- (void)performSearch:(NSString *)query;
+{
+    if (query.length > 0)
+        [self.historyProvider logSearchResultWithTitle:query];
+    
     __weak DDGSearchController *weakSelf = self;
     [self dismissKeyboard:^(BOOL completed) {
-        [weakSelf loadQueryOrURL:([searchText length] ? searchText : nil)];
+        [weakSelf loadQueryOrURL:query];
         [weakSelf dismissAutocomplete];
     }];
     
     oldSearchText = nil;
-	return YES;
 }
 
 -(void)dismissKeyboard:(void (^)(BOOL completed))completion {
