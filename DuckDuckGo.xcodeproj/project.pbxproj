@@ -165,7 +165,6 @@
 		5B5C844D172543F400EBD62E /* icon-notification_large.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5C844B172543F400EBD62E /* icon-notification_large.png */; };
 		5B5C844E172543F400EBD62E /* icon-notification_large@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B5C844C172543F400EBD62E /* icon-notification_large@2x.png */; };
 		5B5C845517256A9A00EBD62E /* DDGHistoryNoResultsDisabledView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B5C845417256A9A00EBD62E /* DDGHistoryNoResultsDisabledView.xib */; };
-		5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66096F16D781B20006B5DE /* libTestFlight.a */; };
 		5B66097316D781D00006B5DE /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B66097216D781D00006B5DE /* libz.dylib */; };
 		5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B66097716D7A3600006B5DE /* DDGFaviconButton.m */; };
 		5B7A1B5D16E4DC9F00354310 /* button_bg_highlighted.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1B4D16E4DC9F00354310 /* button_bg_highlighted.png */; };
@@ -826,7 +825,6 @@
 				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */,
 				83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */,
-				5B66097116D781B20006B5DE /* libTestFlight.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

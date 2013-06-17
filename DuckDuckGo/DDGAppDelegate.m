@@ -38,7 +38,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
-#if DEBUG == 1
+#if DEBUG
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     //Use deprecated uniqueIdentifier call for debug purposes only.

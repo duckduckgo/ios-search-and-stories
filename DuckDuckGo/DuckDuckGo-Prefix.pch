@@ -17,8 +17,6 @@
 
 	#import "Always.h"
     #import "Constants.h"
-#if DEBUG
-    #import "TestFlight.h"
-#endif
+//    #import "TestFlight.h"
 
 #endif
