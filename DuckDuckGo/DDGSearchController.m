@@ -250,7 +250,7 @@ NSString * const emailRegEx =
     [self.view insertSubview:pageViewController.view belowSubview:self.background];
     [pageViewController didMoveToParentViewController:self];
     
-    self.pageViewController = pageViewController;    
+    self.pageViewController = pageViewController;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -264,6 +264,7 @@ NSString * const emailRegEx =
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    
     [super viewDidAppear:animated];
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
@@ -825,16 +826,22 @@ NSString * const emailRegEx =
     self.bangInfoPopover = nil;
     
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:DDGSettingSuppressBangTooltip];
-    
+}
+
+- (IBAction)performExampleQuery:(id)sender;
+{
     //Perform an example query.
     [self performSearch:@"!amazon lego"];
+    
+    //Dismiss the tooltip forever.
+    [self hideBangTooltipForever:nil];
 }
 
 -(void)bangButtonPressed {
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
     
     if (self.showBangTooltip && nil == self.bangInfoPopover) {
-        if (nil == self.bangInfo)
+        if (!self.bangInfo)
             [[NSBundle mainBundle] loadNibNamed:@"DDGBangInfo" owner:self options:nil];
         
         UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
@@ -848,6 +855,9 @@ NSString * const emailRegEx =
                                                  lineBreakMode:NSLineBreakByWordWrapping];
         
         frame.size.height = textSize.height + 28.0;
+        if(frame.size.height < self.bangInfo.frame.size.height)
+            frame.size.height = self.bangInfo.frame.size.height;
+        
         viewController.contentSizeForViewInPopover = frame.size;
         
         DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
