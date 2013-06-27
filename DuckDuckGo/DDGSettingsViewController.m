@@ -200,7 +200,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     }];
     [self addButton:@"Share App" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         NSString *shareTitle = @"Check out the DuckDuckGo iOS app!";
-        NSURL *shareURL = [NSURL URLWithString:@"http://itunes.apple.com/app/id663592361"];
+        NSURL *shareURL = [NSURL URLWithString:@"https://itunes.apple.com/app/id663592361"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
