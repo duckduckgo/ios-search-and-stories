@@ -200,12 +200,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     }];
     [self addButton:@"Share App" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         NSString *shareTitle = @"Check out the DuckDuckGo iOS app!";
-        NSURL *shareURL = [NSURL URLWithString:@"http://itunes.apple.com/us/app/duckduckgo-search/id479988136?mt=8&uo=4"];
+        NSURL *shareURL = [NSURL URLWithString:@"https://itunes.apple.com/app/id663592361"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
     [self addButton:@"Rate App" forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=479988136&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
+        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=663592361&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
     }];
 
     NSString *bundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
