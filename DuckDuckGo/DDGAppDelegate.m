@@ -29,9 +29,9 @@
 @implementation DDGAppDelegate
 
 static void uncaughtExceptionHandler(NSException *exception) {
+    //Internal error reporting
     NSLog(@"CRASH: %@", exception);
     NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
-    // Internal error reporting
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -44,10 +44,11 @@ static void uncaughtExceptionHandler(NSException *exception) {
     //Use deprecated uniqueIdentifier call for debug purposes only.
     [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #pragma clang diagnostic pop
+    //Use Testflight only for the debug version. We don't currently have any error reporting that's not dependant on a third party.
     [TestFlight takeOff:@"a6dad165-a8d4-495c-89c6-f3812248d554"];
 #endif
     
-    // set the global URL cache to SDURLCache, which caches to disk
+    //Set the global URL cache to SDURLCache, which caches to disk
     SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
                                                          diskCapacity:1024*1024*10 // 10MB disk cache
                                                              diskPath:[SDURLCache defaultCachePath]];
@@ -55,10 +56,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     [[AFNetworkActivityIndicatorManager sharedManager] setEnabled:YES];
     
-    // audio session
-    
+    //Audio session
     AVAudioSession *audioSession = [AVAudioSession sharedInstance];
-    BOOL ok;
+    BOOL ok; //I like this. Naming a variable ok. Very subtle.
     NSError *error = nil;
     ok = [audioSession setActive:NO error:&error];
     if (!ok)
@@ -72,16 +72,16 @@ static void uncaughtExceptionHandler(NSException *exception) {
     UInt32 allowMixing = true;
     AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(allowMixing), &allowMixing);
     
-    // Active your audio session
+    //Active your audio session.
     ok = [audioSession setActive:YES error:&error];
-    if (!ok)
+    if(!ok)
         NSLog(@"%s audioSession setActive:YES error=%@", __PRETTY_FUNCTION__, error);
     
     
-    // load default settings
+    //Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
             
-    // theme
+    //Theme.
     
     [[UINavigationBar appearance] setShadowImage:[[UIImage imageNamed:@"toolbar_shadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0.0, 2.0)]];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg"] forBarMetrics:UIBarMetricsDefault];
@@ -100,7 +100,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
                                             forState:UIControlStateHighlighted
                                           barMetrics:UIBarMetricsDefault];
     
-//    [[UIBarButtonItem appearance] setBackgroundVerticalPositionAdjustment:1.0 forBarMetrics:UIBarMetricsDefault];
     [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsDefault];
     [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsLandscapePhone];    
 
@@ -144,7 +143,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     self.window.backgroundColor = [UIColor colorWithRed:0.169 green:0.176 blue:0.188 alpha:1.000];
     
-    // configure the sliding view controller
+    //Configure the sliding view controller
     DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.searchHandler = under;
     
@@ -174,45 +173,53 @@ static void uncaughtExceptionHandler(NSException *exception) {
     return YES;
 }
 
-- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
+- (BOOL)application:(UIApplication *)application
+            openURL:(NSURL *)url
+  sourceApplication:(NSString *)sourceApplication
+         annotation:(id)annotation;
+{
+    //We can only open URLs from DDG.
+    if(![[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"])
+        return NO;
     
-    if ([[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"]) {
-        NSString *query = nil;
-        NSArray *params = [[url query] componentsSeparatedByString:@"&"];
-        for (NSString *param in params) {
-            NSArray *pair = [param componentsSeparatedByString:@"="];
-            if ([pair count] > 1 && [[[pair objectAtIndex:0] lowercaseString] isEqualToString:@"q"]) {
-                query = [[pair objectAtIndex:1] URLDecodedStringDDG];
-            }
+    //Let's see what the query is.
+    NSString *query = nil;
+    NSArray *params = [[url query] componentsSeparatedByString:@"&"];
+    for (NSString *param in params) {
+        NSArray *pair = [param componentsSeparatedByString:@"="];
+        if ([pair count] > 1 && [[[pair objectAtIndex:0] lowercaseString] isEqualToString:@"q"]) {
+            query = [[pair objectAtIndex:1] URLDecodedStringDDG];
         }
-        
-        if (nil != query) {
-            [self.searchHandler loadQueryOrURL:query];
-        } else {
-            [self.searchHandler prepareForUserInput];
-        }
-
-        return YES;
     }
     
-    return NO;
+    if (query) {
+        [self.searchHandler loadQueryOrURL:query];
+    } else {
+        [self.searchHandler prepareForUserInput];
+    }
+
+    return YES;
 }
 
-- (void)applicationWillTerminate:(UIApplication *)application {
+- (void)applicationWillTerminate:(UIApplication *)application;
+{
     [self save];
 }
 
--(void)applicationWillResignActive:(UIApplication *)application {
+- (void)applicationWillResignActive:(UIApplication *)application;
+{
     [self save];
 }
 
--(void)applicationDidEnterBackground:(UIApplication *)application {
+- (void)applicationDidEnterBackground:(UIApplication *)application;
+{
     [self save];
 }
 
 #pragma mark - Core Data stack
 
-- (void)save {
+- (void)save;
+{
     __block UIBackgroundTaskIdentifier identfier = UIBackgroundTaskInvalid;
     
     identfier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^{
@@ -220,7 +227,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     }];
     
     [[NSUserDefaults standardUserDefaults] synchronize];
-    
 
     [self.managedObjectContext performBlock:^{
         if (self.managedObjectContext.hasChanges) {
@@ -264,18 +270,18 @@ static void uncaughtExceptionHandler(NSException *exception) {
 // If the context doesn't already exist, it is created and bound to the persistent store coordinator for the application.
 - (NSManagedObjectContext *)managedObjectContext
 {    
-    if (_managedObjectContext != nil) {
+    if (_managedObjectContext) {
         return _managedObjectContext;
     }
     
     NSPersistentStoreCoordinator *coordinator = [self persistentStoreCoordinator];
     
-    if (nil == _masterManagedObjectContext) {
+    if (!_masterManagedObjectContext) {
         _masterManagedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
         [_masterManagedObjectContext setPersistentStoreCoordinator:coordinator];        
     }    
     
-    if (coordinator != nil) {
+    if (coordinator) {
         _managedObjectContext = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSMainQueueConcurrencyType];
         [_managedObjectContext setParentContext:_masterManagedObjectContext];
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -291,9 +297,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
 // If the model doesn't already exist, it is created from the application's model.
 - (NSManagedObjectModel *)managedObjectModel
 {
-    if (_managedObjectModel != nil) {
+    if(_managedObjectModel) {
         return _managedObjectModel;
     }
+    
     NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"Stories" withExtension:@"momd"];
     _managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];
     return _managedObjectModel;
@@ -303,7 +310,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
 // If the coordinator doesn't already exist, it is created and the application's store added to it.
 - (NSPersistentStoreCoordinator *)persistentStoreCoordinator
 {
-    if (_persistentStoreCoordinator != nil) {
+    if(_persistentStoreCoordinator){
         return _persistentStoreCoordinator;
     }
     
@@ -345,7 +352,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
 #pragma mark - Application's Documents directory
 
 // Returns the URL to the application's Documents directory.
-- (NSURL *)applicationDocumentsDirectory
+- (NSURL *)applicationDocumentsDirectory;
 {
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }

@@ -2050,6 +2050,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
@@ -2159,6 +2160,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
@@ -2189,6 +2191,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
