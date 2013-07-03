@@ -19,17 +19,11 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 * Some of the best features of DuckDuckGo came from the community; so stay in touch!
 
 
-## Making Changes
-
-## **Bugs**
-  * Fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
+## To fix or to feature, that is the question:
+* Bugs fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/NPE-stories-longpress origin/master`
-
-## **Features**
-  * Fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
+* Features fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/sooper_feature origin/develop`
-
-## All
 * Don't make huge commits.
 * Check whitespace with `git diff --check` before committing.
 * Add tests that check what you've done.
