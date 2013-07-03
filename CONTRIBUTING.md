@@ -21,18 +21,18 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 
 ## Making Changes
 
-# Bugs
+## Bugs
 * Fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
   * `git checkout -b nilnilnil/NPE-stories-longpress origin/master`
 
-# Features
+## Features
 * Fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
   * `git checkout -b nilnilnil/sooper_feature origin/develop`
 
 * Don't make huge commits.
 * Check whitespace with `git diff --check` before committing.
 
-# Commit messages
+## Commit messages
 
 ````
     (#99999) Make the example in CONTRIBUTING imperative and concrete
