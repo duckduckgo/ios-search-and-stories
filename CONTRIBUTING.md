@@ -24,6 +24,7 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 ## **Bugs**
   * Fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/NPE-stories-longpress origin/master`
+
 ## **Features**
   * Fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/sooper_feature origin/develop`
