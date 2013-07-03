@@ -21,18 +21,18 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 
 ## Making Changes
 
-## Bugs
-* Fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
-  * `git checkout -b nilnilnil/NPE-stories-longpress origin/master`
+* Bugs
+  * Fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
+  `git checkout -b nilnilnil/NPE-stories-longpress origin/master`
 
-## Features
-* Fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
-  * `git checkout -b nilnilnil/sooper_feature origin/develop`
+* Features
+  * Fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
+  `git checkout -b nilnilnil/sooper_feature origin/develop`
 
 * Don't make huge commits.
 * Check whitespace with `git diff --check` before committing.
 
-## Commit messages
+* Commit messages
 
 ````
     (#99999) Make the example in CONTRIBUTING imperative and concrete
@@ -51,7 +51,7 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 * Add tests that check what you've done.
 * PRs with failing tests will not be accepted.
 
-# Additional Resources
+## Additional Resources
 
 * [DuckDuckGo contribution information](http://help.dukgo.com/customer/portal/articles/378777-contributing)
 * [DuckDuckGo for Android issues]()
