@@ -6,7 +6,7 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 ## Getting Started
 
 * If **you are a developer**, you're in the right place!
-* If **you are not a developer**, there is still a lot you can do at our [ideas site](http://ideas.duckduckhack.com/) like suggest and comment on prospective features / ideas.
+* If **you are not a developer**, there is still a lot you can do at our [ideas site](http://ideas.duckduckhack.com/) like suggest and comment on prospective features and ideas.
 * Both of these roles are very valuable and will help direct community efforts.
 
 * All developers should make sure to have a [GitHub account](https://github.com/signup/free)
@@ -43,6 +43,9 @@ great success and so we've taken the steps necessary to open sourcing our apps.
     from our issue tracker.  The body describes the behavior without the patch,
     why this is a problem, and how the patch fixes the problem when applied.
 ````
+
+## Caveat(s)
+The DuckDuckGo mobile apps represent a ton of hard work from people all around the world. We've spent a long time thinking about exactly what we think makes a great mobile experience. While we'd love to accept each an every pull request, that almost certainly wouldn't result in a coherent experience. It's really important to sync up with us on what you're trying to do. Every new feature, no matter how excellent, must jive and work with the overall vision.  The only way to do that is to stay in touch.
 
 ## Additional Resources
 
