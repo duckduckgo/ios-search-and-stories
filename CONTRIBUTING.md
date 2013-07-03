@@ -21,16 +21,18 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 
 ## Making Changes
 
-* **Bugs**
+### **Bugs**
   * Fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/NPE-stories-longpress origin/master`
-* **Features**
+### **Features**
   * Fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/sooper_feature origin/develop`
 * Don't make huge commits.
 * Check whitespace with `git diff --check` before committing.
+* Add tests that check what you've done.
+* PRs with failing tests will not be accepted.
 
-* **Commit messages**
+### Commit messages
 
 ````
     (#99999) Make the example in CONTRIBUTING imperative and concrete
@@ -46,14 +48,11 @@ great success and so we've taken the steps necessary to open sourcing our apps.
     why this is a problem, and how the patch fixes the problem when applied.
 ````
 
-* Add tests that check what you've done.
-* PRs with failing tests will not be accepted.
-
 ## Additional Resources
 
 * [DuckDuckGo contribution information](http://help.dukgo.com/customer/portal/articles/378777-contributing)
-* [DuckDuckGo for Android issues]()
-* [DuckDuckGo for Android LICENSE]()
-* [DuckDuckGo for Android chat](https://dukgo.com/blog/using-pidgin-with-xmpp-jabber)
+* [Issues]()
+* [LICENSE]()
+* [Chat](https://dukgo.com/blog/using-pidgin-with-xmpp-jabber)
 * [General GitHub documentation](http://help.github.com/)
 * [GitHub pull request documentation](http://help.github.com/send-pull-requests/)
