@@ -29,7 +29,7 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 * Add tests that check what you've done.
 * PRs with failing tests will not be accepted.
 
-**Commit messages**
+**Commits:**
 ````
     (#99999) Make the example in CONTRIBUTING imperative and concrete
 
