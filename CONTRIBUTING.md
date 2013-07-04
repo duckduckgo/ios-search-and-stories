@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping us make DuckDuckGo for Android! DuckDuckHack has been a
+Thanks for helping us make DuckDuckGo for iOS! DuckDuckHack has been a
 great success and so we've taken the steps necessary to open sourcing our apps.
 
 ## Getting Started
