@@ -11,9 +11,8 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 * If there isn't already an open issue that describes your bug or feature, submit one.
   * If you're submitting a bug, please describe a way we can reproduce the issue(s).
   * Be sure to add the version you're experiencing the issue on.
-  * If you're submitting a feature (cool!), make sure you contact us before you do any work to ensure that
-    * You aren't duplicating efforts
-    * It is aligned with the goal of our apps
+  * If you're submitting a feature (cool!), make sure you contact us before you do any work to ensure that you aren't duplicating efforts and that your changes are aligned with the goal of the app.
+
 * Some of the best features of DuckDuckGo came from the community; so stay in touch!
 
 
