@@ -28,7 +28,7 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 
 **Commits:**
 ````
-    (#99999) Make the example in CONTRIBUTING imperative and concrete
+    (#GH_ISSUE) Make the example in CONTRIBUTING imperative and concrete
 
     Without this patch applied the example commit message in the CONTRIBUTING
     document is not a concrete example.  This is a problem because the
@@ -36,9 +36,9 @@ great success and so we've taken the steps necessary to open sourcing our apps.
     based on a description rather than an example.  This patch fixes the
     problem by making the example concrete and imperative.
 
-    The first line is a real life imperative statement with a ticket number
-    from our issue tracker.  The body describes the behavior without the patch,
-    why this is a problem, and how the patch fixes the problem when applied.
+    The first line is a real life imperative statement with a GitHub issue #.
+    The body describes the behavior without the patch, why this is a problem,
+    and how the patch fixes the problem when applied.
 ````
 
 ## Caveat(s)
