@@ -3,7 +3,7 @@
 Thanks for helping us make DuckDuckGo for iOS! DuckDuckHack has been a
 great success and so we've taken the steps necessary to open sourcing our apps.
 
-## Getting Started
+## Setup
 
 * If **you are a developer**, you're in the right place!
 * If **you are not a developer**, there is still a lot you can do at our [ideas site](http://ideas.duckduckhack.com/) like suggest and comment on prospective features and ideas.
@@ -19,7 +19,7 @@ great success and so we've taken the steps necessary to open sourcing our apps.
 * Some of the best features of DuckDuckGo came from the community; so stay in touch!
 
 
-## To fix or to feature, that is the question:
+## Changes
 * Bugs fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/NPE-stories-longpress origin/master`
 * Features fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
