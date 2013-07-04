@@ -46,9 +46,9 @@ The DuckDuckGo mobile apps represent a ton of hard work from people all around t
 
 ## Additional Resources
 
-* [DuckDuckGo contribution information](http://help.dukgo.com/customer/portal/articles/378777-contributing)
 * [Issues]()
-* [LICENSE]()
 * [Chat](https://dukgo.com/blog/using-pidgin-with-xmpp-jabber)
+* [LICENSE]()
+* [General info](http://help.dukgo.com/customer/portal/articles/378777-contributing)
 * [General GitHub documentation](http://help.github.com/)
 * [GitHub pull request documentation](http://help.github.com/send-pull-requests/)
