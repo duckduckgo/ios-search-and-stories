@@ -3,8 +3,6 @@
 Thanks for helping us make DuckDuckGo for iOS! DuckDuckHack has been a
 great success and so we've taken the steps necessary to open sourcing our apps.
 
-## Setup
-
 * If **you are a developer**, you're in the right place!
 * If **you are not a developer**, there is still a lot you can do at our [ideas site](http://ideas.duckduckhack.com/) like suggest and comment on prospective features and ideas.
 * Both of these roles are very valuable and will help direct community efforts.
