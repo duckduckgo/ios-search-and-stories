@@ -8,6 +8,7 @@
 
 #import "DDGUnderViewControllerCell.h"
 #import "DDGDeleteButton.h"
+#import "UIColor+DDG.h"
 
 @interface DDGUnderViewControllerCell ()
 @property (nonatomic, weak, readwrite) DDGFixedSizeImageView *fixedSizeImageView;
@@ -57,7 +58,7 @@
         
 		self.textLabel.numberOfLines = 1;
 		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:17.0];
-        self.textLabel.textColor = [UIColor colorWithRed:0.686 green:0.725 blue:0.800 alpha:1.000];
+        self.textLabel.textColor = [UIColor slideOutMenuTextColor];
         self.textLabel.highlightedTextColor = [UIColor whiteColor];        
     }
     return self;

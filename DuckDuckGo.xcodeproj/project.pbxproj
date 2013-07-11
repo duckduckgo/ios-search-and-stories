@@ -346,6 +346,7 @@
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
+		C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = C1894FD6178F56830076C179 /* UIColor+DDG.m */; };
 		C1A97EE5176BD3560099EDA1 /* btn-bg_bang_example_query.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */; };
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
 		C1A97EE8176BD7AB0099EDA1 /* btn-bg_bang-default.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE7176BD7AB0099EDA1 /* btn-bg_bang-default.png */; };
@@ -794,6 +795,8 @@
 		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGAppDelegate.m; sourceTree = "<group>"; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
+		C1894FD5178F56830076C179 /* UIColor+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DDG.h"; sourceTree = "<group>"; };
+		C1894FD6178F56830076C179 /* UIColor+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DDG.m"; sourceTree = "<group>"; };
 		C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang_example_query.png"; sourceTree = "<group>"; };
 		C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang_example_query@2x.png"; sourceTree = "<group>"; };
 		C1A97EE7176BD7AB0099EDA1 /* btn-bg_bang-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang-default.png"; sourceTree = "<group>"; };
@@ -1490,6 +1493,8 @@
 				8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */,
 				5B2FCABA16F231150045A5FE /* NSString+URLEncodingDDG.h */,
 				5B2FCABB16F231150045A5FE /* NSString+URLEncodingDDG.m */,
+				C1894FD5178F56830076C179 /* UIColor+DDG.h */,
+				C1894FD6178F56830076C179 /* UIColor+DDG.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -1947,6 +1952,7 @@
 				5BDC6B1B174E36E90065BB8D /* DDGFormViewController.m in Sources */,
 				5BDC6B23174E697E0065BB8D /* DDGSearchBarButton.m in Sources */,
 				5BDC6B35174F6A2E0065BB8D /* DDGAutocompleteHeaderView.m in Sources */,
+				C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
