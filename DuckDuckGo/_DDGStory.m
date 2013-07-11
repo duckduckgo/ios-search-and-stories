@@ -49,24 +49,28 @@ const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
 	return (DDGStoryID*)[super objectID];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
++ (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
 	if ([key isEqualToString:@"htmlDownloadedValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"htmlDownloaded"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
 	}
 	if ([key isEqualToString:@"imageDownloadedValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"imageDownloaded"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
 	}
 	if ([key isEqualToString:@"readValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"read"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
 	}
 	if ([key isEqualToString:@"savedValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"saved"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
 	}
 
 	return keyPaths;

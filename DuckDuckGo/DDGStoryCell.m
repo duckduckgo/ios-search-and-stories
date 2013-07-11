@@ -33,7 +33,7 @@
         self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
         
         UIButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
-        faviconButton.frame = CGRectMake(0, 0, 38.0, 44.0);
+        faviconButton.frame = CGRectMake(0, 0, 40.0, 40.0);
         faviconButton.opaque = NO;
         faviconButton.backgroundColor = [UIColor clearColor];
         [faviconButton addTarget:nil action:@selector(filter:) forControlEvents:UIControlEventTouchUpInside];
@@ -51,9 +51,12 @@
     return self;
 }
 
-- (void)layoutSubviews {
+- (void)layoutSubviews;
+{
+    //Always call your parents.
     [super layoutSubviews];
     
+    //Let's set everything up.
     CGRect bounds = self.contentView.bounds;
     
     self.imageView.hidden = NO;
@@ -85,7 +88,9 @@
     
     self.overlayImageView.frame = overlayFrame;    
     
-    faviconFrame.origin.y = overlayFrame.origin.y + ((overlayFrame.size.height - faviconFrame.size.height)/2.0) + 2.0;
+    //Make sure the favicon is the right size and in the right position.
+    faviconFrame.origin.y = overlayFrame.origin.y + ((overlayFrame.size.height - faviconFrame.size.height)/2.0);
+    faviconFrame.size = CGSizeMake(40.0, 40.0);
     
     self.faviconButton.frame = CGRectIntegral(faviconFrame);
     

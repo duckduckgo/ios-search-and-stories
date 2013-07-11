@@ -37,7 +37,9 @@ extern const struct DDGHistoryItemFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* section;
+
 
 
 //- (BOOL)validateSection:(id*)value_ error:(NSError**)error_;
@@ -45,7 +47,9 @@ extern const struct DDGHistoryItemFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSDate* timeStamp;
+
 
 
 //- (BOOL)validateTimeStamp:(id*)value_ error:(NSError**)error_;
@@ -53,7 +57,9 @@ extern const struct DDGHistoryItemFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* title;
+
 
 
 //- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
@@ -61,7 +67,9 @@ extern const struct DDGHistoryItemFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* urlString;
+
 
 
 //- (BOOL)validateUrlString:(id*)value_ error:(NSError**)error_;
@@ -70,7 +78,7 @@ extern const struct DDGHistoryItemFetchedProperties {
 
 
 
-@property (nonatomic, strong) DDGStory* story;
+@property (nonatomic, strong) DDGStory *story;
 
 //- (BOOL)validateStory:(id*)value_ error:(NSError**)error_;
 

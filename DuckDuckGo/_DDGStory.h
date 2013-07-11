@@ -55,7 +55,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* articleURLString;
+
 
 
 //- (BOOL)validateArticleURLString:(id*)value_ error:(NSError**)error_;
@@ -63,7 +65,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* descriptionString;
+
 
 
 //- (BOOL)validateDescriptionString:(id*)value_ error:(NSError**)error_;
@@ -71,7 +75,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSDate* feedDate;
+
 
 
 //- (BOOL)validateFeedDate:(id*)value_ error:(NSError**)error_;
@@ -79,7 +85,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSNumber* htmlDownloaded;
+
 
 
 @property BOOL htmlDownloadedValue;
@@ -91,7 +99,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* id;
+
 
 
 //- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
@@ -99,7 +109,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSNumber* imageDownloaded;
+
 
 
 @property BOOL imageDownloadedValue;
@@ -111,7 +123,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* imageURLString;
+
 
 
 //- (BOOL)validateImageURLString:(id*)value_ error:(NSError**)error_;
@@ -119,7 +133,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSNumber* read;
+
 
 
 @property BOOL readValue;
@@ -131,7 +147,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSNumber* saved;
+
 
 
 @property BOOL savedValue;
@@ -143,7 +161,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSDate* timeStamp;
+
 
 
 //- (BOOL)validateTimeStamp:(id*)value_ error:(NSError**)error_;
@@ -151,7 +171,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* title;
+
 
 
 //- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
@@ -159,7 +181,9 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* urlString;
+
 
 
 //- (BOOL)validateUrlString:(id*)value_ error:(NSError**)error_;
@@ -168,14 +192,14 @@ extern const struct DDGStoryFetchedProperties {
 
 
 
-@property (nonatomic, strong) DDGStoryFeed* feed;
+@property (nonatomic, strong) DDGStoryFeed *feed;
 
 //- (BOOL)validateFeed:(id*)value_ error:(NSError**)error_;
 
 
 
 
-@property (nonatomic, strong) NSSet* recents;
+@property (nonatomic, strong) NSSet *recents;
 
 - (NSMutableSet*)recentsSet;
 

@@ -49,7 +49,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* category;
+
 
 
 //- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
@@ -57,7 +59,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* descriptionString;
+
 
 
 //- (BOOL)validateDescriptionString:(id*)value_ error:(NSError**)error_;
@@ -65,7 +69,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSNumber* enabled;
+
 
 
 @property BOOL enabledValue;
@@ -77,7 +83,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSNumber* enabledByDefault;
+
 
 
 @property BOOL enabledByDefaultValue;
@@ -89,7 +97,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSDate* feedDate;
+
 
 
 //- (BOOL)validateFeedDate:(id*)value_ error:(NSError**)error_;
@@ -97,7 +107,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* id;
+
 
 
 //- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
@@ -105,7 +117,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSNumber* imageDownloaded;
+
 
 
 @property BOOL imageDownloadedValue;
@@ -117,7 +131,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* imageURLString;
+
 
 
 //- (BOOL)validateImageURLString:(id*)value_ error:(NSError**)error_;
@@ -125,7 +141,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* title;
+
 
 
 //- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
@@ -133,7 +151,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
+
 @property (nonatomic, strong) NSString* urlString;
+
 
 
 //- (BOOL)validateUrlString:(id*)value_ error:(NSError**)error_;
@@ -142,7 +162,7 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
-@property (nonatomic, strong) NSSet* stories;
+@property (nonatomic, strong) NSSet *stories;
 
 - (NSMutableSet*)storiesSet;
 

@@ -46,20 +46,23 @@ const struct DDGStoryFeedFetchedProperties DDGStoryFeedFetchedProperties = {
 	return (DDGStoryFeedID*)[super objectID];
 }
 
-+ (NSSet *)keyPathsForValuesAffectingValueForKey:(NSString *)key {
++ (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
 	
 	if ([key isEqualToString:@"enabledValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"enabled"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
 	}
 	if ([key isEqualToString:@"enabledByDefaultValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"enabledByDefault"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
 	}
 	if ([key isEqualToString:@"imageDownloadedValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"imageDownloaded"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
+		return keyPaths;
 	}
 
 	return keyPaths;
