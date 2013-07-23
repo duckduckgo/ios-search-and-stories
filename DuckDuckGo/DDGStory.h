@@ -21,6 +21,7 @@
 @property(nonatomic, strong) NSURL *URL;
 @property(nonatomic, strong) NSURL *imageURL;
 @property(nonatomic, readonly) UIImage *image;
+@property (nonatomic, strong) UIImage *blurredImage;
 @property(nonatomic, readonly) BOOL isImageDownloaded;
 @property(nonatomic, readonly) BOOL isHTMLDownloaded;
 

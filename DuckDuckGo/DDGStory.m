@@ -11,10 +11,13 @@
 
 @interface DDGStory () {
     UIImage *_image;
+    UIImage *_blurredImage;
 }
 @end
 
 @implementation DDGStory
+
+@synthesize blurredImage = _blurredImage;
 
 - (void)setURL:(NSURL *)URL {
     self.urlString = [URL absoluteString];

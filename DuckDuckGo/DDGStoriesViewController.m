@@ -23,13 +23,15 @@
 #import "DDGStoryFetcher.h"
 #import "DDGSafariActivity.h"
 #import "DDGActivityItemProvider.h"
+#import <CoreImage/CoreImage.h>
 
 NSString * const DDGLastViewedStoryKey = @"last_story";
 
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
     UIImageView *topShadow;
-    EGORefreshTableHeaderView *refreshHeaderView;    
+    EGORefreshTableHeaderView *refreshHeaderView;
+    CIContext *_blurContext;
 }
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
@@ -60,6 +62,12 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         self.title = NSLocalizedString(@"Stories", @"View controller title: Stories");
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
+        
+        //Create the context where the blur is going on.
+        EAGLContext *eaglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+        NSMutableDictionary *options = [NSMutableDictionary dictionary];
+        [options setObject: [NSNull null] forKey: kCIContextWorkingColorSpace];
+        _blurContext = [CIContext contextWithEAGLContext:eaglContext options:options];
     }
     return self;
 }
@@ -717,7 +725,8 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 #pragma mark - Loading popular stories
 
-- (void)decompressAndDisplayImageForStory:(DDGStory *)story {
+- (void)decompressAndDisplayImageForStory:(DDGStory *)story;
+{
     if (nil == story.image)
         return;
     
@@ -742,10 +751,20 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     else {
         [self.enqueuedDecompressionOperations addObject:storyID];
         [self.imageDecompressionQueue addOperationWithBlock:^{
+            //Draw the received image in a graphics context.
             UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
             [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
             UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
+            
+            //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
+            CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur"
+                                          keysAndValues:kCIInputImageKey, [CIImage imageWithCGImage:decompressed.CGImage], @"inputRadius", @10, nil];
+            
+            CIImage *result = [filter outputImage];
+            CGImageRef cgImage = [_blurContext createCGImage:result fromRect:[result extent]];
+            story.blurredImage = [UIImage imageWithCGImage:cgImage];
+            CGImageRelease(cgImage);
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [weakSelf.decompressedImages setObject:decompressed forKey:storyID];
@@ -970,8 +989,10 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     
     if (nil != decompressedImage) {
         cell.imageView.image = decompressedImage;
+        storyCell.blurredImageView.image = story.blurredImage;
     } else {
         cell.imageView.image = nil;
+        storyCell.blurredImageView.image = nil;
         if (story.isImageDownloaded) {
             [self decompressAndDisplayImageForStory:story];
         } else  {

@@ -16,6 +16,11 @@
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if (self) {
         self.imageView.clipsToBounds = YES;
+        
+        self.blurredImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
+        self.blurredImageView.contentMode = UIViewContentModeScaleToFill;
+        [self.contentView addSubview:self.blurredImageView];
+        
         UIImageView *overlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"topic_cell_background"]];
         overlayImageView.opaque = NO;
         overlayImageView.backgroundColor = [UIColor clearColor];
@@ -59,10 +64,15 @@
     //Let's set everything up.
     CGRect bounds = self.contentView.bounds;
     
+    //We want the imageView to reach from the top of the cell to the top of the overlay frame.
     self.imageView.hidden = NO;
     self.imageView.frame = bounds;
     self.imageView.alpha = 1.0;
     [self.contentView sendSubviewToBack:self.imageView];
+    
+    //We want the _blurredImageView to be the size of the cell.
+    _blurredImageView.frame = self.imageView.frame;
+    [self.contentView sendSubviewToBack:_blurredImageView];
     
     CGRect faviconFrame = self.faviconButton.frame;    
     
@@ -86,7 +96,14 @@
     overlayFrame.origin.y = bounds.size.height - overlayFrame.size.height;
     overlayFrame.size.width = bounds.size.width;
     
-    self.overlayImageView.frame = overlayFrame;    
+    self.overlayImageView.alpha = 0.6;
+    self.overlayImageView.frame = overlayFrame;
+    
+    if(_blurredImageView.frame.size.height == self.imageView.frame.size.height){
+        CGRect frame = self.imageView.frame;
+        frame.size.height -= overlayFrame.size.height - 5;
+        self.imageView.frame = frame;
+    }
     
     //Make sure the favicon is the right size and in the right position.
     faviconFrame.origin.y = overlayFrame.origin.y + ((overlayFrame.size.height - faviconFrame.size.height)/2.0);

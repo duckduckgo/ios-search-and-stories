@@ -11,6 +11,7 @@
 @interface DDGStoryCell : UITableViewCell
 @property (nonatomic, strong) IBOutlet UILabel *textLabel;
 @property (nonatomic, strong) IBOutlet UIImageView *imageView;
+@property (nonatomic, strong) IBOutlet UIImageView *blurredImageView;
 @property (nonatomic, strong) IBOutlet UIImageView *overlayImageView;
 @property (nonatomic, strong) IBOutlet UIButton *faviconButton;
 @end
