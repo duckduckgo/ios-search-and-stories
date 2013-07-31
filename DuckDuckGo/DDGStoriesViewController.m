@@ -758,13 +758,21 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             UIGraphicsEndImageContext();
             
             //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
-            CIFilter *filter = [CIFilter filterWithName:@"CIGaussianBlur"
-                                          keysAndValues:kCIInputImageKey, [CIImage imageWithCGImage:decompressed.CGImage], @"inputRadius", @10, nil];
             
-            CIImage *result = [filter outputImage];
-            CGImageRef cgImage = [_blurContext createCGImage:result fromRect:[result extent]];
-            story.blurredImage = [UIImage imageWithCGImage:cgImage];
-            CGImageRelease(cgImage);
+            CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
+            
+            CGAffineTransform transform = CGAffineTransformIdentity;
+            CIFilter *clampFilter = [CIFilter filterWithName:@"CIAffineClamp"];
+            [clampFilter setValue:imageToBlur forKey:@"inputImage"];
+            [clampFilter setValue:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
+            
+            CIFilter *blurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
+            [blurFilter setValue:clampFilter.outputImage forKey:@"inputImage"];
+            [blurFilter setValue:@10 forKey:@"inputRadius"];
+            
+            CGImageRef filteredImage = [_blurContext createCGImage:blurFilter.outputImage fromRect:[imageToBlur extent]];
+            story.blurredImage = [UIImage imageWithCGImage:filteredImage];
+            CGImageRelease(filteredImage);
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [weakSelf.decompressedImages setObject:decompressed forKey:storyID];
