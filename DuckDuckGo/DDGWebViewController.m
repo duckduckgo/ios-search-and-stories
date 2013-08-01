@@ -252,11 +252,7 @@
     }
     
     NSURL *url = [NSURL URLWithString:urlString];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
-    if ([[url host] hasSuffix:@"duckduckgo.com"])
-        [request setValue:[DDGUtility agentDDG] forHTTPHeaderField:@"User-Agent"];
-        
-    [self.webView loadRequest:request];
+    [self.webView loadRequest:[DDGUtility requestWithURL:url]];
     [self.searchController updateBarWithURL:url];
     self.webViewURL = url;
 }
@@ -274,7 +270,7 @@
     __weak DDGWebViewController *weakSelf = self;
     
     NSURL *url = [NSURL URLWithString:urlString];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    NSURLRequest *request = [DDGUtility requestWithURL:url];
     AFJSONRequestOperation *operation = [[AFJSONRequestOperation alloc] initWithRequest:request];
     [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
         if (completion)

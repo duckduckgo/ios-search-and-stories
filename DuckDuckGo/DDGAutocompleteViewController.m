@@ -19,6 +19,7 @@
 #import "DDGPlusButton.h"
 #import "DDGAutocompleteCell.h"
 #import "DDGAutocompleteHeaderView.h"
+#import "DDGUtility.h"
 
 @interface DDGAutocompleteViewController ()
 @property (nonatomic, copy) NSArray *history;
@@ -133,7 +134,7 @@ static NSString *historyCellID = @"HCell";
                     }
                 };
                 
-                AFImageRequestOperation *imageOperation = [AFImageRequestOperation imageRequestOperationWithRequest:[NSURLRequest requestWithURL:URL]
+                AFImageRequestOperation *imageOperation = [AFImageRequestOperation imageRequestOperationWithRequest:[DDGUtility requestWithURL:URL]
                                                                                                             success:success];
                 [self.imageRequestQueue addOperation:imageOperation];
             }

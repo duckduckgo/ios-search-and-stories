@@ -15,4 +15,13 @@
 	return [@"DDG-iOS-" stringByAppendingString:(__bridge NSString*)CFBundleGetValueForInfoDictionaryKey (CFBundleGetMainBundle(), kCFBundleVersionKey)];
 }
 
++ (NSURLRequest *)requestWithURL:(NSURL *)URL
+{
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL];
+    if ([[URL host] hasSuffix:@"duckduckgo.com"]) {
+        [request setValue:[DDGUtility agentDDG] forHTTPHeaderField:@"User-Agent"];
+    }
+    return [request copy];
+}
+
 @end

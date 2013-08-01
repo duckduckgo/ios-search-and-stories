@@ -8,6 +8,7 @@
 
 #import "DDGStory.h"
 #import "NSOperationStack.h"
+#import "DDGUtility.h"
 
 @interface DDGStory () {
     UIImage *_image;
@@ -116,7 +117,7 @@
     if (!self.htmlDownloadedValue)
         return nil;
     
-    return [NSURLRequest requestWithURL:[NSURL fileURLWithPath:[self HTMLFilePath]]];
+    return [DDGUtility requestWithURL:[NSURL fileURLWithPath:[self HTMLFilePath]]];
 }
 
 - (void)writeHTMLString:(NSString *)html completion:(void (^)(BOOL success))completion {

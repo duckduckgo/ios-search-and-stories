@@ -10,6 +10,7 @@
 #import "AFNetworking.h"
 #import "DDGStory.h"
 #import "DDGStoryFeed.h"
+#import "DDGUtility.h"
 
 NSString * const DDGStoryFetcherStoriesLastUpdatedKey = @"storiesUpdated";
 NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
@@ -51,7 +52,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     
     dispatch_async(_queue, ^{
         NSURL *sourcesURL = [NSURL URLWithString:kDDGTypeInfoURLString];
-        NSURLRequest *request = [NSURLRequest requestWithURL:sourcesURL];
+        NSURLRequest *request = [DDGUtility requestWithURL:sourcesURL];
         
         NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
         [context setParentContext:self.parentManagedObjectContext];
@@ -155,7 +156,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
         NSDictionary *feedsByID = [self feedsByIDInContext:context enabledFeedsOnly:YES];
         
         NSURL *storiesURL = [NSURL URLWithString:[NSString stringWithFormat:@"%@%@", kDDGStoriesURLString, [[feedsByID allKeys] componentsJoinedByString:@","]]];
-        NSURLRequest *request = [NSURLRequest requestWithURL:storiesURL];
+        NSURLRequest *request = [DDGUtility requestWithURL:storiesURL];
         
         void (^success)(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) = ^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
             NSDate *feedDate= nil;
@@ -292,7 +293,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     NSManagedObjectID *objectID = [feed objectID];
     
     if (!feed.imageDownloadedValue && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
-        NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
+        NSURLRequest *request = [DDGUtility requestWithURL:imageURL];
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
@@ -339,7 +340,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     NSManagedObjectID *objectID = [story objectID];
         
     if (!story.imageDownloadedValue && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
-        NSURLRequest *request = [NSURLRequest requestWithURL:imageURL];
+        NSURLRequest *request = [DDGUtility requestWithURL:imageURL];
         AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
         [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
             

@@ -11,5 +11,6 @@
 @interface DDGUtility : NSObject
 
 + (NSString*)agentDDG;
++ (NSURLRequest *)requestWithURL:(NSURL *)URL;
 
 @end
