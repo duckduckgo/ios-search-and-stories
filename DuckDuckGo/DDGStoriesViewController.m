@@ -26,7 +26,9 @@
 #import <CoreImage/CoreImage.h>
 
 NSString * const DDGLastViewedStoryKey = @"last_story";
+
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
+NSString * const DDGLastRefreshAttemptKey = @"lastRefreshAttempt";
 
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
@@ -229,7 +231,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     
     if (!self.savedStoriesOnly) {
         if ([self shouldRefresh]) {
-            [self refreshSources];
+            [self refresh:YES];
         }
     } else if ([self.fetchedResultsController.fetchedObjects count] == 0) {
         [self showNoStoriesView];
@@ -660,7 +662,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 #pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
-    [self refreshStories];
+    [self refresh:NO];
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
@@ -733,9 +735,9 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 - (BOOL)shouldRefresh
 {
-    NSDate *lastUpdated = (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
-    if (lastUpdated) {
-        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:lastUpdated];
+    NSDate *lastAttempt = (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:DDGLastRefreshAttemptKey];
+    if (lastAttempt) {
+        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:lastAttempt];
         return (timeInterval > DDGMinimumRefreshInterval);
     }
     return YES;
@@ -775,20 +777,22 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             
             //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
             
-            CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
-            
-            CGAffineTransform transform = CGAffineTransformIdentity;
-            CIFilter *clampFilter = [CIFilter filterWithName:@"CIAffineClamp"];
-            [clampFilter setValue:imageToBlur forKey:@"inputImage"];
-            [clampFilter setValue:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
-            
-            CIFilter *blurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
-            [blurFilter setValue:clampFilter.outputImage forKey:@"inputImage"];
-            [blurFilter setValue:@10 forKey:@"inputRadius"];
-            
-            CGImageRef filteredImage = [_blurContext createCGImage:blurFilter.outputImage fromRect:[imageToBlur extent]];
-            story.blurredImage = [UIImage imageWithCGImage:filteredImage];
-            CGImageRelease(filteredImage);
+            if (!story.blurredImage) {
+                CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
+                
+                CGAffineTransform transform = CGAffineTransformIdentity;
+                CIFilter *clampFilter = [CIFilter filterWithName:@"CIAffineClamp"];
+                [clampFilter setValue:imageToBlur forKey:@"inputImage"];
+                [clampFilter setValue:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
+                
+                CIFilter *blurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
+                [blurFilter setValue:clampFilter.outputImage forKey:@"inputImage"];
+                [blurFilter setValue:@10 forKey:@"inputRadius"];
+                
+                CGImageRef filteredImage = [_blurContext createCGImage:blurFilter.outputImage fromRect:[imageToBlur extent]];
+                story.blurredImage = [UIImage imageWithCGImage:filteredImage];
+                CGImageRelease(filteredImage);
+            }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [weakSelf.decompressedImages setObject:decompressed forKey:storyID];
@@ -815,6 +819,16 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
         _storyFetcher = [[DDGStoryFetcher alloc] initWithParentManagedObjectContext:self.managedObjectContext];
     
     return _storyFetcher;
+}
+
+- (void)refresh:(BOOL)includeSources
+{
+    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:DDGLastRefreshAttemptKey];
+    if (includeSources) {
+        [self refreshSources];
+    } else {
+        [self refreshStories];
+    }
 }
 
 - (void)refreshSources {
