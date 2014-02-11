@@ -28,7 +28,6 @@
 NSString * const DDGLastViewedStoryKey = @"last_story";
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
-NSString * const DDGLastRefreshAttemptKey = @"lastRefreshAttempt";
 
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;

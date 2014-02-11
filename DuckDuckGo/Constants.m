@@ -22,3 +22,5 @@ NSString * const kDDGStoriesURLString = @"https://hunter.duckduckgo.com/watrcool
 //NSString * const kDDGStoriesURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&s=";
 
 NSString * const kDDGSuggestionsURLString = @"https://duckduckgo.com/ac/?q=";
+
+NSString * const DDGLastRefreshAttemptKey = @"lastRefreshAttempt";
