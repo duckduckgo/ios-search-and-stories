@@ -1860,7 +1860,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd $SRCROOT/DuckDuckGo\n/usr/local/bin/mogenerator --template-var arc=true -m Stories.xcdatamodeld/Stories.xcdatamodel";
+			shellScript = "cd \"$SRCROOT/DuckDuckGo\"\n/usr/local/bin/mogenerator --template-var arc=true -m Stories.xcdatamodeld/Stories.xcdatamodel";
 		};
 /* End PBXShellScriptBuildPhase section */
 

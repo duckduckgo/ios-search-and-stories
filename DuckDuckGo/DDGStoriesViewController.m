@@ -26,6 +26,7 @@
 #import <CoreImage/CoreImage.h>
 
 NSString * const DDGLastViewedStoryKey = @"last_story";
+NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
@@ -226,10 +227,13 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         }
     }
     
-    if (!self.savedStoriesOnly)
-        [self refreshSources];
-    else if ([self.fetchedResultsController.fetchedObjects count] == 0)
+    if (!self.savedStoriesOnly) {
+        if ([self shouldRefresh]) {
+            [self refreshSources];
+        }
+    } else if ([self.fetchedResultsController.fetchedObjects count] == 0) {
         [self showNoStoriesView];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -284,6 +288,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 #pragma mark - Filtering
 
+#ifndef __clang_analyzer__
 - (IBAction)filter:(id)sender {
     
     void (^completion)() = ^() {
@@ -301,11 +306,11 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         } else if ([sender isKindOfClass:[UIButton class]]) {
             self.sourceFilter = story.feed;
         }
-        
+
         NSPredicate *predicate = nil;
         if (nil != self.sourceFilter)
             predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
-        
+
         NSArray *oldStories = [self.fetchedResultsController fetchedObjects];
         
         [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
@@ -325,6 +330,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     else
         completion();
 }
+#endif
 
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
     NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[newStories count]];
@@ -724,6 +730,16 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 }
 
 #pragma mark - Loading popular stories
+
+- (BOOL)shouldRefresh
+{
+    NSDate *lastUpdated = (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
+    if (lastUpdated) {
+        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:lastUpdated];
+        return (timeInterval > DDGMinimumRefreshInterval);
+    }
+    return YES;
+}
 
 - (void)decompressAndDisplayImageForStory:(DDGStory *)story;
 {

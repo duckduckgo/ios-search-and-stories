@@ -42,10 +42,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     //Use deprecated uniqueIdentifier call for debug purposes only.
-    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+    //[TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #pragma clang diagnostic pop
     //Use Testflight only for the debug version. We don't currently have any error reporting that's not dependant on a third party.
-    [TestFlight takeOff:@"a6dad165-a8d4-495c-89c6-f3812248d554"];
+    //[TestFlight takeOff:@"a6dad165-a8d4-495c-89c6-f3812248d554"];
 #endif
     
     //Set the global URL cache to SDURLCache, which caches to disk
