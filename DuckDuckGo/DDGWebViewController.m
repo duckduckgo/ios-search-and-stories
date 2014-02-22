@@ -130,7 +130,7 @@
     [self.searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
-#pragma mark - Long press
+#pragma mark - Save image to library
 
 - (void)longPress:(UILongPressGestureRecognizer *)recognizer {
     if (recognizer.state == UIGestureRecognizerStateBegan) {
@@ -160,6 +160,16 @@
                                                         otherButtonTitles:@"Save to Library", nil];
         [actionSheet showInView:self.slidingViewController.view];
     }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (error) {
+        NSLog(@"error: %@", error);
+
+        return;
+    }
+
+    [SVProgressHUD showSuccessWithStatus:@"Saved"];
 }
 
 #pragma mark - Readability Mode
@@ -584,5 +594,20 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
     return YES;
 }
 
+#pragma mark - Action sheet delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // save to library
+    if (buttonIndex == 0) {
+        NSURLRequest *request = [DDGUtility requestWithURL:[NSURL URLWithString:actionSheet.title]];
+        [[AFImageRequestOperation imageRequestOperationWithRequest:request success:^(UIImage *image)
+        {
+            if (image) {
+                UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+            }
+        }] start];
+    }
+}
 
 @end
