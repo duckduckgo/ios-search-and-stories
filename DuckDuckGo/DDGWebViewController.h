@@ -12,7 +12,7 @@
 
 @class DDGStory;
 
-@interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate, MFMailComposeViewControllerDelegate>
+@interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate, MFMailComposeViewControllerDelegate, UIGestureRecognizerDelegate>
 {
     NSUInteger _webViewLoadingDepth;
 }
