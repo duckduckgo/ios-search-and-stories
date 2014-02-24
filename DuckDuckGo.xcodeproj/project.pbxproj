@@ -298,6 +298,7 @@
 		5BFF24CE16F7803900844D3B /* DDGStoryFeed.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24C616F7801500844D3B /* DDGStoryFeed.m */; };
 		5BFF24F116FB53D800844D3B /* DDGTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24F016FB53D800844D3B /* DDGTabViewController.m */; };
 		643EC3BC9EDE6880AA2826B7 /* UIWebView+ContextMenuDDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 643EC1BA2C5D6C7389BC0B03 /* UIWebView+ContextMenuDDG.m */; };
+		643EC4EDD543F4CEC1659D87 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 643EC787FFAD54BAE6BCA735 /* AssetsLibrary.framework */; };
 		8333D63716666CA100571C59 /* spacer23x23.png in Resources */ = {isa = PBXBuildFile; fileRef = 8333D63616666CA100571C59 /* spacer23x23.png */; };
 		8343A2E31672827100DDE73C /* icon_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E11672827100DDE73C /* icon_notification@2x.png */; };
 		8343A2E41672827100DDE73C /* icon_notification.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E21672827100DDE73C /* icon_notification.png */; };
@@ -740,6 +741,7 @@
 		5BFF24F016FB53D800844D3B /* DDGTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTabViewController.m; sourceTree = "<group>"; };
 		643EC1373E5231B1B2566C03 /* contextmenu.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = contextmenu.js; sourceTree = "<group>"; };
 		643EC1BA2C5D6C7389BC0B03 /* UIWebView+ContextMenuDDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIWebView+ContextMenuDDG.m"; sourceTree = "<group>"; };
+		643EC787FFAD54BAE6BCA735 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		643ECBE593439904D970C5C0 /* UIWebView+ContextMenuDDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIWebView+ContextMenuDDG.h"; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		8333D63616666CA100571C59 /* spacer23x23.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spacer23x23.png; sourceTree = "<group>"; };
@@ -834,6 +836,7 @@
 				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */,
 				83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */,
+				643EC4EDD543F4CEC1659D87 /* AssetsLibrary.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1472,6 +1475,7 @@
 				4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */,
 				4CF9ED56154DFC460075C23E /* MessageUI.framework */,
 				4C1EF85D150C048A00532858 /* QuartzCore.framework */,
+				643EC787FFAD54BAE6BCA735 /* AssetsLibrary.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

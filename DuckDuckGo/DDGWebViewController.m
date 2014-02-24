@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
@@ -164,7 +165,11 @@
 
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     if (error) {
-        NSLog(@"error: %@", error);
+        [[[UIAlertView alloc] initWithTitle:@"Error"
+                                    message:@"Unable to save photo. Please open the Settings app, navigate to Privacy > Photos, grant DuckDuckGo access to your photo library and try it again."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
 
         return;
     }
@@ -603,9 +608,17 @@ shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherG
         NSURLRequest *request = [DDGUtility requestWithURL:[NSURL URLWithString:actionSheet.title]];
         [[AFImageRequestOperation imageRequestOperationWithRequest:request success:^(UIImage *image)
         {
-            if (image) {
-                UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+            ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+            if (status == ALAuthorizationStatusRestricted || status == ALAuthorizationStatusDenied) {
+                [[[UIAlertView alloc] initWithTitle:@"Error"
+                                           message:@"Unable to save photo. Please open the Settings app, navigate to Privacy > Photos, grant DuckDuckGo access to your photo library and try it again."
+                                          delegate:nil
+                                 cancelButtonTitle:@"OK"
+                                 otherButtonTitles:nil] show];
+                return;
             }
+
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
         }] start];
     }
 }
