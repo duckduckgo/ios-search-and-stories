@@ -6,6 +6,8 @@
 //  Copyright (c) 2011 DuckDuckGo, Inc. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
@@ -22,9 +24,11 @@
 #import "DDGReadabilityToggleActivity.h"
 #import "DDGActivityItemProvider.h"
 #import "DDGSafariActivity.h"
+#import "UIWebView+ContextMenuDDG.h"
 
 @interface DDGWebViewController ()
 @property (nonatomic, readwrite) BOOL inReadabilityMode;
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGestureRecognizer;
 @end
 
 @implementation DDGWebViewController
@@ -56,6 +60,11 @@
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+    longPressGestureRecognizer.delegate = self;
+
+    self.longPressGestureRecognizer = longPressGestureRecognizer;
 }
 
 - (void)setSearchController:(DDGSearchController *)searchController {
@@ -70,6 +79,8 @@
     UIMenuItem *searchMenuItem = [[UIMenuItem alloc] initWithTitle:@"Search"
                                                             action:@selector(search:)];
     [UIMenuController sharedMenuController].menuItems = @[searchMenuItem];
+
+    [self.webView addGestureRecognizer:self.longPressGestureRecognizer];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -77,7 +88,8 @@
         [self.webView stopLoading];
 
     [self resetLoadingDepth];
-    
+
+    [self.webView removeGestureRecognizer:self.longPressGestureRecognizer];
     [super viewWillDisappear:animated];
     
     [UIMenuController sharedMenuController].menuItems = nil;
@@ -117,6 +129,52 @@
 
 -(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
     [self.searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+}
+
+#pragma mark - Save image to library
+
+- (void)longPress:(UILongPressGestureRecognizer *)recognizer {
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        CGPoint point = [self.longPressGestureRecognizer locationInView:self.webView];
+
+        // convert to HTML coordinate system
+        CGFloat viewWidth = [self.webView frame].size.width;
+        CGFloat windowWidth = [[self.webView stringByEvaluatingJavaScriptFromString:@"window.innerWidth"] floatValue];
+
+        CGFloat scale = windowWidth / viewWidth;
+        point.x *= scale;
+        point.y *= scale;
+
+        [self presentContextMenuAtPoint:point];
+    }
+}
+
+- (void)presentContextMenuAtPoint:(CGPoint)point {
+    [self.webView injectJavaScriptIfNecessary];
+    [self.webView findElementAtPoint:point];
+
+    if ([[self.webView contextMenuImageURLString] length] > 0) {
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:[self.webView contextMenuImageURLString]
+                                                                 delegate:self
+                                                        cancelButtonTitle:@"Cancel"
+                                                   destructiveButtonTitle:nil
+                                                        otherButtonTitles:@"Save to Library", nil];
+        [actionSheet showInView:self.slidingViewController.view];
+    }
+}
+
+- (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
+    if (error) {
+        [[[UIAlertView alloc] initWithTitle:@"Error"
+                                    message:@"Unable to save photo. Please open the Settings app, navigate to Privacy > Photos, grant DuckDuckGo access to your photo library and try it again."
+                                   delegate:nil
+                          cancelButtonTitle:@"OK"
+                          otherButtonTitles:nil] show];
+
+        return;
+    }
+
+    [SVProgressHUD showSuccessWithStatus:@"Saved"];
 }
 
 #pragma mark - Readability Mode
@@ -534,5 +592,35 @@
     _webViewLoadingDepth = 0;
 }
 
+#pragma mark - Gesture recognizer delegate
+
+- (BOOL)                         gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer
+shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer {
+    return YES;
+}
+
+#pragma mark - Action sheet delegate
+
+- (void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex
+{
+    // save to library
+    if (buttonIndex == 0) {
+        NSURLRequest *request = [DDGUtility requestWithURL:[NSURL URLWithString:actionSheet.title]];
+        [[AFImageRequestOperation imageRequestOperationWithRequest:request success:^(UIImage *image)
+        {
+            ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+            if (status == ALAuthorizationStatusRestricted || status == ALAuthorizationStatusDenied) {
+                [[[UIAlertView alloc] initWithTitle:@"Error"
+                                           message:@"Unable to save photo. Please open the Settings app, navigate to Privacy > Photos, grant DuckDuckGo access to your photo library and try it again."
+                                          delegate:nil
+                                 cancelButtonTitle:@"OK"
+                                 otherButtonTitles:nil] show];
+                return;
+            }
+
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        }] start];
+    }
+}
 
 @end
