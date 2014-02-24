@@ -204,6 +204,8 @@ static void uncaughtExceptionHandler(NSException *exception) {
 - (void)applicationWillTerminate:(UIApplication *)application;
 {
     [self save];
+
+    [self clearCacheAndCookies];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application;
@@ -214,6 +216,29 @@ static void uncaughtExceptionHandler(NSException *exception) {
 - (void)applicationDidEnterBackground:(UIApplication *)application;
 {
     [self save];
+}
+
+#pragma mark - Clean up
+
+- (void)clearCacheAndCookies
+{
+    __block UIBackgroundTaskIdentifier identifier = UIBackgroundTaskInvalid;
+
+    identifier = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^
+    {
+        identifier = UIBackgroundTaskInvalid;
+    }];
+
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+
+    NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
+    for (NSHTTPCookie *cookie in [storage cookies])
+    {
+       [storage deleteCookie:cookie];
+    }
+    [[NSUserDefaults standardUserDefaults] synchronize];
+
+    [[UIApplication sharedApplication] endBackgroundTask:identifier];
 }
 
 #pragma mark - Core Data stack
