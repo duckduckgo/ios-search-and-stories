@@ -89,28 +89,33 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHistory)
                           } mutableCopy]];
-        
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
                           } mutableCopy]];
-        
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                           } mutableCopy]];
-        
     } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                           } mutableCopy]];
-        
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
                           } mutableCopy]];
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
+                            DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeDuck)
+                            } mutableCopy]];
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
+                            DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
+                            } mutableCopy]];
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
+                            DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
+                            } mutableCopy]];
     } else {
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome)
                           } mutableCopy]];
-        
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                           } mutableCopy]];        
@@ -282,6 +287,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 		{
 			case DDGViewControllerTypeHome:
 			case DDGViewControllerTypeHistory:
+            case DDGViewControllerTypeDuck:
 			{
 				fixedSizeImageView.image = [UIImage imageNamed:@"icon_home"];
                 fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected"];
@@ -421,13 +427,18 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.shouldPushSearchHandlerEvents = YES;
-//            if ([[DDGCache objectForKey:DDGSettingHomeView inCache:DDGSettingsCacheName] isEqual:DDGSettingHomeViewTypeDuck]) {
-//                searchController.contentController = [DDGDuckViewController duckViewController];
-//            } else {
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
             stories.searchControllerBackButtonIconDDG = [UIImage imageNamed:@"button_menu_glyph_home"];
             [searchController pushContentViewController:stories animated:NO];
-//            }
+            searchController.state = DDGSearchControllerStateHome;
+            viewController = searchController;
+            break;
+        }
+        case DDGViewControllerTypeDuck:
+        {
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            searchController.shouldPushSearchHandlerEvents = YES;
+            [searchController pushContentViewController:[DDGDuckViewController duckViewController] animated:NO];
             searchController.state = DDGSearchControllerStateHome;
             viewController = searchController;
         }

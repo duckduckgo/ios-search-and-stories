@@ -158,10 +158,13 @@ static void uncaughtExceptionHandler(NSException *exception) {
   
     int type = DDGViewControllerTypeHome;
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
-    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents])
+    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents]) {
         type = DDGViewControllerTypeHistory;
-    else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved])
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
         type = DDGViewControllerTypeSaved;
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
+        type = DDGViewControllerTypeDuck;
+    }
         
     UIViewController *homeController = [under viewControllerForType:type];
     
