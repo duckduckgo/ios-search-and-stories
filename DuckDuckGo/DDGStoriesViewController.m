@@ -25,7 +25,7 @@
 #import "DDGActivityItemProvider.h"
 #import <CoreImage/CoreImage.h>
 
-NSString * const DDGLastViewedStoryKey = @"last_story";
+NSString *const DDGLastViewedStoryKey = @"last_story";
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
@@ -687,20 +687,11 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	static NSString *CellIdentifier = @"TopicCell";
-    
-	DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (cell == nil)
-	{
-        cell = [[DDGStoryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.imageView.backgroundColor = self.tableView.backgroundColor;
-        cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        cell.overlayImageView.image = [UIImage imageNamed:@"topic_cell_background.png"];
+    DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:DDGStoryCellIdentifier];
+    if (!cell) {
+        cell = [DDGStoryCell new];
     }
-    
     [self configureCell:cell atIndexPath:indexPath];
-    
 	return cell;
 }
 
@@ -775,7 +766,6 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             UIGraphicsEndImageContext();
             
             //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
-            
             if (!story.blurredImage) {
                 CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
                 
@@ -989,7 +979,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell:(DDGStoryCell *)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
@@ -1004,38 +994,26 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     [self.tableView endUpdates];
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    DDGStoryCell *storyCell = ([cell isKindOfClass:[DDGStoryCell class]]) ? (DDGStoryCell *) cell : nil;
-    
-    cell.textLabel.text = story.title;
-    [cell setNeedsLayout];
-    
-    if(story.readValue)
-        cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    else
-        cell.textLabel.textColor = [UIColor whiteColor];    
-    
-    UIImage *image = nil;
-    if(story.feed)
-        image = story.feed.image;
-    [storyCell.faviconButton setImage:image forState:UIControlStateNormal];
-    
-    UIImage *decompressedImage = [self.decompressedImages objectForKey:story.id];
-    
-    if (nil != decompressedImage) {
-        cell.imageView.image = decompressedImage;
-        storyCell.blurredImageView.image = story.blurredImage;
+    cell.title = story.title;
+    cell.titleColor = story.readValue ? [UIColor colorWithWhite:1.0f alpha:0.5f] : [UIColor whiteColor];
+    if (story.feed) {
+        cell.favicon = [story.feed image];
+    }
+    UIImage *image = self.decompressedImages[story.id];
+    if (image) {
+        cell.image = image;
+        cell.blurredImage = story.blurredImage;
     } else {
-        cell.imageView.image = nil;
-        storyCell.blurredImageView.image = nil;
         if (story.isImageDownloaded) {
             [self decompressAndDisplayImageForStory:story];
-        } else  {
+        } else {
             [self.storyFetcher downloadImageForStory:story];
         }
-    }    
+    }
+    [cell redraw];
 }
 
 

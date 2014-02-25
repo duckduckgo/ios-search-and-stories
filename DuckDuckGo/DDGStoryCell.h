@@ -8,10 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
+extern NSString *const DDGStoryCellIdentifier;
+
 @interface DDGStoryCell : UITableViewCell
-@property (nonatomic, strong) IBOutlet UILabel *textLabel;
-@property (nonatomic, strong) IBOutlet UIImageView *imageView;
-@property (nonatomic, strong) IBOutlet UIImageView *blurredImageView;
-@property (nonatomic, strong) IBOutlet UIImageView *overlayImageView;
-@property (nonatomic, strong) IBOutlet UIButton *faviconButton;
+
+@property (nonatomic, strong) UIImage *blurredImage;
+@property (nonatomic, strong) UIImage *favicon;
+@property (nonatomic, strong) UIImage *image;
+@property (nonatomic, copy) NSString *title;
+@property (nonatomic, strong) UIColor *titleColor;
+
+- (void)redraw;
+
 @end

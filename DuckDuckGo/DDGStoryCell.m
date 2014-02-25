@@ -6,55 +6,112 @@
 //
 //
 
-#import "DDGStoryCell.h"
+#import "DDGStoryBackgroundView.h"
 #import "DDGFaviconButton.h"
+#import "DDGStoryCell.h"
+
+NSString *const DDGStoryCellIdentifier = @"StoryCell";
+
+@interface DDGStoryCell ()
+
+@property (nonatomic, strong) DDGFaviconButton *faviconButton;
+@property (nonatomic, strong) UIImageView *overlayImageView;
+@property (nonatomic, strong) DDGStoryBackgroundView *storyBackgroundView;
+
+@end
 
 @implementation DDGStoryCell
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+#pragma mark -
+
+- (instancetype)init
 {
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:DDGStoryCellIdentifier];
     if (self) {
-        self.imageView.clipsToBounds = YES;
-        
-        self.blurredImageView = [[UIImageView alloc] initWithFrame:CGRectZero];
-        self.blurredImageView.contentMode = UIViewContentModeScaleToFill;
-        [self.contentView addSubview:self.blurredImageView];
-        
-        UIImageView *overlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"topic_cell_background"]];
-        overlayImageView.opaque = NO;
-        overlayImageView.backgroundColor = [UIColor clearColor];
-        overlayImageView.contentMode = UIViewContentModeTop;
-        overlayImageView.clipsToBounds = YES;
-        [self.contentView addSubview:overlayImageView];
-        self.overlayImageView = overlayImageView;
-        
-        self.contentView.opaque = YES;
-        self.contentView.backgroundColor = [UIColor colorWithRed:0.247 green:0.267 blue:0.302 alpha:1.000];
-        
-        self.textLabel.backgroundColor = [UIColor clearColor];
-        self.textLabel.opaque = NO;
-        self.textLabel.numberOfLines = 2;
-        self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
-        
-        UIButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
-        faviconButton.frame = CGRectMake(0, 0, 40.0, 40.0);
-        faviconButton.opaque = NO;
-        faviconButton.backgroundColor = [UIColor clearColor];
-        [faviconButton addTarget:nil action:@selector(filter:) forControlEvents:UIControlEventTouchUpInside];
-        [self.contentView addSubview:faviconButton];
-        self.faviconButton = faviconButton;
-        
-        CGRect bounds = self.contentView.bounds;
-        UIView *gratituousWhiteStripe = [[UIView alloc] initWithFrame:CGRectMake(0, bounds.size.height-1, bounds.size.width, 1.0)];
-        gratituousWhiteStripe.backgroundColor = [UIColor whiteColor];
-        gratituousWhiteStripe.opaque = YES;
-        gratituousWhiteStripe.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-        [self.contentView addSubview:gratituousWhiteStripe];
-                                         
+        [self configure];
     }
     return self;
 }
+
+#pragma mark -
+
+- (void)setBlurredImage:(UIImage *)blurredImage
+{
+    [self.storyBackgroundView setBlurredImage:blurredImage];
+}
+
+- (void)setFavicon:(UIImage *)favicon
+{
+    _favicon = favicon;
+    [self.faviconButton setImage:favicon forState:UIControlStateNormal];
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    // Empty stub!
+}
+
+- (void)setImage:(UIImage *)image
+{
+    [self.storyBackgroundView setBackgroundImage:image];
+}
+
+- (void)setTitle:(NSString *)title
+{
+    _title = [title copy];
+    [self.textLabel setText:title];
+}
+
+- (void)setTitleColor:(UIColor *)titleColor
+{
+    _titleColor = titleColor;
+    [self.textLabel setTextColor:titleColor];
+}
+
+#pragma mark -
+
+- (void)configure
+{
+    DDGStoryBackgroundView *storyBackgroundView = [DDGStoryBackgroundView new];
+    [self.contentView addSubview:storyBackgroundView];
+    self.storyBackgroundView = storyBackgroundView;
+    
+    UIImageView *overlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"topic_cell_background"]];
+    overlayImageView.opaque = NO;
+    overlayImageView.backgroundColor = [UIColor clearColor];
+    overlayImageView.contentMode = UIViewContentModeTop;
+    overlayImageView.clipsToBounds = YES;
+    [self.contentView addSubview:overlayImageView];
+    self.overlayImageView = overlayImageView;
+    
+    self.textLabel.backgroundColor = [UIColor clearColor];
+    self.textLabel.opaque = NO;
+    self.textLabel.numberOfLines = 2;
+    self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0f];
+    
+    DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
+    faviconButton.frame = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
+    faviconButton.opaque = NO;
+    faviconButton.backgroundColor = [UIColor clearColor];
+    [faviconButton addTarget:nil action:@selector(filter:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:faviconButton];
+    self.faviconButton = faviconButton;
+    
+    CGRect bounds = self.contentView.bounds;
+    UIView *gratituousWhiteStripe = [[UIView alloc] initWithFrame:CGRectMake(0, bounds.size.height-1, bounds.size.width, 1.0)];
+    gratituousWhiteStripe.backgroundColor = [UIColor whiteColor];
+    gratituousWhiteStripe.opaque = YES;
+    gratituousWhiteStripe.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+    [self.contentView addSubview:gratituousWhiteStripe];
+}
+
+- (void)redraw
+{
+    [self setNeedsLayout];
+    [self.storyBackgroundView setNeedsDisplay];
+}
+
+#pragma mark -
 
 - (void)layoutSubviews;
 {
@@ -63,16 +120,7 @@
     
     //Let's set everything up.
     CGRect bounds = self.contentView.bounds;
-    
-    //We want the imageView to reach from the top of the cell to the top of the overlay frame.
-    self.imageView.hidden = NO;
-    self.imageView.frame = bounds;
-    self.imageView.alpha = 1.0;
-    [self.contentView sendSubviewToBack:self.imageView];
-    
-    //We want the _blurredImageView to be the size of the cell.
-    _blurredImageView.frame = self.imageView.frame;
-    [self.contentView sendSubviewToBack:_blurredImageView];
+    [self.storyBackgroundView setFrame:bounds];
     
     CGRect faviconFrame = self.faviconButton.frame;    
     
@@ -98,12 +146,7 @@
     
     self.overlayImageView.alpha = 0.6;
     self.overlayImageView.frame = overlayFrame;
-    
-    if(_blurredImageView.frame.size.height == self.imageView.frame.size.height){
-        CGRect frame = self.imageView.frame;
-        frame.size.height -= overlayFrame.size.height - 5;
-        self.imageView.frame = frame;
-    }
+    [self.storyBackgroundView setBlurRect:overlayFrame];
     
     //Make sure the favicon is the right size and in the right position.
     faviconFrame.origin.y = overlayFrame.origin.y + ((overlayFrame.size.height - faviconFrame.size.height)/2.0);
@@ -119,11 +162,10 @@
     self.textLabel.frame = textFrame;
 }
 
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated {}
-
-- (void)prepareForReuse {
+- (void)prepareForReuse
+{
     [super prepareForReuse];
-    [self setNeedsLayout];
+    [self.storyBackgroundView reset];
 }
 
 @end
