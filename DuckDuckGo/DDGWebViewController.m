@@ -166,7 +166,7 @@
 - (void)image:(UIImage *)image didFinishSavingWithError:(NSError *)error contextInfo:(void *)contextInfo {
     if (error) {
         [[[UIAlertView alloc] initWithTitle:@"Error"
-                                    message:@"Unable to save photo. Please open the Settings app, navigate to Privacy > Photos, grant DuckDuckGo access to your photo library and try it again."
+                                    message:[error localizedDescription]
                                    delegate:nil
                           cancelButtonTitle:@"OK"
                           otherButtonTitles:nil] show];
