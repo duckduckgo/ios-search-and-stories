@@ -57,7 +57,11 @@
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
-    return 44.0 + [cell.detailTextLabel.text sizeWithFont:cell.detailTextLabel.font constrainedToSize:cell.detailTextLabel.frame.size].height;
+    CGFloat height = CGRectIntegral([cell.detailTextLabel.text boundingRectWithSize:cell.detailTextLabel.frame.size
+                                                                            options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                                         attributes:@{NSFontAttributeName: cell.detailTextLabel.font}
+                                                                            context:nil]).size.height;
+    return 44.0f + height;
 }
 
 #pragma mark - Table view delegate

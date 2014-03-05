@@ -42,11 +42,14 @@ static void uncaughtExceptionHandler(NSException *exception) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
     //Use deprecated uniqueIdentifier call for debug purposes only.
-    [TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
+    //[TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
 #pragma clang diagnostic pop
     //Use Testflight only for the debug version. We don't currently have any error reporting that's not dependant on a third party.
-    [TestFlight takeOff:@"a6dad165-a8d4-495c-89c6-f3812248d554"];
+    //[TestFlight takeOff:@"a6dad165-a8d4-495c-89c6-f3812248d554"];
 #endif
+    
+    NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
+    [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:DDGLastRefreshAttemptKey];
     
     //Set the global URL cache to SDURLCache, which caches to disk
     SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
@@ -65,13 +68,11 @@ static void uncaughtExceptionHandler(NSException *exception) {
         NSLog(@"%s audioSession setActive:NO error=%@", __PRETTY_FUNCTION__, error);
 
     ok = [audioSession setCategory:AVAudioSessionCategoryPlayback
+                       withOptions:AVAudioSessionCategoryOptionMixWithOthers
                              error:&error];
     if (!ok)
         NSLog(@"%s setCategoryError=%@", __PRETTY_FUNCTION__, error);
-    
-    UInt32 allowMixing = true;
-    AudioSessionSetProperty(kAudioSessionProperty_OverrideCategoryMixWithOthers, sizeof(allowMixing), &allowMixing);
-    
+        
     //Active your audio session.
     ok = [audioSession setActive:YES error:&error];
     if(!ok)
@@ -86,10 +87,12 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [[UINavigationBar appearance] setShadowImage:[[UIImage imageNamed:@"toolbar_shadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0.0, 2.0)]];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg"] forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg_32"] forBarMetrics:UIBarMetricsLandscapePhone];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0],
-														UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
-														UITextAttributeTextShadowColor : [UIColor whiteColor]
-	 }];
+    NSShadow *titleTextShadow = [NSShadow new];
+    titleTextShadow.shadowColor = [UIColor whiteColor];
+    titleTextShadow.shadowOffset = CGSizeMake(0.0f, 1.0f);
+    [[UINavigationBar appearance] setTitleTextAttributes:@{	NSForegroundColorAttributeName: [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0],
+                                                            NSShadowAttributeName: titleTextShadow
+    }];
     
     UIEdgeInsets insets = UIEdgeInsetsMake(5.0, 3.0, 5.0, 3.0);
     
@@ -103,18 +106,18 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsDefault];
     [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsLandscapePhone];    
 
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.403 green:0.406 blue:0.427 alpha:1.000],
-                        UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
-                         UITextAttributeTextShadowColor : [UIColor whiteColor]
-	 } forState:UIControlStateNormal];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.581 green:0.585 blue:0.607 alpha:1.000],
-                        UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, 1)],
-                         UITextAttributeTextShadowColor : [UIColor whiteColor]
-	 } forState:UIControlStateDisabled];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithWhite:0.992 alpha:1.000],
-                        UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, -1)],
-                         UITextAttributeTextShadowColor : [UIColor colorWithRed:0.169 green:0.180 blue:0.192 alpha:1.000]
-	 } forState:UIControlStateHighlighted];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	NSForegroundColorAttributeName: [UIColor colorWithRed:0.403 green:0.406 blue:0.427 alpha:1.000],
+                                                            NSShadowAttributeName: titleTextShadow
+    } forState:UIControlStateNormal];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	NSForegroundColorAttributeName: [UIColor colorWithRed:0.581 green:0.585 blue:0.607 alpha:1.000],
+                                                            NSShadowAttributeName: titleTextShadow
+    } forState:UIControlStateDisabled];
+    NSShadow *titleTextHighlightedShadow = [NSShadow new];
+    titleTextHighlightedShadow.shadowColor = [UIColor colorWithRed:0.169f green:0.18f blue:0.192f alpha:1.0f];
+    titleTextHighlightedShadow.shadowOffset = CGSizeMake(0.0f, -1.0f);
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	NSForegroundColorAttributeName: [UIColor colorWithWhite:0.992 alpha:1.000],
+                                                            NSShadowAttributeName: titleTextHighlightedShadow
+    } forState:UIControlStateHighlighted];
     
     [[UISegmentedControl appearance] setBackgroundImage:[UIImage imageNamed:@"segment_normal"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [[UISegmentedControl appearance] setBackgroundImage:[UIImage imageNamed:@"segment_selected"] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
@@ -131,11 +134,12 @@ static void uncaughtExceptionHandler(NSException *exception) {
                                    rightSegmentState:UIControlStateNormal
                                           barMetrics:UIBarMetricsDefault];
     
-    [[UISegmentedControl appearance] setTitleTextAttributes:@{	UITextAttributeTextColor :	[UIColor colorWithRed:0.827 green:0.855 blue:0.898 alpha:1.000],
-                           UITextAttributeTextShadowOffset :	[NSValue valueWithUIOffset:UIOffsetMake(0, -1)],
-                            UITextAttributeTextShadowColor : [UIColor blackColor]
-	 } forState:UIControlStateNormal];
-    
+    NSShadow *segmentedControlTitleTextShadow = [NSShadow new];
+    segmentedControlTitleTextShadow.shadowColor = [UIColor blackColor];
+    segmentedControlTitleTextShadow.shadowOffset = CGSizeMake(0.0f, -1.0f);
+    [[UISegmentedControl appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor colorWithRed:0.827 green:0.855 blue:0.898 alpha:1.000],
+                                                               NSShadowAttributeName: segmentedControlTitleTextShadow
+    } forState:UIControlStateNormal];
     [[UISegmentedControl appearance] setContentPositionAdjustment:UIOffsetMake(4.0, 0.0) forSegmentType:UISegmentedControlSegmentLeft barMetrics:UIBarMetricsDefault];
     [[UISegmentedControl appearance] setContentPositionAdjustment:UIOffsetMake(-4.0, 0.0) forSegmentType:UISegmentedControlSegmentRight barMetrics:UIBarMetricsDefault];
 
@@ -155,10 +159,13 @@ static void uncaughtExceptionHandler(NSException *exception) {
   
     int type = DDGViewControllerTypeHome;
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
-    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents])
+    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents]) {
         type = DDGViewControllerTypeHistory;
-    else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved])
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
         type = DDGViewControllerTypeSaved;
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
+        type = DDGViewControllerTypeDuck;
+    }
         
     UIViewController *homeController = [under viewControllerForType:type];
     

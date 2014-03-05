@@ -850,15 +850,19 @@ NSString * const emailRegEx =
         frame.size.width = self.view.bounds.size.width - 20.0;
         
         CGRect textRect = CGRectInset(frame, 12.0, 0.0);
-        CGSize textSize = [self.bangTextView.text sizeWithFont:self.bangTextView.font
-                                             constrainedToSize:CGSizeMake(textRect.size.width, MAXFLOAT)
-                                                 lineBreakMode:NSLineBreakByWordWrapping];
+        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+        CGSize textSize = CGRectIntegral([self.bangTextView.text boundingRectWithSize:CGSizeMake(textRect.size.width, MAXFLOAT)
+                                                               options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                            attributes:@{NSFontAttributeName: self.bangTextView.font,
+                                                                         NSParagraphStyleAttributeName: paragraphStyle}
+                                                               context:nil]).size;
         
         frame.size.height = textSize.height + 28.0;
         if(frame.size.height < self.bangInfo.frame.size.height)
             frame.size.height = self.bangInfo.frame.size.height;
         
-        viewController.contentSizeForViewInPopover = frame.size;
+        viewController.preferredContentSize = frame.size;
         
         DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
         popover.delegate = self;
@@ -921,7 +925,7 @@ NSString * const emailRegEx =
 
         [button setTitle:suggestion forState:UIControlStateNormal];
         [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        CGSize titleSize = [suggestion sizeWithFont:button.titleLabel.font];
+        CGSize titleSize = [suggestion sizeWithAttributes:@{NSFontAttributeName: button.titleLabel.font}];
         
         [button setFrame:CGRectMake(scrollView.contentSize.width, 0, (titleSize.width > 30 ? titleSize.width + 20 : 50), 46)];
         [button setBackgroundImage:backgroundImg forState:UIControlStateNormal];

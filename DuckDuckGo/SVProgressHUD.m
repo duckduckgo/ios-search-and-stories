@@ -181,7 +181,10 @@
     CGRect labelRect = CGRectZero;
     
     if(string) {
-        CGSize stringSize = [string sizeWithFont:self.stringLabel.font constrainedToSize:CGSizeMake(200, 300)];
+        CGSize stringSize = CGRectIntegral([string boundingRectWithSize:CGSizeMake(200.0f, 300.0f)
+                                                                options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                             attributes:@{NSFontAttributeName: self.stringLabel.font}
+                                                                context:nil]).size;
         stringWidth = stringSize.width;
         stringHeight = stringSize.height;
         hudHeight = 80+stringHeight;

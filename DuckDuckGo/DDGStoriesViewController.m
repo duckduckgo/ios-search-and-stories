@@ -25,7 +25,9 @@
 #import "DDGActivityItemProvider.h"
 #import <CoreImage/CoreImage.h>
 
-NSString * const DDGLastViewedStoryKey = @"last_story";
+NSString *const DDGLastViewedStoryKey = @"last_story";
+
+NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
@@ -226,10 +228,13 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         }
     }
     
-    if (!self.savedStoriesOnly)
-        [self refreshSources];
-    else if ([self.fetchedResultsController.fetchedObjects count] == 0)
+    if (!self.savedStoriesOnly) {
+        if ([self shouldRefresh]) {
+            [self refresh:YES];
+        }
+    } else if ([self.fetchedResultsController.fetchedObjects count] == 0) {
         [self showNoStoriesView];
+    }
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -284,6 +289,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 #pragma mark - Filtering
 
+#ifndef __clang_analyzer__
 - (IBAction)filter:(id)sender {
     
     void (^completion)() = ^() {
@@ -301,11 +307,11 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         } else if ([sender isKindOfClass:[UIButton class]]) {
             self.sourceFilter = story.feed;
         }
-        
+
         NSPredicate *predicate = nil;
         if (nil != self.sourceFilter)
             predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
-        
+
         NSArray *oldStories = [self.fetchedResultsController fetchedObjects];
         
         [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
@@ -325,6 +331,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     else
         completion();
 }
+#endif
 
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
     NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[newStories count]];
@@ -654,7 +661,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 #pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
-    [self refreshStories];
+    [self refresh:NO];
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
@@ -680,20 +687,11 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 
 - (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	static NSString *CellIdentifier = @"TopicCell";
-    
-	DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (cell == nil)
-	{
-        cell = [[DDGStoryCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-        cell.imageView.backgroundColor = self.tableView.backgroundColor;
-        cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        cell.overlayImageView.image = [UIImage imageNamed:@"topic_cell_background.png"];
+    DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:DDGStoryCellIdentifier];
+    if (!cell) {
+        cell = [DDGStoryCell new];
     }
-    
     [self configureCell:cell atIndexPath:indexPath];
-    
 	return cell;
 }
 
@@ -724,6 +722,16 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
 }
 
 #pragma mark - Loading popular stories
+
+- (BOOL)shouldRefresh
+{
+    NSDate *lastAttempt = (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:DDGLastRefreshAttemptKey];
+    if (lastAttempt) {
+        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:lastAttempt];
+        return (timeInterval > DDGMinimumRefreshInterval);
+    }
+    return YES;
+}
 
 - (void)decompressAndDisplayImageForStory:(DDGStory *)story;
 {
@@ -758,21 +766,22 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             UIGraphicsEndImageContext();
             
             //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
-            
-            CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
-            
-            CGAffineTransform transform = CGAffineTransformIdentity;
-            CIFilter *clampFilter = [CIFilter filterWithName:@"CIAffineClamp"];
-            [clampFilter setValue:imageToBlur forKey:@"inputImage"];
-            [clampFilter setValue:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
-            
-            CIFilter *blurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
-            [blurFilter setValue:clampFilter.outputImage forKey:@"inputImage"];
-            [blurFilter setValue:@10 forKey:@"inputRadius"];
-            
-            CGImageRef filteredImage = [_blurContext createCGImage:blurFilter.outputImage fromRect:[imageToBlur extent]];
-            story.blurredImage = [UIImage imageWithCGImage:filteredImage];
-            CGImageRelease(filteredImage);
+            if (!story.blurredImage) {
+                CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
+                
+                CGAffineTransform transform = CGAffineTransformIdentity;
+                CIFilter *clampFilter = [CIFilter filterWithName:@"CIAffineClamp"];
+                [clampFilter setValue:imageToBlur forKey:@"inputImage"];
+                [clampFilter setValue:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
+                
+                CIFilter *blurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
+                [blurFilter setValue:clampFilter.outputImage forKey:@"inputImage"];
+                [blurFilter setValue:@10 forKey:@"inputRadius"];
+                
+                CGImageRef filteredImage = [_blurContext createCGImage:blurFilter.outputImage fromRect:[imageToBlur extent]];
+                story.blurredImage = [UIImage imageWithCGImage:filteredImage];
+                CGImageRelease(filteredImage);
+            }
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [weakSelf.decompressedImages setObject:decompressed forKey:storyID];
@@ -799,6 +808,16 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
         _storyFetcher = [[DDGStoryFetcher alloc] initWithParentManagedObjectContext:self.managedObjectContext];
     
     return _storyFetcher;
+}
+
+- (void)refresh:(BOOL)includeSources
+{
+    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:DDGLastRefreshAttemptKey];
+    if (includeSources) {
+        [self refreshSources];
+    } else {
+        [self refreshStories];
+    }
 }
 
 - (void)refreshSources {
@@ -960,7 +979,7 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell:(DDGStoryCell *)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
@@ -975,38 +994,26 @@ NSString * const DDGLastViewedStoryKey = @"last_story";
     [self.tableView endUpdates];
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+- (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    DDGStoryCell *storyCell = ([cell isKindOfClass:[DDGStoryCell class]]) ? (DDGStoryCell *) cell : nil;
-    
-    cell.textLabel.text = story.title;
-    [cell setNeedsLayout];
-    
-    if(story.readValue)
-        cell.textLabel.textColor = [UIColor colorWithWhite:1.0 alpha:0.5];
-    else
-        cell.textLabel.textColor = [UIColor whiteColor];    
-    
-    UIImage *image = nil;
-    if(story.feed)
-        image = story.feed.image;
-    [storyCell.faviconButton setImage:image forState:UIControlStateNormal];
-    
-    UIImage *decompressedImage = [self.decompressedImages objectForKey:story.id];
-    
-    if (nil != decompressedImage) {
-        cell.imageView.image = decompressedImage;
-        storyCell.blurredImageView.image = story.blurredImage;
+    cell.title = story.title;
+    cell.titleColor = story.readValue ? [UIColor colorWithWhite:1.0f alpha:0.5f] : [UIColor whiteColor];
+    if (story.feed) {
+        cell.favicon = [story.feed image];
+    }
+    UIImage *image = self.decompressedImages[story.id];
+    if (image) {
+        cell.image = image;
+        cell.blurredImage = story.blurredImage;
     } else {
-        cell.imageView.image = nil;
-        storyCell.blurredImageView.image = nil;
         if (story.isImageDownloaded) {
             [self decompressAndDisplayImageForStory:story];
-        } else  {
+        } else {
             [self.storyFetcher downloadImageForStory:story];
         }
-    }    
+    }
+    [cell redraw];
 }
 
 
