@@ -798,7 +798,7 @@
 		83F32268149290EF00A61BC5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		83F3226A149290EF00A61BC5 /* DuckDuckGo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DuckDuckGo-Prefix.pch"; sourceTree = "<group>"; };
 		83F3226B149290EF00A61BC5 /* DDGAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DDGAppDelegate.h; sourceTree = "<group>"; };
-		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DDGAppDelegate.m; sourceTree = "<group>"; };
+		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DDGAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
 		C1894FD5178F56830076C179 /* UIColor+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DDG.h"; sourceTree = "<group>"; };

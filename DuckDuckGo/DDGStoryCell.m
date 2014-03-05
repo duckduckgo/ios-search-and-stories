@@ -125,9 +125,13 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     CGRect faviconFrame = self.faviconButton.frame;    
     
     CGFloat textWidth = bounds.size.width - faviconFrame.size.width - 16.0;
-    CGSize textSize = [self.textLabel.text sizeWithFont:self.textLabel.font
-                                      constrainedToSize:CGSizeMake(textWidth, MAXFLOAT)
-                                          lineBreakMode:self.textLabel.lineBreakMode];
+    NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+    paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+    CGSize textSize = CGRectIntegral([self.textLabel.text boundingRectWithSize:CGSizeMake(textWidth, MAXFLOAT)
+                                                                       options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+                                                                    attributes:@{NSFontAttributeName: self.textLabel.font,
+                                                                                 NSParagraphStyleAttributeName: paragraphStyle}
+                                                                          context:nil]).size;
     
     CGRect overlayFrame = self.overlayImageView.frame;
     CGFloat lineHeight = self.textLabel.font.lineHeight + 2.0;

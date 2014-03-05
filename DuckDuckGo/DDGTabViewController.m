@@ -108,8 +108,7 @@
             [items addObject:title];
         }        
         UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:items];
-        [segmentedControl setSegmentedControlStyle:UISegmentedControlStyleBar];
-        [segmentedControl addTarget:self action:@selector(_switchViewController:) forControlEvents:UIControlEventValueChanged];        
+        [segmentedControl addTarget:self action:@selector(_switchViewController:) forControlEvents:UIControlEventValueChanged];
         self.segmentedControl = segmentedControl;
     }
     

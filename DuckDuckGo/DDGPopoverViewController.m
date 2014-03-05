@@ -69,7 +69,7 @@
 
 - (void)presentPopoverFromRect:(CGRect)rect inView:(UIView *)view permittedArrowDirections:(UIPopoverArrowDirection)arrowDirections animated:(BOOL)animated
 {
-    CGSize contentSize = self.contentViewController.contentSizeForViewInPopover;
+    CGSize contentSize = self.contentViewController.preferredContentSize;
     CGRect contentBounds = CGRectMake(0, 0, contentSize.width, contentSize.height);
 
     UIEdgeInsets insets = self.edgeInsets;
