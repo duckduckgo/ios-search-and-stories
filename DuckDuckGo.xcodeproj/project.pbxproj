@@ -299,6 +299,7 @@
 		5BFF24DD16FA0C1600844D3B /* (null) in Resources */ = {isa = PBXBuildFile; };
 		5BFF24DE16FA0C1600844D3B /* (null) in Resources */ = {isa = PBXBuildFile; };
 		5BFF24F116FB53D800844D3B /* DDGTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24F016FB53D800844D3B /* DDGTabViewController.m */; };
+		7B15790318C72415002F229B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B15790218C72415002F229B /* Images.xcassets */; };
 		7BFC64DF18BCEEC800C48753 /* DDGStoryBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */; };
 		8333D63716666CA100571C59 /* spacer23x23.png in Resources */ = {isa = PBXBuildFile; fileRef = 8333D63616666CA100571C59 /* spacer23x23.png */; };
 		8343A2E31672827100DDE73C /* icon_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E11672827100DDE73C /* icon_notification@2x.png */; };
@@ -739,6 +740,7 @@
 		5BFF24CB16F7803400844D3B /* _DDGStoryFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _DDGStoryFeed.m; sourceTree = "<group>"; };
 		5BFF24EF16FB53D800844D3B /* DDGTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTabViewController.h; sourceTree = "<group>"; };
 		5BFF24F016FB53D800844D3B /* DDGTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTabViewController.m; sourceTree = "<group>"; };
+		7B15790218C72415002F229B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7BFC64DD18BCEEC800C48753 /* DDGStoryBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryBackgroundView.h; sourceTree = "<group>"; };
 		7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryBackgroundView.m; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
@@ -843,6 +845,7 @@
 		4C1FD7D31548FF5B006B2511 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				7B15790218C72415002F229B /* Images.xcassets */,
 				4C1FD7D51548FF65006B2511 /* arrowRight18x18.png */,
 				4C5F81F8158FEA94007B745A /* bang_button.png */,
 				4C5F81F9158FEA94007B745A /* bang_button@2x.png */,
@@ -1826,6 +1829,7 @@
 				5BDC6B07174E2FAA0065BB8D /* SettingsBottomCellBackground@2x.png in Resources */,
 				5BDC6B08174E2FAA0065BB8D /* SettingsBottomCellBackgroundHighlighted.png in Resources */,
 				5BDC6B09174E2FAA0065BB8D /* SettingsBottomCellBackgroundHighlighted@2x.png in Resources */,
+				7B15790318C72415002F229B /* Images.xcassets in Resources */,
 				5BDC6B0A174E2FAA0065BB8D /* SettingsFullCellBackground.png in Resources */,
 				5BDC6B0B174E2FAA0065BB8D /* SettingsFullCellBackground@2x.png in Resources */,
 				5BDC6B0C174E2FAA0065BB8D /* SettingsFullCellBackgroundHighlighted.png in Resources */,
@@ -2058,6 +2062,8 @@
 		5B66097516D783620006B5DE /* Release (Testflight) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEBUG = 1;
@@ -2066,7 +2072,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
@@ -2168,6 +2174,8 @@
 		83F3227A149290EF00A61BC5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG = 1;
@@ -2176,7 +2184,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
@@ -2199,6 +2207,8 @@
 		83F3227B149290EF00A61BC5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEBUG = 0;
@@ -2207,7 +2217,7 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
