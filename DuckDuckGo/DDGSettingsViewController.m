@@ -40,7 +40,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         DDGSettingQuackOnRefresh: @(NO),
 		DDGSettingRegion: @"us-en",
 		DDGSettingAutocomplete: @(YES),
-		DDGSettingStoriesReadabilityMode: @(DDGReadabilityModeOnExclusive),
+		DDGSettingStoriesReadabilityMode: @(DDGReadabilityModeOnIfAvailable),
         DDGSettingHomeView: DDGSettingHomeViewTypeStories,
     };
     
