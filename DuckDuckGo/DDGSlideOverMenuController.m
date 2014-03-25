@@ -11,6 +11,7 @@
 @interface DDGSlideOverMenuController ()
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
+@property (nonatomic, assign, readwrite, getter = isShowingMenu) BOOL showingMenu;
 
 @end
 
@@ -89,7 +90,54 @@
     return self;
 }
 
+- (BOOL)shouldAutomaticallyForwardAppearanceMethods
+{
+    return NO;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [self endChildAppearanceTransition];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    [self endChildAppearanceTransition];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self beginChildAppearanceTransition:YES animated:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    [self beginChildAppearanceTransition:NO animated:animated];
+}
+
 #pragma mark - Private
+
+- (void)beginChildAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
+{
+    if (self.menuViewController && self.isShowingMenu) {
+        [self.menuViewController beginAppearanceTransition:isAppearing animated:animated];
+    } else if (self.contentViewController) {
+        [self.contentViewController beginAppearanceTransition:isAppearing animated:animated];
+    }
+}
+
+- (void)endChildAppearanceTransition
+{
+    if (self.menuViewController && self.isShowingMenu) {
+        [self.menuViewController endAppearanceTransition];
+    } else if (self.contentViewController) {
+        [self.contentViewController endAppearanceTransition];
+    }
+}
 
 - (CGRect)frameForMenuViewController
 {
@@ -106,6 +154,7 @@
 - (void)setup
 {
     self.animating = NO;
+    self.showingMenu = NO;
 }
 
 @end
