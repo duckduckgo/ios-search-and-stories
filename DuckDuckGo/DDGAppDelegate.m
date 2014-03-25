@@ -17,6 +17,7 @@
 #import "DDGSearchHandler.h"
 #import "NSString+URLEncodingDDG.h"
 #import "DDGFirstRunViewController.h"
+#import "DDGSlideOverMenuController.h"
 
 @interface DDGAppDelegate ()
 @property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
@@ -150,12 +151,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
     //Configure the sliding view controller
     DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.searchHandler = under;
-    
-    DDGSlidingViewController *slidingViewController = [[DDGSlidingViewController alloc] initWithNibName:nil bundle:nil];
-    self.window.rootViewController = slidingViewController;
-    
-    slidingViewController.underLeftViewController = under;
-    slidingViewController.anchorRightRevealAmount = 258.0;
+        
+    DDGSlideOverMenuController *slideOverMenuController = [DDGSlideOverMenuController new];
+    slideOverMenuController.menuViewController = under;
+    [self.window setRootViewController:slideOverMenuController];
   
     int type = DDGViewControllerTypeHome;
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
@@ -169,8 +168,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
         
     UIViewController *homeController = [under viewControllerForType:type];
     
-    slidingViewController.topViewController = homeController;
-    [under configureViewController:homeController];
+    slideOverMenuController.contentViewController = homeController;
+    
+    /* The following line is currently commented out since is causes a crash */
+    // [under configureViewController:homeController];
     
     [self.window makeKeyAndVisible];
     

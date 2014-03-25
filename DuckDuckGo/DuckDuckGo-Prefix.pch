@@ -17,6 +17,7 @@
 
 	#import "Always.h"
     #import "Constants.h"
+    #import "UIViewController+DDGSlideOverMenuController.h"
 //    #import "TestFlight.h"
 
 #endif
