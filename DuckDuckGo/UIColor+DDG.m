@@ -21,4 +21,19 @@
     return [UIColor colorWithRed:red green:green blue:blue alpha:1.000];
 }
 
++ (UIColor *)duckBlack
+{
+    return [UIColor colorWithRed:24.0f/255.0f green:24.0f/255.0f blue:24.0f/255.0f alpha:1.0f];
+}
+
++ (UIColor *)duckGray
+{
+    return [UIColor colorWithRed:106.0f/255.0f green:106.0f/255.0f blue:106.0f/255.0f alpha:1.0f];
+}
+
++ (UIColor *)duckRed
+{
+    return [UIColor colorWithRed:185.0f/255.0f green:59.0f/255.0f blue:42.0f/255.0f alpha:1.0f];
+}
+
 @end

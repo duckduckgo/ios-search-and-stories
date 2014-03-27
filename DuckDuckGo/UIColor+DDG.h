@@ -12,4 +12,9 @@
 
 + (UIColor *)slideOutMenuTextColor;
 
+/* Visual Refresh */
++ (UIColor *)duckBlack;
++ (UIColor *)duckGray;
++ (UIColor *)duckRed;
+
 @end

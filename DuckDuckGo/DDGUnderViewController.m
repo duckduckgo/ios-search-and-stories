@@ -22,6 +22,10 @@
 #import "DDGPlusButton.h"
 #import "DDGHistoryViewController.h"
 
+#import "DDGMenuItemCell.h"
+#import "DDGMenuSectionHeaderView.h"
+
+
 NSString * const DDGViewControllerTypeTitleKey = @"title";
 NSString * const DDGViewControllerTypeTypeKey = @"type";
 NSString * const DDGViewControllerTypeControllerKey = @"viewController";
@@ -45,14 +49,19 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     return self;
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-
+    [self.view setClipsToBounds:YES];
+    
     DDGHistoryViewController *historyViewController = [[DDGHistoryViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext  mode:DDGHistoryViewControllerModeUnder];
     historyViewController.additionalSectionsDelegate = self;
     
     historyViewController.view.frame = self.view.bounds;
     historyViewController.tableView.scrollsToTop = NO;
+    [historyViewController.tableView registerNib:[UINib nibWithNibName:@"DDGMenuItemCell" bundle:nil]
+                          forCellReuseIdentifier:@"DDGMenuItemCell"];
+    
     historyViewController.overhangWidth = 74;
     
     [self.view addSubview:historyViewController.view];
@@ -62,6 +71,9 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     [historyViewController didMoveToParentViewController:self];
     
+    UIView *decorationView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 568.0f, 4.0f)];
+    decorationView.backgroundColor = [UIColor duckRed];
+    [self.view addSubview:decorationView];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -256,34 +268,16 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"cell";
-
-    DDGUnderViewControllerCell *cell = (DDGUnderViewControllerCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(!cell) {
-        if (indexPath.section == 0)
-            cell = [[DDGUnderViewControllerCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-    
-    [self configureCell:cell atIndexPath:indexPath];
-    
-    return cell;
+    DDGMenuItemCell *menuItemCell = (DDGMenuItemCell *)[tableView dequeueReusableCellWithIdentifier:@"DDGMenuItemCell"];
+    [self configureCell:menuItemCell atIndexPath:indexPath];
+    return menuItemCell;
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath {
-    
-    DDGUnderViewControllerCell *underCell = (DDGUnderViewControllerCell *)cell;
-    DDGFixedSizeImageView *fixedSizeImageView = underCell.fixedSizeImageView;
-    
-    underCell.active = ([indexPath isEqual:self.menuIndexPath]);
-    
-	underCell.imageView.image = nil;
-    underCell.imageView.highlightedImage = nil;
-    underCell.overhangWidth = 74;
-    
-	UILabel *lbl = underCell.textLabel;
+- (void)configureCell:(DDGMenuItemCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
     if(indexPath.section == 0)
 	{
-        lbl.text = [[self.viewControllerTypes objectAtIndex:indexPath.row] objectForKey:DDGViewControllerTypeTitleKey];
+        cell.title = [[self.viewControllerTypes objectAtIndex:indexPath.row] objectForKey:DDGViewControllerTypeTitleKey];
         
         NSDictionary *typeInfo = [self.viewControllerTypes objectAtIndex:indexPath.row];
         DDGViewControllerType type = [[typeInfo objectForKey:DDGViewControllerTypeTypeKey] integerValue];
@@ -294,26 +288,22 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 			case DDGViewControllerTypeHistory:
             case DDGViewControllerTypeDuck:
 			{
-				fixedSizeImageView.image = [UIImage imageNamed:@"icon_home"];
-                fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_home_selected"];
+                cell.icon = [UIImage imageNamed:@"icon_home"];
 			}
 				break;
 			case DDGViewControllerTypeSaved:
 			{
-				fixedSizeImageView.image = [UIImage imageNamed:@"icon_saved-pages"];
-                fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_saved-pages_selected"];
+                cell.icon = [UIImage imageNamed:@"icon_saved-pages"];
 			}
 				break;
 			case DDGViewControllerTypeStories:
 			{
-				fixedSizeImageView.image = [UIImage imageNamed:@"icon_stories"];
-                fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_stories_selected"];
+                cell.icon = [UIImage imageNamed:@"icon_stories"];
 			}
 				break;
 			case DDGViewControllerTypeSettings:
 			{
-				fixedSizeImageView.image = [UIImage imageNamed:@"icon_settings"];
-                fixedSizeImageView.highlightedImage = [UIImage imageNamed:@"icon_settings_selected"];
+                cell.icon = [UIImage imageNamed:@"icon_settings"];
 			}
 				break;
 		}
@@ -322,19 +312,20 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return (section == 0 ? 0 : 23);
+    return 50.0f;
 }
 
--(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
-    [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];    
-    
-    return headerView;
+    UINib *nib = [UINib nibWithNibName:@"DDGMenuSectionHeaderView" bundle:nil];
+    DDGMenuSectionHeaderView *sectionHeaderView = (DDGMenuSectionHeaderView *)[nib instantiateWithOwner:nil options:nil][0];
+    sectionHeaderView.title = @"Menu";
+    return sectionHeaderView;
 }
 
 #pragma mark - Table view delegate
 
+/*
 - (NSIndexPath*)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
 	if (indexPath.section == 1 && ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
@@ -350,6 +341,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
 	return indexPath;
 }
+*/
 
 - (UIViewController *)viewControllerForType:(DDGViewControllerType)type {
     UIViewController *viewController = nil;

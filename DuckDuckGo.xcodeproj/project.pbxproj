@@ -299,9 +299,13 @@
 		5BFF24DD16FA0C1600844D3B /* (null) in Resources */ = {isa = PBXBuildFile; };
 		5BFF24DE16FA0C1600844D3B /* (null) in Resources */ = {isa = PBXBuildFile; };
 		5BFF24F116FB53D800844D3B /* DDGTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BFF24F016FB53D800844D3B /* DDGTabViewController.m */; };
+		7B09EDE818E45BCA0042BB27 /* DDGMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B09EDE718E45BCA0042BB27 /* DDGMenuItemCell.xib */; };
+		7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */; };
 		7B15790318C72415002F229B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B15790218C72415002F229B /* Images.xcassets */; };
 		7B76FEC518E1DCFB00674702 /* DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */; };
 		7B76FECB18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */; };
+		7BCE31D918E4476700C87EF4 /* DDGMenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */; };
+		7BCE31DD18E449D600C87EF4 /* DDGMenuSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */; };
 		7BFC64DF18BCEEC800C48753 /* DDGStoryBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */; };
 		8333D63716666CA100571C59 /* spacer23x23.png in Resources */ = {isa = PBXBuildFile; fileRef = 8333D63616666CA100571C59 /* spacer23x23.png */; };
 		8343A2E31672827100DDE73C /* icon_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E11672827100DDE73C /* icon_notification@2x.png */; };
@@ -742,11 +746,17 @@
 		5BFF24CB16F7803400844D3B /* _DDGStoryFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _DDGStoryFeed.m; sourceTree = "<group>"; };
 		5BFF24EF16FB53D800844D3B /* DDGTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTabViewController.h; sourceTree = "<group>"; };
 		5BFF24F016FB53D800844D3B /* DDGTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTabViewController.m; sourceTree = "<group>"; };
+		7B09EDE718E45BCA0042BB27 /* DDGMenuItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuItemCell.xib; sourceTree = "<group>"; };
+		7B09EDE918E45F1D0042BB27 /* DDGMenuItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuItemCell.h; sourceTree = "<group>"; };
+		7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuItemCell.m; sourceTree = "<group>"; };
 		7B15790218C72415002F229B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7B76FEC318E1DCFB00674702 /* DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSlideOverMenuController.h; sourceTree = "<group>"; };
 		7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlideOverMenuController.m; sourceTree = "<group>"; };
 		7B76FEC918E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DDGSlideOverMenuController.h"; sourceTree = "<group>"; };
 		7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+DDGSlideOverMenuController.m"; sourceTree = "<group>"; };
+		7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuSectionHeaderView.xib; sourceTree = "<group>"; };
+		7BCE31DB18E449D600C87EF4 /* DDGMenuSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuSectionHeaderView.h; sourceTree = "<group>"; };
+		7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuSectionHeaderView.m; sourceTree = "<group>"; };
 		7BFC64DD18BCEEC800C48753 /* DDGStoryBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryBackgroundView.h; sourceTree = "<group>"; };
 		7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryBackgroundView.m; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
@@ -1290,7 +1300,7 @@
 		5B7C3BDA170B093300B9E009 /* Main Menu */ = {
 			isa = PBXGroup;
 			children = (
-				7B76FEC218E1DCCC00674702 /* DDGSlideOverMenuController */,
+				7BCE31DA18E4498B00C87EF4 /* Visual Refresh */,
 				4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */,
 				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
 				5B7A1C3516E9EEB700354310 /* DDGUnderViewControllerCell.h */,
@@ -1468,6 +1478,20 @@
 				7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */,
 			);
 			name = DDGSlideOverMenuController;
+			sourceTree = "<group>";
+		};
+		7BCE31DA18E4498B00C87EF4 /* Visual Refresh */ = {
+			isa = PBXGroup;
+			children = (
+				7B76FEC218E1DCCC00674702 /* DDGSlideOverMenuController */,
+				7B09EDE918E45F1D0042BB27 /* DDGMenuItemCell.h */,
+				7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */,
+				7B09EDE718E45BCA0042BB27 /* DDGMenuItemCell.xib */,
+				7BCE31DB18E449D600C87EF4 /* DDGMenuSectionHeaderView.h */,
+				7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */,
+				7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */,
+			);
+			name = "Visual Refresh";
 			sourceTree = "<group>";
 		};
 		833DB53C1494164F00509F2E /* Frameworks */ = {
@@ -1681,6 +1705,7 @@
 				4C24A75A15BA0946003DCB56 /* load_bar.png in Resources */,
 				4C24A75B15BA0946003DCB56 /* load_bar@2x.png in Resources */,
 				4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */,
+				7B09EDE818E45BCA0042BB27 /* DDGMenuItemCell.xib in Resources */,
 				4C4B7E9515C4F1AA00340B59 /* DDGBookmarksViewController.xib in Resources */,
 				4CA9C46A15CC6972001F3231 /* refresh_dotted_line@2x.png in Resources */,
 				4CA9C46B15CC6972001F3231 /* refresh_dotted_line.png in Resources */,
@@ -1689,6 +1714,7 @@
 				4CA9C48A15CC82A3001F3231 /* table_view_shadow_bottom@2x.png in Resources */,
 				4CA9C48B15CC82A3001F3231 /* table_view_shadow_bottom.png in Resources */,
 				4C02E2E11623C9F70010F06C /* bg_divider.png in Resources */,
+				7BCE31D918E4476700C87EF4 /* DDGMenuSectionHeaderView.xib in Resources */,
 				4C02E2E21623C9F70010F06C /* bg_divider@2x.png in Resources */,
 				83BAB47E1636DB6600DF1A6D /* spacer64x64.png in Resources */,
 				83CD213016374049000220B0 /* section_tile.png in Resources */,
@@ -1925,6 +1951,7 @@
 				8398DACC1641DA9F00A559C3 /* DDGRegionProvider.m in Sources */,
 				8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */,
 				8390A3F51677CB3500336DE7 /* DDGUtility.m in Sources */,
+				7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */,
 				5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */,
 				5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */,
 				7B76FEC518E1DCFB00674702 /* DDGSlideOverMenuController.m in Sources */,
@@ -1962,6 +1989,7 @@
 				5BFF24C416F77F9F00844D3B /* Stories.xcdatamodeld in Sources */,
 				5BFF24CC16F7803400844D3B /* _DDGStory.m in Sources */,
 				5BFF24CD16F7803400844D3B /* _DDGStoryFeed.m in Sources */,
+				7BCE31DD18E449D600C87EF4 /* DDGMenuSectionHeaderView.m in Sources */,
 				5BFF24CE16F7803900844D3B /* DDGStoryFeed.m in Sources */,
 				5BFF24F116FB53D800844D3B /* DDGTabViewController.m in Sources */,
 				5B07086A17008ECE0058718F /* _DDGHistoryItem.m in Sources */,

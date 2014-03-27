@@ -15,6 +15,7 @@
 #import "DDGSearchController.h"
 #import "ECSlidingViewController.h"
 #import "DDGHistoryItemCell.h"
+#import "DDGMenuSectionHeaderView.h"
 
 @interface DDGHistoryViewController () <UIGestureRecognizerDelegate> {
     BOOL _showingNoResultsSection;
@@ -54,7 +55,10 @@
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         if (self.mode == DDGHistoryViewControllerModeUnder) {
-            tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];            
+#warning Change this back to clear once the blur view is in
+//            tableView.backgroundColor = [UIColor clearColor];
+//            tableView.opaque = NO;
+            tableView.backgroundColor = [UIColor whiteColor];
             tableView.rowHeight = 44.0;
         } else {
             tableView.backgroundColor = [UIColor colorWithRed:0.212 green:0.224 blue:0.251 alpha:1.000];
@@ -437,7 +441,7 @@
             return [self.additionalSectionsDelegate tableView:tableView heightForHeaderInSection:section];
     }
     
-    return 23;
+    return self.mode == DDGHistoryViewControllerModeUnder ? 50.0f : 23.0f;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -451,7 +455,7 @@
     return 0.0;
 }
 
--(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
     if (section < additionalSections) {
@@ -460,27 +464,35 @@
         return nil;
     }
     
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
-    [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
-    
     NSArray *sections = [self.fetchedResultsController sections];
     NSInteger historySection = [self historySectionForTableSection:section];
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
-    
+    NSString *headerTitle = nil;
     if (_showingNoResultsSection && section == ([sections count] + additionalSections)) {
-        title.text = NSLocalizedString(@"Recent Searches & Stories", @"Table section header title");
+        headerTitle = NSLocalizedString(@"Recent Searches & Stories", @"Table section header title");
     } else {
         NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:historySection] name];
-        
         if ([name isEqualToString:@"searches"]) {
-            title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");
+            headerTitle = NSLocalizedString(@"Recent Searches", @"Table section header title");
         } else if ([name isEqualToString:@"stories"]) {
-            title.text = NSLocalizedString(@"Recent Stories", @"Table section header title");
+            headerTitle = NSLocalizedString(@"Recent Stories", @"Table section header title");
         } else {
-            title.text = name;
+            headerTitle = name;
         }
     }
     
+    /* Added as part of the visual refresh */
+    if (self.mode == DDGHistoryViewControllerModeUnder) {
+        UINib *nib = [UINib nibWithNibName:@"DDGMenuSectionHeaderView" bundle:nil];
+        DDGMenuSectionHeaderView *sectionHeaderView = (DDGMenuSectionHeaderView *)[nib instantiateWithOwner:nil options:nil][0];
+        sectionHeaderView.title = headerTitle;
+        return sectionHeaderView;
+    }
+    /* end */
+    
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
+    [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
+    title.text = headerTitle;
     title.textColor = [UIColor whiteColor];
     title.opaque = NO;
     title.backgroundColor = [UIColor clearColor];
