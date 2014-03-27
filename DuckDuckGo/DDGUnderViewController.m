@@ -473,25 +473,14 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
-        
-        self.menuIndexPath = indexPath;
-        
-        if(indexPath.section == 0)
-		{
-            UIViewController *newTopViewController = [self viewControllerForIndexPath:indexPath];
-            
-            if (nil != newTopViewController) {
-                CGRect frame = self.slidingViewController.topViewController.view.frame;
-                self.slidingViewController.topViewController = newTopViewController;
-                self.slidingViewController.topViewController.view.frame = frame;
-                [self.slidingViewController resetTopView];
-                
-                [self configureViewController:newTopViewController];                
-            }
+    self.menuIndexPath = indexPath;
+    if (indexPath.section == 0) {
+        UIViewController *contentViewController = [self viewControllerForIndexPath:indexPath];
+        if (contentViewController) {
+            [self.slideOverMenuController setContentViewController:contentViewController];
+            [self.slideOverMenuController hideMenu];
         }
-    }];
-    
+    }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
