@@ -10,6 +10,6 @@
 
 @interface UIView (SlideOverMenu)
 
-- (UIImage *)snapshotImage;
+- (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates;
 
 @end

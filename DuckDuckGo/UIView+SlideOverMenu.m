@@ -10,10 +10,10 @@
 
 @implementation UIView (SlideOverMenu)
 
-- (UIImage *)snapshotImage
+- (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates
 {
     UIGraphicsBeginImageContext(self.bounds.size);
-    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:NO];
+    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:afterUpdates];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     NSData *data = UIImageJPEGRepresentation(image, 0.75f);
