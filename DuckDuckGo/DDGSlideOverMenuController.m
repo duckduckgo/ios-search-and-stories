@@ -150,6 +150,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                                            animated:animated];
 }
 
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [self updateLayout];
+}
+
 #pragma mark - Private
 
 - (void)beginAppearanceTransitionOnViewController:(UIViewController *)viewController appearing:(BOOL)isAppearing animated:(BOOL)animated
@@ -164,13 +169,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (CGRect)frameForMenuViewController
 {
-    CGRect frame = CGRectZero;
-    if (self.menuViewController) {
-        frame = [[self.menuViewController view] frame];
-    } else {
-        frame = [self offScreenFrameForMenuViewController];
-    }
-    return frame;
+    return self.isShowingMenu ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
 }
 
 - (void)notifyObserversAboutMenuAppearanceTransition:(BOOL)complete
@@ -181,14 +180,14 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (CGRect)offScreenFrameForMenuViewController
 {
-    CGRect frame = [self.view frame];
+    CGRect frame = [self.view bounds];
     frame.origin.x -= CGRectGetWidth(frame);
     return frame;
 }
 
 - (CGRect)onScreenFrameForMenuViewController
 {
-    return [self.view frame];
+    return [self.view bounds];
 }
 
 - (void)setup
@@ -237,6 +236,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         [NSException raise:NSInternalInconsistencyException
                     format:@"Attempted to animate a nil menu view controller"];
     }
+}
+
+- (void)updateLayout
+{
+    [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
 }
 
 @end
