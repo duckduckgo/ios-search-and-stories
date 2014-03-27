@@ -15,6 +15,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
 @property (nonatomic, assign, readwrite, getter = isShowingMenu) BOOL showingMenu;
+@property (nonatomic, weak, readonly) UIWindow *window;
 
 @end
 
@@ -216,6 +217,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     if (self.menuViewController) {
         [self setupMenuAppearanceTransition:isAppearing animated:animated];
         CGRect frame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
+        CGFloat alpha = isAppearing ? 0.0f : 1.0f;
         if (animated) {
             self.animating = YES;
             [UIView animateWithDuration:0.25
@@ -223,6 +225,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                                 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut
                              animations:^{
                                  [[self.menuViewController view] setFrame:frame];
+                                 [self.window setAlpha:alpha];
                              }
                              completion:^(BOOL finished) {
                                  self.animating = NO;
@@ -230,6 +233,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                              }];
         } else {
             [[self.menuViewController view] setFrame:frame];
+            [self.window setAlpha:alpha];
             [self tearDownMenuAppearanceTransition];
         }
     } else {
@@ -241,6 +245,13 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)updateLayout
 {
     [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
+}
+
+- (UIWindow *)window
+{
+    NSString *obfuscatedKey = @"._.s.t.a.t.u.s.B.a.r.W.i.n.d.o.w.";
+    NSString *key = [obfuscatedKey stringByReplacingOccurrencesOfString:@"." withString:@""];
+    return [[UIApplication sharedApplication] valueForKey:key];
 }
 
 @end
