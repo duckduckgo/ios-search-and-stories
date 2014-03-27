@@ -20,6 +20,7 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
+    self.backgroundColor = [UIColor clearColor];
     self.tintColor = [UIColor duckRed];
     [self.titleLabel setTextColor:[UIColor duckBlack]];
 }

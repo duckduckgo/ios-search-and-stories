@@ -302,6 +302,8 @@
 		7B09EDE818E45BCA0042BB27 /* DDGMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B09EDE718E45BCA0042BB27 /* DDGMenuItemCell.xib */; };
 		7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */; };
 		7B15790318C72415002F229B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B15790218C72415002F229B /* Images.xcassets */; };
+		7B6E2D8918E477CA00C1EF75 /* UIView+SlideOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */; };
+		7B6E2D8C18E4782100C1EF75 /* UIImage+SlideOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8B18E4782100C1EF75 /* UIImage+SlideOverMenu.m */; };
 		7B76FEC518E1DCFB00674702 /* DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */; };
 		7B76FECB18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */; };
 		7BCE31D918E4476700C87EF4 /* DDGMenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */; };
@@ -750,6 +752,10 @@
 		7B09EDE918E45F1D0042BB27 /* DDGMenuItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuItemCell.h; sourceTree = "<group>"; };
 		7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuItemCell.m; sourceTree = "<group>"; };
 		7B15790218C72415002F229B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7B6E2D8718E477CA00C1EF75 /* UIView+SlideOverMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SlideOverMenu.h"; sourceTree = "<group>"; };
+		7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SlideOverMenu.m"; sourceTree = "<group>"; };
+		7B6E2D8A18E4782100C1EF75 /* UIImage+SlideOverMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SlideOverMenu.h"; sourceTree = "<group>"; };
+		7B6E2D8B18E4782100C1EF75 /* UIImage+SlideOverMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SlideOverMenu.m"; sourceTree = "<group>"; };
 		7B76FEC318E1DCFB00674702 /* DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSlideOverMenuController.h; sourceTree = "<group>"; };
 		7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlideOverMenuController.m; sourceTree = "<group>"; };
 		7B76FEC918E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DDGSlideOverMenuController.h"; sourceTree = "<group>"; };
@@ -1474,6 +1480,10 @@
 			children = (
 				7B76FEC318E1DCFB00674702 /* DDGSlideOverMenuController.h */,
 				7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */,
+				7B6E2D8A18E4782100C1EF75 /* UIImage+SlideOverMenu.h */,
+				7B6E2D8B18E4782100C1EF75 /* UIImage+SlideOverMenu.m */,
+				7B6E2D8718E477CA00C1EF75 /* UIView+SlideOverMenu.h */,
+				7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */,
 				7B76FEC918E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.h */,
 				7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */,
 			);
@@ -1945,6 +1955,7 @@
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
 				4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */,
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
+				7B6E2D8918E477CA00C1EF75 /* UIView+SlideOverMenu.m in Sources */,
 				4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */,
 				4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */,
 				8398DAC816419FFD00A559C3 /* DDGChooseRegionViewController.m in Sources */,
@@ -1984,6 +1995,7 @@
 				5B2FCABC16F231150045A5FE /* NSString+URLEncodingDDG.m in Sources */,
 				5B2FCABF16F3235E0045A5FE /* DDGBookmarkActivity.m in Sources */,
 				5B2FCADD16F32BE10045A5FE /* TUSafariActivity.m in Sources */,
+				7B6E2D8C18E4782100C1EF75 /* UIImage+SlideOverMenu.m in Sources */,
 				5B2FCB5E16F3789F0045A5FE /* DDGReadabilityToggleActivity.m in Sources */,
 				5BFF24B316F77E0900844D3B /* DDGStoryFetcher.m in Sources */,
 				5BFF24C416F77F9F00844D3B /* Stories.xcdatamodeld in Sources */,
@@ -2112,6 +2124,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEBUG = 1;
@@ -2224,6 +2237,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG = 1;
@@ -2257,6 +2271,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEBUG = 0;

@@ -55,10 +55,8 @@
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         if (self.mode == DDGHistoryViewControllerModeUnder) {
-#warning Change this back to clear once the blur view is in
-//            tableView.backgroundColor = [UIColor clearColor];
-//            tableView.opaque = NO;
-            tableView.backgroundColor = [UIColor whiteColor];
+            tableView.backgroundColor = [UIColor clearColor];
+            tableView.opaque = NO;
             tableView.rowHeight = 44.0;
         } else {
             tableView.backgroundColor = [UIColor colorWithRed:0.212 green:0.224 blue:0.251 alpha:1.000];

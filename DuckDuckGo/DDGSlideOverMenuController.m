@@ -7,6 +7,8 @@
 //
 
 #import "DDGSlideOverMenuController.h"
+#import "UIImage+SlideOverMenu.h"
+#import "UIView+SlideOverMenu.h"
 
 NSString * const DDGSlideOverMenuWillAppearNotification = @"DDGSlideOverMenuWillAppearNotification";
 NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAppearNotification";
@@ -14,6 +16,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 @interface DDGSlideOverMenuController ()
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
+@property (nonatomic, strong) UIImageView *blurContainerView;
 @property (nonatomic, assign, readwrite, getter = isShowingMenu) BOOL showingMenu;
 @property (nonatomic, weak, readonly) UIWindow *window;
 
@@ -53,6 +56,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         }
         [contentViewController didMoveToParentViewController:self];
     }
+    [self reorderViewStack];
 }
 
 - (void)setMenuViewController:(UIViewController *)menuViewController
@@ -71,6 +75,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
             [self.view addSubview:menuViewController.view];
             [menuViewController didMoveToParentViewController:self];
         }
+        [self reorderViewStack];
     } else {
         [NSException raise:NSInternalInconsistencyException
                     format:@"Attempted to change the menu view controller whilst animating"];
@@ -135,6 +140,12 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self endAppearanceTransitionOnViewController:self.isShowingMenu ? self.menuViewController : self.contentViewController];
 }
 
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self setupBlurContainer];
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
@@ -168,6 +179,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [viewController endAppearanceTransition];
 }
 
+- (CGRect)frameForBlurContainer
+{
+    return self.isShowingMenu ? [self onScreenFrameForBlurContainer] : [self offScreenFrameForBlurContainer];
+}
+
 - (CGRect)frameForMenuViewController
 {
     return self.isShowingMenu ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
@@ -179,6 +195,13 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
 }
 
+- (CGRect)offScreenFrameForBlurContainer
+{
+    CGRect frame = [self.view bounds];
+    frame.size.width = 0.0f;
+    return frame;
+}
+
 - (CGRect)offScreenFrameForMenuViewController
 {
     CGRect frame = [self.view bounds];
@@ -186,9 +209,24 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     return frame;
 }
 
+- (CGRect)onScreenFrameForBlurContainer
+{
+    return [self.view bounds];
+}
+
 - (CGRect)onScreenFrameForMenuViewController
 {
     return [self.view bounds];
+}
+
+- (void)reorderViewStack
+{
+    if (self.contentViewController) {
+        [self.view sendSubviewToBack:[self.contentViewController view]];
+    }
+    if (self.menuViewController) {
+        [self.view bringSubviewToFront:[self.menuViewController view]];
+    }
 }
 
 - (void)setup
@@ -197,9 +235,23 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     self.showingMenu = NO;
 }
 
+- (void)setupBlurContainer
+{
+    CGRect frame = [self onScreenFrameForMenuViewController];
+    frame.size.width = 0.0f;
+    UIImageView *blurContainerView = [[UIImageView alloc] initWithFrame:frame];
+    blurContainerView.contentMode = UIViewContentModeTopLeft;
+    blurContainerView.clipsToBounds = YES;
+    [self.view addSubview:blurContainerView];
+    self.blurContainerView = blurContainerView;
+}
+
 - (void)setupMenuAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
 {
     self.showingMenu = !self.isShowingMenu;
+    if (isAppearing) {
+        [self updateBlurContainerContent];
+    }
     [self notifyObserversAboutMenuAppearanceTransition:NO];
     [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:isAppearing animated:animated];
     [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:!isAppearing animated:animated];
@@ -216,15 +268,17 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     if (self.menuViewController) {
         [self setupMenuAppearanceTransition:isAppearing animated:animated];
-        CGRect frame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
         CGFloat alpha = isAppearing ? 0.0f : 1.0f;
+        CGRect blurContainerFrame = isAppearing ? [self onScreenFrameForBlurContainer] : [self offScreenFrameForBlurContainer];
+        CGRect menuViewFrame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
         if (animated) {
             self.animating = YES;
             [UIView animateWithDuration:0.25
                                   delay:0
                                 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut
                              animations:^{
-                                 [[self.menuViewController view] setFrame:frame];
+                                 [self.blurContainerView setFrame:blurContainerFrame];
+                                 [[self.menuViewController view] setFrame:menuViewFrame];
                                  [self.window setAlpha:alpha];
                              }
                              completion:^(BOOL finished) {
@@ -232,7 +286,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                                  [self tearDownMenuAppearanceTransition];
                              }];
         } else {
-            [[self.menuViewController view] setFrame:frame];
+            [self.blurContainerView setFrame:blurContainerFrame];
+            [[self.menuViewController view] setFrame:menuViewFrame];
             [self.window setAlpha:alpha];
             [self tearDownMenuAppearanceTransition];
         }
@@ -242,8 +297,20 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     }
 }
 
+- (void)updateBlurContainerContent
+{
+    UIImage *snapshotImage = [[self.contentViewController view] snapshotImage];
+    UIImage *blurredSnapshotImage = [snapshotImage imageWithBlurRadius:12.0f
+                                                             tintColor:[UIColor colorWithWhite:0.95f alpha:0.7f]
+                                                 saturationDeltaFactor:1.0f
+                                                             maskImage:nil];
+    [self.blurContainerView setImage:blurredSnapshotImage];
+}
+
 - (void)updateLayout
 {
+    [self.blurContainerView setFrame:[self frameForBlurContainer]];
+    [self updateBlurContainerContent];
     [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
 }
 
