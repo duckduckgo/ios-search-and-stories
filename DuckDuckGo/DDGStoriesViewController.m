@@ -79,8 +79,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     [self.imageDownloadQueue cancelAllOperations];
     self.imageDownloadQueue = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ECSlidingViewUnderLeftWillAppear
-                                                  object:self.slidingViewController];
+                                                    name:DDGSlideOverMenuWillAppearNotification
+                                                  object:nil];
 }
 
 - (DDGHistoryProvider *)historyProvider {
@@ -208,8 +208,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     self.enqueuedDecompressionOperations = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ECSlidingViewUnderLeftWillAppear
-                                                  object:self.slidingViewController];
+                                                    name:DDGSlideOverMenuWillAppearNotification
+                                                  object:nil];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -250,9 +250,10 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
         }];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewUnderLeftWillAppear:)
-                                                 name:ECSlidingViewUnderLeftWillAppear
-                                               object:self.slidingViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(slidingViewUnderLeftWillAppear:)
+                                                 name:DDGSlideOverMenuWillAppearNotification
+                                               object:nil];
     
     [self.tableView addGestureRecognizer:self.panLeftGestureRecognizer];
 }
@@ -263,8 +264,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ECSlidingViewUnderLeftWillAppear
-                                                  object:self.slidingViewController];
+                                                    name:DDGSlideOverMenuWillAppearNotification
+                                                  object:nil];
     
     [self.tableView removeGestureRecognizer:self.panLeftGestureRecognizer];
 	[super viewWillDisappear:animated];

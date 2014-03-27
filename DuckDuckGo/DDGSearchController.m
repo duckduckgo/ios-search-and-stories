@@ -329,13 +329,17 @@ NSString * const emailRegEx =
 }
 
 -(void)keyboardWillShow:(NSNotification *)notification {
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewTopDidAnchorRight:) name:ECSlidingViewTopDidAnchorRight object:self.slidingViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(slidingViewTopDidAnchorRight:)
+                                                 name:DDGSlideOverMenuDidAppearNotification
+                                               object:nil];
     [self keyboardWillShow:YES notification:notification];
 }
 
 -(void)keyboardWillHide:(NSNotification *)notification {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewTopDidAnchorRight object:self.slidingViewController];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:DDGSlideOverMenuDidAppearNotification
+                                                  object:nil];
     [self keyboardWillShow:NO notification:notification];
 }
 
@@ -1025,9 +1029,8 @@ NSString * const emailRegEx =
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(dismissAutocomplete)
-                                                 name:ECSlidingViewUnderLeftWillAppear
-                                               object:self.slidingViewController];
-    
+                                                 name:DDGSlideOverMenuWillAppearNotification
+                                               object:nil];
 	return YES;
 }
 
@@ -1044,7 +1047,7 @@ NSString * const emailRegEx =
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ECSlidingViewUnderLeftWillAppear
+                                                    name:DDGSlideOverMenuWillAppearNotification
                                                   object:nil];
 }
 

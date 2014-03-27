@@ -8,6 +8,9 @@
 
 #import "DDGSlideOverMenuController.h"
 
+NSString * const DDGSlideOverMenuWillAppearNotification = @"DDGSlideOverMenuWillAppearNotification";
+NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAppearNotification";
+
 @interface DDGSlideOverMenuController ()
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
@@ -18,6 +21,18 @@
 @implementation DDGSlideOverMenuController
 
 #pragma mark - DDGSlideOverMenuController
+
+- (void)hideMenu
+{
+    [self hideMenu:YES];
+}
+
+- (void)hideMenu:(BOOL)animated
+{
+    if (self.isShowingMenu) {
+        [self triggerMenuAppearanceTransition:NO animated:animated];
+    }
+}
 
 - (void)setContentViewController:(UIViewController *)contentViewController
 {
@@ -61,6 +76,18 @@
     }
 }
 
+- (void)showMenu
+{
+    [self showMenu:YES];
+}
+
+- (void)showMenu:(BOOL)animated
+{
+    if (!self.isShowingMenu) {
+        [self triggerMenuAppearanceTransition:YES animated:animated];
+    }
+}
+
 #pragma mark - UIViewController
 
 - (instancetype)init
@@ -98,45 +125,41 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self endChildAppearanceTransition];
+    [self endAppearanceTransitionOnViewController:self.isShowingMenu ? self.menuViewController : self.contentViewController];
 }
 
 - (void)viewDidDisappear:(BOOL)animated
 {
     [super viewDidDisappear:animated];
-    [self endChildAppearanceTransition];
+    [self endAppearanceTransitionOnViewController:self.isShowingMenu ? self.menuViewController : self.contentViewController];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self beginChildAppearanceTransition:YES animated:animated];
+    [self beginAppearanceTransitionOnViewController:self.isShowingMenu ? self.menuViewController : self.contentViewController
+                                          appearing:YES
+                                           animated:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
-    [self beginChildAppearanceTransition:NO animated:animated];
+    [self beginAppearanceTransitionOnViewController:self.isShowingMenu ? self.menuViewController : self.contentViewController
+                                          appearing:NO
+                                           animated:animated];
 }
 
 #pragma mark - Private
 
-- (void)beginChildAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
+- (void)beginAppearanceTransitionOnViewController:(UIViewController *)viewController appearing:(BOOL)isAppearing animated:(BOOL)animated
 {
-    if (self.menuViewController && self.isShowingMenu) {
-        [self.menuViewController beginAppearanceTransition:isAppearing animated:animated];
-    } else if (self.contentViewController) {
-        [self.contentViewController beginAppearanceTransition:isAppearing animated:animated];
-    }
+    [viewController beginAppearanceTransition:isAppearing animated:animated];
 }
 
-- (void)endChildAppearanceTransition
+- (void)endAppearanceTransitionOnViewController:(UIViewController *)viewController
 {
-    if (self.menuViewController && self.isShowingMenu) {
-        [self.menuViewController endAppearanceTransition];
-    } else if (self.contentViewController) {
-        [self.contentViewController endAppearanceTransition];
-    }
+    [viewController endAppearanceTransition];
 }
 
 - (CGRect)frameForMenuViewController
@@ -145,16 +168,75 @@
     if (self.menuViewController) {
         frame = [[self.menuViewController view] frame];
     } else {
-        frame = [self.view frame];
-        frame.origin.x -= CGRectGetWidth(frame);
+        frame = [self offScreenFrameForMenuViewController];
     }
     return frame;
+}
+
+- (void)notifyObserversAboutMenuAppearanceTransition:(BOOL)complete
+{
+    NSString *notification = complete ? DDGSlideOverMenuDidAppearNotification : DDGSlideOverMenuWillAppearNotification;
+    [[NSNotificationCenter defaultCenter] postNotificationName:notification object:nil];
+}
+
+- (CGRect)offScreenFrameForMenuViewController
+{
+    CGRect frame = [self.view frame];
+    frame.origin.x -= CGRectGetWidth(frame);
+    return frame;
+}
+
+- (CGRect)onScreenFrameForMenuViewController
+{
+    return [self.view frame];
 }
 
 - (void)setup
 {
     self.animating = NO;
     self.showingMenu = NO;
+}
+
+- (void)setupMenuAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
+{
+    self.showingMenu = !self.isShowingMenu;
+    [self notifyObserversAboutMenuAppearanceTransition:NO];
+    [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:isAppearing animated:animated];
+    [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:!isAppearing animated:animated];
+}
+
+- (void)tearDownMenuAppearanceTransition
+{
+    [self endAppearanceTransitionOnViewController:self.menuViewController];
+    [self endAppearanceTransitionOnViewController:self.contentViewController];
+    [self notifyObserversAboutMenuAppearanceTransition:YES];
+}
+
+- (void)triggerMenuAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
+{
+    if (self.menuViewController) {
+        [self setupMenuAppearanceTransition:isAppearing animated:animated];
+        CGRect frame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
+        if (animated) {
+            self.animating = YES;
+            [UIView animateWithDuration:0.25
+                                  delay:0
+                                options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut
+                             animations:^{
+                                 [[self.menuViewController view] setFrame:frame];
+                             }
+                             completion:^(BOOL finished) {
+                                 self.animating = NO;
+                                 [self tearDownMenuAppearanceTransition];
+                             }];
+        } else {
+            [[self.menuViewController view] setFrame:frame];
+            [self tearDownMenuAppearanceTransition];
+        }
+    } else {
+        [NSException raise:NSInternalInconsistencyException
+                    format:@"Attempted to animate a nil menu view controller"];
+    }
 }
 
 @end

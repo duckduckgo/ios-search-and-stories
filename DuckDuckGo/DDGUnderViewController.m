@@ -152,6 +152,11 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+}
+
 #pragma mark - DDGTableViewAdditionalSectionsDelegate
 
 - (NSInteger)numberOfAdditionalSections {
@@ -192,7 +197,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 }
 
 -(void)searchControllerLeftButtonPressed {
-    [self.slidingViewController anchorTopViewTo:ECRight];
+    [self.slideOverMenuController showMenu];
 }
 
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {

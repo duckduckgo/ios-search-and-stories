@@ -47,9 +47,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewUnderLeftWillAppear object:nil];
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:DDGSlideOverMenuWillAppearNotification object:nil];
 }
 
 #pragma mark - View lifecycle
@@ -96,7 +95,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewUnderLeftWillAppear:) name:ECSlidingViewUnderLeftWillAppear object:self.slidingViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(slidingViewUnderLeftWillAppear:)
+                                                 name:DDGSlideOverMenuWillAppearNotification
+                                               object:nil];
 }
 
 - (void)reenableScrollsToTop {
@@ -110,7 +112,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewUnderLeftWillAppear object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:DDGSlideOverMenuWillAppearNotification
+                                                  object:nil];
 }
 
 - (void)viewWillLayoutSubviews
