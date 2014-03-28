@@ -319,6 +319,10 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 {
     UINib *nib = [UINib nibWithNibName:@"DDGMenuSectionHeaderView" bundle:nil];
     DDGMenuSectionHeaderView *sectionHeaderView = (DDGMenuSectionHeaderView *)[nib instantiateWithOwner:nil options:nil][0];
+    __weak DDGUnderViewController *weakSelf = self;
+    sectionHeaderView.closeBlock = ^(){
+        [weakSelf.slideOverMenuController hideMenu];
+    };
     sectionHeaderView.title = @"Menu";
     return sectionHeaderView;
 }

@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^DDGMenuSectionHeaderCloseBlock)();
+
 @interface DDGMenuSectionHeaderView : UIView
 
+@property (nonatomic, copy) DDGMenuSectionHeaderCloseBlock closeBlock;
 @property (nonatomic, copy) NSString *title;
 
 @end
