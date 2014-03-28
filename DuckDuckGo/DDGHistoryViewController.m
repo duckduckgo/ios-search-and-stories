@@ -101,11 +101,13 @@
 }
 
 - (void)swipeLeft:(UISwipeGestureRecognizer *)swipe {
-    [self swipe:swipe direction:UISwipeGestureRecognizerDirectionLeft];
+#warning Need to re-enable once deletion is working again
+    //[self swipe:swipe direction:UISwipeGestureRecognizerDirectionLeft];
 }
 
 - (void)swipeRight:(UISwipeGestureRecognizer *)swipe {
-    [self swipe:swipe direction:UISwipeGestureRecognizerDirectionRight];
+#warning Need to re-enable once deletion is working again
+//    [self swipe:swipe direction:UISwipeGestureRecognizerDirectionRight];
 }
 
 - (void)swipe:(UISwipeGestureRecognizer *)swipe direction:(UISwipeGestureRecognizerDirection)direction {
@@ -360,7 +362,7 @@
         return;
     }
 
-#warning Need to re-enable deleting
+#warning Need to re-enable once deletion is working again
 //    [self cancelDeletingIndexPathsAnimated:YES];    
     NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
     
