@@ -359,12 +359,9 @@
             [self.additionalSectionsDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
         return;
     }
-    
-#warning Deselect and return immediately, just for now. Needs to be updated to accomodate the new design
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    return;
-    
-    [self cancelDeletingIndexPathsAnimated:YES];    
+
+#warning Need to re-enable deleting
+//    [self cancelDeletingIndexPathsAnimated:YES];    
     NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
     
     NSArray *sections = [self.fetchedResultsController sections];

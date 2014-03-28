@@ -223,14 +223,10 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     [webVC loadStory:story readabilityMode:readabilityMode];
     self.menuIndexPath = nil;
     
-    [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
-        CGRect frame = self.slidingViewController.topViewController.view.frame;
-        self.slidingViewController.topViewController = searchController;
-        self.slidingViewController.topViewController.view.frame = frame;
-        [self configureViewController:searchController];
-        
-        [self.slidingViewController resetTopView];
-    }];
+    if (searchController) {
+        [self.slideOverMenuController setContentViewController:searchController];
+        [self.slideOverMenuController hideMenu];
+    }
     
 }
 
@@ -244,15 +240,11 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     [webVC loadQueryOrURL:queryOrURL];
     self.menuIndexPath = nil;    
-    
-    [self.slidingViewController anchorTopViewOffScreenTo:ECRight animations:nil onComplete:^{
-        CGRect frame = self.slidingViewController.topViewController.view.frame;
-        self.slidingViewController.topViewController = searchController;
-        self.slidingViewController.topViewController.view.frame = frame;
-        [self configureViewController:searchController];
-        
-        [self.slidingViewController resetTopView];
-    }];
+
+    if (searchController) {
+        [self.slideOverMenuController setContentViewController:searchController];
+        [self.slideOverMenuController hideMenu];
+    }
 }
 
 

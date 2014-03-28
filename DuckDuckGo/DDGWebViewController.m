@@ -214,12 +214,13 @@
 }
 
 -(void)searchControllerLeftButtonPressed {        
-	if(self.webView.canGoBack)
+	if (self.webView.canGoBack) {
         [self.webView goBack];
-    else if ([self.searchController canPopContentViewController])
+    } else if ([self.searchController canPopContentViewController]) {
         [self.searchController popContentViewControllerAnimated:YES];    
-	else
-	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController searchControllerLeftButtonPressed];
+    } else {
+        [(DDGUnderViewController *)[self.slideOverMenuController menuViewController] searchControllerLeftButtonPressed];
+    }
 }
 
 -(void)searchControllerStopOrReloadButtonPressed {
