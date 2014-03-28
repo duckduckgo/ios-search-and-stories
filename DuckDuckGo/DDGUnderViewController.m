@@ -288,22 +288,22 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 			case DDGViewControllerTypeHistory:
             case DDGViewControllerTypeDuck:
 			{
-                cell.icon = [UIImage imageNamed:@"icon_home"];
+                cell.icon = [UIImage imageNamed:@"Home"];
 			}
 				break;
 			case DDGViewControllerTypeSaved:
 			{
-                cell.icon = [UIImage imageNamed:@"icon_saved-pages"];
+                cell.icon = [UIImage imageNamed:@"Saved"];
 			}
 				break;
 			case DDGViewControllerTypeStories:
 			{
-                cell.icon = [UIImage imageNamed:@"icon_stories"];
+                cell.icon = [UIImage imageNamed:@"Recent"];
 			}
 				break;
 			case DDGViewControllerTypeSettings:
 			{
-                cell.icon = [UIImage imageNamed:@"icon_settings"];
+                cell.icon = [UIImage imageNamed:@"Settings"];
 			}
 				break;
 		}

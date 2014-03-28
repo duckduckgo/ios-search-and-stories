@@ -16,6 +16,12 @@
 
 @implementation DDGMenuSectionHeaderView
 
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    [self.titleLabel setTextColor:[UIColor duckGray]];
+}
+
 - (void)setTitle:(NSString *)title
 {
     _title = [[title uppercaseString] copy];

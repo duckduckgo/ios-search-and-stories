@@ -40,6 +40,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)setContentViewController:(UIViewController *)contentViewController
 {
+    if ([contentViewController isEqual:self.contentViewController]) {
+        return;
+    }
     if (_contentViewController) {
         [_contentViewController.view removeFromSuperview];
         [_contentViewController willMoveToParentViewController:nil];
@@ -65,6 +68,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)setMenuViewController:(UIViewController *)menuViewController
 {
     if (!self.isAnimating) {
+        if ([menuViewController isEqual:self.menuViewController]) {
+            return;
+        }
         CGRect frame = [self frameForMenuViewController];
         if (_menuViewController) {
             [_menuViewController.view removeFromSuperview];

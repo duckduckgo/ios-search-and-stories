@@ -28,7 +28,7 @@
 
 + (UIColor *)duckGray
 {
-    return [UIColor colorWithRed:106.0f/255.0f green:106.0f/255.0f blue:106.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:86.0f/255.0f green:86.0f/255.0f blue:86.0f/255.0f alpha:1.0f];
 }
 
 + (UIColor *)duckRed
