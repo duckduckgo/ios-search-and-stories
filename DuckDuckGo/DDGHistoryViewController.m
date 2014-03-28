@@ -51,7 +51,13 @@
     [super viewDidLoad];
 
     if (nil == self.tableView) {
-        UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        UITableView *tableView = nil;
+        if (self.mode == DDGHistoryViewControllerModeUnder) {
+            tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        } else {
+            tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        }
+        
         tableView.delegate = self;
         tableView.dataSource = self;
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
