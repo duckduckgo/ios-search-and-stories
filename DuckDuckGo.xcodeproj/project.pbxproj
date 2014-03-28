@@ -302,6 +302,8 @@
 		7B09EDE818E45BCA0042BB27 /* DDGMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B09EDE718E45BCA0042BB27 /* DDGMenuItemCell.xib */; };
 		7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */; };
 		7B15790318C72415002F229B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B15790218C72415002F229B /* Images.xcassets */; };
+		7B6450FB18E58E23005ED543 /* DDGMenuHistoryItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */; };
+		7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */; };
 		7B6E2D8918E477CA00C1EF75 /* UIView+SlideOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */; };
 		7B6E2D8C18E4782100C1EF75 /* UIImage+SlideOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8B18E4782100C1EF75 /* UIImage+SlideOverMenu.m */; };
 		7B76FEC518E1DCFB00674702 /* DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */; };
@@ -752,6 +754,9 @@
 		7B09EDE918E45F1D0042BB27 /* DDGMenuItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuItemCell.h; sourceTree = "<group>"; };
 		7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuItemCell.m; sourceTree = "<group>"; };
 		7B15790218C72415002F229B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuHistoryItemCell.xib; sourceTree = "<group>"; };
+		7B6450FC18E5901C005ED543 /* DDGMenuHistoryItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuHistoryItemCell.h; sourceTree = "<group>"; };
+		7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuHistoryItemCell.m; sourceTree = "<group>"; };
 		7B6E2D8718E477CA00C1EF75 /* UIView+SlideOverMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SlideOverMenu.h"; sourceTree = "<group>"; };
 		7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SlideOverMenu.m"; sourceTree = "<group>"; };
 		7B6E2D8A18E4782100C1EF75 /* UIImage+SlideOverMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SlideOverMenu.h"; sourceTree = "<group>"; };
@@ -1494,6 +1499,9 @@
 			isa = PBXGroup;
 			children = (
 				7B76FEC218E1DCCC00674702 /* DDGSlideOverMenuController */,
+				7B6450FC18E5901C005ED543 /* DDGMenuHistoryItemCell.h */,
+				7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */,
+				7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */,
 				7B09EDE918E45F1D0042BB27 /* DDGMenuItemCell.h */,
 				7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */,
 				7B09EDE718E45BCA0042BB27 /* DDGMenuItemCell.xib */,
@@ -1891,6 +1899,7 @@
 				5BDC6B0E174E2FAA0065BB8D /* SettingsMiddleCellBackground.png in Resources */,
 				5BDC6B0F174E2FAA0065BB8D /* SettingsMiddleCellBackground@2x.png in Resources */,
 				5BDC6B10174E2FAA0065BB8D /* SettingsMiddleCellBackgroundHighlighted.png in Resources */,
+				7B6450FB18E58E23005ED543 /* DDGMenuHistoryItemCell.xib in Resources */,
 				5BDC6B11174E2FAA0065BB8D /* SettingsMiddleCellBackgroundHighlighted@2x.png in Resources */,
 				5BDC6B12174E2FAA0065BB8D /* SettingsTopCellBackground.png in Resources */,
 				5BDC6B13174E2FAA0065BB8D /* SettingsTopCellBackground@2x.png in Resources */,
@@ -1988,6 +1997,7 @@
 				5B7A1C9916F0836400354310 /* IGFormElement.m in Sources */,
 				5B7A1C9A16F0836400354310 /* IGFormRadioOption.m in Sources */,
 				5B7A1C9B16F0836400354310 /* IGFormSection.m in Sources */,
+				7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */,
 				5B7A1C9C16F0836400354310 /* IGFormSwitch.m in Sources */,
 				5B7A1C9D16F0836400354310 /* IGFormTextField.m in Sources */,
 				5B7A1C9E16F0836400354310 /* IGFormTextView.m in Sources */,

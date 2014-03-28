@@ -15,7 +15,10 @@
 #import "DDGSearchController.h"
 #import "ECSlidingViewController.h"
 #import "DDGHistoryItemCell.h"
+
+#import "DDGMenuHistoryItemCell.h"
 #import "DDGMenuSectionHeaderView.h"
+
 
 @interface DDGHistoryViewController () <UIGestureRecognizerDelegate> {
     BOOL _showingNoResultsSection;
@@ -58,17 +61,16 @@
             tableView.backgroundColor = [UIColor clearColor];
             tableView.opaque = NO;
             tableView.rowHeight = 44.0;
+            [tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil] forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
         } else {
             tableView.backgroundColor = [UIColor colorWithRed:0.212 green:0.224 blue:0.251 alpha:1.000];
             tableView.rowHeight = 51.0;
+            UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
+            [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
+            tableView.tableFooterView = footerView;
         }
         
-        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
-        [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
-        tableView.tableFooterView = footerView;
-        
         [self.view addSubview:tableView];
-        
         self.tableView = tableView;
     }
     
@@ -349,14 +351,18 @@
     return indexPath;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
     if (indexPath.section < additionalSections) {
         if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)])
             [self.additionalSectionsDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
         return;
     }
+    
+#warning Deselect and return immediately, just for now. Needs to be updated to accomodate the new design
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    return;
     
     [self cancelDeletingIndexPathsAnimated:YES];    
     NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
@@ -407,15 +413,23 @@
     return [sectionInfo numberOfObjects];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
     if (indexPath.section < additionalSections)
-        return [self.additionalSectionsDelegate tableView:tv cellForRowAtIndexPath:indexPath];
+        return [self.additionalSectionsDelegate tableView:tableView cellForRowAtIndexPath:indexPath];
     
-	static NSString *CellIdentifier = @"HistoryCell";
+    /* Added as part of the visual refresh */
+	if (self.mode == DDGHistoryViewControllerModeUnder) {
+        DDGMenuHistoryItemCell *historyItemCell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
+        [self configureHistoryItemCell:historyItemCell atIndexPath:indexPath];
+        return historyItemCell;
+    }
+    /* End */
     
-	DDGHistoryItemCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
+    static NSString *CellIdentifier = @"HistoryCell";
+    
+	DDGHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil)
 	{
@@ -626,6 +640,28 @@
         }
         lbl.text = item.title;        
     }
+}
+
+- (void)configureHistoryItemCell:(DDGMenuHistoryItemCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
+    NSArray *sections = [self.fetchedResultsController sections];
+    NSString *content = nil;
+    if (_showingNoResultsSection && historyIndexPath.section == [sections count]) {
+        cell.notification = YES;
+        BOOL recordHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
+        content = recordHistory ? @"No recent searches or stories." : @"Saving recents is disabled.\nYou can re-enable it in settings";
+    } else {
+        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
+        DDGStory *story = historyItem.story;
+        if (story) {
+            cell.faviconImage = story.feed.image;
+        } else {
+            cell.auxiliaryViewHidden = NO;
+        }
+        content = historyItem.title;
+    }
+    cell.content = content;
 }
 
 @end
