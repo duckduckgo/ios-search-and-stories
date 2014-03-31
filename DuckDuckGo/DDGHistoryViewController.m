@@ -577,7 +577,12 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:tableIndexPath] atIndexPath:tableIndexPath];
+            if (self.mode == DDGHistoryViewControllerModeUnder) {
+                [self configureHistoryItemCell:(DDGMenuHistoryItemCell *)[tableView cellForRowAtIndexPath:tableIndexPath]
+                                   atIndexPath:tableIndexPath];
+            } else {
+                [self configureCell:[tableView cellForRowAtIndexPath:tableIndexPath] atIndexPath:tableIndexPath];
+            }
             break;
             
         case NSFetchedResultsChangeMove:

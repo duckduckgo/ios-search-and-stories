@@ -377,7 +377,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
                                             segmentSize.height);
             tabViewController.segmentedControl.frame = CGRectIntegral(controlRect);
             tabViewController.segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-            tabViewController.searchControllerBackButtonIconDDG = [UIImage imageNamed:@"button_menu_glyph_saved"];
+            tabViewController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Saved"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 
             [tabViewController.controlView addSubview:tabViewController.segmentedControl];
             tabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
@@ -423,7 +423,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.shouldPushSearchHandlerEvents = YES;
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
-            stories.searchControllerBackButtonIconDDG = [UIImage imageNamed:@"button_menu_glyph_home"];
+            stories.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [searchController pushContentViewController:stories animated:NO];
             searchController.state = DDGSearchControllerStateHome;
             viewController = searchController;
