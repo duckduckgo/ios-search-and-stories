@@ -18,6 +18,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
 @property (nonatomic, strong) UIImageView *blurContainerView;
+@property (nonatomic, assign) CGRect panBlurContainerFrame;
+@property (nonatomic, assign) CGPoint panMenuCenterPoint;
+@property (nonatomic, assign) CGPoint panOriginPoint;
 @property (nonatomic, strong, readwrite) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign, readwrite, getter = isShowingMenu) BOOL showingMenu;
 @property (nonatomic, weak, readonly) UIWindow *window;
@@ -36,7 +39,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)hideMenu:(BOOL)animated
 {
     if (self.isShowingMenu) {
-        [self triggerMenuAppearanceTransition:NO animated:animated];
+        [self triggerMenuAppearanceTransition:NO interactive:NO animated:animated];
     }
 }
 
@@ -103,7 +106,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)showMenu:(BOOL)animated
 {
     if (!self.isShowingMenu) {
-        [self triggerMenuAppearanceTransition:YES animated:animated];
+        [self triggerMenuAppearanceTransition:YES interactive:NO animated:animated];
     }
 }
 
@@ -246,6 +249,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     self.animating = NO;
     self.panGesture = [[DDGHorizontalPanGestureRecognizer alloc] initWithTarget:self action:@selector(updateMenuPositionWhilstPanning:)];
+    self.panBlurContainerFrame = CGRectZero;
+    self.panMenuCenterPoint = CGPointZero;
+    self.panOriginPoint = CGPointZero;
     self.showingMenu = NO;
 }
 
@@ -278,10 +284,12 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self notifyObserversAboutMenuAppearanceTransition:YES];
 }
 
-- (void)triggerMenuAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
+- (void)triggerMenuAppearanceTransition:(BOOL)isAppearing interactive:(BOOL)interactive animated:(BOOL)animated
 {
     if (self.menuViewController) {
-        [self setupMenuAppearanceTransition:isAppearing animated:animated];
+        if (!interactive) {
+            [self setupMenuAppearanceTransition:isAppearing animated:animated];
+        }
         CGFloat alpha = isAppearing ? 0.0f : 1.0f;
         CGRect blurContainerFrame = isAppearing ? [self onScreenFrameForBlurContainer] : [self offScreenFrameForBlurContainer];
         CGRect menuViewFrame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
@@ -297,13 +305,17 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                              }
                              completion:^(BOOL finished) {
                                  self.animating = NO;
-                                 [self tearDownMenuAppearanceTransition];
+                                 if (!interactive) {
+                                    [self tearDownMenuAppearanceTransition];
+                                 }
                              }];
         } else {
             [self.blurContainerView setFrame:blurContainerFrame];
             [[self.menuViewController view] setFrame:menuViewFrame];
             [self.window setAlpha:alpha];
-            [self tearDownMenuAppearanceTransition];
+            if (!interactive) {
+                [self tearDownMenuAppearanceTransition];
+            }
         }
     } else {
         [NSException raise:NSInternalInconsistencyException
@@ -328,9 +340,40 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
 }
 
+- (void)updateMenuPositionWithOffset:(CGFloat)offset
+{
+    CGPoint origin = self.panMenuCenterPoint;
+    origin.x += offset;
+    [[self.menuViewController view] setCenter:origin];
+    
+    CGRect bounds = self.panBlurContainerFrame;
+    bounds.size.width += offset;
+    [self.blurContainerView setFrame:bounds];
+    
+    CGFloat alpha = 1.0f - (bounds.size.width / CGRectGetWidth([self.view bounds]));
+    [self.window setAlpha:alpha];
+}
+
 - (void)updateMenuPositionWhilstPanning:(UIPanGestureRecognizer *)recognizer
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
+    if (self.menuViewController) {
+        CGPoint point = [recognizer locationInView:self.view];
+        if (recognizer.state == UIGestureRecognizerStateBegan) {
+            self.panBlurContainerFrame = [self.blurContainerView frame];
+            self.panMenuCenterPoint = [[self.menuViewController view] center];
+            self.panOriginPoint = point;
+            [self setupMenuAppearanceTransition:!self.isShowingMenu animated:YES];
+        } else if (recognizer.state == UIGestureRecognizerStateChanged) {
+            CGFloat distance = point.x - self.panOriginPoint.x;
+            [self updateMenuPositionWithOffset:distance];
+        } else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
+            CGFloat center = CGRectGetMidX([self.view bounds]);
+            CGFloat rightEdge = CGRectGetMaxX([[self.menuViewController view] frame]);
+            [self triggerMenuAppearanceTransition:(rightEdge > center) interactive:YES animated:YES];
+            self.showingMenu = (rightEdge > center);
+            [self tearDownMenuAppearanceTransition];
+        }
+    }
 }
 
 - (UIWindow *)window
