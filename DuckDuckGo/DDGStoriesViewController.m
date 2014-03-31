@@ -178,7 +178,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     panLeftGestureRecognizer.maximumNumberOfTouches = 1;
     
     self.panLeftGestureRecognizer = panLeftGestureRecognizer;
-    [self.slidingViewController.panGesture requireGestureRecognizerToFail:panLeftGestureRecognizer];
+//    [self.slidingViewController.panGesture requireGestureRecognizerToFail:panLeftGestureRecognizer];
+    [[self.slideOverMenuController panGesture] requireGestureRecognizerToFail:panLeftGestureRecognizer];
     
     NSOperationQueue *queue = [NSOperationQueue new];
     queue.maxConcurrentOperationCount = 2;

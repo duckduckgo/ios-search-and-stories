@@ -125,7 +125,7 @@ NSString * const emailRegEx =
 }
 
 - (void)configurePanGestureForViewController:(UIViewController *)viewController {
-    UIGestureRecognizer *panGesture = self.slidingViewController.panGesture;
+    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture]; //self.slidingViewController.panGesture;
     if (nil == panGesture)
         return;
     

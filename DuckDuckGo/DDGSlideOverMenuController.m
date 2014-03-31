@@ -6,6 +6,7 @@
 //
 //
 
+#import "DDGHorizontalPanGestureRecognizer.h"
 #import "DDGSlideOverMenuController.h"
 #import "UIImage+SlideOverMenu.h"
 #import "UIView+SlideOverMenu.h"
@@ -17,6 +18,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
 @property (nonatomic, strong) UIImageView *blurContainerView;
+@property (nonatomic, strong, readwrite) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign, readwrite, getter = isShowingMenu) BOOL showingMenu;
 @property (nonatomic, weak, readonly) UIWindow *window;
 
@@ -47,6 +49,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         [_contentViewController.view removeFromSuperview];
         [_contentViewController willMoveToParentViewController:nil];
         [_contentViewController removeFromParentViewController];
+        [_contentViewController.view removeGestureRecognizer:self.panGesture];
     }
     _contentViewController = contentViewController;
     if (contentViewController) {
@@ -61,6 +64,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         if (self.isShowingMenu) {
             [self updateBlurContainerContent];
         }
+        [contentViewController.view addGestureRecognizer:self.panGesture];
     }
     [self reorderViewStack];
 }
@@ -241,6 +245,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)setup
 {
     self.animating = NO;
+    self.panGesture = [[DDGHorizontalPanGestureRecognizer alloc] initWithTarget:self action:@selector(updateMenuPositionWhilstPanning:)];
     self.showingMenu = NO;
 }
 
@@ -321,6 +326,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self.blurContainerView setFrame:[self frameForBlurContainer]];
     [self updateBlurContainerContent];
     [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
+}
+
+- (void)updateMenuPositionWhilstPanning:(UIPanGestureRecognizer *)recognizer
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
 }
 
 - (UIWindow *)window

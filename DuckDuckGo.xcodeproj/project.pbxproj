@@ -302,6 +302,7 @@
 		7B09EDE818E45BCA0042BB27 /* DDGMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B09EDE718E45BCA0042BB27 /* DDGMenuItemCell.xib */; };
 		7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */; };
 		7B15790318C72415002F229B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B15790218C72415002F229B /* Images.xcassets */; };
+		7B2BDF9D18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BDF9C18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m */; };
 		7B6450FB18E58E23005ED543 /* DDGMenuHistoryItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */; };
 		7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */; };
 		7B6E2D8918E477CA00C1EF75 /* UIView+SlideOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */; };
@@ -754,6 +755,8 @@
 		7B09EDE918E45F1D0042BB27 /* DDGMenuItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuItemCell.h; sourceTree = "<group>"; };
 		7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuItemCell.m; sourceTree = "<group>"; };
 		7B15790218C72415002F229B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		7B2BDF9B18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHorizontalPanGestureRecognizer.h; sourceTree = "<group>"; };
+		7B2BDF9C18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHorizontalPanGestureRecognizer.m; sourceTree = "<group>"; };
 		7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuHistoryItemCell.xib; sourceTree = "<group>"; };
 		7B6450FC18E5901C005ED543 /* DDGMenuHistoryItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuHistoryItemCell.h; sourceTree = "<group>"; };
 		7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuHistoryItemCell.m; sourceTree = "<group>"; };
@@ -1483,6 +1486,8 @@
 		7B76FEC218E1DCCC00674702 /* DDGSlideOverMenuController */ = {
 			isa = PBXGroup;
 			children = (
+				7B2BDF9B18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.h */,
+				7B2BDF9C18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m */,
 				7B76FEC318E1DCFB00674702 /* DDGSlideOverMenuController.h */,
 				7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */,
 				7B6E2D8A18E4782100C1EF75 /* UIImage+SlideOverMenu.h */,
@@ -2004,6 +2009,7 @@
 				5B7A1C9F16F0836400354310 /* IGFormViewController.m in Sources */,
 				5B2FCABC16F231150045A5FE /* NSString+URLEncodingDDG.m in Sources */,
 				5B2FCABF16F3235E0045A5FE /* DDGBookmarkActivity.m in Sources */,
+				7B2BDF9D18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m in Sources */,
 				5B2FCADD16F32BE10045A5FE /* TUSafariActivity.m in Sources */,
 				7B6E2D8C18E4782100C1EF75 /* UIImage+SlideOverMenu.m in Sources */,
 				5B2FCB5E16F3789F0045A5FE /* DDGReadabilityToggleActivity.m in Sources */,

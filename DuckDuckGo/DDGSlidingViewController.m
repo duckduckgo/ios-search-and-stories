@@ -6,25 +6,26 @@
 //
 //
 
+#import "DDGHorizontalPanGestureRecognizer.h"
 #import "DDGSlidingViewController.h"
-#import <UIKit/UIGestureRecognizerSubclass.h>
+//#import <UIKit/UIGestureRecognizerSubclass.h>
 
-@interface DDGHorizontalPanGestureRecognizer : UIPanGestureRecognizer
-
-@end
-
-@implementation DDGHorizontalPanGestureRecognizer
-
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesMoved:touches withEvent:event];
-    
-    CGPoint translation = [self translationInView:self.view];
-    if (abs(translation.y) > abs(translation.x)) {
-        self.state = UIGestureRecognizerStateFailed;
-    }
-}
-
-@end
+//@interface DDGHorizontalPanGestureRecognizer : UIPanGestureRecognizer
+//
+//@end
+//
+//@implementation DDGHorizontalPanGestureRecognizer
+//
+//- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+//    [super touchesMoved:touches withEvent:event];
+//    
+//    CGPoint translation = [self translationInView:self.view];
+//    if (abs(translation.y) > abs(translation.x)) {
+//        self.state = UIGestureRecognizerStateFailed;
+//    }
+//}
+//
+//@end
 
 @interface DDGSlidingViewController ()
 @property (nonatomic, strong) DDGHorizontalPanGestureRecognizer *panGesture;

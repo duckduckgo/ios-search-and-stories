@@ -69,7 +69,7 @@
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     
-    UIGestureRecognizer *panGesture = [self.slidingViewController panGesture];
+    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture]; //[self.slidingViewController panGesture];
     for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
         if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
             [panGesture requireGestureRecognizerToFail:gr];

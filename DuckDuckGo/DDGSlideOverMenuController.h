@@ -16,6 +16,7 @@ extern NSString * const DDGSlideOverMenuDidAppearNotification;
 @property (nonatomic, assign, readonly, getter = isAnimating) BOOL animating;
 @property (nonatomic, strong) UIViewController *contentViewController;
 @property (nonatomic, strong) UIViewController *menuViewController;
+@property (nonatomic, strong, readonly) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign, readonly, getter = isShowingMenu) BOOL showingMenu;
 
 - (void)hideMenu;

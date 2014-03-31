@@ -156,12 +156,14 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     [self.historyViewController.tableView reloadData];
 }
 
--(void)configureViewController:(UIViewController *)viewController {
-    [viewController.view addGestureRecognizer:self.slidingViewController.panGesture];
+-(void)configureViewController:(UIViewController *)viewController
+{
+    //[viewController.view addGestureRecognizer:self.slidingViewController.panGesture];
+    [viewController.view addGestureRecognizer:[self.slideOverMenuController panGesture]];
     
-    viewController.view.layer.shadowOpacity = 0.75f;
-    viewController.view.layer.shadowRadius = 10.0f;
-    viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
+//    viewController.view.layer.shadowOpacity = 0.75f;
+//    viewController.view.layer.shadowRadius = 10.0f;
+//    viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -203,7 +205,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     CGRect frame = self.slidingViewController.topViewController.view.frame;
     self.slidingViewController.topViewController = searchController;
     self.slidingViewController.topViewController.view.frame = frame;
-    [self configureViewController:searchController];
+//    [self configureViewController:searchController];
     
     [searchController.searchBar.searchField becomeFirstResponder];
 }
