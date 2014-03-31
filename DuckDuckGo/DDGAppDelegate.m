@@ -18,6 +18,7 @@
 #import "NSString+URLEncodingDDG.h"
 #import "DDGFirstRunViewController.h"
 #import "DDGSlideOverMenuController.h"
+#import <HockeySDK/HockeySDK.h>
 
 @interface DDGAppDelegate ()
 @property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
@@ -72,7 +73,12 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     //Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
-            
+    
+    // Setup Hockey
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"a29176ab05b9fe95c2b006b585fdfc18"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+    
     //Theme.
     
     [[UINavigationBar appearance] setShadowImage:[[UIImage imageNamed:@"toolbar_shadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0.0, 2.0)]];

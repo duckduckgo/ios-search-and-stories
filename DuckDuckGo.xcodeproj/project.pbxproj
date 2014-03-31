@@ -303,6 +303,10 @@
 		7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */; };
 		7B15790318C72415002F229B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B15790218C72415002F229B /* Images.xcassets */; };
 		7B2BDF9D18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BDF9C18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m */; };
+		7B2BDFA018E997C8003B8078 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2BDF9F18E997C8003B8078 /* CoreText.framework */; };
+		7B2BDFA618E997ED003B8078 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2BDFA218E997ED003B8078 /* HockeySDK.framework */; };
+		7B2BDFA718E997ED003B8078 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA418E997ED003B8078 /* HockeySDK.xcconfig */; };
+		7B2BDFA818E997ED003B8078 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */; };
 		7B6450FB18E58E23005ED543 /* DDGMenuHistoryItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */; };
 		7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */; };
 		7B6E2D8918E477CA00C1EF75 /* UIView+SlideOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */; };
@@ -755,6 +759,10 @@
 		7B15790218C72415002F229B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7B2BDF9B18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHorizontalPanGestureRecognizer.h; sourceTree = "<group>"; };
 		7B2BDF9C18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHorizontalPanGestureRecognizer.m; sourceTree = "<group>"; };
+		7B2BDF9F18E997C8003B8078 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		7B2BDFA218E997ED003B8078 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
+		7B2BDFA418E997ED003B8078 /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
+		7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuHistoryItemCell.xib; sourceTree = "<group>"; };
 		7B6450FC18E5901C005ED543 /* DDGMenuHistoryItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuHistoryItemCell.h; sourceTree = "<group>"; };
 		7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuHistoryItemCell.m; sourceTree = "<group>"; };
@@ -842,6 +850,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B2BDFA018E997C8003B8078 /* CoreText.framework in Frameworks */,
 				C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */,
 				5BFF24AE16F77C0D00844D3B /* CoreData.framework in Frameworks */,
 				5B7A1B7916E649B500354310 /* AVFoundation.framework in Frameworks */,
@@ -861,6 +870,7 @@
 				4CF9ED59154DFCD80075C23E /* MessageUI.framework in Frameworks */,
 				4C1EF85E150C048B00532858 /* QuartzCore.framework in Frameworks */,
 				8345080614AB8D520093C2A1 /* Foundation.framework in Frameworks */,
+				7B2BDFA618E997ED003B8078 /* HockeySDK.framework in Frameworks */,
 				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */,
 				83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */,
@@ -1471,6 +1481,25 @@
 			name = Mogenerated;
 			sourceTree = "<group>";
 		};
+		7B2BDFA118E997ED003B8078 /* HockeySDK.embeddedframework */ = {
+			isa = PBXGroup;
+			children = (
+				7B2BDFA218E997ED003B8078 /* HockeySDK.framework */,
+				7B2BDFA318E997ED003B8078 /* Resources */,
+			);
+			name = HockeySDK.embeddedframework;
+			path = "DuckDuckGo/Vendor/Hockey/HockeySDK-iOS/HockeySDK.embeddedframework";
+			sourceTree = "<group>";
+		};
+		7B2BDFA318E997ED003B8078 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				7B2BDFA418E997ED003B8078 /* HockeySDK.xcconfig */,
+				7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
 		7B76FEC218E1DCCC00674702 /* DDGSlideOverMenuController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1508,6 +1537,8 @@
 		833DB53C1494164F00509F2E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7B2BDFA118E997ED003B8078 /* HockeySDK.embeddedframework */,
+				7B2BDF9F18E997C8003B8078 /* CoreText.framework */,
 				C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */,
 				5BFF24AD16F77C0D00844D3B /* CoreData.framework */,
 				5B66097216D781D00006B5DE /* libz.dylib */,
@@ -1627,6 +1658,7 @@
 				83F32254149290EF00A61BC5 /* Sources */,
 				83F32255149290EF00A61BC5 /* Frameworks */,
 				83F32256149290EF00A61BC5 /* Resources */,
+				7B2BDF9E18E997A2003B8078 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1697,6 +1729,7 @@
 				4C1FD7FF1548FF65006B2511 /* search_field@2x.png in Resources */,
 				4C1FD8021548FF65006B2511 /* spacer8x16.png in Resources */,
 				4C1FD8031548FF65006B2511 /* spacer44x44.png in Resources */,
+				7B2BDFA818E997ED003B8078 /* HockeySDKResources.bundle in Resources */,
 				4C1FD8041548FF65006B2511 /* stop.png in Resources */,
 				4C9A9773154DEAED00286619 /* reload@2x.png in Resources */,
 				4C9A9774154DEAED00286619 /* stop@2x.png in Resources */,
@@ -1795,6 +1828,7 @@
 				5B2FCAD916F32BE10045A5FE /* Safari.png in Resources */,
 				5B2FCADA16F32BE10045A5FE /* Safari@2x.png in Resources */,
 				5B2FCADB16F32BE10045A5FE /* Safari@2x~ipad.png in Resources */,
+				7B2BDFA718E997ED003B8078 /* HockeySDK.xcconfig in Resources */,
 				5B2FCADC16F32BE10045A5FE /* Safari~ipad.png in Resources */,
 				5BFF24DD16FA0C1600844D3B /* (null) in Resources */,
 				5BFF24DE16FA0C1600844D3B /* (null) in Resources */,
@@ -1926,6 +1960,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "cd \"$SRCROOT/DuckDuckGo\"\n/usr/local/bin/mogenerator --template-var arc=true -m Stories.xcdatamodeld/Stories.xcdatamodel";
+		};
+		7B2BDF9E18E997A2003B8078 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "FILE=\"${SRCROOT}/DuckDuckGo/Vendor/Hockey/HockeySDK-iOS/BuildAgent\"\nif [ -f \"$FILE\" ]; then\n\"$FILE\"\nfi";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -2132,6 +2179,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEBUG = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DuckDuckGo/Vendor/Hockey/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				GENERATE_PROFILING_CODE = YES;
@@ -2242,6 +2293,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG = 1;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DuckDuckGo/Vendor/Hockey/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				GENERATE_PROFILING_CODE = YES;
@@ -2273,6 +2328,10 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				DEBUG = 0;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/DuckDuckGo/Vendor/Hockey/HockeySDK-iOS/HockeySDK.embeddedframework",
+				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
 				GENERATE_PROFILING_CODE = YES;
