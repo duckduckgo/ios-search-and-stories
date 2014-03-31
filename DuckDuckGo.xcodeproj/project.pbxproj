@@ -576,8 +576,6 @@
 		5B5C844B172543F400EBD62E /* icon-notification_large.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-notification_large.png"; sourceTree = "<group>"; };
 		5B5C844C172543F400EBD62E /* icon-notification_large@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-notification_large@2x.png"; sourceTree = "<group>"; };
 		5B5C845417256A9A00EBD62E /* DDGHistoryNoResultsDisabledView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGHistoryNoResultsDisabledView.xib; sourceTree = "<group>"; };
-		5B66096F16D781B20006B5DE /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libTestFlight.a; path = TestFlightSDK1/libTestFlight.a; sourceTree = "<group>"; };
-		5B66097016D781B20006B5DE /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestFlight.h; path = TestFlightSDK1/TestFlight.h; sourceTree = "<group>"; };
 		5B66097216D781D00006B5DE /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		5B66097616D7A3600006B5DE /* DDGFaviconButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGFaviconButton.h; sourceTree = "<group>"; };
 		5B66097716D7A3600006B5DE /* DDGFaviconButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGFaviconButton.m; sourceTree = "<group>"; };
@@ -1120,7 +1118,6 @@
 			isa = PBXGroup;
 			children = (
 				5B2FCAC016F32BE10045A5FE /* TUSafariActivity */,
-				5B66096E16D7817A0006B5DE /* TestFlight */,
 				5BA321EA16C9054A0066BCB0 /* SDURLCache */,
 				5BA321A816C904BA0066BCB0 /* AFNetworking */,
 				5BA321EF16C906060066BCB0 /* NSOperationStack */,
@@ -1227,15 +1224,6 @@
 				5B2FCB5D16F3789F0045A5FE /* DDGReadabilityToggleActivity.m */,
 			);
 			name = "Web View";
-			sourceTree = "<group>";
-		};
-		5B66096E16D7817A0006B5DE /* TestFlight */ = {
-			isa = PBXGroup;
-			children = (
-				5B66096F16D781B20006B5DE /* libTestFlight.a */,
-				5B66097016D781B20006B5DE /* TestFlight.h */,
-			);
-			name = TestFlight;
 			sourceTree = "<group>";
 		};
 		5B7A1B4416E4DC9200354310 /* Toolbar */ = {
@@ -2150,10 +2138,7 @@
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -2263,10 +2248,7 @@
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
@@ -2297,10 +2279,7 @@
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/DuckDuckGo/TestFlightSDK1\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
