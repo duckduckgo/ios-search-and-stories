@@ -18,8 +18,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
 @property (nonatomic, strong) UIImageView *blurContainerView;
-@property (nonatomic, assign) CGRect panBlurContainerFrame;
-@property (nonatomic, assign) CGPoint panMenuCenterPoint;
+@property (nonatomic, assign) CGRect originalBlurContainerFrame;
+@property (nonatomic, assign) CGPoint originalMenuCenterPoint;
 @property (nonatomic, assign) CGPoint panOriginPoint;
 @property (nonatomic, strong, readwrite) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign, readwrite, getter = isShowingMenu) BOOL showingMenu;
@@ -248,9 +248,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)setup
 {
     self.animating = NO;
+    self.originalBlurContainerFrame = CGRectZero;
+    self.originalMenuCenterPoint = CGPointZero;
     self.panGesture = [[DDGHorizontalPanGestureRecognizer alloc] initWithTarget:self action:@selector(updateMenuPositionWhilstPanning:)];
-    self.panBlurContainerFrame = CGRectZero;
-    self.panMenuCenterPoint = CGPointZero;
     self.panOriginPoint = CGPointZero;
     self.showingMenu = NO;
 }
@@ -342,11 +342,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)updateMenuPositionWithOffset:(CGFloat)offset
 {
-    CGPoint origin = self.panMenuCenterPoint;
+    CGPoint origin = self.originalMenuCenterPoint;
     origin.x += offset;
     [[self.menuViewController view] setCenter:origin];
     
-    CGRect bounds = self.panBlurContainerFrame;
+    CGRect bounds = self.originalBlurContainerFrame;
     bounds.size.width += offset;
     [self.blurContainerView setFrame:bounds];
     
@@ -359,8 +359,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     if (self.menuViewController) {
         CGPoint point = [recognizer locationInView:self.view];
         if (recognizer.state == UIGestureRecognizerStateBegan) {
-            self.panBlurContainerFrame = [self.blurContainerView frame];
-            self.panMenuCenterPoint = [[self.menuViewController view] center];
+            self.originalBlurContainerFrame = [self.blurContainerView frame];
+            self.originalMenuCenterPoint = [[self.menuViewController view] center];
             self.panOriginPoint = point;
             [self setupMenuAppearanceTransition:!self.isShowingMenu animated:YES];
         } else if (recognizer.state == UIGestureRecognizerStateChanged) {
