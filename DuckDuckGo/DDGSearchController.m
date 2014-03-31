@@ -89,7 +89,7 @@ NSString * const emailRegEx =
     }
     
     if (image == nil)
-        image = [UIImage imageNamed:@"button_menu_glyph_under"];
+        image = [[UIImage imageNamed:@"Menu"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
     [self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];

@@ -14,7 +14,7 @@
 -(id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if(self) {
-        [self customInit];
+        [self setup];
     }
     return self;
 }
@@ -22,16 +22,20 @@
 -(id)initWithCoder:(NSCoder *)aDecoder {
     self = [super initWithCoder:aDecoder];
     if(self) {
-        [self customInit];
+        [self setup];
     }
     return self;
 }
 
--(void)customInit {
+-(void)setup
+{
     [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
     [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
     
-    self.background = [[UIImage imageNamed:@"search_field.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0, 2.0)];
+    self.backgroundColor = [UIColor whiteColor];
+    CALayer *layer = self.layer;
+    layer.cornerRadius = 2.0f;
+    layer.masksToBounds = YES;
     
     progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"load_bar.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0, 2.0)]];
     progressView.frame = CGRectMake(2, 2, 100, 27);
@@ -94,26 +98,6 @@
         progressView.frame = f;
     }
         progress = newProgress;
-}
-
-// this adds a drop shadow under the text which is only visible when the progress bar is visible
-- (void) drawTextInRect:(CGRect)rect {
-    CGSize shadowOffset = CGSizeMake(0, 1);
-    CGFloat shadowBlur = 0;
-    
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSaveGState(context);
-    
-    float components[4] = {1, 1, 1, 0.75};
-    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    CGColorRef shadowColor = CGColorCreate( colorSpace, components);
-    CGContextSetShadowWithColor(context, shadowOffset, shadowBlur, shadowColor);
-    CGColorRelease(shadowColor);
-	CGColorSpaceRelease(colorSpace);
-    
-    [super drawTextInRect:rect];
-    
-    CGContextRestoreGState(context);
 }
 
 @end
