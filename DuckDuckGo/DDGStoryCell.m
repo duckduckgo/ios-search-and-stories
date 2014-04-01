@@ -6,7 +6,6 @@
 //
 //
 
-#import "DDGStoryBackgroundView.h"
 #import "DDGFaviconButton.h"
 #import "DDGStoryCell.h"
 
@@ -14,9 +13,9 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 @interface DDGStoryCell ()
 
+@property (nonatomic, strong) UIImageView *backgroundImageView;
+@property (nonatomic, strong) UIView *contentBackgroundView;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
-@property (nonatomic, strong) UIImageView *overlayImageView;
-@property (nonatomic, strong) DDGStoryBackgroundView *storyBackgroundView;
 
 @end
 
@@ -35,11 +34,6 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 #pragma mark -
 
-- (void)setBlurredImage:(UIImage *)blurredImage
-{
-    [self.storyBackgroundView setBlurredImage:blurredImage];
-}
-
 - (void)setFavicon:(UIImage *)favicon
 {
     _favicon = favicon;
@@ -53,7 +47,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 - (void)setImage:(UIImage *)image
 {
-    [self.storyBackgroundView setBackgroundImage:image];
+    [self.backgroundImageView setImage:image];
 }
 
 - (void)setTitle:(NSString *)title
@@ -72,17 +66,16 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 - (void)configure
 {
-    DDGStoryBackgroundView *storyBackgroundView = [DDGStoryBackgroundView new];
-    [self.contentView addSubview:storyBackgroundView];
-    self.storyBackgroundView = storyBackgroundView;
+    UIImageView *backgroundImageView = [UIImageView new];
+    backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+    backgroundImageView.clipsToBounds = YES;
+    [self.contentView addSubview:backgroundImageView];
+    self.backgroundImageView = backgroundImageView;
     
-    UIImageView *overlayImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"topic_cell_background"]];
-    overlayImageView.opaque = NO;
-    overlayImageView.backgroundColor = [UIColor clearColor];
-    overlayImageView.contentMode = UIViewContentModeTop;
-    overlayImageView.clipsToBounds = YES;
-    [self.contentView addSubview:overlayImageView];
-    self.overlayImageView = overlayImageView;
+    UIView *contentBackgroundView = [UIView new];
+    contentBackgroundView.backgroundColor = [UIColor duckLightGray];
+    [self.contentView addSubview:contentBackgroundView];
+    self.contentBackgroundView = contentBackgroundView;
     
     self.textLabel.backgroundColor = [UIColor clearColor];
     self.textLabel.opaque = NO;
@@ -96,19 +89,6 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     [faviconButton addTarget:nil action:@selector(filter:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:faviconButton];
     self.faviconButton = faviconButton;
-    
-    CGRect bounds = self.contentView.bounds;
-    UIView *gratituousWhiteStripe = [[UIView alloc] initWithFrame:CGRectMake(0, bounds.size.height-1, bounds.size.width, 1.0)];
-    gratituousWhiteStripe.backgroundColor = [UIColor whiteColor];
-    gratituousWhiteStripe.opaque = YES;
-    gratituousWhiteStripe.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-    [self.contentView addSubview:gratituousWhiteStripe];
-}
-
-- (void)redraw
-{
-    [self setNeedsLayout];
-    [self.storyBackgroundView setNeedsDisplay];
 }
 
 #pragma mark -
@@ -120,7 +100,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     
     //Let's set everything up.
     CGRect bounds = self.contentView.bounds;
-    [self.storyBackgroundView setFrame:bounds];
+    [self.backgroundImageView setFrame:bounds];
     
     CGRect faviconFrame = self.faviconButton.frame;    
     
@@ -133,32 +113,30 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
                                                                                  NSParagraphStyleAttributeName: paragraphStyle}
                                                                           context:nil]).size;
     
-    CGRect overlayFrame = self.overlayImageView.frame;
+    CGRect contentBackgroundFrame = [self.contentBackgroundView frame];
     CGFloat lineHeight = self.textLabel.font.lineHeight + 2.0;
     
     BOOL multiLine = (textSize.height > lineHeight);
     
     if (multiLine) {
-        overlayFrame.size.height = self.overlayImageView.image.size.height;
+        contentBackgroundFrame.size.height = 51.0f;
     } else {
-        overlayFrame.size.height = MAX(lineHeight, 38.0);
+        contentBackgroundFrame.size.height = MAX(lineHeight, 38.0);
     }
     
-    overlayFrame.origin.x = 0;
-    overlayFrame.origin.y = bounds.size.height - overlayFrame.size.height;
-    overlayFrame.size.width = bounds.size.width;
+    contentBackgroundFrame.origin.x = 0;
+    contentBackgroundFrame.origin.y = bounds.size.height - contentBackgroundFrame.size.height;
+    contentBackgroundFrame.size.width = bounds.size.width;
     
-    self.overlayImageView.alpha = 0.6;
-    self.overlayImageView.frame = overlayFrame;
-    [self.storyBackgroundView setBlurRect:overlayFrame];
+    [self.contentBackgroundView setFrame:contentBackgroundFrame];
     
     //Make sure the favicon is the right size and in the right position.
-    faviconFrame.origin.y = overlayFrame.origin.y + ((overlayFrame.size.height - faviconFrame.size.height)/2.0);
+    faviconFrame.origin.y = contentBackgroundFrame.origin.y + ((contentBackgroundFrame.size.height - faviconFrame.size.height)/2.0);
     faviconFrame.size = CGSizeMake(40.0, 40.0);
     
     self.faviconButton.frame = CGRectIntegral(faviconFrame);
     
-    CGRect textFrame = self.overlayImageView.frame;
+    CGRect textFrame = [self.contentBackgroundView frame];
     textFrame.origin.y += 1.0;
     textFrame.origin.x += faviconFrame.size.width;
     textFrame.size.width = textWidth;
@@ -169,7 +147,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 - (void)prepareForReuse
 {
     [super prepareForReuse];
-    [self.storyBackgroundView reset];
+    [self.backgroundImageView setImage:nil];
 }
 
 @end

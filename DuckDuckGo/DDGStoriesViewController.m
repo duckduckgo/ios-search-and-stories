@@ -768,6 +768,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             UIGraphicsEndImageContext();
             
             //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
+            /*
             if (!story.blurredImage) {
                 CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
                 
@@ -784,6 +785,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
                 story.blurredImage = [UIImage imageWithCGImage:filteredImage];
                 CGImageRelease(filteredImage);
             }
+             */
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [weakSelf.decompressedImages setObject:decompressed forKey:storyID];
@@ -1000,14 +1002,13 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.title = story.title;
-    cell.titleColor = story.readValue ? [UIColor colorWithWhite:1.0f alpha:0.5f] : [UIColor whiteColor];
+    cell.titleColor = [UIColor duckBlack];
     if (story.feed) {
         cell.favicon = [story.feed image];
     }
     UIImage *image = self.decompressedImages[story.id];
     if (image) {
         cell.image = image;
-        cell.blurredImage = story.blurredImage;
     } else {
         if (story.isImageDownloaded) {
             [self decompressAndDisplayImageForStory:story];
@@ -1015,7 +1016,6 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             [self.storyFetcher downloadImageForStory:story];
         }
     }
-    [cell redraw];
 }
 
 
