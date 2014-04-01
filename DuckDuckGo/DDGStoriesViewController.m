@@ -160,7 +160,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     
     if (!self.savedStoriesOnly && refreshHeaderView == nil) {
 		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
-		refreshHeaderView.delegate = self;
+		refreshHeaderView.backgroundColor = [UIColor duckRed];
+        refreshHeaderView.delegate = self;
 		[self.tableView addSubview:refreshHeaderView];
         [refreshHeaderView refreshLastUpdatedDate];
 	}

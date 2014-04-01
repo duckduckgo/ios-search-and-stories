@@ -23,7 +23,7 @@
 
 + (UIColor *)duckBlack
 {
-    return [UIColor colorWithRed:24.0f/255.0f green:24.0f/255.0f blue:24.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:47.0f/255.0f green:47.0f/255.0f blue:47.0f/255.0f alpha:1.0f];
 }
 
 + (UIColor *)duckGray
@@ -33,13 +33,13 @@
 
 + (UIColor *)duckLightGray
 {
-    CGFloat component = 237.0f/255.0f;
+    CGFloat component = 240.0f/255.0f;
     return [UIColor colorWithRed:component green:component blue:component alpha:1.0f];
 }
 
 + (UIColor *)duckRed
 {
-    return [UIColor colorWithRed:185.0f/255.0f green:59.0f/255.0f blue:42.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:217.0f/255.0f green:73.0f/255.0f blue:38.0f/255.0f alpha:1.0f];
 }
 
 @end
