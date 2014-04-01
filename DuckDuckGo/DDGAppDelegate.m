@@ -10,7 +10,6 @@
 #import "DDGHistoryProvider.h"
 #import "SDURLCache.h"
 #import "DDGSettingsViewController.h"
-#import "DDGSlidingViewController.h"
 #import "AFNetworking.h"
 #import "DDGUnderViewController.h"
 #import "DDGSearchController.h"

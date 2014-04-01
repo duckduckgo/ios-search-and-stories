@@ -10,7 +10,6 @@
 #import "DDGBookmarksProvider.h"
 #import "DDGSearchController.h"
 #import "DDGUnderViewController.h"
-#import "ECSlidingViewController.h"
 #import "DDGPlusButton.h"
 #import "DDGHistoryItemCell.h"
 
@@ -69,7 +68,7 @@
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     
-    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture]; //[self.slidingViewController panGesture];
+    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
     for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
         if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
             [panGesture requireGestureRecognizerToFail:gr];
@@ -118,8 +117,9 @@
     [self.navigationItem setRightBarButtonItem:(edit ? self.doneBarButtonItem : self.editBarButtonItem) animated:NO];
 }
 
--(void)leftButtonPressed {
-    [self.slidingViewController anchorTopViewTo:ECRight];
+-(void)leftButtonPressed
+{
+    [self.slideOverMenuController showMenu];
 }
 
 - (void)reenableScrollsToTop {

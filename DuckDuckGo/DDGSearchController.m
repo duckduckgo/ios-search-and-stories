@@ -13,7 +13,6 @@
 #import "DDGInputAccessoryView.h"
 #import "DDGBookmarksViewController.h"
 #import "DDGAutocompleteViewController.h"
-#import "ECSlidingViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
@@ -125,7 +124,7 @@ NSString * const emailRegEx =
 }
 
 - (void)configurePanGestureForViewController:(UIViewController *)viewController {
-    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture]; //self.slidingViewController.panGesture;
+    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
     if (nil == panGesture)
         return;
     
@@ -684,7 +683,7 @@ NSString * const emailRegEx =
     self.searchBar.showsCancelButton = YES;
     [self.searchBar layoutIfNeeded:0.25];
     
-    self.slidingViewController.panGesture.enabled = NO;
+    [[self.slideOverMenuController panGesture] setEnabled:NO];
     
     autocompleteOpen = YES;
 }
@@ -696,7 +695,7 @@ NSString * const emailRegEx =
     
     autocompleteOpen = NO;
 
-    self.slidingViewController.panGesture.enabled = YES;
+    [[self.slideOverMenuController panGesture] setEnabled:YES];
     
     [self.searchBar.searchField resignFirstResponder];
     if(!barUpdated) {

@@ -13,7 +13,6 @@
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
 #import "DDGHistoryProvider.h"
-#import "ECSlidingViewController.h"
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
 #import "DDGReadabilitySettingViewController.h"
@@ -77,8 +76,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 	[self viewWillLayoutSubviews];
 }
 
--(void)leftButtonPressed {
-    [self.slidingViewController anchorTopViewTo:ECRight];
+-(void)leftButtonPressed
+{
+    [self.slideOverMenuController showMenu];
 }
 
 - (void)viewWillAppear:(BOOL)animated {

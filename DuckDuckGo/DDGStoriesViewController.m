@@ -14,7 +14,6 @@
 #import "DDGStoryFeed.h"
 #import "DDGStoryCell.h"
 #import "NSArray+ConcurrentIteration.h"
-#import "ECSlidingViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
@@ -179,7 +178,6 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     panLeftGestureRecognizer.maximumNumberOfTouches = 1;
     
     self.panLeftGestureRecognizer = panLeftGestureRecognizer;
-//    [self.slidingViewController.panGesture requireGestureRecognizerToFail:panLeftGestureRecognizer];
     [[self.slideOverMenuController panGesture] requireGestureRecognizerToFail:panLeftGestureRecognizer];
     
     NSOperationQueue *queue = [NSOperationQueue new];
@@ -385,12 +383,14 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 #pragma mark - Search handler
 
--(void)searchControllerLeftButtonPressed {
-    [self.slidingViewController anchorTopViewTo:ECRight];
+-(void)searchControllerLeftButtonPressed
+{
+    [self.slideOverMenuController showMenu];
 }
 
--(void)loadQueryOrURL:(NSString *)queryOrURL {
-    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:queryOrURL];
+-(void)loadQueryOrURL:(NSString *)queryOrURL
+{
+    [(DDGUnderViewController *)[self.slideOverMenuController menuViewController] loadQueryOrURL:queryOrURL];
 }
 
 #pragma mark - Swipe View
@@ -491,7 +491,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
                              completion();
                      }];
     
-    [self.slidingViewController.panGesture setEnabled:YES];
+    [[self.slideOverMenuController panGesture] setEnabled:YES];
 }
 
 - (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath {
@@ -560,7 +560,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
             
-            [self.slidingViewController.panGesture setEnabled:NO];
+            [[self.slideOverMenuController panGesture] setEnabled:NO];
             
             if (velocity.x < 0 && percent > 0.25) {
                 CGFloat distanceRemaining = contentFrame.size.width - offset;

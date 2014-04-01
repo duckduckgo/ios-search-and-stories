@@ -7,7 +7,6 @@
 //
 
 #import "DDGUnderViewController.h"
-#import "ECSlidingViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGWebViewController.h"
 #import "DDGHistoryProvider.h"
@@ -156,16 +155,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     [self.historyViewController.tableView reloadData];
 }
 
--(void)configureViewController:(UIViewController *)viewController
-{
-    //[viewController.view addGestureRecognizer:self.slidingViewController.panGesture];
-    [viewController.view addGestureRecognizer:[self.slideOverMenuController panGesture]];
-    
-//    viewController.view.layer.shadowOpacity = 0.75f;
-//    viewController.view.layer.shadowRadius = 10.0f;
-//    viewController.view.layer.shadowColor = [UIColor blackColor].CGColor;
-}
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -179,12 +168,13 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 #pragma mark - DDGSearchHandler
 
-- (void)beginSearchInputWithString:(NSString *)string {
-    UIViewController *topViewController = self.slidingViewController.topViewController;
-    if ([topViewController isKindOfClass:[DDGSearchController class]]) {
-        DDGSearchController *searchController = (DDGSearchController *)topViewController;
-        DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
-        [self.slidingViewController resetTopViewWithAnimations:nil onComplete:^{
+- (void)beginSearchInputWithString:(NSString *)string
+{
+    UIViewController *contentViewController = [self.slideOverMenuController contentViewController];
+    if (contentViewController && [contentViewController isKindOfClass:[DDGSearchController class]]) {
+        DDGSearchController *searchController = (DDGSearchController *)contentViewController;
+        DDGAddressBarTextField *searchField = [searchController.searchBar searchField];
+        [self.slideOverMenuController hideMenu:YES completion:^{
             [searchField becomeFirstResponder];
             searchField.text = string;
             [searchController searchFieldDidChange:nil];
@@ -200,12 +190,9 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
-    searchController.state = DDGSearchControllerStateWeb;    
+    searchController.state = DDGSearchControllerStateWeb;
     
-    CGRect frame = self.slidingViewController.topViewController.view.frame;
-    self.slidingViewController.topViewController = searchController;
-    self.slidingViewController.topViewController.view.frame = frame;
-//    [self configureViewController:searchController];
+    [self.slideOverMenuController setContentViewController:searchController];
     
     [searchController.searchBar.searchField becomeFirstResponder];
 }
@@ -479,18 +466,6 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-	CGSize sz = [[UIScreen mainScreen] bounds].size;
-	CGFloat width;
-	if (UIInterfaceOrientationIsPortrait(toInterfaceOrientation))
-		width = sz.width;
-	else
-		width = sz.height;
-	
-    [self.slidingViewController setAnchorRightRevealAmount:width - 65.0];
 }
 
 #pragma mark - DDGTabViewControllerDelegate

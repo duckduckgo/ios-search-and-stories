@@ -21,6 +21,7 @@ extern NSString * const DDGSlideOverMenuDidAppearNotification;
 
 - (void)hideMenu;
 - (void)hideMenu:(BOOL)animated;
+- (void)hideMenu:(BOOL)animated completion:(void(^)())completion;
 - (void)showMenu;
 - (void)showMenu:(BOOL)animated;
 

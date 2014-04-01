@@ -33,13 +33,18 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)hideMenu
 {
-    [self hideMenu:YES];
+    [self hideMenu:YES completion:nil];
 }
 
 - (void)hideMenu:(BOOL)animated
 {
+    [self hideMenu:animated completion:nil];
+}
+
+- (void)hideMenu:(BOOL)animated completion:(void (^)())completion
+{
     if (self.isShowingMenu) {
-        [self triggerMenuAppearanceTransition:NO interactive:NO animated:animated];
+        [self triggerMenuAppearanceTransition:NO interactive:NO animated:animated completion:completion];
     }
 }
 
@@ -109,7 +114,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)showMenu:(BOOL)animated
 {
     if (!self.isShowingMenu) {
-        [self triggerMenuAppearanceTransition:YES interactive:NO animated:animated];
+        [self triggerMenuAppearanceTransition:YES interactive:NO animated:animated completion:nil];
     }
 }
 
@@ -289,7 +294,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self notifyObserversAboutMenuAppearanceTransition:YES];
 }
 
-- (void)triggerMenuAppearanceTransition:(BOOL)isAppearing interactive:(BOOL)interactive animated:(BOOL)animated
+- (void)triggerMenuAppearanceTransition:(BOOL)isAppearing interactive:(BOOL)interactive animated:(BOOL)animated completion:(void (^)())completion
 {
     if (self.menuViewController) {
         if (!interactive) {
@@ -313,6 +318,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                                  if (!interactive) {
                                     [self tearDownMenuAppearanceTransition];
                                  }
+                                 if (completion) {
+                                     completion();
+                                 }
                              }];
         } else {
             [self.blurContainerView setFrame:blurContainerFrame];
@@ -320,6 +328,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
             [self.window setAlpha:alpha];
             if (!interactive) {
                 [self tearDownMenuAppearanceTransition];
+            }
+            if (completion) {
+                completion();
             }
         }
     } else {
@@ -374,7 +385,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         } else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
             CGFloat center = CGRectGetMidX([self.view bounds]);
             CGFloat rightEdge = CGRectGetMaxX([[self.menuViewController view] frame]);
-            [self triggerMenuAppearanceTransition:(rightEdge > center) interactive:YES animated:YES];
+            [self triggerMenuAppearanceTransition:(rightEdge > center) interactive:YES animated:YES completion:nil];
             self.showingMenu = (rightEdge > center);
             [self tearDownMenuAppearanceTransition];
         }

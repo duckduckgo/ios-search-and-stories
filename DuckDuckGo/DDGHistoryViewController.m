@@ -13,7 +13,6 @@
 #import "DDGStory.h"
 #import "DDGSettingsViewController.h"
 #import "DDGSearchController.h"
-#import "ECSlidingViewController.h"
 #import "DDGHistoryItemCell.h"
 
 #import "DDGMenuHistoryItemCell.h"
@@ -319,7 +318,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture]; //[self.slidingViewController panGesture];
+    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
     for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
         if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
             [panGesture requireGestureRecognizerToFail:gr];

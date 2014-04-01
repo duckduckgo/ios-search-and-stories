@@ -10,7 +10,6 @@
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
-#import "ECSlidingViewController.h"
 #import "DDGUnderViewController.h"
 #import "DDGUtility.h"
 #import "DDGStory.h"
