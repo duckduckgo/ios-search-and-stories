@@ -50,6 +50,11 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     [self.backgroundImageView setImage:image];
 }
 
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    // Empty stub!
+}
+
 - (void)setTitle:(NSString *)title
 {
     _title = [title copy];
