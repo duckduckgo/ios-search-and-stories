@@ -98,22 +98,27 @@
     self.tableView.scrollsToTop = YES;
 }
 
-- (void)cancelDeletingIndexPathsAnimated:(BOOL)animated {
+- (void)cancelDeletingIndexPathsAnimated:(BOOL)animated
+{
     for (NSIndexPath *indexPath in self.deletingIndexPaths) {
-        DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        [cell setDeleting:NO animated:animated];
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        if (self.mode == DDGHistoryViewControllerModeUnder) {
+            [(DDGMenuHistoryItemCell *)cell setDeletable:NO animated:animated];
+        } else {
+            [(DDGHistoryItemCell *)cell setDeleting:NO animated:animated];
+        }
     }
     [self.deletingIndexPaths removeAllObjects];
 }
 
-- (void)swipeLeft:(UISwipeGestureRecognizer *)swipe {
-#warning Need to re-enable once deletion is working again
-    //[self swipe:swipe direction:UISwipeGestureRecognizerDirectionLeft];
+- (void)swipeLeft:(UISwipeGestureRecognizer *)swipe
+{
+    [self swipe:swipe direction:UISwipeGestureRecognizerDirectionLeft];
 }
 
-- (void)swipeRight:(UISwipeGestureRecognizer *)swipe {
-#warning Need to re-enable once deletion is working again
-//    [self swipe:swipe direction:UISwipeGestureRecognizerDirectionRight];
+- (void)swipeRight:(UISwipeGestureRecognizer *)swipe
+{
+    [self swipe:swipe direction:UISwipeGestureRecognizerDirectionRight];
 }
 
 - (void)swipe:(UISwipeGestureRecognizer *)swipe direction:(UISwipeGestureRecognizerDirection)direction {
@@ -135,8 +140,12 @@
             
             BOOL deleting = (direction == UISwipeGestureRecognizerDirectionLeft);
             
-            DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-            [cell setDeleting:deleting animated:YES];
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            if (self.mode == DDGHistoryViewControllerModeUnder) {
+                [(DDGMenuHistoryItemCell *)cell setDeletable:deleting animated:YES];
+            } else {
+                [(DDGHistoryItemCell *)cell setDeleting:deleting animated:YES];
+            }
             
             if (deleting)
                 [self.deletingIndexPaths addObject:indexPath];            
@@ -368,8 +377,7 @@
         return;
     }
 
-#warning Need to re-enable once deletion is working again
-//    [self cancelDeletingIndexPathsAnimated:YES];    
+    [self cancelDeletingIndexPathsAnimated:YES];    
     NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
     
     NSArray *sections = [self.fetchedResultsController sections];
@@ -670,6 +678,10 @@
             cell.auxiliaryViewHidden = NO;
         }
         content = historyItem.title;
+        __weak typeof(self) weakSelf = self;
+        [cell setDeleteBlock:^(id sender) {
+            [weakSelf delete:sender];
+        }];
     }
     cell.content = content;
 }

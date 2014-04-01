@@ -11,7 +11,9 @@
 @interface DDGMenuHistoryItemCell ()
 
 @property (nonatomic, weak) IBOutlet UIImageView *auxiliaryImageView;
+@property (nonatomic, weak) IBOutlet UIView *buttonContainerView;
 @property (nonatomic, weak) IBOutlet UILabel *contentLabel;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contentContainerWidthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *contentLabelRightConstraint;
 @property (nonatomic, weak) IBOutlet UIImageView *faviconImageView;
 
@@ -23,9 +25,19 @@
 {
     [super awakeFromNib];
     self.backgroundColor = [UIColor clearColor];
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDeleteButtonTap:)];
+    [self.buttonContainerView addGestureRecognizer:tapGestureRecognizer];
     self.opaque = NO;
     self.tintColor = [UIColor duckRed];
     [self reset];
+}
+
+- (void)handleDeleteButtonTap:(UITapGestureRecognizer *)recognizer
+{
+    NSLog(@"%s", __PRETTY_FUNCTION__);
+    if (self.deleteBlock) {
+        self.deleteBlock(self);
+    }
 }
 
 - (void)prepareForReuse
@@ -40,6 +52,7 @@
     self.auxiliaryViewHidden = YES;
     [self.faviconImageView setContentMode:UIViewContentModeCenter];
     self.notification = NO;
+    [self setDeletable:NO animated:NO];
 }
 
 - (void)setAuxiliaryViewHidden:(BOOL)hidden
@@ -47,13 +60,30 @@
     _auxiliaryViewHidden = hidden;
     [self.auxiliaryImageView setHidden:hidden];
     [self.contentLabelRightConstraint setConstant:hidden ? 15.0f : 39.0f];
-    [self setNeedsUpdateConstraints];
+    [self layoutIfNeeded];
 }
 
 - (void)setContent:(NSString *)content
 {
     _content = [content copy];
     [self.contentLabel setText:content];
+}
+
+- (void)setDeletable:(BOOL)deletable animated:(BOOL)animated
+{
+    [self.contentView layoutIfNeeded];
+    if (animated) {
+        [UIView animateWithDuration:0.25
+                              delay:0
+                            options:UIViewAnimationOptionCurveEaseInOut
+                         animations:^{
+                             [self.contentContainerWidthConstraint setConstant:deletable ? 246.0f : CGRectGetWidth(self.bounds)];
+                             [self layoutIfNeeded];
+                         } completion:nil];
+    } else {
+        [self.contentContainerWidthConstraint setConstant:deletable ? 246.0f : CGRectGetWidth(self.bounds)];
+        [self layoutIfNeeded];
+    }
 }
 
 - (void)setFaviconImage:(UIImage *)faviconImage
