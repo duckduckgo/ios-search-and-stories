@@ -15,6 +15,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIView *contentBackgroundView;
+@property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
 
 @end
@@ -82,6 +83,12 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     [self.contentView addSubview:contentBackgroundView];
     self.contentBackgroundView = contentBackgroundView;
     
+    UIView *dropShadowView = [UIView new];
+    dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.25f];
+    dropShadowView.opaque = NO;
+    [self.contentView addSubview:dropShadowView];
+    self.dropShadowView = dropShadowView;
+    
     self.textLabel.backgroundColor = [UIColor clearColor];
     self.textLabel.opaque = NO;
     self.textLabel.numberOfLines = 2;
@@ -105,7 +112,11 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     
     //Let's set everything up.
     CGRect bounds = self.contentView.bounds;
+    
     [self.backgroundImageView setFrame:bounds];
+    CGRect dropShadowBounds = bounds;
+    dropShadowBounds.size.height = 1.0f;
+    [self.dropShadowView setFrame:dropShadowBounds];
     
     CGRect faviconFrame = self.faviconButton.frame;    
     
