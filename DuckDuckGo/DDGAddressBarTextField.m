@@ -37,7 +37,8 @@
     layer.cornerRadius = 2.0f;
     layer.masksToBounds = YES;
     
-    progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"load_bar.png"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0, 2.0)]];
+    progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"Loading"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    progressView.tintColor = [UIColor duckLightBlue];
     progressView.frame = CGRectMake(2, 2, 100, 27);
     [self insertSubview:progressView atIndex:1];
     

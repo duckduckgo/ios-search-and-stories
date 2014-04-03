@@ -15,6 +15,7 @@
 /* Visual Refresh */
 + (UIColor *)duckBlack;
 + (UIColor *)duckGray;
++ (UIColor *)duckLightBlue;
 + (UIColor *)duckLightGray;
 + (UIColor *)duckRed;
 
