@@ -573,7 +573,8 @@ NSString * const emailRegEx =
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
     if(canGoBack)
-        [self.searchBar.orangeButton setImage:[UIImage imageNamed:@"button_menu_glyph_back"] forState:UIControlStateNormal];
+        [self.searchBar.orangeButton setImage:[[UIImage imageNamed:@"Back"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                     forState:UIControlStateNormal];
     else
         [self setSearchBarOrangeButtonImage];
 }
