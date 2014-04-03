@@ -268,7 +268,9 @@ NSString * const emailRegEx =
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
     
-    [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
+    if ([self.controllers count] > 0) {
+        [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
+    }
 }
 
 #pragma mark - UIPageViewControllerDelegate, UIPageViewControllerDataSource
