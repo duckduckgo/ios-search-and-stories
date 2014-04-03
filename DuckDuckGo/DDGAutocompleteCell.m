@@ -7,12 +7,15 @@
 //
 
 #import "DDGAutocompleteCell.h"
-#import "DDGPlusButton.h"
+//#import "DDGPlusButton.h"
 
 @interface DDGAutocompleteCell ()
-@property (nonatomic, strong, readwrite) DDGPlusButton *plusButton;
+
+//@property (nonatomic, strong, readwrite) DDGPlusButton *plusButton;
+@property (nonatomic, strong) UIButton *button;
 @property (nonatomic, weak, readwrite) UIImageView *roundedImageView;
 @property (nonatomic, weak, readwrite) UIView *separatorLine;
+
 @end
 
 @implementation DDGAutocompleteCell
@@ -48,20 +51,18 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
 }
 
 
-- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
+- (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier
+{
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0];
-        self.textLabel.textColor = [UIColor colorWithRed:0.353 green:0.373 blue:0.400 alpha:1.000];
         self.textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
         self.textLabel.numberOfLines = 1;
+        self.tintColor = [UIColor autocompleteHeaderColor];
         self.selectionStyle = UITableViewCellSelectionStyleGray;
         self.backgroundView = [[UIView alloc] init];
         self.backgroundView.backgroundColor = [UIColor whiteColor];
         
         self.detailTextLabel.numberOfLines = 2;
-        self.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:13.0];
-        self.detailTextLabel.textColor = [UIColor colorWithRed:0.549 green:0.565 blue:0.580 alpha:1.000];        
         
         UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 53, 53)];
         iv.contentMode = UIViewContentModeScaleAspectFit;
@@ -69,8 +70,6 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
         iv.backgroundColor = [UIColor whiteColor];
         
         CALayer *layer = iv.layer;
-        layer.borderWidth = 0.5;
-        layer.borderColor = [UIColor colorWithRed:0.812 green:0.820 blue:0.835 alpha:1.000].CGColor;
         layer.cornerRadius = 4.0;
         
         [self.contentView insertSubview:iv aboveSubview:self.imageView];
@@ -81,39 +80,29 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
         UIView *separatorLine = [[UIView alloc] initWithFrame:CGRectMake(0, frame.size.height-1.0, frame.size.width, 1.0)];
         separatorLine.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
         separatorLine.clipsToBounds = YES;
-        separatorLine.backgroundColor = [UIColor lightGrayColor];
+        separatorLine.backgroundColor = [UIColor autocompleteHeaderColor];
         [self addSubview:separatorLine];
         self.separatorLine = separatorLine;
         
+        UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 44.0f, 44.0f)];
+        [button setImage:[UIImage imageNamed:@"Plus"] forState:UIControlStateNormal];
+        self.button = button;
     }
     return self;
 }
 
-- (BOOL)showsSeparatorLine {
+- (BOOL)showsSeparatorLine
+{
     return (!self.separatorLine.isHidden);
 }
 
-- (void)setShowsSeparatorLine:(BOOL)showsSeparatorLine {
+- (void)setShowsSeparatorLine:(BOOL)showsSeparatorLine
+{
     self.separatorLine.hidden = (!showsSeparatorLine);
 }
 
-- (void)setShowsPlusButton:(BOOL)showsPlusButton {
-    if (showsPlusButton == _showsPlusButton)
-        return;
-    
-    if (showsPlusButton) {
-        if (nil == self.plusButton)
-            self.plusButton = [DDGPlusButton lightPlusButton];
-        self.accessoryView = self.plusButton;
-    } else {
-        [self.plusButton removeFromSuperview];
-        self.accessoryView = nil;
-    }
-    
-    [self setNeedsLayout];
-}
-
-- (void)layoutSubviews {
+- (void)layoutSubviews
+{
     [super layoutSubviews];
     
     self.roundedImageView.hidden = (nil == self.roundedImageView.image);
@@ -128,10 +117,8 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
     CGRect textRect = self.textLabel.frame;
     CGRect detailRect = self.detailTextLabel.frame;
     
-    self.accessoryView.frame = CGRectMake(bounds.size.width - accessoryRect.size.width + 6.0,
-                                          accessoryRect.origin.y,
-                                          accessoryRect.size.width,
-                                          accessoryRect.size.height);
+    CGPoint center = CGPointMake(CGRectGetMaxX(bounds) - (CGRectGetWidth(accessoryRect) * 0.5f), CGRectGetMidY(bounds));
+    [self.accessoryView setCenter:center];
     
     self.contentView.frame = CGRectMake(contentRect.origin.x,
                                         contentRect.origin.y,
@@ -149,10 +136,26 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
                                             detailRect.size.height);
 }
 
--(void)prepareForReuse {
+- (void)prepareForReuse
+{
     [super prepareForReuse];
-    self.showsPlusButton = NO;
-    [self.plusButton removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    [self.button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
+    self.accessoryView = nil;
+    [self setAdorned:NO];
+}
+
+- (void)setAdorned:(BOOL)adorned
+{
+    [self.textLabel setFont:adorned ? [UIFont boldSystemFontOfSize:17.0f] : [UIFont systemFontOfSize:17.0f]];
+    [self.textLabel setTextColor:adorned ? [UIColor autocompleteTitleColor] : [UIColor autocompleteTextColor]];
+    [self.detailTextLabel setFont:adorned ? [UIFont systemFontOfSize:15.0f] : [UIFont systemFontOfSize:15.0f]];
+    [self.detailTextLabel setTextColor:adorned ? [UIColor autocompleteDetailColor] : [UIColor autocompleteTextColor]];
+}
+
+- (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents
+{
+    [self.button addTarget:target action:action forControlEvents:controlEvents];
+    self.accessoryView = self.button;
 }
 
 @end

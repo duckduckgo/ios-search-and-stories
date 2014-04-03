@@ -251,7 +251,8 @@ static NSString *historyCellID = @"HCell";
             cell = [[DDGAutocompleteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:suggestionCellID];
             cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
         }
-		
+		[cell setAdorned:NO];
+        
 		lineHidden = (indexPath.row == self.suggestions.count - 1) ? YES : NO;
 
         NSArray *suggestions = self.suggestions;
@@ -264,15 +265,15 @@ static NSString *historyCellID = @"HCell";
         cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
         cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
         
-        cell.showsPlusButton = YES;
-        [cell.plusButton addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
+        [cell addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
         
         UIImage *image = nil;
         if([[suggestionItem objectForKey:@"image"] length]) {
             NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
             image = [self.imageCache objectForKey:URL];
+            [cell setAdorned:YES];
 		} else {
-            image = [UIImage imageNamed:@"search_generic.png"];
+            image = [[UIImage imageNamed:@"SearchBig"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         }
              
         cell.roundedImageView.image = image;

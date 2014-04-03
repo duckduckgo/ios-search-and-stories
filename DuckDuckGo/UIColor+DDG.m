@@ -47,4 +47,24 @@
     return [UIColor colorWithRed:217.0f/255.0f green:73.0f/255.0f blue:38.0f/255.0f alpha:1.0f];
 }
 
++ (UIColor *)autocompleteDetailColor
+{
+    return RGBA(140.0f, 145.0f, 148.0f, 1.0f);
+}
+
++ (UIColor *)autocompleteHeaderColor
+{
+    return RGBA(225.0f, 225.0f, 225.0f, 1.0f);
+}
+
++ (UIColor *)autocompleteTextColor
+{
+    return RGBA(57.0f, 57.0f, 57.0f, 1.0f);
+}
+
++ (UIColor *)autocompleteTitleColor
+{
+    return RGBA(89.0f, 95.0f, 102.0f, 1.0f);
+}
+
 @end
