@@ -15,7 +15,6 @@
 
 - (void)commonInit {
     self.buttonSpacing = 5.0;
-    
     [self setNeedsLayout];
 }
 
@@ -35,6 +34,13 @@
         [self commonInit];
     }
     return self;
+}
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    [self.rightButton setImage:[[UIImage imageNamed:@"Share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                      forState:UIControlStateNormal];
 }
 
 - (void)setShowsCancelButton:(BOOL)show {
