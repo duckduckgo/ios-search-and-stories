@@ -197,8 +197,12 @@ NSString * const emailRegEx =
 	}
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    
+    [[self.searchBar bangButton] setImage:[[UIImage imageNamed:@"Bang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                 forState:UIControlStateNormal];
     
     DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
     autocompleteVC.historyProvider = self.historyProvider;
