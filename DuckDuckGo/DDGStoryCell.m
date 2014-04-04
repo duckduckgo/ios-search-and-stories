@@ -11,6 +11,8 @@
 
 NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
+CGFloat const DDGTitleBarHeight = 35.0f;
+
 @interface DDGStoryCell ()
 
 @property (nonatomic, strong) UIImageView *backgroundImageView;
@@ -90,9 +92,9 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.dropShadowView = dropShadowView;
     
     self.textLabel.backgroundColor = [UIColor clearColor];
-    self.textLabel.opaque = NO;
-    self.textLabel.numberOfLines = 2;
     self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0f];
+    self.textLabel.numberOfLines = 2;
+    self.textLabel.opaque = NO;
     
     DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
     faviconButton.frame = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
@@ -113,7 +115,9 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     //Let's set everything up.
     CGRect bounds = self.contentView.bounds;
     
-    [self.backgroundImageView setFrame:bounds];
+    CGRect backgroundImageViewBounds = bounds;
+    backgroundImageViewBounds.size.height -= DDGTitleBarHeight;
+    [self.backgroundImageView setFrame:backgroundImageViewBounds];
     CGRect dropShadowBounds = bounds;
     dropShadowBounds.size.height = 1.0f;
     [self.dropShadowView setFrame:dropShadowBounds];
@@ -137,7 +141,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     if (multiLine) {
         contentBackgroundFrame.size.height = 51.0f;
     } else {
-        contentBackgroundFrame.size.height = MAX(lineHeight, 38.0);
+        contentBackgroundFrame.size.height = MAX(lineHeight, DDGTitleBarHeight);
     }
     
     contentBackgroundFrame.origin.x = 0;
@@ -146,11 +150,9 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     
     [self.contentBackgroundView setFrame:contentBackgroundFrame];
     
-    //Make sure the favicon is the right size and in the right position.
-    faviconFrame.origin.y = contentBackgroundFrame.origin.y + ((contentBackgroundFrame.size.height - faviconFrame.size.height)/2.0);
-    faviconFrame.size = CGSizeMake(40.0, 40.0);
-    
-    self.faviconButton.frame = CGRectIntegral(faviconFrame);
+    CGPoint center = [self.faviconButton center];
+    center.y = CGRectGetMidY(contentBackgroundFrame);
+    [self.faviconButton setCenter:center];
     
     CGRect textFrame = [self.contentBackgroundView frame];
     textFrame.origin.y += 1.0;

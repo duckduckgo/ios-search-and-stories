@@ -143,7 +143,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     tableView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
     tableView.dataSource = self;
     tableView.delegate = self;
-    tableView.rowHeight = 155.0;
+    tableView.rowHeight = 220.0f;
     tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:tableView];
     self.tableView = tableView;
