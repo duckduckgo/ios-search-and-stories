@@ -128,7 +128,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 - (UIImage *)searchControllerBackButtonIconDDG {
-    return [UIImage imageNamed:@"button_menu_glyph_settings"];
+    return [[UIImage imageNamed:@"Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];;
 }
 
 #pragma mark - Rotation
