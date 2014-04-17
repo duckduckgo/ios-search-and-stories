@@ -17,6 +17,10 @@
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
 @property (nonatomic, strong) UIImage *searchIcon;
+
+@property (nonatomic, weak) IBOutlet UIImageView *largeIconImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *smallIconImageView;
+
 @end
 
 @implementation DDGBookmarksViewController
@@ -32,7 +36,13 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    [self.largeIconImageView setTintColor:[UIColor whiteColor]];
+    [self.largeIconImageView setImage:[[UIImage imageNamed:@"NoFavorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    
+    [self.smallIconImageView setTintColor:RGBA(245.0f, 203.0f, 196.0f, 1.0f)];
+    [self.smallIconImageView setImage:[[UIImage imageNamed:@"inline_actions-icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    
     NSParameterAssert(nil != self.searchController);
     
     self.tableView.frame = self.view.bounds;

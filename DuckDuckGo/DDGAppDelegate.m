@@ -129,6 +129,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
                                                             NSShadowAttributeName: titleTextHighlightedShadow
     } forState:UIControlStateHighlighted];
     
+    /*
     [[UISegmentedControl appearance] setBackgroundImage:[UIImage imageNamed:@"segment_normal"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
     [[UISegmentedControl appearance] setBackgroundImage:[UIImage imageNamed:@"segment_selected"] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
     [[UISegmentedControl appearance] setDividerImage:[UIImage imageNamed:@"segment_normal_normal"]
@@ -152,6 +153,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     } forState:UIControlStateNormal];
     [[UISegmentedControl appearance] setContentPositionAdjustment:UIOffsetMake(4.0, 0.0) forSegmentType:UISegmentedControlSegmentLeft barMetrics:UIBarMetricsDefault];
     [[UISegmentedControl appearance] setContentPositionAdjustment:UIOffsetMake(-4.0, 0.0) forSegmentType:UISegmentedControlSegmentRight barMetrics:UIBarMetricsDefault];
+     */
 
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];

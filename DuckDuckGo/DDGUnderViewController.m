@@ -335,7 +335,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         case DDGViewControllerTypeSaved:
         {
             DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
-            bookmarks.title = NSLocalizedString(@"Favorite Searches", @"View controller title: Saved Searches");
+            bookmarks.title = NSLocalizedString(@"Searches", @"View controller title: Saved Searches");
             
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.state = DDGSearchControllerStateHome;
@@ -343,7 +343,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
             stories.savedStoriesOnly = YES;
-            stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
+            stories.title = NSLocalizedString(@"Stories", @"View controller title: Saved Stories");
             
             DDGTabViewController *tabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[bookmarks, stories]];            
             
@@ -352,7 +352,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             
             tabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionBottom;
             tabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-            tabViewController.controlView.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_header_background"]];
+            tabViewController.controlView.backgroundColor = [UIColor duckLightGray]; //[UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_header_background"]];
             [tabViewController.segmentedControl sizeToFit];
 
             CGRect controlBounds = tabViewController.controlView.bounds;
