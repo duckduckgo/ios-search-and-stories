@@ -103,7 +103,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
                           } mutableCopy]];
-        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Favorites",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                           } mutableCopy]];
     } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
@@ -120,14 +120,14 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Stories",
                             DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeStories)
                             } mutableCopy]];
-        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Favorites",
                             DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                             } mutableCopy]];
     } else {
         [types addObject:[@{DDGViewControllerTypeTitleKey : @"Home",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeHome)
                           } mutableCopy]];
-        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Saved",
+        [types addObject:[@{DDGViewControllerTypeTitleKey : @"Favorites",
                           DDGViewControllerTypeTypeKey: @(DDGViewControllerTypeSaved)
                           } mutableCopy]];        
     }
@@ -335,7 +335,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         case DDGViewControllerTypeSaved:
         {
             DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
-            bookmarks.title = NSLocalizedString(@"Saved Searches", @"View controller title: Saved Searches");
+            bookmarks.title = NSLocalizedString(@"Favorite Searches", @"View controller title: Saved Searches");
             
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.state = DDGSearchControllerStateHome;
@@ -343,7 +343,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
             stories.savedStoriesOnly = YES;
-            stories.title = NSLocalizedString(@"Saved Stories", @"View controller title: Saved Stories");
+            stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
             
             DDGTabViewController *tabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[bookmarks, stories]];            
             

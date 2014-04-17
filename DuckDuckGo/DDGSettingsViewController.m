@@ -152,7 +152,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
     [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
     [self addRadioOptionWithTitle:@"Recent" value:DDGSettingHomeViewTypeRecents key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeRecents]];
-    [self addRadioOptionWithTitle:@"Saved" value:DDGSettingHomeViewTypeSaved key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];    
+    [self addRadioOptionWithTitle:@"Favorites" value:DDGSettingHomeViewTypeSaved key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];    
     [self addRadioOptionWithTitle:@"Duckmode" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
     
     [self addSectionWithTitle:@"Stories" footer:nil];
