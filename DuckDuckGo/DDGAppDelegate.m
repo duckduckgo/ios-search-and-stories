@@ -161,7 +161,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.searchHandler = under;
         
-    DDGSlideOverMenuController *slideOverMenuController = [DDGSlideOverMenuController new];
+    DDGSlideOverMenuController *slideOverMenuController = [[DDGSlideOverMenuController alloc] initWithMode:DDGSlideOverMenuModeVertical];
     slideOverMenuController.menuViewController = under;
     [self.window setRootViewController:slideOverMenuController];
   

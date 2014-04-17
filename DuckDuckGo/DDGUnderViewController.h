@@ -27,7 +27,7 @@ typedef enum DDGViewControllerType {
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
 
--(void)configureViewController:(UIViewController *)viewController;
+//-(void)configureViewController:(UIViewController *)viewController;
 
 - (UIViewController *)viewControllerForType:(DDGViewControllerType)type;
 @end

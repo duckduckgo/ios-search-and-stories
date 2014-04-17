@@ -8,6 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, DDGSlideOverMenuMode) {
+    DDGSlideOverMenuModeHorizontal = 0,
+    DDGSlideOverMenuModeVertical
+};
+
 extern NSString * const DDGSlideOverMenuWillAppearNotification;
 extern NSString * const DDGSlideOverMenuDidAppearNotification;
 
@@ -18,6 +23,8 @@ extern NSString * const DDGSlideOverMenuDidAppearNotification;
 @property (nonatomic, strong) UIViewController *menuViewController;
 @property (nonatomic, strong, readonly) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign, readonly, getter = isShowingMenu) BOOL showingMenu;
+
+- (instancetype)initWithMode:(DDGSlideOverMenuMode)mode;
 
 - (void)hideMenu;
 - (void)hideMenu:(BOOL)animated;

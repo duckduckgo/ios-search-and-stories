@@ -18,6 +18,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
 @property (nonatomic, strong) UIImageView *blurContainerView;
+@property (nonatomic, assign, getter = isInteractive) BOOL interactive;
+@property (nonatomic, assign) DDGSlideOverMenuMode mode;
 @property (nonatomic, assign) CGRect originalBlurContainerFrame;
 @property (nonatomic, assign) CGPoint originalMenuCenterPoint;
 @property (nonatomic, assign) CGPoint panOriginPoint;
@@ -75,7 +77,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         if (self.isShowingMenu) {
             [self updateBlurContainerContent];
         }
-        [contentViewController.view addGestureRecognizer:self.panGesture];
+        if (self.isInteractive) {
+            [contentViewController.view addGestureRecognizer:self.panGesture];
+        }
     }
     [self reorderViewStack];
 }
@@ -134,6 +138,17 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     self = [super initWithCoder:aDecoder];
     if (self) {
         [self setup];
+    }
+    return self;
+}
+
+- (instancetype)initWithMode:(DDGSlideOverMenuMode)mode
+{
+    self = [super init];
+    if (self) {
+        self.interactive = (mode == DDGSlideOverMenuModeHorizontal);
+        self.mode = mode;
+        [self setupBlurContainer];
     }
     return self;
 }
@@ -222,14 +237,23 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (CGRect)offScreenFrameForBlurContainer
 {
     CGRect frame = [self.view bounds];
-    frame.size.width = 0.0f;
+    if (self.mode == DDGSlideOverMenuModeHorizontal) {
+        frame.size.width = 0.0f;
+    } else {
+        frame.origin.y = CGRectGetHeight(frame);
+        frame.size.height = 0.0f;
+    }
     return frame;
 }
 
 - (CGRect)offScreenFrameForMenuViewController
 {
     CGRect frame = [self.view bounds];
-    frame.origin.x -= CGRectGetWidth(frame);
+    if (self.mode == DDGSlideOverMenuModeHorizontal) {
+        frame.origin.x -= CGRectGetWidth(frame);
+    } else {
+        frame.origin.y = CGRectGetHeight(frame);
+    }
     return frame;
 }
 
@@ -257,6 +281,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     self.animating = NO;
     [self.view setBackgroundColor:[UIColor duckLightGray]];
+    self.interactive = YES;
+    self.mode = DDGSlideOverMenuModeHorizontal;
     self.originalBlurContainerFrame = CGRectZero;
     self.originalMenuCenterPoint = CGPointZero;
     self.panGesture = [[DDGHorizontalPanGestureRecognizer alloc] initWithTarget:self action:@selector(updateMenuPositionWhilstPanning:)];
@@ -267,10 +293,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)setupBlurContainer
 {
-    CGRect frame = [self onScreenFrameForMenuViewController];
-    frame.size.width = 0.0f;
+    CGRect frame = [self offScreenFrameForBlurContainer];
     UIImageView *blurContainerView = [[UIImageView alloc] initWithFrame:frame];
-    blurContainerView.contentMode = UIViewContentModeTopLeft;
+    blurContainerView.contentMode = (self.mode == DDGSlideOverMenuModeHorizontal ? UIViewContentModeTopLeft : UIViewContentModeBottomLeft);
     blurContainerView.clipsToBounds = YES;
     [self.view addSubview:blurContainerView];
     self.blurContainerView = blurContainerView;
@@ -305,7 +330,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         CGRect menuViewFrame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
         if (animated) {
             self.animating = YES;
-            [UIView animateWithDuration:0.25
+            [UIView animateWithDuration:(self.mode == DDGSlideOverMenuModeHorizontal ? 0.25 : 0.375)
                                   delay:0
                                 options:UIViewAnimationOptionAllowUserInteraction | UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionCurveEaseInOut
                              animations:^{
@@ -372,7 +397,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)updateMenuPositionWhilstPanning:(UIPanGestureRecognizer *)recognizer
 {
-    if (self.menuViewController) {
+    if (self.menuViewController && self.isInteractive) {
         CGPoint point = [recognizer locationInView:self.view];
         if (recognizer.state == UIGestureRecognizerStateBegan) {
             self.originalBlurContainerFrame = [self.blurContainerView frame];
