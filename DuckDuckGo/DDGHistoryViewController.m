@@ -212,7 +212,7 @@
 }
 
 - (UIImage *)searchControllerBackButtonIconDDG {
-    return [UIImage imageNamed:@"button_menu_glyph_home"];
+    return [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
 - (IBAction)plus:(id)sender {
