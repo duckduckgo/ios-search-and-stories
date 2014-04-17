@@ -41,6 +41,8 @@
     [super awakeFromNib];
     [self.rightButton setImage:[[UIImage imageNamed:@"Share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                       forState:UIControlStateNormal];
+    [self.rightButton setImage:[[UIImage imageNamed:@"Share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                      forState:UIControlStateHighlighted];
 }
 
 - (void)setShowsCancelButton:(BOOL)show {
