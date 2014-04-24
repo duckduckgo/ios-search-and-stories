@@ -46,7 +46,9 @@ NSInteger const DDGSmallImageViewTag = 2;
 @property (nonatomic, strong) DDGPanGestureRecognizer *panLeftGestureRecognizer;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
-@property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
+@property (nonatomic, weak) IBOutlet UIButton *swipeViewSaveButton;
+@property (nonatomic, weak) IBOutlet UIButton *swipeViewSafariButton;
+@property (nonatomic, weak) IBOutlet UIButton *swipeViewShareButton;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
 @property (nonatomic, strong) NSCache *decompressedImages;
@@ -505,26 +507,29 @@ NSInteger const DDGSmallImageViewTag = 2;
     [[self.slideOverMenuController panGesture] setEnabled:YES];
 }
 
-- (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath {
+- (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath
+{
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if (nil != cell) {
+    if (cell) {
         UIView *behindView = cell.contentView;
         CGRect swipeFrame = behindView.frame;
-        
-        if (nil == self.swipeView)
+        if (!self.swipeView) {
             [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
-        
+        }
+        [self.swipeView setTintColor:[UIColor whiteColor]];
         DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
         BOOL saved = story.savedValue;
-        
-        NSString *imageName = (saved) ? @"swipe-un-save" : @"swipe-save";
-        [self.swipeViewSaveButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-        
+        NSString *imageName = (saved) ? @"swipe-un-save" : @"Favorite";
+        [self.swipeViewSafariButton setImage:[[UIImage imageNamed:@"Safari"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                    forState:UIControlStateNormal];
+        [self.swipeViewSaveButton setImage:[[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                  forState:UIControlStateNormal];
+        [self.swipeViewShareButton setImage:[[UIImage imageNamed:@"ShareSwipe"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                   forState:UIControlStateNormal];
         self.swipeView.frame = swipeFrame;
         [behindView.superview insertSubview:self.swipeView belowSubview:behindView];
         self.swipeViewIndexPath = indexPath;
     }
-    
 }
 
 - (void)showSwipeViewForIndexPath:(NSIndexPath *)indexPath {
