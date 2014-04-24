@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5053" systemVersion="13C64" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="5056" systemVersion="13C1021" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3733"/>
     </dependencies>
@@ -66,8 +66,8 @@
                                     <constraint firstAttribute="height" constant="16" id="eEU-sU-Uid"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="168" translatesAutoresizingMaskIntoConstraints="NO" id="Ams-D9-cNe" userLabel="Content">
-                                <rect key="frame" x="39" y="0.0" width="168" height="43"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="150" translatesAutoresizingMaskIntoConstraints="NO" id="Ams-D9-cNe" userLabel="Content">
+                                <rect key="frame" x="48" y="0.0" width="150" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <nil key="highlightedColor"/>
@@ -75,14 +75,14 @@
                         </subviews>
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="6YO-QK-YwU" secondAttribute="trailing" constant="15" id="3Q5-CY-iBa"/>
-                            <constraint firstAttribute="trailing" secondItem="Ams-D9-cNe" secondAttribute="trailing" constant="39" id="4Hb-4R-SjV"/>
                             <constraint firstAttribute="centerY" secondItem="A97-YL-AYi" secondAttribute="centerY" id="90Z-jb-UlO"/>
                             <constraint firstItem="A97-YL-AYi" firstAttribute="leading" secondItem="4fu-vO-iG6" secondAttribute="leading" constant="15" id="FsQ-lU-UXt"/>
-                            <constraint firstItem="Ams-D9-cNe" firstAttribute="top" secondItem="4fu-vO-iG6" secondAttribute="top" id="N3v-uU-yWS"/>
+                            <constraint firstItem="Ams-D9-cNe" firstAttribute="top" secondItem="4fu-vO-iG6" secondAttribute="top" id="NLv-RN-sPk"/>
+                            <constraint firstItem="Ams-D9-cNe" firstAttribute="leading" secondItem="A97-YL-AYi" secondAttribute="trailing" constant="17" id="Ovx-bN-vZT"/>
+                            <constraint firstAttribute="bottom" secondItem="Ams-D9-cNe" secondAttribute="bottom" id="cF7-RA-jfm"/>
                             <constraint firstAttribute="centerY" secondItem="6YO-QK-YwU" secondAttribute="centerY" id="gYe-iN-HnR"/>
                             <constraint firstAttribute="width" constant="246" id="jeg-37-D56"/>
-                            <constraint firstItem="Ams-D9-cNe" firstAttribute="leading" secondItem="A97-YL-AYi" secondAttribute="trailing" constant="8" id="nBE-Kb-GLQ"/>
-                            <constraint firstAttribute="bottom" secondItem="Ams-D9-cNe" secondAttribute="bottom" id="vFV-20-7Lq"/>
+                            <constraint firstAttribute="trailing" secondItem="Ams-D9-cNe" secondAttribute="trailing" constant="48" id="p3u-u6-q65"/>
                         </constraints>
                     </view>
                 </subviews>
@@ -99,7 +99,6 @@
                 <outlet property="buttonContainerView" destination="umN-QZ-6wk" id="ncw-jj-Ls2"/>
                 <outlet property="contentContainerWidthConstraint" destination="jeg-37-D56" id="uTK-Ko-MQI"/>
                 <outlet property="contentLabel" destination="Ams-D9-cNe" id="oos-oX-Xpr"/>
-                <outlet property="contentLabelRightConstraint" destination="4Hb-4R-SjV" id="wfU-ul-Peu"/>
                 <outlet property="faviconImageView" destination="A97-YL-AYi" id="rxn-O2-kQB"/>
             </connections>
         </tableViewCell>

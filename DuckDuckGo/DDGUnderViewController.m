@@ -293,7 +293,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 50.0f;
+    //return 50.0f;
+    return 64.0f;
 }
 
 -(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -304,7 +305,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     sectionHeaderView.closeBlock = ^(){
         [weakSelf.slideOverMenuController hideMenu];
     };
-    sectionHeaderView.title = @"Menu";
+//    sectionHeaderView.title = @"Menu";
+    sectionHeaderView.title = @"";
     return sectionHeaderView;
 }
 
