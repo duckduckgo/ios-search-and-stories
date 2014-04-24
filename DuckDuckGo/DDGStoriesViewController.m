@@ -49,7 +49,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 @property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
-@property (nonatomic, strong) NSMutableDictionary *decompressedImages;
+@property (nonatomic, strong) NSCache *decompressedImages;
 @property (nonatomic, strong) NSMutableSet *enqueuedDecompressionOperations;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
@@ -196,7 +196,11 @@ NSInteger const DDGSmallImageViewTag = 2;
     decompressionQueue.name = @"DDG Watercooler Image Decompression Queue";
     self.imageDecompressionQueue = decompressionQueue;
     
-    self.decompressedImages = [NSMutableDictionary dictionaryWithCapacity:50];
+    NSCache *decompressedImages = [NSCache new];
+    [decompressedImages setCountLimit:50];
+    [decompressedImages setName:@"com.duckduckgo.mobile.ios.story-image-cache"];
+    self.decompressedImages = decompressedImages;
+    
     self.enqueuedDownloadOperations = [NSMutableSet new];
     self.enqueuedDecompressionOperations = [NSMutableSet set];    
 }
@@ -1014,7 +1018,7 @@ NSInteger const DDGSmallImageViewTag = 2;
     if (story.feed) {
         cell.favicon = [story.feed image];
     }
-    UIImage *image = self.decompressedImages[story.id];
+    UIImage *image = [self.decompressedImages objectForKey:story.id];
     if (image) {
         cell.image = image;
     } else {
