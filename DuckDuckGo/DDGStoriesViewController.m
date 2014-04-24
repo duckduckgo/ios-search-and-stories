@@ -93,18 +93,15 @@ NSInteger const DDGSmallImageViewTag = 2;
     return _historyProvider;
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
-    
-    self.decompressedImages = nil;
-    
+    [self.decompressedImages removeAllObjects];
     if (nil == self.view) {
         [self.imageDownloadQueue cancelAllOperations];
-        self.imageDownloadQueue = nil;
-        self.enqueuedDownloadOperations = nil;
+        [self.enqueuedDownloadOperations removeAllObjects];
         [self.imageDecompressionQueue cancelAllOperations];
-        self.imageDecompressionQueue = nil;
-        self.enqueuedDecompressionOperations = nil;
+        [self.enqueuedDecompressionOperations removeAllObjects];
     }
 }
 
