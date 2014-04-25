@@ -44,7 +44,7 @@
 
 + (UIColor *)duckRed
 {
-    return [UIColor colorWithRed:217.0f/255.0f green:73.0f/255.0f blue:38.0f/255.0f alpha:1.0f];
+    return [UIColor colorWithRed:204.0f/255.0f green:105.0f/255.0f blue:86.0f/255.0f alpha:1.0f];
 }
 
 + (UIColor *)autocompleteDetailColor

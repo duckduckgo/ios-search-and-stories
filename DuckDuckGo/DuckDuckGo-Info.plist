@@ -9,12 +9,7 @@
 	<key>CFBundleExecutable</key>
 	<string>${EXECUTABLE_NAME}</string>
 	<key>CFBundleIconFiles</key>
-	<array>
-		<string>icon57x.png</string>
-		<string>icon57x@2x.png</string>
-		<string>icon72x.png</string>
-		<string>icon72x@2x.png</string>
-	</array>
+	<array/>
 	<key>CFBundleIcons</key>
 	<dict/>
 	<key>CFBundleIcons~ipad</key>
