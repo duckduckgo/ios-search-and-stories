@@ -519,7 +519,7 @@ NSInteger const DDGSmallImageViewTag = 2;
         [self.swipeView setTintColor:[UIColor whiteColor]];
         DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
         BOOL saved = story.savedValue;
-        NSString *imageName = (saved) ? @"swipe-un-save" : @"Favorite";
+        NSString *imageName = (saved) ? @"Unfavorite" : @"Favorite";
         [self.swipeViewSafariButton setImage:[[UIImage imageNamed:@"Safari"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                                     forState:UIControlStateNormal];
         [self.swipeViewSaveButton setImage:[[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
