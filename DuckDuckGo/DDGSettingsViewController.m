@@ -16,7 +16,6 @@
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
 #import "DDGReadabilitySettingViewController.h"
-#import "DDGGroupedTableViewCell.h"
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
@@ -262,7 +261,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 -(IGFormSwitch *)addSwitch:(NSString *)title forKey:(NSString *)key enabled:(BOOL)enabled {
     IGFormSwitch *formSwitch = [super addSwitch:title forKey:key enabled:enabled];
-    formSwitch.switchControl.onTintColor = [UIColor colorWithRed:0.212 green:0.455 blue:0.698 alpha:1.000];
+    formSwitch.switchControl.onTintColor = [UIColor duckRed];
     return formSwitch;
 }
 

@@ -28,7 +28,7 @@ typedef enum DDGReadabilityMode {
     DDGReadabilityModeOnExclusive
 } DDGReadabilityMode;
 
-#define DDG_SETTINGS_BACKGROUND_COLOR [UIColor colorWithRed:0.910 green:0.914 blue:0.922 alpha:1.000]
+#define DDG_SETTINGS_BACKGROUND_COLOR [UIColor colorWithRed:248.0f/255.0f green:248.0f/255.0f blue:248.0f/255.0f alpha:1.000]
 
 #define DDG_SETTINGS_HEADER(view, title) view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];           \
 view.opaque = NO;   \
@@ -37,11 +37,9 @@ view.backgroundColor = [UIColor clearColor];    \
 titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;   \
 titleLabel.opaque = NO; \
 titleLabel.backgroundColor = [UIColor clearColor];  \
-titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:15.0];    \
+titleLabel.font = [UIFont systemFontOfSize:15.0];    \
 titleLabel.text = title;   \
-titleLabel.shadowColor = [UIColor whiteColor];  \
-titleLabel.shadowOffset = CGSizeMake(0, 1.0);   \
-titleLabel.textColor = [UIColor colorWithRed:0.435 green:0.475 blue:0.522 alpha:1.000]; \
+titleLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];   \
 [view addSubview:titleLabel];}
 
 #define DDG_SETTINGS_FOOTER(view, title) view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];           \
@@ -54,18 +52,16 @@ titleLabel.backgroundColor = [UIColor clearColor];  \
 titleLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:13];    \
 titleLabel.textAlignment = NSTextAlignmentCenter; \
 titleLabel.text = title;   \
-titleLabel.shadowColor = [UIColor whiteColor];  \
-titleLabel.shadowOffset = CGSizeMake(0, 1.0);   \
 titleLabel.textColor = [UIColor colorWithRed:0.341 green:0.376 blue:0.424 alpha:1.000]; \
 [view addSubview:titleLabel];}
 
 #define DDG_SETTINGS_TITLE_LABEL(titleLabel) \
-titleLabel.font = [UIFont fontWithName:@"HelveticaNeue-Bold" size:17.0]; \
-titleLabel.textColor = [UIColor colorWithRed:0.267 green:0.278 blue:0.310 alpha:1.000];
+titleLabel.font = [UIFont systemFontOfSize:17.0]; \
+titleLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
 
 #define DDG_SETTINGS_DETAIL_LABEL(detailTextLabel) \
-detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];    \
-detailTextLabel.textColor = [UIColor colorWithRed:0.212 green:0.455 blue:0.698 alpha:1.000];
+detailTextLabel.font = [UIFont systemFontOfSize:15.0];    \
+detailTextLabel.textColor = [UIColor colorWithRed:137.0f/255.0f green:137.0f/255.0f blue:137.0f/255.0f alpha:1.0f];
 
 @interface DDGSettingsViewController : DDGFormViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
