@@ -25,12 +25,12 @@
                                     <constraint firstAttribute="width" constant="66" id="9qe-Wi-07K"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bN4-Kb-wl4" userLabel="Button Title">
-                                <rect key="frame" x="15" y="14" width="36" height="15"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bN4-Kb-wl4" userLabel="Button Title">
+                                <rect key="frame" x="0.0" y="5" width="66" height="34"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="36" id="X7H-fn-Bc4"/>
-                                    <constraint firstAttribute="height" constant="15" id="XFl-vB-OMx"/>
+                                    <constraint firstAttribute="height" constant="34" id="EJy-dU-heG"/>
+                                    <constraint firstAttribute="width" constant="66" id="WU8-f1-iyF"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -41,9 +41,9 @@
                             <constraint firstAttribute="centerY" secondItem="9Ky-6Z-ANd" secondAttribute="centerY" id="0OO-Ui-KAw"/>
                             <constraint firstAttribute="centerX" secondItem="9Ky-6Z-ANd" secondAttribute="centerX" id="9hA-XZ-9fU"/>
                             <constraint firstAttribute="height" constant="43" id="Rpc-lQ-Tck"/>
-                            <constraint firstAttribute="centerX" secondItem="bN4-Kb-wl4" secondAttribute="centerX" id="Tyc-fL-6OI"/>
                             <constraint firstAttribute="width" constant="66" id="UYs-Hl-K9W"/>
-                            <constraint firstAttribute="centerY" secondItem="bN4-Kb-wl4" secondAttribute="centerY" id="fZc-Wy-kwT"/>
+                            <constraint firstAttribute="centerX" secondItem="bN4-Kb-wl4" secondAttribute="centerX" id="Uef-HA-0oJ"/>
+                            <constraint firstAttribute="centerY" secondItem="bN4-Kb-wl4" secondAttribute="centerY" id="bXr-fT-zag"/>
                         </constraints>
                     </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4fu-vO-iG6" userLabel="Content Container">
