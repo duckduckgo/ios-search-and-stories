@@ -71,7 +71,7 @@
                     </connections>
                 </button>
             </subviews>
-            <color key="backgroundColor" red="0.80000000000000004" green="0.41176470588235292" blue="0.33725490196078434" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" red="0.81568627449999997" green="0.38823529410000002" blue="0.33333333329999998" alpha="1" colorSpace="calibratedRGB"/>
         </view>
     </objects>
     <resources>
