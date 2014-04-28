@@ -21,6 +21,9 @@
 {
     [super awakeFromNib];
     self.backgroundColor = [UIColor clearColor];
+    UIView *selectedBackgroundView = [[UIView alloc] init];
+    selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.2f];
+    self.selectedBackgroundView = selectedBackgroundView;
     self.tintColor = [UIColor duckRed];
     [self.titleLabel setTextColor:[UIColor duckBlack]];
 }
@@ -29,6 +32,13 @@
 {
     _icon = [icon imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [self.iconImageView setImage:_icon];
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    [super setHighlighted:highlighted animated:animated];
+    self.tintColor = highlighted ? [UIColor whiteColor] : [UIColor duckRed];
+    [self.titleLabel setTextColor:highlighted ? [UIColor whiteColor] : [UIColor duckBlack]];
 }
 
 - (void)setTitle:(NSString *)title

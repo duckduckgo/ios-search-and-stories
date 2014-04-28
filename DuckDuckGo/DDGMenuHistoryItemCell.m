@@ -28,6 +28,9 @@
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDeleteButtonTap:)];
     [self.buttonContainerView addGestureRecognizer:tapGestureRecognizer];
     self.opaque = NO;
+    UIView *selectedBackgroundView = [[UIView alloc] init];
+    selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.2f];
+    self.selectedBackgroundView = selectedBackgroundView;
     self.tintColor = [UIColor duckRed];
     [self reset];
 }
@@ -91,6 +94,13 @@
     _faviconImage = faviconImage;
     [self.faviconImageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.faviconImageView setImage:faviconImage];
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    [super setHighlighted:highlighted animated:animated];
+    self.tintColor = highlighted ? [UIColor whiteColor] : [UIColor duckRed];
+    [self.contentLabel setTextColor:highlighted ? [UIColor whiteColor] : [UIColor duckBlack]];
 }
 
 - (void)setNotification:(BOOL)notification
