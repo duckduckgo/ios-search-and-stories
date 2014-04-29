@@ -27,6 +27,7 @@
     self.backgroundColor = [UIColor clearColor];
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDeleteButtonTap:)];
     [self.buttonContainerView addGestureRecognizer:tapGestureRecognizer];
+    [self.buttonContainerView setHidden:YES];
     self.opaque = NO;
     UIView *selectedBackgroundView = [[UIView alloc] init];
     selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.2f];
@@ -37,7 +38,6 @@
 
 - (void)handleDeleteButtonTap:(UITapGestureRecognizer *)recognizer
 {
-    NSLog(@"%s", __PRETTY_FUNCTION__);
     if (self.deleteBlock) {
         self.deleteBlock(self);
     }
@@ -75,12 +75,14 @@
 - (void)setDeletable:(BOOL)deletable animated:(BOOL)animated
 {
     [self.contentView layoutIfNeeded];
+    [self.buttonContainerView setHidden:!deletable];
     if (animated) {
         [UIView animateWithDuration:0.25
                               delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
-                             [self.contentContainerWidthConstraint setConstant:deletable ? 246.0f : CGRectGetWidth(self.bounds)];
+                             CGFloat width = CGRectGetWidth(self.bounds);
+                             [self.contentContainerWidthConstraint setConstant:deletable ? (width - 74.0f) : width];
                              [self layoutIfNeeded];
                          } completion:nil];
     } else {

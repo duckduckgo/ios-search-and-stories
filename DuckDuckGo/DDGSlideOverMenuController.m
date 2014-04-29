@@ -124,6 +124,12 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 #pragma mark - UIViewController
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [self updateLayout];
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+}
+
 - (instancetype)init
 {
     self = [super init];
@@ -167,6 +173,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     return NO;
 }
 
+- (BOOL)shouldAutomaticallyForwardRotationMethods
+{
+    return YES;
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -199,11 +210,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self beginAppearanceTransitionOnViewController:self.isShowingMenu ? self.menuViewController : self.contentViewController
                                           appearing:NO
                                            animated:animated];
-}
-
-- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    [self updateLayout];
 }
 
 #pragma mark - Private

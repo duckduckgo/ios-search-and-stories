@@ -81,6 +81,12 @@
     [self fetchedResultsController];
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+}
+
 - (void)reenableScrollsToTop {
     self.tableView.scrollsToTop = YES;
 }
