@@ -10,10 +10,14 @@
 
 @implementation UIView (SlideOverMenu)
 
-- (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates
+- (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates adjustBoundsForStatusBar:(BOOL)adjustBounds
 {
-    UIGraphicsBeginImageContext(self.bounds.size);
-    [self drawViewHierarchyInRect:self.bounds afterScreenUpdates:afterUpdates];
+    CGRect bounds = self.bounds;
+    if (adjustBounds) {
+        bounds.size.height += 20.0f;
+    }
+    UIGraphicsBeginImageContext(bounds.size);
+    [self drawViewHierarchyInRect:bounds afterScreenUpdates:afterUpdates];
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     NSData *data = UIImageJPEGRepresentation(image, 0.75f);

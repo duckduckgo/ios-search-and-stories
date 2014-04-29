@@ -372,7 +372,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)updateBlurContainerContent
 {
-    UIImage *snapshotImage = [self.view snapshotImageAfterScreenUpdates:self.isShowingMenu];
+    UIImage *snapshotImage = [[self.contentViewController view] snapshotImageAfterScreenUpdates:self.isShowingMenu
+                                                                       adjustBoundsForStatusBar:YES];
     UIImage *blurredSnapshotImage = [snapshotImage imageWithBlurRadius:12.0f
                                                              tintColor:[UIColor colorWithWhite:0.95f alpha:0.7f]
                                                  saturationDeltaFactor:1.0f

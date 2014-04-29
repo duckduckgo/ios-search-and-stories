@@ -10,6 +10,6 @@
 
 @interface UIView (SlideOverMenu)
 
-- (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates;
+- (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates adjustBoundsForStatusBar:(BOOL)adjustBounds;
 
 @end
