@@ -354,7 +354,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             
             tabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionBottom;
             tabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-            tabViewController.controlView.backgroundColor = [UIColor duckNoContentColor]; //[UIColor colorWithPatternImage:[UIImage imageNamed:@"saved_header_background"]];
+            tabViewController.controlView.backgroundColor = [UIColor duckLightGray];
             [tabViewController.segmentedControl sizeToFit];
 
             CGRect controlBounds = tabViewController.controlView.bounds;
