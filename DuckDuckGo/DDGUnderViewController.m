@@ -392,7 +392,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             searchController.shouldPushSearchHandlerEvents = YES;
             searchController.state = DDGSearchControllerStateHome;
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
-            stories.searchControllerBackButtonIconDDG = [UIImage imageNamed:@"button_menu_glyph_stories"];
+            stories.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Recent"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [searchController pushContentViewController:stories animated:NO];
             viewController = searchController;
         }
