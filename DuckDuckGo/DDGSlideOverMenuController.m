@@ -126,8 +126,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    [self updateLayout];
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self.blurContainerView setContentMode:(self.mode == DDGSlideOverMenuModeHorizontal ? UIViewContentModeTopLeft : UIViewContentModeBottomLeft)];
+    [self updateBlurContainerContent];
 }
 
 - (instancetype)init
@@ -210,6 +211,18 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self beginAppearanceTransitionOnViewController:self.isShowingMenu ? self.menuViewController : self.contentViewController
                                           appearing:NO
                                            animated:animated];
+}
+
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self updateLayout];
+}
+
+- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
+    [self.blurContainerView setContentMode:UIViewContentModeScaleToFill];
 }
 
 #pragma mark - Private
@@ -309,6 +322,10 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)setupMenuAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
 {
+    if (!self.isShowingMenu) {
+        [self.blurContainerView setHidden:NO];
+        [[self.menuViewController view] setHidden:NO];
+    }
     self.showingMenu = !self.isShowingMenu;
     if (isAppearing) {
         [self updateBlurContainerContent];
@@ -323,6 +340,10 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self endAppearanceTransitionOnViewController:self.menuViewController];
     [self endAppearanceTransitionOnViewController:self.contentViewController];
     [self notifyObserversAboutMenuAppearanceTransition:YES];
+    if (!self.isShowingMenu) {
+        [self.blurContainerView setHidden:YES];
+        [[self.menuViewController view] setHidden:YES];
+    }
 }
 
 - (void)triggerMenuAppearanceTransition:(BOOL)isAppearing interactive:(BOOL)interactive animated:(BOOL)animated completion:(void (^)())completion
@@ -384,7 +405,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)updateLayout
 {
     [self.blurContainerView setFrame:[self frameForBlurContainer]];
-    [self updateBlurContainerContent];
     [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
 }
 
@@ -417,9 +437,10 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         } else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
             CGFloat center = CGRectGetMidX([self.view bounds]);
             CGFloat rightEdge = CGRectGetMaxX([[self.menuViewController view] frame]);
-            [self triggerMenuAppearanceTransition:(rightEdge > center) interactive:YES animated:YES completion:nil];
-            self.showingMenu = (rightEdge > center);
-            [self tearDownMenuAppearanceTransition];
+            [self triggerMenuAppearanceTransition:(rightEdge > center) interactive:YES animated:YES completion:^{
+                self.showingMenu = (rightEdge > center);
+                [self tearDownMenuAppearanceTransition];
+            }];
         }
     }
 }
