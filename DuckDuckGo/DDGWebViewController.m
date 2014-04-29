@@ -43,7 +43,7 @@
         
         webView.scalesPageToFit = YES;
         _webViewLoadingDepth = 0;
-        webView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
+        webView.backgroundColor = [UIColor duckNoContentColor]; //[UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
         
         [self.view addSubview:webView];
         _webView = webView;

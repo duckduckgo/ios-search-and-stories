@@ -246,7 +246,7 @@ NSString * const emailRegEx =
     pageViewController.delegate = self;
     pageViewController.dataSource = self;
     
-    pageViewController.view.backgroundColor = [UIColor colorWithRed:0.200 green:0.212 blue:0.251 alpha:1.000];
+    pageViewController.view.backgroundColor = [UIColor duckNoContentColor];
     pageViewController.view.frame = [self contentRect];
     
     [self addChildViewController:pageViewController];

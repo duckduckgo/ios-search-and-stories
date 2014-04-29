@@ -81,7 +81,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     self.backgroundImageView = backgroundImageView;
     
     UIView *contentBackgroundView = [UIView new];
-    contentBackgroundView.backgroundColor = [UIColor duckLightGray];
+    contentBackgroundView.backgroundColor = [UIColor duckNoContentColor];
     [self.contentView addSubview:contentBackgroundView];
     self.contentBackgroundView = contentBackgroundView;
     
