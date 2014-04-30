@@ -23,6 +23,7 @@ extern NSString * const DDGSlideOverMenuDidAppearNotification;
 @property (nonatomic, strong) UIViewController *menuViewController;
 @property (nonatomic, strong, readonly) UIPanGestureRecognizer *panGesture;
 @property (nonatomic, assign, readonly, getter = isShowingMenu) BOOL showingMenu;
+@property (nonatomic, copy) void (^viewDidAppearCompletion)(DDGSlideOverMenuController *slideOverMenuController);
 
 - (instancetype)initWithMode:(DDGSlideOverMenuMode)mode;
 

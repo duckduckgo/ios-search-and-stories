@@ -184,6 +184,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     [super viewDidAppear:animated];
     [self endAppearanceTransitionOnViewController:self.isShowingMenu ? self.menuViewController : self.contentViewController];
+    if (self.viewDidAppearCompletion) {
+        self.viewDidAppearCompletion(self);
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated

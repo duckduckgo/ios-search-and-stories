@@ -164,9 +164,15 @@ static void uncaughtExceptionHandler(NSException *exception) {
     DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.searchHandler = under;
         
-    DDGSlideOverMenuController *slideOverMenuController = [[DDGSlideOverMenuController alloc] initWithMode:DDGSlideOverMenuModeHorizontal];
-    slideOverMenuController.menuViewController = under;
-    [self.window setRootViewController:slideOverMenuController];
+    DDGSlideOverMenuController *menuController = [[DDGSlideOverMenuController alloc] initWithMode:DDGSlideOverMenuModeHorizontal];
+    menuController.menuViewController = under;
+    menuController.viewDidAppearCompletion = ^(DDGSlideOverMenuController *slideOverMenuController) {
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey]) {
+            DDGFirstRunViewController *firstRunViewController = [DDGFirstRunViewController new];
+            [slideOverMenuController presentViewController:firstRunViewController animated:YES completion:nil];
+        }
+    };
+    [self.window setRootViewController:menuController];
   
     int type = DDGViewControllerTypeHome;
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
@@ -179,17 +185,12 @@ static void uncaughtExceptionHandler(NSException *exception) {
     }
         
     UIViewController *homeController = [under viewControllerForType:type];
-    
-    slideOverMenuController.contentViewController = homeController;
+    menuController.contentViewController = homeController;
     
     /* The following line is currently commented out since is causes a crash */
     // [under configureViewController:homeController];
     
     [self.window makeKeyAndVisible];
-    
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey])
-        [self.window.rootViewController presentViewController:[[DDGFirstRunViewController alloc] init] animated:YES completion:NULL];
-    
     return YES;
 }
 
