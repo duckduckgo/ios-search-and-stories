@@ -243,9 +243,19 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 #pragma mark - UIGestureRecognizerDelete
 
-- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch
 {
-    return [otherGestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]];
+    __block BOOL shouldReceiveTouch = YES;
+    [[self.menuViewController view] inspectViewHierarchy:^(UIView *view, BOOL *stop) {
+        if ([view isKindOfClass:[UITableViewCell class]]) {
+            CGPoint point = [touch locationInView:view];
+            if (CGRectContainsPoint(view.bounds, point)) {
+                shouldReceiveTouch = NO;
+                *stop = YES;
+            }
+        }
+    }];
+    return shouldReceiveTouch;
 }
 
 #pragma mark - Private
