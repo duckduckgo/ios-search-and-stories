@@ -250,8 +250,10 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         if ([view isKindOfClass:[UITableViewCell class]]) {
             CGPoint point = [touch locationInView:view];
             if (CGRectContainsPoint(view.bounds, point)) {
-                shouldReceiveTouch = NO;
-                *stop = YES;
+                if (point.x < CGRectGetMidX(view.bounds) || [view respondsToSelector:@selector(setDeletable:animated:)]) {
+                    shouldReceiveTouch = NO;
+                    *stop = YES;
+                }
             }
         }
     }];
