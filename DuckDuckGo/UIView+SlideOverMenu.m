@@ -10,6 +10,12 @@
 
 @implementation UIView (SlideOverMenu)
 
+- (void)inspectViewHierarchy:(DDGViewInspectionBlock)block
+{
+    BOOL stop = NO;
+    [self inspectViewHierarchy:block stop:&stop];
+}
+
 - (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates adjustBoundsForStatusBar:(BOOL)adjustBounds
 {
     CGRect bounds = self.bounds;
@@ -25,5 +31,20 @@
     return image;
 }
 
+#pragma mark - Private
+
+- (void)inspectViewHierarchy:(DDGViewInspectionBlock)block stop:(BOOL *)stop
+{
+    if (!block || *stop) {
+        return;
+    }
+    block(self, stop);
+    for (UIView *view in self.subviews) {
+        [view inspectViewHierarchy:block stop:stop];
+        if (*stop) {
+            break;
+        }
+    }
+}
 
 @end

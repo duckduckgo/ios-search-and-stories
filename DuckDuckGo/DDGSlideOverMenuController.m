@@ -14,11 +14,12 @@
 NSString * const DDGSlideOverMenuWillAppearNotification = @"DDGSlideOverMenuWillAppearNotification";
 NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAppearNotification";
 
-@interface DDGSlideOverMenuController ()
+@interface DDGSlideOverMenuController () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
 @property (nonatomic, strong) UIImageView *blurContainerView;
 @property (nonatomic, assign, getter = isInteractive) BOOL interactive;
+@property (nonatomic, strong) UIPanGestureRecognizer *menuPanGesture;
 @property (nonatomic, assign) DDGSlideOverMenuMode mode;
 @property (nonatomic, assign) CGRect originalBlurContainerFrame;
 @property (nonatomic, assign) CGPoint originalMenuCenterPoint;
@@ -46,7 +47,14 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)hideMenu:(BOOL)animated completion:(void (^)())completion
 {
     if (self.isShowingMenu) {
-        [self triggerMenuAppearanceTransition:NO interactive:NO animated:animated completion:completion];
+        __weak DDGSlideOverMenuController *weakSelf = self;
+        void (^interceptedCompletion)() = ^(){
+            [weakSelf tearDownGestureRecognizer];
+            if (completion) {
+                completion();
+            }
+        };
+        [self triggerMenuAppearanceTransition:NO interactive:NO animated:animated completion:interceptedCompletion];
     }
 }
 
@@ -118,7 +126,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)showMenu:(BOOL)animated
 {
     if (!self.isShowingMenu) {
-        [self triggerMenuAppearanceTransition:YES interactive:NO animated:animated completion:nil];
+        __weak DDGSlideOverMenuController *weakSelf = self;
+        void (^completion)() = ^(){
+            [weakSelf setupGestureRecognizer];
+        };
+        [self triggerMenuAppearanceTransition:YES interactive:NO animated:animated completion:completion];
     }
 }
 
@@ -229,6 +241,13 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self.blurContainerView setContentMode:UIViewContentModeScaleAspectFill];
 }
 
+#pragma mark - UIGestureRecognizerDelete
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    return [otherGestureRecognizer isKindOfClass:[UISwipeGestureRecognizer class]];
+}
+
 #pragma mark - Private
 
 - (void)beginAppearanceTransitionOnViewController:(UIViewController *)viewController appearing:(BOOL)isAppearing animated:(BOOL)animated
@@ -305,6 +324,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     self.animating = NO;
     [self.view setBackgroundColor:[UIColor duckLightGray]];
     self.interactive = YES;
+    self.menuPanGesture = [[DDGHorizontalPanGestureRecognizer alloc] initWithTarget:self action:@selector(updateMenuPositionWhilstPanning:)];
+    [self.menuPanGesture setDelegate:self];
     self.mode = DDGSlideOverMenuModeHorizontal;
     self.originalBlurContainerFrame = CGRectZero;
     self.originalMenuCenterPoint = CGPointZero;
@@ -324,6 +345,12 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     self.blurContainerView = blurContainerView;
 }
 
+- (void)setupGestureRecognizer
+{
+    [self tearDownGestureRecognizer];
+    [[self.menuViewController view] addGestureRecognizer:self.menuPanGesture];
+}
+
 - (void)setupMenuAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated
 {
     if (!self.isShowingMenu) {
@@ -337,6 +364,14 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [self notifyObserversAboutMenuAppearanceTransition:NO];
     [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:isAppearing animated:animated];
     [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:!isAppearing animated:animated];
+}
+
+- (void)tearDownGestureRecognizer
+{
+    NSArray *recognizers = [[self.menuViewController view] gestureRecognizers];
+    if ([recognizers containsObject:self.menuPanGesture]) {
+        [[self.menuViewController view] removeGestureRecognizer:self.menuPanGesture];
+    }
 }
 
 - (void)tearDownMenuAppearanceTransition
@@ -457,9 +492,16 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         } else if (recognizer.state == UIGestureRecognizerStateEnded || recognizer.state == UIGestureRecognizerStateCancelled) {
             CGFloat center = CGRectGetMidX([self.view bounds]);
             CGFloat rightEdge = CGRectGetMaxX([[self.menuViewController view] frame]);
-            [self triggerMenuAppearanceTransition:(rightEdge > center) interactive:YES animated:YES completion:^{
-                self.showingMenu = (rightEdge > center);
-                [self tearDownMenuAppearanceTransition];
+            __weak DDGSlideOverMenuController *weakSelf = self;
+            BOOL appearing = (rightEdge > center);
+            [self triggerMenuAppearanceTransition:appearing interactive:YES animated:YES completion:^{
+                weakSelf.showingMenu = appearing;
+                [weakSelf tearDownMenuAppearanceTransition];
+                if (appearing) {
+                    [weakSelf setupGestureRecognizer];
+                } else {
+                    [weakSelf tearDownGestureRecognizer];
+                }
             }];
         }
     }
