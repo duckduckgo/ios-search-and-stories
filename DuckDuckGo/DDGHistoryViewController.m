@@ -111,9 +111,18 @@
 }
 
 - (void)swipe:(UISwipeGestureRecognizer *)swipe direction:(UISwipeGestureRecognizerDirection)direction {
-    if (swipe.state == UIGestureRecognizerStateRecognized) {
+    if (swipe.state == UIGestureRecognizerStateEnded) {
         CGPoint point = [swipe locationInView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+        
+        // Workaround for the bug mentioned in http://openradar.io/13187897
+        if (indexPath) {
+            CGRect rect = [self.tableView rectForHeaderInSection:indexPath.section];
+            if (CGRectContainsPoint(rect, point)) {
+                return;
+            }
+        }
+        
         NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
 
         if (indexPath.section < additionalSections)
