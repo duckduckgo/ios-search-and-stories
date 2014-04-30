@@ -279,7 +279,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 				break;
 			case DDGViewControllerTypeStories:
 			{
-                cell.icon = [UIImage imageNamed:@"Recent"];
+                cell.icon = [UIImage imageNamed:@"Stories"];
 			}
 				break;
 			case DDGViewControllerTypeSettings:
@@ -392,7 +392,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
             searchController.shouldPushSearchHandlerEvents = YES;
             searchController.state = DDGSearchControllerStateHome;
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
-            stories.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Recent"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            stories.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Stories"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
             [searchController pushContentViewController:stories animated:NO];
             viewController = searchController;
         }
