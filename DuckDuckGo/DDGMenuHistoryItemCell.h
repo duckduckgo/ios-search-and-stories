@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGMenuHistoryItemCell : UITableViewCell
+@interface DDGMenuHistoryItemCell : UITableViewCell <DDGSlideOverMenuPanGestureCoordinator>
 
 @property (nonatomic, assign, getter = isAuxiliaryViewHidden) BOOL auxiliaryViewHidden;
 @property (nonatomic, copy) NSString *content;

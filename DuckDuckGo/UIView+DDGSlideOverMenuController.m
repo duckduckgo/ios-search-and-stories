@@ -1,14 +1,14 @@
 //
-//  UIView+SlideOverMenu.m
+//  UIView+DDGSlideOverMenuController.m
 //  DuckDuckGo
 //
 //  Created by Mic Pringle on 27/03/2014.
 //
 //
 
-#import "UIView+SlideOverMenu.h"
+#import "UIView+DDGSlideOverMenuController.h"
 
-@implementation UIView (SlideOverMenu)
+@implementation UIView (DDGSlideOverMenuController)
 
 - (void)inspectViewHierarchy:(DDGViewInspectionBlock)block
 {

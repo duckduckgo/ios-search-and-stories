@@ -1,5 +1,5 @@
 //
-//  UIImage+SlideOverMenu.m
+//  UIImage+DDGSlideOverMenuController.m
 //  DuckDuckGo
 //
 //  Created by Mic Pringle on 27/03/2014.
@@ -7,9 +7,9 @@
 //
 
 @import Accelerate;
-#import "UIImage+SlideOverMenu.h"
+#import "UIImage+DDGSlideOverMenuController.h"
 
-@implementation UIImage (SlideOverMenu)
+@implementation UIImage (DDGSlideOverMenuController)
 
 - (UIImage *)imageWithBlurRadius:(CGFloat)blurRadius
                        tintColor:(UIColor *)tintColor

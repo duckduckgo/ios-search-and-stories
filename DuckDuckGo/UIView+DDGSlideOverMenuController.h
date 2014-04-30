@@ -1,5 +1,5 @@
 //
-//  UIView+SlideOverMenu.h
+//  UIView+DDGSlideOverMenuController.h
 //  DuckDuckGo
 //
 //  Created by Mic Pringle on 27/03/2014.
@@ -10,7 +10,7 @@
 
 typedef void(^DDGViewInspectionBlock)(UIView *view, BOOL *stop);
 
-@interface UIView (SlideOverMenu)
+@interface UIView (DDGSlideOverMenuController)
 
 - (void)inspectViewHierarchy:(DDGViewInspectionBlock)block;
 - (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates adjustBoundsForStatusBar:(BOOL)adjustBounds;

@@ -8,8 +8,6 @@
 
 #import "DDGHorizontalPanGestureRecognizer.h"
 #import "DDGSlideOverMenuController.h"
-#import "UIImage+SlideOverMenu.h"
-#import "UIView+SlideOverMenu.h"
 
 NSString * const DDGSlideOverMenuWillAppearNotification = @"DDGSlideOverMenuWillAppearNotification";
 NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAppearNotification";
@@ -247,10 +245,18 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     __block BOOL shouldReceiveTouch = YES;
     [[self.menuViewController view] inspectViewHierarchy:^(UIView *view, BOOL *stop) {
-        if ([view isKindOfClass:[UITableViewCell class]]) {
-            CGPoint point = [touch locationInView:view];
-            if (CGRectContainsPoint(view.bounds, point)) {
-                if (point.x < CGRectGetMidX(view.bounds) || [view respondsToSelector:@selector(setDeletable:animated:)]) {
+        CGPoint point = [touch locationInView:view];
+        if (CGRectContainsPoint(view.bounds, point)) {
+            if ([view conformsToProtocol:@protocol(DDGSlideOverMenuPanGestureCoordinator)] ||
+                [view respondsToSelector:@selector(shouldCauseMenuPanGestureToFail)]) {
+                BOOL fail;
+                NSMethodSignature *signature = [[view class] instanceMethodSignatureForSelector:@selector(shouldCauseMenuPanGestureToFail)];
+                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
+                [invocation setSelector:@selector(shouldCauseMenuPanGestureToFail)];
+                [invocation setTarget:view];
+                [invocation invoke];
+                [invocation getReturnValue:&fail];
+                if (fail) {
                     shouldReceiveTouch = NO;
                     *stop = YES;
                 }

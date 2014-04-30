@@ -303,8 +303,8 @@
 		7B2BDFA818E997ED003B8078 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */; };
 		7B6450FB18E58E23005ED543 /* DDGMenuHistoryItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */; };
 		7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */; };
-		7B6E2D8918E477CA00C1EF75 /* UIView+SlideOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */; };
-		7B6E2D8C18E4782100C1EF75 /* UIImage+SlideOverMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8B18E4782100C1EF75 /* UIImage+SlideOverMenu.m */; };
+		7B6E2D8918E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8818E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m */; };
+		7B6E2D8C18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8B18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m */; };
 		7B76FEC518E1DCFB00674702 /* DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */; };
 		7B76FECB18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */; };
 		7BCE31D918E4476700C87EF4 /* DDGMenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */; };
@@ -760,10 +760,10 @@
 		7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuHistoryItemCell.xib; sourceTree = "<group>"; };
 		7B6450FC18E5901C005ED543 /* DDGMenuHistoryItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuHistoryItemCell.h; sourceTree = "<group>"; };
 		7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuHistoryItemCell.m; sourceTree = "<group>"; };
-		7B6E2D8718E477CA00C1EF75 /* UIView+SlideOverMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+SlideOverMenu.h"; sourceTree = "<group>"; };
-		7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+SlideOverMenu.m"; sourceTree = "<group>"; };
-		7B6E2D8A18E4782100C1EF75 /* UIImage+SlideOverMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+SlideOverMenu.h"; sourceTree = "<group>"; };
-		7B6E2D8B18E4782100C1EF75 /* UIImage+SlideOverMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+SlideOverMenu.m"; sourceTree = "<group>"; };
+		7B6E2D8718E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+DDGSlideOverMenuController.h"; sourceTree = "<group>"; };
+		7B6E2D8818E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+DDGSlideOverMenuController.m"; sourceTree = "<group>"; };
+		7B6E2D8A18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+DDGSlideOverMenuController.h"; sourceTree = "<group>"; };
+		7B6E2D8B18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+DDGSlideOverMenuController.m"; sourceTree = "<group>"; };
 		7B76FEC318E1DCFB00674702 /* DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSlideOverMenuController.h; sourceTree = "<group>"; };
 		7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlideOverMenuController.m; sourceTree = "<group>"; };
 		7B76FEC918E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DDGSlideOverMenuController.h"; sourceTree = "<group>"; };
@@ -771,6 +771,7 @@
 		7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuSectionHeaderView.xib; sourceTree = "<group>"; };
 		7BCE31DB18E449D600C87EF4 /* DDGMenuSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuSectionHeaderView.h; sourceTree = "<group>"; };
 		7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuSectionHeaderView.m; sourceTree = "<group>"; };
+		7BE56C9219114C1B00C71AB4 /* DDGSlideOverMenuPanGestureCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSlideOverMenuPanGestureCoordinator.h; sourceTree = "<group>"; };
 		7BFC64DD18BCEEC800C48753 /* DDGStoryBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryBackgroundView.h; sourceTree = "<group>"; };
 		7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryBackgroundView.m; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
@@ -1501,10 +1502,11 @@
 				7B2BDF9C18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m */,
 				7B76FEC318E1DCFB00674702 /* DDGSlideOverMenuController.h */,
 				7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */,
-				7B6E2D8A18E4782100C1EF75 /* UIImage+SlideOverMenu.h */,
-				7B6E2D8B18E4782100C1EF75 /* UIImage+SlideOverMenu.m */,
-				7B6E2D8718E477CA00C1EF75 /* UIView+SlideOverMenu.h */,
-				7B6E2D8818E477CA00C1EF75 /* UIView+SlideOverMenu.m */,
+				7BE56C9219114C1B00C71AB4 /* DDGSlideOverMenuPanGestureCoordinator.h */,
+				7B6E2D8A18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.h */,
+				7B6E2D8B18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m */,
+				7B6E2D8718E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.h */,
+				7B6E2D8818E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m */,
 				7B76FEC918E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.h */,
 				7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */,
 			);
@@ -1992,7 +1994,7 @@
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
 				4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */,
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
-				7B6E2D8918E477CA00C1EF75 /* UIView+SlideOverMenu.m in Sources */,
+				7B6E2D8918E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m in Sources */,
 				4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */,
 				4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */,
 				8398DAC816419FFD00A559C3 /* DDGChooseRegionViewController.m in Sources */,
@@ -2034,7 +2036,7 @@
 				5B2FCABF16F3235E0045A5FE /* DDGBookmarkActivity.m in Sources */,
 				7B2BDF9D18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m in Sources */,
 				5B2FCADD16F32BE10045A5FE /* TUSafariActivity.m in Sources */,
-				7B6E2D8C18E4782100C1EF75 /* UIImage+SlideOverMenu.m in Sources */,
+				7B6E2D8C18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m in Sources */,
 				5B2FCB5E16F3789F0045A5FE /* DDGReadabilityToggleActivity.m in Sources */,
 				5BFF24B316F77E0900844D3B /* DDGStoryFetcher.m in Sources */,
 				5BFF24C416F77F9F00844D3B /* Stories.xcdatamodeld in Sources */,

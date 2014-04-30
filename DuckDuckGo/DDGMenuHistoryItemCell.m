@@ -117,4 +117,11 @@
     [self.faviconImageView setImage:image];
 }
 
+#pragma mark - DDGSlideOverMenuPanGestureCoordinator
+
+- (BOOL)shouldCauseMenuPanGestureToFail
+{
+    return YES;
+}
+
 @end
