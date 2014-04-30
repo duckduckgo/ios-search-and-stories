@@ -467,6 +467,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     CGPoint origin = self.originalMenuCenterPoint;
     origin.x += offset;
+    if (origin.x > [[self.contentViewController view] center].x) {
+        origin.x = [[self.contentViewController view] center].x;
+    }
     [[self.menuViewController view] setCenter:origin];
     
     CGRect bounds = self.originalBlurContainerFrame;
