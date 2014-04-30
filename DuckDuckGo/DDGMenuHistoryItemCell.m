@@ -30,7 +30,7 @@
     [self.buttonContainerView setHidden:YES];
     self.opaque = NO;
     UIView *selectedBackgroundView = [[UIView alloc] init];
-    selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.2f];
+    selectedBackgroundView.backgroundColor = [UIColor duckRed];
     self.selectedBackgroundView = selectedBackgroundView;
     self.tintColor = [UIColor duckRed];
     [self reset];

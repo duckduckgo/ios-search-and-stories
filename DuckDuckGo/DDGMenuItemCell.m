@@ -22,7 +22,7 @@
     [super awakeFromNib];
     self.backgroundColor = [UIColor clearColor];
     UIView *selectedBackgroundView = [[UIView alloc] init];
-    selectedBackgroundView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.2f];
+    selectedBackgroundView.backgroundColor = [UIColor duckRed];
     self.selectedBackgroundView = selectedBackgroundView;
     self.tintColor = [UIColor duckRed];
     [self.titleLabel setTextColor:[UIColor duckBlack]];
