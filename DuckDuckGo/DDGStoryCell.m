@@ -80,7 +80,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 
 - (void)configure
 {
-    self.displaysInnerShadow = YES;
+    self.displaysInnerShadow = NO;
     
     UIImageView *backgroundImageView = [UIImageView new];
     backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -177,6 +177,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 {
     [super prepareForReuse];
     [self.backgroundImageView setImage:nil];
+    self.displaysInnerShadow = NO;
 }
 
 @end
