@@ -53,6 +53,11 @@
     return [UIColor colorWithRed:208.0f/255.0f green:99.0f/255.0f blue:85.0f/255.0f alpha:1.0f];
 }
 
++ (UIColor *)duckStoryReadColor
+{
+    return RGBA(158.0f, 158.0f, 158.0f, 1.0f);
+}
+
 + (UIColor *)autocompleteDetailColor
 {
     return RGBA(140.0f, 145.0f, 148.0f, 1.0f);

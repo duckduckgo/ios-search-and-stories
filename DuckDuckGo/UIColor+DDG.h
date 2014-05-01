@@ -19,6 +19,7 @@
 + (UIColor *)duckLightGray;
 + (UIColor *)duckNoContentColor;
 + (UIColor *)duckRed;
++ (UIColor *)duckStoryReadColor;
 
 + (UIColor *)autocompleteDetailColor;
 + (UIColor *)autocompleteHeaderColor;

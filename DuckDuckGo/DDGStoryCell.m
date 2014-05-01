@@ -53,6 +53,12 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     [self.backgroundImageView setImage:image];
 }
 
+- (void)setRead:(BOOL)read
+{
+    _read = read;
+    [self.textLabel setTextColor:(read ? [UIColor duckStoryReadColor] : [UIColor duckBlack])];
+}
+
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated
 {
     // Empty stub!
@@ -62,12 +68,6 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 {
     _title = [title copy];
     [self.textLabel setText:title];
-}
-
-- (void)setTitleColor:(UIColor *)titleColor
-{
-    _titleColor = titleColor;
-    [self.textLabel setTextColor:titleColor];
 }
 
 #pragma mark -

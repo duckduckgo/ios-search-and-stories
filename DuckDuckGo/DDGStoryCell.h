@@ -14,7 +14,7 @@ extern NSString *const DDGStoryCellIdentifier;
 
 @property (nonatomic, strong) UIImage *favicon;
 @property (nonatomic, strong) UIImage *image;
+@property (nonatomic, assign, getter = isRead) BOOL read;
 @property (nonatomic, copy) NSString *title;
-@property (nonatomic, strong) UIColor *titleColor;
 
 @end

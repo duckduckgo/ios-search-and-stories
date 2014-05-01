@@ -1019,7 +1019,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.title = story.title;
-    cell.titleColor = [UIColor duckBlack];
+    cell.read = story.readValue;
     if (story.feed) {
         cell.favicon = [story.feed image];
     }
