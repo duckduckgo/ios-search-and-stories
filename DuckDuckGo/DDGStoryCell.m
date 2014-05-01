@@ -37,6 +37,12 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 
 #pragma mark -
 
+- (void)setDisplaysInnerShadow:(BOOL)displaysInnerShadow
+{
+    _displaysInnerShadow = displaysInnerShadow;
+    [self setNeedsLayout];
+}
+
 - (void)setFavicon:(UIImage *)favicon
 {
     _favicon = favicon;
