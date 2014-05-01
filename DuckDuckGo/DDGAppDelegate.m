@@ -157,7 +157,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
 
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-//    self.window.backgroundColor = [UIColor colorWithRed:0.169 green:0.176 blue:0.188 alpha:1.000];
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];
     
     //Configure the sliding view controller

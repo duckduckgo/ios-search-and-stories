@@ -381,33 +381,11 @@ NSString * const emailRegEx =
         });
                 
     } else {
-        double animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        
-        [self revealInputAccessory:show animationDuration:animationDuration];
-        
-        UIViewAnimationCurve curve = [[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
-        UIViewAnimationOptions options = 0;
-        switch (curve) {
-            case UIViewAnimationCurveEaseIn:
-                options = UIViewAnimationOptionCurveEaseIn;
-                break;
-            case UIViewAnimationCurveEaseInOut:
-                options = UIViewAnimationOptionCurveEaseInOut;
-                break;
-            case UIViewAnimationCurveEaseOut:
-                options = UIViewAnimationOptionCurveEaseOut;
-                break;
-            case UIViewAnimationCurveLinear:
-                options = UIViewAnimationOptionCurveLinear;
-                break;
-            default:
-                options = UIViewAnimationOptionCurveEaseInOut;
-                break;
-        }
-
-        [UIView animateWithDuration:animationDuration
+        double duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        [self revealInputAccessory:show animationDuration:duration];
+        [UIView animateWithDuration:duration
                               delay:0
-                            options:options
+                            options:[[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]
                          animations:^{
                              CGRect f = self.view.frame;
                              f.size.height = keyboardEnd.origin.y - f.origin.y;

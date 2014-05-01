@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class DDGSearchController;
+
 @interface DDGDuckViewController : UIViewController
 
-+ (id)duckViewController;
+- (instancetype)initWithSearchController:(DDGSearchController *)searchController;
 
 @end

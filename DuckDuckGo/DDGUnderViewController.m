@@ -422,7 +422,8 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
         {
             DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
             searchController.shouldPushSearchHandlerEvents = YES;
-            [searchController pushContentViewController:[DDGDuckViewController duckViewController] animated:NO];
+            DDGDuckViewController *duckViewController = [[DDGDuckViewController alloc] initWithSearchController:searchController];
+            [searchController pushContentViewController:duckViewController animated:NO];
             searchController.state = DDGSearchControllerStateHome;
             viewController = searchController;
         }

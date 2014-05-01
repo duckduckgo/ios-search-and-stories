@@ -6,9 +6,14 @@
 //
 //
 
+#import "DDGAddressBarTextField.h"
 #import "DDGDuckViewController.h"
+#import "DDGSearchBar.h"
+#import "DDGSearchController.h"
 
 @interface DDGDuckViewController ()
+
+@property (nonatomic, weak) DDGSearchController *searchController;
 
 @end
 
@@ -16,19 +21,22 @@
 
 #pragma mark -
 
-+ (id)duckViewController {
-    return [[DDGDuckViewController alloc] initWithNibName:@"DDGDuckViewController" bundle:nil];
-}
-
-#pragma mark -
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (instancetype)initWithSearchController:(DDGSearchController *)searchController
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    self = [self initWithNibName:nil bundle:nil];
     if (self) {
-        
+        self.searchController = searchController;
     }
     return self;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    DDGSearchBar *searchBar = [self.searchController searchBar];
+    DDGAddressBarTextField *addressBarTextField = searchBar.searchField;
+    [addressBarTextField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0];
+    [self.searchController searchFieldDidChange:nil];
 }
 
 @end
