@@ -74,6 +74,8 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 
 - (void)configure
 {
+    self.displaysInnerShadow = YES;
+    
     UIImageView *backgroundImageView = [UIImageView new];
     backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     backgroundImageView.clipsToBounds = YES;
@@ -118,9 +120,12 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     CGRect backgroundImageViewBounds = bounds;
     backgroundImageViewBounds.size.height -= DDGTitleBarHeight;
     [self.backgroundImageView setFrame:backgroundImageViewBounds];
-    CGRect dropShadowBounds = bounds;
-    dropShadowBounds.size.height = 1.0f;
-    [self.dropShadowView setFrame:dropShadowBounds];
+    
+    if (self.displaysInnerShadow) {
+        CGRect dropShadowBounds = bounds;
+        dropShadowBounds.size.height = 0.5f;
+        [self.dropShadowView setFrame:dropShadowBounds];
+    }
     
     CGRect faviconFrame = self.faviconButton.frame;    
     

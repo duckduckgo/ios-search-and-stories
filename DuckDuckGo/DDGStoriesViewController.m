@@ -33,7 +33,6 @@ NSInteger const DDGSmallImageViewTag = 2;
 
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
-    UIImageView *topShadow;
     EGORefreshTableHeaderView *refreshHeaderView;
     CIContext *_blurContext;
 }
@@ -160,11 +159,6 @@ NSInteger const DDGSmallImageViewTag = 2;
     self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
     [self prepareUpcomingCellContent];
-    
-    topShadow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"table_view_shadow_top.png"]];
-    topShadow.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 5.0);
-    topShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    // shadow gets added to table view in scrollViewDidScroll
     
     if (!self.savedStoriesOnly && refreshHeaderView == nil) {
 		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
@@ -657,12 +651,6 @@ NSInteger const DDGSmallImageViewTag = 2;
     
     if(scrollView.contentOffset.y <= 0) {
         [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-        
-        CGRect f = topShadow.frame;
-        f.origin.y = scrollView.contentOffset.y;
-        topShadow.frame = f;
-        
-        [_tableView insertSubview:topShadow atIndex:0];
     }
     
     [self prepareUpcomingCellContent];
@@ -1018,6 +1006,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.displaysInnerShadow = (indexPath.row != 0);
     cell.title = story.title;
     cell.read = story.readValue;
     if (story.feed) {
