@@ -13,6 +13,7 @@ typedef void(^DDGViewInspectionBlock)(UIView *view, BOOL *stop);
 @interface UIView (DDGSlideOverMenuController)
 
 - (void)inspectViewHierarchy:(DDGViewInspectionBlock)block;
+- (BOOL)shouldCauseMenuPanGestureToFail;
 - (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates adjustBoundsForStatusBar:(BOOL)adjustBounds;
 
 @end

@@ -16,6 +16,11 @@
     [self inspectViewHierarchy:block stop:&stop];
 }
 
+- (BOOL)shouldCauseMenuPanGestureToFail
+{
+    return NO;
+}
+
 - (UIImage *)snapshotImageAfterScreenUpdates:(BOOL)afterUpdates adjustBoundsForStatusBar:(BOOL)adjustBounds
 {
     CGRect bounds = self.bounds;

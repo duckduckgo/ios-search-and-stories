@@ -17,7 +17,6 @@
 
 	#import "Always.h"
     #import "Constants.h"
-    #import "DDGSlideOverMenuPanGestureCoordinator.h"
     #import "UIImage+DDGSlideOverMenuController.h"
     #import "UIView+DDGSlideOverMenuController.h"
     #import "UIViewController+DDGSlideOverMenuController.h"

@@ -247,16 +247,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [[self.menuViewController view] inspectViewHierarchy:^(UIView *view, BOOL *stop) {
         CGPoint point = [touch locationInView:view];
         if (CGRectContainsPoint(view.bounds, point)) {
-            if ([view conformsToProtocol:@protocol(DDGSlideOverMenuPanGestureCoordinator)] ||
-                [view respondsToSelector:@selector(shouldCauseMenuPanGestureToFail)]) {
-                BOOL fail;
-                NSMethodSignature *signature = [[view class] instanceMethodSignatureForSelector:@selector(shouldCauseMenuPanGestureToFail)];
-                NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:signature];
-                [invocation setSelector:@selector(shouldCauseMenuPanGestureToFail)];
-                [invocation setTarget:view];
-                [invocation invoke];
-                [invocation getReturnValue:&fail];
-                if (fail) {
+            if ([view respondsToSelector:@selector(shouldCauseMenuPanGestureToFail)]) {
+                if ([view shouldCauseMenuPanGestureToFail]) {
                     shouldReceiveTouch = NO;
                     *stop = YES;
                 }
