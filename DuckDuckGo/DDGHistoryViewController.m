@@ -27,6 +27,7 @@
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, strong) NSMutableSet *deletingIndexPaths;
 @property (nonatomic) DDGHistoryViewControllerMode mode;
+@property (nonatomic, weak) IBOutlet UIImageView *chatBubbleImageView;
 @end
 
 @implementation DDGHistoryViewController
@@ -302,7 +303,9 @@
             else
                 [[NSBundle mainBundle] loadNibNamed:@"DDGHistoryNoResultsDisabledView" owner:self options:nil];
         }
-        
+        [self.noResultsView setTintColor:[UIColor whiteColor]];
+        [self.chatBubbleImageView setImage:[[UIImage imageNamed:@"Chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+        [self.noResultsView setFrame:[self.view bounds]];
         [self.view addSubview:self.noResultsView];
         
     } else {
