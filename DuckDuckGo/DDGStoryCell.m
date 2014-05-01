@@ -88,7 +88,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     self.contentBackgroundView = contentBackgroundView;
     
     UIView *dropShadowView = [UIView new];
-    dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.25f];
+    dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
     dropShadowView.opaque = NO;
     [self.contentView addSubview:dropShadowView];
     self.dropShadowView = dropShadowView;
