@@ -371,7 +371,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     if (isAppearing) {
         [self updateBlurContainerContent:NO completion:nil];
     }
-    [self notifyObserversAboutMenuAppearanceTransition:NO];
+    if (isAppearing) {
+        [self notifyObserversAboutMenuAppearanceTransition:NO];
+    }
     [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:isAppearing animated:animated];
     [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:!isAppearing animated:animated];
 }
@@ -388,8 +390,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     [self endAppearanceTransitionOnViewController:self.menuViewController];
     [self endAppearanceTransitionOnViewController:self.contentViewController];
-    [self notifyObserversAboutMenuAppearanceTransition:YES];
-    if (!self.isShowingMenu) {
+    if (self.isShowingMenu) {
+        [self notifyObserversAboutMenuAppearanceTransition:YES];
+    } else {
         [self.blurContainerView setHidden:YES];
         [[self.menuViewController view] setHidden:YES];
     }
