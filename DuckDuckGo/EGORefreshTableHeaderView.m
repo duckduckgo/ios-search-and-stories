@@ -81,10 +81,6 @@
         [self addSubview:view];
 		_activityView = view;
         
-        UIView *innerShadow = [[UIView alloc] initWithFrame:CGRectMake(0.0f, CGRectGetHeight(self.frame) - 0.5f, CGRectGetWidth(self.frame), 0.5f)];
-        innerShadow.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.375f];
-        [self addSubview:innerShadow];
-        
 		[self setState:EGOOPullRefreshNormal];
     }
     return self;
