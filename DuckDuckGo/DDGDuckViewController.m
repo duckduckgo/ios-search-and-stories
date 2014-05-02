@@ -34,10 +34,12 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    DDGSearchBar *searchBar = [self.searchController searchBar];
-    DDGAddressBarTextField *addressBarTextField = searchBar.searchField;
-    [addressBarTextField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0];
-    [self.searchController searchFieldDidChange:nil];
+    if (![self.slideOverMenuController isShowingMenu]) {
+        DDGSearchBar *searchBar = [self.searchController searchBar];
+        DDGAddressBarTextField *addressBarTextField = searchBar.searchField;
+        [addressBarTextField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0];
+        [self.searchController searchFieldDidChange:nil];
+    }
 }
 
 #pragma mark -

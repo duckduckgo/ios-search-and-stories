@@ -388,6 +388,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)tearDownMenuAppearanceTransition
 {
+    /*
+     BUG: When we're interactive we're notifiying observers, as well as the child view controllers, that the menu has appeared 
+     even when the menu was already on screen. For instance, when dragging from the right a little and then letting go so the
+     menu snaps back to the right edge. It needs to be fixed, but also requires some thought on how to go about doing so.
+     */
     [self endAppearanceTransitionOnViewController:self.menuViewController];
     [self endAppearanceTransitionOnViewController:self.contentViewController];
     if (self.isShowingMenu) {
