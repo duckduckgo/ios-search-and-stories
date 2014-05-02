@@ -252,7 +252,8 @@
     }
     
     NSURL *url = [NSURL URLWithString:urlString];
-    [self.webView loadRequest:[DDGUtility requestWithURL:url]];
+    NSURLRequest *request = [DDGUtility requestWithURL:url];
+    [self.webView loadRequest:request];
     [self.searchController updateBarWithURL:url];
     self.webViewURL = url;
 }

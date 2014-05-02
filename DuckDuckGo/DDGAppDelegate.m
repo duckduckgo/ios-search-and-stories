@@ -18,6 +18,7 @@
 #import "DDGFirstRunViewController.h"
 #import "DDGSlideOverMenuController.h"
 #import <HockeySDK/HockeySDK.h>
+#import "DDGURLProtocol.h"
 
 @interface DDGAppDelegate ()
 @property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
@@ -35,7 +36,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    [NSURLProtocol registerClass:[DDGURLProtocol class]];
     
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
