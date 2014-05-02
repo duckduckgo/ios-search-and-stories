@@ -18,6 +18,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIView *contentBackgroundView;
 @property (nonatomic, strong) UIView *dropShadowView;
+@property (nonatomic, strong) UIView *innerShadowView;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
 
 @end
@@ -36,6 +37,13 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 }
 
 #pragma mark -
+
+- (void)setDisplaysDropShadow:(BOOL)displaysDropShadow
+{
+    _displaysDropShadow = displaysDropShadow;
+    self.clipsToBounds = !displaysDropShadow;
+    [self setNeedsLayout];
+}
 
 - (void)setDisplaysInnerShadow:(BOOL)displaysInnerShadow
 {
@@ -80,6 +88,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 
 - (void)configure
 {
+    self.displaysDropShadow = NO;
     self.displaysInnerShadow = NO;
     
     UIImageView *backgroundImageView = [UIImageView new];
@@ -96,8 +105,14 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     UIView *dropShadowView = [UIView new];
     dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
     dropShadowView.opaque = NO;
-    [self.contentView addSubview:dropShadowView];
+    [self addSubview:dropShadowView];
     self.dropShadowView = dropShadowView;
+    
+    UIView *innerShadowView = [UIView new];
+    innerShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
+    innerShadowView.opaque = NO;
+    [self.contentView addSubview:innerShadowView];
+    self.innerShadowView = innerShadowView;
     
     self.textLabel.backgroundColor = [UIColor clearColor];
     self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0f];
@@ -127,10 +142,17 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     backgroundImageViewBounds.size.height -= DDGTitleBarHeight;
     [self.backgroundImageView setFrame:backgroundImageViewBounds];
     
-    if (self.displaysInnerShadow) {
+    if (self.displaysDropShadow) {
         CGRect dropShadowBounds = bounds;
+        dropShadowBounds.origin.y = CGRectGetHeight(bounds);
         dropShadowBounds.size.height = 0.5f;
         [self.dropShadowView setFrame:dropShadowBounds];
+    }
+    
+    if (self.displaysInnerShadow) {
+        CGRect innerShadowBounds = bounds;
+        innerShadowBounds.size.height = 0.5f;
+        [self.innerShadowView setFrame:innerShadowBounds];
     }
     
     CGRect faviconFrame = self.faviconButton.frame;    
@@ -177,6 +199,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 {
     [super prepareForReuse];
     [self.backgroundImageView setImage:nil];
+    self.displaysDropShadow = NO;
     self.displaysInnerShadow = NO;
 }
 

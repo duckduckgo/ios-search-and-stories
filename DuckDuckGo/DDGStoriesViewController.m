@@ -1006,6 +1006,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.displaysDropShadow = (indexPath.row == ([self.tableView numberOfRowsInSection:indexPath.section] - 1));
     cell.displaysInnerShadow = (indexPath.row != 0);
     cell.title = story.title;
     cell.read = story.readValue;

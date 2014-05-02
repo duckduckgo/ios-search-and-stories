@@ -12,6 +12,7 @@ extern NSString *const DDGStoryCellIdentifier;
 
 @interface DDGStoryCell : UITableViewCell
 
+@property (nonatomic, assign) BOOL displaysDropShadow;
 @property (nonatomic, assign) BOOL displaysInnerShadow;
 @property (nonatomic, strong) UIImage *favicon;
 @property (nonatomic, strong) UIImage *image;
