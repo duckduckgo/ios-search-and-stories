@@ -13,5 +13,6 @@
 @interface DDGDuckViewController : UIViewController
 
 - (instancetype)initWithSearchController:(DDGSearchController *)searchController;
+- (void)updateContainerHeightConstraint:(BOOL)keyboardShowing;
 
 @end

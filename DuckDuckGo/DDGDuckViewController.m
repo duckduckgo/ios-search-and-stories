@@ -14,6 +14,7 @@
 @interface DDGDuckViewController ()
 
 @property (nonatomic, weak) DDGSearchController *searchController;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *containerViewHeightConstraint;
 
 @end
 
@@ -37,6 +38,13 @@
     DDGAddressBarTextField *addressBarTextField = searchBar.searchField;
     [addressBarTextField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0];
     [self.searchController searchFieldDidChange:nil];
+}
+
+#pragma mark -
+
+- (void)updateContainerHeightConstraint:(BOOL)keyboardShowing
+{
+    [self.containerViewHeightConstraint setConstant:keyboardShowing ? 170.0f : 230.0f];
 }
 
 @end

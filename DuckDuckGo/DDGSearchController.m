@@ -20,6 +20,7 @@
 
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
+#import "DDGDuckViewController.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -383,10 +384,19 @@ NSString * const emailRegEx =
     } else {
         double duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
         [self revealInputAccessory:show animationDuration:duration];
+        
+        UIViewController *controller = [self.controllers lastObject];
+        if ([controller isKindOfClass:[DDGDuckViewController class]]) {
+            [controller.view layoutIfNeeded];
+        }
         [UIView animateWithDuration:duration
                               delay:0
                             options:[[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]
                          animations:^{
+                             if ([controller isKindOfClass:[DDGDuckViewController class]]) {
+                                 [(DDGDuckViewController *)controller updateContainerHeightConstraint:show];
+                                 [controller.view layoutIfNeeded];
+                             }
                              CGRect f = self.view.frame;
                              f.size.height = keyboardEnd.origin.y - f.origin.y;
                              self.view.frame = f;
