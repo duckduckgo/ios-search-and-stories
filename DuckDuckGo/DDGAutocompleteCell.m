@@ -142,6 +142,8 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
     [self.button removeTarget:nil action:NULL forControlEvents:UIControlEventAllEvents];
     self.accessoryView = nil;
     [self setAdorned:NO];
+    [self.imageView setImage:nil];
+    [self.roundedImageView setImage:nil];
 }
 
 - (void)setAdorned:(BOOL)adorned

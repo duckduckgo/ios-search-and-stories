@@ -247,9 +247,8 @@ static NSString *historyCellID = @"HCell";
 	else if(indexPath.section == 1)
 	{
         cell = [tv dequeueReusableCellWithIdentifier:suggestionCellID];
-        if(!cell) {
+        if (!cell) {
             cell = [[DDGAutocompleteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:suggestionCellID];
-            cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
         }
 		[cell setAdorned:NO];
         
@@ -267,16 +266,13 @@ static NSString *historyCellID = @"HCell";
         
         [cell addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
         
-        UIImage *image = nil;
         if([[suggestionItem objectForKey:@"image"] length]) {
             NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
-            image = [self.imageCache objectForKey:URL];
+            UIImage *image = [self.imageCache objectForKey:URL];
             [cell setAdorned:YES];
-		} else {
-            image = [[UIImage imageNamed:@"SearchBig"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        }
-             
-        cell.roundedImageView.image = image;
+            cell.roundedImageView.image = image;
+            cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
+		}
         
         if([suggestionItem objectForKey:@"calls"] && [[suggestionItem objectForKey:@"calls"] count])
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
@@ -291,12 +287,18 @@ static NSString *historyCellID = @"HCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (!indexPath.section && self.history.count)
-		return kCellHeightHistory+1;
-	else if (indexPath.section == 1 && self.suggestions.count)
-		return kCellHeightSuggestions+1;
-
-	return 0.0;
+    CGFloat height = 0.0f;
+    if (indexPath.section == 0 && [self.history count] > 0) {
+        height = 44.0f;
+    } else if (indexPath.section == 1 && [self.suggestions count] > 0) {
+        NSDictionary *suggestion = self.suggestions[indexPath.row];
+        if (suggestion[@"image"] && [suggestion[@"image"] length] > 0) {
+            height = 66.0f;
+        } else {
+            height = 44.0f;
+        }
+    }
+    return height;
 }
 
 #pragma mark - Table view delegate
