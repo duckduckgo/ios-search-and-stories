@@ -879,8 +879,7 @@ NSInteger const DDGSmallImageViewTag = 2;
             
             if(changes > 0 && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
                 SystemSoundID quack;
-                NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
-                NSURL *url = [NSURL URLWithString:path];
+                NSURL *url = [[NSBundle mainBundle] URLForResource:@"quack" withExtension:@"wav"];
                 AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &quack);
                 AudioServicesPlaySystemSound(quack);
             }
