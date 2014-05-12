@@ -18,6 +18,4 @@
 @property (nonatomic, weak) DDGSearchController *searchController;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 
-- (IBAction)plus:(id)sender;
-
 @end
