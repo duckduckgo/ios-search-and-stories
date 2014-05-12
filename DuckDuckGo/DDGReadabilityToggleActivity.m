@@ -24,11 +24,11 @@
     
     switch (self.toggleMode) {
         case DDGReadabilityToggleModeOn:
-            return NSLocalizedString(@"Readability On", @"Activity title: switch on readability mode");
+            return NSLocalizedString(@"Enable Readability", @"Activity title: switch on readability mode");
             break;
         case DDGReadabilityToggleModeOff:
         default:
-            return NSLocalizedString(@"Readability Off", @"Activity title: switch off readability mode");
+            return NSLocalizedString(@"Disable Readability", @"Activity title: switch off readability mode");
             break;
     }
     
@@ -38,11 +38,11 @@
 - (UIImage *)activityImage {    
     switch (self.toggleMode) {
         case DDGReadabilityToggleModeOn:
-            return [UIImage imageNamed:@"ui-activity_readability-on"];
+            return [UIImage imageNamed:@"ReadabilityOn"];
             break;
         case DDGReadabilityToggleModeOff:
         default:
-            return [UIImage imageNamed:@"ui-activity_readability-off"];
+            return [UIImage imageNamed:@"ReadabilityOff"];
             break;
     }
     

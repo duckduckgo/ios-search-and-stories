@@ -62,12 +62,12 @@
 - (NSString *)activityTitle {
     switch (self.bookmarkActivityState) {
         case DDGBookmarkActivityStateUnsave:
-            return NSLocalizedString(@"Unsave", @"Bookmark Activity Title: Unsave");
+            return NSLocalizedString(@"Unfavorite", @"Bookmark Activity Title: Unsave");
             break;
             
         case DDGBookmarkActivityStateSave:
         default:
-            return NSLocalizedString(@"Save", @"Bookmark Activity Title: Save");
+            return NSLocalizedString(@"Favorite", @"Bookmark Activity Title: Save");
             break;
     }
 }
@@ -75,12 +75,12 @@
 - (UIImage *)activityImage {
     switch (self.bookmarkActivityState) {
         case DDGBookmarkActivityStateUnsave:
-            return [UIImage imageNamed:@"ui-activity_un-save"];
+            return [UIImage imageNamed:@"Unfavorite"];
             break;
             
         case DDGBookmarkActivityStateSave:
         default:
-            return [UIImage imageNamed:@"ui-activity_save"];
+            return [UIImage imageNamed:@"Favorite"];
             break;
     }
 }
