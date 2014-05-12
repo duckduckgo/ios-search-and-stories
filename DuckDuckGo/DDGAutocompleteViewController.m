@@ -129,7 +129,7 @@ static NSString *historyCellID = @"HCell";
                     NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
                     if (row != NSNotFound) {
                         DDGAutocompleteCell *cell = (DDGAutocompleteCell *)[weakSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:1]];
-                        cell.roundedImageView.image = image;
+                        [cell.imageView setImage:image];
                         [cell setNeedsLayout];
                     }
                 };
@@ -270,8 +270,9 @@ static NSString *historyCellID = @"HCell";
             NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
             UIImage *image = [self.imageCache objectForKey:URL];
             [cell setAdorned:YES];
-            cell.roundedImageView.image = image;
-            cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
+//            cell.roundedImageView.image = image;
+//            cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
+            [cell.imageView setImage:image];
 		}
         
         if([suggestionItem objectForKey:@"calls"] && [[suggestionItem objectForKey:@"calls"] count])

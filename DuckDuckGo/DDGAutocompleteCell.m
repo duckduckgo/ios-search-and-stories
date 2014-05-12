@@ -7,13 +7,10 @@
 //
 
 #import "DDGAutocompleteCell.h"
-//#import "DDGPlusButton.h"
 
 @interface DDGAutocompleteCell ()
 
-//@property (nonatomic, strong, readwrite) DDGPlusButton *plusButton;
 @property (nonatomic, strong) UIButton *button;
-@property (nonatomic, weak, readwrite) UIImageView *roundedImageView;
 @property (nonatomic, weak, readwrite) UIView *separatorLine;
 
 @end
@@ -55,25 +52,21 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        self.textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
-        self.textLabel.numberOfLines = 1;
         self.tintColor = [UIColor autocompleteHeaderColor];
         self.selectionStyle = UITableViewCellSelectionStyleGray;
         self.backgroundView = [[UIView alloc] init];
         self.backgroundView.backgroundColor = [UIColor whiteColor];
         
+        self.textLabel.lineBreakMode = NSLineBreakByTruncatingTail;
+        self.textLabel.numberOfLines = 1;
+        
         self.detailTextLabel.numberOfLines = 2;
         
-        UIImageView *iv = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 53, 53)];
-        iv.contentMode = UIViewContentModeScaleAspectFit;
-        iv.clipsToBounds = YES;
-        iv.backgroundColor = [UIColor whiteColor];
-        
-        CALayer *layer = iv.layer;
-        layer.cornerRadius = 4.0;
-        
-        [self.contentView insertSubview:iv aboveSubview:self.imageView];
-        self.roundedImageView = iv;
+        [self.imageView setContentMode:UIViewContentModeScaleAspectFit];
+        [self.imageView setBackgroundColor:[UIColor whiteColor]];
+        CALayer *layer = [self.imageView layer];
+        layer.cornerRadius = 4.0f;
+        layer.masksToBounds = YES;
         
         // self contained separator lines
         CGRect frame = self.contentView.bounds;
@@ -105,12 +98,9 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
 {
     [super layoutSubviews];
     
-    self.roundedImageView.hidden = (nil == self.roundedImageView.image);
-    CGSize size = self.roundedImageView.image.size;
-    CGSize fitSize = AspectFitSizeInSize(size, CGSizeMake(53, 53), NO);
-    self.roundedImageView.bounds = CGRectMake(0, 0, fitSize.width, fitSize.height);
-    self.roundedImageView.center = self.imageView.center;
-    
+    CGRect imageViewBounds = CGRectMake(6.0f, 6.0f, 54.0f, 54.0f);
+    [self.imageView setFrame:imageViewBounds];
+
     CGRect bounds = self.bounds;
     CGRect accessoryRect = self.accessoryView.frame;
     CGRect contentRect = self.contentView.frame;
@@ -125,12 +115,12 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
                                         bounds.size.width - contentRect.origin.x - accessoryRect.size.width - 6.0,
                                         contentRect.size.height);
 
-    self.textLabel.frame = CGRectMake(textRect.origin.x,
+    self.textLabel.frame = CGRectMake([self.imageView image] ? 70.0f : 17.0f,
                                       textRect.origin.y,
                                       contentRect.size.width - textRect.origin.x,
                                       textRect.size.height);
     
-    self.detailTextLabel.frame = CGRectMake(detailRect.origin.x,
+    self.detailTextLabel.frame = CGRectMake(self.textLabel.frame.origin.x,
                                             detailRect.origin.y,
                                             contentRect.size.width - detailRect.origin.x,
                                             detailRect.size.height);
@@ -143,7 +133,6 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
     self.accessoryView = nil;
     [self setAdorned:NO];
     [self.imageView setImage:nil];
-    [self.roundedImageView setImage:nil];
 }
 
 - (void)setAdorned:(BOOL)adorned

@@ -9,12 +9,9 @@
 #import <UIKit/UIKit.h>
 #import <QuartzCore/QuartzCore.h>
 
-@class DDGPlusButton;
-
 @interface DDGAutocompleteCell : UITableViewCell
 
-@property (nonatomic, weak, readonly) UIImageView *roundedImageView;
-@property (nonatomic, readwrite) BOOL showsSeparatorLine;
+@property (nonatomic, assign, readwrite) BOOL showsSeparatorLine;
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents;
 - (void)setAdorned:(BOOL)adorned;
