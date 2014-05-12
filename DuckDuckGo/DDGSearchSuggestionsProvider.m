@@ -20,7 +20,7 @@ static DDGSearchSuggestionsProvider *sharedProvider;
     if(self) {
         suggestionsCache = [[NSMutableDictionary alloc] init];
 
-        serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
+        serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://next.duckduckgo.com"]
                                                 cachePolicy:NSURLRequestUseProtocolCachePolicy
                                             timeoutInterval:10.0];
 		

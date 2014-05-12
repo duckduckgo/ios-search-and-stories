@@ -157,7 +157,7 @@
     if(query)
     {
         NSString *escapedQuery = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-        shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:escapedQuery]];
+        shareURL = [NSURL URLWithString:[@"https://next.duckduckgo.com/?q=" stringByAppendingString:escapedQuery]];
     }
     
     NSString *pageTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
@@ -241,7 +241,7 @@
     if([self.searchController isQuery:queryOrURLString])
     {
         // direct query
-        urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
+        urlString = [NSString stringWithFormat:@"https://next.duckduckgo.com/?q=%@&ko=-1&kl=%@",
                      [queryOrURLString URLEncodedStringDDG], 
                      [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingRegion]];
     }
