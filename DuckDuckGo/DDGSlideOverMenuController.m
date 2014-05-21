@@ -23,6 +23,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 @property (nonatomic, assign) CGPoint originalMenuCenterPoint;
 @property (nonatomic, assign) CGPoint panOriginPoint;
 @property (nonatomic, strong, readwrite) UIPanGestureRecognizer *panGesture;
+@property (nonatomic, strong) UIView *shadowView;
 @property (nonatomic, assign, readwrite, getter = isShowingMenu) BOOL showingMenu;
 @property (nonatomic, weak, readonly) UIWindow *window;
 
@@ -209,6 +210,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     [super viewDidLoad];
     [self setupBlurContainer];
+    [self setupShadow];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -278,6 +280,13 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (CGRect)frameForMenuViewController
 {
     return self.isShowingMenu ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
+}
+
+- (CGRect)frameForShadow
+{
+    CGRect frame = [self frameForBlurContainer];
+    frame.size.width = 1.0f;
+    return frame;
 }
 
 - (void)notifyObserversAboutMenuAppearanceTransition:(BOOL)complete
@@ -366,6 +375,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     if (!self.isShowingMenu) {
         [self.blurContainerView setHidden:NO];
         [[self.menuViewController view] setHidden:NO];
+        [self.shadowView setHidden:NO];
     }
     self.showingMenu = !self.isShowingMenu;
     if (isAppearing) {
@@ -376,6 +386,15 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     }
     [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:isAppearing animated:animated];
     [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:!isAppearing animated:animated];
+}
+
+- (void)setupShadow
+{
+    UIView *shadowView = [[UIView alloc] initWithFrame:[self frameForShadow]]; //[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1.0f, CGRectGetHeight([self.view bounds]))];
+    shadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
+    shadowView.hidden = YES;
+    [self.view addSubview:shadowView];
+    self.shadowView = shadowView;
 }
 
 - (void)tearDownGestureRecognizer
@@ -400,6 +419,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     } else {
         [self.blurContainerView setHidden:YES];
         [[self.menuViewController view] setHidden:YES];
+        [self.shadowView setHidden:YES];
     }
 }
 
@@ -412,6 +432,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         CGFloat alpha = isAppearing ? 0.0f : 1.0f;
         CGRect blurContainerFrame = isAppearing ? [self onScreenFrameForBlurContainer] : [self offScreenFrameForBlurContainer];
         CGRect menuViewFrame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
+        CGRect shadowViewFrame = [self frameForShadow]; //CGRectMake(CGRectGetWidth(blurContainerFrame), 0.0f, 1.0f, CGRectGetHeight([self.view bounds]));
         if (animated) {
             self.animating = YES;
             [UIView animateWithDuration:(self.mode == DDGSlideOverMenuModeHorizontal ? 0.25 : 0.375)
@@ -420,6 +441,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                              animations:^{
                                  [self.blurContainerView setFrame:blurContainerFrame];
                                  [[self.menuViewController view] setFrame:menuViewFrame];
+                                 [self.shadowView setFrame:shadowViewFrame];
                                  [self.window setAlpha:alpha];
                              }
                              completion:^(BOOL finished) {
@@ -434,6 +456,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         } else {
             [self.blurContainerView setFrame:blurContainerFrame];
             [[self.menuViewController view] setFrame:menuViewFrame];
+            [self.shadowView setFrame:shadowViewFrame];
             [self.window setAlpha:alpha];
             if (!interactive) {
                 [self tearDownMenuAppearanceTransition];
@@ -479,6 +502,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     [self.blurContainerView setFrame:[self frameForBlurContainer]];
     [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
+    [self.shadowView setFrame:[self frameForShadow]];
 }
 
 - (void)updateMenuPositionWithOffset:(CGFloat)offset
@@ -493,6 +517,10 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     CGRect bounds = self.originalBlurContainerFrame;
     bounds.size.width += offset;
     [self.blurContainerView setFrame:bounds];
+    
+    bounds = [self.shadowView frame];
+    bounds.origin.x = CGRectGetWidth([self.blurContainerView bounds]);
+    [self.shadowView setFrame:bounds];
     
     CGFloat alpha = 1.0f - (bounds.size.width / CGRectGetWidth([self.view bounds]));
     [self.window setAlpha:alpha];
