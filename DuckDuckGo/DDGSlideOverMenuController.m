@@ -15,7 +15,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 @interface DDGSlideOverMenuController () <UIGestureRecognizerDelegate>
 
 @property (nonatomic, assign, readwrite, getter = isAnimating) BOOL animating;
-@property (nonatomic, strong) UIImageView *blurContainerView;
+@property (nonatomic, strong) UIView *blurContainerView;
 @property (nonatomic, assign, getter = isInteractive) BOOL interactive;
 @property (nonatomic, strong) UIPanGestureRecognizer *menuPanGesture;
 @property (nonatomic, assign) DDGSlideOverMenuMode mode;
@@ -23,7 +23,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 @property (nonatomic, assign) CGPoint originalMenuCenterPoint;
 @property (nonatomic, assign) CGPoint panOriginPoint;
 @property (nonatomic, strong, readwrite) UIPanGestureRecognizer *panGesture;
-@property (nonatomic, strong) UIView *shadowView;
 @property (nonatomic, assign, readwrite, getter = isShowingMenu) BOOL showingMenu;
 @property (nonatomic, weak, readonly) UIWindow *window;
 
@@ -139,7 +138,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     [self updateBlurContainerContent:YES completion:^{
-        [self.blurContainerView setContentMode:(self.mode == DDGSlideOverMenuModeHorizontal ? UIViewContentModeTopLeft : UIViewContentModeBottomLeft)];
+        UIImageView *blurImageView = (UIImageView *)[[self.blurContainerView subviews] firstObject];
+        [blurImageView setContentMode:(self.mode == DDGSlideOverMenuModeHorizontal ? UIViewContentModeTopLeft : UIViewContentModeBottomLeft)];
     }];
 }
 
@@ -210,7 +210,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     [super viewDidLoad];
     [self setupBlurContainer];
-    [self setupShadow];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -238,7 +237,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
 {
     [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    [self.blurContainerView setContentMode:UIViewContentModeScaleAspectFill];
+    UIImageView *blurImageView = (UIImageView *)[[self.blurContainerView subviews] firstObject];
+    [blurImageView setContentMode:UIViewContentModeScaleAspectFill];
 }
 
 #pragma mark - UIGestureRecognizerDelete
@@ -280,13 +280,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (CGRect)frameForMenuViewController
 {
     return self.isShowingMenu ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
-}
-
-- (CGRect)frameForShadowUsingRect:(CGRect)rect
-{
-    rect.origin.x = rect.size.width;
-    rect.size.width = 0.5f;
-    return rect;
 }
 
 - (void)notifyObserversAboutMenuAppearanceTransition:(BOOL)complete
@@ -357,9 +350,18 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 - (void)setupBlurContainer
 {
     CGRect frame = [self offScreenFrameForBlurContainer];
-    UIImageView *blurContainerView = [[UIImageView alloc] initWithFrame:frame];
-    blurContainerView.contentMode = (self.mode == DDGSlideOverMenuModeHorizontal ? UIViewContentModeTopLeft : UIViewContentModeBottomLeft);
-    blurContainerView.clipsToBounds = YES;
+    UIView *blurContainerView = [[UIView alloc] initWithFrame:frame];
+    CALayer *layer = blurContainerView.layer;
+    layer.masksToBounds = NO;
+    layer.shadowColor = [UIColor blackColor].CGColor;
+    layer.shadowOffset = CGSizeMake(5.0f, 0.0f);
+    layer.shadowOpacity = 0.15f;
+    layer.shadowRadius = 5.0f;
+    UIImageView *blurImageView = [[UIImageView alloc] initWithFrame:frame];
+    blurImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    blurImageView.contentMode = (self.mode == DDGSlideOverMenuModeHorizontal ? UIViewContentModeTopLeft : UIViewContentModeBottomLeft);
+    blurImageView.clipsToBounds = YES;
+    [blurContainerView addSubview:blurImageView];
     [self.view addSubview:blurContainerView];
     self.blurContainerView = blurContainerView;
 }
@@ -375,7 +377,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     if (!self.isShowingMenu) {
         [self.blurContainerView setHidden:NO];
         [[self.menuViewController view] setHidden:NO];
-        [self.shadowView setHidden:NO];
     }
     self.showingMenu = !self.isShowingMenu;
     if (isAppearing) {
@@ -386,15 +387,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     }
     [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:isAppearing animated:animated];
     [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:!isAppearing animated:animated];
-}
-
-- (void)setupShadow
-{
-    UIView *shadowView = [[UIView alloc] initWithFrame:[self frameForShadowUsingRect:[self frameForBlurContainer]]];
-    shadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
-    shadowView.hidden = YES;
-    [self.view addSubview:shadowView];
-    self.shadowView = shadowView;
 }
 
 - (void)tearDownGestureRecognizer
@@ -419,7 +411,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     } else {
         [self.blurContainerView setHidden:YES];
         [[self.menuViewController view] setHidden:YES];
-        [self.shadowView setHidden:YES];
     }
 }
 
@@ -432,7 +423,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         CGFloat alpha = isAppearing ? 0.0f : 1.0f;
         CGRect blurContainerFrame = isAppearing ? [self onScreenFrameForBlurContainer] : [self offScreenFrameForBlurContainer];
         CGRect menuViewFrame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
-        CGRect shadowViewFrame = [self frameForShadowUsingRect:blurContainerFrame];
         if (animated) {
             self.animating = YES;
             [UIView animateWithDuration:(self.mode == DDGSlideOverMenuModeHorizontal ? 0.25 : 0.375)
@@ -441,7 +431,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                              animations:^{
                                  [self.blurContainerView setFrame:blurContainerFrame];
                                  [[self.menuViewController view] setFrame:menuViewFrame];
-                                 [self.shadowView setFrame:shadowViewFrame];
                                  [self.window setAlpha:alpha];
                              }
                              completion:^(BOOL finished) {
@@ -456,7 +445,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         } else {
             [self.blurContainerView setFrame:blurContainerFrame];
             [[self.menuViewController view] setFrame:menuViewFrame];
-            [self.shadowView setFrame:shadowViewFrame];
             [self.window setAlpha:alpha];
             if (!interactive) {
                 [self tearDownMenuAppearanceTransition];
@@ -479,19 +467,21 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                                                              tintColor:[UIColor colorWithWhite:0.95f alpha:0.7f]
                                                  saturationDeltaFactor:1.0f
                                                              maskImage:nil];
+    UIImageView *blurImageView = (UIImageView *)[[self.blurContainerView subviews] firstObject];
     if (animated) {
         [UIView transitionWithView:self.blurContainerView
                           duration:0.25
                            options:UIViewAnimationOptionTransitionCrossDissolve
                         animations:^{
-                            [self.blurContainerView setImage:blurredSnapshotImage];
+                            
+                            [blurImageView setImage:blurredSnapshotImage];
                         } completion:^(BOOL finished) {
                             if (completion) {
                                 completion();
                             }
                         }];
     } else {
-        [self.blurContainerView setImage:blurredSnapshotImage];
+        [blurImageView setImage:blurredSnapshotImage];
         if (completion) {
             completion();
         }
@@ -502,7 +492,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     [self.blurContainerView setFrame:[self frameForBlurContainer]];
     [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
-    [self.shadowView setFrame:[self frameForShadowUsingRect:[self.blurContainerView frame]]];
 }
 
 - (void)updateMenuPositionWithOffset:(CGFloat)offset
@@ -517,10 +506,6 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     CGRect bounds = self.originalBlurContainerFrame;
     bounds.size.width += offset;
     [self.blurContainerView setFrame:bounds];
-    
-    bounds = [self.shadowView frame];
-    bounds.origin.x = CGRectGetWidth([self.blurContainerView bounds]);
-    [self.shadowView setFrame:bounds];
     
     CGFloat alpha = 1.0f - (bounds.size.width / CGRectGetWidth([self.view bounds]));
     [self.window setAlpha:alpha];
