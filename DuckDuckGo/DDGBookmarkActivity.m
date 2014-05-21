@@ -138,8 +138,10 @@
         }
     }        
     
-    NSString *status = (self.bookmarkActivityState == DDGBookmarkActivityStateSave) ? NSLocalizedString(@"Saved", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Unsaved", @"Bookmark Activity Confirmation: Unsaved");
-    [SVProgressHUD showSuccessWithStatus:status];
+    NSString *status = (self.bookmarkActivityState == DDGBookmarkActivityStateSave) ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
+    UIImage *image = (self.bookmarkActivityState == DDGBookmarkActivityStateSave) ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    
+    [SVProgressHUD showImage:image status:status];
     
     [self activityDidFinish:YES];
 }
