@@ -74,18 +74,28 @@
 
 - (void)setDeletable:(BOOL)deletable animated:(BOOL)animated
 {
-    [self.contentView layoutIfNeeded];
-    [self.buttonContainerView setHidden:!deletable];
+    [self.contentView layoutIfNeeded];    
     if (animated) {
+        if (deletable) {
+            [self.buttonContainerView setHidden:NO];
+        }
         [UIView animateWithDuration:0.25
                               delay:0
                             options:UIViewAnimationOptionCurveEaseInOut
                          animations:^{
+                             if (!self.auxiliaryViewHidden) {
+                                 [self.auxiliaryImageView setAlpha:deletable ? 0.0f : 1.0f];
+                             }
                              CGFloat width = CGRectGetWidth(self.bounds);
                              [self.contentContainerWidthConstraint setConstant:deletable ? (width - 74.0f) : width];
                              [self layoutIfNeeded];
-                         } completion:nil];
+                         } completion:^(BOOL finished) {
+                             if (!deletable) {
+                                 [self.buttonContainerView setHidden:YES];
+                             }
+                         }];
     } else {
+        [self.buttonContainerView setHidden:!deletable];
         [self.contentContainerWidthConstraint setConstant:deletable ? 246.0f : CGRectGetWidth(self.bounds)];
         [self layoutIfNeeded];
     }
