@@ -152,11 +152,13 @@ static NSString *historyCellID = @"HCell";
 
 - (void)searchFieldDidChange:(id)sender {
     NSString *newSearchText = self.searchController.searchBar.searchField.text;
-        
+    
+    /* Disabled as per https://github.com/duckduckgo/ios/issues/25
     if([newSearchText isEqualToString:[self.searchController validURLStringFromString:newSearchText]]) {
         // we're definitely editing a URL, don't bother with autocomplete.
         return;
     }
+    */
     
 	if (newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.

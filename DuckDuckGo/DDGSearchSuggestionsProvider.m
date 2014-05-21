@@ -76,7 +76,7 @@ static DDGSearchSuggestionsProvider *sharedProvider;
         if (success)
             success();
         return;
-    } else if(!searchText || [searchText isEqualToString:@""] || [self textIsLink:searchText]) {
+    } else if(!searchText || [searchText isEqualToString:@""]) {
         if (success)
             success();
     } else {
