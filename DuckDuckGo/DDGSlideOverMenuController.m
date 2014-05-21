@@ -282,11 +282,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     return self.isShowingMenu ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
 }
 
-- (CGRect)frameForShadow
+- (CGRect)frameForShadowUsingRect:(CGRect)rect
 {
-    CGRect frame = [self frameForBlurContainer];
-    frame.size.width = 1.0f;
-    return frame;
+    rect.origin.x = rect.size.width;
+    rect.size.width = 0.5f;
+    return rect;
 }
 
 - (void)notifyObserversAboutMenuAppearanceTransition:(BOOL)complete
@@ -390,7 +390,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)setupShadow
 {
-    UIView *shadowView = [[UIView alloc] initWithFrame:[self frameForShadow]]; //[[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 1.0f, CGRectGetHeight([self.view bounds]))];
+    UIView *shadowView = [[UIView alloc] initWithFrame:[self frameForShadowUsingRect:[self frameForBlurContainer]]];
     shadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
     shadowView.hidden = YES;
     [self.view addSubview:shadowView];
@@ -432,7 +432,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         CGFloat alpha = isAppearing ? 0.0f : 1.0f;
         CGRect blurContainerFrame = isAppearing ? [self onScreenFrameForBlurContainer] : [self offScreenFrameForBlurContainer];
         CGRect menuViewFrame = isAppearing ? [self onScreenFrameForMenuViewController] : [self offScreenFrameForMenuViewController];
-        CGRect shadowViewFrame = [self frameForShadow]; //CGRectMake(CGRectGetWidth(blurContainerFrame), 0.0f, 1.0f, CGRectGetHeight([self.view bounds]));
+        CGRect shadowViewFrame = [self frameForShadowUsingRect:blurContainerFrame];
         if (animated) {
             self.animating = YES;
             [UIView animateWithDuration:(self.mode == DDGSlideOverMenuModeHorizontal ? 0.25 : 0.375)
@@ -502,7 +502,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 {
     [self.blurContainerView setFrame:[self frameForBlurContainer]];
     [[self.menuViewController view] setFrame:[self frameForMenuViewController]];
-    [self.shadowView setFrame:[self frameForShadow]];
+    [self.shadowView setFrame:[self frameForShadowUsingRect:[self.blurContainerView frame]]];
 }
 
 - (void)updateMenuPositionWithOffset:(CGFloat)offset
