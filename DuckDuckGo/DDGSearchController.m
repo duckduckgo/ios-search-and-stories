@@ -619,7 +619,7 @@ NSString * const emailRegEx =
     }
     
     // check whether we have a DDG search URL
-    if([[url host] isEqualToString:@"bttf.duckduckgo.com"]) {
+    if([[url host] isEqualToString:@"duckduckgo.com"]) {
         if([[url path] isEqualToString:@"/"] && [queryComponents objectForKey:@"q"]) {
             // yep! extract the search query...
             NSString *query = [queryComponents objectForKey:@"q"];
