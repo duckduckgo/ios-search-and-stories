@@ -301,6 +301,7 @@
 		7B2BDFA618E997ED003B8078 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2BDFA218E997ED003B8078 /* HockeySDK.framework */; };
 		7B2BDFA718E997ED003B8078 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA418E997ED003B8078 /* HockeySDK.xcconfig */; };
 		7B2BDFA818E997ED003B8078 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */; };
+		7B3BB7F7192E0F0A00E94055 /* DDGWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */; };
 		7B6450FB18E58E23005ED543 /* DDGMenuHistoryItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */; };
 		7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */; };
 		7B6E2D8918E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8818E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m */; };
@@ -754,6 +755,8 @@
 		7B2BDFA218E997ED003B8078 /* HockeySDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = HockeySDK.framework; sourceTree = "<group>"; };
 		7B2BDFA418E997ED003B8078 /* HockeySDK.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = HockeySDK.xcconfig; sourceTree = "<group>"; };
 		7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
+		7B3BB7F5192E0F0A00E94055 /* DDGWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebView.h; sourceTree = "<group>"; };
+		7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebView.m; sourceTree = "<group>"; };
 		7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuHistoryItemCell.xib; sourceTree = "<group>"; };
 		7B6450FC18E5901C005ED543 /* DDGMenuHistoryItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuHistoryItemCell.h; sourceTree = "<group>"; };
 		7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuHistoryItemCell.m; sourceTree = "<group>"; };
@@ -1218,6 +1221,8 @@
 		5B2FCB5B16F3786D0045A5FE /* Web View */ = {
 			isa = PBXGroup;
 			children = (
+				7B3BB7F5192E0F0A00E94055 /* DDGWebView.h */,
+				7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				5B2FCB5C16F3789F0045A5FE /* DDGReadabilityToggleActivity.h */,
@@ -2054,6 +2059,7 @@
 				5B7C3C301715AF8900B9E009 /* DDGHistoryViewController.m in Sources */,
 				5B7C3CA3171851F800B9E009 /* DDGDeleteButton.m in Sources */,
 				5B7C3CAA171C4B1800B9E009 /* DDGFixedSizeImageView.m in Sources */,
+				7B3BB7F7192E0F0A00E94055 /* DDGWebView.m in Sources */,
 				5B7C3CAD171C4D1E00B9E009 /* DDGHistoryItemCell.m in Sources */,
 				5B375C4917201DA600C53772 /* DDGCustomDeleteViewController.m in Sources */,
 				5B15F3D017394CC100912482 /* DDGPopoverViewController.m in Sources */,

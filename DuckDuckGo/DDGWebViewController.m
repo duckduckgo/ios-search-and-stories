@@ -21,6 +21,7 @@
 #import "DDGReadabilityToggleActivity.h"
 #import "DDGActivityItemProvider.h"
 #import "DDGSafariActivity.h"
+#import "DDGWebView.h"
 
 @interface DDGWebViewController ()
 @property (nonatomic, readwrite) BOOL inReadabilityMode;
@@ -35,9 +36,9 @@
     self.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);    
 }
 
-- (UIWebView *)webView {
+- (DDGWebView *)webView {
     if (nil == _webView) {
-        UIWebView *webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+        DDGWebView *webView = [[DDGWebView alloc] initWithFrame:self.view.bounds];
         webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
         webView.delegate = self;
         
@@ -53,8 +54,13 @@
 }
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    
+    UIMenuItem *search = [[UIMenuItem alloc] initWithTitle:@"Search" action:@selector(search:)];
+    UIMenuItem *saveImage = [[UIMenuItem alloc] initWithTitle:@"Save Image" action:@selector(saveImage:)];
+    [[UIMenuController sharedMenuController] setMenuItems:@[search, saveImage]];
 }
 
 - (void)setSearchController:(DDGSearchController *)searchController {
@@ -62,13 +68,6 @@
         return;
     
     _searchController = searchController;
-}
-
--(void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    UIMenuItem *searchMenuItem = [[UIMenuItem alloc] initWithTitle:@"Search"
-                                                            action:@selector(search:)];
-    [UIMenuController sharedMenuController].menuItems = @[searchMenuItem];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -363,14 +362,24 @@
 
 #pragma mark - Searching for selected text
 
--(BOOL)canPerformAction:(SEL)action withSender:(id)sender {
-    if(action == @selector(search:))
-        return ![self.searchController.searchBar.searchField isFirstResponder];
-    else
-        return [super canPerformAction:action withSender:sender];
+- (BOOL)canPerformAction:(SEL)action withSender:(id)sender
+{
+    if (action == @selector(search:)) {
+        return ![self.searchController.searchBar.searchField isFirstResponder] && ![self.webView tappedImageURL];
+    }
+    if (action == @selector(saveImage:)) {
+        return [self.webView tappedImageURL] ? YES : NO;
+    }
+    return [super canPerformAction:action withSender:sender];
 }
 
--(void)search:(id)sender {
+- (void)saveImage:(UIMenuItem *)menuItem
+{
+    NSLog(@"Save Image Pressed");
+}
+
+- (void)search:(UIMenuItem *)menuItem
+{
     NSString *selection = [self.webView stringByEvaluatingJavaScriptFromString:@"window.getSelection().toString()"];
     [self loadQueryOrURL:selection];
 }
