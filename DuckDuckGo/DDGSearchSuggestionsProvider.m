@@ -20,7 +20,7 @@ static DDGSearchSuggestionsProvider *sharedProvider;
     if(self) {
         suggestionsCache = [[NSMutableDictionary alloc] init];
 
-        serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://duckduckgo.com"]
+        serverRequest = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://bttf.duckduckgo.com"]
                                                 cachePolicy:NSURLRequestUseProtocolCachePolicy
                                             timeoutInterval:10.0];
 		
@@ -76,7 +76,7 @@ static DDGSearchSuggestionsProvider *sharedProvider;
         if (success)
             success();
         return;
-    } else if(!searchText || [searchText isEqualToString:@""] || [self textIsLink:searchText]) {
+    } else if(!searchText || [searchText isEqualToString:@""]) {
         if (success)
             success();
     } else {

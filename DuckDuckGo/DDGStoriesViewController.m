@@ -14,7 +14,6 @@
 #import "DDGStoryFeed.h"
 #import "DDGStoryCell.h"
 #import "NSArray+ConcurrentIteration.h"
-#import "ECSlidingViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
@@ -29,9 +28,11 @@ NSString *const DDGLastViewedStoryKey = @"last_story";
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
+NSInteger const DDGLargeImageViewTag = 1;
+NSInteger const DDGSmallImageViewTag = 2;
+
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
-    UIImageView *topShadow;
     EGORefreshTableHeaderView *refreshHeaderView;
     CIContext *_blurContext;
 }
@@ -44,10 +45,12 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 @property (nonatomic, strong) DDGPanGestureRecognizer *panLeftGestureRecognizer;
 @property (nonatomic, strong) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
-@property (weak, nonatomic) IBOutlet UIButton *swipeViewSaveButton;
+@property (nonatomic, weak) IBOutlet UIButton *swipeViewSaveButton;
+@property (nonatomic, weak) IBOutlet UIButton *swipeViewSafariButton;
+@property (nonatomic, weak) IBOutlet UIButton *swipeViewShareButton;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
-@property (nonatomic, strong) NSMutableDictionary *decompressedImages;
+@property (nonatomic, strong) NSCache *decompressedImages;
 @property (nonatomic, strong) NSMutableSet *enqueuedDecompressionOperations;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
@@ -79,8 +82,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     [self.imageDownloadQueue cancelAllOperations];
     self.imageDownloadQueue = nil;
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ECSlidingViewUnderLeftWillAppear
-                                                  object:self.slidingViewController];
+                                                    name:DDGSlideOverMenuWillAppearNotification
+                                                  object:nil];
 }
 
 - (DDGHistoryProvider *)historyProvider {
@@ -91,18 +94,15 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     return _historyProvider;
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
-    
-    self.decompressedImages = nil;
-    
+    [self.decompressedImages removeAllObjects];
     if (nil == self.view) {
         [self.imageDownloadQueue cancelAllOperations];
-        self.imageDownloadQueue = nil;
-        self.enqueuedDownloadOperations = nil;
+        [self.enqueuedDownloadOperations removeAllObjects];
         [self.imageDecompressionQueue cancelAllOperations];
-        self.imageDecompressionQueue = nil;
-        self.enqueuedDecompressionOperations = nil;
+        [self.enqueuedDecompressionOperations removeAllObjects];
     }
 }
 
@@ -113,8 +113,15 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 #pragma mark - No Stories
 
 - (void)showNoStoriesView {
-    if (nil == self.noStoriesView)
+    if (nil == self.noStoriesView) {
         [[NSBundle mainBundle] loadNibNamed:@"NoStoriesView" owner:self options:nil];
+        UIImageView *largeImageView = (UIImageView *)[self.noStoriesView viewWithTag:DDGLargeImageViewTag];
+        largeImageView.tintColor = [UIColor whiteColor];
+        largeImageView.image = [[UIImage imageNamed:@"NoFavorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        UIImageView *smallImageView = (UIImageView *)[self.noStoriesView viewWithTag:DDGSmallImageViewTag];
+        smallImageView.tintColor = RGBA(245.0f, 203.0f, 196.0f, 1.0f);
+        smallImageView.image = [[UIImage imageNamed:@"inline_actions-icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
     
     [UIView animateWithDuration:0 animations:^{
         [self.tableView removeFromSuperview];
@@ -141,10 +148,10 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
+    tableView.backgroundColor = [UIColor duckNoContentColor];
     tableView.dataSource = self;
     tableView.delegate = self;
-    tableView.rowHeight = 155.0;
+    tableView.rowHeight = 220.0f;
     tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [self.view addSubview:tableView];
     self.tableView = tableView;
@@ -153,14 +160,10 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     
     [self prepareUpcomingCellContent];
     
-    topShadow = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"table_view_shadow_top.png"]];
-    topShadow.frame = CGRectMake(0, 0, self.tableView.frame.size.width, 5.0);
-    topShadow.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    // shadow gets added to table view in scrollViewDidScroll
-    
     if (!self.savedStoriesOnly && refreshHeaderView == nil) {
 		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
-		refreshHeaderView.delegate = self;
+		refreshHeaderView.backgroundColor = [UIColor duckRed];
+        refreshHeaderView.delegate = self;
 		[self.tableView addSubview:refreshHeaderView];
         [refreshHeaderView refreshLastUpdatedDate];
 	}
@@ -178,7 +181,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     panLeftGestureRecognizer.maximumNumberOfTouches = 1;
     
     self.panLeftGestureRecognizer = panLeftGestureRecognizer;
-    [self.slidingViewController.panGesture requireGestureRecognizerToFail:panLeftGestureRecognizer];
+    [[self.slideOverMenuController panGesture] requireGestureRecognizerToFail:panLeftGestureRecognizer];
     
     NSOperationQueue *queue = [NSOperationQueue new];
     queue.maxConcurrentOperationCount = 2;
@@ -189,7 +192,11 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     decompressionQueue.name = @"DDG Watercooler Image Decompression Queue";
     self.imageDecompressionQueue = decompressionQueue;
     
-    self.decompressedImages = [NSMutableDictionary dictionaryWithCapacity:50];
+    NSCache *decompressedImages = [NSCache new];
+    [decompressedImages setCountLimit:50];
+    [decompressedImages setName:@"com.duckduckgo.mobile.ios.story-image-cache"];
+    self.decompressedImages = decompressedImages;
+    
     self.enqueuedDownloadOperations = [NSMutableSet new];
     self.enqueuedDecompressionOperations = [NSMutableSet set];    
 }
@@ -208,8 +215,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     self.enqueuedDecompressionOperations = nil;
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ECSlidingViewUnderLeftWillAppear
-                                                  object:self.slidingViewController];
+                                                    name:DDGSlideOverMenuWillAppearNotification
+                                                  object:nil];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -250,9 +257,10 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
         }];
     }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewUnderLeftWillAppear:)
-                                                 name:ECSlidingViewUnderLeftWillAppear
-                                               object:self.slidingViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(slidingViewUnderLeftWillAppear:)
+                                                 name:DDGSlideOverMenuWillAppearNotification
+                                               object:nil];
     
     [self.tableView addGestureRecognizer:self.panLeftGestureRecognizer];
 }
@@ -263,8 +271,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ECSlidingViewUnderLeftWillAppear
-                                                  object:self.slidingViewController];
+                                                    name:DDGSlideOverMenuWillAppearNotification
+                                                  object:nil];
     
     [self.tableView removeGestureRecognizer:self.panLeftGestureRecognizer];
 	[super viewWillDisappear:animated];
@@ -382,12 +390,14 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 #pragma mark - Search handler
 
--(void)searchControllerLeftButtonPressed {
-    [self.slidingViewController anchorTopViewTo:ECRight];
+-(void)searchControllerLeftButtonPressed
+{
+    [self.slideOverMenuController showMenu];
 }
 
--(void)loadQueryOrURL:(NSString *)queryOrURL {
-    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController loadQueryOrURL:queryOrURL];
+-(void)loadQueryOrURL:(NSString *)queryOrURL
+{
+    [(DDGUnderViewController *)[self.slideOverMenuController menuViewController] loadQueryOrURL:queryOrURL];
 }
 
 #pragma mark - Swipe View
@@ -488,29 +498,32 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
                              completion();
                      }];
     
-    [self.slidingViewController.panGesture setEnabled:YES];
+    [[self.slideOverMenuController panGesture] setEnabled:YES];
 }
 
-- (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath {
+- (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath
+{
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if (nil != cell) {
+    if (cell) {
         UIView *behindView = cell.contentView;
         CGRect swipeFrame = behindView.frame;
-        
-        if (nil == self.swipeView)
+        if (!self.swipeView) {
             [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
-        
+        }
+        [self.swipeView setTintColor:[UIColor whiteColor]];
         DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
         BOOL saved = story.savedValue;
-        
-        NSString *imageName = (saved) ? @"swipe-un-save" : @"swipe-save";
-        [self.swipeViewSaveButton setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
-        
+        NSString *imageName = (saved) ? @"Unfavorite" : @"Favorite";
+        [self.swipeViewSafariButton setImage:[[UIImage imageNamed:@"Safari"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                    forState:UIControlStateNormal];
+        [self.swipeViewSaveButton setImage:[[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                  forState:UIControlStateNormal];
+        [self.swipeViewShareButton setImage:[[UIImage imageNamed:@"ShareSwipe"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                   forState:UIControlStateNormal];
         self.swipeView.frame = swipeFrame;
         [behindView.superview insertSubview:self.swipeView belowSubview:behindView];
         self.swipeViewIndexPath = indexPath;
     }
-    
 }
 
 - (void)showSwipeViewForIndexPath:(NSIndexPath *)indexPath {
@@ -557,7 +570,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             
             CGPoint velocity = [recognizer velocityInView:recognizer.view];
             
-            [self.slidingViewController.panGesture setEnabled:NO];
+            [[self.slideOverMenuController panGesture] setEnabled:NO];
             
             if (velocity.x < 0 && percent > 0.25) {
                 CGFloat distanceRemaining = contentFrame.size.width - offset;
@@ -638,12 +651,6 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
     
     if(scrollView.contentOffset.y <= 0) {
         [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-        
-        CGRect f = topShadow.frame;
-        f.origin.y = scrollView.contentOffset.y;
-        topShadow.frame = f;
-        
-        [_tableView insertSubview:topShadow atIndex:0];
     }
     
     [self prepareUpcomingCellContent];
@@ -766,6 +773,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             UIGraphicsEndImageContext();
             
             //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
+            /*
             if (!story.blurredImage) {
                 CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
                 
@@ -782,6 +790,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
                 story.blurredImage = [UIImage imageWithCGImage:filteredImage];
                 CGImageRelease(filteredImage);
             }
+             */
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [weakSelf.decompressedImages setObject:decompressed forKey:storyID];
@@ -870,8 +879,7 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             
             if(changes > 0 && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
                 SystemSoundID quack;
-                NSString *path = [[NSBundle mainBundle] pathForResource:@"quack" ofType:@"wav"];
-                NSURL *url = [NSURL URLWithString:path];
+                NSURL *url = [[NSBundle mainBundle] URLForResource:@"quack" withExtension:@"wav"];
                 AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &quack);
                 AudioServicesPlaySystemSound(quack);
             }
@@ -997,15 +1005,16 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.displaysDropShadow = (indexPath.row == ([self.tableView numberOfRowsInSection:indexPath.section] - 1));
+    cell.displaysInnerShadow = (indexPath.row != 0);
     cell.title = story.title;
-    cell.titleColor = story.readValue ? [UIColor colorWithWhite:1.0f alpha:0.5f] : [UIColor whiteColor];
+    cell.read = story.readValue;
     if (story.feed) {
         cell.favicon = [story.feed image];
     }
-    UIImage *image = self.decompressedImages[story.id];
+    UIImage *image = [self.decompressedImages objectForKey:story.id];
     if (image) {
         cell.image = image;
-        cell.blurredImage = story.blurredImage;
     } else {
         if (story.isImageDownloaded) {
             [self decompressAndDisplayImageForStory:story];
@@ -1013,7 +1022,6 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
             [self.storyFetcher downloadImageForStory:story];
         }
     }
-    [cell redraw];
 }
 
 

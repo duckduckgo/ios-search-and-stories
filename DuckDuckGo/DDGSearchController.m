@@ -13,7 +13,6 @@
 #import "DDGInputAccessoryView.h"
 #import "DDGBookmarksViewController.h"
 #import "DDGAutocompleteViewController.h"
-#import "ECSlidingViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
@@ -21,6 +20,7 @@
 
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
+#import "DDGDuckViewController.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -89,7 +89,7 @@ NSString * const emailRegEx =
     }
     
     if (image == nil)
-        image = [UIImage imageNamed:@"button_menu_glyph_under"];
+        image = [[UIImage imageNamed:@"Menu"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
     [self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];
@@ -125,7 +125,7 @@ NSString * const emailRegEx =
 }
 
 - (void)configurePanGestureForViewController:(UIViewController *)viewController {
-    UIGestureRecognizer *panGesture = self.slidingViewController.panGesture;
+    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
     if (nil == panGesture)
         return;
     
@@ -198,8 +198,12 @@ NSString * const emailRegEx =
 	}
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
+    
+    [[self.searchBar bangButton] setImage:[[UIImage imageNamed:@"Bang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                 forState:UIControlStateNormal];
     
     DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
     autocompleteVC.historyProvider = self.historyProvider;
@@ -243,7 +247,7 @@ NSString * const emailRegEx =
     pageViewController.delegate = self;
     pageViewController.dataSource = self;
     
-    pageViewController.view.backgroundColor = [UIColor colorWithRed:0.200 green:0.212 blue:0.251 alpha:1.000];
+    pageViewController.view.backgroundColor = [UIColor duckNoContentColor];
     pageViewController.view.frame = [self contentRect];
     
     [self addChildViewController:pageViewController];
@@ -269,7 +273,9 @@ NSString * const emailRegEx =
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
     
-    [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
+    if ([self.controllers count] > 0) {
+        [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
+    }
 }
 
 #pragma mark - UIPageViewControllerDelegate, UIPageViewControllerDataSource
@@ -329,13 +335,17 @@ NSString * const emailRegEx =
 }
 
 -(void)keyboardWillShow:(NSNotification *)notification {
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewTopDidAnchorRight:) name:ECSlidingViewTopDidAnchorRight object:self.slidingViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(slidingViewTopDidAnchorRight:)
+                                                 name:DDGSlideOverMenuDidAppearNotification
+                                               object:nil];
     [self keyboardWillShow:YES notification:notification];
 }
 
 -(void)keyboardWillHide:(NSNotification *)notification {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewTopDidAnchorRight object:self.slidingViewController];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:DDGSlideOverMenuDidAppearNotification
+                                                  object:nil];
     [self keyboardWillShow:NO notification:notification];
 }
 
@@ -372,34 +382,21 @@ NSString * const emailRegEx =
         });
                 
     } else {
-        double animationDuration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        double duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
+        [self revealInputAccessory:show animationDuration:duration];
         
-        [self revealInputAccessory:show animationDuration:animationDuration];
-        
-        UIViewAnimationCurve curve = [[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue];
-        UIViewAnimationOptions options = 0;
-        switch (curve) {
-            case UIViewAnimationCurveEaseIn:
-                options = UIViewAnimationOptionCurveEaseIn;
-                break;
-            case UIViewAnimationCurveEaseInOut:
-                options = UIViewAnimationOptionCurveEaseInOut;
-                break;
-            case UIViewAnimationCurveEaseOut:
-                options = UIViewAnimationOptionCurveEaseOut;
-                break;
-            case UIViewAnimationCurveLinear:
-                options = UIViewAnimationOptionCurveLinear;
-                break;
-            default:
-                options = UIViewAnimationOptionCurveEaseInOut;
-                break;
+        UIViewController *controller = [self.controllers lastObject];
+        if ([controller isKindOfClass:[DDGDuckViewController class]]) {
+            [controller.view layoutIfNeeded];
         }
-
-        [UIView animateWithDuration:animationDuration
+        [UIView animateWithDuration:duration
                               delay:0
-                            options:options
+                            options:[[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]
                          animations:^{
+                             if ([controller isKindOfClass:[DDGDuckViewController class]]) {
+                                 [(DDGDuckViewController *)controller updateContainerHeightConstraint:show];
+                                 [controller.view layoutIfNeeded];
+                             }
                              CGRect f = self.view.frame;
                              f.size.height = keyboardEnd.origin.y - f.origin.y;
                              self.view.frame = f;
@@ -564,7 +561,8 @@ NSString * const emailRegEx =
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
     if(canGoBack)
-        [self.searchBar.orangeButton setImage:[UIImage imageNamed:@"button_menu_glyph_back"] forState:UIControlStateNormal];
+        [self.searchBar.orangeButton setImage:[[UIImage imageNamed:@"Back"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                     forState:UIControlStateNormal];
     else
         [self setSearchBarOrangeButtonImage];
 }
@@ -680,7 +678,7 @@ NSString * const emailRegEx =
     self.searchBar.showsCancelButton = YES;
     [self.searchBar layoutIfNeeded:0.25];
     
-    self.slidingViewController.panGesture.enabled = NO;
+    [[self.slideOverMenuController panGesture] setEnabled:NO];
     
     autocompleteOpen = YES;
 }
@@ -692,7 +690,7 @@ NSString * const emailRegEx =
     
     autocompleteOpen = NO;
 
-    self.slidingViewController.panGesture.enabled = YES;
+    [[self.slideOverMenuController panGesture] setEnabled:YES];
     
     [self.searchBar.searchField resignFirstResponder];
     if(!barUpdated) {
@@ -1025,9 +1023,8 @@ NSString * const emailRegEx =
     
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(dismissAutocomplete)
-                                                 name:ECSlidingViewUnderLeftWillAppear
-                                               object:self.slidingViewController];
-    
+                                                 name:DDGSlideOverMenuWillAppearNotification
+                                               object:nil];
 	return YES;
 }
 
@@ -1044,7 +1041,7 @@ NSString * const emailRegEx =
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
     [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:ECSlidingViewUnderLeftWillAppear
+                                                    name:DDGSlideOverMenuWillAppearNotification
                                                   object:nil];
 }
 

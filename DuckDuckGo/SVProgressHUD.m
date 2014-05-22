@@ -136,6 +136,7 @@
         self.backgroundColor = [UIColor clearColor];
 		self.alpha = 0;
         self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        self.tintColor = [UIColor whiteColor];
     }
 	
     return self;
@@ -481,7 +482,7 @@
 
 - (UIImageView *)imageView {
     if (imageView == nil)
-        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 28, 28)];
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 26)];
     
     if(!imageView.superview)
         [self.hudView addSubview:imageView];

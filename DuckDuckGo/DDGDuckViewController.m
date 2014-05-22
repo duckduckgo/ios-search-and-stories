@@ -6,9 +6,15 @@
 //
 //
 
+#import "DDGAddressBarTextField.h"
 #import "DDGDuckViewController.h"
+#import "DDGSearchBar.h"
+#import "DDGSearchController.h"
 
 @interface DDGDuckViewController ()
+
+@property (nonatomic, weak) DDGSearchController *searchController;
+@property (nonatomic, weak) IBOutlet NSLayoutConstraint *containerViewHeightConstraint;
 
 @end
 
@@ -16,19 +22,31 @@
 
 #pragma mark -
 
-+ (id)duckViewController {
-    return [[DDGDuckViewController alloc] initWithNibName:@"DDGDuckViewController" bundle:nil];
+- (instancetype)initWithSearchController:(DDGSearchController *)searchController
+{
+    self = [self initWithNibName:nil bundle:nil];
+    if (self) {
+        self.searchController = searchController;
+    }
+    return self;
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if (![self.slideOverMenuController isShowingMenu]) {
+        DDGSearchBar *searchBar = [self.searchController searchBar];
+        DDGAddressBarTextField *addressBarTextField = searchBar.searchField;
+        [addressBarTextField performSelector:@selector(becomeFirstResponder) withObject:nil afterDelay:0];
+        [self.searchController searchFieldDidChange:nil];
+    }
 }
 
 #pragma mark -
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+- (void)updateContainerHeightConstraint:(BOOL)keyboardShowing
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        
-    }
-    return self;
+    [self.containerViewHeightConstraint setConstant:keyboardShowing ? 170.0f : 230.0f];
 }
 
 @end

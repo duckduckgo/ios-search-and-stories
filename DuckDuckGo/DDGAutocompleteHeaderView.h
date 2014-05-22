@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface DDGAutocompleteHeaderView : UIView
+
 @property (nonatomic, weak, readonly) UILabel *textLabel;
+
 @end

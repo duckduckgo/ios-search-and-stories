@@ -13,8 +13,11 @@
 #import "DDGStory.h"
 #import "DDGSettingsViewController.h"
 #import "DDGSearchController.h"
-#import "ECSlidingViewController.h"
 #import "DDGHistoryItemCell.h"
+
+#import "DDGMenuHistoryItemCell.h"
+#import "DDGMenuSectionHeaderView.h"
+
 
 @interface DDGHistoryViewController () <UIGestureRecognizerDelegate> {
     BOOL _showingNoResultsSection;
@@ -24,6 +27,7 @@
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, strong) NSMutableSet *deletingIndexPaths;
 @property (nonatomic) DDGHistoryViewControllerMode mode;
+@property (nonatomic, weak) IBOutlet UIImageView *chatBubbleImageView;
 @end
 
 @implementation DDGHistoryViewController
@@ -47,26 +51,20 @@
     [super viewDidLoad];
 
     if (nil == self.tableView) {
-        UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        UITableView *tableView = nil;
+        tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        
         tableView.delegate = self;
         tableView.dataSource = self;
         tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
-        if (self.mode == DDGHistoryViewControllerModeUnder) {
-            tableView.backgroundColor = [UIColor colorWithRed:0.161 green:0.173 blue:0.196 alpha:1.000];            
-            tableView.rowHeight = 44.0;
-        } else {
-            tableView.backgroundColor = [UIColor colorWithRed:0.212 green:0.224 blue:0.251 alpha:1.000];
-            tableView.rowHeight = 51.0;
-        }
-        
-        UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 1)];
-        [footerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"end_of_list_highlight.png"]]];
-        tableView.tableFooterView = footerView;
+        tableView.backgroundColor = [UIColor clearColor];
+        tableView.opaque = NO;
+        tableView.rowHeight = 44.0;
+        [tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil] forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
         
         [self.view addSubview:tableView];
-        
         self.tableView = tableView;
     }
     
@@ -84,30 +82,48 @@
     [self fetchedResultsController];
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [self.tableView reloadRowsAtIndexPaths:[self.tableView indexPathsForVisibleRows] withRowAnimation:UITableViewRowAnimationAutomatic];
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+}
+
 - (void)reenableScrollsToTop {
     self.tableView.scrollsToTop = YES;
 }
 
-- (void)cancelDeletingIndexPathsAnimated:(BOOL)animated {
+- (void)cancelDeletingIndexPathsAnimated:(BOOL)animated
+{
     for (NSIndexPath *indexPath in self.deletingIndexPaths) {
-        DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        [cell setDeleting:NO animated:animated];
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        [(DDGMenuHistoryItemCell *)cell setDeletable:NO animated:animated];
     }
     [self.deletingIndexPaths removeAllObjects];
 }
 
-- (void)swipeLeft:(UISwipeGestureRecognizer *)swipe {
+- (void)swipeLeft:(UISwipeGestureRecognizer *)swipe
+{
     [self swipe:swipe direction:UISwipeGestureRecognizerDirectionLeft];
 }
 
-- (void)swipeRight:(UISwipeGestureRecognizer *)swipe {
+- (void)swipeRight:(UISwipeGestureRecognizer *)swipe
+{
     [self swipe:swipe direction:UISwipeGestureRecognizerDirectionRight];
 }
 
 - (void)swipe:(UISwipeGestureRecognizer *)swipe direction:(UISwipeGestureRecognizerDirection)direction {
-    if (swipe.state == UIGestureRecognizerStateRecognized) {
+    if (swipe.state == UIGestureRecognizerStateEnded) {
         CGPoint point = [swipe locationInView:self.tableView];
         NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+        
+        // Workaround for the bug mentioned in http://openradar.io/13187897
+        if (indexPath) {
+            CGRect rect = [self.tableView rectForHeaderInSection:indexPath.section];
+            if (CGRectContainsPoint(rect, point)) {
+                return;
+            }
+        }
+        
         NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
 
         if (indexPath.section < additionalSections)
@@ -123,9 +139,9 @@
             
             BOOL deleting = (direction == UISwipeGestureRecognizerDirectionLeft);
             
-            DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-            [cell setDeleting:deleting animated:YES];
-            
+            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            [(DDGMenuHistoryItemCell *)cell setDeletable:deleting animated:YES];
+
             if (deleting)
                 [self.deletingIndexPaths addObject:indexPath];            
         }
@@ -192,7 +208,7 @@
 }
 
 - (UIImage *)searchControllerBackButtonIconDDG {
-    return [UIImage imageNamed:@"button_menu_glyph_home"];
+    return [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
 - (IBAction)plus:(id)sender {
@@ -287,7 +303,9 @@
             else
                 [[NSBundle mainBundle] loadNibNamed:@"DDGHistoryNoResultsDisabledView" owner:self options:nil];
         }
-        
+        [self.noResultsView setTintColor:[UIColor whiteColor]];
+        [self.chatBubbleImageView setImage:[[UIImage imageNamed:@"Chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+        [self.noResultsView setFrame:[self.view bounds]];
         [self.view addSubview:self.noResultsView];
         
     } else {
@@ -298,7 +316,7 @@
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    UIGestureRecognizer *panGesture = [self.slidingViewController panGesture];
+    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
     for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
         if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
             [panGesture requireGestureRecognizerToFail:gr];
@@ -347,15 +365,15 @@
     return indexPath;
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
     NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
     if (indexPath.section < additionalSections) {
         if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:didSelectRowAtIndexPath:)])
             [self.additionalSectionsDelegate tableView:tableView didSelectRowAtIndexPath:indexPath];
         return;
     }
-    
+
     [self cancelDeletingIndexPathsAnimated:YES];    
     NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
     
@@ -405,28 +423,15 @@
     return [sectionInfo numberOfObjects];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
     if (indexPath.section < additionalSections)
-        return [self.additionalSectionsDelegate tableView:tv cellForRowAtIndexPath:indexPath];
+        return [self.additionalSectionsDelegate tableView:tableView cellForRowAtIndexPath:indexPath];
     
-	static NSString *CellIdentifier = @"HistoryCell";
-    
-	DDGHistoryItemCell *cell = [tv dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    if (cell == nil)
-	{
-        DDGHistoryItemCellMode mode = (self.mode == DDGHistoryViewControllerModeUnder) ? DDGHistoryItemCellModeUnder : DDGHistoryItemCellModeNormal;
-        
-        cell = [[DDGHistoryItemCell alloc] initWithCellMode:mode reuseIdentifier:CellIdentifier];
-        cell.imageView.backgroundColor = self.tableView.backgroundColor;
-        cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
-    }
-    
-    [self configureCell:cell atIndexPath:indexPath];
-    
-	return cell;
+    DDGMenuHistoryItemCell *historyItemCell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
+    [self configureHistoryItemCell:historyItemCell atIndexPath:indexPath];
+    return historyItemCell;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -437,7 +442,7 @@
             return [self.additionalSectionsDelegate tableView:tableView heightForHeaderInSection:section];
     }
     
-    return 23;
+    return 50.0f;
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -451,7 +456,7 @@
     return 0.0;
 }
 
--(UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
     if (section < additionalSections) {
@@ -460,34 +465,26 @@
         return nil;
     }
     
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 23)];
-    [headerView setBackgroundColor:[UIColor colorWithPatternImage:[UIImage imageNamed:@"bg_divider.png"]]];
-    
     NSArray *sections = [self.fetchedResultsController sections];
     NSInteger historySection = [self historySectionForTableSection:section];
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width-10, 20)];
-    
+    NSString *headerTitle = nil;
     if (_showingNoResultsSection && section == ([sections count] + additionalSections)) {
-        title.text = NSLocalizedString(@"Recent Searches & Stories", @"Table section header title");
+        headerTitle = NSLocalizedString(@"Recent Searches & Stories", @"Table section header title");
     } else {
         NSString *name = [(id <NSFetchedResultsSectionInfo>)[sections objectAtIndex:historySection] name];
-        
         if ([name isEqualToString:@"searches"]) {
-            title.text = NSLocalizedString(@"Recent Searches", @"Table section header title");
+            headerTitle = NSLocalizedString(@"Recent Searches", @"Table section header title");
         } else if ([name isEqualToString:@"stories"]) {
-            title.text = NSLocalizedString(@"Recent Stories", @"Table section header title");
+            headerTitle = NSLocalizedString(@"Recent Stories", @"Table section header title");
         } else {
-            title.text = name;
+            headerTitle = name;
         }
     }
     
-    title.textColor = [UIColor whiteColor];
-    title.opaque = NO;
-    title.backgroundColor = [UIColor clearColor];
-    title.font = [UIFont fontWithName:@"HelveticaNeue-Medium" size:13.0];
-    [headerView addSubview:title];
-    
-    return headerView;
+    UINib *nib = [UINib nibWithNibName:@"DDGMenuSectionHeaderView" bundle:nil];
+    DDGMenuSectionHeaderView *sectionHeaderView = (DDGMenuSectionHeaderView *)[nib instantiateWithOwner:nil options:nil][0];
+    sectionHeaderView.title = headerTitle;
+    return sectionHeaderView;
 }
 
 -(UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
@@ -548,9 +545,9 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:tableIndexPath] atIndexPath:tableIndexPath];
+            [self configureHistoryItemCell:(DDGMenuHistoryItemCell *)[tableView cellForRowAtIndexPath:tableIndexPath]
+                               atIndexPath:tableIndexPath];
             break;
-            
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:@[tableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             [tableView insertRowsAtIndexPaths:@[newTableIndexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -616,6 +613,32 @@
         }
         lbl.text = item.title;        
     }
+}
+
+- (void)configureHistoryItemCell:(DDGMenuHistoryItemCell *)cell atIndexPath:(NSIndexPath *)indexPath
+{
+    NSIndexPath *historyIndexPath = [self historyIndexPathForTableIndexPath:indexPath];
+    NSArray *sections = [self.fetchedResultsController sections];
+    NSString *content = nil;
+    if (_showingNoResultsSection && historyIndexPath.section == [sections count]) {
+        cell.notification = YES;
+        BOOL recordHistory = [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory];
+        content = recordHistory ? @"No recent searches or stories." : @"Saving recents is disabled.\nYou can re-enable it in settings";
+    } else {
+        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:historyIndexPath];
+        DDGStory *story = historyItem.story;
+        if (story) {
+            cell.faviconImage = story.feed.image;
+        } else {
+            cell.auxiliaryViewHidden = NO;
+        }
+        content = historyItem.title;
+        __weak typeof(self) weakSelf = self;
+        [cell setDeleteBlock:^(id sender) {
+            [weakSelf delete:sender];
+        }];
+    }
+    cell.content = content;
 }
 
 @end

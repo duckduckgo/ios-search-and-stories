@@ -129,7 +129,7 @@ static NSString *historyCellID = @"HCell";
                     NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
                     if (row != NSNotFound) {
                         DDGAutocompleteCell *cell = (DDGAutocompleteCell *)[weakSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:1]];
-                        cell.roundedImageView.image = image;
+                        [cell.imageView setImage:image];
                         [cell setNeedsLayout];
                     }
                 };
@@ -152,11 +152,13 @@ static NSString *historyCellID = @"HCell";
 
 - (void)searchFieldDidChange:(id)sender {
     NSString *newSearchText = self.searchController.searchBar.searchField.text;
-        
+    
+    /* Disabled as per https://github.com/duckduckgo/ios/issues/25
     if([newSearchText isEqualToString:[self.searchController validURLStringFromString:newSearchText]]) {
         // we're definitely editing a URL, don't bother with autocomplete.
         return;
     }
+    */
     
 	if (newSearchText.length) {
 		// load our new best cached result, and download new autocomplete suggestions.
@@ -247,11 +249,11 @@ static NSString *historyCellID = @"HCell";
 	else if(indexPath.section == 1)
 	{
         cell = [tv dequeueReusableCellWithIdentifier:suggestionCellID];
-        if(!cell) {
+        if (!cell) {
             cell = [[DDGAutocompleteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:suggestionCellID];
-            cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
         }
-		
+		[cell setAdorned:NO];
+        
 		lineHidden = (indexPath.row == self.suggestions.count - 1) ? YES : NO;
 
         NSArray *suggestions = self.suggestions;
@@ -264,18 +266,16 @@ static NSString *historyCellID = @"HCell";
         cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
         cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
         
-        cell.showsPlusButton = YES;
-        [cell.plusButton addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
+        [cell addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
         
-        UIImage *image = nil;
         if([[suggestionItem objectForKey:@"image"] length]) {
             NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
-            image = [self.imageCache objectForKey:URL];
-		} else {
-            image = [UIImage imageNamed:@"search_generic.png"];
-        }
-             
-        cell.roundedImageView.image = image;
+            UIImage *image = [self.imageCache objectForKey:URL];
+            [cell setAdorned:YES];
+//            cell.roundedImageView.image = image;
+//            cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
+            [cell.imageView setImage:image];
+		}
         
         if([suggestionItem objectForKey:@"calls"] && [[suggestionItem objectForKey:@"calls"] count])
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
@@ -290,12 +290,18 @@ static NSString *historyCellID = @"HCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-	if (!indexPath.section && self.history.count)
-		return kCellHeightHistory+1;
-	else if (indexPath.section == 1 && self.suggestions.count)
-		return kCellHeightSuggestions+1;
-
-	return 0.0;
+    CGFloat height = 0.0f;
+    if (indexPath.section == 0 && [self.history count] > 0) {
+        height = 44.0f;
+    } else if (indexPath.section == 1 && [self.suggestions count] > 0) {
+        NSDictionary *suggestion = self.suggestions[indexPath.row];
+        if (suggestion[@"image"] && [suggestion[@"image"] length] > 0) {
+            height = 66.0f;
+        } else {
+            height = 44.0f;
+        }
+    }
+    return height;
 }
 
 #pragma mark - Table view delegate

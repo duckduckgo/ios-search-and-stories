@@ -7,7 +7,7 @@
 //
 
 #import "DDGCustomDeleteViewController.h"
-#import "DDGHistoryItemCell.h"
+#import "DDGMenuHistoryItemCell.h"
 
 @implementation DDGCustomDeleteViewController
 
@@ -40,8 +40,8 @@
 
 - (void)cancelDeletingIndexPathsAnimated:(BOOL)animated {
     for (NSIndexPath *indexPath in self.deletingIndexPaths) {
-        DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-        [cell setDeleting:NO animated:animated];
+        DDGMenuHistoryItemCell *cell = (DDGMenuHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+        [cell setDeletable:NO animated:animated];
     }
     [self.deletingIndexPaths removeAllObjects];
 }
@@ -65,8 +65,8 @@
             
             BOOL deleting = (direction == UISwipeGestureRecognizerDirectionLeft);
             
-            DDGHistoryItemCell *cell = (DDGHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
-            [cell setDeleting:deleting animated:YES];
+            DDGMenuHistoryItemCell *cell = (DDGMenuHistoryItemCell *)[self.tableView cellForRowAtIndexPath:indexPath];
+            [cell setDeletable:deleting animated:YES];
             
             if (deleting)
                 [self.deletingIndexPaths addObject:indexPath];            

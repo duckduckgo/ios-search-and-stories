@@ -12,6 +12,7 @@
 @property (nonatomic, strong, readwrite) UISegmentedControl *segmentedControl;
 @property (nonatomic, copy, readwrite) NSArray *viewControllers;
 @property (nonatomic, weak, readwrite) UIViewController *currentViewController;
+@property (nonatomic, strong) UIView *toolbarDropShadowView;
 - (CGRect)_viewControllerFrameForControlViewPosition:(DDGTabViewControllerControlViewPosition)toolbarPosition;
 @end
 
@@ -90,6 +91,17 @@
             break;
     }
     
+    if (!self.toolbarDropShadowView) {
+        UIView *dropShadowView = [UIView new];
+        dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
+        dropShadowView.opaque = NO;
+        [self.controlView setClipsToBounds:NO];
+        [self.controlView addSubview:dropShadowView];
+        self.toolbarDropShadowView = dropShadowView;
+    }
+    CGRect bounds = CGRectMake(0.0f, -0.5f, CGRectGetWidth(viewBounds), 0.5f);
+    [self.toolbarDropShadowView setFrame:bounds];
+    
     [UIView animateWithDuration:0
                      animations:^{
                          [self.controlView setFrame:toolbarFrame];
@@ -107,6 +119,14 @@
                 title = NSLocalizedString(@"untitled", @"SSPTabViewController segmented control title for untitled view controller");
             [items addObject:title];
         }        
+        
+//        if (self.displaysDropShadow) {
+//            CGRect dropShadowBounds = bounds;
+//            dropShadowBounds.origin.y = CGRectGetHeight(bounds);
+//            dropShadowBounds.size.height = 0.5f;
+//            [self.dropShadowView setFrame:dropShadowBounds];
+//        }
+        
         UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:items];
         [segmentedControl addTarget:self action:@selector(_switchViewController:) forControlEvents:UIControlEventValueChanged];
         self.segmentedControl = segmentedControl;

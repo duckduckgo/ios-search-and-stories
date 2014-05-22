@@ -10,7 +10,6 @@
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
-#import "ECSlidingViewController.h"
 #import "DDGUnderViewController.h"
 #import "DDGUtility.h"
 #import "DDGStory.h"
@@ -44,7 +43,7 @@
         
         webView.scalesPageToFit = YES;
         _webViewLoadingDepth = 0;
-        webView.backgroundColor = [UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
+        webView.backgroundColor = [UIColor duckNoContentColor]; //[UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
         
         [self.view addSubview:webView];
         _webView = webView;
@@ -214,12 +213,13 @@
 }
 
 -(void)searchControllerLeftButtonPressed {        
-	if(self.webView.canGoBack)
+	if (self.webView.canGoBack) {
         [self.webView goBack];
-    else if ([self.searchController canPopContentViewController])
+    } else if ([self.searchController canPopContentViewController]) {
         [self.searchController popContentViewControllerAnimated:YES];    
-	else
-	    [(DDGUnderViewController *)self.slidingViewController.underLeftViewController searchControllerLeftButtonPressed];
+    } else {
+        [(DDGUnderViewController *)[self.slideOverMenuController menuViewController] searchControllerLeftButtonPressed];
+    }
 }
 
 -(void)searchControllerStopOrReloadButtonPressed {
@@ -252,7 +252,8 @@
     }
     
     NSURL *url = [NSURL URLWithString:urlString];
-    [self.webView loadRequest:[DDGUtility requestWithURL:url]];
+    NSURLRequest *request = [DDGUtility requestWithURL:url];
+    [self.webView loadRequest:request];
     [self.searchController updateBarWithURL:url];
     self.webViewURL = url;
 }

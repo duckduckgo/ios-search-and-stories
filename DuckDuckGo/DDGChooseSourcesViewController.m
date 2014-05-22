@@ -11,7 +11,6 @@
 #import "UIImageView+AFNetworking.h"
 #import "SVProgressHUD.h"
 #import "DDGSettingsViewController.h"
-#import "DDGGroupedTableViewCell.h"
 
 @interface DDGChooseSourcesViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
@@ -128,29 +127,25 @@
             cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
             if(!cell)
 			{
-                cell = [[DDGGroupedTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
+                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
                 cell.textLabel.text = @"Suggest a Story Source";
                 cell.textLabel.textAlignment = NSTextAlignmentCenter;
                 cell.accessoryType = UITableViewCellAccessoryNone;
-				cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
-                
-                ((DDGGroupedTableViewCell *)cell).position = GroupedTableViewCellPositionFull;
+				cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
             }
         }        
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
         if(!cell)
 		{
-            cell = [[DDGGroupedTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
-            
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
             DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
-            
-            cell.detailTextLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:15.0];
+            DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)
             
             // keep using the default imageview for layout/spacing purposes, but use our own one for displaying the image
             cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
             cell.imageView.alpha = 0;
-			cell.textLabel.textColor = [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0];
+			cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 34, 34)];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -320,29 +315,6 @@
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     else
         cell.accessoryType = UITableViewCellAccessoryNone;
-    
-    if ([cell isKindOfClass:[DDGGroupedTableViewCell class]]) {
-        
-        DDGGroupedTableViewCell *groupedCell = (DDGGroupedTableViewCell *)cell;
-        
-        NSInteger rows = [self tableView:self.tableView numberOfRowsInSection:indexPath.section];
-        
-        if (indexPath.row == 0 && rows == 1) {
-            groupedCell.position = GroupedTableViewCellPositionFull;
-        }
-        
-        if (indexPath.row == 0 && rows > 1) {
-            groupedCell.position = GroupedTableViewCellPositionTop;
-        }
-        
-        if (indexPath.row > 0 && rows > 1) {
-            groupedCell.position = GroupedTableViewCellPositionMiddle;
-        }
-        
-        if (indexPath.row == (rows -1) && rows > 1) {
-            groupedCell.position = GroupedTableViewCellPositionBottom;
-        }
-    }
 }
 
 @end

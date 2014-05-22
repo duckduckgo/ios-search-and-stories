@@ -13,11 +13,9 @@
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
 #import "DDGHistoryProvider.h"
-#import "ECSlidingViewController.h"
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
 #import "DDGReadabilitySettingViewController.h"
-#import "DDGGroupedTableViewCell.h"
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
@@ -47,9 +45,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewUnderLeftWillAppear object:nil];
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:DDGSlideOverMenuWillAppearNotification object:nil];
 }
 
 #pragma mark - View lifecycle
@@ -78,8 +75,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 	[self viewWillLayoutSubviews];
 }
 
--(void)leftButtonPressed {
-    [self.slidingViewController anchorTopViewTo:ECRight];
+-(void)leftButtonPressed
+{
+    [self.slideOverMenuController showMenu];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -96,7 +94,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(slidingViewUnderLeftWillAppear:) name:ECSlidingViewUnderLeftWillAppear object:self.slidingViewController];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(slidingViewUnderLeftWillAppear:)
+                                                 name:DDGSlideOverMenuWillAppearNotification
+                                               object:nil];
 }
 
 - (void)reenableScrollsToTop {
@@ -110,7 +111,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:ECSlidingViewUnderLeftWillAppear object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                    name:DDGSlideOverMenuWillAppearNotification
+                                                  object:nil];
 }
 
 - (void)viewWillLayoutSubviews
@@ -124,7 +127,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 - (UIImage *)searchControllerBackButtonIconDDG {
-    return [UIImage imageNamed:@"button_menu_glyph_settings"];
+    return [[UIImage imageNamed:@"Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];;
 }
 
 #pragma mark - Rotation
@@ -148,8 +151,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
     [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
     [self addRadioOptionWithTitle:@"Recent" value:DDGSettingHomeViewTypeRecents key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeRecents]];
-    [self addRadioOptionWithTitle:@"Saved" value:DDGSettingHomeViewTypeSaved key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];    
-    [self addRadioOptionWithTitle:@"Duckmode" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
+    [self addRadioOptionWithTitle:@"Favorites" value:DDGSettingHomeViewTypeSaved key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];    
+    [self addRadioOptionWithTitle:@"Search Only" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
     
     [self addSectionWithTitle:@"Stories" footer:nil];
     [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
@@ -258,7 +261,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 -(IGFormSwitch *)addSwitch:(NSString *)title forKey:(NSString *)key enabled:(BOOL)enabled {
     IGFormSwitch *formSwitch = [super addSwitch:title forKey:key enabled:enabled];
-    formSwitch.switchControl.onTintColor = [UIColor colorWithRed:0.212 green:0.455 blue:0.698 alpha:1.000];
+    formSwitch.switchControl.onTintColor = [UIColor duckRed];
     return formSwitch;
 }
 

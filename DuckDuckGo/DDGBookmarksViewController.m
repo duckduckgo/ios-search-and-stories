@@ -10,14 +10,18 @@
 #import "DDGBookmarksProvider.h"
 #import "DDGSearchController.h"
 #import "DDGUnderViewController.h"
-#import "ECSlidingViewController.h"
 #import "DDGPlusButton.h"
-#import "DDGHistoryItemCell.h"
+#import "DDGMenuHistoryItemCell.h"
+#import "DDGMenuSectionHeaderView.h"
 
 @interface DDGBookmarksViewController ()
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
 @property (nonatomic, strong) UIImage *searchIcon;
+
+@property (nonatomic, weak) IBOutlet UIImageView *largeIconImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *smallIconImageView;
+
 @end
 
 @implementation DDGBookmarksViewController
@@ -33,9 +37,22 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
+    
+    [self.view setBackgroundColor:[UIColor duckNoContentColor]];
+    
+    [self.largeIconImageView setTintColor:[UIColor whiteColor]];
+    [self.largeIconImageView setImage:[[UIImage imageNamed:@"NoFavorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    
+    [self.smallIconImageView setTintColor:RGBA(245.0f, 203.0f, 196.0f, 1.0f)];
+    [self.smallIconImageView setImage:[[UIImage imageNamed:@"inline_actions-icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    
     NSParameterAssert(nil != self.searchController);
     
+    [self.tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil] forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
+    [self.tableView setBackgroundColor:[UIColor clearColor]];
+    [self.tableView setOpaque:NO];
+    [self.tableView setRowHeight:44.0f];
+    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     self.tableView.frame = self.view.bounds;
     [self.view addSubview:self.tableView];    
     
@@ -69,7 +86,7 @@
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     
-    UIGestureRecognizer *panGesture = [self.slidingViewController panGesture];
+    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
     for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
         if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
             [panGesture requireGestureRecognizerToFail:gr];
@@ -87,6 +104,13 @@
 }
 
 #pragma mark - Rotation
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
+    [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
+}
 
 - (void)viewWillLayoutSubviews
 {
@@ -118,8 +142,9 @@
     [self.navigationItem setRightBarButtonItem:(edit ? self.doneBarButtonItem : self.editBarButtonItem) animated:NO];
 }
 
--(void)leftButtonPressed {
-    [self.slidingViewController anchorTopViewTo:ECRight];
+-(void)leftButtonPressed
+{
+    [self.slideOverMenuController showMenu];
 }
 
 - (void)reenableScrollsToTop {
@@ -147,27 +172,6 @@
     }
 }
 
-/*
- 
- [UIView animateWithDuration:0 animations:^{
- [self.tableView removeFromSuperview];
- self.noStoriesView.frame = self.view.bounds;
- [self.view addSubview:self.noStoriesView];
- }];
- }
- 
- - (void)hideNoStoriesView {
- if (nil == self.tableView.superview) {
- [UIView animateWithDuration:0 animations:^{
- [self.noStoriesView removeFromSuperview];
- self.noStoriesView = nil;
- self.tableView.frame = self.view.bounds;
- [self.view addSubview:self.tableView];
- }];
- }
- 
- */
-
 - (IBAction)delete:(id)sender {
     NSSet *indexPaths = [self.deletingIndexPaths copy];
     [self cancelDeletingIndexPathsAnimated:YES];
@@ -178,23 +182,6 @@
         
         if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0)
             [self performSelector:@selector(showNoBookmarksView) withObject:nil afterDelay:0.2];
-    }
-}
-
-- (IBAction)plus:(id)sender {
-    UIButton *button = nil;
-    if ([sender isKindOfClass:[UIButton class]])
-        button = (UIButton *)sender;
-    
-    if (button) {
-        CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
-        NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];        
-        NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:tappedIndex.row];
-        DDGAddressBarTextField *searchField = self.searchController.searchBar.searchField;
-        
-        [searchField becomeFirstResponder];
-        searchField.text = [bookmark objectForKey:@"title"];
-        [self.searchController searchFieldDidChange:nil];
     }
 }
 
@@ -213,22 +200,28 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    DDGHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if(!cell)
-	{
-        cell = [[DDGHistoryItemCell alloc] initWithCellMode:DDGHistoryItemCellModeNormal reuseIdentifier:CellIdentifier];
-        cell.fixedSizeImageView.size = CGSizeMake(16.0, 16.0);
-        cell.overhangWidth = 6.0;
-        cell.accessoryView = [DDGPlusButton plusButton];
-    }
-    
-    NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
-    cell.textLabel.text = [bookmark objectForKey:@"title"];
-    cell.fixedSizeImageView.image = self.searchIcon;
-//    cell.detailTextLabel.text = [bookmark objectForKey:@"url"];
-
+    NSDictionary *bookmark = [[[DDGBookmarksProvider sharedProvider] bookmarks] objectAtIndex:indexPath.row];
+    DDGMenuHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
+    cell.auxiliaryViewHidden = NO;
+    cell.content = bookmark[@"title"];
+    __weak typeof(self) weakSelf = self;
+    [cell setDeleteBlock:^(id sender) {
+        [weakSelf delete:sender];
+    }];
     return cell;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 50.0f;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UINib *nib = [UINib nibWithNibName:@"DDGMenuSectionHeaderView" bundle:nil];
+    DDGMenuSectionHeaderView *sectionHeaderView = (DDGMenuSectionHeaderView *)[nib instantiateWithOwner:nil options:nil][0];
+    sectionHeaderView.title = @"Favorites";
+    return sectionHeaderView;
 }
 
 #pragma mark - Table view delegate

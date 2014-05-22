@@ -10,13 +10,15 @@
 #import "DDGHistoryProvider.h"
 #import "SDURLCache.h"
 #import "DDGSettingsViewController.h"
-#import "DDGSlidingViewController.h"
 #import "AFNetworking.h"
 #import "DDGUnderViewController.h"
 #import "DDGSearchController.h"
 #import "DDGSearchHandler.h"
 #import "NSString+URLEncodingDDG.h"
 #import "DDGFirstRunViewController.h"
+#import "DDGSlideOverMenuController.h"
+#import <HockeySDK/HockeySDK.h>
+#import "DDGURLProtocol.h"
 
 @interface DDGAppDelegate ()
 @property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
@@ -34,19 +36,11 @@ static void uncaughtExceptionHandler(NSException *exception) {
     NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
 }
 
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    [NSURLProtocol registerClass:[DDGURLProtocol class]];
     
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
-    
-#if DEBUG
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-    //Use deprecated uniqueIdentifier call for debug purposes only.
-    //[TestFlight setDeviceIdentifier:[[UIDevice currentDevice] uniqueIdentifier]];
-#pragma clang diagnostic pop
-    //Use Testflight only for the debug version. We don't currently have any error reporting that's not dependant on a third party.
-    //[TestFlight takeOff:@"a6dad165-a8d4-495c-89c6-f3812248d554"];
-#endif
     
     NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
     [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:DDGLastRefreshAttemptKey];
@@ -81,81 +75,31 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     //Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
-            
-    //Theme.
     
-    [[UINavigationBar appearance] setShadowImage:[[UIImage imageNamed:@"toolbar_shadow"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 2.0, 0.0, 2.0)]];
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg"] forBarMetrics:UIBarMetricsDefault];
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"toolbar_bg_32"] forBarMetrics:UIBarMetricsLandscapePhone];
-    NSShadow *titleTextShadow = [NSShadow new];
-    titleTextShadow.shadowColor = [UIColor whiteColor];
-    titleTextShadow.shadowOffset = CGSizeMake(0.0f, 1.0f);
-    [[UINavigationBar appearance] setTitleTextAttributes:@{	NSForegroundColorAttributeName: [UIColor colorWithRed:0.29 green:0.30 blue:0.32 alpha:1.0],
-                                                            NSShadowAttributeName: titleTextShadow
-    }];
-    
-    UIEdgeInsets insets = UIEdgeInsetsMake(5.0, 3.0, 5.0, 3.0);
-    
-    [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg"] resizableImageWithCapInsets:insets]
-                                            forState:UIControlStateNormal
-                                          barMetrics:UIBarMetricsDefault];
-    [[UIBarButtonItem appearance] setBackgroundImage:[[UIImage imageNamed:@"button_bg_highlighted"] resizableImageWithCapInsets:insets]
-                                            forState:UIControlStateHighlighted
-                                          barMetrics:UIBarMetricsDefault];
-    
-    [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsDefault];
-    [[UIBarButtonItem appearance] setTitlePositionAdjustment:UIOffsetMake(0.0, 1.0) forBarMetrics:UIBarMetricsLandscapePhone];    
-
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	NSForegroundColorAttributeName: [UIColor colorWithRed:0.403 green:0.406 blue:0.427 alpha:1.000],
-                                                            NSShadowAttributeName: titleTextShadow
-    } forState:UIControlStateNormal];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	NSForegroundColorAttributeName: [UIColor colorWithRed:0.581 green:0.585 blue:0.607 alpha:1.000],
-                                                            NSShadowAttributeName: titleTextShadow
-    } forState:UIControlStateDisabled];
-    NSShadow *titleTextHighlightedShadow = [NSShadow new];
-    titleTextHighlightedShadow.shadowColor = [UIColor colorWithRed:0.169f green:0.18f blue:0.192f alpha:1.0f];
-    titleTextHighlightedShadow.shadowOffset = CGSizeMake(0.0f, -1.0f);
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{	NSForegroundColorAttributeName: [UIColor colorWithWhite:0.992 alpha:1.000],
-                                                            NSShadowAttributeName: titleTextHighlightedShadow
-    } forState:UIControlStateHighlighted];
-    
-    [[UISegmentedControl appearance] setBackgroundImage:[UIImage imageNamed:@"segment_normal"] forState:UIControlStateNormal barMetrics:UIBarMetricsDefault];
-    [[UISegmentedControl appearance] setBackgroundImage:[UIImage imageNamed:@"segment_selected"] forState:UIControlStateSelected barMetrics:UIBarMetricsDefault];
-    [[UISegmentedControl appearance] setDividerImage:[UIImage imageNamed:@"segment_normal_normal"]
-                                 forLeftSegmentState:UIControlStateNormal
-                                   rightSegmentState:UIControlStateNormal
-                                          barMetrics:UIBarMetricsDefault];
-    [[UISegmentedControl appearance] setDividerImage:[UIImage imageNamed:@"segment_normal_selected"]
-                                 forLeftSegmentState:UIControlStateNormal
-                                   rightSegmentState:UIControlStateSelected
-                                          barMetrics:UIBarMetricsDefault];
-    [[UISegmentedControl appearance] setDividerImage:[UIImage imageNamed:@"segment_selected_normal"]
-                                 forLeftSegmentState:UIControlStateSelected
-                                   rightSegmentState:UIControlStateNormal
-                                          barMetrics:UIBarMetricsDefault];
-    
-    NSShadow *segmentedControlTitleTextShadow = [NSShadow new];
-    segmentedControlTitleTextShadow.shadowColor = [UIColor blackColor];
-    segmentedControlTitleTextShadow.shadowOffset = CGSizeMake(0.0f, -1.0f);
-    [[UISegmentedControl appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor colorWithRed:0.827 green:0.855 blue:0.898 alpha:1.000],
-                                                               NSShadowAttributeName: segmentedControlTitleTextShadow
-    } forState:UIControlStateNormal];
-    [[UISegmentedControl appearance] setContentPositionAdjustment:UIOffsetMake(4.0, 0.0) forSegmentType:UISegmentedControlSegmentLeft barMetrics:UIBarMetricsDefault];
-    [[UISegmentedControl appearance] setContentPositionAdjustment:UIOffsetMake(-4.0, 0.0) forSegmentType:UISegmentedControlSegmentRight barMetrics:UIBarMetricsDefault];
-
+    // Setup Hockey
+    [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"a29176ab05b9fe95c2b006b585fdfc18"];
+    [[BITHockeyManager sharedHockeyManager] startManager];
+    [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
+        
+    [[UINavigationBar appearance] setBackgroundColor:[UIColor duckLightGray]];
+    [[UINavigationBar appearance] setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.backgroundColor = [UIColor colorWithRed:0.169 green:0.176 blue:0.188 alpha:1.000];
+    [self.window setBackgroundColor:[UIColor duckNoContentColor]];
     
     //Configure the sliding view controller
     DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.searchHandler = under;
-    
-    DDGSlidingViewController *slidingViewController = [[DDGSlidingViewController alloc] initWithNibName:nil bundle:nil];
-    self.window.rootViewController = slidingViewController;
-    
-    slidingViewController.underLeftViewController = under;
-    slidingViewController.anchorRightRevealAmount = 258.0;
+        
+    DDGSlideOverMenuController *menuController = [[DDGSlideOverMenuController alloc] initWithMode:DDGSlideOverMenuModeHorizontal];
+    menuController.menuViewController = under;
+    menuController.viewDidAppearCompletion = ^(DDGSlideOverMenuController *slideOverMenuController) {
+        if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey]) {
+            DDGFirstRunViewController *firstRunViewController = [DDGFirstRunViewController new];
+            [slideOverMenuController presentViewController:firstRunViewController animated:YES completion:nil];
+        }
+    };
+    [self.window setRootViewController:menuController];
   
     int type = DDGViewControllerTypeHome;
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
@@ -168,15 +112,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     }
         
     UIViewController *homeController = [under viewControllerForType:type];
-    
-    slidingViewController.topViewController = homeController;
-    [under configureViewController:homeController];
+    menuController.contentViewController = homeController;
     
     [self.window makeKeyAndVisible];
-    
-    if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey])
-        [self.window.rootViewController presentViewController:[[DDGFirstRunViewController alloc] init] animated:YES completion:NULL];
-    
     return YES;
 }
 

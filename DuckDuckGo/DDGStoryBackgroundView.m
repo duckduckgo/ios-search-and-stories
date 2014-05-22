@@ -24,7 +24,7 @@
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetFillColorWithColor(context, DDGStoryBackgroundViewBackgroundColor);
+    CGContextSetFillColorWithColor(context, [UIColor duckNoContentColor].CGColor);
     CGContextFillRect(context, self.bounds);
     
     UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.bounds];
