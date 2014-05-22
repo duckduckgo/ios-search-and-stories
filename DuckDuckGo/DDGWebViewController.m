@@ -6,6 +6,7 @@
 //  Copyright (c) 2011 DuckDuckGo, Inc. All rights reserved.
 //
 
+@import AssetsLibrary;
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
@@ -368,14 +369,30 @@
         return ![self.searchController.searchBar.searchField isFirstResponder] && ![self.webView tappedImageURL];
     }
     if (action == @selector(saveImage:)) {
-        return [self.webView tappedImageURL] ? YES : NO;
+        return ([self hasAccessToPhotos] && [self.webView tappedImageURL]);
     }
     return [super canPerformAction:action withSender:sender];
 }
 
 - (void)saveImage:(UIMenuItem *)menuItem
 {
-    NSLog(@"Save Image Pressed");
+    if ([self hasAccessToPhotos]) {
+        NSURLRequest *request = [DDGUtility requestWithURL:[NSURL URLWithString:[self.webView tappedImageURL]]];
+        [[AFImageRequestOperation imageRequestOperationWithRequest:request success:^(UIImage *image) {
+            if (image) {
+                ALAssetsLibrary *library = [ALAssetsLibrary new];
+                [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)image.imageOrientation completionBlock:^(NSURL *assetURL, NSError *error) {
+                    if (error) {
+                        [[[UIAlertView alloc] initWithTitle:@"Save Imaged Failed"
+                                                    message:@"The image couldn't be saved to your camera roll at this time. Please try again later."
+                                                   delegate:nil
+                                          cancelButtonTitle:@"OK"
+                                          otherButtonTitles:nil, nil] show];
+                    }
+                }];
+            }
+        }] start];
+    }
 }
 
 - (void)search:(UIMenuItem *)menuItem
@@ -542,6 +559,14 @@
     }
     
     _webViewLoadingDepth = 0;
+}
+
+#pragma mark - Other
+
+- (BOOL)hasAccessToPhotos
+{
+    ALAuthorizationStatus status = [ALAssetsLibrary authorizationStatus];
+    return (status == ALAuthorizationStatusNotDetermined || status == ALAuthorizationStatusAuthorized);
 }
 
 

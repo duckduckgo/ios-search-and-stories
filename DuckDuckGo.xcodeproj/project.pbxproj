@@ -302,6 +302,7 @@
 		7B2BDFA718E997ED003B8078 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA418E997ED003B8078 /* HockeySDK.xcconfig */; };
 		7B2BDFA818E997ED003B8078 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */; };
 		7B3BB7F7192E0F0A00E94055 /* DDGWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */; };
+		7B3BB7F9192E350900E94055 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3BB7F8192E350900E94055 /* AssetsLibrary.framework */; };
 		7B6450FB18E58E23005ED543 /* DDGMenuHistoryItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */; };
 		7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */; };
 		7B6E2D8918E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8818E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m */; };
@@ -757,6 +758,7 @@
 		7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = HockeySDKResources.bundle; sourceTree = "<group>"; };
 		7B3BB7F5192E0F0A00E94055 /* DDGWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebView.h; sourceTree = "<group>"; };
 		7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebView.m; sourceTree = "<group>"; };
+		7B3BB7F8192E350900E94055 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		7B6450FA18E58E23005ED543 /* DDGMenuHistoryItemCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuHistoryItemCell.xib; sourceTree = "<group>"; };
 		7B6450FC18E5901C005ED543 /* DDGMenuHistoryItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuHistoryItemCell.h; sourceTree = "<group>"; };
 		7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuHistoryItemCell.m; sourceTree = "<group>"; };
@@ -847,6 +849,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B3BB7F9192E350900E94055 /* AssetsLibrary.framework in Frameworks */,
 				7B2BDFA018E997C8003B8078 /* CoreText.framework in Frameworks */,
 				C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */,
 				5BFF24AE16F77C0D00844D3B /* CoreData.framework in Frameworks */,
@@ -1533,6 +1536,7 @@
 		833DB53C1494164F00509F2E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7B3BB7F8192E350900E94055 /* AssetsLibrary.framework */,
 				7B2BDFA118E997ED003B8078 /* HockeySDK.embeddedframework */,
 				7B2BDF9F18E997C8003B8078 /* CoreText.framework */,
 				C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */,
