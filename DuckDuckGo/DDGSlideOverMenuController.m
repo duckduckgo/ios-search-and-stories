@@ -267,9 +267,31 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     [viewController beginAppearanceTransition:isAppearing animated:animated];
 }
 
+- (void)cancelAppearanceTransitionOnViewController:(UIViewController *)viewController appearing:(BOOL)isAppearing animated:(BOOL)animated
+{
+    [viewController beginAppearanceTransition:isAppearing animated:animated];
+    [viewController endAppearanceTransition];
+}
+
 - (void)endAppearanceTransitionOnViewController:(UIViewController *)viewController
 {
     [viewController endAppearanceTransition];
+}
+
+- (void)finishMenuAppearanceTransition:(BOOL)isAppearing interactive:(BOOL)interactive animated:(BOOL)animated completion:(void (^)())completion
+{
+    self.showingMenu = isAppearing;
+    if (!interactive) {
+        [self tearDownMenuAppearanceTransition];
+        [self endAppearanceTransitionOnViewController:self.contentViewController];
+        [self endAppearanceTransitionOnViewController:self.menuViewController];
+        if (isAppearing) {
+            [self notifyObserversAboutMenuAppearanceTransition:YES];
+        }
+    }
+    if (completion) {
+        completion();
+    }
 }
 
 - (CGRect)frameForBlurContainer
@@ -378,15 +400,9 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
         [self.blurContainerView setHidden:NO];
         [[self.menuViewController view] setHidden:NO];
     }
-    self.showingMenu = !self.isShowingMenu;
     if (isAppearing) {
         [self updateBlurContainerContent:NO completion:nil];
     }
-    if (isAppearing) {
-        [self notifyObserversAboutMenuAppearanceTransition:NO];
-    }
-    [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:isAppearing animated:animated];
-    [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:!isAppearing animated:animated];
 }
 
 - (void)tearDownGestureRecognizer
@@ -399,16 +415,7 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
 
 - (void)tearDownMenuAppearanceTransition
 {
-    /*
-     BUG: When we're interactive we're notifiying observers, as well as the child view controllers, that the menu has appeared 
-     even when the menu was already on screen. For instance, when dragging from the right a little and then letting go so the
-     menu snaps back to the right edge. It needs to be fixed, but also requires some thought on how to go about doing so.
-     */
-    [self endAppearanceTransitionOnViewController:self.menuViewController];
-    [self endAppearanceTransitionOnViewController:self.contentViewController];
-    if (self.isShowingMenu) {
-        [self notifyObserversAboutMenuAppearanceTransition:YES];
-    } else {
+    if (!self.isShowingMenu) {
         [self.blurContainerView setHidden:YES];
         [[self.menuViewController view] setHidden:YES];
     }
@@ -419,6 +426,11 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
     if (self.menuViewController) {
         if (!interactive) {
             [self setupMenuAppearanceTransition:isAppearing animated:animated];
+            [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:!isAppearing animated:animated];
+            [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:isAppearing animated:animated];
+            if (isAppearing) {
+                [self notifyObserversAboutMenuAppearanceTransition:NO];
+            }
         }
         CGFloat alpha = isAppearing ? 0.0f : 1.0f;
         CGRect blurContainerFrame = isAppearing ? [self onScreenFrameForBlurContainer] : [self offScreenFrameForBlurContainer];
@@ -435,23 +447,13 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
                              }
                              completion:^(BOOL finished) {
                                  self.animating = NO;
-                                 if (!interactive) {
-                                    [self tearDownMenuAppearanceTransition];
-                                 }
-                                 if (completion) {
-                                     completion();
-                                 }
+                                 [self finishMenuAppearanceTransition:isAppearing interactive:interactive animated:animated completion:completion];
                              }];
         } else {
             [self.blurContainerView setFrame:blurContainerFrame];
             [[self.menuViewController view] setFrame:menuViewFrame];
             [self.window setAlpha:alpha];
-            if (!interactive) {
-                [self tearDownMenuAppearanceTransition];
-            }
-            if (completion) {
-                completion();
-            }
+            [self finishMenuAppearanceTransition:isAppearing interactive:interactive animated:animated completion:completion];
         }
     } else {
         [NSException raise:NSInternalInconsistencyException
@@ -520,6 +522,8 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
             self.originalMenuCenterPoint = [[self.menuViewController view] center];
             self.panOriginPoint = point;
             [self setupMenuAppearanceTransition:!self.isShowingMenu animated:YES];
+            [self beginAppearanceTransitionOnViewController:self.contentViewController appearing:self.isShowingMenu animated:YES];
+            [self beginAppearanceTransitionOnViewController:self.menuViewController appearing:!self.isShowingMenu animated:YES];
         } else if (recognizer.state == UIGestureRecognizerStateChanged) {
             CGFloat distance = point.x - self.panOriginPoint.x;
             [self updateMenuPositionWithOffset:distance];
@@ -528,11 +532,21 @@ NSString * const DDGSlideOverMenuDidAppearNotification = @"DDGSlideOverMenuDidAp
             CGFloat rightEdge = CGRectGetMaxX([[self.menuViewController view] frame]);
             __weak DDGSlideOverMenuController *weakSelf = self;
             BOOL appearing = (rightEdge > center);
+            BOOL shouldCancelTransition = (appearing == self.isShowingMenu);
+            if (appearing) {
+                [self notifyObserversAboutMenuAppearanceTransition:NO];
+            }
             [self triggerMenuAppearanceTransition:appearing interactive:YES animated:YES completion:^{
-                weakSelf.showingMenu = appearing;
+                [self endAppearanceTransitionOnViewController:weakSelf.contentViewController];
+                [self endAppearanceTransitionOnViewController:weakSelf.menuViewController];
+                if (shouldCancelTransition) {
+                    [self cancelAppearanceTransitionOnViewController:weakSelf.contentViewController appearing:!appearing animated:YES];
+                    [self cancelAppearanceTransitionOnViewController:weakSelf.menuViewController appearing:appearing animated:YES];
+                }
                 [weakSelf tearDownMenuAppearanceTransition];
                 if (appearing) {
                     [weakSelf setupGestureRecognizer];
+                    [self notifyObserversAboutMenuAppearanceTransition:YES];
                 } else {
                     [weakSelf tearDownGestureRecognizer];
                 }

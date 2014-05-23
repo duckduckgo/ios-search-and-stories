@@ -268,8 +268,13 @@ NSString * const emailRegEx =
     [super viewDidUnload];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
     [super viewDidAppear:animated];
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
@@ -277,6 +282,16 @@ NSString * const emailRegEx =
     if ([self.controllers count] > 0) {
         [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
     }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
 }
 
 #pragma mark - UIPageViewControllerDelegate, UIPageViewControllerDataSource

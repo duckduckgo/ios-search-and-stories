@@ -148,6 +148,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
     [self setupViewControllerTypes];
     
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
@@ -158,6 +159,16 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
 }
 
 #pragma mark - DDGTableViewAdditionalSectionsDelegate
