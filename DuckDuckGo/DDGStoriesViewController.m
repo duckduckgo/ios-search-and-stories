@@ -434,18 +434,16 @@ NSInteger const DDGSmallImageViewTag = 2;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-            
-            BOOL saved = story.savedValue;
             story.savedValue = !story.savedValue;
-            
             NSManagedObjectContext *context = story.managedObjectContext;
-            [context performBlock:^{
+            [context performBlockAndWait:^{
                 NSError *error = nil;
                 if (![context save:&error])
                     NSLog(@"error: %@", error);
             }];
-            
-            [SVProgressHUD showSuccessWithStatus:(saved ? @"Unsaved!" : @"Saved!")];
+            NSString *status = story.savedValue ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
+            UIImage *image = story.savedValue ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            [SVProgressHUD showImage:image status:status];
         }];
     });    
 }
