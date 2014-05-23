@@ -50,7 +50,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 @property (nonatomic, weak) IBOutlet UIButton *swipeViewShareButton;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
-@property (nonatomic, strong) NSCache *decompressedImages;
+@property (nonatomic, strong) NSMutableDictionary *decompressedImages;
 @property (nonatomic, strong) NSMutableSet *enqueuedDecompressionOperations;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
@@ -97,7 +97,21 @@ NSInteger const DDGSmallImageViewTag = 2;
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+    
+    NSMutableDictionary *cachedImages = [NSMutableDictionary new];
+    NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
+    for (NSIndexPath *indexPath in indexPaths) {
+        DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        if (story) {
+            UIImage *image = [self.decompressedImages objectForKey:story.id];
+            if (image) {
+                [cachedImages setObject:image forKey:story.id];
+            }
+        }
+    }
     [self.decompressedImages removeAllObjects];
+    [self.decompressedImages addEntriesFromDictionary:cachedImages];
+    
     if (nil == self.view) {
         [self.imageDownloadQueue cancelAllOperations];
         [self.enqueuedDownloadOperations removeAllObjects];
@@ -192,10 +206,7 @@ NSInteger const DDGSmallImageViewTag = 2;
     decompressionQueue.name = @"DDG Watercooler Image Decompression Queue";
     self.imageDecompressionQueue = decompressionQueue;
     
-    NSCache *decompressedImages = [NSCache new];
-    [decompressedImages setCountLimit:50];
-    [decompressedImages setName:@"com.duckduckgo.mobile.ios.story-image-cache"];
-    self.decompressedImages = decompressedImages;
+    self.decompressedImages = [NSMutableDictionary new];
     
     self.enqueuedDownloadOperations = [NSMutableSet new];
     self.enqueuedDecompressionOperations = [NSMutableSet set];    
