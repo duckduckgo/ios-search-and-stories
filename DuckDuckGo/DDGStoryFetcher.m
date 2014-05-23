@@ -84,7 +84,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                         feed = [results objectAtIndex:0];
                     } else {
                         feed = [DDGStoryFeed insertInManagedObjectContext:context];
-                        [feed setValue:[feedDict valueForKey:@"default"] forKey:@"enabled"];
+                        feed.feedState = DDGStoryFeedStateDefault;
                     }
                                         
                     feed.urlString = [feedDict valueForKey:@"link"];
@@ -269,7 +269,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Feed"];
     if (enabledOnly)
-        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"enabled = %@", @(YES)]];
+        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"enabled = %i", DDGStoryFeedStateEnabled]];
     
     __block NSArray *results;
     [context performBlockAndWait:^{

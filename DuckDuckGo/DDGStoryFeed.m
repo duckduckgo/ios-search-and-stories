@@ -71,4 +71,18 @@
     return [[self baseFilePath] stringByAppendingPathComponent:[@"feed-image-" stringByAppendingFormat:@"%@.png",self.id]];
 }
 
+- (DDGStoryFeedState)feedState
+{
+    DDGStoryFeedState state = [self.enabled integerValue];
+    if (state == DDGStoryFeedStateDefault) {
+        state = (DDGStoryFeedState)[self.enabledByDefault integerValue];
+    }
+    return state;
+}
+
+- (void)setFeedState:(DDGStoryFeedState)feedState
+{
+    self.enabled = [NSNumber numberWithInteger:feedState];
+}
+
 @end
