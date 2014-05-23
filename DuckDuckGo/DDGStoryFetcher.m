@@ -132,7 +132,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     [context performBlock:^{
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
         NSPredicate *datePredicate = [NSPredicate predicateWithFormat:@"feedDate < %@", date];
-        NSPredicate *savedPredicate = [NSPredicate predicateWithFormat:@"enabled == %@", @(NO)];
+        NSPredicate *savedPredicate = [NSPredicate predicateWithFormat:@"enabled != %i", DDGStoryFeedStateEnabled];
         NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[datePredicate, savedPredicate]];
         [request setPredicate:predicate];        
         
