@@ -218,8 +218,9 @@ NSString * const emailRegEx =
     [self revealBackground:NO animated:NO];
     
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
+    searchField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
+                                                                        attributes:@{NSForegroundColorAttributeName: RGBA(128.0f, 128.0f, 128.0f, 1.0f)}];
     
-    searchField.placeholder = NSLocalizedString(@"SearchPlaceholder", nil);
     [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     
     stopOrReloadButton = [[UIButton alloc] init];
