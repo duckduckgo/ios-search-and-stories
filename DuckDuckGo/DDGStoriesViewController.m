@@ -98,26 +98,26 @@ NSInteger const DDGSmallImageViewTag = 2;
 {
     [super didReceiveMemoryWarning];
     
-    NSMutableDictionary *cachedImages = [NSMutableDictionary new];
-    NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
-    for (NSIndexPath *indexPath in indexPaths) {
-        DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        if (story) {
-            UIImage *image = [self.decompressedImages objectForKey:story.id];
-            if (image) {
-                [cachedImages setObject:image forKey:story.id];
-            }
-        }
-    }
-    [self.decompressedImages removeAllObjects];
-    [self.decompressedImages addEntriesFromDictionary:cachedImages];
-    
-    if (nil == self.view) {
-        [self.imageDownloadQueue cancelAllOperations];
-        [self.enqueuedDownloadOperations removeAllObjects];
-        [self.imageDecompressionQueue cancelAllOperations];
-        [self.enqueuedDecompressionOperations removeAllObjects];
-    }
+//    NSMutableDictionary *cachedImages = [NSMutableDictionary new];
+//    NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
+//    for (NSIndexPath *indexPath in indexPaths) {
+//        DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//        if (story) {
+//            UIImage *image = [self.decompressedImages objectForKey:story.id];
+//            if (image) {
+//                [cachedImages setObject:image forKey:story.id];
+//            }
+//        }
+//    }
+//    [self.decompressedImages removeAllObjects];
+//    [self.decompressedImages addEntriesFromDictionary:cachedImages];
+//    
+//    if (nil == self.view) {
+//        [self.imageDownloadQueue cancelAllOperations];
+//        [self.enqueuedDownloadOperations removeAllObjects];
+//        [self.imageDecompressionQueue cancelAllOperations];
+//        [self.enqueuedDecompressionOperations removeAllObjects];
+//    }
 }
 
 - (void)reenableScrollsToTop {
