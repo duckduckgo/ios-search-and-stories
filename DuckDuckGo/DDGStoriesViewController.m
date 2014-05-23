@@ -436,7 +436,7 @@ NSInteger const DDGSmallImageViewTag = 2;
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
             story.savedValue = !story.savedValue;
             NSManagedObjectContext *context = story.managedObjectContext;
-            [context performBlockAndWait:^{
+            [context performBlock:^{
                 NSError *error = nil;
                 if (![context save:&error])
                     NSLog(@"error: %@", error);
