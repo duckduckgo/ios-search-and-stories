@@ -985,6 +985,15 @@ NSString * const emailRegEx =
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     // find the word that the cursor is currently in and update the bang bar based on it
     
+    /* Prevent the search text being prefixed with a space */
+    if (range.location == 0) {
+        if (string.length > 0) {
+            if ([[string substringWithRange:NSMakeRange(0, 1)] isEqualToString:@" "]) {
+                return NO;
+            }
+        }
+    }
+    
     NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
 
     if(newString.length == 0) {
