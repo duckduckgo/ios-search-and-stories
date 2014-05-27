@@ -773,6 +773,7 @@
 		7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuSectionHeaderView.xib; sourceTree = "<group>"; };
 		7BCE31DB18E449D600C87EF4 /* DDGMenuSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuSectionHeaderView.h; sourceTree = "<group>"; };
 		7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuSectionHeaderView.m; sourceTree = "<group>"; };
+		7BD55F10192F7D2A007B1518 /* Stories v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Stories v2.xcdatamodel"; sourceTree = "<group>"; };
 		7BE56C9219114C1B00C71AB4 /* DDGSlideOverMenuPanGestureCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSlideOverMenuPanGestureCoordinator.h; sourceTree = "<group>"; };
 		7BFC64DD18BCEEC800C48753 /* DDGStoryBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryBackgroundView.h; sourceTree = "<group>"; };
 		7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryBackgroundView.m; sourceTree = "<group>"; };
@@ -1955,7 +1956,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/DuckDuckGo\"\n/usr/local/bin/mogenerator --template-var arc=true -m Stories.xcdatamodeld/Stories.xcdatamodel";
+			shellScript = "cd \"$SRCROOT/DuckDuckGo\"\n/usr/local/bin/mogenerator --template-var arc=true -m \"Stories.xcdatamodeld/Stories v2.xcdatamodel\"";
 		};
 		7B2BDF9E18E997A2003B8078 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2390,9 +2391,10 @@
 		5BFF24C216F77F9E00844D3B /* Stories.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				7BD55F10192F7D2A007B1518 /* Stories v2.xcdatamodel */,
 				5BFF24C316F77F9F00844D3B /* Stories.xcdatamodel */,
 			);
-			currentVersion = 5BFF24C316F77F9F00844D3B /* Stories.xcdatamodel */;
+			currentVersion = 7BD55F10192F7D2A007B1518 /* Stories v2.xcdatamodel */;
 			path = Stories.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

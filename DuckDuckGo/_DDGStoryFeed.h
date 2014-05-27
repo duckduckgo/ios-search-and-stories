@@ -74,9 +74,9 @@ extern const struct DDGStoryFeedFetchedProperties {
 
 
 
-@property BOOL enabledValue;
-- (BOOL)enabledValue;
-- (void)setEnabledValue:(BOOL)value_;
+@property int16_t enabledValue;
+- (int16_t)enabledValue;
+- (void)setEnabledValue:(int16_t)value_;
 
 //- (BOOL)validateEnabled:(id*)value_ error:(NSError**)error_;
 
@@ -199,8 +199,8 @@ extern const struct DDGStoryFeedFetchedProperties {
 - (NSNumber*)primitiveEnabled;
 - (void)setPrimitiveEnabled:(NSNumber*)value;
 
-- (BOOL)primitiveEnabledValue;
-- (void)setPrimitiveEnabledValue:(BOOL)value_;
+- (int16_t)primitiveEnabledValue;
+- (void)setPrimitiveEnabledValue:(int16_t)value_;
 
 
 

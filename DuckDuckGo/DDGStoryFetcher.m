@@ -84,7 +84,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                         feed = [results objectAtIndex:0];
                     } else {
                         feed = [DDGStoryFeed insertInManagedObjectContext:context];
-                        [feed setValue:[feedDict valueForKey:@"default"] forKey:@"enabled"];
+                        feed.feedState = DDGStoryFeedStateDefault;
                     }
                                         
                     feed.urlString = [feedDict valueForKey:@"link"];
@@ -101,10 +101,18 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                 
                 [[NSUserDefaults standardUserDefaults] setObject:feedDate forKey:DDGStoryFetcherSourcesLastUpdatedKey];
                 
+                __block BOOL saved = NO;
+                __block NSError *error = nil;
+                __weak typeof(self) weakSelf = self;
                 [context performBlockAndWait:^{
-                    NSError *error = nil;
-                    BOOL success = [context save:&error];
-                    if (!success)
+                    saved = [context save:&error];
+                    if (saved && weakSelf.parentManagedObjectContext) {
+                        [weakSelf.parentManagedObjectContext performBlockAndWait:^{
+                            error = nil;
+                            saved = [weakSelf.parentManagedObjectContext save:&error];
+                        }];
+                    }
+                    if (!saved)
                         NSLog(@"error: %@", error);
                 }];
                 
@@ -128,22 +136,21 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     });
 }
 
-- (void)purgeSourcesOlderThanDate:(NSDate *)date inContext:(NSManagedObjectContext *)context {
-    [context performBlock:^{
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
-        NSPredicate *datePredicate = [NSPredicate predicateWithFormat:@"feedDate < %@", date];
-        NSPredicate *savedPredicate = [NSPredicate predicateWithFormat:@"enabled == %@", @(NO)];
-        NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[datePredicate, savedPredicate]];
-        [request setPredicate:predicate];        
-        
-        NSError *error = nil;
-        NSArray *feeds = [context executeFetchRequest:request error:&error];
-        if (nil == feeds)
-            NSLog(@"error: %@", error);
-        
-        for (DDGStoryFeed *feed in feeds)
-            [context deleteObject:feed];
-    }];
+- (void)purgeSourcesOlderThanDate:(NSDate *)date inContext:(NSManagedObjectContext *)context
+{
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
+    NSPredicate *datePredicate = [NSPredicate predicateWithFormat:@"feedDate < %@", date];
+    NSPredicate *savedPredicate = [NSPredicate predicateWithFormat:@"enabled != %i", DDGStoryFeedStateEnabled];
+    NSPredicate *predicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[datePredicate, savedPredicate]];
+    [request setPredicate:predicate];        
+    
+    NSError *error = nil;
+    NSArray *feeds = [context executeFetchRequest:request error:&error];
+    if (nil == feeds)
+        NSLog(@"error: %@", error);
+    
+    for (DDGStoryFeed *feed in feeds)
+        [context deleteObject:feed];
 }
 
 - (void)refreshStories:(void (^)())willSave completion:(void (^)(NSDate *lastFetchDate))completion {
@@ -268,8 +275,10 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
 - (NSDictionary *)feedsByIDInContext:(NSManagedObjectContext *)context enabledFeedsOnly:(BOOL)enabledOnly {
     
     NSFetchRequest *fetchRequest = [NSFetchRequest fetchRequestWithEntityName:@"Feed"];
+    NSPredicate *enabledPredicate = [NSPredicate predicateWithFormat:@"enabled = %i", DDGStoryFeedStateEnabled];
+    NSPredicate *enabledByDefaultPredicate = [NSPredicate predicateWithFormat:@"enabled = %i AND enabledByDefault = %i", DDGStoryFeedStateDefault, DDGStoryFeedStateEnabled];
     if (enabledOnly)
-        [fetchRequest setPredicate:[NSPredicate predicateWithFormat:@"enabled = %@", @(YES)]];
+        [fetchRequest setPredicate:[NSCompoundPredicate orPredicateWithSubpredicates:@[enabledPredicate, enabledByDefaultPredicate]]];
     
     __block NSArray *results;
     [context performBlockAndWait:^{

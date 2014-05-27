@@ -89,22 +89,22 @@ const struct DDGStoryFeedFetchedProperties DDGStoryFeedFetchedProperties = {
 
 
 
-- (BOOL)enabledValue {
+- (int16_t)enabledValue {
 	NSNumber *result = [self enabled];
-	return [result boolValue];
+	return [result shortValue];
 }
 
-- (void)setEnabledValue:(BOOL)value_ {
-	[self setEnabled:[NSNumber numberWithBool:value_]];
+- (void)setEnabledValue:(int16_t)value_ {
+	[self setEnabled:[NSNumber numberWithShort:value_]];
 }
 
-- (BOOL)primitiveEnabledValue {
+- (int16_t)primitiveEnabledValue {
 	NSNumber *result = [self primitiveEnabled];
-	return [result boolValue];
+	return [result shortValue];
 }
 
-- (void)setPrimitiveEnabledValue:(BOOL)value_ {
-	[self setPrimitiveEnabled:[NSNumber numberWithBool:value_]];
+- (void)setPrimitiveEnabledValue:(int16_t)value_ {
+	[self setPrimitiveEnabled:[NSNumber numberWithShort:value_]];
 }
 
 
