@@ -346,49 +346,49 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
 
 - (void)downloadImageForStory:(DDGStory *)story {
     NSURL *imageURL = story.imageURL;    
-    NSManagedObjectID *objectID = [story objectID];
-        
-    if (!story.imageDownloadedValue && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
-        NSURLRequest *request = [DDGUtility requestWithURL:imageURL];
-        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-            
-            NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-            [context setParentContext:self.parentManagedObjectContext];
-            [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];            
-            
-            NSData *responseData = (NSData *)responseObject;
-            
-            __block DDGStory *story;
-            [context performBlockAndWait:^{
-                story = (DDGStory *)[context objectWithID:objectID];
-            }];            
-            
-            [story writeImageData:responseData completion:^(BOOL success) {
-                if (success) {
-                    story.imageDownloadedValue = YES;
-                    [context performBlock:^{
-                        NSError *error = nil;
-                        BOOL success = [context save:&error];
-                        if (!success)
-                            NSLog(@"error: %@", error);
-                    }];
-                }
+    if (imageURL) {
+        NSManagedObjectID *objectID = [story objectID];
+        if (!story.imageDownloadedValue && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
+            NSURLRequest *request = [DDGUtility requestWithURL:imageURL];
+            AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+            [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+                
+                NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+                [context setParentContext:self.parentManagedObjectContext];
+                [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];            
+                
+                NSData *responseData = (NSData *)responseObject;
+                
+                __block DDGStory *story;
+                [context performBlockAndWait:^{
+                    story = (DDGStory *)[context objectWithID:objectID];
+                }];            
+                
+                [story writeImageData:responseData completion:^(BOOL success) {
+                    if (success) {
+                        story.imageDownloadedValue = YES;
+                        [context performBlock:^{
+                            NSError *error = nil;
+                            BOOL success = [context save:&error];
+                            if (!success)
+                                NSLog(@"error: %@", error);
+                        }];
+                    }
+                }];
+                [self.enqueuedDownloadOperations removeObject:imageURL];
+            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+                [self.enqueuedDownloadOperations removeObject:imageURL];
             }];
-            [self.enqueuedDownloadOperations removeObject:imageURL];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [self.enqueuedDownloadOperations removeObject:imageURL];
-        }];
-        
-        [operation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
-            [self.enqueuedDownloadOperations removeObject:imageURL];
-        }];
-        
-        [operation setSuccessCallbackQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];        
-        [self.enqueuedDownloadOperations addObject:imageURL];
-        [self.imageDownloadQueue addOperation:operation];
+            
+            [operation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
+                [self.enqueuedDownloadOperations removeObject:imageURL];
+            }];
+            
+            [operation setSuccessCallbackQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];        
+            [self.enqueuedDownloadOperations addObject:imageURL];
+            [self.imageDownloadQueue addOperation:operation];
+        }
     }
-    
 }
 
 @end
