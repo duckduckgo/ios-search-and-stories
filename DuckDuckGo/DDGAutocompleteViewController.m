@@ -331,10 +331,13 @@ static NSString *historyCellID = @"HCell";
         DDGAddressBarTextField *searchField = self.searchController.searchBar.searchField;
         NSString *searchText = searchField.text;
         NSArray *words = [searchText componentsSeparatedByString:@" "];
+        
+        BOOL isBang = NO;
         if ([words count] == 1 && [[words firstObject] length] > 0) {
-            if ([[[words firstObject] substringToIndex:1] isEqualToString:@"!"]) {
-                searchField.text = [[suggestionItem objectForKey:@"phrase"] stringByAppendingString:@" "];
-            }
+            isBang = [[[words firstObject] substringToIndex:1] isEqualToString:@"!"];
+        }
+        if (isBang) {
+            searchField.text = [[suggestionItem objectForKey:@"phrase"] stringByAppendingString:@" "];
         } else {
             if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil
                 [self.historyProvider logSearchResultWithTitle:[suggestionItem objectForKey:@"phrase"]];            
