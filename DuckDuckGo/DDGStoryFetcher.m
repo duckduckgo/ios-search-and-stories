@@ -345,7 +345,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
         [DDGHTTPRequestManager performRequest:request
                                operationQueue:self.imageDownloadQueue
                                 callbackQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-                                      retries:3
+                                     attempts:3
                                       success:success
                                       failure:failure
                                    expiration:expiration];
@@ -398,7 +398,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
             [DDGHTTPRequestManager performRequest:request
                                    operationQueue:self.imageDownloadQueue
                                     callbackQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-                                          retries:3
+                                         attempts:3
                                           success:success
                                           failure:failure
                                        expiration:expiration];

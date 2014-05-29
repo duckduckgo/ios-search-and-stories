@@ -14,7 +14,7 @@
 + (void)performRequest:(NSURLRequest *)request
         operationQueue:(NSOperationQueue *)operationQueue
          callbackQueue:(dispatch_queue_t)callbackQueue
-               retries:(NSUInteger)retries
+              attempts:(NSUInteger)attempts
                success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
                failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
             expiration:(void (^)())expiration;

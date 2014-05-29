@@ -15,7 +15,7 @@
 + (void)performRequest:(NSURLRequest *)request
         operationQueue:(NSOperationQueue *)operationQueue
          callbackQueue:(dispatch_queue_t)callbackQueue
-               retries:(NSUInteger)retries
+              attempts:(NSUInteger)attempts
                success:(void (^)(AFHTTPRequestOperation *operation, id responseObject))success
                failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error))failure
             expiration:(void (^)())expiration
@@ -26,15 +26,16 @@
             success(operation, responseObject);
         }
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        if (retries <= 0) {
+        NSUInteger attemptsRemaining = (attempts - 1);
+        if (attemptsRemaining <= 0) {
             if (failure) {
                 failure(operation, error);
             }
         } else {
             [self performRequest:request
-                      operationQueue:operationQueue
+                  operationQueue:operationQueue
                    callbackQueue:callbackQueue
-                         retries:(retries - 1)
+                        attempts:attemptsRemaining
                          success:success
                          failure:failure
                       expiration:expiration];
