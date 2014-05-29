@@ -309,6 +309,7 @@
 		7B6E2D8C18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8B18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m */; };
 		7B76FEC518E1DCFB00674702 /* DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */; };
 		7B76FECB18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */; };
+		7BB873FD19374F04000C4DC4 /* DDGHTTPRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB873FC19374F04000C4DC4 /* DDGHTTPRequestManager.m */; };
 		7BCE31D918E4476700C87EF4 /* DDGMenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */; };
 		7BCE31DD18E449D600C87EF4 /* DDGMenuSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */; };
 		7BFC64DF18BCEEC800C48753 /* DDGStoryBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */; };
@@ -770,6 +771,8 @@
 		7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlideOverMenuController.m; sourceTree = "<group>"; };
 		7B76FEC918E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DDGSlideOverMenuController.h"; sourceTree = "<group>"; };
 		7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+DDGSlideOverMenuController.m"; sourceTree = "<group>"; };
+		7BB873FB19374F04000C4DC4 /* DDGHTTPRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHTTPRequestManager.h; sourceTree = "<group>"; };
+		7BB873FC19374F04000C4DC4 /* DDGHTTPRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHTTPRequestManager.m; sourceTree = "<group>"; };
 		7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuSectionHeaderView.xib; sourceTree = "<group>"; };
 		7BCE31DB18E449D600C87EF4 /* DDGMenuSectionHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuSectionHeaderView.h; sourceTree = "<group>"; };
 		7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuSectionHeaderView.m; sourceTree = "<group>"; };
@@ -1582,6 +1585,8 @@
 			children = (
 				4CD9247C15C9ED0900EB062F /* Constants.h */,
 				4CD9247D15C9ED0900EB062F /* Constants.m */,
+				7BB873FB19374F04000C4DC4 /* DDGHTTPRequestManager.h */,
+				7BB873FC19374F04000C4DC4 /* DDGHTTPRequestManager.m */,
 				7BFDC9621913B65C00C4A30D /* DDGURLProtocol.h */,
 				7BFDC9631913B65C00C4A30D /* DDGURLProtocol.m */,
 				8390A3F31677CB3400336DE7 /* DDGUtility.h */,
@@ -1979,6 +1984,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				83F32269149290EF00A61BC5 /* main.m in Sources */,
+				7BB873FD19374F04000C4DC4 /* DDGHTTPRequestManager.m in Sources */,
 				83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,

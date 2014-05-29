@@ -11,6 +11,7 @@
 #import "DDGStory.h"
 #import "DDGStoryFeed.h"
 #import "DDGUtility.h"
+#import "DDGHTTPRequestManager.h"
 
 NSString * const DDGStoryFetcherStoriesLastUpdatedKey = @"storiesUpdated";
 NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
@@ -297,14 +298,16 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     return feedsByID;
 }
 
-- (void)downloadIconForFeed:(DDGStoryFeed *)feed {
+- (void)downloadIconForFeed:(DDGStoryFeed *)feed
+{
     NSURL *imageURL = feed.imageURL;
     NSManagedObjectID *objectID = [feed objectID];
     
     if (!feed.imageDownloadedValue && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
+        [self.enqueuedDownloadOperations addObject:imageURL];
         NSURLRequest *request = [DDGUtility requestWithURL:imageURL];
-        AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-        [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+
+        void (^success)(AFHTTPRequestOperation *operation, id responseObject) = ^void(AFHTTPRequestOperation *operation, id responseObject) {
             NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
             [context setParentContext:self.parentManagedObjectContext];
             [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
@@ -329,40 +332,46 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                 }
             }];
             [self.enqueuedDownloadOperations removeObject:imageURL];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            [self.enqueuedDownloadOperations removeObject:imageURL];
-        }];
+        };
         
-        [operation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
+        void (^failure)(AFHTTPRequestOperation *operation, NSError *error) = ^void(AFHTTPRequestOperation *operation, NSError *error) {
             [self.enqueuedDownloadOperations removeObject:imageURL];
-        }];
+        };
         
-        [operation setSuccessCallbackQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
-        [self.enqueuedDownloadOperations addObject:imageURL];
-        [self.imageDownloadQueue addOperation:operation];
+        void (^expiration)() = ^void() {
+            [self.enqueuedDownloadOperations removeObject:imageURL];
+        };
+        
+        [DDGHTTPRequestManager performRequest:request
+                               operationQueue:self.imageDownloadQueue
+                                callbackQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                                      retries:3
+                                      success:success
+                                      failure:failure
+                                   expiration:expiration];
     }
-    
 }
 
-- (void)downloadImageForStory:(DDGStory *)story {
-    NSURL *imageURL = story.imageURL;    
+- (void)downloadImageForStory:(DDGStory *)story
+{
+    NSURL *imageURL = story.imageURL;
     if (imageURL) {
         NSManagedObjectID *objectID = [story objectID];
         if (!story.imageDownloadedValue && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
+            [self.enqueuedDownloadOperations addObject:imageURL];
             NSURLRequest *request = [DDGUtility requestWithURL:imageURL];
-            AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-            [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-                
+            
+            void (^success)(AFHTTPRequestOperation *operation, id responseObject) = ^void(AFHTTPRequestOperation *operation, id responseObject) {
                 NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
                 [context setParentContext:self.parentManagedObjectContext];
-                [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];            
+                [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
                 
                 NSData *responseData = (NSData *)responseObject;
                 
                 __block DDGStory *story;
                 [context performBlockAndWait:^{
                     story = (DDGStory *)[context objectWithID:objectID];
-                }];            
+                }];
                 
                 [story writeImageData:responseData completion:^(BOOL success) {
                     if (success) {
@@ -376,17 +385,23 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                     }
                 }];
                 [self.enqueuedDownloadOperations removeObject:imageURL];
-            } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            };
+        
+            void (^failure)(AFHTTPRequestOperation *operation, NSError *error) = ^void(AFHTTPRequestOperation *operation, NSError *error) {
                 [self.enqueuedDownloadOperations removeObject:imageURL];
-            }];
+            };
             
-            [operation setShouldExecuteAsBackgroundTaskWithExpirationHandler:^{
+            void (^expiration)() = ^void() {
                 [self.enqueuedDownloadOperations removeObject:imageURL];
-            }];
+            };
             
-            [operation setSuccessCallbackQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];        
-            [self.enqueuedDownloadOperations addObject:imageURL];
-            [self.imageDownloadQueue addOperation:operation];
+            [DDGHTTPRequestManager performRequest:request
+                                   operationQueue:self.imageDownloadQueue
+                                    callbackQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
+                                          retries:3
+                                          success:success
+                                          failure:failure
+                                       expiration:expiration];
         }
     }
 }
