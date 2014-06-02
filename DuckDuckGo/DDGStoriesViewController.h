@@ -22,4 +22,7 @@
 @property (nonatomic, strong) UIImage *searchControllerBackButtonIconDDG;
 
 - (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
+- (IBAction)filter:(id)sender;
+
 @end

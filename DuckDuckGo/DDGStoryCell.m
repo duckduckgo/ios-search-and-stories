@@ -8,6 +8,7 @@
 
 #import "DDGFaviconButton.h"
 #import "DDGStoryCell.h"
+#import "DDGStoriesViewController.h"
 
 NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
