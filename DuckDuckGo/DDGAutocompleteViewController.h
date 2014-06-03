@@ -10,10 +10,10 @@
 #import "DDGHistoryProvider.h"
 #import "DDGSearchSuggestionsProvider.h"
 
-@interface DDGAutocompleteViewController : UITableViewController {
-}
+@interface DDGAutocompleteViewController : UITableViewController
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 
 -(void)searchFieldDidChange:(id)sender;
+-(void)tableViewBackgroundTouched;
 
 @end

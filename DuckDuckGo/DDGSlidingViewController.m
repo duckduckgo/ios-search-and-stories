@@ -39,7 +39,7 @@
     [super viewDidLoad];
     
     self.oldPanGesture = [super panGesture];    
-    self.panGesture = [[DDGHorizontalPanGestureRecognizer alloc] initWithTarget:self action:@selector(updateTopViewHorizontalCenterWithRecognizer:)];
+    self.panGesture = [[DDGHorizontalPanGestureRecognizer alloc] initWithTarget:self action:NSSelectorFromString(@"updateTopViewHorizontalCenterWithRecognizer:")];
 }
 
 - (void)anchorTopViewTo:(ECSide)side animations:(void (^)())animations onComplete:(void (^)())complete {

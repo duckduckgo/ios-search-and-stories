@@ -7,6 +7,7 @@
 //
 
 #import "DDGAutocompleteTableView.h"
+#import "DDGAutocompleteViewController.h"
 
 @implementation DDGAutocompleteTableView
 

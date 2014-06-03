@@ -32,7 +32,7 @@
     // we need to offset the triforce image by 1px down to compensate for the shadow in the image
     float topInset = 1.0f;
     button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
-    [button addTarget:self action:@selector(saveAndExit) forControlEvents:UIControlEventTouchUpInside];
+    [button addTarget:self action:NSSelectorFromString(@"saveAndExit") forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 	
 	// force 1st time through for iOS < 6.0

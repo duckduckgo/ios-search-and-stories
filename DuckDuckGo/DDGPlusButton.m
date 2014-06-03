@@ -8,6 +8,10 @@
 
 #import "DDGPlusButton.h"
 
+@interface NSObject ()
+- (IBAction)plus:(id)sender;
+@end
+
 @implementation DDGPlusButton
 
 + (id)plusButtonWithImageName:(NSString *)imageName BackgroundImageNamed:(NSString *)backgroundImageName {
