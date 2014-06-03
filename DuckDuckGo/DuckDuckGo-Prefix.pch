@@ -23,5 +23,15 @@
     #import "UIColor+DDG.h"
 
     #define RGBA(R, G, B, A) ([UIColor colorWithRed:R/255.0f green:G/255.0f blue:B/255.0f alpha:A])
+
 #endif
+
+#ifdef __APPLE__
+#import "TargetConditionals.h"
+#endif
+
+#if !(TARGET_IPHONE_SIMULATOR) && !(APPSTORE)
+#define ENABLE_HOCKEY 1
+#endif
+
 

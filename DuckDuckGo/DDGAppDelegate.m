@@ -17,11 +17,10 @@
 #import "NSString+URLEncodingDDG.h"
 #import "DDGFirstRunViewController.h"
 #import "DDGSlideOverMenuController.h"
+#ifdef ENABLE_HOCKEY
 #import <HockeySDK/HockeySDK.h>
-#import "DDGURLProtocol.h"
-#ifdef __APPLE__
-#include "TargetConditionals.h"
 #endif
+#import "DDGURLProtocol.h"
 
 @interface DDGAppDelegate ()
 @property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
@@ -79,12 +78,13 @@ static void uncaughtExceptionHandler(NSException *exception) {
     //Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
     
-    // Setup Hockey
-#if !(TARGET_IPHONE_SIMULATOR)
+#ifdef ENABLE_HOCKEY
+// Setup Hockey
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"a29176ab05b9fe95c2b006b585fdfc18"];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];
 #endif
+  
     [[UINavigationBar appearance] setBackgroundColor:[UIColor duckLightGray]];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     
