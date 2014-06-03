@@ -24,8 +24,11 @@ NSString * const DDGUserDefaultHasShownFirstRunKey = @"DDGUserDefaultHasShownFir
 }
 
 - (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];    
+    [super viewDidAppear:animated];
+    
+    // Ensure the value is serialized immediately.
     [[NSUserDefaults standardUserDefaults] setBool:YES forKey:DDGUserDefaultHasShownFirstRunKey];
+    [[NSUserDefaults standardUserDefaults] synchronize];
 }
 
 - (IBAction)dismiss:(id)sender {

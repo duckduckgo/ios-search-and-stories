@@ -70,6 +70,12 @@
 {
     _content = [content copy];
     [self.contentLabel setText:content];
+    if (content && content.length > 0) {
+        BOOL isBang = [[content substringToIndex:1] isEqualToString:@"!"];
+        if (isBang) {
+            self.faviconImage = [[UIImage imageNamed:@"Bang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        }
+    }
 }
 
 - (void)setDeletable:(BOOL)deletable animated:(BOOL)animated

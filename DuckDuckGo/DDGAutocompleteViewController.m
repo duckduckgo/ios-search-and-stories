@@ -150,7 +150,8 @@ static NSString *historyCellID = @"HCell";
     return (DDGSearchController *)self.navigationController.parentViewController;
 }
 
-- (void)searchFieldDidChange:(id)sender {
+- (void)searchFieldDidChange:(id)sender
+{
     NSString *newSearchText = self.searchController.searchBar.searchField.text;
     
     /* Disabled as per https://github.com/duckduckgo/ios/issues/25
@@ -330,7 +331,12 @@ static NSString *historyCellID = @"HCell";
         DDGAddressBarTextField *searchField = self.searchController.searchBar.searchField;
         NSString *searchText = searchField.text;
         NSArray *words = [searchText componentsSeparatedByString:@" "];
-        if ([words count] == 1 && [[[words objectAtIndex:0] substringToIndex:1] isEqualToString:@"!"]) {
+        
+        BOOL isBang = NO;
+        if ([words count] == 1 && [[words firstObject] length] > 0) {
+            isBang = [[[words firstObject] substringToIndex:1] isEqualToString:@"!"];
+        }
+        if (isBang) {
             searchField.text = [[suggestionItem objectForKey:@"phrase"] stringByAppendingString:@" "];
         } else {
             if([suggestionItem objectForKey:@"phrase"]) // if the server gave us bad data, phrase might be nil

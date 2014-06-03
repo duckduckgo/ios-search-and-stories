@@ -168,7 +168,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 //    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
     IGFormSwitch *quackSwitch = [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
-    [self addSectionWithTitle:@"Autocomplete" footer:nil];
+    [self addSectionWithTitle:@"Autosuggest" footer:nil];
     IGFormSwitch *suggestionsSwitch = [self addSwitch:@"Suggestions" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
     
     [self addSectionWithTitle:@"Search Results" footer:nil];

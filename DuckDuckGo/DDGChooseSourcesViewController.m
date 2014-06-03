@@ -18,12 +18,6 @@
 
 @implementation DDGChooseSourcesViewController
 
-
-- (void)dealloc
-{
-    NSLog(@"dealloc");
-}
-
 #pragma mark - View controller methods
 
 - (void)viewDidLoad
@@ -200,7 +194,7 @@
 	else
 	{
         DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        feed.enabledValue = (!feed.enabledValue);
+        feed.feedState = (feed.feedState == DDGStoryFeedStateEnabled) ? DDGStoryFeedStateDisabled : DDGStoryFeedStateEnabled;
         
         NSManagedObjectContext *context = feed.managedObjectContext;
         [context performBlock:^{
@@ -311,7 +305,7 @@
     cell.imageView.image = image;
     ((UIImageView *)[cell viewWithTag:100]).image = image;
     
-    if(feed.enabledValue)
+    if(feed.feedState == DDGStoryFeedStateEnabled)
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
     else
         cell.accessoryType = UITableViewCellAccessoryNone;

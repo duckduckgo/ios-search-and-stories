@@ -3,7 +3,7 @@
     <entity name="Feed" representedClassName="DDGStoryFeed" syncable="YES">
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descriptionString" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="enabled" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
+        <attribute name="enabled" optional="YES" attributeType="Integer 16" defaultValueString="NO" syncable="YES"/>
         <attribute name="enabledByDefault" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="feedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="id" attributeType="String" indexed="YES" syncable="YES"/>
