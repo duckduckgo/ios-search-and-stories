@@ -6,6 +6,16 @@
 //  Copyright (c) 2011 DuckDuckGo, Inc. All rights reserved.
 //
 
+#ifdef __APPLE__
+#import "TargetConditionals.h"
+#endif
+
+#if !(TARGET_IPHONE_SIMULATOR) && (APPSTORE_BUILD==0)
+#define ENABLE_HOCKEY 1
+#else
+#define ENABLE_HOCKEY 0
+#endif
+
 #import "DDGAppDelegate.h"
 #import "DDGHistoryProvider.h"
 #import "SDURLCache.h"
@@ -17,7 +27,7 @@
 #import "NSString+URLEncodingDDG.h"
 #import "DDGFirstRunViewController.h"
 #import "DDGSlideOverMenuController.h"
-#ifdef ENABLE_HOCKEY
+#if ENABLE_HOCKEY
 #import <HockeySDK/HockeySDK.h>
 #endif
 #import "DDGURLProtocol.h"
@@ -78,8 +88,8 @@ static void uncaughtExceptionHandler(NSException *exception) {
     //Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
     
-#ifdef ENABLE_HOCKEY
-// Setup Hockey
+#if ENABLE_HOCKEY==1
+    // Setup Hockey
     [[BITHockeyManager sharedHockeyManager] configureWithIdentifier:@"a29176ab05b9fe95c2b006b585fdfc18"];
     [[BITHockeyManager sharedHockeyManager] startManager];
     [[BITHockeyManager sharedHockeyManager].authenticator authenticateInstallation];

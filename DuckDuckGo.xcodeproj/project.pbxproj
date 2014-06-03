@@ -298,7 +298,6 @@
 		7B15790318C72415002F229B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B15790218C72415002F229B /* Images.xcassets */; };
 		7B2BDF9D18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B2BDF9C18E966BB003B8078 /* DDGHorizontalPanGestureRecognizer.m */; };
 		7B2BDFA018E997C8003B8078 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2BDF9F18E997C8003B8078 /* CoreText.framework */; };
-		7B2BDFA618E997ED003B8078 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2BDFA218E997ED003B8078 /* HockeySDK.framework */; };
 		7B2BDFA718E997ED003B8078 /* HockeySDK.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA418E997ED003B8078 /* HockeySDK.xcconfig */; };
 		7B2BDFA818E997ED003B8078 /* HockeySDKResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 7B2BDFA518E997ED003B8078 /* HockeySDKResources.bundle */; };
 		7B3BB7F7192E0F0A00E94055 /* DDGWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */; };
@@ -361,6 +360,7 @@
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
+		84792E06193E85AD00265665 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2BDFA218E997ED003B8078 /* HockeySDK.framework */; };
 		C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = C1894FD6178F56830076C179 /* UIColor+DDG.m */; };
 		C1A97EE5176BD3560099EDA1 /* btn-bg_bang_example_query.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */; };
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
@@ -856,6 +856,7 @@
 				7B3BB7F9192E350900E94055 /* AssetsLibrary.framework in Frameworks */,
 				7B2BDFA018E997C8003B8078 /* CoreText.framework in Frameworks */,
 				C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */,
+				84792E06193E85AD00265665 /* HockeySDK.framework in Frameworks */,
 				5BFF24AE16F77C0D00844D3B /* CoreData.framework in Frameworks */,
 				5B7A1B7916E649B500354310 /* AVFoundation.framework in Frameworks */,
 				5B66097316D781D00006B5DE /* libz.dylib in Frameworks */,
@@ -874,7 +875,6 @@
 				4CF9ED59154DFCD80075C23E /* MessageUI.framework in Frameworks */,
 				4C1EF85E150C048B00532858 /* QuartzCore.framework in Frameworks */,
 				8345080614AB8D520093C2A1 /* Foundation.framework in Frameworks */,
-				7B2BDFA618E997ED003B8078 /* HockeySDK.framework in Frameworks */,
 				83F3225D149290EF00A61BC5 /* UIKit.framework in Frameworks */,
 				834CD86B14A0FC3C006240F1 /* SystemConfiguration.framework in Frameworks */,
 				83F32261149290EF00A61BC5 /* CoreGraphics.framework in Frameworks */,
@@ -2178,12 +2178,11 @@
 		5B66097516D783620006B5DE /* Release (Testflight) */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPSTORE = 0;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG = 1;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2275,6 +2274,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_PREPROCESSOR_DEFINITIONS = "APPSTORE_BUILD=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -2293,13 +2293,13 @@
 		83F3227A149290EF00A61BC5 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPSTORE = 0;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG = 1;
+				"DEBUG[arch=*]" = 1;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/DuckDuckGo/Vendor/Hockey/HockeySDK-iOS/HockeySDK.embeddedframework",
@@ -2329,12 +2329,11 @@
 		83F3227B149290EF00A61BC5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPSTORE = 1;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				DEBUG = 0;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
