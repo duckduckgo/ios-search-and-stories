@@ -103,9 +103,9 @@ NSInteger const DDGSmallImageViewTag = 2;
     for (NSIndexPath *indexPath in indexPaths) {
         DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
         if (story) {
-            UIImage *image = [self.decompressedImages objectForKey:story.id];
+            UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
             if (image) {
-                [cachedImages setObject:image forKey:story.id];
+                [cachedImages setObject:image forKey:story.cacheKey];
             }
         }
     }
@@ -641,7 +641,7 @@ NSInteger const DDGSmallImageViewTag = 2;
     
     for (NSInteger i = lowestIndex; i<highestIndex; i++) {
         DDGStory *story = [stories objectAtIndex:i];
-        UIImage *decompressedImage = [self.decompressedImages objectForKey:story.id];
+        UIImage *decompressedImage = [self.decompressedImages objectForKey:story.cacheKey];
         
         if (nil == decompressedImage) {
             if (story.isImageDownloaded) {
@@ -754,9 +754,9 @@ NSInteger const DDGSmallImageViewTag = 2;
     if (nil == story.image)
         return;
     
-    NSString *storyID = story.id;
+    NSString *cacheKey = story.cacheKey;
     
-    if ([self.enqueuedDecompressionOperations containsObject:storyID])
+    if ([self.enqueuedDecompressionOperations containsObject:cacheKey])
         return;
     
     __weak DDGStoriesViewController *weakSelf = self;
@@ -773,7 +773,7 @@ NSInteger const DDGSmallImageViewTag = 2;
     if (nil == image)
         completionBlock();
     else {
-        [self.enqueuedDecompressionOperations addObject:storyID];
+        [self.enqueuedDecompressionOperations addObject:cacheKey];
         [self.imageDecompressionQueue addOperationWithBlock:^{
             //Draw the received image in a graphics context.
             UIGraphicsBeginImageContextWithOptions(image.size, YES, image.scale);
@@ -802,11 +802,11 @@ NSInteger const DDGSmallImageViewTag = 2;
              */
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [weakSelf.decompressedImages setObject:decompressed forKey:storyID];
+                [weakSelf.decompressedImages setObject:decompressed forKey:cacheKey];
             }];
             
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                [weakSelf.enqueuedDecompressionOperations removeObject:storyID];
+                [weakSelf.enqueuedDecompressionOperations removeObject:cacheKey];
                 completionBlock();
             }];
         }];
@@ -1021,14 +1021,17 @@ NSInteger const DDGSmallImageViewTag = 2;
     if (story.feed) {
         cell.favicon = [story.feed image];
     }
-    UIImage *image = [self.decompressedImages objectForKey:story.id];
+    UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
     if (image) {
         cell.image = image;
     } else {
         if (story.isImageDownloaded) {
             [self decompressAndDisplayImageForStory:story];
         } else {
-            [self.storyFetcher downloadImageForStory:story];
+            __weak typeof(self) weakSelf = self;
+            [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {
+                [weakSelf configureCell:cell atIndexPath:indexPath];
+            }];
         }
     }
 }

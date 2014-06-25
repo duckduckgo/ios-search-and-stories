@@ -25,6 +25,8 @@ extern NSString * const DDGStoryFetcherSourcesLastUpdatedKey;
 - (void)refreshStories:(void (^)())willSave completion:(void (^)(NSDate *lastFetchDate))completion;
 
 - (void)downloadImageForStory:(DDGStory *)story;
+- (void)downloadImageForStory:(DDGStory *)story completion:(void (^)(BOOL success))completion;
+
 - (void)downloadIconForFeed:(DDGStoryFeed *)feed;
 
 @end

@@ -354,36 +354,33 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
 
 - (void)downloadImageForStory:(DDGStory *)story
 {
+    [self downloadImageForStory:story completion:nil];
+}
+
+- (void)downloadImageForStory:(DDGStory *)story completion:(void (^)(BOOL success))completion;
+{
     NSURL *imageURL = story.imageURL;
     if (imageURL) {
         NSManagedObjectID *objectID = [story objectID];
-        if (!story.imageDownloadedValue && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
+        if (!story.isImageDownloaded && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
+            
             [self.enqueuedDownloadOperations addObject:imageURL];
             NSURLRequest *request = [DDGUtility requestWithURL:imageURL];
             
             void (^success)(AFHTTPRequestOperation *operation, id responseObject) = ^void(AFHTTPRequestOperation *operation, id responseObject) {
-                NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
-                [context setParentContext:self.parentManagedObjectContext];
-                [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
-                
-                NSData *responseData = (NSData *)responseObject;
-                
-                __block DDGStory *story;
-                [context performBlockAndWait:^{
-                    story = (DDGStory *)[context objectWithID:objectID];
-                }];
-                
-                [story writeImageData:responseData completion:^(BOOL success) {
-                    if (success) {
-                        story.imageDownloadedValue = YES;
-                        [context performBlock:^{
-                            NSError *error = nil;
-                            BOOL success = [context save:&error];
-                            if (!success)
-                                NSLog(@"error: %@", error);
-                        }];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    NSData *responseData = (NSData *)responseObject;
+                    NSManagedObjectContext *context = [[NSManagedObjectContext alloc] initWithConcurrencyType:NSPrivateQueueConcurrencyType];
+                    [context setParentContext:self.parentManagedObjectContext];
+                    [context setMergePolicy:NSMergeByPropertyObjectTrumpMergePolicy];
+                    DDGStory *story = (DDGStory *)[context objectWithID:objectID];
+                    BOOL success = [story writeImageData:responseData];
+                    if (completion) {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            completion(success);
+                        });
                     }
-                }];
+                });
                 [self.enqueuedDownloadOperations removeObject:imageURL];
             };
         

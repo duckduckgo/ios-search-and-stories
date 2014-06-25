@@ -20,107 +20,118 @@
 
 @synthesize blurredImage = _blurredImage;
 
-- (void)setURL:(NSURL *)URL {
+- (NSString *)cacheKey
+{
+    return self.imageURLString;
+}
+
+- (void)setURL:(NSURL *)URL
+{
     self.urlString = [URL absoluteString];
 }
 
-- (NSURL *)URL {
+- (NSURL *)URL
+{
     NSURL *URL = nil;
     NSString *URLString = self.urlString;
-    if (nil != URLString)
+    if (nil != URLString) {
         URL = [NSURL URLWithString:URLString];
+    }
     return URL;
 }
 
-- (void)setImageURL:(NSURL *)imageURL {
+- (void)setImageURL:(NSURL *)imageURL
+{
     self.imageURLString = [imageURL absoluteString];
 }
 
-- (NSURL *)imageURL {
+- (NSURL *)imageURL
+{
     NSURL *imageURL = nil;
     NSString *imageURLString = self.imageURLString;
-    if (nil != imageURLString)
+    if (nil != imageURLString) {
         imageURL = [NSURL URLWithString:imageURLString];
+    }
     return imageURL;
 }
 
--(NSString *)baseFilePath {
+-(NSString *)baseFilePath
+{
     return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
 }
 
-- (NSString *)description {
+- (NSString *)description
+{
     return [[super description] stringByAppendingFormat:@" %@ - %@", self.id, self.title];
 }
 
-- (BOOL)isImageDownloaded {
-    return self.imageDownloadedValue;
+- (BOOL)isImageDownloaded
+{
+    return [[NSFileManager defaultManager] fileExistsAtPath:[self imageFilePath]];;
 }
 
-- (BOOL)isHTMLDownloaded {
+- (BOOL)isHTMLDownloaded
+{
     return self.htmlDownloadedValue;
 }
 
-- (void)prepareForDeletion {
+- (void)prepareForDeletion
+{
     [super prepareForDeletion];
-    
     [self deleteImage];
     [self deleteHTML];
 }
 
 #pragma mark - Image
 
--(UIImage *)image {
+-(UIImage *)image
+{
     UIImage *image = nil;
-    if (self.imageDownloadedValue) {
+    if (self.isImageDownloaded) {
         NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath];
         image = [UIImage imageWithData:imageData];
     }
-    
     return image;
 }
 
--(void)deleteImage {
+-(void)deleteImage
+{
     [[NSFileManager defaultManager] removeItemAtPath:[self imageFilePath] error:nil];
-    self.imageDownloadedValue = NO;
 }
 
-- (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        BOOL suceess = [data writeToFile:[self imageFilePath] atomically:NO];
-        if (suceess)
-            [self.managedObjectContext performBlockAndWait:^{
-                self.imageDownloadedValue = YES;
-            }];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion)
-                completion(suceess);
-        });
-    });
+- (BOOL)writeImageData:(NSData *)data
+{
+    return [data writeToFile:[self imageFilePath] atomically:NO];
 }
 
--(NSString *)imageFilePath {
-    return [[self baseFilePath] stringByAppendingPathComponent:[@"image" stringByAppendingFormat:@"%@.jpg",self.id]];
+-(NSString *)imageFilePath
+{
+    return [[self baseFilePath] stringByAppendingPathComponent:[self.imageURL lastPathComponent]];
 }
 
 #pragma mark - HTML
 
-- (void)deleteHTML {
+- (void)deleteHTML
+{
     [[NSFileManager defaultManager] removeItemAtPath:[self HTMLFilePath] error:nil];
     self.htmlDownloadedValue = NO;
 }
 
-- (NSString *)HTML {
+- (NSString *)HTML
+{
     return [NSString stringWithContentsOfFile:[self HTMLFilePath] encoding:NSUTF8StringEncoding error:nil];
 }
 
-- (NSURLRequest *)HTMLURLRequest {
-    if (!self.htmlDownloadedValue)
+- (NSURLRequest *)HTMLURLRequest
+{
+    if (!self.htmlDownloadedValue) {
         return nil;
-    
+    }
     return [DDGUtility requestWithURL:[NSURL fileURLWithPath:[self HTMLFilePath]]];
 }
 
-- (void)writeHTMLString:(NSString *)html completion:(void (^)(BOOL success))completion {
+- (void)writeHTMLString:(NSString *)html completion:(void (^)(BOOL success))completion
+{
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         BOOL suceess = [html writeToFile:[self HTMLFilePath] atomically:NO encoding:NSUTF8StringEncoding error:nil];
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -133,7 +144,8 @@
     });
 }
 
--(NSString *)HTMLFilePath {
+-(NSString *)HTMLFilePath
+{
     return [[self baseFilePath] stringByAppendingPathComponent:[@"story" stringByAppendingFormat:@"%@.html",self.id]];
 }
 
