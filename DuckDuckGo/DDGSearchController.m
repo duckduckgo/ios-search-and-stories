@@ -300,22 +300,20 @@ NSString * const emailRegEx =
       viewControllerBeforeViewController:(UIViewController *)viewController {
     
     NSUInteger i = [self.controllers indexOfObject:viewController];
-    if (i==NSNotFound || i == 0) {
+    if (i == NSNotFound || i == 0) {
         return nil;
     }
-    
-    return self.controllers[i-1];
+    return self.controllers[i - 1];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
        viewControllerAfterViewController:(UIViewController *)viewController {
     
     NSUInteger i = [self.controllers indexOfObject:viewController];
-    if (i==NSNotFound || i == self.controllers.count -1) {
+    if (i == NSNotFound || i == (self.controllers.count - 1)) {
         return nil;
     }
-    
-    return self.controllers[i+1];
+    return self.controllers[i + 1];
 }
 
 - (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
@@ -327,6 +325,17 @@ NSString * const emailRegEx =
    previousViewControllers:(NSArray *)previousViewControllers
        transitionCompleted:(BOOL)completed {
     self.transitioningViewControllers = NO;
+    
+    /* Workaround for the fact didFinishAnimating and transitionCompleted always return YES */
+    /* [self.pageViewControllers viewControllers] only ever holds a single object; the current view controller */
+    UIViewController *currentViewController = [[self.pageViewController viewControllers] firstObject];
+    /* We only ever push or pop a single view controller at a time */
+    UIViewController *previousViewController = [previousViewControllers firstObject];
+    /* If the current view controller is the same as the previous one, we haven't changed page, despite what transitionCompleted states */
+    if (currentViewController == previousViewController) {
+        return;
+    }
+    
     if (completed) {
         UIViewController *viewController = [previousViewControllers lastObject];
         NSUInteger index = [self.controllers indexOfObject:viewController];
