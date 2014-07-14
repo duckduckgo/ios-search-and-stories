@@ -481,8 +481,10 @@
 }
 
 - (UIImageView *)imageView {
-    if (imageView == nil)
-        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 30, 26)];
+    if (imageView == nil) {
+        imageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 32, 32)];
+        imageView.contentMode = UIViewContentModeCenter;
+    }
     
     if(!imageView.superview)
         [self.hudView addSubview:imageView];
