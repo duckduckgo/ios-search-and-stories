@@ -9,8 +9,10 @@
 #import "DDGStory.h"
 #import "NSOperationStack.h"
 #import "DDGUtility.h"
+#import "NSString+MD5.h"
 
 @interface DDGStory () {
+    NSString *_cacheKey;
     UIImage *_image;
     UIImage *_blurredImage;
 }
@@ -22,7 +24,15 @@
 
 - (NSString *)cacheKey
 {
-    return self.imageURLString;
+    if (!_cacheKey) {
+        _cacheKey = [[self.imageURLString MD5String] copy];
+    }
+    return _cacheKey;
+}
+
+- (void)resetCacheKey
+{
+    _cacheKey = nil;
 }
 
 - (void)setURL:(NSURL *)URL
@@ -106,7 +116,7 @@
 
 -(NSString *)imageFilePath
 {
-    return [[self baseFilePath] stringByAppendingPathComponent:[self.imageURL lastPathComponent]];
+    return [[self baseFilePath] stringByAppendingPathComponent:self.cacheKey];
 }
 
 #pragma mark - HTML

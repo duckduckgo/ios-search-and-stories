@@ -217,6 +217,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                     story.timeStamp = date;
                     story.articleURLString = [storyDict objectForKey:@"article_url"];
                     story.feedDate = feedDate;
+                    [story resetCacheKey];
                 }
                 
                 [self purgeStoriesOlderThanDate:feedDate inContext:context];

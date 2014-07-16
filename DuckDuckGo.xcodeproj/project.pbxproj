@@ -308,6 +308,7 @@
 		7B6E2D8C18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8B18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m */; };
 		7B76FEC518E1DCFB00674702 /* DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */; };
 		7B76FECB18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */; };
+		7BA49624197678440001B88C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BA49623197678440001B88C /* NSString+MD5.m */; };
 		7BB873FD19374F04000C4DC4 /* DDGHTTPRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB873FC19374F04000C4DC4 /* DDGHTTPRequestManager.m */; };
 		7BCE31D918E4476700C87EF4 /* DDGMenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */; };
 		7BCE31DD18E449D600C87EF4 /* DDGMenuSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */; };
@@ -771,6 +772,8 @@
 		7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlideOverMenuController.m; sourceTree = "<group>"; };
 		7B76FEC918E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DDGSlideOverMenuController.h"; sourceTree = "<group>"; };
 		7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+DDGSlideOverMenuController.m"; sourceTree = "<group>"; };
+		7BA49622197678440001B88C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
+		7BA49623197678440001B88C /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		7BB873FB19374F04000C4DC4 /* DDGHTTPRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHTTPRequestManager.h; sourceTree = "<group>"; };
 		7BB873FC19374F04000C4DC4 /* DDGHTTPRequestManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHTTPRequestManager.m; sourceTree = "<group>"; };
 		7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGMenuSectionHeaderView.xib; sourceTree = "<group>"; };
@@ -1595,6 +1598,8 @@
 				4C184D0D15A3742A003AAD5E /* NSArray+ConcurrentIteration.m */,
 				8392E2301668E148004263B6 /* NSMutableString+DDGDumpView.h */,
 				8392E2311668E148004263B6 /* NSMutableString+DDGDumpView.m */,
+				7BA49622197678440001B88C /* NSString+MD5.h */,
+				7BA49623197678440001B88C /* NSString+MD5.m */,
 				5B2FCABA16F231150045A5FE /* NSString+URLEncodingDDG.h */,
 				5B2FCABB16F231150045A5FE /* NSString+URLEncodingDDG.m */,
 				C1894FD5178F56830076C179 /* UIColor+DDG.h */,
@@ -2066,6 +2071,7 @@
 				5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */,
 				5B7C3BDF170B098C00B9E009 /* DDGFirstRunViewController.m in Sources */,
 				5B7C3BEF170DA03E00B9E009 /* DDGSearchBar.m in Sources */,
+				7BA49624197678440001B88C /* NSString+MD5.m in Sources */,
 				5B7C3BF5170EECFF00B9E009 /* UIViewController+DDGSearchController.m in Sources */,
 				5B7C3C301715AF8900B9E009 /* DDGHistoryViewController.m in Sources */,
 				5B7C3CA3171851F800B9E009 /* DDGDeleteButton.m in Sources */,

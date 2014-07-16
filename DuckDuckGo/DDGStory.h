@@ -24,6 +24,7 @@
 - (NSString *)HTML;
 - (NSURLRequest *)HTMLURLRequest;
 
+- (void)resetCacheKey;
 - (void)writeHTMLString:(NSString *)html completion:(void (^)(BOOL success))completion;
 - (BOOL)writeImageData:(NSData *)data;
 
