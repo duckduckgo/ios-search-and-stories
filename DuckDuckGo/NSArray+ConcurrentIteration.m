@@ -10,14 +10,14 @@
 
 @implementation NSArray (ConcurrentIteration)
 
--(void)iterateWithMaximumConcurrentOperations:(NSUInteger)threads block:(void (^)(int, id))block {
+-(void)iterateWithMaximumConcurrentOperations:(NSUInteger)threads block:(void (^)(NSUInteger, id))block {
     
     NSOperationQueue *queue = [NSOperationQueue new];
     queue.suspended = YES;
     queue.maxConcurrentOperationCount = threads;
     
-    int count = self.count;
-    for (NSUInteger i = 0; i<count; i++) {
+    NSUInteger count = self.count;
+    for (NSUInteger i = 0; i < count; i++) {
         [queue addOperationWithBlock:^{
             block(i, [self objectAtIndex:i]);
         }];

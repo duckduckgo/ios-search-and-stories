@@ -10,6 +10,6 @@
 
 @interface NSArray (ConcurrentIteration)
 
--(void)iterateWithMaximumConcurrentOperations:(NSUInteger)max block:(void (^)(int i, id obj))block;
+-(void)iterateWithMaximumConcurrentOperations:(NSUInteger)max block:(void (^)(NSUInteger i, id obj))block;
 
 @end
