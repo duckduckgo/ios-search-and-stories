@@ -729,7 +729,7 @@ NSInteger const DDGSmallImageViewTag = 2;
     
     [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:DDGLastViewedStoryKey];
     
-    int readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+    NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
     [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
     
     [self.historyProvider logStory:story];
@@ -922,7 +922,7 @@ NSInteger const DDGSmallImageViewTag = 2;
     
     NSMutableArray *predicates = [NSMutableArray array];
     
-    int readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+    NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
     if (readabilityMode == DDGReadabilityModeOnExclusive && !self.savedStoriesOnly)
         [predicates addObject:[NSPredicate predicateWithFormat:@"articleURLString.length > 0"]];
     
