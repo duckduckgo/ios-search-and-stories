@@ -751,7 +751,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 
 - (void)decompressAndDisplayImageForStory:(DDGStory *)story;
 {
-    if (nil == story.image)
+    if (nil == story.image || nil == story.cacheKey)
         return;
     
     NSString *cacheKey = story.cacheKey;
