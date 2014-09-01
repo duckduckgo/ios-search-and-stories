@@ -123,7 +123,10 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     faviconButton.frame = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
     faviconButton.opaque = NO;
     faviconButton.backgroundColor = [UIColor clearColor];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
     [faviconButton addTarget:nil action:@selector(filter:) forControlEvents:UIControlEventTouchUpInside];
+#pragma clang diagnostic pop
     [self.contentView addSubview:faviconButton];
     self.faviconButton = faviconButton;
 }
