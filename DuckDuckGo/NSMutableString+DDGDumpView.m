@@ -15,7 +15,7 @@
 {
     for (int i = 0; i < indent; i++)
 		[self appendString:@"--"];
-	NSString *tag = (aView.tag == 0) ? @"" : [NSString stringWithFormat:@" (%d)", aView.tag];
+	NSString *tag = (aView.tag == 0) ? @"" : [NSString stringWithFormat:@" (%ld)", (long)aView.tag];
 	
     [self appendFormat:@"[%2d] %@%@ -- F:(%.f, %.f, %.f, %.f), B:(%.f, %.f, %.f, %.f), visible=%@\n",
 	 indent, [[aView class] description], tag,
