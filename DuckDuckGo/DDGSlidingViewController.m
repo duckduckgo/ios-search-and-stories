@@ -27,6 +27,12 @@
 //
 //@end
 
+@interface ECSlidingViewController (ExposePrivateMethod)
+
+- (void)updateTopViewHorizontalCenterWithRecognizer:(UIPanGestureRecognizer *)recognizer;
+
+@end
+
 @interface DDGSlidingViewController ()
 @property (nonatomic, strong) DDGHorizontalPanGestureRecognizer *panGesture;
 @property (nonatomic, strong) UIPanGestureRecognizer *oldPanGesture;
