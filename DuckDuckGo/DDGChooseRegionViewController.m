@@ -11,6 +11,12 @@
 #import "DDGSearchController.h"
 #import "DDGSettingsViewController.h"
 
+@interface IGFormViewController (ExposePrivateMethod)
+
+- (void)saveAndExit;
+
+@end
+
 @implementation DDGChooseRegionViewController
 
 - (void)viewDidLoad
