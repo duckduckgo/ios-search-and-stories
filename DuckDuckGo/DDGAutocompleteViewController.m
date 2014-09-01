@@ -314,7 +314,7 @@ static NSString *historyCellID = @"HCell";
         DDGHistoryItem *item = [self.history objectAtIndex:indexPath.row];
         [self.historyProvider relogHistoryItem:item];
         DDGStory *story = item.story;
-        int readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+        NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
         if (item.story) {
             [self.searchController loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
         } else {
