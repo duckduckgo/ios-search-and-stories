@@ -146,7 +146,7 @@
 }
 
 - (void)setCurrentViewControllerIndex:(NSInteger)newViewControllerIndex {
-    NSAssert1(newViewControllerIndex < [self.viewControllers count], @"Attempt to select a view controller beyond range of tabViewControllers %i", newViewControllerIndex);
+    NSAssert1(newViewControllerIndex < [self.viewControllers count], @"Attempt to select a view controller beyond range of tabViewControllers %ld", (long)newViewControllerIndex);
     
     UIViewController *nextViewController = [self.viewControllers objectAtIndex:newViewControllerIndex];
 
