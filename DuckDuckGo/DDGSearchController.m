@@ -1012,15 +1012,15 @@ NSString * const emailRegEx =
     }
     
     // find word beginning
-    int wordBeginning;
-    for(wordBeginning = range.location+string.length;wordBeginning>=0;wordBeginning--) {
-        if(wordBeginning == 0 || [newString characterAtIndex:wordBeginning-1] == ' ')
+    unsigned long wordBeginning;
+    for(wordBeginning = range.location + string.length; wordBeginning; wordBeginning--) {
+        if(wordBeginning == 0 || [newString characterAtIndex:wordBeginning - 1] == ' ')
             break;
     }
 
     // find word end
-    int wordEnd;
-    for(wordEnd = wordBeginning;wordEnd<newString.length;wordEnd++) {
+    unsigned long wordEnd;
+    for(wordEnd = wordBeginning; wordEnd < newString.length; wordEnd++) {
         if(wordEnd == newString.length || [newString characterAtIndex:wordEnd] == ' ')
             break;
     }
