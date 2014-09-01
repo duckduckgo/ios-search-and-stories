@@ -15,9 +15,11 @@
 - (NSString *)MD5String
 {
     const char *string = self.UTF8String;
+    /* Assert that the length is less than UINT32_MAX before casting to CC_LONG */
+    NSAssert(strlen(string) > UINT32_MAX, @"Length of string is larger than UINT32_MAX");
     unsigned long length = strlen(string);
     unsigned char bytes[CC_MD5_DIGEST_LENGTH];
-    CC_MD5(string, length, bytes);
+    CC_MD5(string, (CC_LONG)length, bytes);
     return [self stringFromBytes:bytes length:CC_MD5_DIGEST_LENGTH];
 }
 
