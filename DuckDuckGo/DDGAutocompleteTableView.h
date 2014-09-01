@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol DDGTableViewDelegate <UITableViewDelegate>
+
+- (void)tableViewBackgroundTouched;
+
+@end
+
 @interface DDGAutocompleteTableView : UITableView
 
 @end
