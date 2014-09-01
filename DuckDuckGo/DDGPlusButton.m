@@ -16,7 +16,10 @@
     UIEdgeInsets insets = UIEdgeInsetsMake(3.0, 3.0, 3.0, 3.0);
     [button setBackgroundImage:[[UIImage imageNamed:backgroundImageName] resizableImageWithCapInsets:insets] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wundeclared-selector"
     [button addTarget:nil action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
+#pragma clang diagnostic pop
     [button sizeToFit];
     
     return button;
