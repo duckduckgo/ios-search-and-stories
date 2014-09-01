@@ -10,14 +10,14 @@
 #import "DDGSearchHandler.h"
 #import "DDGTabViewController.h"
 
-typedef enum DDGViewControllerType {
-    DDGViewControllerTypeHome=0,
+typedef NS_ENUM(NSInteger, DDGViewControllerType) {
+    DDGViewControllerTypeHome = 0,
     DDGViewControllerTypeSaved,
     DDGViewControllerTypeStories,
     DDGViewControllerTypeHistory,
     DDGViewControllerTypeSettings,
     DDGViewControllerTypeDuck
-} DDGViewControllerType;
+};
 
 @class DDGSettingsViewController, DDGStory;
 
