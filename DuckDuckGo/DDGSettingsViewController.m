@@ -81,6 +81,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 - (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
     NSArray *regionItems = [self elementsForKey:@"region"];
     NSString *regionTitle = [[DDGRegionProvider shared] titleForRegion:[[DDGRegionProvider shared] region]];
     for (IGFormElement *element in regionItems) {

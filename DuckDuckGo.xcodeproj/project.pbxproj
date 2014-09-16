@@ -311,6 +311,7 @@
 		7BB873FD19374F04000C4DC4 /* DDGHTTPRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB873FC19374F04000C4DC4 /* DDGHTTPRequestManager.m */; };
 		7BCE31D918E4476700C87EF4 /* DDGMenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */; };
 		7BCE31DD18E449D600C87EF4 /* DDGMenuSectionHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */; };
+		7BF05AF519C82E84004A5B37 /* DDGLaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF05AF419C82E84004A5B37 /* DDGLaunchScreen.xib */; };
 		7BFC64DF18BCEEC800C48753 /* DDGStoryBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */; };
 		7BFDC9641913B65C00C4A30D /* DDGURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFDC9631913B65C00C4A30D /* DDGURLProtocol.m */; };
 		8333D63716666CA100571C59 /* spacer23x23.png in Resources */ = {isa = PBXBuildFile; fileRef = 8333D63616666CA100571C59 /* spacer23x23.png */; };
@@ -780,6 +781,7 @@
 		7BCE31DC18E449D600C87EF4 /* DDGMenuSectionHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuSectionHeaderView.m; sourceTree = "<group>"; };
 		7BD55F10192F7D2A007B1518 /* Stories v2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Stories v2.xcdatamodel"; sourceTree = "<group>"; };
 		7BE56C9219114C1B00C71AB4 /* DDGSlideOverMenuPanGestureCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSlideOverMenuPanGestureCoordinator.h; sourceTree = "<group>"; };
+		7BF05AF419C82E84004A5B37 /* DDGLaunchScreen.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGLaunchScreen.xib; sourceTree = "<group>"; };
 		7BFC64DD18BCEEC800C48753 /* DDGStoryBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryBackgroundView.h; sourceTree = "<group>"; };
 		7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryBackgroundView.m; sourceTree = "<group>"; };
 		7BFDC9621913B65C00C4A30D /* DDGURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGURLProtocol.h; sourceTree = "<group>"; };
@@ -1574,6 +1576,7 @@
 		838E906D149A794F00C11E41 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7BF05AF419C82E84004A5B37 /* DDGLaunchScreen.xib */,
 				4C0BC93515B8C2BE008C6FC4 /* quack.wav */,
 				838E906C149A76D400C11E41 /* Localizable.strings */,
 				8398DAC316419EB100A559C3 /* regions.json */,
@@ -1688,7 +1691,7 @@
 		83F3224F149290EF00A61BC5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
+				LastUpgradeCheck = 0600;
 			};
 			buildConfigurationList = 83F32252149290EF00A61BC5 /* Build configuration list for PBXProject "DuckDuckGo" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1786,6 +1789,7 @@
 				83CAD04016397F8D0030C4FC /* icon_caret_onclick.png in Resources */,
 				83CAD04116397F8D0030C4FC /* icon_caret_onclick@2x.png in Resources */,
 				83CAD04216397F8D0030C4FC /* icon_caret.png in Resources */,
+				7BF05AF519C82E84004A5B37 /* DDGLaunchScreen.xib in Resources */,
 				83CAD04316397F8D0030C4FC /* icon_caret@2x.png in Resources */,
 				4C1D95E5163F3D2100F7A0B9 /* bg_history-items@2x.png in Resources */,
 				4C1D95E6163F3D2100F7A0B9 /* bg_menu-items@2x.png in Resources */,
@@ -2161,9 +2165,11 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -2187,7 +2193,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2247,9 +2252,11 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -2284,9 +2291,11 @@
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PREPROCESSOR_DEFINITIONS = "APPSTORE_BUILD=1";
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -2311,7 +2320,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2347,7 +2355,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";

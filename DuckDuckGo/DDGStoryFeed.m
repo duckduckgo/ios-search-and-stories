@@ -54,7 +54,7 @@
 
 -(void)deleteImage {
     [[NSFileManager defaultManager] removeItemAtPath:[self imageFilePath] error:nil];
-    self.imageDownloaded = NO;
+    self.imageDownloadedValue = NO;
 }
 
 - (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion {

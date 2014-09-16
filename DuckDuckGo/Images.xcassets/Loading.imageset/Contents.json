@@ -37,6 +37,11 @@
       "idiom" : "universal",
       "filename" : "Loading@2x.png",
       "scale" : "2x"
+    },
+    {
+      "idiom" : "universal",
+      "scale" : "3x",
+      "filename" : "Loading@3x.png"
     }
   ],
   "info" : {

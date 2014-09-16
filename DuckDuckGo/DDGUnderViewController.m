@@ -70,7 +70,7 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     
     [historyViewController didMoveToParentViewController:self];
     
-    UIView *decorationView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 568.0f, 4.0f)];
+    UIView *decorationView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, CGRectGetHeight(self.view.bounds), 4.0f)];
     decorationView.backgroundColor = [UIColor duckRed];
     [self.view addSubview:decorationView];
 }
