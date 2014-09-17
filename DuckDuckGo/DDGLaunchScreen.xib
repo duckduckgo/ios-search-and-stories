@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A343f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6245" systemVersion="14A361c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
         <deployment defaultVersion="1792" identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6238"/>
@@ -11,7 +11,7 @@
             <rect key="frame" x="0.0" y="0.0" width="480" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SearchAndStories" translatesAutoresizingMaskIntoConstraints="NO" id="Y6h-io-Gdj">
+                <imageView userInteractionEnabled="NO" contentMode="TopLeft" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Launch" translatesAutoresizingMaskIntoConstraints="NO" id="Y6h-io-Gdj">
                     <rect key="frame" x="149" y="155" width="182" height="170"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="182" id="2M0-w6-HBM"/>
@@ -19,7 +19,7 @@
                     </constraints>
                 </imageView>
             </subviews>
-            <color key="backgroundColor" red="0.96470588235294119" green="0.96470588235294119" blue="0.96470588235294119" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.81568627450980391" green="0.38823529411764707" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="centerY" secondItem="Y6h-io-Gdj" secondAttribute="centerY" id="Uq3-Yb-5ll"/>
                 <constraint firstAttribute="centerX" secondItem="Y6h-io-Gdj" secondAttribute="centerX" id="vYa-a2-OFq"/>
@@ -30,6 +30,6 @@
         </view>
     </objects>
     <resources>
-        <image name="SearchAndStories" width="182" height="170"/>
+        <image name="Launch" width="182" height="170"/>
     </resources>
 </document>
