@@ -43,9 +43,14 @@ NSString * const emailRegEx =
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic) BOOL showBangTooltip;
 @property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
+
 @end
 
-@implementation DDGSearchController
+@implementation DDGSearchController {
+    id keyboardDidHideObserver;
+    id keyboardWillShowObserver;
+    id keyboardWillHideObserver;
+}
 
 -(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext; {
 	self = [super initWithNibName:@"DDGSearchController" bundle:nil];
@@ -63,8 +68,12 @@ NSString * const emailRegEx =
     if (nil != self.keyboardDidHideBlock)
         self.keyboardDidHideBlock(NO);
     self.keyboardDidHideBlock = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-	[self.view removeFromSuperview];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self];
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    [center removeObserver:keyboardWillShowObserver];
+    [center removeObserver:keyboardWillHideObserver];
+    [center removeObserver:keyboardDidHideObserver];
+    [self.view removeFromSuperview];
 }
 
 - (CGRect)contentRect {
@@ -236,9 +245,30 @@ NSString * const emailRegEx =
 	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	searchField.delegate = self;    
     
+    /*
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
+    */
+    
+    NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
+    NSOperationQueue *queue = [NSOperationQueue mainQueue];
+    __weak typeof(self) weakSelf = self;
+    keyboardWillShowObserver = [center addObserverForName:UIKeyboardWillShowNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
+        if (weakSelf) {
+            [weakSelf keyboardWillShow:note];
+        }
+    }];
+    keyboardWillHideObserver = [center addObserverForName:UIKeyboardWillHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
+        if (weakSelf) {
+            [weakSelf keyboardWillHide:note];
+        }
+    }];
+    keyboardDidHideObserver = [center addObserverForName:UIKeyboardDidHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
+        if (weakSelf) {
+            [weakSelf keyboardDidHide:note];
+        }
+    }];
     
     UIPageViewController *pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                                                navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
