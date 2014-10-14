@@ -3,6 +3,7 @@
 
 #import <CoreData/CoreData.h>
 
+
 extern const struct DDGStoryFeedAttributes {
 	__unsafe_unretained NSString *category;
 	__unsafe_unretained NSString *descriptionString;
@@ -20,7 +21,21 @@ extern const struct DDGStoryFeedRelationships {
 	__unsafe_unretained NSString *stories;
 } DDGStoryFeedRelationships;
 
+extern const struct DDGStoryFeedFetchedProperties {
+} DDGStoryFeedFetchedProperties;
+
 @class DDGStory;
+
+
+
+
+
+
+
+
+
+
+
 
 @interface DDGStoryFeedID : NSManagedObjectID {}
 @end
@@ -29,67 +44,136 @@ extern const struct DDGStoryFeedRelationships {
 + (id)insertInManagedObjectContext:(NSManagedObjectContext*)moc_;
 + (NSString*)entityName;
 + (NSEntityDescription*)entityInManagedObjectContext:(NSManagedObjectContext*)moc_;
-@property (nonatomic, readonly, strong) DDGStoryFeedID* objectID;
+- (DDGStoryFeedID*)objectID;
+
+
+
+
 
 @property (nonatomic, strong) NSString* category;
 
+
+
 //- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @property (nonatomic, strong) NSString* descriptionString;
 
+
+
 //- (BOOL)validateDescriptionString:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @property (nonatomic, strong) NSNumber* enabled;
 
-@property (atomic) int16_t enabledValue;
+
+
+@property int16_t enabledValue;
 - (int16_t)enabledValue;
 - (void)setEnabledValue:(int16_t)value_;
 
 //- (BOOL)validateEnabled:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
 @property (nonatomic, strong) NSNumber* enabledByDefault;
 
-@property (atomic) BOOL enabledByDefaultValue;
+
+
+@property BOOL enabledByDefaultValue;
 - (BOOL)enabledByDefaultValue;
 - (void)setEnabledByDefaultValue:(BOOL)value_;
 
 //- (BOOL)validateEnabledByDefault:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
 @property (nonatomic, strong) NSDate* feedDate;
+
+
 
 //- (BOOL)validateFeedDate:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
 @property (nonatomic, strong) NSString* id;
+
+
 
 //- (BOOL)validateId:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
 @property (nonatomic, strong) NSNumber* imageDownloaded;
 
-@property (atomic) BOOL imageDownloadedValue;
+
+
+@property BOOL imageDownloadedValue;
 - (BOOL)imageDownloadedValue;
 - (void)setImageDownloadedValue:(BOOL)value_;
 
 //- (BOOL)validateImageDownloaded:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
 @property (nonatomic, strong) NSString* imageURLString;
+
+
 
 //- (BOOL)validateImageURLString:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
 @property (nonatomic, strong) NSString* title;
+
+
 
 //- (BOOL)validateTitle:(id*)value_ error:(NSError**)error_;
 
+
+
+
+
 @property (nonatomic, strong) NSString* urlString;
 
+
+
 //- (BOOL)validateUrlString:(id*)value_ error:(NSError**)error_;
+
+
+
+
 
 @property (nonatomic, strong) NSSet *stories;
 
 - (NSMutableSet*)storiesSet;
 
+
+
+
+
 @end
 
-@interface _DDGStoryFeed (StoriesCoreDataGeneratedAccessors)
+@interface _DDGStoryFeed (CoreDataGeneratedAccessors)
+
 - (void)addStories:(NSSet*)value_;
 - (void)removeStories:(NSSet*)value_;
 - (void)addStoriesObject:(DDGStory*)value_;
@@ -99,11 +183,18 @@ extern const struct DDGStoryFeedRelationships {
 
 @interface _DDGStoryFeed (CoreDataGeneratedPrimitiveAccessors)
 
+
 - (NSString*)primitiveCategory;
 - (void)setPrimitiveCategory:(NSString*)value;
 
+
+
+
 - (NSString*)primitiveDescriptionString;
 - (void)setPrimitiveDescriptionString:(NSString*)value;
+
+
+
 
 - (NSNumber*)primitiveEnabled;
 - (void)setPrimitiveEnabled:(NSNumber*)value;
@@ -111,17 +202,29 @@ extern const struct DDGStoryFeedRelationships {
 - (int16_t)primitiveEnabledValue;
 - (void)setPrimitiveEnabledValue:(int16_t)value_;
 
+
+
+
 - (NSNumber*)primitiveEnabledByDefault;
 - (void)setPrimitiveEnabledByDefault:(NSNumber*)value;
 
 - (BOOL)primitiveEnabledByDefaultValue;
 - (void)setPrimitiveEnabledByDefaultValue:(BOOL)value_;
 
+
+
+
 - (NSDate*)primitiveFeedDate;
 - (void)setPrimitiveFeedDate:(NSDate*)value;
 
+
+
+
 - (NSString*)primitiveId;
 - (void)setPrimitiveId:(NSString*)value;
+
+
+
 
 - (NSNumber*)primitiveImageDownloaded;
 - (void)setPrimitiveImageDownloaded:(NSNumber*)value;
@@ -129,16 +232,30 @@ extern const struct DDGStoryFeedRelationships {
 - (BOOL)primitiveImageDownloadedValue;
 - (void)setPrimitiveImageDownloadedValue:(BOOL)value_;
 
+
+
+
 - (NSString*)primitiveImageURLString;
 - (void)setPrimitiveImageURLString:(NSString*)value;
+
+
+
 
 - (NSString*)primitiveTitle;
 - (void)setPrimitiveTitle:(NSString*)value;
 
+
+
+
 - (NSString*)primitiveUrlString;
 - (void)setPrimitiveUrlString:(NSString*)value;
 
+
+
+
+
 - (NSMutableSet*)primitiveStories;
 - (void)setPrimitiveStories:(NSMutableSet*)value;
+
 
 @end
