@@ -361,6 +361,7 @@
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
+		84792E06193E85AD00265665 /* HockeySDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2BDFA218E997ED003B8078 /* HockeySDK.framework */; };
 		C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = C1894FD6178F56830076C179 /* UIColor+DDG.m */; };
 		C1A97EE5176BD3560099EDA1 /* btn-bg_bang_example_query.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */; };
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
@@ -859,6 +860,7 @@
 				7B3BB7F9192E350900E94055 /* AssetsLibrary.framework in Frameworks */,
 				7B2BDFA018E997C8003B8078 /* CoreText.framework in Frameworks */,
 				C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */,
+				84792E06193E85AD00265665 /* HockeySDK.framework in Frameworks */,
 				5BFF24AE16F77C0D00844D3B /* CoreData.framework in Frameworks */,
 				5B7A1B7916E649B500354310 /* AVFoundation.framework in Frameworks */,
 				5B66097316D781D00006B5DE /* libz.dylib in Frameworks */,
