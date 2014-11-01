@@ -67,7 +67,7 @@
 
 -(NSString *)baseFilePath
 {
-    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+    return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask,YES) objectAtIndex:0];
 }
 
 - (NSString *)description
@@ -111,7 +111,18 @@
 
 - (BOOL)writeImageData:(NSData *)data
 {
-    return [data writeToFile:[self imageFilePath] atomically:NO];
+  NSURL* url = [NSURL fileURLWithPath:self.imageFilePath];
+  BOOL result = [data writeToURL:url atomically:NO];
+  if(result) { // mark the file as not to be backed up
+    NSError* error = nil;
+    BOOL success = [url setResourceValue:[NSNumber numberWithBool: YES]
+                                  forKey: NSURLIsExcludedFromBackupKey
+                                   error: &error];
+    if(!success){
+      NSLog(@"Error excluding %@ from backup %@", url, error);
+    }
+  }
+  return result;
 }
 
 -(NSString *)imageFilePath
@@ -143,14 +154,25 @@
 - (void)writeHTMLString:(NSString *)html completion:(void (^)(BOOL success))completion
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        BOOL suceess = [html writeToFile:[self HTMLFilePath] atomically:NO encoding:NSUTF8StringEncoding error:nil];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.managedObjectContext performBlockAndWait:^{
-                self.htmlDownloadedValue = YES;
-            }];
-            if (completion)
-                completion(suceess);
-        });
+      NSURL* url = [NSURL fileURLWithPath:[self HTMLFilePath]];
+      BOOL result = [html writeToURL:url atomically:NO encoding:NSUTF8StringEncoding error:nil];
+      
+      if(result) { // mark the file as not to be backed up
+        NSError* error = nil;
+        BOOL success = [url setResourceValue:[NSNumber numberWithBool: YES]
+                                      forKey: NSURLIsExcludedFromBackupKey
+                                       error: &error];
+        if(!success){
+          NSLog(@"Error excluding %@ from backup %@", url, error);
+        }
+      }
+      
+      dispatch_async(dispatch_get_main_queue(), ^{
+        [self.managedObjectContext performBlockAndWait:^{
+          self.htmlDownloadedValue = YES;
+        }];
+        if (completion) completion(result);
+      });
     });
 }
 

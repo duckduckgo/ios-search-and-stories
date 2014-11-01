@@ -298,7 +298,17 @@ static void uncaughtExceptionHandler(NSException *exception) {
         return _persistentStoreCoordinator;
     }
     
-    NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"Stories.sqlite"];
+    NSFileManager* fm = [NSFileManager defaultManager];
+    NSURL* docsDir = [[fm URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
+    DLog(@"documents directory: %@", docsDir);
+    NSURL *storeURL = [docsDir URLByAppendingPathComponent:@"Stories.sqlite"];
+    
+    if(![[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {
+        // this can happen if we were restored from an icloud backup, which can exclude the sqlite DB file.
+        // in those cases, we should require a refresh
+        NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
+        [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:DDGLastRefreshAttemptKey];
+    }
     
     NSError *error = nil;
     NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption: @YES,
@@ -332,15 +342,18 @@ static void uncaughtExceptionHandler(NSException *exception) {
         abort();
     }
     
+#ifdef DISALLOW_ICLOUD_BACKUP
+    if([[NSFileManager defaultManager] fileExistsAtPath: [storeURL path]]) {
+        NSError *error = nil;
+        BOOL success = [storeURL setResourceValue: [NSNumber numberWithBool: YES] forKey: NSURLIsExcludedFromBackupKey error: &error];
+        if(!success){
+            NSLog(@"Error excluding %@ from backup %@", [docsDir lastPathComponent], error);
+        }
+    }
+#endif
+    
+    
     return _persistentStoreCoordinator;
-}
-
-#pragma mark - Application's Documents directory
-
-// Returns the URL to the application's Documents directory.
-- (NSURL *)applicationDocumentsDirectory;
-{
-    return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
 @end

@@ -26,3 +26,13 @@
 
 #endif
 
+#define DISALLOW_ICLOUD_BACKUP 1
+
+#if DEBUG == 1
+#   define DLog(fmt, ...) NSLog((@"%s [Line %d] " fmt), __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__);
+#   define STACK_TRACE NSLog(@"Stack trace: %@", [NSThread callStackSymbols]);
+#else
+#   define DLog(...)
+#   define STACK_TRACE
+#endif
+

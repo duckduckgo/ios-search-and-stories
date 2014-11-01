@@ -29,7 +29,11 @@
 }
 
 -(NSString *)baseFilePath {
-    return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+  return [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES) objectAtIndex:0];
+}
+
+-(NSString *)cacheDirPath {
+  return [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask,YES) objectAtIndex:0];
 }
 
 - (NSString *)description {
@@ -37,19 +41,23 @@
 }
 
 - (BOOL)isImageDownloaded {
-    return self.imageDownloadedValue;
+  NSFileManager* fm = [NSFileManager defaultManager];
+  return self.imageDownloadedValue && ([fm fileExistsAtPath:self.imageFilePath] || [fm fileExistsAtPath:self.oldImageFilePath]);
 }
 
 #pragma mark - Image
 
 -(UIImage *)image {
-    UIImage *image = nil;
-    if (self.imageDownloadedValue) {
-        NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath];
-        image = [UIImage imageWithData:imageData];
+  UIImage *image = nil;
+  if([self isImageDownloaded]) {
+    NSData *imageData = [NSData dataWithContentsOfFile:self.imageFilePath];
+    if(imageData == nil) {
+      imageData = [NSData dataWithContentsOfFile:self.oldImageFilePath];
     }
-    
-    return image;
+    image = [UIImage imageWithData:imageData];
+  }
+  
+  return image;
 }
 
 -(void)deleteImage {
@@ -59,16 +67,31 @@
 
 - (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        BOOL suceess = [data writeToFile:[self imageFilePath] atomically:NO];
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (completion)
-                completion(suceess);
-        });
+      NSURL* url = [NSURL fileURLWithPath:[self imageFilePath]];
+      BOOL result = [data writeToURL:url atomically:NO];
+      
+      if(result) { // mark the file as not to be backed up
+        NSError* error = nil;
+        BOOL success = [url setResourceValue:[NSNumber numberWithBool: YES]
+                                      forKey: NSURLIsExcludedFromBackupKey
+                                       error: &error];
+        if(!success){
+          NSLog(@"Error excluding %@ from backup %@", url, error);
+        }
+      }
+      
+      dispatch_async(dispatch_get_main_queue(), ^{
+        if (completion) completion(result);
+      });
     });
 }
 
 -(NSString *)imageFilePath {
-    return [[self baseFilePath] stringByAppendingPathComponent:[@"feed-image-" stringByAppendingFormat:@"%@.png",self.id]];
+  return [[self cacheDirPath] stringByAppendingPathComponent:[@"feed-image-" stringByAppendingFormat:@"%@.png",self.id]];
+}
+
+-(NSString *)oldImageFilePath {
+  return [[self baseFilePath] stringByAppendingPathComponent:[@"feed-image-" stringByAppendingFormat:@"%@.png",self.id]];
 }
 
 - (DDGStoryFeedState)feedState

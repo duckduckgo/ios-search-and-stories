@@ -842,18 +842,15 @@ NSInteger const DDGSmallImageViewTag = 2;
     if (!self.storyFetcher.isRefreshing) {
         __weak DDGStoriesViewController *weakSelf = self;
         [self.storyFetcher refreshSources:^(NSDate *feedDate){
-            
+            NSLog(@"refreshing sources");
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
             NSPredicate *iconPredicate = [NSPredicate predicateWithFormat:@"imageDownloaded == %@", @(NO)];
             [request setPredicate:iconPredicate];
             NSError *error = nil;
             NSArray *feeds = [weakSelf.managedObjectContext executeFetchRequest:request error:&error];
-            if (nil == feeds)
+            if (nil == feeds) {
                 NSLog(@"failed to fetch story feeds. Error: %@", error);
-            
-            for (DDGStoryFeed *feed in feeds)
-                if (!feed.imageDownloadedValue)
-                    [weakSelf.storyFetcher downloadIconForFeed:feed];
+            }
             
             [weakSelf refreshStories];
         }];

@@ -14,5 +14,6 @@ typedef NS_ENUM(NSInteger, DDGStoryFeedState) {
 @property (nonatomic, readonly) UIImage *image;
 
 - (void)writeImageData:(NSData *)data completion:(void (^)(BOOL success))completion;
+- (BOOL)isImageDownloaded;
 
 @end

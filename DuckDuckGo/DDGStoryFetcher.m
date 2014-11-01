@@ -87,7 +87,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                         feed = [DDGStoryFeed insertInManagedObjectContext:context];
                         feed.feedState = DDGStoryFeedStateDefault;
                     }
-                                        
+                    
                     feed.urlString = [feedDict valueForKey:@"link"];
                     feed.id = [feedDict valueForKey:@"id"];
                     feed.enabledByDefault = [feedDict valueForKey:@"default"];
@@ -95,7 +95,15 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                     feed.title = [feedDict valueForKey:@"title"];
                     feed.descriptionString = [feedDict valueForKey:@"description"];
                     feed.imageURLString = [feedDict valueForKey:@"image"];
-                    feed.feedDate = feedDate;                    
+                    feed.feedDate = feedDate;
+                    
+                    if (!feed.isImageDownloaded) {
+                        NSLog(@"feed image is NOT downloaded, queueing download %@", feed.title);
+                        [self downloadIconForFeed:feed];
+                    } else {
+                        NSLog(@"feed image IS downloaded %@", feed.title);
+                    }
+
                 }
                 
                 [self purgeSourcesOlderThanDate:feedDate inContext:context];                
@@ -304,7 +312,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     NSURL *imageURL = feed.imageURL;
     NSManagedObjectID *objectID = [feed objectID];
     
-    if (!feed.imageDownloadedValue && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
+    if (!feed.isImageDownloaded && ![self.enqueuedDownloadOperations containsObject:imageURL]) {
         [self.enqueuedDownloadOperations addObject:imageURL];
         NSURLRequest *request = [DDGUtility requestWithURL:imageURL];
 
@@ -337,6 +345,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
         
         void (^failure)(AFHTTPRequestOperation *operation, NSError *error) = ^void(AFHTTPRequestOperation *operation, NSError *error) {
             [self.enqueuedDownloadOperations removeObject:imageURL];
+            NSLog(@"failed to download feed icon: %@", imageURL);
         };
         
         void (^expiration)() = ^void() {

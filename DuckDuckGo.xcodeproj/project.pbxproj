@@ -741,7 +741,7 @@
 		5BFF24B216F77E0900844D3B /* DDGStoryFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryFetcher.m; sourceTree = "<group>"; };
 		5BFF24C316F77F9F00844D3B /* Stories.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Stories.xcdatamodel; sourceTree = "<group>"; };
 		5BFF24C516F7801500844D3B /* DDGStoryFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryFeed.h; sourceTree = "<group>"; };
-		5BFF24C616F7801500844D3B /* DDGStoryFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryFeed.m; sourceTree = "<group>"; };
+		5BFF24C616F7801500844D3B /* DDGStoryFeed.m */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 2; lastKnownFileType = sourcecode.c.objc; path = DDGStoryFeed.m; sourceTree = "<group>"; tabWidth = 2; };
 		5BFF24C816F7803400844D3B /* _DDGStory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _DDGStory.h; sourceTree = "<group>"; };
 		5BFF24C916F7803400844D3B /* _DDGStory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = _DDGStory.m; sourceTree = "<group>"; };
 		5BFF24CA16F7803400844D3B /* _DDGStoryFeed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = _DDGStoryFeed.h; sourceTree = "<group>"; };
