@@ -301,7 +301,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
     NSFileManager* fm = [NSFileManager defaultManager];
     NSURL* docsDir = [[fm URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
     DLog(@"documents directory: %@", docsDir);
-    NSURL *storeURL = [docsDir URLByAppendingPathComponent:@"Stories.sqlite"];
+    NSString *storeName = @"Stories.sqlite";
+    NSURL *storeURL = [docsDir URLByAppendingPathComponent:storeName];
+    NSURL *storeWriteAheadLogURL = [docsDir URLByAppendingPathComponent:[storeName stringByAppendingString:@"-wal"]];
+    NSURL *storeSharedMemoryURL = [docsDir URLByAppendingPathComponent:[storeName stringByAppendingString:@"-shm"]];
     
     if(![[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {
         // this can happen if we were restored from an icloud backup, which can exclude the sqlite DB file.
@@ -343,11 +346,26 @@ static void uncaughtExceptionHandler(NSException *exception) {
     }
     
 #ifdef DISALLOW_ICLOUD_BACKUP
-    if([[NSFileManager defaultManager] fileExistsAtPath: [storeURL path]]) {
-        NSError *error = nil;
-        BOOL success = [storeURL setResourceValue: [NSNumber numberWithBool: YES] forKey: NSURLIsExcludedFromBackupKey error: &error];
+    BOOL success = NO;
+    if([[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {
+        error = nil;
+        success = [storeURL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
         if(!success){
-            NSLog(@"Error excluding %@ from backup %@", [docsDir lastPathComponent], error);
+            NSLog(@"Error excluding %@ from backup %@", [storeURL lastPathComponent], error);
+        }
+    }
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[storeSharedMemoryURL path]]) {
+        error = nil;
+        success = [storeSharedMemoryURL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
+        if(!success){
+            NSLog(@"Error excluding %@ from backup %@", [storeSharedMemoryURL lastPathComponent], error);
+        }
+    }
+    if ([[NSFileManager defaultManager] fileExistsAtPath:[storeWriteAheadLogURL path]]) {
+        error = nil;
+        success = [storeWriteAheadLogURL setResourceValue:[NSNumber numberWithBool:YES] forKey:NSURLIsExcludedFromBackupKey error:&error];
+        if(!success){
+            NSLog(@"Error excluding %@ from backup %@", [storeWriteAheadLogURL lastPathComponent], error);
         }
     }
 #endif
