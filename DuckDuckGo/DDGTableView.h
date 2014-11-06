@@ -10,4 +10,6 @@
 
 @interface DDGTableView : UITableView
 
+@property (nonatomic, assign) BOOL shouldBlockAutomaticContentOffsetAdjustments;
+
 @end

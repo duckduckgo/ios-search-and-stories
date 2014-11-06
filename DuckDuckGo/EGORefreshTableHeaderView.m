@@ -25,6 +25,7 @@
 //
 
 #import "EGORefreshTableHeaderView.h"
+#import "DDGTableView.h"
 
 #define FLIP_ANIMATION_DURATION 0.18f
 #define FLIP_TRIGGER_OFFSET (-87.0)
@@ -190,24 +191,34 @@
 		}
         
 		[self setState:EGOOPullRefreshLoading];
-		[UIView beginAnimations:nil context:NULL];
-		[UIView setAnimationDuration:0.2];
-		scrollView.contentInset = UIEdgeInsetsMake(LOADING_OFFSET, 0.0f, 0.0f, 0.0f);
-		[UIView commitAnimations];
+        
+        DDGTableView *tableView = [scrollView isKindOfClass:[DDGTableView class]] ? (DDGTableView *)scrollView : nil;
+        if (tableView) {
+            tableView.shouldBlockAutomaticContentOffsetAdjustments = YES;
+        }
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
+            scrollView.contentInset = UIEdgeInsetsMake(LOADING_OFFSET, 0.0f, 0.0f, 0.0f);
+        } completion:^(BOOL finished) {
+            tableView.shouldBlockAutomaticContentOffsetAdjustments = NO;
+        }];
         
 	}
 	
 }
 
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {	
-	
-	[UIView beginAnimations:nil context:NULL];
-	[UIView setAnimationDuration:.3];
-	[scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-	[UIView commitAnimations];
+    
+    DDGTableView *tableView = [scrollView isKindOfClass:[DDGTableView class]] ? (DDGTableView *)scrollView : nil;
+    if (tableView) {
+        tableView.shouldBlockAutomaticContentOffsetAdjustments = YES;
+    }
+    [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
+        scrollView.contentInset = UIEdgeInsetsZero;
+    } completion:^(BOOL finished) {
+        tableView.shouldBlockAutomaticContentOffsetAdjustments = NO;
+    }];
 	
 	[self setState:EGOOPullRefreshNormal];
-
 }
 
 @end

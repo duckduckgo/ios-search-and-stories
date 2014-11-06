@@ -307,8 +307,6 @@
 		7B6E2D8C18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8B18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m */; };
 		7B76FEC518E1DCFB00674702 /* DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */; };
 		7B76FECB18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */; };
-		7BA36C331A0A6F6000B905A7 /* TestTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BA36C321A0A6F6000B905A7 /* TestTableView.m */; };
-		7BA36C361A0A83C400B905A7 /* UIScrollView+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BA36C351A0A83C400B905A7 /* UIScrollView+DDG.m */; };
 		7BA49624197678440001B88C /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BA49623197678440001B88C /* NSString+MD5.m */; };
 		7BB873FD19374F04000C4DC4 /* DDGHTTPRequestManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BB873FC19374F04000C4DC4 /* DDGHTTPRequestManager.m */; };
 		7BCE31D918E4476700C87EF4 /* DDGMenuSectionHeaderView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BCE31D818E4476700C87EF4 /* DDGMenuSectionHeaderView.xib */; };
@@ -775,10 +773,6 @@
 		7B76FEC418E1DCFB00674702 /* DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSlideOverMenuController.m; sourceTree = "<group>"; };
 		7B76FEC918E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DDGSlideOverMenuController.h"; sourceTree = "<group>"; };
 		7B76FECA18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+DDGSlideOverMenuController.m"; sourceTree = "<group>"; };
-		7BA36C311A0A6F6000B905A7 /* TestTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestTableView.h; sourceTree = "<group>"; };
-		7BA36C321A0A6F6000B905A7 /* TestTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TestTableView.m; sourceTree = "<group>"; };
-		7BA36C341A0A83C400B905A7 /* UIScrollView+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+DDG.h"; sourceTree = "<group>"; };
-		7BA36C351A0A83C400B905A7 /* UIScrollView+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+DDG.m"; sourceTree = "<group>"; };
 		7BA49622197678440001B88C /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
 		7BA49623197678440001B88C /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
 		7BB873FB19374F04000C4DC4 /* DDGHTTPRequestManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHTTPRequestManager.h; sourceTree = "<group>"; };
@@ -1426,10 +1420,6 @@
 			children = (
 				4C1EF859150C043D00532858 /* EGORefreshTableHeaderView.h */,
 				4C1EF85A150C043D00532858 /* EGORefreshTableHeaderView.m */,
-				7BA36C311A0A6F6000B905A7 /* TestTableView.h */,
-				7BA36C321A0A6F6000B905A7 /* TestTableView.m */,
-				7BA36C341A0A83C400B905A7 /* UIScrollView+DDG.h */,
-				7BA36C351A0A83C400B905A7 /* UIScrollView+DDG.m */,
 			);
 			name = EGORefreshTableHeaderView;
 			sourceTree = "<group>";
@@ -2017,7 +2007,6 @@
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				7B76FECB18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
-				7BA36C361A0A83C400B905A7 /* UIScrollView+DDG.m in Sources */,
 				4CCDC2AF1527B18C00CB6907 /* DDGHistoryProvider.m in Sources */,
 				4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */,
 				4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */,
@@ -2034,7 +2023,6 @@
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
 				4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */,
-				7BA36C331A0A6F6000B905A7 /* TestTableView.m in Sources */,
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
 				7B6E2D8918E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m in Sources */,
 				4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */,
