@@ -222,8 +222,12 @@
             tableView.shouldBlockAutomaticContentOffsetAdjustments = NO;
         }
         if (!UIEdgeInsetsEqualToEdgeInsets(scrollView.contentInset, UIEdgeInsetsZero)) {
-            [self egoRefreshScrollViewDataSourceDidFinishedLoading:scrollView];
+            NSLog(@"Stuck; trying again...");
+            [self performSelector:@selector(egoRefreshScrollViewDataSourceDidFinishedLoading:)
+                       withObject:scrollView
+                       afterDelay:0];
         } else {
+            [scrollView setContentOffset:CGPointZero animated:YES];
             [self setState:EGOOPullRefreshNormal];
         }
     }];
