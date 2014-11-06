@@ -148,7 +148,8 @@
 #pragma mark ScrollView Methods
 
 - (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {	
-	if (_state == EGOOPullRefreshLoading) {
+
+    if (_state == EGOOPullRefreshLoading) {
 		
 		CGFloat offset = MAX(scrollView.contentOffset.y * -1, 0);
 		offset = MIN(offset, LOADING_OFFSET);
@@ -178,7 +179,7 @@
 }
 
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView {
-    
+
 	BOOL _loading = NO;
 	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
 		_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
@@ -196,29 +197,37 @@
         if (tableView) {
             tableView.shouldBlockAutomaticContentOffsetAdjustments = YES;
         }
-        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
+        [UIView animateWithDuration:0.2 delay:0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             scrollView.contentInset = UIEdgeInsetsMake(LOADING_OFFSET, 0.0f, 0.0f, 0.0f);
         } completion:^(BOOL finished) {
-            tableView.shouldBlockAutomaticContentOffsetAdjustments = NO;
+            if (tableView) {
+                tableView.shouldBlockAutomaticContentOffsetAdjustments = NO;
+            }
         }];
         
 	}
 	
 }
 
-- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {	
+- (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {
     
     DDGTableView *tableView = [scrollView isKindOfClass:[DDGTableView class]] ? (DDGTableView *)scrollView : nil;
     if (tableView) {
         tableView.shouldBlockAutomaticContentOffsetAdjustments = YES;
     }
-    [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionBeginFromCurrentState | UIViewAnimationOptionAllowUserInteraction animations:^{
+    [UIView animateWithDuration:0.3 delay:0.2 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
         scrollView.contentInset = UIEdgeInsetsZero;
     } completion:^(BOOL finished) {
-        tableView.shouldBlockAutomaticContentOffsetAdjustments = NO;
+        if (tableView) {
+            tableView.shouldBlockAutomaticContentOffsetAdjustments = NO;
+        }
+        if (!UIEdgeInsetsEqualToEdgeInsets(scrollView.contentInset, UIEdgeInsetsZero)) {
+            [self egoRefreshScrollViewDataSourceDidFinishedLoading:scrollView];
+        } else {
+            [self setState:EGOOPullRefreshNormal];
+        }
     }];
 	
-	[self setState:EGOOPullRefreshNormal];
 }
 
 @end
