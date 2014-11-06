@@ -222,7 +222,6 @@
             tableView.shouldBlockAutomaticContentOffsetAdjustments = NO;
         }
         if (!UIEdgeInsetsEqualToEdgeInsets(scrollView.contentInset, UIEdgeInsetsZero)) {
-            NSLog(@"Stuck; trying again...");
             [self performSelector:@selector(egoRefreshScrollViewDataSourceDidFinishedLoading:)
                        withObject:scrollView
                        afterDelay:0];

@@ -41,11 +41,9 @@ NSString * const DDGObfuscatedSelectorName = @"*_*a*d*j*u*s*t*C*o*n*t*e*n*t*O*f*
 }
 
 - (void)ignoreAdjustContentOffsetIfNecessary {
-//    NSLog(@"current offset: %@", NSStringFromCGPoint(self.contentOffset));
     if (!self.shouldBlockAutomaticContentOffsetAdjustments) {
         [self ignoreAdjustContentOffsetIfNecessary];
     }
-//    NSLog(@"adjusted offset: %@", NSStringFromCGPoint(self.contentOffset));
 }
 
 @end
