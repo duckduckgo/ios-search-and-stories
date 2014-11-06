@@ -20,9 +20,6 @@ const struct DDGStoryFeedRelationships DDGStoryFeedRelationships = {
 	.stories = @"stories",
 };
 
-const struct DDGStoryFeedFetchedProperties DDGStoryFeedFetchedProperties = {
-};
-
 @implementation DDGStoryFeedID
 @end
 
@@ -48,7 +45,7 @@ const struct DDGStoryFeedFetchedProperties DDGStoryFeedFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"enabledValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"enabled"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -68,26 +65,11 @@ const struct DDGStoryFeedFetchedProperties DDGStoryFeedFetchedProperties = {
 	return keyPaths;
 }
 
-
-
-
 @dynamic category;
-
-
-
-
-
 
 @dynamic descriptionString;
 
-
-
-
-
-
 @dynamic enabled;
-
-
 
 - (int16_t)enabledValue {
 	NSNumber *result = [self enabled];
@@ -107,13 +89,7 @@ const struct DDGStoryFeedFetchedProperties DDGStoryFeedFetchedProperties = {
 	[self setPrimitiveEnabled:[NSNumber numberWithShort:value_]];
 }
 
-
-
-
-
 @dynamic enabledByDefault;
-
-
 
 - (BOOL)enabledByDefaultValue {
 	NSNumber *result = [self enabledByDefault];
@@ -133,27 +109,11 @@ const struct DDGStoryFeedFetchedProperties DDGStoryFeedFetchedProperties = {
 	[self setPrimitiveEnabledByDefault:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic feedDate;
-
-
-
-
-
 
 @dynamic id;
 
-
-
-
-
-
 @dynamic imageDownloaded;
-
-
 
 - (BOOL)imageDownloadedValue {
 	NSNumber *result = [self imageDownloaded];
@@ -173,47 +133,22 @@ const struct DDGStoryFeedFetchedProperties DDGStoryFeedFetchedProperties = {
 	[self setPrimitiveImageDownloaded:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic imageURLString;
-
-
-
-
-
 
 @dynamic title;
 
-
-
-
-
-
 @dynamic urlString;
-
-
-
-
-
 
 @dynamic stories;
 
-	
 - (NSMutableSet*)storiesSet {
 	[self willAccessValueForKey:@"stories"];
-  
+
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"stories"];
-  
+
 	[self didAccessValueForKey:@"stories"];
 	return result;
 }
-	
-
-
-
-
-
 
 @end
+

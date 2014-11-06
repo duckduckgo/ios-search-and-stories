@@ -14,9 +14,6 @@ const struct DDGHistoryItemRelationships DDGHistoryItemRelationships = {
 	.story = @"story",
 };
 
-const struct DDGHistoryItemFetchedProperties DDGHistoryItemFetchedProperties = {
-};
-
 @implementation DDGHistoryItemID
 @end
 
@@ -42,49 +39,19 @@ const struct DDGHistoryItemFetchedProperties DDGHistoryItemFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
 
 	return keyPaths;
 }
 
-
-
-
 @dynamic section;
-
-
-
-
-
 
 @dynamic timeStamp;
 
-
-
-
-
-
 @dynamic title;
-
-
-
-
-
 
 @dynamic urlString;
 
-
-
-
-
-
 @dynamic story;
 
-	
-
-
-
-
-
-
 @end
+

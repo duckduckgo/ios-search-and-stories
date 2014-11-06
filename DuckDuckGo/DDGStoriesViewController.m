@@ -23,6 +23,7 @@
 #import "DDGSafariActivity.h"
 #import "DDGActivityItemProvider.h"
 #import <CoreImage/CoreImage.h>
+#import "DDGTableView.h"
 
 NSString *const DDGLastViewedStoryKey = @"last_story";
 
@@ -43,7 +44,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
 @property (nonatomic, strong) DDGPanGestureRecognizer *panLeftGestureRecognizer;
-@property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) IBOutlet DDGTableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
 @property (nonatomic, weak) IBOutlet UIButton *swipeViewSaveButton;
 @property (nonatomic, weak) IBOutlet UIButton *swipeViewSafariButton;
@@ -160,7 +161,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+    DDGTableView *tableView = [[DDGTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
     tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     tableView.backgroundColor = [UIColor duckNoContentColor];
     tableView.dataSource = self;

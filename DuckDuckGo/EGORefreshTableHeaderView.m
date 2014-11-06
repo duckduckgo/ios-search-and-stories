@@ -177,7 +177,7 @@
 }
 
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView {
-	
+    
 	BOOL _loading = NO;
 	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
 		_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
@@ -188,13 +188,13 @@
 		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
 			[_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
 		}
-		
+        
 		[self setState:EGOOPullRefreshLoading];
 		[UIView beginAnimations:nil context:NULL];
 		[UIView setAnimationDuration:0.2];
 		scrollView.contentInset = UIEdgeInsetsMake(LOADING_OFFSET, 0.0f, 0.0f, 0.0f);
 		[UIView commitAnimations];
-		
+        
 	}
 	
 }

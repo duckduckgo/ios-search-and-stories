@@ -314,6 +314,7 @@
 		7BF05AF519C82E84004A5B37 /* DDGLaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 7BF05AF419C82E84004A5B37 /* DDGLaunchScreen.xib */; };
 		7BFC64DF18BCEEC800C48753 /* DDGStoryBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */; };
 		7BFDC9641913B65C00C4A30D /* DDGURLProtocol.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFDC9631913B65C00C4A30D /* DDGURLProtocol.m */; };
+		7BFE72171A0B83C00024C53F /* DDGTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7BFE72161A0B83C00024C53F /* DDGTableView.m */; };
 		8333D63716666CA100571C59 /* spacer23x23.png in Resources */ = {isa = PBXBuildFile; fileRef = 8333D63616666CA100571C59 /* spacer23x23.png */; };
 		8343A2E31672827100DDE73C /* icon_notification@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E11672827100DDE73C /* icon_notification@2x.png */; };
 		8343A2E41672827100DDE73C /* icon_notification.png in Resources */ = {isa = PBXBuildFile; fileRef = 8343A2E21672827100DDE73C /* icon_notification.png */; };
@@ -786,6 +787,8 @@
 		7BFC64DE18BCEEC800C48753 /* DDGStoryBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryBackgroundView.m; sourceTree = "<group>"; };
 		7BFDC9621913B65C00C4A30D /* DDGURLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGURLProtocol.h; sourceTree = "<group>"; };
 		7BFDC9631913B65C00C4A30D /* DDGURLProtocol.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGURLProtocol.m; sourceTree = "<group>"; };
+		7BFE72151A0B83C00024C53F /* DDGTableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTableView.h; sourceTree = "<group>"; };
+		7BFE72161A0B83C00024C53F /* DDGTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTableView.m; sourceTree = "<group>"; };
 		8303A4E71499287B00D34412 /* Always.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Always.h; sourceTree = "<group>"; };
 		8333D63616666CA100571C59 /* spacer23x23.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = spacer23x23.png; sourceTree = "<group>"; };
 		833DB53D1494164F00509F2E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -1292,6 +1295,8 @@
 				5B66097716D7A3600006B5DE /* DDGFaviconButton.m */,
 				5B88DBD816DB9C84007A935D /* DDGPanGestureRecognizer.h */,
 				5B88DBD916DB9C84007A935D /* DDGPanGestureRecognizer.m */,
+				7BFE72151A0B83C00024C53F /* DDGTableView.h */,
+				7BFE72161A0B83C00024C53F /* DDGTableView.m */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -1694,7 +1699,7 @@
 				LastUpgradeCheck = 0600;
 				TargetAttributes = {
 					83F32257149290EF00A61BC5 = {
-						DevelopmentTeam = HKE973VLUW;
+						DevelopmentTeam = FWMY9T628H;
 					};
 				};
 			};
@@ -2026,6 +2031,7 @@
 				8398DACC1641DA9F00A559C3 /* DDGRegionProvider.m in Sources */,
 				8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */,
 				8390A3F51677CB3500336DE7 /* DDGUtility.m in Sources */,
+				7BFE72171A0B83C00024C53F /* DDGTableView.m in Sources */,
 				7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */,
 				5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */,
 				5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */,
@@ -2364,7 +2370,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Duck Duck Go, Inc. (HKE973VLUW)";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG = 0;
 				FRAMEWORK_SEARCH_PATHS = (
