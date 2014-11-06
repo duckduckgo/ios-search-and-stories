@@ -25,7 +25,6 @@
 //
 
 #import "EGORefreshTableHeaderView.h"
-#import "UIScrollView+DDG.h"
 
 #define FLIP_ANIMATION_DURATION 0.18f
 #define FLIP_TRIGGER_OFFSET (-87.0)
@@ -147,9 +146,8 @@
 #pragma mark -
 #pragma mark ScrollView Methods
 
-- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    if (_state == EGOOPullRefreshLoading) {
+- (void)egoRefreshScrollViewDidScroll:(UIScrollView *)scrollView {	
+	if (_state == EGOOPullRefreshLoading) {
 		
 		CGFloat offset = MAX(scrollView.contentOffset.y * -1, 0);
 		offset = MIN(offset, LOADING_OFFSET);
@@ -180,7 +178,7 @@
 
 - (void)egoRefreshScrollViewDidEndDragging:(UIScrollView *)scrollView {
     
-    BOOL _loading = NO;
+	BOOL _loading = NO;
 	if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDataSourceIsLoading:)]) {
 		_loading = [_delegate egoRefreshTableHeaderDataSourceIsLoading:self];
 	}
@@ -190,35 +188,24 @@
 		if ([_delegate respondsToSelector:@selector(egoRefreshTableHeaderDidTriggerRefresh:)]) {
 			[_delegate egoRefreshTableHeaderDidTriggerRefresh:self];
 		}
-		
-		[self setState:EGOOPullRefreshLoading];
         
-        [UIView animateWithDuration:0.2 animations:^{
-            scrollView.offsetToIgnore = -LOADING_OFFSET;
-            scrollView.ignoringOffset = YES;
-            scrollView.contentInset = UIEdgeInsetsMake(LOADING_OFFSET, 0.0f, 0.0f, 0.0f);
-            scrollView.ignoringOffset = NO;
-        }];
-//        [UIView beginAnimations:nil context:NULL];
-//		[UIView setAnimationDuration:0.2];
-//        NSLog(@"Setting contentInset");
-//		scrollView.contentInset = UIEdgeInsetsMake(LOADING_OFFSET, 0.0f, 0.0f, 0.0f);
-//		[UIView commitAnimations];
+		[self setState:EGOOPullRefreshLoading];
+		[UIView beginAnimations:nil context:NULL];
+		[UIView setAnimationDuration:0.2];
+		scrollView.contentInset = UIEdgeInsetsMake(LOADING_OFFSET, 0.0f, 0.0f, 0.0f);
+		[UIView commitAnimations];
+        
 	}
 	
 }
 
 - (void)egoRefreshScrollViewDataSourceDidFinishedLoading:(UIScrollView *)scrollView {	
 	
-//    [UIView beginAnimations:nil context:NULL];
-//	[UIView setAnimationDuration:.3];
-//	[scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
-//	[UIView commitAnimations];
+	[UIView beginAnimations:nil context:NULL];
+	[UIView setAnimationDuration:.3];
+	[scrollView setContentInset:UIEdgeInsetsMake(0.0f, 0.0f, 0.0f, 0.0f)];
+	[UIView commitAnimations];
 	
-    [UIView animateWithDuration:0.3 animations:^{
-        scrollView.contentInset = UIEdgeInsetsZero;
-    }];
-    
 	[self setState:EGOOPullRefreshNormal];
 
 }
