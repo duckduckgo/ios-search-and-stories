@@ -73,18 +73,21 @@
       "orientation" : "portrait",
       "idiom" : "iphone",
       "extent" : "full-screen",
+      "filename" : "DDG_iphone_small_launch.png",
       "scale" : "1x"
     },
     {
       "orientation" : "portrait",
       "idiom" : "iphone",
       "extent" : "full-screen",
+      "filename" : "DDG_iphone_small_launch@2x.png",
       "scale" : "2x"
     },
     {
       "orientation" : "portrait",
       "idiom" : "iphone",
       "extent" : "full-screen",
+      "filename" : "Launch4@2x-1.png",
       "subtype" : "retina4",
       "scale" : "2x"
     },
