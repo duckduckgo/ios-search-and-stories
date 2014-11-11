@@ -249,7 +249,7 @@ NSInteger const DDGSmallImageViewTag = 2;
     
     if (!self.savedStoriesOnly) {
         if ([self shouldRefresh]) {
-            [self refresh:YES];
+            [self refreshStoriesTriggeredManually:NO includeSources:YES];
         }
     } else if ([self.fetchedResultsController.fetchedObjects count] == 0) {
         [self showNoStoriesView];
@@ -678,7 +678,7 @@ NSInteger const DDGSmallImageViewTag = 2;
 #pragma mark - EGORefreshTableHeaderDelegate Methods
 
 - (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
-    [self refresh:NO];
+    [self refreshStoriesTriggeredManually:YES includeSources:NO];
 }
 
 - (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
@@ -829,17 +829,17 @@ NSInteger const DDGSmallImageViewTag = 2;
     return _storyFetcher;
 }
 
-- (void)refresh:(BOOL)includeSources
+- (void)refreshStoriesTriggeredManually:(BOOL)manual includeSources:(BOOL)includeSources
 {
     [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:DDGLastRefreshAttemptKey];
     if (includeSources) {
-        [self refreshSources];
+        [self refreshSources:manual];
     } else {
-        [self refreshStories];
+        [self refreshStories:manual];
     }
 }
 
-- (void)refreshSources {
+- (void)refreshSources:(BOOL)manual {
     if (!self.storyFetcher.isRefreshing) {
         __weak DDGStoriesViewController *weakSelf = self;
         [self.storyFetcher refreshSources:^(NSDate *feedDate){
@@ -853,12 +853,12 @@ NSInteger const DDGSmallImageViewTag = 2;
                 NSLog(@"failed to fetch story feeds. Error: %@", error);
             }
             
-            [weakSelf refreshStories];
+            [weakSelf refreshStories:manual];
         }];
     }
 }
 
-- (void)refreshStories {
+- (void)refreshStories:(BOOL)manual {
     if (!self.storyFetcher.isRefreshing) {
         
         __block NSArray *oldStories = nil;        
@@ -882,7 +882,10 @@ NSInteger const DDGSmallImageViewTag = 2;
             [weakSelf prepareUpcomingCellContent];
             
             isRefreshing = NO;
-            [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:weakSelf.tableView];
+            /* Should only call this method if the refresh was triggered by a PTR */
+            if (manual) {
+                [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:weakSelf.tableView];
+            }
             
             if(changes > 0 && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
                 SystemSoundID quack;
