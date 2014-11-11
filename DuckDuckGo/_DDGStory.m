@@ -23,9 +23,6 @@ const struct DDGStoryRelationships DDGStoryRelationships = {
 	.recents = @"recents",
 };
 
-const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
-};
-
 @implementation DDGStoryID
 @end
 
@@ -51,7 +48,7 @@ const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
 
 + (NSSet*)keyPathsForValuesAffectingValueForKey:(NSString*)key {
 	NSSet *keyPaths = [super keyPathsForValuesAffectingValueForKey:key];
-	
+
 	if ([key isEqualToString:@"htmlDownloadedValue"]) {
 		NSSet *affectingKey = [NSSet setWithObject:@"htmlDownloaded"];
 		keyPaths = [keyPaths setByAddingObjectsFromSet:affectingKey];
@@ -76,33 +73,13 @@ const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
 	return keyPaths;
 }
 
-
-
-
 @dynamic articleURLString;
-
-
-
-
-
 
 @dynamic descriptionString;
 
-
-
-
-
-
 @dynamic feedDate;
 
-
-
-
-
-
 @dynamic htmlDownloaded;
-
-
 
 - (BOOL)htmlDownloadedValue {
 	NSNumber *result = [self htmlDownloaded];
@@ -122,20 +99,9 @@ const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
 	[self setPrimitiveHtmlDownloaded:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic id;
 
-
-
-
-
-
 @dynamic imageDownloaded;
-
-
 
 - (BOOL)imageDownloadedValue {
 	NSNumber *result = [self imageDownloaded];
@@ -155,20 +121,9 @@ const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
 	[self setPrimitiveImageDownloaded:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic imageURLString;
 
-
-
-
-
-
 @dynamic read;
-
-
 
 - (BOOL)readValue {
 	NSNumber *result = [self read];
@@ -188,13 +143,7 @@ const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
 	[self setPrimitiveRead:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic saved;
-
-
 
 - (BOOL)savedValue {
 	NSNumber *result = [self saved];
@@ -214,51 +163,24 @@ const struct DDGStoryFetchedProperties DDGStoryFetchedProperties = {
 	[self setPrimitiveSaved:[NSNumber numberWithBool:value_]];
 }
 
-
-
-
-
 @dynamic timeStamp;
-
-
-
-
-
 
 @dynamic title;
 
-
-
-
-
-
 @dynamic urlString;
-
-
-
-
-
 
 @dynamic feed;
 
-	
-
 @dynamic recents;
 
-	
 - (NSMutableSet*)recentsSet {
 	[self willAccessValueForKey:@"recents"];
-  
+
 	NSMutableSet *result = (NSMutableSet*)[self mutableSetValueForKey:@"recents"];
-  
+
 	[self didAccessValueForKey:@"recents"];
 	return result;
 }
-	
-
-
-
-
-
 
 @end
+

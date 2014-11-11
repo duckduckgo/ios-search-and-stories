@@ -370,16 +370,6 @@
 		C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		5BFF24BF16F77F0100844D3B /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 83F3224F149290EF00A61BC5 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 5BFF24BA16F77EF900844D3B;
-			remoteInfo = Mogenerator;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		4C02E2DF1623C9F40010F06C /* bg_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_divider.png; sourceTree = "<group>"; };
 		4C02E2E01623C9F50010F06C /* bg_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_divider@2x.png"; sourceTree = "<group>"; };
@@ -1683,7 +1673,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				5BFF24C016F77F0100844D3B /* PBXTargetDependency */,
 			);
 			name = DuckDuckGo;
 			productName = DuckDuckGo2;
@@ -2106,14 +2095,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		5BFF24C016F77F0100844D3B /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 5BFF24BA16F77EF900844D3B /* Mogenerator */;
-			targetProxy = 5BFF24BF16F77F0100844D3B /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		5B2FCAC116F32BE10045A5FE /* TUSafariActivity.strings */ = {
