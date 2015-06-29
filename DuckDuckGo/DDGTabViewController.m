@@ -29,6 +29,7 @@
 
 #pragma mark - View lifecycle
 
+
 - (CGRect)_viewControllerFrameForControlViewPosition:(DDGTabViewControllerControlViewPosition)controlViewPosition {
     CGRect controlViewFrame = [self.controlView frame];
     CGRect viewControllerFrame;
@@ -91,16 +92,16 @@
             break;
     }
     
-    if (!self.toolbarDropShadowView) {
-        UIView *dropShadowView = [UIView new];
-        dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
-        dropShadowView.opaque = NO;
-        [self.controlView setClipsToBounds:NO];
-        [self.controlView addSubview:dropShadowView];
-        self.toolbarDropShadowView = dropShadowView;
-    }
-    CGRect bounds = CGRectMake(0.0f, -0.5f, CGRectGetWidth(viewBounds), 0.5f);
-    [self.toolbarDropShadowView setFrame:bounds];
+//    if (!self.toolbarDropShadowView) {
+//        UIView *dropShadowView = [UIView new];
+//        dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
+//        dropShadowView.opaque = NO;
+//        [self.controlView setClipsToBounds:NO];
+//        [self.controlView addSubview:dropShadowView];
+//        self.toolbarDropShadowView = dropShadowView;
+//    }
+//    CGRect bounds = CGRectMake(0.0f, -0.5f, CGRectGetWidth(viewBounds), 0.5f);
+//    [self.toolbarDropShadowView setFrame:bounds];
     
     [UIView animateWithDuration:0
                      animations:^{
@@ -129,6 +130,7 @@
         
         UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:items];
         [segmentedControl addTarget:self action:@selector(_switchViewController:) forControlEvents:UIControlEventValueChanged];
+        segmentedControl.backgroundColor = [UIColor duckSegmentBarBackground];
         self.segmentedControl = segmentedControl;
     }
     

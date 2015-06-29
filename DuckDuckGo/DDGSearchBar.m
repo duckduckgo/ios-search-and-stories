@@ -113,43 +113,44 @@
 - (void)layoutSubviews {
     CGRect bounds = self.bounds;
     
-    // left button
-    CGRect leftButtonFrame = self.leftButton.frame;
-    if (self.showsLeftButton)
-        leftButtonFrame.origin.x = self.buttonSpacing;
-    else
-        leftButtonFrame.origin.x = -leftButtonFrame.size.width;
+    self.leftButton.hidden = !self.showsLeftButton;
+//    // left button
+//    CGRect leftButtonFrame = self.leftButton.frame;
+//    if (self.showsLeftButton)
+//        leftButtonFrame.origin.x = self.buttonSpacing;
+//    else
+//        leftButtonFrame.origin.x = -leftButtonFrame.size.width;
+//    
+//    self.leftButton.alpha = (self.showsLeftButton) ? 1.0 : 0.0;
+//    self.leftButton.frame = leftButtonFrame;
     
-    self.leftButton.alpha = (self.showsLeftButton) ? 1.0 : 0.0;
-    self.leftButton.frame = leftButtonFrame;
-    
-    // right button
-    CGRect rightButtonFrame = self.rightButton.frame;
-    if (self.showsRightButton)
-        rightButtonFrame.origin.x = (bounds.origin.x + bounds.size.width) - rightButtonFrame.size.width - self.buttonSpacing;
-    else
-        rightButtonFrame.origin.x = bounds.origin.x + bounds.size.width;
-    
-    self.rightButton.alpha = (self.showsRightButton) ? 1.0 : 0.0;    
-    self.rightButton.frame = rightButtonFrame;
+//    // right button
+//    CGRect rightButtonFrame = self.rightButton.frame;
+//    if (self.showsRightButton)
+//        rightButtonFrame.origin.x = (bounds.origin.x + bounds.size.width) - rightButtonFrame.size.width - self.buttonSpacing;
+//    else
+//        rightButtonFrame.origin.x = bounds.origin.x + bounds.size.width;
+//    
+//    self.rightButton.alpha = (self.showsRightButton) ? 1.0 : 0.0;    
+//    self.rightButton.frame = rightButtonFrame;
+    self.rightButton.hidden = !self.showsRightButton;
 
     // cancel button
-    CGRect cancelButtonFrame = self.cancelButton.frame;
+//    CGRect cancelButtonFrame = self.cancelButton.frame;
     
+//    if (self.showsCancelButton)
+//        cancelButtonFrame.origin.x = rightButtonFrame.origin.x - cancelButtonFrame.size.width - self.buttonSpacing;
+//    else
+//        cancelButtonFrame.origin.x = bounds.origin.x + bounds.size.width;
+    self.cancelButton.hidden = !self.showsCancelButton;
     
-    if (self.showsCancelButton)
-        cancelButtonFrame.origin.x = rightButtonFrame.origin.x - cancelButtonFrame.size.width - self.buttonSpacing;
-    else
-        cancelButtonFrame.origin.x = bounds.origin.x + bounds.size.width;
-
-    self.cancelButton.alpha = (self.showsCancelButton) ? 1.0 : 0.0;        
-    self.cancelButton.frame = cancelButtonFrame;
-
     // search field
+    CGFloat rightButtonX = MIN(self.showsCancelButton ? self.cancelButton.frame.origin.x : bounds.size.width,
+                               self.showsRightButton ? self.rightButton.frame.origin.x : bounds.size.width);
     CGRect searchFieldFrame = self.searchField.frame;
-    searchFieldFrame.origin.x = leftButtonFrame.origin.x + leftButtonFrame.size.width + self.buttonSpacing;
-    searchFieldFrame.size.width = MIN(cancelButtonFrame.origin.x, rightButtonFrame.origin.x) - searchFieldFrame.origin.x - self.buttonSpacing;
-    
+    //searchFieldFrame.origin.x = leftButtonFrame.origin.x + leftButtonFrame.size.width + self.buttonSpacing;
+    searchFieldFrame.size.width = rightButtonX - searchFieldFrame.origin.x - self.buttonSpacing;
+    NSLog(@"search field frame: %@", NSStringFromCGRect(searchFieldFrame));
     self.searchField.frame = searchFieldFrame;
 }
 

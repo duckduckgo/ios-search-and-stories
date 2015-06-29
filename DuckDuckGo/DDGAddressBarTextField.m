@@ -32,27 +32,51 @@
     [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
     [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor duckSearchFieldBackground];
+    self.textColor = [UIColor duckSearchFieldForeground];
+    self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    
     CALayer *layer = self.layer;
-    layer.cornerRadius = 2.0f;
-    layer.masksToBounds = YES;
+    layer.cornerRadius = 4.0f;
+    layer.masksToBounds = NO;
     
     progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"Loading"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     progressView.tintColor = [UIColor duckLightBlue];
-    progressView.frame = CGRectMake(2, 2, 100, 27);
+    progressView.frame = CGRectMake(32, 8, 100, 21);
     [self insertSubview:progressView atIndex:1];
     
     [self setProgress:0];
+}
+
+
+// placeholder position
+- (CGRect)textRectForBounds:(CGRect)bounds {
+    CGRect rect = [super textRectForBounds:bounds];
+    rect.origin.x += 30;
+    rect.size.width -= 30;
+    return rect;
+}
+
+// text position
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+    CGRect rect = [super editingRectForBounds:bounds];
+    rect.origin.x += 30;
+    rect.size.width -= 30;
+    return rect;
 }
 
 #pragma mark - Showing and hiding progress
 
 -(void)hideProgress {
     progressView.hidden = YES;
+    self.placeholder = @"";
 }
 
 -(void)showProgress {
     progressView.hidden = NO;
+    self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
+                                                                 attributes:@{NSForegroundColorAttributeName: [UIColor duckSearchFieldPlaceholderForeground]
+                                                                              }];
 }
 
 -(void)cancel {
@@ -81,7 +105,7 @@
     if(newProgress > 1)
         newProgress = 1;
     CGRect f = progressView.frame;
-    f.size.width = (self.bounds.size.width-4)*newProgress;
+    f.size.width = (self.bounds.size.width-34)*newProgress;
     if(newProgress > progress) {
         [UIView animateWithDuration:duration
                               delay:0.0

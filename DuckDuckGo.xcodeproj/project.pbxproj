@@ -361,6 +361,10 @@
 		83F32269149290EF00A61BC5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F32268149290EF00A61BC5 /* main.m */; };
 		83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */; };
 		83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */; };
+		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
+		8464976D1B3D3FE600BAF256 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */; };
+		84B3AEFE1B32FAA800FF3453 /* DuckDuckGo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */; };
+		84B3AF351B3AF2E500FF3453 /* DDGUnderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84B3AF341B3AF2E500FF3453 /* DDGUnderViewController.xib */; };
 		C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = C1894FD6178F56830076C179 /* UIColor+DDG.m */; };
 		C1A97EE5176BD3560099EDA1 /* btn-bg_bang_example_query.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */; };
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
@@ -832,6 +836,12 @@
 		83F3226C149290EF00A61BC5 /* DDGAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DDGAppDelegate.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		83F3229B1492EE1B00A61BC5 /* DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchController.h; sourceTree = "<group>"; };
 		83F3229C1492EE1B00A61BC5 /* DDGSearchController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchController.m; sourceTree = "<group>"; };
+		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
+		8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
+		8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGHomeViewController.xib; sourceTree = "<group>"; };
+		84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = DuckDuckGo.storyboard; path = DuckDuckGo/UI/DuckDuckGo.storyboard; sourceTree = "<group>"; };
+		84B3AF341B3AF2E500FF3453 /* DDGUnderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGUnderViewController.xib; sourceTree = "<group>"; };
+		84D9A82C1B3CB74B00AF00CF /* DuckDuckGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DuckDuckGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		C1894FD5178F56830076C179 /* UIColor+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DDG.h"; sourceTree = "<group>"; };
 		C1894FD6178F56830076C179 /* UIColor+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DDG.m"; sourceTree = "<group>"; };
 		C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang_example_query.png"; sourceTree = "<group>"; };
@@ -1316,6 +1326,11 @@
 				5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */,
 				5BDC6A4C174B99940065BB8D /* DDGSlidingViewController.h */,
 				5BDC6A4D174B99940065BB8D /* DDGSlidingViewController.m */,
+				84B3AF341B3AF2E500FF3453 /* DDGUnderViewController.xib */,
+				84D9A82C1B3CB74B00AF00CF /* DuckDuckGo-Bridging-Header.h */,
+				846497691B3D3FE600BAF256 /* DDGHomeViewController.h */,
+				8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */,
+				8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */,
 			);
 			name = "Main Menu";
 			sourceTree = "<group>";
@@ -1582,11 +1597,14 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
+				84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		83F32259149290EF00A61BC5 /* Products */ = {
 			isa = PBXGroup;
@@ -1763,6 +1781,7 @@
 				7BF05AF519C82E84004A5B37 /* DDGLaunchScreen.xib in Resources */,
 				83CAD04316397F8D0030C4FC /* icon_caret@2x.png in Resources */,
 				4C1D95E5163F3D2100F7A0B9 /* bg_history-items@2x.png in Resources */,
+				84B3AEFE1B32FAA800FF3453 /* DuckDuckGo.storyboard in Resources */,
 				4C1D95E6163F3D2100F7A0B9 /* bg_menu-items@2x.png in Resources */,
 				4C1D95E7163F3D2100F7A0B9 /* bg_history-items.png in Resources */,
 				4C1D95E8163F3D2100F7A0B9 /* bg_home-bar@2x.png in Resources */,
@@ -1791,6 +1810,7 @@
 				5B88DBB616DB7BA7007A935D /* swipe-un-save@2x.png in Resources */,
 				5BB1599716E0F2FE00C2A0F9 /* Default.png in Resources */,
 				5BB1599816E0F2FE00C2A0F9 /* Default@2x.png in Resources */,
+				8464976D1B3D3FE600BAF256 /* DDGHomeViewController.xib in Resources */,
 				5BB1599A16E0F31F00C2A0F9 /* Default-568h@2x.png in Resources */,
 				5B7A1B5D16E4DC9F00354310 /* button_bg_highlighted.png in Resources */,
 				5B7A1B5E16E4DC9F00354310 /* button_bg_highlighted@2x.png in Resources */,
@@ -1875,6 +1895,7 @@
 				5B5C844E172543F400EBD62E /* icon-notification_large@2x.png in Resources */,
 				5B5C845517256A9A00EBD62E /* DDGHistoryNoResultsDisabledView.xib in Resources */,
 				5B15F3181727EB5E00912482 /* btn-bg_plus_search-suggestions.png in Resources */,
+				84B3AF351B3AF2E500FF3453 /* DDGUnderViewController.xib in Resources */,
 				5B15F3191727EB5E00912482 /* btn-bg_plus_search-suggestions@2x.png in Resources */,
 				5B15F31C1727EC7500912482 /* btn-icon_plus_search-suggestions.png in Resources */,
 				5B15F31D1727EC7500912482 /* btn-icon_plus_search-suggestions@2x.png in Resources */,
@@ -1964,6 +1985,7 @@
 				4C2E001215B87C700096C994 /* DDGChooseSourcesViewController.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
 				4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */,
+				8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */,
 				4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */,
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
 				4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */,
@@ -2156,6 +2178,7 @@
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -2165,7 +2188,8 @@
 				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
 			};
@@ -2282,6 +2306,7 @@
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -2291,7 +2316,9 @@
 				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
@@ -2314,6 +2341,7 @@
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -2323,7 +2351,8 @@
 				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
-				TARGETED_DEVICE_FAMILY = 1;
+				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
 			};

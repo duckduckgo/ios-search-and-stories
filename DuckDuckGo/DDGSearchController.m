@@ -211,8 +211,11 @@ NSString * const emailRegEx =
 {
     [super viewDidLoad];
     
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    
     [[self.searchBar bangButton] setImage:[[UIImage imageNamed:@"Bang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                                  forState:UIControlStateNormal];
+    [self.searchBar setBackgroundColor:[UIColor duckSearchBarBackground]];
     
     DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
     autocompleteVC.historyProvider = self.historyProvider;
@@ -227,9 +230,6 @@ NSString * const emailRegEx =
     [self revealBackground:NO animated:NO];
     
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
-    searchField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
-                                                                        attributes:@{NSForegroundColorAttributeName: RGBA(128.0f, 128.0f, 128.0f, 1.0f)}];
-    
     [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
     
     stopOrReloadButton = [[UIButton alloc] init];
@@ -286,7 +286,15 @@ NSString * const emailRegEx =
     [pageViewController didMoveToParentViewController:self];
     
     self.pageViewController = pageViewController;
+    [self setNeedsStatusBarAppearanceUpdate];
 }
+
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
@@ -842,13 +850,13 @@ NSString * const emailRegEx =
     inputAccessory.alpha = 0.0;
     [self.view addSubview:inputAccessory];
     
-    // add bang button
-    UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
-    bangButton.frame = CGRectMake(0, 0, 46, 46);
-    bangButton.tag = 103;
-    [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [inputAccessory addSubview:bangButton];
+//    // add bang button
+//    UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
+//    [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
+//    bangButton.frame = CGRectMake(0, 0, 46, 46);
+//    bangButton.tag = 103;
+//    [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+//    [inputAccessory addSubview:bangButton];
     
     // add scroll view
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, inputAccessory.bounds.size.width, 46)];

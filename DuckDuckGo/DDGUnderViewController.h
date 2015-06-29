@@ -21,9 +21,10 @@ typedef NS_ENUM(NSInteger, DDGViewControllerType) {
 
 @class DDGSettingsViewController, DDGStory;
 
-@interface DDGUnderViewController : UIViewController <DDGSearchHandler, DDGTabViewControllerDelegate, NSFetchedResultsControllerDelegate> {
+@interface DDGUnderViewController : UITabBarController <DDGSearchHandler, DDGTabViewControllerDelegate, NSFetchedResultsControllerDelegate> {
 }
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
+@property (nonatomic, copy) void (^viewDidAppearCompletion)(DDGUnderViewController *slideOverMenuController);
 
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc;
 

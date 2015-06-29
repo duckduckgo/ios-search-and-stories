@@ -584,7 +584,7 @@ NSInteger const DDGSmallImageViewTag = 2;
             
             if (velocity.x < 0 && percent > 0.25) {
                 CGFloat distanceRemaining = contentFrame.size.width - offset;
-                CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);
+                CGFloat duration = MIN(distanceRemaining / fabs(velocity.x), 0.4);
                 [UIView animateWithDuration:duration
                                  animations:^{
                                      cell.contentView.frame = CGRectMake(origin.x - contentFrame.size.width,

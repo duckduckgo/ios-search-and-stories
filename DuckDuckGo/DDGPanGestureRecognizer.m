@@ -19,7 +19,7 @@
     [super touchesMoved:touches withEvent:event];
     
     CGPoint translation = [self translationInView:self.view];
-    if (abs(translation.y) > abs(translation.x)) {
+    if (fabs(translation.y) > fabs(translation.x)) {
         self.state = UIGestureRecognizerStateFailed;
     } else {
         if (translation.x < 0) {

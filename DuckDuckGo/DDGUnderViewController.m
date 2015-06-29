@@ -23,18 +23,18 @@
 
 #import "DDGMenuItemCell.h"
 #import "DDGMenuSectionHeaderView.h"
+#import "DDGAppDelegate.h"
 
 
 NSString * const DDGViewControllerTypeTitleKey = @"title";
 NSString * const DDGViewControllerTypeTypeKey = @"type";
 NSString * const DDGViewControllerTypeControllerKey = @"viewController";
-NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 
 @interface DDGUnderViewController () <DDGTableViewAdditionalSectionsDelegate>
 @property (nonatomic, strong) NSIndexPath *menuIndexPath;
 @property (nonatomic, strong) NSArray *viewControllerTypes;
-@property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong) DDGHistoryViewController *historyViewController;
+@property (nonatomic, strong) DDGHistoryViewController* historyViewController;
+
 @end
 
 @implementation DDGUnderViewController
@@ -42,10 +42,15 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 - (id)initWithManagedObjectContext:(NSManagedObjectContext *)moc {
     self = [super initWithNibName:nil bundle:nil];
     if(self) {
-        self.managedObjectContext = moc;        
+        //self.managedObjectContext = moc;
         [self setupViewControllerTypes];
     }
     return self;
+}
+
+
+-(NSManagedObjectContext*)managedObjectContext {
+    return ((DDGAppDelegate*)[UIApplication sharedApplication].delegate).managedObjectContext;
 }
 
 - (void)viewDidLoad
@@ -53,9 +58,10 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     [super viewDidLoad];
     [self.view setClipsToBounds:YES];
     
-    DDGHistoryViewController *historyViewController = [[DDGHistoryViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext  mode:DDGHistoryViewControllerModeUnder];
+    DDGHistoryViewController *historyViewController = [[DDGHistoryViewController alloc] initWithSearchHandler:self
+                                                                                         managedObjectContext:self.managedObjectContext
+                                                                                                         mode:DDGHistoryViewControllerModeUnder];
     historyViewController.additionalSectionsDelegate = self;
-    
     historyViewController.view.frame = self.view.bounds;
     historyViewController.tableView.scrollsToTop = NO;
     [historyViewController.tableView registerNib:[UINib nibWithNibName:@"DDGMenuItemCell" bundle:nil]
@@ -66,13 +72,22 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
     [self.view addSubview:historyViewController.view];
     [self addChildViewController:historyViewController];
     
-    self.historyViewController = historyViewController;
+    historyViewController = historyViewController;
     
     [historyViewController didMoveToParentViewController:self];
+    self.historyViewController = historyViewController;
     
     UIView *decorationView = [[UIView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, CGRectGetHeight(self.view.bounds), 4.0f)];
     decorationView.backgroundColor = [UIColor duckRed];
     [self.view addSubview:decorationView];
+    
+    
+    
+    
+    self.viewControllers = @[ [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext],
+                              [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext],
+                              historyViewController
+                             ];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -159,7 +174,12 @@ NSString * const DDGSavedViewLastSelectedTabIndex = @"saved tab index";
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    if (self.viewDidAppearCompletion) {
+        self.viewDidAppearCompletion(self);
+    }
 }
+
+
 
 - (void)viewWillDisappear:(BOOL)animated
 {

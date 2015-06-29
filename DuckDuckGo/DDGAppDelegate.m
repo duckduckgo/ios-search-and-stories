@@ -22,6 +22,7 @@
 #import "DDGFirstRunViewController.h"
 #import "DDGSlideOverMenuController.h"
 #import "DDGURLProtocol.h"
+#import "DDGHomeViewController.h"
 
 @interface DDGAppDelegate ()
 @property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
@@ -79,38 +80,36 @@ static void uncaughtExceptionHandler(NSException *exception) {
     //Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
       
-    [[UINavigationBar appearance] setBackgroundColor:[UIColor duckLightGray]];
+    [[UINavigationBar appearance] setBackgroundColor:[UIColor duckSearchBarBackground]];
+    [[UINavigationBar appearance] setTintColor:[UIColor duckSearchBarBackground]];
     [[UINavigationBar appearance] setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];
     
-    //Configure the sliding view controller
-    DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
-    self.searchHandler = under;
-        
-    DDGSlideOverMenuController *menuController = [[DDGSlideOverMenuController alloc] initWithMode:DDGSlideOverMenuModeHorizontal];
-    menuController.menuViewController = under;
-    menuController.viewDidAppearCompletion = ^(DDGSlideOverMenuController *slideOverMenuController) {
+    // main view controller
+    DDGHomeViewController* home = [[DDGHomeViewController alloc] initWithNibName:nil bundle:nil];
+    self.searchHandler = home;
+    
+    home.viewDidAppearCompletion = ^(DDGHomeViewController *homeController) {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey]) {
             DDGFirstRunViewController *firstRunViewController = [DDGFirstRunViewController new];
-            [slideOverMenuController presentViewController:firstRunViewController animated:YES completion:nil];
+            [homeController presentViewController:firstRunViewController animated:YES completion:nil];
         }
     };
-    [self.window setRootViewController:menuController];
-  
-    int type = DDGViewControllerTypeHome;
-    NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
-    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents]) {
-        type = DDGViewControllerTypeHistory;
-    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
-        type = DDGViewControllerTypeSaved;
-    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
-        type = DDGViewControllerTypeDuck;
-    }
-        
-    UIViewController *homeController = [under viewControllerForType:type];
-    menuController.contentViewController = homeController;
+    
+//    UIViewController *homeController = [under viewControllerForType:type];
+//    under.viewDidAppearCompletion = ^(DDGUnderViewController *mainViewController) {
+//        if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey]) {
+//            DDGFirstRunViewController *firstRunViewController = [DDGFirstRunViewController new];
+//            [mainViewController presentViewController:firstRunViewController animated:YES completion:nil];
+//        }
+//    };
+
+//    menuController.contentViewController = homeController;
+    
+//    DDGHomeViewController* homeController = [ newHomeController];
+    self.window.rootViewController = home;
     
     [self.window makeKeyAndVisible];
     return YES;
@@ -260,6 +259,11 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     return _managedObjectContext;
 }
+
++(NSManagedObjectContext*)sharedManagedObjectContext {
+    return ((DDGAppDelegate*)[UIApplication sharedApplication].delegate).managedObjectContext;
+}
+
 
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.

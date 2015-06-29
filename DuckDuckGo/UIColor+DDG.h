@@ -21,6 +21,21 @@
 + (UIColor *)duckRed;
 + (UIColor *)duckStoryReadColor;
 
++ (UIColor *)duckSearchFieldBackground;
++ (UIColor *)duckSearchBarBackground;
++ (UIColor *)duckSearchFieldForeground;
++ (UIColor *)duckSearchFieldPlaceholderForeground;
+
++ (UIColor*)duckTabBarBackground;
++ (UIColor*)duckTabBarForeground;
++ (UIColor*)duckTabBarForegroundSelected;
+
++ (UIColor*)duckSegmentBarBackground;
++ (UIColor*)duckSegmentBarForeground;
++ (UIColor*)duckSegmentBarBackgroundSelected;
++ (UIColor*)duckSegmentBarForegroundSelected;
++ (UIColor*)duckSegmentBarBorder;
+
 + (UIColor *)autocompleteDetailColor;
 + (UIColor *)autocompleteHeaderColor;
 + (UIColor *)autocompleteTextColor;

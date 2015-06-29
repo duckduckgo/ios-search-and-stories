@@ -42,10 +42,32 @@
     return [UIColor colorWithRed:component green:component blue:component alpha:1.0f];
 }
 
++ (UIColor*)duckTabBarBackground
+{
+    return [UIColor whiteColor];
+}
+
++ (UIColor*)duckTabBarForeground
+{
+    return UIColorFromRGB(0xADADAD);
+}
+
++ (UIColor*)duckTabBarForegroundSelected
+{
+    return UIColorFromRGB(0xDF5833);
+}
+
+
++ (UIColor*)duckSegmentBarBackground { return [UIColor duckSearchBarBackground]; }
++ (UIColor*)duckSegmentBarForeground { return [UIColor whiteColor]; }
++ (UIColor*)duckSegmentBarBackgroundSelected { return [UIColor whiteColor]; }
++ (UIColor*)duckSegmentBarForegroundSelected { return [UIColor duckSearchBarBackground]; }
++ (UIColor*)duckSegmentBarBorder { return [UIColor whiteColor]; }
+
+
 + (UIColor *)duckNoContentColor
 {
-    CGFloat component = 224.0f/255.0f;
-    return [UIColor colorWithRed:component green:component blue:component alpha:1.0f];
+    return UIColorFromRGB(0xEAEAEA);
 }
 
 + (UIColor *)duckRed
@@ -57,6 +79,28 @@
 {
     return RGBA(158.0f, 158.0f, 158.0f, 1.0f);
 }
+
++ (UIColor *)duckSearchFieldBackground
+{
+    return UIColorFromRGB(0xBD4A2B);
+}
+
++ (UIColor *)duckSearchBarBackground
+{
+    return UIColorFromRGB(0xDE5833);
+}
+
++ (UIColor *)duckSearchFieldForeground
+{
+    return [UIColor whiteColor];
+}
+
++ (UIColor *)duckSearchFieldPlaceholderForeground
+{
+    return [UIColor whiteColor];
+}
+
+
 
 + (UIColor *)autocompleteDetailColor
 {
