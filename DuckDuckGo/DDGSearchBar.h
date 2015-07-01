@@ -13,6 +13,7 @@
 @interface DDGSearchBar : UIView
 @property(nonatomic) BOOL showsCancelButton;
 @property(nonatomic) BOOL showsLeftButton;
+@property(nonatomic) BOOL showsBangButton;
 @property(nonatomic) BOOL showsRightButton;
 @property(nonatomic) CGFloat buttonSpacing;
 @property(nonatomic, strong) IBOutlet UIButton *bangButton;

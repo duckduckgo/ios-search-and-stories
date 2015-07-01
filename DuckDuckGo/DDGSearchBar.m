@@ -9,6 +9,11 @@
 #import "DDGSearchBar.h"
 
 @interface DDGSearchBar ()
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldLeftAlignToSuperview;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldLeftAlignToLeftButton;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldRightAlignToSuperview;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldRightAlignToCancelButton;
+
 @end
 
 @implementation DDGSearchBar
@@ -39,51 +44,58 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    [self.rightButton setImage:[[UIImage imageNamed:@"Share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                      forState:UIControlStateNormal];
-    [self.rightButton setImage:[[UIImage imageNamed:@"Share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                      forState:UIControlStateHighlighted];
+    self.addressFieldRightAlignToCancelButton = [NSLayoutConstraint constraintWithItem:self.searchField
+                                                                             attribute:NSLayoutAttributeTrailing
+                                                                             relatedBy:NSLayoutRelationEqual
+                                                                                toItem:self.cancelButton
+                                                                             attribute:NSLayoutAttributeLeading
+                                                                            multiplier:1 constant:-13];
+    self.addressFieldLeftAlignToLeftButton = [NSLayoutConstraint constraintWithItem:self.searchField
+                                                                          attribute:NSLayoutAttributeLeading
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self.leftButton
+                                                                          attribute:NSLayoutAttributeTrailing
+                                                                         multiplier:1 constant:8];
+    [self addConstraint:self.addressFieldRightAlignToSuperview];
+    [self addConstraint:self.addressFieldLeftAlignToSuperview];
+    //[self addConstraint:self.addressFieldRightAlignToCancelButton];
 }
 
 - (void)setShowsCancelButton:(BOOL)show {
     _showsCancelButton = show;
-    [self setNeedsLayout];
+    if(show) {
+        [self removeConstraint:self.addressFieldRightAlignToSuperview];
+        [self addConstraint:self.addressFieldRightAlignToCancelButton];
+    } else {
+        [self removeConstraint:self.addressFieldRightAlignToCancelButton];
+        [self addConstraint:self.addressFieldRightAlignToSuperview];
+    }
 }
 
-- (void)setShowsLeftButton:(BOOL)showsLeftButton {
-    _showsLeftButton = showsLeftButton;
-    [self setNeedsLayout];
+- (void)setShowsLeftButton:(BOOL)show {
+    _showsLeftButton = show;
+    if(show) {
+        [self removeConstraint:self.addressFieldLeftAlignToSuperview];
+        [self addConstraint:self.addressFieldLeftAlignToLeftButton];
+    } else {
+        [self removeConstraint:self.addressFieldLeftAlignToLeftButton];
+        [self addConstraint:self.addressFieldLeftAlignToSuperview];
+    }
+}
+
+- (void)setShowsBangButton:(BOOL)show {
+    _showsBangButton = show;
+    self.searchField.additionalLeftSideInset = show ? 39 : 0;
 }
 
 - (void)setShowsRightButton:(BOOL)showsRightButton {
     _showsRightButton = showsRightButton;
-    [self setNeedsLayout];    
 }
 
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated {
-    
-    UIButton *incomming;
-    UIButton *outgoing;
-    
-    if (show) {
-        incomming = self.bangButton;
-        outgoing = self.orangeButton;
-    } else {
-        outgoing = self.bangButton;
-        incomming = self.orangeButton;
-    }
-    
+    self.showsBangButton = show;
     NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         incomming.alpha = 1.0;
-                         outgoing.alpha = 0.0;
-                     }
-     
-     ];
-    
-    self.leftButton = incomming;
-    [self setNeedsLayout];
+    [self layoutIfNeeded:duration];
 }
 
 - (void)layoutIfNeeded:(NSTimeInterval)animationDuration {
@@ -111,47 +123,41 @@
 }
 
 - (void)layoutSubviews {
-    CGRect bounds = self.bounds;
-    
+    CGRect bounds = self.frame;
     self.leftButton.hidden = !self.showsLeftButton;
-//    // left button
-//    CGRect leftButtonFrame = self.leftButton.frame;
-//    if (self.showsLeftButton)
-//        leftButtonFrame.origin.x = self.buttonSpacing;
-//    else
-//        leftButtonFrame.origin.x = -leftButtonFrame.size.width;
-//    
-//    self.leftButton.alpha = (self.showsLeftButton) ? 1.0 : 0.0;
-//    self.leftButton.frame = leftButtonFrame;
-    
-//    // right button
-//    CGRect rightButtonFrame = self.rightButton.frame;
-//    if (self.showsRightButton)
-//        rightButtonFrame.origin.x = (bounds.origin.x + bounds.size.width) - rightButtonFrame.size.width - self.buttonSpacing;
-//    else
-//        rightButtonFrame.origin.x = bounds.origin.x + bounds.size.width;
-//    
-//    self.rightButton.alpha = (self.showsRightButton) ? 1.0 : 0.0;    
-//    self.rightButton.frame = rightButtonFrame;
+    self.bangButton.hidden = !self.showsBangButton;
     self.rightButton.hidden = !self.showsRightButton;
-
-    // cancel button
-//    CGRect cancelButtonFrame = self.cancelButton.frame;
-    
-//    if (self.showsCancelButton)
-//        cancelButtonFrame.origin.x = rightButtonFrame.origin.x - cancelButtonFrame.size.width - self.buttonSpacing;
-//    else
-//        cancelButtonFrame.origin.x = bounds.origin.x + bounds.size.width;
     self.cancelButton.hidden = !self.showsCancelButton;
+//
+//    CGRect addressFrame = self.searchField.frame;
+//    addressFrame.origin.x = self.showsLeftButton ? 38 : 8;
+//    addressFrame.size.width = bounds.size.width - addressFrame.origin.x -
+//    (self.showsCancelButton ? self.cancelButton.frame.size.width : 0 ) - 8;
+//    self.searchField.frame = addressFrame;
+//    
+//    CGRect bangFrame = self.bangButton.frame;
+//    bangFrame.origin.x = addressFrame.origin.x + 8;
+//    self.bangButton.frame = bangFrame;
+//    
+//    CGRect cancelFrame = self.cancelButton.frame;
+//    cancelFrame.origin.x = bounds.size.width - cancelFrame.size.width - 8;
+//    self.cancelButton.frame = cancelFrame;
+//    
+//    NSLog(@"laid out views: %@", NSStringFromCGRect(bounds));
+//    NSLog(@"  cancel frame: %@", NSStringFromCGRect(cancelFrame));
+//    NSLog(@"  address frame: %@", NSStringFromCGRect(addressFrame));
+    
+    [self setNeedsDisplay];
+    [self setNeedsUpdateConstraints];
     
     // search field
-    CGFloat rightButtonX = MIN(self.showsCancelButton ? self.cancelButton.frame.origin.x : bounds.size.width,
-                               self.showsRightButton ? self.rightButton.frame.origin.x : bounds.size.width);
-    CGRect searchFieldFrame = self.searchField.frame;
-    //searchFieldFrame.origin.x = leftButtonFrame.origin.x + leftButtonFrame.size.width + self.buttonSpacing;
-    searchFieldFrame.size.width = rightButtonX - searchFieldFrame.origin.x - self.buttonSpacing;
-    NSLog(@"search field frame: %@", NSStringFromCGRect(searchFieldFrame));
-    self.searchField.frame = searchFieldFrame;
+//    CGFloat rightButtonX = MIN(self.showsCancelButton ? self.cancelButton.frame.origin.x : bounds.size.width,
+//                               self.showsRightButton ? self.rightButton.frame.origin.x : bounds.size.width);
+//    CGRect searchFieldFrame = self.searchField.frame;
+//    //searchFieldFrame.origin.x = leftButtonFrame.origin.x + leftButtonFrame.size.width + self.buttonSpacing;
+//    searchFieldFrame.size.width = rightButtonX - searchFieldFrame.origin.x - self.buttonSpacing;
+//    NSLog(@"search field frame: %@", NSStringFromCGRect(searchFieldFrame));
+//    self.searchField.frame = searchFieldFrame;
 }
 
 @end

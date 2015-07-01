@@ -17,6 +17,7 @@
 #import "DDGUnderViewController.h"
 #import "DDGDuckViewController.h"
 #import "DDGBookmarksViewController.h"
+#import "UIColor+DDG.h"
 
 @interface DDGHomeViewController ()
 
@@ -48,6 +49,10 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.tabBar.selectedImageTintColor = [UIColor duckTabBarForegroundSelected];
+    self.tabBar.tintColor = [UIColor duckTabBarForeground];
+    self.tabBar.backgroundColor = [UIColor duckTabBarBackground];
+    
     NSMutableArray* controllers = [NSMutableArray new];
     
     { // configure the search view controller
@@ -57,7 +62,6 @@
         search.shouldPushSearchHandlerEvents = TRUE;
         self.searchController = [[DDGDuckViewController alloc] initWithSearchController:search];
         [search pushContentViewController:self.searchController animated:NO];
-        search.state = DDGSearchControllerStateHome;
         search.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                           image:[[UIImage imageNamed:@"Tab-Search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                                                   selectedImage:[[UIImage imageNamed:@"Tab-Search-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];

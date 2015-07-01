@@ -9,6 +9,12 @@
 #import "DDGAddressBarTextField.h"
 #import <QuartzCore/QuartzCore.h>
 
+@interface DDGAddressBarTextField ()
+@property NSAttributedString* actualPlaceholderText;
+@property NSAttributedString* inactivePlaceholderText;
+
+@end
+
 @implementation DDGAddressBarTextField
 
 -(id)initWithFrame:(CGRect)frame {
@@ -29,11 +35,17 @@
 
 -(void)setup
 {
+    self.actualPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
+                                                                 attributes:@{NSForegroundColorAttributeName: [UIColor duckSearchFieldPlaceholderForeground]}];
+    self.inactivePlaceholderText = [NSAttributedString new];
+    self.attributedPlaceholder = self.inactivePlaceholderText;
+    
     [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
     [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
     
     self.backgroundColor = [UIColor duckSearchFieldBackground];
     self.textColor = [UIColor duckSearchFieldForeground];
+    self.tintColor = [UIColor duckSearchFieldForeground];
     self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     
     CALayer *layer = self.layer;
@@ -44,7 +56,7 @@
     progressView.tintColor = [UIColor duckLightBlue];
     progressView.frame = CGRectMake(32, 8, 100, 21);
     [self insertSubview:progressView atIndex:1];
-    
+
     [self setProgress:0];
 }
 
@@ -52,16 +64,18 @@
 // placeholder position
 - (CGRect)textRectForBounds:(CGRect)bounds {
     CGRect rect = [super textRectForBounds:bounds];
-    rect.origin.x += 30;
-    rect.size.width -= 30;
+    if(self.additionalLeftSideInset!=0) rect.origin.x = self.additionalLeftSideInset;
+    rect.size.width -= self.additionalLeftSideInset;
+    rect.size.width -= self.additionalRightSideInset;
     return rect;
 }
 
 // text position
 - (CGRect)editingRectForBounds:(CGRect)bounds {
     CGRect rect = [super editingRectForBounds:bounds];
-    rect.origin.x += 30;
-    rect.size.width -= 30;
+    if(self.additionalLeftSideInset!=0) rect.origin.x = self.additionalLeftSideInset;
+    rect.size.width -= self.additionalLeftSideInset;
+    rect.size.width -= self.additionalRightSideInset;
     return rect;
 }
 
@@ -69,14 +83,15 @@
 
 -(void)hideProgress {
     progressView.hidden = YES;
-    self.placeholder = @"";
+    self.placeholderView.hidden = TRUE;
+    self.attributedPlaceholder = self.actualPlaceholderText;
 }
 
 -(void)showProgress {
     progressView.hidden = NO;
-    self.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
-                                                                 attributes:@{NSForegroundColorAttributeName: [UIColor duckSearchFieldPlaceholderForeground]
-                                                                              }];
+    NSString* text = self.text;
+    self.placeholderView.hidden = !(text==nil || text.length<=0);
+    self.attributedPlaceholder = self.inactivePlaceholderText;
 }
 
 -(void)cancel {

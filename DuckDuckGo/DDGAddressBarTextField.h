@@ -13,6 +13,10 @@
     CGFloat progress;
 }
 
+@property CGFloat additionalLeftSideInset;
+@property CGFloat additionalRightSideInset;
+@property (nonatomic, strong) IBOutlet UIView* placeholderView;
+
 -(void)setProgress:(CGFloat)newProgress;
 -(void)cancel;;
 -(void)finish;

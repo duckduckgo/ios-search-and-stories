@@ -212,9 +212,6 @@ NSString * const emailRegEx =
     [super viewDidLoad];
     
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    
-    [[self.searchBar bangButton] setImage:[[UIImage imageNamed:@"Bang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                 forState:UIControlStateNormal];
     [self.searchBar setBackgroundColor:[UIColor duckSearchBarBackground]];
     
     DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
@@ -580,7 +577,7 @@ NSString * const emailRegEx =
         
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsRightButton = NO;
-        self.searchBar.showsLeftButton = YES;
+        self.searchBar.showsLeftButton = NO;
 
         if (duration > 0)
             [self.searchBar layoutIfNeeded:duration];
@@ -596,6 +593,7 @@ NSString * const emailRegEx =
         
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = YES;
+        self.searchBar.showsBangButton = NO;
         self.searchBar.showsRightButton = showsRightButton;        
         self.searchBar.searchField.rightView = stopOrReloadButton;
         
@@ -736,7 +734,7 @@ NSString * const emailRegEx =
     
     [self.searchBar setShowsBangButton:YES animated:YES];
             
-    self.searchBar.showsLeftButton = YES;    
+    //self.searchBar.showsLeftButton = YES;
     self.searchBar.showsRightButton = NO;
     self.searchBar.showsCancelButton = YES;
     [self.searchBar layoutIfNeeded:0.25];
@@ -772,7 +770,7 @@ NSString * const emailRegEx =
     [self.bangInfoPopover dismissPopoverAnimated:YES];
     self.bangInfoPopover = nil;
     
-    self.searchBar.showsLeftButton = YES;
+    //self.searchBar.showsLeftButton = YES;
     self.searchBar.showsRightButton = (self.state == DDGSearchControllerStateWeb);
     self.searchBar.showsCancelButton = NO;
     [self.searchBar layoutIfNeeded:0.25];
@@ -849,14 +847,6 @@ NSString * const emailRegEx =
     inputAccessory.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     inputAccessory.alpha = 0.0;
     [self.view addSubview:inputAccessory];
-    
-//    // add bang button
-//    UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
-//    [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
-//    bangButton.frame = CGRectMake(0, 0, 46, 46);
-//    bangButton.tag = 103;
-//    [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-//    [inputAccessory addSubview:bangButton];
     
     // add scroll view
     UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, inputAccessory.bounds.size.width, 46)];
@@ -963,11 +953,7 @@ NSString * const emailRegEx =
     if(suggestions.count > 0) {
         scrollView.hidden = NO;
         [self positionNavControllerForInputAccessoryForceHidden:NO];
-        UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
-        [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button_open.png"] forState:UIControlStateNormal];
-        bangButton.hidden = YES;
     }
-    UIImage *backgroundImg = [[UIImage imageNamed:@"empty_bang_button.png"] stretchableImageWithLeftCapWidth:7.0 topCapHeight:0];
 
     for(NSDictionary *suggestionDict in suggestions) {
         NSString *suggestion = [suggestionDict objectForKey:@"name"];
@@ -989,7 +975,6 @@ NSString * const emailRegEx =
         CGSize titleSize = [suggestion sizeWithAttributes:@{NSFontAttributeName: button.titleLabel.font}];
         
         [button setFrame:CGRectMake(scrollView.contentSize.width, 0, (titleSize.width > 30 ? titleSize.width + 20 : 50), 46)];
-        [button setBackgroundImage:backgroundImg forState:UIControlStateNormal];
         scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + button.frame.size.width, 46);
         [scrollView addSubview:button];
     }
@@ -1009,9 +994,7 @@ NSString * const emailRegEx =
     scrollView.hidden = YES;
     [self positionNavControllerForInputAccessoryForceHidden:NO];
     
-    UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
-    [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
-    bangButton.hidden = NO;
+    self.searchBar.bangButton.hidden = NO;
 }
 
 #pragma mark - Text field delegate
