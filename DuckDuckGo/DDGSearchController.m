@@ -101,7 +101,7 @@ NSString * const emailRegEx =
         image = [[UIImage imageNamed:@"Menu"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
-    [self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];
+    //[self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];
 }
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {

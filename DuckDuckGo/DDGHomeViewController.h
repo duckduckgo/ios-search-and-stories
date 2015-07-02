@@ -12,8 +12,10 @@
 #import "DDGTabViewController.h"
 
 
-@interface DDGHomeViewController : UITabBarController <DDGSearchHandler, DDGTabViewControllerDelegate>
+@interface DDGHomeViewController : UIViewController <DDGSearchHandler, DDGTabViewControllerDelegate, UITabBarControllerDelegate>
 
 @property (nonatomic, copy) void (^viewDidAppearCompletion)(DDGHomeViewController *homeController);
+
++(DDGHomeViewController*)newHomeController;
 
 @end

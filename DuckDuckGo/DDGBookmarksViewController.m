@@ -40,10 +40,9 @@
     
     [self.view setBackgroundColor:[UIColor duckNoContentColor]];
     
-    [self.largeIconImageView setTintColor:[UIColor whiteColor]];
     [self.largeIconImageView setImage:[[UIImage imageNamed:@"NoFavorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     
-    [self.smallIconImageView setTintColor:RGBA(245.0f, 203.0f, 196.0f, 1.0f)];
+    //[self.smallIconImageView setTintColor:RGBA(245.0f, 203.0f, 196.0f, 1.0f)];
     [self.smallIconImageView setImage:[[UIImage imageNamed:@"inline_actions-icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
     
     NSParameterAssert(nil != self.searchController);

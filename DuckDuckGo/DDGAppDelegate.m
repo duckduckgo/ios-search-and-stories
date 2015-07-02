@@ -88,7 +88,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];
     
     // main view controller
-    DDGHomeViewController* home = [[DDGHomeViewController alloc] initWithNibName:nil bundle:nil];
+    DDGHomeViewController* home = [DDGHomeViewController newHomeController];
     self.searchHandler = home;
     
     home.viewDidAppearCompletion = ^(DDGHomeViewController *homeController) {

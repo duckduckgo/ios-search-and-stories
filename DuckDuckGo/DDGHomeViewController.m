@@ -20,38 +20,70 @@
 #import "UIColor+DDG.h"
 
 @interface DDGHomeViewController ()
+@property (nonatomic, strong) IBOutlet UIView* tabContentView;
+@property (nonatomic, strong) UITabBarController* tabController;
 
-//@property (nonatomic, strong) DDGSearchController* searchController;
 @property (nonatomic, strong) DDGStoriesViewController* storiesController;
 @property (nonatomic, strong) DDGSettingsViewController* settingsController;
 @property (nonatomic, strong) DDGDuckViewController* searchController;
 @property (nonatomic, strong) DDGTabViewController* favoritesTabViewController;
 @property (nonatomic, strong) DDGTabViewController* recentsController;
 
+@property (nonatomic, strong) IBOutlet UIButton* storiesTabButton;
+@property (nonatomic, strong) IBOutlet UIButton* settingsTabButton;
+@property (nonatomic, strong) IBOutlet UIButton* searchTabButton;
+@property (nonatomic, strong) IBOutlet UIButton* favoritesTabButton;
+@property (nonatomic, strong) IBOutlet UIButton* recentsTabButton;
+
+@property (nonatomic, strong) NSArray* tabButtons;
+
 @end
 
 @implementation DDGHomeViewController
 
 
--(void)showRecents {
-    
++(DDGHomeViewController*)newHomeController {
+  return [[DDGHomeViewController alloc] initWithNibName:@"DDGHomeViewController" bundle:nil];
 }
 
--(void)showFavorites {
-    
+-(IBAction)showRecents {
+    self.tabController.selectedViewController = self.recentsController.searchControllerDDG;
+    [self setSelectedButton:self.recentsTabButton];
 }
 
--(void)showDuck {
-    
+-(IBAction)showFavorites {
+    self.tabController.selectedViewController = self.favoritesTabViewController.searchControllerDDG;
+    [self setSelectedButton:self.favoritesTabButton];
+}
+
+-(IBAction)showStories {
+    self.tabController.selectedViewController = self.storiesController.searchControllerDDG;
+    [self setSelectedButton:self.storiesTabButton];
+}
+
+-(IBAction)showDuck {
+    self.tabController.selectedViewController = self.searchController.searchControllerDDG;
+    [self setSelectedButton:self.searchTabButton];
+}
+
+-(IBAction)showSettings {
+    self.tabController.selectedViewController = self.settingsController.searchControllerDDG;
+    [self setSelectedButton:self.settingsTabButton];
 }
 
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.tabBar.selectedImageTintColor = [UIColor duckTabBarForegroundSelected];
-    self.tabBar.tintColor = [UIColor duckTabBarForeground];
-    self.tabBar.backgroundColor = [UIColor duckTabBarBackground];
+    self.tabButtons = @[self.searchTabButton, self.storiesTabButton, self.favoritesTabButton, self.recentsTabButton, self.settingsTabButton ];
+    
+    self.tabController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
+    self.tabController.delegate = self;
+    [self addChildViewController:self.tabController];
+    self.tabController.view.frame = self.tabContentView.frame;
+    [self.tabContentView addSubview:self.tabController.view];
+    [self.tabController didMoveToParentViewController:self];
+    self.tabController.tabBar.hidden = TRUE;
     
     NSMutableArray* controllers = [NSMutableArray new];
     
@@ -107,7 +139,7 @@
         
         self.favoritesTabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
         self.favoritesTabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-        self.favoritesTabViewController.controlView.backgroundColor = [UIColor duckLightGray];
+        self.favoritesTabViewController.controlView.backgroundColor = [UIColor duckSearchBarBackground];
         [self.favoritesTabViewController.segmentedControl sizeToFit];
         
         CGRect controlBounds = self.favoritesTabViewController.controlView.bounds;
@@ -155,7 +187,7 @@
         
         self.recentsController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
         self.recentsController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-        self.recentsController.controlView.backgroundColor = [UIColor duckLightGray];
+        self.recentsController.controlView.backgroundColor = [UIColor duckSearchBarBackground];
         [self.recentsController.segmentedControl sizeToFit];
         
         CGRect controlBounds = self.recentsController.controlView.bounds;
@@ -207,7 +239,7 @@
         [controllers addObject:search];
     }
     
-    self.viewControllers = controllers;
+    self.tabController.viewControllers = controllers;
     
     //int type = DDGViewControllerTypeHome;
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
@@ -215,7 +247,9 @@
         [self showRecents];
     } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
         [self showFavorites];
-    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeStories]) {
+        [self showStories];
+    } else { //if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
         [self showDuck];
     }
     
@@ -303,13 +337,23 @@
     }
 }
 
-
+-(void)setSelectedButton:(UIButton*)newlySelectedTabButton
+{
+    UIColor* selColor = [UIColor duckTabBarForegroundSelected];
+    UIColor* unselColor = [UIColor duckTabBarForeground];
+    self.searchTabButton.tintColor = newlySelectedTabButton==self.searchTabButton ? selColor : unselColor;
+    self.storiesTabButton.tintColor = newlySelectedTabButton==self.storiesTabButton ? selColor : unselColor;
+    self.favoritesTabButton.tintColor = newlySelectedTabButton==self.favoritesTabButton ? selColor : unselColor;
+    self.recentsTabButton.tintColor = newlySelectedTabButton==self.recentsTabButton ? selColor : unselColor;
+    self.settingsTabButton.tintColor = newlySelectedTabButton==self.settingsTabButton ? selColor : unselColor;
+}
 
 #pragma mark - DDGTabViewControllerDelegate
 
 - (void)tabViewController:(DDGTabViewController *)tabViewController didSwitchToViewController:(UIViewController *)viewController atIndex:(NSInteger)tabIndex {
-    
+    NSLog(@"tabViewController:didSwitchToViewController:atIndex:%ld", (long)tabIndex);
     [[NSUserDefaults standardUserDefaults] setInteger:tabIndex forKey:DDGSavedViewLastSelectedTabIndex];
+    [self setSelectedButton:[self.tabButtons objectAtIndex:tabIndex]];
 }
 
 
