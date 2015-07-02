@@ -20,7 +20,6 @@
 @property (nonatomic, strong) UIImage *searchIcon;
 
 @property (nonatomic, weak) IBOutlet UIImageView *largeIconImageView;
-@property (nonatomic, weak) IBOutlet UIImageView *smallIconImageView;
 
 @end
 
@@ -40,10 +39,7 @@
     
     [self.view setBackgroundColor:[UIColor duckNoContentColor]];
     
-    [self.largeIconImageView setImage:[[UIImage imageNamed:@"NoFavorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-    
-    //[self.smallIconImageView setTintColor:RGBA(245.0f, 203.0f, 196.0f, 1.0f)];
-    [self.smallIconImageView setImage:[[UIImage imageNamed:@"inline_actions-icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+    [self.largeIconImageView setImage:[UIImage imageNamed:@"NoFavorites"]];
     
     NSParameterAssert(nil != self.searchController);
     

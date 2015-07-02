@@ -30,7 +30,6 @@ NSString *const DDGLastViewedStoryKey = @"last_story";
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 NSInteger const DDGLargeImageViewTag = 1;
-NSInteger const DDGSmallImageViewTag = 2;
 
 @interface DDGStoriesViewController () {
     BOOL isRefreshing;
@@ -131,11 +130,7 @@ NSInteger const DDGSmallImageViewTag = 2;
     if (nil == self.noStoriesView) {
         [[NSBundle mainBundle] loadNibNamed:@"NoStoriesView" owner:self options:nil];
         UIImageView *largeImageView = (UIImageView *)[self.noStoriesView viewWithTag:DDGLargeImageViewTag];
-        largeImageView.tintColor = [UIColor whiteColor];
-        largeImageView.image = [[UIImage imageNamed:@"NoFavorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        UIImageView *smallImageView = (UIImageView *)[self.noStoriesView viewWithTag:DDGSmallImageViewTag];
-        smallImageView.tintColor = RGBA(245.0f, 203.0f, 196.0f, 1.0f);
-        smallImageView.image = [[UIImage imageNamed:@"inline_actions-icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        largeImageView.image = [UIImage imageNamed:@"NoFavorites"];
     }
     
     [UIView animateWithDuration:0 animations:^{

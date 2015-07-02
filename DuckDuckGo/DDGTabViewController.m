@@ -176,9 +176,6 @@
     [self didChangeValueForKey:@"currentViewControllerIndex"];        
     
     [self.segmentedControl setSelectedSegmentIndex:newViewControllerIndex];
-    
-    if ([[self delegate] respondsToSelector:@selector(tabViewController:didSwitchToViewController:atIndex:)])
-        [[self delegate] tabViewController:self didSwitchToViewController:_currentViewController atIndex:newViewControllerIndex];        
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
