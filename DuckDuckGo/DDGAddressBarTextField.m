@@ -37,8 +37,8 @@
 {
     self.actualPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
                                                                  attributes:@{NSForegroundColorAttributeName: [UIColor duckSearchFieldPlaceholderForeground]}];
-    self.inactivePlaceholderText = [NSAttributedString new];
-    self.attributedPlaceholder = self.inactivePlaceholderText;
+    self.inactivePlaceholderText = [[NSAttributedString alloc] initWithString:@" " attributes:@{}];
+    self.attributedPlaceholder = self.inactivePlaceholderText; // need to set to a
     
     [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
     [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
