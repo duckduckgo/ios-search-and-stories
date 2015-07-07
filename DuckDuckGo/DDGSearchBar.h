@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGAddressBarTextField.h"
+#import "DDGProgressBar.h"
 
 @class DDGAddressBarTextField;
 @interface DDGSearchBar : UIView
@@ -22,9 +23,14 @@
 @property(nonatomic, weak) IBOutlet UIButton *rightButton;
 @property(nonatomic, weak) IBOutlet UIButton *cancelButton;
 @property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
+@property(strong, nonatomic) IBOutlet DDGProgressBar *progressView;
+
 - (void)setShowsCancelButton:(BOOL)show animated:(BOOL)animated;
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated;
 - (void)setShowsLeftButton:(BOOL)show animated:(BOOL)animated;
 - (void)setShowsRightButton:(BOOL)show animated:(BOOL)animated;
 - (void)layoutIfNeeded:(NSTimeInterval)animationDuration;
+- (void)cancel;
+- (void)finish;
+
 @end

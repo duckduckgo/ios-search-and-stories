@@ -58,6 +58,17 @@
 }
 
 
++ (UIColor*)duckProgressBarForeground
+{
+    return [UIColor duckSearchBarBackground];
+}
+
++ (UIColor*)duckProgressBarBackground
+{
+    return [UIColor whiteColor];
+}
+
+
 + (UIColor*)duckSegmentBarBackground { return [UIColor duckSearchBarBackground]; }
 + (UIColor*)duckSegmentBarForeground { return [UIColor whiteColor]; }
 + (UIColor*)duckSegmentBarBackgroundSelected { return [UIColor whiteColor]; }

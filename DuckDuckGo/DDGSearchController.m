@@ -612,12 +612,12 @@ NSString * const emailRegEx =
 
 -(void)webViewCancelledLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];
-    [self.searchBar.searchField cancel];
+    [self.searchBar cancel];
 }
 
 -(void)webViewFinishedLoading {
     [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];
-    [self.searchBar.searchField finish];
+    [self.searchBar finish];
 }
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
@@ -629,7 +629,7 @@ NSString * const emailRegEx =
 }
 
 -(void)setProgress:(CGFloat)progress {
-    [self.searchBar.searchField setProgress:progress];
+    self.searchBar.progressView.percentCompleted = (NSUInteger)(progress * 100);
 }
 
 #pragma mark - Helper methods

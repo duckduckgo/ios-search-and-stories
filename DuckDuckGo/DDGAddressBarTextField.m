@@ -33,15 +33,31 @@
     return self;
 }
 
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"text"]) {
+        id newText = [change valueForKey:@"new"];
+        if(newText!=nil && [newText length]>0) {
+            [self hidePlaceholder];
+        }
+    }
+}
+
+
 -(void)setup
 {
     self.actualPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
                                                                  attributes:@{NSForegroundColorAttributeName: [UIColor duckSearchFieldPlaceholderForeground]}];
     self.inactivePlaceholderText = [[NSAttributedString alloc] initWithString:@" " attributes:@{}];
-    self.attributedPlaceholder = self.inactivePlaceholderText; // need to set to a
+    self.attributedPlaceholder = self.inactivePlaceholderText; // need to set to a non-empty string in order to prevent it sliding in from {0,0} when made visible
+    [self addObserver:self
+           forKeyPath:@"text"
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
     
-    [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
-    [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
+    [self addTarget:self action:@selector(hidePlaceholder) forControlEvents:UIControlEventEditingDidBegin];
+    [self addTarget:self action:@selector(showPlaceholder) forControlEvents:UIControlEventEditingDidEnd];
     
     self.backgroundColor = [UIColor duckSearchFieldBackground];
     self.textColor = [UIColor duckSearchFieldForeground];
@@ -51,14 +67,19 @@
     CALayer *layer = self.layer;
     layer.cornerRadius = 4.0f;
     layer.masksToBounds = NO;
-    
-    progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"Loading"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-    progressView.tintColor = [UIColor duckLightBlue];
-    progressView.frame = CGRectMake(32, 8, 100, 21);
-    [self insertSubview:progressView atIndex:1];
-
-    [self setProgress:0];
 }
+
+-(void)hidePlaceholder {
+    self.placeholderView.hidden = TRUE;
+    self.attributedPlaceholder = self.actualPlaceholderText;
+}
+
+-(void)showPlaceholder {
+    NSString* text = self.text;
+    self.placeholderView.hidden = !(text==nil || text.length<=0);
+    self.attributedPlaceholder = self.inactivePlaceholderText;
+}
+
 
 
 // placeholder position
@@ -77,67 +98,6 @@
     rect.size.width -= self.additionalLeftSideInset;
     rect.size.width -= self.additionalRightSideInset;
     return rect;
-}
-
-#pragma mark - Showing and hiding progress
-
--(void)hideProgress {
-    progressView.hidden = YES;
-    self.placeholderView.hidden = TRUE;
-    self.attributedPlaceholder = self.actualPlaceholderText;
-}
-
--(void)showProgress {
-    progressView.hidden = NO;
-    NSString* text = self.text;
-    self.placeholderView.hidden = !(text==nil || text.length<=0);
-    self.attributedPlaceholder = self.inactivePlaceholderText;
-}
-
--(void)cancel {
-    [self setProgress:0.0 animationDuration:0.0];
-    [progressView.layer removeAllAnimations];    
-}
-
--(void)finish {
-    [self setProgress:1.0 animationDuration:0.5];
-    // the fade-out needs to happen before the width animation happens, otherwise the width animation will try to continue itself and render the setProgress:0 below useless
-    [UIView animateWithDuration:0.45 animations:^{
-        progressView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [self setProgress:0];
-        progressView.alpha = 1;
-    }];
-}
-
-#pragma mark - Progress bar
-
--(void)setProgress:(CGFloat)newProgress {
-    [self setProgress:newProgress animationDuration:2.0];
-}
-
--(void)setProgress:(CGFloat)newProgress animationDuration:(CGFloat)duration {
-    if(newProgress > 1)
-        newProgress = 1;
-    CGRect f = progressView.frame;
-    f.size.width = (self.bounds.size.width-34)*newProgress;
-    if(newProgress > progress) {
-        [UIView animateWithDuration:duration
-                              delay:0.0
-                            options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             progressView.frame = f;                     
-                         }
-                         completion:^(BOOL finished) {
-                             if(finished)
-                                 [self setProgress:newProgress+0.1 
-                                 animationDuration:duration*4];
-                         }];
-    } else {
-        [progressView.layer removeAllAnimations];
-        progressView.frame = f;
-    }
-        progress = newProgress;
 }
 
 @end

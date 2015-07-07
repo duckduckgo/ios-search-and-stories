@@ -9,6 +9,7 @@
 #import "DDGSearchBar.h"
 
 @interface DDGSearchBar ()
+
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldLeftAlignToSuperview;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldLeftAlignToLeftButton;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldRightAlignToSuperview;
@@ -123,7 +124,7 @@
 }
 
 - (void)layoutSubviews {
-    CGRect bounds = self.frame;
+    //CGRect bounds = self.frame;
     self.leftButton.hidden = !self.showsLeftButton;
     self.bangButton.hidden = !self.showsBangButton;
     self.rightButton.hidden = !self.showsRightButton;
@@ -159,5 +160,48 @@
 //    NSLog(@"search field frame: %@", NSStringFromCGRect(searchFieldFrame));
 //    self.searchField.frame = searchFieldFrame;
 }
+
+
+
+#pragma mark - Showing and hiding progress
+
+//-(void)hideProgress {
+//    self.progressView.percentCompleted = 100;
+//}
+//
+//-(void)showProgress {
+//    progressView.hidden = NO;
+//}
+
+-(void)cancel {
+    self.progressView.percentCompleted = 100;
+}
+
+-(void)finish {
+    self.progressView.percentCompleted = 100;
+}
+
+#pragma mark - Progress bar
+
+-(void)setProgress:(CGFloat)newProgress {
+    NSLog(@"setting progress to %f", newProgress);
+    self.progressView.percentCompleted = ceill(newProgress*100);
+    
+}
+
+-(void)setProgress:(CGFloat)newProgress animationDuration:(CGFloat)duration {
+    [UIView animateWithDuration:duration
+                          delay:0.0
+                        options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self setProgress:newProgress];
+                     }
+                     completion:^(BOOL finished) {
+                         if(finished)
+                             [self setProgress:newProgress+0.1
+                             animationDuration:duration*4];
+                     }];
+}
+
 
 @end
