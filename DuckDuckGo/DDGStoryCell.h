@@ -10,7 +10,7 @@
 
 extern NSString *const DDGStoryCellIdentifier;
 
-@interface DDGStoryCell : UITableViewCell
+@interface DDGStoryCell : UICollectionViewCell
 
 @property (nonatomic, assign) BOOL displaysDropShadow;
 @property (nonatomic, assign) BOOL displaysInnerShadow;

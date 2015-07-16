@@ -19,6 +19,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 @property (nonatomic, strong) UIView *contentBackgroundView;
 @property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) UIView *innerShadowView;
+@property (nonatomic, strong) UILabel* textLabel;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
 
 @end
@@ -27,14 +28,20 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 
 #pragma mark -
 
-- (instancetype)init
+- (instancetype)initWithFrame:(CGRect)frame
 {
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:DDGStoryCellIdentifier];
+    self = [super initWithFrame:frame];
     if (self) {
         [self configure];
     }
     return self;
 }
+
+-(NSString*)reuseIdentifier
+{
+    return DDGStoryCellIdentifier;
+}
+
 
 #pragma mark -
 
@@ -114,10 +121,12 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     [self.contentView addSubview:innerShadowView];
     self.innerShadowView = innerShadowView;
     
+    self.textLabel = [UILabel new];
     self.textLabel.backgroundColor = [UIColor clearColor];
     self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0f];
     self.textLabel.numberOfLines = 2;
     self.textLabel.opaque = NO;
+    [self.contentView addSubview:self.textLabel];
     
     DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
     faviconButton.frame = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);

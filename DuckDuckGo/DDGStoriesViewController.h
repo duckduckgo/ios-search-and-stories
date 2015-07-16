@@ -13,7 +13,10 @@
 #import "DDGSearchController.h"
 #import "EGORefreshTableHeaderView.h"
 
-@interface DDGStoriesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, NSFetchedResultsControllerDelegate>
+CGFloat DDG_rowHeightWithContainerSize(CGSize containerSize);
+
+
+@interface DDGStoriesViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, EGORefreshTableHeaderDelegate, UIScrollViewDelegate, NSFetchedResultsControllerDelegate>
 {}
 @property (nonatomic, strong) IBOutlet UIView *noStoriesView;
 @property (nonatomic, readonly, weak) id <DDGSearchHandler> searchHandler;

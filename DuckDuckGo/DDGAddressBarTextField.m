@@ -100,4 +100,9 @@
     return rect;
 }
 
+-(void)dealloc
+{
+    [self removeObserver:self forKeyPath:@"text"];
+}
+
 @end

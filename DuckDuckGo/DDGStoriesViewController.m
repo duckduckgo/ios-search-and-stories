@@ -26,6 +26,10 @@
 #import "DDGTableView.h"
 
 NSString *const DDGLastViewedStoryKey = @"last_story";
+CGFloat const DDGStoriesInterRowSpacing = 10;
+CGFloat const DDGStoriesBetweenItemsSpacing = 10;
+CGFloat const DDGStoriesMulticolumnWidthThreshold = 500;
+CGFloat const DDGStoryImageRatio = 2.08f;  //1.597f = measured from iPhone screenshot; 1.36f = measured from iPad screenshot
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
@@ -43,7 +47,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
 @property (nonatomic, strong) DDGPanGestureRecognizer *panLeftGestureRecognizer;
-@property (nonatomic, strong) IBOutlet DDGTableView *tableView;
+@property (nonatomic, strong) IBOutlet UICollectionView *storyView;
 @property (strong, nonatomic) IBOutlet UIView *swipeView;
 @property (nonatomic, weak) IBOutlet UIButton *swipeViewSaveButton;
 @property (nonatomic, weak) IBOutlet UIButton *swipeViewSafariButton;
@@ -55,6 +59,192 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @end
+
+
+
+#pragma mark DDGStoriesLayout
+
+static NSString * const DDGStoriesLayoutKind = @"PhotoCell";
+
+
+@interface DDGStoriesLayout : UICollectionViewLayout
+@property (nonatomic, weak) DDGStoriesViewController* storiesController;
+@property BOOL mosaicMode;
+@property (nonatomic, strong) NSDictionary *layoutInfo;
+
+@end
+
+
+@implementation DDGStoriesLayout
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        [self setup];
+    }
+    
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self) {
+        [self setup];
+    }
+    
+    return self;
+}
+
+- (void)setup
+{
+    self.mosaicMode = TRUE;
+}
+
+- (void)prepareLayout
+{
+    NSMutableDictionary *newLayoutInfo = [NSMutableDictionary dictionary];
+    NSMutableDictionary *cellLayoutInfo = [NSMutableDictionary dictionary];
+    
+    NSInteger sectionCount = [self.collectionView numberOfSections];
+    
+    for (NSInteger section = 0; section < sectionCount; section++) {
+        NSInteger itemCount = [self.collectionView numberOfItemsInSection:section];
+        
+        for (NSInteger item = 0; item < itemCount; item++) {
+            NSIndexPath* indexPath = [NSIndexPath indexPathForItem:item inSection:0];
+            UICollectionViewLayoutAttributes* itemAttributes =
+            [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+            itemAttributes.frame = [self frameForStoryAtIndexPath:indexPath];
+            
+            cellLayoutInfo[indexPath] = itemAttributes;
+        }
+    }
+    
+    newLayoutInfo[DDGStoriesLayoutKind] = cellLayoutInfo;
+    
+    self.layoutInfo = newLayoutInfo;
+}
+
+
+CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
+    BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    CGFloat rowHeight;
+    if(mosaicMode) { // set to the height of the larger story
+        rowHeight = ((size.width - DDGStoriesBetweenItemsSpacing)*2/3) / DDGStoryImageRatio;
+    } else { // set to the height
+        rowHeight = size.width / DDGStoryImageRatio;
+    }
+    return MAX(10.0f, rowHeight); // a little safety
+}
+
+- (CGSize)collectionViewContentSize
+{
+    NSUInteger numStories = [self.collectionView numberOfItemsInSection:0];
+    CGSize size = self.collectionView.frame.size;
+    self.mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    NSUInteger cellsPerRow = self.mosaicMode ? 3 : 1;
+    CGFloat rowHeight = DDG_rowHeightWithContainerSize(size);
+    NSUInteger numRows = numStories/3;
+    if(numStories%cellsPerRow!=0) numRows++;
+    size.height = rowHeight * numRows;
+    return size;
+}
+
+
+
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
+{
+    NSMutableArray* elementAttributes = [NSMutableArray new];
+    CGSize size = self.collectionView.frame.size;
+    BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    CGFloat rowHeight = DDG_rowHeightWithContainerSize(size);
+    
+    NSUInteger cellsPerRow = mosaicMode ? 3 : 1;
+    NSUInteger rowsBeforeRect = floor(rect.origin.y / rowHeight);
+    NSUInteger rowsWithinRect = ceil((rect.origin.y+rect.size.height) / rowHeight) - rowsBeforeRect + 1;
+    
+    for(NSUInteger row = rowsBeforeRect; row < rowsBeforeRect + rowsWithinRect; row++) {
+        for(NSUInteger column = 0 ; column < cellsPerRow; column++) {
+            NSUInteger storyIndex = row * cellsPerRow + column;
+            if(storyIndex >= [self.collectionView numberOfItemsInSection:0]) break;
+            UICollectionViewLayoutAttributes* attributes = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:storyIndex inSection:0]];
+            [elementAttributes addObject:attributes];
+        }
+    }
+    return elementAttributes;
+}
+
+
+- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewLayoutAttributes *itemAttributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+    itemAttributes.frame = [self frameForStoryAtIndexPath:indexPath];
+    return itemAttributes;
+}
+
+- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
+{
+    return TRUE; // re-layout for all bounds changes
+}
+
+- (CGRect)frameForStoryAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSUInteger row = indexPath.item;
+    if(row==NSNotFound) return CGRectZero;
+    row = row / (self.mosaicMode ? 3 : 1);
+    NSInteger column = indexPath.item % (self.mosaicMode ? 3 : 1);
+    CGSize frameSize = self.collectionView.frame.size;
+    CGFloat rowHeight = DDG_rowHeightWithContainerSize(frameSize);
+    CGFloat rowWidth = frameSize.width;
+    BOOL oddRow = (row % 2) == 1;
+    
+    CGRect storyRect = CGRectMake(0, row * rowHeight + DDGStoriesInterRowSpacing,
+                                  rowWidth, rowHeight - DDGStoriesInterRowSpacing);
+    if(self.mosaicMode) {
+        if(oddRow) {
+            if(column==0) { // top left of three
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing*2)/2;
+            } else if(column==1) { // bottom left of three
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing*2)/2;
+                storyRect.origin.y += rowHeight - storyRect.size.height - DDGStoriesBetweenItemsSpacing;
+            } else { // if(column==2) // the large right-side story
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)*2/3;
+                storyRect.origin.x += rowWidth - storyRect.size.width;
+            }
+        } else { // even row
+            if(column==1) { // top right of three
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing*2)/2;
+                storyRect.origin.x += rowWidth - storyRect.size.width;
+            } else if(column==2) { // bottom right of three
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing*2)/2;
+                storyRect.origin.y += rowHeight - storyRect.size.height - DDGStoriesBetweenItemsSpacing;
+                storyRect.origin.x += rowWidth - storyRect.size.width;
+            } else { // if(column==0) // the large left-side story
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)*2/3;
+            }
+        }
+    } else { // not a mosaic
+        // the defaults are good enough
+    }
+    //NSLog(@"item %lu:  frame: %@", indexPath.item, NSStringFromCGRect(storyRect));
+
+    return storyRect;
+}
+
+
+@end
+
+
+
+
+#pragma mark DDGStoriesViewController
+
 
 @implementation DDGStoriesViewController
 
@@ -99,7 +289,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     [super didReceiveMemoryWarning];
     
     NSMutableDictionary *cachedImages = [NSMutableDictionary new];
-    NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
+    NSArray *indexPaths = [self.storyView indexPathsForVisibleItems];
     for (NSIndexPath *indexPath in indexPaths) {
         DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
         if (story) {
@@ -121,7 +311,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 }
 
 - (void)reenableScrollsToTop {
-    self.tableView.scrollsToTop = YES;
+    self.storyView.scrollsToTop = YES;
 }
 
 #pragma mark - No Stories
@@ -134,19 +324,19 @@ NSInteger const DDGLargeImageViewTag = 1;
     }
     
     [UIView animateWithDuration:0 animations:^{
-        [self.tableView removeFromSuperview];
+        [self.storyView removeFromSuperview];
         self.noStoriesView.frame = self.view.bounds;
         [self.view addSubview:self.noStoriesView];
     }];
 }
 
 - (void)hideNoStoriesView {
-    if (nil == self.tableView.superview) {
+    if (nil == self.storyView.superview) {
         [UIView animateWithDuration:0 animations:^{
             [self.noStoriesView removeFromSuperview];
             self.noStoriesView = nil;
-            self.tableView.frame = self.view.bounds;
-            [self.view addSubview:self.tableView];
+            self.storyView.frame = self.view.bounds;
+            [self.view addSubview:self.storyView];
         }];        
     }
 }
@@ -155,26 +345,27 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    DDGStoriesLayout* storyLayout = [[DDGStoriesLayout alloc] init];
+    storyLayout.storiesController = self;
+    UICollectionView* storyView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:storyLayout];
+    storyView.backgroundColor = [UIColor duckNoContentColor];
+    storyView.dataSource = self;
+    storyView.delegate = self;
+    storyView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [storyView registerClass:DDGStoryCell.class forCellWithReuseIdentifier:DDGStoryCellIdentifier];
     
-    DDGTableView *tableView = [[DDGTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.backgroundColor = [UIColor duckNoContentColor];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.rowHeight = 220.0f;
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:tableView];
-    self.tableView = tableView;
+    [self.view addSubview:storyView];
+    self.storyView = storyView;
     
     self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
     [self prepareUpcomingCellContent];
     
     if (!self.savedStoriesOnly && refreshHeaderView == nil) {
-		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
-		refreshHeaderView.backgroundColor = [UIColor duckRed];
+		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.storyView.bounds.size.height, self.view.frame.size.width, self.storyView.bounds.size.height)];
+		refreshHeaderView.backgroundColor = [UIColor duckSearchBarBackground];
         refreshHeaderView.delegate = self;
-		[self.tableView addSubview:refreshHeaderView];
+		[self.storyView addSubview:refreshHeaderView];
         [refreshHeaderView refreshLastUpdatedDate];
 	}
 	
@@ -256,11 +447,11 @@ NSInteger const DDGLargeImageViewTag = 1;
     [super viewDidAppear:animated];
     
     // if we animated out, animate back in
-    if(_tableView.alpha == 0) {
-        _tableView.transform = CGAffineTransformMakeScale(2, 2);
+    if(_storyView.alpha == 0) {
+        _storyView.transform = CGAffineTransformMakeScale(2, 2);
         [UIView animateWithDuration:0.3 animations:^{
-            _tableView.alpha = 1;
-            _tableView.transform = CGAffineTransformIdentity;
+            _storyView.alpha = 1;
+            _storyView.transform = CGAffineTransformIdentity;
         }];
     }
     
@@ -269,7 +460,7 @@ NSInteger const DDGLargeImageViewTag = 1;
                                                  name:DDGSlideOverMenuWillAppearNotification
                                                object:nil];
     
-    [self.tableView addGestureRecognizer:self.panLeftGestureRecognizer];
+    [self.storyView addGestureRecognizer:self.panLeftGestureRecognizer];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -281,7 +472,7 @@ NSInteger const DDGLargeImageViewTag = 1;
                                                     name:DDGSlideOverMenuWillAppearNotification
                                                   object:nil];
     
-    [self.tableView removeGestureRecognizer:self.panLeftGestureRecognizer];
+    [self.storyView removeGestureRecognizer:self.panLeftGestureRecognizer];
 	[super viewWillDisappear:animated];
     
     [self.imageDownloadQueue cancelAllOperations];
@@ -312,8 +503,8 @@ NSInteger const DDGLargeImageViewTag = 1;
         
         if ([sender isKindOfClass:[UIButton class]]) {
             UIButton *button = (UIButton *)sender;
-            CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
-            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
+            CGPoint point = [button convertPoint:button.bounds.origin toView:self.storyView];
+            NSIndexPath *indexPath = [self.storyView indexPathForItemAtPoint:point];
             story = [self.fetchedResultsController objectAtIndexPath:indexPath];
         }
         
@@ -351,7 +542,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
     NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[newStories count]];
     
-    for(int i=0;i<newStories.count;i++) {
+    for(int i=0; i<newStories.count; i++) {
         DDGStory *story = [newStories objectAtIndex:i];
         NSString *storyID = story.id;
         
@@ -363,8 +554,9 @@ NSInteger const DDGLargeImageViewTag = 1;
             }
         }
         
-        if(!matchFound)
-            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+        if(!matchFound) {
+            [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+        }
     }
     return [indexPaths copy];
 }
@@ -376,13 +568,17 @@ NSInteger const DDGLargeImageViewTag = 1;
     NSInteger changes = [addedStories count] + [removedStories count];
     
     // update the table view with added and removed stories
-    [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:addedStories
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView deleteRowsAtIndexPaths:removedStories
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView endUpdates];
+    //[self.storyView beginUpdates];
     
+//    if(removedStories.count > 0) {
+//        [self.storyView deleteItemsAtIndexPaths:removedStories];
+//    }
+//    if(addedStories.count > 0) {
+//        [self.storyView insertItemsAtIndexPaths:addedStories];
+//    }
+    NSLog(@"updating with %lu deleted items and %lu new items", removedStories.count, addedStories.count);
+    [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+
     if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0) {
         [self showNoStoriesView];
     } else {
@@ -414,7 +610,7 @@ NSInteger const DDGLargeImageViewTag = 1;
         return;
     
     NSArray *stories = self.fetchedResultsController.fetchedObjects;
-    DDGStory *story = [stories objectAtIndex:self.swipeViewIndexPath.row];
+    DDGStory *story = [stories objectAtIndex:self.swipeViewIndexPath.item];
     
     
     double delayInSeconds = 0.2;
@@ -488,7 +684,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 }
 
 - (void)hideSwipeViewForIndexPath:(NSIndexPath *)indexPath completion:(void (^)())completion {
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UICollectionViewCell* cell = [self.storyView cellForItemAtIndexPath:indexPath];
     self.swipeViewIndexPath = nil;
     
     UIView *swipeView = self.swipeView;
@@ -508,7 +704,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 - (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UICollectionViewCell* cell = [self.storyView cellForItemAtIndexPath:indexPath];
     if (cell) {
         UIView *behindView = cell.contentView;
         CGRect swipeFrame = behindView.frame;
@@ -533,7 +729,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 - (void)showSwipeViewForIndexPath:(NSIndexPath *)indexPath {
     
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UICollectionViewCell* cell = [self.storyView cellForItemAtIndexPath:indexPath];
     
     void(^completion)() = ^() {
         if (nil != cell) {
@@ -567,7 +763,7 @@ NSInteger const DDGLargeImageViewTag = 1;
                || recognizer.state == UIGestureRecognizerStateCancelled) {
         
         if (nil != self.swipeViewIndexPath) {
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];
+            UICollectionViewCell* cell = [self.storyView cellForItemAtIndexPath:self.swipeViewIndexPath];
             CGPoint origin = self.swipeView.frame.origin;
             CGRect contentFrame = cell.contentView.frame;
             CGFloat offset = origin.x - contentFrame.origin.x;
@@ -594,8 +790,8 @@ NSInteger const DDGLargeImageViewTag = 1;
         }
         
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGPoint location = [recognizer locationInView:self.tableView];
-        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
+        CGPoint location = [recognizer locationInView:self.storyView];
+        NSIndexPath *indexPath = [self.storyView indexPathForItemAtPoint:location];
         
         if (nil != self.swipeViewIndexPath
             && ![self.swipeViewIndexPath isEqual:indexPath]) {
@@ -606,12 +802,11 @@ NSInteger const DDGLargeImageViewTag = 1;
             [self insertSwipeViewForIndexPath:indexPath];
         }
         
-        DDGStoryCell *cell = (DDGStoryCell *)[self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];
+        DDGStoryCell *cell = (DDGStoryCell *)[self.storyView cellForItemAtIndexPath:self.swipeViewIndexPath];
         CGPoint translation = [recognizer translationInView:recognizer.view];
         
         CGPoint center = cell.contentView.center;
-        cell.contentView.center = CGPointMake(center.x + translation.x,
-                                              center.y);
+        cell.contentView.center = CGPointMake(center.x + translation.x, center.y);
         
         [recognizer setTranslation:CGPointZero inView:recognizer.view];
     }
@@ -627,9 +822,9 @@ NSInteger const DDGLargeImageViewTag = 1;
     NSInteger lowestIndex = count;
     NSInteger highestIndex = 0;
     
-    for (NSIndexPath *indexPath in [self.tableView indexPathsForVisibleRows]) {
-        lowestIndex = MIN(lowestIndex, indexPath.row);
-        highestIndex = MAX(highestIndex, indexPath.row);
+    for (NSIndexPath *indexPath in [self.storyView indexPathsForVisibleItems]) {
+        lowestIndex = MIN(lowestIndex, indexPath.item);
+        highestIndex = MAX(highestIndex, indexPath.item);
     }
     
     lowestIndex = MAX(0, lowestIndex-2);
@@ -684,22 +879,22 @@ NSInteger const DDGLargeImageViewTag = 1;
     return [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];;
 }
 
-#pragma mark - Table view data source
+#pragma mark - collection view data source
 
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView*)collectionView
 {
-    return [[self.fetchedResultsController sections] count];
+    return 1; //[[self.fetchedResultsController sections] count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo numberOfObjects];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:DDGStoryCellIdentifier];
+    DDGStoryCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:DDGStoryCellIdentifier forIndexPath:indexPath];
     if (!cell) {
         cell = [DDGStoryCell new];
     }
@@ -707,18 +902,20 @@ NSInteger const DDGLargeImageViewTag = 1;
 	return cell;
 }
 
-#pragma  mark - Table view delegate
+#pragma  mark - collection view delegate
 
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+-(BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
     if (nil != self.swipeViewIndexPath) {
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-        return nil;
+        return FALSE;
     }
     
-    return indexPath;
+    return TRUE;
 }
 
-- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
 
     story.readValue = YES;
@@ -730,7 +927,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     
     [self.historyProvider logStory:story];
     
-    [theTableView deselectRowAtIndexPath:indexPath animated:NO];
+    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
 }
 
 #pragma mark - Loading popular stories
@@ -760,7 +957,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     void (^completionBlock)() = ^() {
         NSIndexPath *indexPath = [weakSelf.fetchedResultsController indexPathForObject:story];
         if (nil != indexPath) {
-            [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
         }
     };
     
@@ -813,7 +1010,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     if (nil != story) {
         NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:story];
         if (nil != indexPath)
-            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animated];
+            [self.storyView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
     }
 }
 
@@ -857,7 +1054,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     if (!self.storyFetcher.isRefreshing) {
         
         __block NSArray *oldStories = nil;        
-        __weak DDGStoriesViewController *weakSelf = self;
+        DDGStoriesViewController *weakSelf = self;
         
         void (^willSave)() = ^() {
             oldStories = [self.fetchedResultsController fetchedObjects];
@@ -879,7 +1076,7 @@ NSInteger const DDGLargeImageViewTag = 1;
             isRefreshing = NO;
             /* Should only call this method if the refresh was triggered by a PTR */
             if (manual) {
-                [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:weakSelf.tableView];
+                [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:weakSelf.storyView];
             }
             
             if(changes > 0 && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
@@ -954,7 +1151,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView beginUpdates];
+//    [self.storyView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
@@ -962,11 +1159,11 @@ NSInteger const DDGLargeImageViewTag = 1;
 {
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [self.storyView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            [self.storyView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]];
             break;
       
         case NSFetchedResultsChangeMove:
@@ -979,16 +1176,16 @@ NSInteger const DDGLargeImageViewTag = 1;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    UITableView *tableView = self.tableView;
+    UICollectionView *storyView = self.storyView;
     
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [storyView insertItemsAtIndexPaths:@[newIndexPath]];
             break;
             
         case NSFetchedResultsChangeDelete:
         {
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [storyView deleteItemsAtIndexPaths:@[indexPath]];
             if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0)
                 [self performSelector:@selector(showNoStoriesView) withObject:nil afterDelay:0.2];
             
@@ -996,26 +1193,26 @@ NSInteger const DDGLargeImageViewTag = 1;
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:(DDGStoryCell *)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell:(DDGStoryCell *)[storyView cellForItemAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [storyView deleteItemsAtIndexPaths:@[indexPath]];
+            [storyView insertItemsAtIndexPaths:@[newIndexPath]];
             break;
     }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView endUpdates];
+    //[self.storyView endUpdates];
 }
 
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.displaysDropShadow = (indexPath.row == ([self.tableView numberOfRowsInSection:indexPath.section] - 1));
-    cell.displaysInnerShadow = (indexPath.row != 0);
+    cell.displaysDropShadow = (indexPath.item == ([self.storyView numberOfItemsInSection:0] - 1));
+    cell.displaysInnerShadow = (indexPath.item != 0);
     cell.title = story.title;
     cell.read = story.readValue;
     if (story.feed) {

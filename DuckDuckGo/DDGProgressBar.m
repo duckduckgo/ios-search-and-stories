@@ -48,6 +48,12 @@
     //[self setNeedsLayout];
 }
 
+-(void)setBounds:(CGRect)bounds
+{
+    [super setBounds:bounds];
+    [self updateProgress];
+}
+
 -(void)setFrame:(CGRect)frame
 {
     [super setFrame:frame];
