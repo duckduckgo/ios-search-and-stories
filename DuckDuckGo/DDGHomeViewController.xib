@@ -11,11 +11,19 @@
             <connections>
                 <outlet property="favoritesTabButton" destination="FmX-HN-8WI" id="mEJ-3X-bw0"/>
                 <outlet property="recentsTabButton" destination="5xv-00-irE" id="0UH-0J-2ed"/>
+                <outlet property="searchButtonBar" destination="HQm-a7-mxw" id="j8l-zf-631"/>
                 <outlet property="searchTabButton" destination="Iqm-n3-jod" id="F3S-04-wtt"/>
                 <outlet property="settingsTabButton" destination="w9s-2z-UbG" id="Auf-4g-A1Q"/>
                 <outlet property="storiesTabButton" destination="zhq-iC-hVf" id="08H-GD-xtX"/>
                 <outlet property="tabContentView" destination="nOn-A2-4XZ" id="YsK-tH-YCA"/>
+                <outlet property="topAlignmentConstraint" destination="Okf-nx-ZKD" id="h1Y-EG-3bR"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+                <outlet property="webBackButton" destination="G8e-zP-V7N" id="u4u-Pe-7YF"/>
+                <outlet property="webButtonBar" destination="yya-l6-FNm" id="xZP-5u-r2e"/>
+                <outlet property="webFavButton" destination="iio-ka-yVp" id="TEN-pV-YIl"/>
+                <outlet property="webForwardButton" destination="3Xz-2N-gPY" id="fpz-Pg-2ov"/>
+                <outlet property="webShareButton" destination="D5U-9F-ssr" id="05P-1Z-kSo"/>
+                <outlet property="webTabsButton" destination="sK8-Hg-V5R" id="Ut4-J1-GTn"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -138,7 +146,7 @@
                     <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
             </subviews>
-            <color key="backgroundColor" red="0.81568627449999997" green="0.38823529410000002" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+            <color key="backgroundColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="07T-AZ-Z0Z"/>
                 <constraint firstAttribute="trailing" secondItem="nOn-A2-4XZ" secondAttribute="trailing" id="8IO-Gj-RIU"/>
@@ -151,6 +159,95 @@
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
             <point key="canvasLocation" x="360" y="469"/>
         </view>
+        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yya-l6-FNm" userLabel="web toolbar">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ij0-h6-ShU" userLabel="border">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
+                    <color key="backgroundColor" red="0.79215686269999996" green="0.79215686269999996" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="fRE-yY-yaN"/>
+                    </constraints>
+                </view>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="G8e-zP-V7N" userLabel="back">
+                    <rect key="frame" x="36" y="1" width="48" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="VsV-Qh-ZXl"/>
+                        <constraint firstAttribute="width" constant="48" id="dgq-MB-E8d"/>
+                    </constraints>
+                    <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    <state key="normal" image="webbar-back">
+                        <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Xz-2N-gPY" userLabel="forward">
+                    <rect key="frame" x="156" y="1" width="48" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="AJY-He-QGO"/>
+                        <constraint firstAttribute="width" constant="48" id="LNC-2J-FfM"/>
+                    </constraints>
+                    <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    <state key="normal" image="webbar-forward">
+                        <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iio-ka-yVp" userLabel="fav">
+                    <rect key="frame" x="276" y="1" width="48" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="48" id="Okh-H6-jvj"/>
+                        <constraint firstAttribute="height" constant="48" id="gPI-3r-cb9"/>
+                    </constraints>
+                    <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    <state key="normal" image="webbar-fav">
+                        <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D5U-9F-ssr" userLabel="share">
+                    <rect key="frame" x="396" y="1" width="48" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="1Bb-iZ-9RI"/>
+                        <constraint firstAttribute="width" constant="48" id="tUX-K2-3og"/>
+                    </constraints>
+                    <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    <state key="normal" image="webbar-share">
+                        <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    </state>
+                </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sK8-Hg-V5R" userLabel="tabs">
+                    <rect key="frame" x="516" y="1" width="48" height="48"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="48" id="2v3-aG-7RI"/>
+                        <constraint firstAttribute="width" constant="48" id="Hre-Vj-D4F"/>
+                    </constraints>
+                    <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    <state key="normal" image="webbar-tabs">
+                        <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                    </state>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="G8e-zP-V7N" firstAttribute="centerY" secondItem="yya-l6-FNm" secondAttribute="centerY" id="1fV-9R-jQJ" userLabel="back vertical center"/>
+                <constraint firstItem="sK8-Hg-V5R" firstAttribute="centerY" secondItem="yya-l6-FNm" secondAttribute="centerY" id="6RN-CE-qlt" userLabel="tabs vertical center"/>
+                <constraint firstAttribute="centerY" secondItem="3Xz-2N-gPY" secondAttribute="centerY" id="DEH-NZ-5oG" userLabel="forward vertical center"/>
+                <constraint firstAttribute="centerY" secondItem="D5U-9F-ssr" secondAttribute="centerY" id="DhX-H5-8yI" userLabel="share vertical center"/>
+                <constraint firstItem="sK8-Hg-V5R" firstAttribute="centerX" secondItem="yya-l6-FNm" secondAttribute="trailing" multiplier="0.9" id="MGb-hX-GqV" userLabel="tabs left align"/>
+                <constraint firstItem="3Xz-2N-gPY" firstAttribute="centerX" secondItem="yya-l6-FNm" secondAttribute="trailing" multiplier="0.3" id="S2f-04-6Qb" userLabel="forward left align"/>
+                <constraint firstAttribute="trailing" secondItem="ij0-h6-ShU" secondAttribute="trailing" id="TcG-j8-ZXz" userLabel="border right align"/>
+                <constraint firstItem="ij0-h6-ShU" firstAttribute="top" secondItem="yya-l6-FNm" secondAttribute="top" id="bMw-J7-UB1" userLabel="border height"/>
+                <constraint firstItem="ij0-h6-ShU" firstAttribute="leading" secondItem="yya-l6-FNm" secondAttribute="leading" id="cFt-7y-W82" userLabel="border left align"/>
+                <constraint firstItem="D5U-9F-ssr" firstAttribute="centerX" secondItem="yya-l6-FNm" secondAttribute="trailing" multiplier="0.7" id="dC4-yB-MZd" userLabel="share left align"/>
+                <constraint firstAttribute="centerY" secondItem="iio-ka-yVp" secondAttribute="centerY" id="jOL-4V-ceE" userLabel="fav vertical center"/>
+                <constraint firstItem="G8e-zP-V7N" firstAttribute="centerX" secondItem="yya-l6-FNm" secondAttribute="trailing" multiplier="0.1" id="lwj-q0-Z7p" userLabel="back left align"/>
+                <constraint firstAttribute="height" constant="50" id="wy9-aL-Yuc" userLabel="tab bar height"/>
+                <constraint firstItem="iio-ka-yVp" firstAttribute="centerX" secondItem="yya-l6-FNm" secondAttribute="trailing" multiplier="0.5" id="ysD-Fm-7Mj" userLabel="fav left align"/>
+            </constraints>
+            <nil key="simulatedStatusBarMetrics"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <nil key="simulatedBottomBarMetrics"/>
+            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <point key="canvasLocation" x="360" y="865"/>
+        </view>
     </objects>
     <resources>
         <image name="Tab-Favorites" width="24" height="24"/>
@@ -158,5 +255,10 @@
         <image name="Tab-Search" width="24" height="24"/>
         <image name="Tab-Settings" width="24" height="24"/>
         <image name="Tab-Stories" width="24" height="24"/>
+        <image name="webbar-back" width="24" height="24"/>
+        <image name="webbar-fav" width="24" height="24"/>
+        <image name="webbar-forward" width="24" height="24"/>
+        <image name="webbar-share" width="24" height="24"/>
+        <image name="webbar-tabs" width="24" height="24"/>
     </resources>
 </document>

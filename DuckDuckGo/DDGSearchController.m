@@ -98,7 +98,7 @@ NSString * const emailRegEx =
     }
     
     if (image == nil)
-        image = [[UIImage imageNamed:@"Menu"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        image = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
     //[self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];

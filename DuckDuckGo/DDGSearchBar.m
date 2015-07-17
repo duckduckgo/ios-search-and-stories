@@ -21,6 +21,7 @@
 
 - (void)commonInit {
     self.buttonSpacing = 5.0;
+    
     [self setNeedsLayout];
 }
 
@@ -42,9 +43,9 @@
     return self;
 }
 
-- (void)awakeFromNib
+-(void)viewDidLoad
 {
-    [super awakeFromNib];
+    NSLog(@"viewDidLoad: loading manual constraints");
     self.addressFieldRightAlignToCancelButton = [NSLayoutConstraint constraintWithItem:self.searchField
                                                                              attribute:NSLayoutAttributeTrailing
                                                                              relatedBy:NSLayoutRelationEqual
@@ -57,10 +58,33 @@
                                                                              toItem:self.leftButton
                                                                           attribute:NSLayoutAttributeTrailing
                                                                          multiplier:1 constant:8];
-    [self addConstraint:self.addressFieldRightAlignToSuperview];
-    [self addConstraint:self.addressFieldLeftAlignToSuperview];
+}
+
+- (void)awakeFromNib
+{
+    [super awakeFromNib];
+    NSLog(@"awakeFromNib: loading manual constraints");
+
+    self.addressFieldRightAlignToCancelButton = [NSLayoutConstraint constraintWithItem:self.searchField
+                                                                             attribute:NSLayoutAttributeTrailing
+                                                                             relatedBy:NSLayoutRelationEqual
+                                                                                toItem:self.cancelButton
+                                                                             attribute:NSLayoutAttributeLeading
+                                                                            multiplier:1 constant:-13];
+    self.addressFieldLeftAlignToLeftButton = [NSLayoutConstraint constraintWithItem:self.searchField
+                                                                          attribute:NSLayoutAttributeLeading
+                                                                          relatedBy:NSLayoutRelationEqual
+                                                                             toItem:self.leftButton
+                                                                          attribute:NSLayoutAttributeTrailing
+                                                                         multiplier:1 constant:8];
+    
+//    [self addConstraint:self.addressFieldRightAlignToSuperview];
+//    [self addConstraint:self.addressFieldLeftAlignToSuperview];
     //[self addConstraint:self.addressFieldRightAlignToCancelButton];
 }
+
+
+
 
 - (void)setShowsCancelButton:(BOOL)show {
     _showsCancelButton = show;

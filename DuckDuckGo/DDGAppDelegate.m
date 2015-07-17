@@ -42,6 +42,8 @@ static void uncaughtExceptionHandler(NSException *exception) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [application setStatusBarStyle:UIStatusBarStyleLightContent];
+
     [NSURLProtocol registerClass:[DDGURLProtocol class]];
     
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);

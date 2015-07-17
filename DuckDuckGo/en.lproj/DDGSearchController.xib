@@ -17,12 +17,12 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <view opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="21">
-                    <rect key="frame" x="0.0" y="64" width="600" height="536"/>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.5" colorSpace="calibratedRGB"/>
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="21" userLabel="content">
+                    <rect key="frame" x="0.0" y="44" width="600" height="556"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="67" customClass="DDGSearchBar">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="64"/>
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                     <subviews>
                         <navigationBar hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translucent="NO" translatesAutoresizingMaskIntoConstraints="NO" id="81">
                             <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
@@ -31,7 +31,7 @@
                             <color key="barTintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         </navigationBar>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="69" userLabel="Left Button" customClass="DDGSearchBarButton">
-                            <rect key="frame" x="10" y="21" width="30" height="40"/>
+                            <rect key="frame" x="10" y="1" width="30" height="40"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="30" id="Hse-88-xjo"/>
@@ -43,7 +43,7 @@
                             </connections>
                         </button>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="70" customClass="DDGAddressBarTextField">
-                            <rect key="frame" x="10" y="27" width="580" height="29"/>
+                            <rect key="frame" x="10" y="7" width="580" height="29"/>
                             <color key="backgroundColor" red="0.83137254900000002" green="0.34901960780000002" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -58,7 +58,7 @@
                             </connections>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="83" userLabel="Bang Button" customClass="DDGSearchBarButton">
-                            <rect key="frame" x="10" y="21" width="29" height="40"/>
+                            <rect key="frame" x="10" y="1" width="29" height="40"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="29" id="59a-Ow-lad"/>
@@ -71,7 +71,7 @@
                             </connections>
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" reversesTitleShadowWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="72" userLabel="Cancel Button" customClass="DDGSearchBarButton">
-                            <rect key="frame" x="539" y="19" width="48" height="44"/>
+                            <rect key="frame" x="539" y="-1" width="48" height="44"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <accessibility key="accessibilityConfiguration" label="Cancel"/>
                             <constraints>
@@ -86,7 +86,7 @@
                             </connections>
                         </button>
                         <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IlG-e8-l4A" userLabel="placeholder container">
-                            <rect key="frame" x="40" y="27" width="522" height="29"/>
+                            <rect key="frame" x="40" y="7" width="522" height="29"/>
                             <subviews>
                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SearchBar-Search" translatesAutoresizingMaskIntoConstraints="NO" id="Ong-Rn-OOF">
                                     <rect key="frame" x="182" y="8" width="13" height="13"/>
@@ -121,10 +121,10 @@
                             </variation>
                         </view>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8B2-xM-tuN" userLabel="progressView" customClass="DDGProgressBar">
-                            <rect key="frame" x="0.0" y="60" width="600" height="4"/>
+                            <rect key="frame" x="0.0" y="42" width="600" height="2"/>
                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
-                                <constraint firstAttribute="height" constant="4" id="sxQ-UV-Sis"/>
+                                <constraint firstAttribute="height" constant="2" id="sxQ-UV-Sis"/>
                             </constraints>
                         </view>
                     </subviews>
@@ -140,7 +140,7 @@
                         <constraint firstItem="8B2-xM-tuN" firstAttribute="leading" secondItem="67" secondAttribute="leading" id="Hkw-Ht-jNo"/>
                         <constraint firstItem="8B2-xM-tuN" firstAttribute="bottom" secondItem="67" secondAttribute="bottom" id="Ieq-2o-cxQ"/>
                         <constraint firstItem="IlG-e8-l4A" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="QgQ-JD-KGf" userLabel="placeholder vertical center"/>
-                        <constraint firstAttribute="height" constant="64" id="WGv-23-cEv" userLabel="search bar height"/>
+                        <constraint firstAttribute="height" constant="44" id="WGv-23-cEv" userLabel="search bar height"/>
                         <constraint firstItem="83" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="aGc-Ts-A3A" userLabel="bang button vertical center"/>
                         <constraint firstItem="69" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="h2C-Sq-7w2" userLabel="left button vertical center"/>
                         <constraint firstAttribute="trailing" secondItem="8B2-xM-tuN" secondAttribute="trailing" id="mR4-BO-5IR"/>
@@ -160,12 +160,16 @@
                     </connections>
                 </view>
             </subviews>
-            <color key="backgroundColor" red="0.20000000000000001" green="0.2156862745" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="67" secondAttribute="trailing" id="Bd5-CG-cBq"/>
+                <constraint firstAttribute="bottom" secondItem="21" secondAttribute="bottom" id="DsX-Il-jIf"/>
                 <constraint firstItem="67" firstAttribute="top" secondItem="8" secondAttribute="top" id="Dz0-T8-euT"/>
+                <constraint firstItem="21" firstAttribute="top" secondItem="67" secondAttribute="bottom" id="RsI-hb-5gY"/>
+                <constraint firstAttribute="trailing" secondItem="21" secondAttribute="trailing" id="TH5-OW-Ojl"/>
                 <constraint firstItem="67" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="cP8-tp-f9a"/>
+                <constraint firstItem="21" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="erU-2B-h6t"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
             <point key="canvasLocation" x="70" y="418"/>

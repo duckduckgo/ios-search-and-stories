@@ -35,13 +35,23 @@
 @property (nonatomic, strong) DDGTabViewController* favoritesTabViewController;
 @property (nonatomic, strong) DDGTabViewController* recentsController;
 
+@property (nonatomic, strong) IBOutlet UIView* searchButtonBar;
 @property (nonatomic, strong) IBOutlet UIButton* storiesTabButton;
 @property (nonatomic, strong) IBOutlet UIButton* settingsTabButton;
 @property (nonatomic, strong) IBOutlet UIButton* searchTabButton;
 @property (nonatomic, strong) IBOutlet UIButton* favoritesTabButton;
 @property (nonatomic, strong) IBOutlet UIButton* recentsTabButton;
 
+@property (nonatomic, strong) IBOutlet UIView* webButtonBar;
+@property (nonatomic, strong) IBOutlet UIButton* webBackButton;
+@property (nonatomic, strong) IBOutlet UIButton* webForwardButton;
+@property (nonatomic, strong) IBOutlet UIButton* webFavButton;
+@property (nonatomic, strong) IBOutlet UIButton* webShareButton;
+@property (nonatomic, strong) IBOutlet UIButton* webTabsButton;
+
 @property (nonatomic, strong) NSArray* tabButtons;
+
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* topAlignmentConstraint;
 
 @end
 
@@ -91,6 +101,8 @@
     [self.tabController didMoveToParentViewController:self];
     self.tabController.tabBar.hidden = TRUE;
     
+    self.view.backgroundColor = [UIColor duckSearchBarBackground];
+    
     NSMutableArray* controllers = [NSMutableArray new];
     
     { // configure the search view controller
@@ -112,7 +124,8 @@
         self.storiesTopController.shouldPushSearchHandlerEvents = YES;
         self.storiesController = [[DDGStoriesViewController alloc] initWithSearchHandler:self.storiesTopController
                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        self.storiesController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        //self.storiesController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        
         [self.storiesTopController pushContentViewController:self.storiesController animated:NO];
         self.storiesTopController.state = DDGSearchControllerStateHome;
         self.storiesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
@@ -127,8 +140,9 @@
     { // configure the favorites view controller
         self.favoritesTopController = [[DDGSearchController alloc] initWithSearchHandler:self
                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        
         DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
-        bookmarks.title = NSLocalizedString(@"Searches", @"View controller title: Saved Searches");
+        bookmarks.title = NSLocalizedString(@"Favorite Searches", @"View controller title: Saved Searches");
         
         self.favoritesTopController.state = DDGSearchControllerStateHome;
         self.favoritesTopController.shouldPushSearchHandlerEvents = YES;
@@ -136,9 +150,9 @@
         DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.favoritesTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         stories.savedStoriesOnly = YES;
-        stories.title = NSLocalizedString(@"Stories", @"View controller title: Saved Stories");
+        stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
         
-        self.favoritesTabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[bookmarks, stories]];
+        self.favoritesTabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[stories, bookmarks]];
         
         bookmarks.searchController = self.favoritesTopController;
         bookmarks.searchHandler = self.favoritesTopController;
@@ -267,6 +281,11 @@
     if (self.viewDidAppearCompletion) {
         self.viewDidAppearCompletion(self);
     }
+}
+
+-(void)viewDidLayoutSubviews
+{
+    self.topAlignmentConstraint.constant = self.topLayoutGuide.length;
 }
 
 
