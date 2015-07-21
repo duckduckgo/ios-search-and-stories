@@ -14,7 +14,6 @@
 #import "DDGAppDelegate.h"
 #import "DDGWebViewController.h"
 #import "DDGSettingsViewController.h"
-#import "DDGUnderViewController.h"
 #import "DDGDuckViewController.h"
 #import "DDGBookmarksViewController.h"
 #import "UIColor+DDG.h"

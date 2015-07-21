@@ -577,7 +577,6 @@ NSString * const emailRegEx =
 //        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
         
         self.searchBar.showsCancelButton = NO;
-        self.searchBar.showsRightButton = NO;
         self.searchBar.showsLeftButton = NO;
 
         if (duration > 0)
@@ -590,13 +589,13 @@ NSString * const emailRegEx =
 //        [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
         
         UIViewController *topViewController = [self.controllers lastObject];
-        BOOL showsRightButton = [topViewController respondsToSelector:@selector(searchControllerActionButtonPressed)];
         
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = YES;
         self.searchBar.showsBangButton = NO;
-        self.searchBar.showsRightButton = showsRightButton;        
         self.searchBar.searchField.rightView = stopOrReloadButton;
+        
+#warning settings/removing the web toolbar should happen here
         
         if (duration > 0)
             [self.searchBar layoutIfNeeded:duration];        
@@ -736,7 +735,6 @@ NSString * const emailRegEx =
     [self.searchBar setShowsBangButton:YES animated:YES];
             
     //self.searchBar.showsLeftButton = YES;
-    self.searchBar.showsRightButton = NO;
     self.searchBar.showsCancelButton = YES;
     [self.searchBar layoutIfNeeded:0.25];
     
@@ -772,7 +770,6 @@ NSString * const emailRegEx =
     self.bangInfoPopover = nil;
     
     //self.searchBar.showsLeftButton = YES;
-    self.searchBar.showsRightButton = (self.state == DDGSearchControllerStateWeb);
     self.searchBar.showsCancelButton = NO;
     [self.searchBar layoutIfNeeded:0.25];
 }

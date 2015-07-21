@@ -15,7 +15,6 @@
 #import "SDURLCache.h"
 #import "DDGSettingsViewController.h"
 #import "AFNetworking.h"
-#import "DDGUnderViewController.h"
 #import "DDGSearchController.h"
 #import "DDGSearchHandler.h"
 #import "NSString+URLEncodingDDG.h"
@@ -100,17 +99,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
         }
     };
     
-//    UIViewController *homeController = [under viewControllerForType:type];
-//    under.viewDidAppearCompletion = ^(DDGUnderViewController *mainViewController) {
-//        if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey]) {
-//            DDGFirstRunViewController *firstRunViewController = [DDGFirstRunViewController new];
-//            [mainViewController presentViewController:firstRunViewController animated:YES completion:nil];
-//        }
-//    };
-
-//    menuController.contentViewController = homeController;
-    
-//    DDGHomeViewController* homeController = [ newHomeController];
     self.window.rootViewController = home;
     
     [self.window makeKeyAndVisible];

@@ -92,17 +92,6 @@
             break;
     }
     
-//    if (!self.toolbarDropShadowView) {
-//        UIView *dropShadowView = [UIView new];
-//        dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
-//        dropShadowView.opaque = NO;
-//        [self.controlView setClipsToBounds:NO];
-//        [self.controlView addSubview:dropShadowView];
-//        self.toolbarDropShadowView = dropShadowView;
-//    }
-//    CGRect bounds = CGRectMake(0.0f, -0.5f, CGRectGetWidth(viewBounds), 0.5f);
-//    [self.toolbarDropShadowView setFrame:bounds];
-    
     [UIView animateWithDuration:0
                      animations:^{
                          [self.controlView setFrame:toolbarFrame];
@@ -121,16 +110,10 @@
             [items addObject:title];
         }        
         
-//        if (self.displaysDropShadow) {
-//            CGRect dropShadowBounds = bounds;
-//            dropShadowBounds.origin.y = CGRectGetHeight(bounds);
-//            dropShadowBounds.size.height = 0.5f;
-//            [self.dropShadowView setFrame:dropShadowBounds];
-//        }
-        
         UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:items];
         [segmentedControl addTarget:self action:@selector(_switchViewController:) forControlEvents:UIControlEventValueChanged];
         segmentedControl.backgroundColor = [UIColor duckSegmentBarBackground];
+        segmentedControl.tintColor = [UIColor duckSegmentBarForeground];
         self.segmentedControl = segmentedControl;
     }
     

@@ -10,6 +10,7 @@
 #import "UIViewController+DDGSearchController.h"
 #import "DDGSearchHandler.h"
 #import "DDGSearchBar.h"
+#import "DDGHomeViewController.h"
 
 typedef enum {
 	DDGSearchControllerStateUnknown = 0,
@@ -18,6 +19,7 @@ typedef enum {
 } DDGSearchControllerState;
 
 @class DDGSearchSuggestionsProvider, DDGHistoryProvider, DDGInputAccessoryView;
+
 @interface DDGSearchController : UIViewController <UITextFieldDelegate, UINavigationControllerDelegate, DDGSearchHandler, UIGestureRecognizerDelegate, UIPageViewControllerDelegate, UIPageViewControllerDataSource> {
     NSString *oldSearchText;
     BOOL barUpdated;
@@ -36,6 +38,7 @@ typedef enum {
 @property (nonatomic, weak) IBOutlet UIButton *bangQueryButton;
 @property (nonatomic, strong) NSArray *contentControllers;
 @property (nonatomic, strong) UINavigationController *autocompleteNavigationController;
+@property (nonatomic, strong) DDGHomeViewController* homeController;
 @property (nonatomic, assign) DDGSearchControllerState state;
 @property (nonatomic, weak, readonly) id<DDGSearchHandler> searchHandler;
 @property (nonatomic) BOOL shouldPushSearchHandlerEvents;

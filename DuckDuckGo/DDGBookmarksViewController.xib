@@ -4,6 +4,14 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <mutableArray key="proximanova-regular.otf">
+            <string>ProximaNova-Regular</string>
+        </mutableArray>
+        <mutableArray key="proximanova-semibold.otf">
+            <string>ProximaNova-Semibold</string>
+        </mutableArray>
+    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DDGBookmarksViewController">
             <connections>
@@ -17,7 +25,7 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" misplaced="YES" image="NoFavorites" translatesAutoresizingMaskIntoConstraints="NO" id="gwh-RK-Pki">
+                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" image="NoFavorites" translatesAutoresizingMaskIntoConstraints="NO" id="gwh-RK-Pki">
                     <rect key="frame" x="138" y="100" width="44" height="44"/>
                 </imageView>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="No Favorites" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Yq-Sz-1rQ">
@@ -25,7 +33,7 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="280" id="cky-oN-VtG"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="18"/>
+                    <fontDescription key="fontDescription" name="ProximaNova-Semibold" family="Proxima Nova" pointSize="18"/>
                     <color key="textColor" red="0.12941176469999999" green="0.12941176469999999" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -35,7 +43,7 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="207" id="luQ-Wk-Kpw"/>
                     </constraints>
-                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                    <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="17"/>
                     <color key="textColor" red="0.45882352939999999" green="0.45882352939999999" blue="0.45882352939999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                     <size key="shadowOffset" width="0.0" height="0.0"/>

@@ -90,10 +90,6 @@
     self.searchField.additionalLeftSideInset = show ? 39 : 0;
 }
 
-- (void)setShowsRightButton:(BOOL)showsRightButton {
-    _showsRightButton = showsRightButton;
-}
-
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated {
     self.showsBangButton = show;
     NSTimeInterval duration = (animated) ? 0.2 : 0.0;
@@ -118,16 +114,9 @@
     [self layoutIfNeeded:duration];
 }
 
-- (void)setShowsRightButton:(BOOL)show animated:(BOOL)animated {
-    self.showsRightButton = show;
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [self layoutIfNeeded:duration];
-}
-
 - (void)layoutSubviews {
     self.leftButton.hidden = !self.showsLeftButton;
     self.bangButton.hidden = !self.showsBangButton;
-    self.rightButton.hidden = !self.showsRightButton;
     self.cancelButton.hidden = !self.showsCancelButton;
 
     [self setNeedsDisplay];
@@ -137,14 +126,6 @@
 
 
 #pragma mark - Showing and hiding progress
-
-//-(void)hideProgress {
-//    self.progressView.percentCompleted = 100;
-//}
-//
-//-(void)showProgress {
-//    progressView.hidden = NO;
-//}
 
 -(void)cancel {
     self.progressView.percentCompleted = 100;
@@ -157,7 +138,6 @@
 #pragma mark - Progress bar
 
 -(void)setProgress:(CGFloat)newProgress {
-    NSLog(@"setting progress to %f", newProgress);
     self.progressView.percentCompleted = ceill(newProgress*100);
     
 }

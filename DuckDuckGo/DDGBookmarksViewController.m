@@ -9,7 +9,6 @@
 #import "DDGBookmarksViewController.h"
 #import "DDGBookmarksProvider.h"
 #import "DDGSearchController.h"
-#import "DDGUnderViewController.h"
 #import "DDGPlusButton.h"
 #import "DDGMenuHistoryItemCell.h"
 #import "DDGMenuSectionHeaderView.h"

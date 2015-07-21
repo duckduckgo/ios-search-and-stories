@@ -1176,31 +1176,32 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    UICollectionView *storyView = self.storyView;
-    
-    switch(type) {
-        case NSFetchedResultsChangeInsert:
-            [storyView insertItemsAtIndexPaths:@[newIndexPath]];
-            break;
-            
-        case NSFetchedResultsChangeDelete:
-        {
-            [storyView deleteItemsAtIndexPaths:@[indexPath]];
-            if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0)
-                [self performSelector:@selector(showNoStoriesView) withObject:nil afterDelay:0.2];
-            
-        }
-            break;
-            
-        case NSFetchedResultsChangeUpdate:
-            [self configureCell:(DDGStoryCell *)[storyView cellForItemAtIndexPath:indexPath] atIndexPath:indexPath];
-            break;
-            
-        case NSFetchedResultsChangeMove:
-            [storyView deleteItemsAtIndexPaths:@[indexPath]];
-            [storyView insertItemsAtIndexPaths:@[newIndexPath]];
-            break;
-    }
+    [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+//    UICollectionView *storyView = self.storyView;
+//
+//    switch(type) {
+//        case NSFetchedResultsChangeInsert:
+//            [storyView insertItemsAtIndexPaths:@[newIndexPath]];
+//            break;
+//            
+//        case NSFetchedResultsChangeDelete:
+//        {
+//            [storyView deleteItemsAtIndexPaths:@[indexPath]];
+//            if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0)
+//                [self performSelector:@selector(showNoStoriesView) withObject:nil afterDelay:0.2];
+//            
+//        }
+//            break;
+//            
+//        case NSFetchedResultsChangeUpdate:
+//            [self configureCell:(DDGStoryCell *)[storyView cellForItemAtIndexPath:indexPath] atIndexPath:indexPath];
+//            break;
+//            
+//        case NSFetchedResultsChangeMove:
+//            [storyView deleteItemsAtIndexPaths:@[indexPath]];
+//            [storyView insertItemsAtIndexPaths:@[newIndexPath]];
+//            break;
+//    }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
