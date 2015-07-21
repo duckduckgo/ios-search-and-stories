@@ -145,15 +145,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
     
-    [self addSectionWithTitle:@"Home" footer:nil];
-    
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];    
-    
-    NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
-    [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
-    [self addRadioOptionWithTitle:@"Recent" value:DDGSettingHomeViewTypeRecents key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeRecents]];
-    [self addRadioOptionWithTitle:@"Favorites" value:DDGSettingHomeViewTypeSaved key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];    
-    [self addRadioOptionWithTitle:@"Search Only" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     [self addSectionWithTitle:@"Stories" footer:nil];
     [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{

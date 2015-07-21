@@ -432,11 +432,12 @@ NSString * const emailRegEx =
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             CGRect f = self.view.frame;
+            CGRect superviewF = self.view.superview.bounds;
             
             if(show)
-                f.size.height = self.view.superview.bounds.size.height - f.origin.y - keyboardEnd.size.height;
+                f.size.height = superviewF.size.height - f.origin.y - keyboardEnd.size.height;
             else
-                f.size.height = self.view.superview.bounds.size.height - f.origin.y;
+                f.size.height = superviewF.size.height - f.origin.y;
             
             self.view.frame = f;
         });

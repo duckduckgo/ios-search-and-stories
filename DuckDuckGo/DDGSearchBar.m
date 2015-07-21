@@ -43,28 +43,9 @@
     return self;
 }
 
--(void)viewDidLoad
-{
-    NSLog(@"viewDidLoad: loading manual constraints");
-    self.addressFieldRightAlignToCancelButton = [NSLayoutConstraint constraintWithItem:self.searchField
-                                                                             attribute:NSLayoutAttributeTrailing
-                                                                             relatedBy:NSLayoutRelationEqual
-                                                                                toItem:self.cancelButton
-                                                                             attribute:NSLayoutAttributeLeading
-                                                                            multiplier:1 constant:-13];
-    self.addressFieldLeftAlignToLeftButton = [NSLayoutConstraint constraintWithItem:self.searchField
-                                                                          attribute:NSLayoutAttributeLeading
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.leftButton
-                                                                          attribute:NSLayoutAttributeTrailing
-                                                                         multiplier:1 constant:8];
-}
-
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    NSLog(@"awakeFromNib: loading manual constraints");
-
     self.addressFieldRightAlignToCancelButton = [NSLayoutConstraint constraintWithItem:self.searchField
                                                                              attribute:NSLayoutAttributeTrailing
                                                                              relatedBy:NSLayoutRelationEqual
@@ -77,10 +58,6 @@
                                                                              toItem:self.leftButton
                                                                           attribute:NSLayoutAttributeTrailing
                                                                          multiplier:1 constant:8];
-    
-//    [self addConstraint:self.addressFieldRightAlignToSuperview];
-//    [self addConstraint:self.addressFieldLeftAlignToSuperview];
-    //[self addConstraint:self.addressFieldRightAlignToCancelButton];
 }
 
 
@@ -148,41 +125,13 @@
 }
 
 - (void)layoutSubviews {
-    //CGRect bounds = self.frame;
     self.leftButton.hidden = !self.showsLeftButton;
     self.bangButton.hidden = !self.showsBangButton;
     self.rightButton.hidden = !self.showsRightButton;
     self.cancelButton.hidden = !self.showsCancelButton;
-//
-//    CGRect addressFrame = self.searchField.frame;
-//    addressFrame.origin.x = self.showsLeftButton ? 38 : 8;
-//    addressFrame.size.width = bounds.size.width - addressFrame.origin.x -
-//    (self.showsCancelButton ? self.cancelButton.frame.size.width : 0 ) - 8;
-//    self.searchField.frame = addressFrame;
-//    
-//    CGRect bangFrame = self.bangButton.frame;
-//    bangFrame.origin.x = addressFrame.origin.x + 8;
-//    self.bangButton.frame = bangFrame;
-//    
-//    CGRect cancelFrame = self.cancelButton.frame;
-//    cancelFrame.origin.x = bounds.size.width - cancelFrame.size.width - 8;
-//    self.cancelButton.frame = cancelFrame;
-//    
-//    NSLog(@"laid out views: %@", NSStringFromCGRect(bounds));
-//    NSLog(@"  cancel frame: %@", NSStringFromCGRect(cancelFrame));
-//    NSLog(@"  address frame: %@", NSStringFromCGRect(addressFrame));
-    
+
     [self setNeedsDisplay];
     [self setNeedsUpdateConstraints];
-    
-    // search field
-//    CGFloat rightButtonX = MIN(self.showsCancelButton ? self.cancelButton.frame.origin.x : bounds.size.width,
-//                               self.showsRightButton ? self.rightButton.frame.origin.x : bounds.size.width);
-//    CGRect searchFieldFrame = self.searchField.frame;
-//    //searchFieldFrame.origin.x = leftButtonFrame.origin.x + leftButtonFrame.size.width + self.buttonSpacing;
-//    searchFieldFrame.size.width = rightButtonX - searchFieldFrame.origin.x - self.buttonSpacing;
-//    NSLog(@"search field frame: %@", NSStringFromCGRect(searchFieldFrame));
-//    self.searchField.frame = searchFieldFrame;
 }
 
 
