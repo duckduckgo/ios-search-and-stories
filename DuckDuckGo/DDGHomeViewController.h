@@ -15,6 +15,7 @@
 @interface DDGHomeViewController : UIViewController <DDGSearchHandler, DDGTabViewControllerDelegate, UITabBarControllerDelegate>
 
 @property (nonatomic, copy) void (^viewDidAppearCompletion)(DDGHomeViewController *homeController);
+@property (nonatomic, strong) UIView* alternateButtonBar;
 
 +(DDGHomeViewController*)newHomeController;
 

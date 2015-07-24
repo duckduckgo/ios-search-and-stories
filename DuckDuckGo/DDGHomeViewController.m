@@ -34,6 +34,8 @@
 @property (nonatomic, strong) DDGTabViewController* favoritesTabViewController;
 @property (nonatomic, strong) DDGTabViewController* recentsController;
 
+@property (nonatomic, strong) IBOutlet UIView* toolbarContainer;
+
 @property (nonatomic, strong) IBOutlet UIView* searchButtonBar;
 @property (nonatomic, strong) IBOutlet UIButton* storiesTabButton;
 @property (nonatomic, strong) IBOutlet UIButton* settingsTabButton;
@@ -41,16 +43,12 @@
 @property (nonatomic, strong) IBOutlet UIButton* favoritesTabButton;
 @property (nonatomic, strong) IBOutlet UIButton* recentsTabButton;
 
-@property (nonatomic, strong) IBOutlet UIView* webButtonBar;
-@property (nonatomic, strong) IBOutlet UIButton* webBackButton;
-@property (nonatomic, strong) IBOutlet UIButton* webForwardButton;
-@property (nonatomic, strong) IBOutlet UIButton* webFavButton;
-@property (nonatomic, strong) IBOutlet UIButton* webShareButton;
-@property (nonatomic, strong) IBOutlet UIButton* webTabsButton;
-
 @property (nonatomic, strong) NSArray* tabButtons;
 
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* topAlignmentConstraint;
+
+@property (nonatomic, strong) IBOutlet UIView* alternateToolbarContainer;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* alternateToolbarBottom;
 
 @end
 
@@ -59,6 +57,48 @@
 
 +(DDGHomeViewController*)newHomeController {
   return [[DDGHomeViewController alloc] initWithNibName:@"DDGHomeViewController" bundle:nil];
+}
+
+-(BOOL)hideTabBar {
+    return self.searchButtonBar.hidden;
+}
+
+-(void)setAlternateButtonBar:(UIView *)alternateButtonBar {
+    NSLog(@"setting alternate button bar to %@", alternateButtonBar);
+    if(alternateButtonBar!=_alternateButtonBar) {
+        if(alternateButtonBar) {
+            [self.alternateToolbarContainer addSubview:alternateButtonBar];
+            [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeLeading
+                                                                                       relatedBy:NSLayoutRelationEqual
+                                                                                          toItem:self.alternateToolbarContainer
+                                                                                       attribute:NSLayoutAttributeLeading
+                                                                                      multiplier:1 constant:0]];
+            [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeTrailing
+                                                                                       relatedBy:NSLayoutRelationEqual
+                                                                                          toItem:self.alternateToolbarContainer
+                                                                                       attribute:NSLayoutAttributeTrailing
+                                                                                      multiplier:1 constant:0]];
+            [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeTop
+                                                                                       relatedBy:NSLayoutRelationEqual
+                                                                                          toItem:self.alternateToolbarContainer
+                                                                                       attribute:NSLayoutAttributeTop
+                                                                                      multiplier:1 constant:0]];
+            [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeBottom
+                                                                                       relatedBy:NSLayoutRelationEqual
+                                                                                          toItem:self.alternateToolbarContainer
+                                                                                       attribute:NSLayoutAttributeBottom
+                                                                                      multiplier:1 constant:0]];
+            self.alternateToolbarBottom.constant = 0;
+            [self.alternateToolbarContainer setNeedsUpdateConstraints];
+        } else {
+            // show the default home button bar
+            self.alternateToolbarBottom.constant = 50;
+            [_alternateButtonBar removeFromSuperview];
+            [self.alternateToolbarContainer removeConstraints:self.alternateToolbarContainer.constraints];
+        }
+    }
+    _alternateButtonBar = alternateButtonBar;
+    //    self.searchButtonBar.hidden = TRUE;
 }
 
 -(IBAction)showRecents {
@@ -106,9 +146,10 @@
     
     { // configure the search view controller
         self.searchTopController = [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                       homeController:self
                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.searchTopController.state = DDGSearchControllerStateHome;
-        self.searchTopController.shouldPushSearchHandlerEvents = TRUE;
+        self.searchTopController.shouldPushSearchHandlerEvents = YES;
         self.searchController = [[DDGDuckViewController alloc] initWithSearchController:self.searchTopController];
         [self.searchTopController pushContentViewController:self.searchController animated:NO];
         self.searchTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
@@ -119,7 +160,8 @@
     
     { // configure the stories view controller
         self.storiesTopController = [[DDGSearchController alloc] initWithSearchHandler:self
-                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+                                                                        homeController:self
+                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.storiesTopController.shouldPushSearchHandlerEvents = YES;
         self.storiesController = [[DDGStoriesViewController alloc] initWithSearchHandler:self.storiesTopController
                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
@@ -138,6 +180,7 @@
     
     { // configure the favorites view controller
         self.favoritesTopController = [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                          homeController:self
                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         
         DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
@@ -185,7 +228,8 @@
     
     { // configure the recents/history view controller
         self.recentsTopController = [[DDGSearchController alloc] initWithSearchHandler:self
-                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+                                                                        homeController:self
+                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         DDGHistoryViewController* history = [[DDGHistoryViewController alloc] initWithSearchHandler:self
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]
                                                                                                mode:DDGHistoryViewControllerModeUnder];
@@ -246,7 +290,8 @@
     
     { // configure the settings view controller
         self.settingsTopController = [[DDGSearchController alloc] initWithSearchHandler:self
-                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+                                                                         homeController:self
+                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.settingsTopController.state = DDGSearchControllerStateHome;
         self.settingsController = [[DDGSettingsViewController alloc] initWithDefaults];
         self.settingsController.managedObjectContext = [DDGAppDelegate sharedManagedObjectContext];
@@ -308,6 +353,7 @@
 - (void)prepareForUserInput {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
     DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
+                                                                                homeController:self
                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
     webVC.searchController = searchController;
     
@@ -327,6 +373,7 @@
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
     DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
+                                                                                homeController:self
                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
     webVC.searchController = searchController;
     
@@ -346,6 +393,7 @@
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
     DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
+                                                                                homeController:self
                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
     webVC.searchController = searchController;
     

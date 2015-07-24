@@ -10,6 +10,12 @@
 #import "DDGSearchController.h"
 
 @implementation UIViewController (DDGSearchController)
+
+
+-(UIView*)alternateToolbar {
+    return nil;
+}
+
 - (DDGSearchController *)searchControllerDDG
 {
     UIViewController *viewController = self.parentViewController;

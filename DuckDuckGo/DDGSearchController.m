@@ -21,6 +21,7 @@
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
 #import "DDGDuckViewController.h"
+#import "UIViewController+DDGSearchController.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -43,6 +44,7 @@ NSString * const emailRegEx =
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic) BOOL showBangTooltip;
 @property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
+@property (nonatomic, weak) UIView* customToolbar;
 
 @end
 
@@ -52,10 +54,14 @@ NSString * const emailRegEx =
     id keyboardWillHideObserver;
 }
 
--(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext; {
+-(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler
+            homeController:(DDGHomeViewController*)homeController
+      managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
 	self = [super initWithNibName:@"DDGSearchController" bundle:nil];
     
 	if (self) {
+        self.homeController = homeController;
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
         self.controllers = [NSMutableArray arrayWithCapacity:2];
@@ -105,7 +111,6 @@ NSString * const emailRegEx =
 }
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
-    
     if (self.isTransitioningViewControllers)
         return;
     
@@ -114,12 +119,13 @@ NSString * const emailRegEx =
     [self.controllers addObject:contentController];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
     [self setSearchBarOrangeButtonImage];
-    
     NSInteger count = self.controllers.count-1;
     for (NSInteger i=0; i<count; i++)
         [self clearScrollsToTop:[[self.controllers objectAtIndex:i] view]];
     [contentController reenableScrollsToTop];
     
+    self.homeController.alternateButtonBar = [contentController alternateToolbar];
+
     self.transitioningViewControllers = YES;
     __weak DDGSearchController *weakSelf = self;
     [self.pageViewController setViewControllers:@[contentController]
@@ -578,7 +584,8 @@ NSString * const emailRegEx =
         
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = NO;
-
+        self.homeController.alternateButtonBar = nil;
+        
         if (duration > 0)
             [self.searchBar layoutIfNeeded:duration];
         
@@ -587,15 +594,11 @@ NSString * const emailRegEx =
     } else if (_state == DDGSearchControllerStateWeb) {
 //        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
 //        [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
-        
-        UIViewController *topViewController = [self.controllers lastObject];
-        
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = YES;
         self.searchBar.showsBangButton = NO;
+        self.homeController.alternateButtonBar = self.customToolbar;
         self.searchBar.searchField.rightView = stopOrReloadButton;
-        
-#warning settings/removing the web toolbar should happen here
         
         if (duration > 0)
             [self.searchBar layoutIfNeeded:duration];        

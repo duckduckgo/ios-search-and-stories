@@ -24,8 +24,20 @@
 #import "DDGSafariActivity.h"
 #import "DDGWebView.h"
 
-@interface DDGWebViewController ()
+@interface DDGWebViewController () {
+    BOOL _isFavorited;
+}
 @property (nonatomic, readwrite) BOOL inReadabilityMode;
+
+@property UIView* toolbar;
+@property IBOutlet UIButton* backButton;
+@property IBOutlet UIButton* forwardButton;
+@property IBOutlet UIButton* favButton;
+@property IBOutlet UIButton* shareButton;
+@property IBOutlet UIButton* tabsButton;
+
+@property BOOL isFavorited;
+
 @end
 
 @implementation DDGWebViewController
@@ -33,26 +45,30 @@
 #pragma mark - View lifecycle
 
 - (void)loadView {
+    [super loadView];
     self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    self.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);    
+    self.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    
+    self.webView = [[DDGWebView alloc] initWithFrame:self.view.bounds];
+    self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+    self.webView.delegate = self;
+    
+    self.webView.scalesPageToFit = YES;
+    _webViewLoadingDepth = 0;
+    self.webView.backgroundColor = [UIColor duckNoContentColor];
+    
+    self.toolbar = [[UINib nibWithNibName:@"DDGWebToolbar" bundle:nil] instantiateWithOwner:self options:nil][0];
+    self.backButton.enabled = FALSE;
+    self.forwardButton.enabled = FALSE;
+    
+    [self.view addSubview:self.webView];
 }
 
-- (DDGWebView *)webView {
-    if (nil == _webView) {
-        DDGWebView *webView = [[DDGWebView alloc] initWithFrame:self.view.bounds];
-        webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-        webView.delegate = self;
-        
-        webView.scalesPageToFit = YES;
-        _webViewLoadingDepth = 0;
-        webView.backgroundColor = [UIColor duckNoContentColor]; //[UIColor colorWithRed:0.204 green:0.220 blue:0.251 alpha:1.000];
-        
-        [self.view addSubview:webView];
-        _webView = webView;
-    }
-        
-    return _webView;
+-(UIView*)alternateToolbar {
+    if([self view]) return self.toolbar;
+    return nil;
 }
+
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
@@ -62,6 +78,10 @@
     UIMenuItem *search = [[UIMenuItem alloc] initWithTitle:@"Search" action:@selector(search:)];
     UIMenuItem *saveImage = [[UIMenuItem alloc] initWithTitle:@"Save Image" action:@selector(saveImage:)];
     [[UIMenuController sharedMenuController] setMenuItems:@[search, saveImage]];
+    
+    //    UIView*
+    
+    self.hidesBottomBarWhenPushed = TRUE;
 }
 
 - (void)setSearchController:(DDGSearchController *)searchController {
@@ -82,8 +102,9 @@
     [UIMenuController sharedMenuController].menuItems = nil;
 }
 
+
 -(void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];    
+    [super viewDidDisappear:animated];
     [self.searchController clearAddressBar];
 }
 
@@ -149,6 +170,21 @@
 
 #pragma mark - Actions
 
+-(BOOL)isFavorited
+{
+    return _isFavorited;
+}
+
+-(void)setIsFavorited:(BOOL)isFavorited
+{
+    if(isFavorited) {
+        [self.favButton setImage:[UIImage imageNamed:@"webbar-fav-active"] forState:UIControlStateNormal];
+    } else {
+        [self.favButton setImage:[UIImage imageNamed:@"webbar-fav"] forState:UIControlStateNormal];
+    }
+    _isFavorited = isFavorited;
+}
+
 -(void)searchControllerActionButtonPressed
 {
     // strip extra params from DDG search URLs
@@ -172,25 +208,6 @@
     NSArray *applicationActivities = @[];
     NSArray *items = @[titleProvider, urlItem, self];
     
-    DDGBookmarkActivity *bookmarkActivity = nil;
-    DDGBookmarkActivityItem *bookmarkItem = nil;
-    
-    if (nil != self.story && !self.webView.canGoBack) {
-        bookmarkActivity = [[DDGBookmarkActivity alloc] init];
-        bookmarkItem = [DDGBookmarkActivityItem itemWithStory:self.story];
-        bookmarkActivity.bookmarkActivityState = (self.story.savedValue) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
-    } else if (query) {
-        bookmarkActivity = [[DDGBookmarkActivity alloc] init];        
-        bookmarkItem = [DDGBookmarkActivityItem itemWithTitle:query URL:self.webViewURL feed:feed];
-        BOOL bookmarked = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:self.webViewURL];
-        bookmarkActivity.bookmarkActivityState = (bookmarked) ? DDGBookmarkActivityStateUnsave : DDGBookmarkActivityStateSave;
-    }
-    
-    if (nil != bookmarkActivity && bookmarkItem != nil) {
-        applicationActivities = [applicationActivities arrayByAddingObject:bookmarkActivity];
-        items = [items arrayByAddingObject:bookmarkItem];
-    }
-    
     if (self.inReadabilityMode) {
         DDGReadabilityToggleActivity *toggleActivity = [[DDGReadabilityToggleActivity alloc] init];
         toggleActivity.toggleMode = DDGReadabilityToggleModeOff;
@@ -212,13 +229,85 @@
         [self.searchController.searchBar.searchField becomeFirstResponder];
 }
 
--(void)searchControllerLeftButtonPressed {        
-	if (self.webView.canGoBack) {
+-(IBAction)backButtonPressed {
+    if (self.webView.canGoBack) {
         [self.webView goBack];
     } else if ([self.searchController canPopContentViewController]) {
-        [self.searchController popContentViewControllerAnimated:YES];    
+        [self.searchController popContentViewControllerAnimated:YES];
+    }
+}
+
+-(IBAction)forwardButtonPressed {
+    if (self.webView.canGoForward) {
+        [self.webView goForward];
+    }
+}
+
+-(IBAction)favButtonPressed {
+    NSURL *shareURL = self.webViewURL;
+    NSString *query = [self.searchController queryFromDDGURL:shareURL];
+    NSString *feed = [self.webViewURL absoluteString];
+    DDGBookmarkActivityItem* bookmarkItem = nil;
+    if (nil != self.story && !self.webView.canGoBack) { // bookmark the story, since we're at the top level
+        bookmarkItem = [DDGBookmarkActivityItem itemWithStory:self.story];
+    } else if (query) { // bookmark the query that we just used
+        bookmarkItem = [DDGBookmarkActivityItem itemWithTitle:query URL:self.webViewURL feed:feed];
+    } else { // there was no query... just bookmark this page
+        NSString* title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+        if(title==nil || [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]].length<=0) {
+            title = self.webView.request.URL.absoluteString;
+        }
+        if(title!=nil) {
+            bookmarkItem = [DDGBookmarkActivityItem itemWithTitle:title URL:self.webViewURL feed:feed];
+        }
+    }
+    
+    DDGBookmarksProvider *provider = [DDGBookmarksProvider sharedProvider];
+    if(self.isFavorited) {
+        if (bookmarkItem.story) {
+            bookmarkItem.story.savedValue = NO;
+        } else {
+            [provider unbookmarkPageWithURL:bookmarkItem.URL];
+        }
     } else {
-        [(DDGUnderViewController *)[self.slideOverMenuController menuViewController] searchControllerLeftButtonPressed];
+        if (bookmarkItem.story) {
+            bookmarkItem.story.savedValue = YES;
+        } else {
+            [provider bookmarkPageWithTitle:bookmarkItem.title feed:bookmarkItem.feed URL:bookmarkItem.URL];
+        }
+    }
+    
+    if (nil != bookmarkItem.story) {
+        NSManagedObjectContext *context = bookmarkItem.story.managedObjectContext;
+        [context performBlock:^{
+            NSError *error = nil;
+            if (![context save:&error])
+                NSLog(@"error: %@", error);
+        }];
+    }
+    
+    self.isFavorited = !self.isFavorited;
+    
+    NSString *status = self.isFavorited ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
+    UIImage *image = self.isFavorited ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    
+    [SVProgressHUD showImage:image status:status];
+}
+
+-(IBAction)shareButtonPressed {
+    [self searchControllerActionButtonPressed];
+}
+
+-(IBAction)tabsButtonPressed {
+    NSLog(@"tabsButtonPressed");
+}
+
+
+
+
+-(void)searchControllerLeftButtonPressed {        
+    if ([self.searchController canPopContentViewController]) {
+        [self.searchController popContentViewControllerAnimated:YES];
     }
 }
 
@@ -497,20 +586,35 @@
 	return YES;
 }
 
+
+-(void)updateButtons {
+    self.backButton.enabled = self.webView.canGoBack || [self.searchController canPopContentViewController];
+    self.forwardButton.enabled = self.webView.canGoForward;
+    
+    if (nil != self.story && !self.webView.canGoBack) {
+        // we're at the top level of a story, so we can fave/bookmark that story
+        self.isFavorited = self.story.savedValue;
+    } else { //if ([self.searchController queryFromDDGURL:self.webViewURL]) {
+        // this is a query that has been favorited/bookmarked
+        self.isFavorited = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:self.webViewURL];
+    }
+}
+
 - (void)webViewDidStartLoad:(UIWebView *)theWebView
 {
 //    NSLog(@"webViewDidStartLoad events: %i", _webViewLoadEvents);
-    
-    [self.searchController webViewCanGoBack:theWebView.canGoBack];
+    [self updateButtons];
     [self incrementLoadingDepth];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView
 {    
     [self updateBarWithRequest:theWebView.request];
-    [self.searchController webViewCanGoBack:theWebView.canGoBack];
-        
+    //[self.searchController webViewCanGoBack:theWebView.canGoBack];
+    [self.backButton setEnabled:theWebView.canGoBack];
+    [self.forwardButton setEnabled:theWebView.canGoForward];
     [self decrementLoadingDepthCancelled:NO];
+
     
 //    NSLog(@"webViewDidFinishLoad events: %i", _webViewLoadEvents);
 }

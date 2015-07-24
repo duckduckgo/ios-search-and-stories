@@ -84,7 +84,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
     
     
     
-    self.viewControllers = @[ [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext],
+    self.viewControllers = @[ [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                  homeController:nil
+                                                            managedObjectContext:self.managedObjectContext],
                               [[DDGStoriesViewController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext],
                               historyViewController
                              ];
@@ -217,7 +219,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 
 - (void)prepareForUserInput {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
+                                                                                homeController:nil
+                                                                          managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
@@ -234,7 +238,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
+                                                                                homeController:nil
+                                                                          managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
@@ -252,7 +258,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC managedObjectContext:self.managedObjectContext];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
+                                                                                homeController:nil
+                                                                          managedObjectContext:self.managedObjectContext];
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
@@ -370,7 +378,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
             DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
             bookmarks.title = NSLocalizedString(@"Searches", @"View controller title: Saved Searches");
             
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                                        homeController:nil
+                                                                                  managedObjectContext:self.managedObjectContext];
             searchController.state = DDGSearchControllerStateHome;
             searchController.shouldPushSearchHandlerEvents = YES;
             
@@ -410,7 +420,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
             
             break;
         case DDGViewControllerTypeHistory: {
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                                        homeController:nil
+                                                                                  managedObjectContext:self.managedObjectContext];
             searchController.shouldPushSearchHandlerEvents = YES;
             searchController.state = DDGSearchControllerStateHome;
             DDGHistoryViewController *history = [[DDGHistoryViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext mode:DDGHistoryViewControllerModeNormal];
@@ -419,7 +431,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
         }
             break;
         case DDGViewControllerTypeStories: {
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                                        homeController:nil
+                                                                                  managedObjectContext:self.managedObjectContext];
             searchController.shouldPushSearchHandlerEvents = YES;
             searchController.state = DDGSearchControllerStateHome;
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
@@ -430,7 +444,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
             break;
         case DDGViewControllerTypeSettings: {
             
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                                        homeController:nil
+                                                                                  managedObjectContext:self.managedObjectContext];
             searchController.state = DDGSearchControllerStateHome;
             DDGSettingsViewController *settings = [[DDGSettingsViewController alloc] initWithDefaults];
             settings.managedObjectContext = self.managedObjectContext;
@@ -440,7 +456,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
         }
         case DDGViewControllerTypeHome:
         {
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                                        homeController:nil
+                                                                                  managedObjectContext:self.managedObjectContext];
             searchController.shouldPushSearchHandlerEvents = YES;
             DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:searchController managedObjectContext:self.managedObjectContext];
             stories.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -451,7 +469,9 @@ NSString * const DDGViewControllerTypeControllerKey = @"viewController";
         }
         case DDGViewControllerTypeDuck:
         {
-            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self managedObjectContext:self.managedObjectContext];
+            DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:self
+                                                                                        homeController:nil
+                                                                                  managedObjectContext:self.managedObjectContext];
             searchController.shouldPushSearchHandlerEvents = YES;
             DDGDuckViewController *duckViewController = [[DDGDuckViewController alloc] initWithSearchController:searchController];
             [searchController pushContentViewController:duckViewController animated:NO];
