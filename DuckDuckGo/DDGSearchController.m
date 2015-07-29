@@ -47,11 +47,6 @@ NSString * const emailRegEx =
 @property (nonatomic, weak) UIView* customToolbar;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* contentBottomConstraint;
 
-@property (nonatomic) UIImage* stopImage;
-@property (nonatomic) UIImage* reloadImage;
-@property (nonatomic) UIImage* clearImage;
-
-
 @end
 
 @implementation DDGSearchController {
@@ -72,10 +67,6 @@ NSString * const emailRegEx =
         self.managedObjectContext = managedObjectContext;
         self.controllers = [NSMutableArray arrayWithCapacity:2];
         self.showBangTooltip = ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingSuppressBangTooltip];
-        
-        self.stopImage = [UIImage imageNamed:@"stop.png"];
-        self.reloadImage = [UIImage imageNamed:@"refresh.png"];
-        self.clearImage = [UIImage imageNamed:@"clear.png"];
 	}
 	return self;
 }
@@ -245,18 +236,15 @@ NSString * const emailRegEx =
     
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
     [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    [searchField.stopButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [searchField.reloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
     
-    stopOrReloadButton = [[UIButton alloc] init];
-    stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
-    [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    
-    unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];    
+    unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];
     
     [self createInputAccessory];
-    
-	searchField.rightViewMode = UITextFieldViewModeAlways;
-	searchField.leftViewMode = UITextFieldViewModeAlways;
-	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
+    searchField.leftViewMode = UITextFieldViewModeAlways;
+    searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	searchField.delegate = self;    
     
     /*
@@ -606,7 +594,7 @@ NSString * const emailRegEx =
         self.searchBar.showsLeftButton = YES;
         self.searchBar.showsBangButton = NO;
         self.homeController.alternateButtonBar = self.customToolbar;
-        self.searchBar.searchField.rightView = stopOrReloadButton;
+        
         if (duration > 0)
             [self.searchBar layoutIfNeeded:duration];        
     }
@@ -617,16 +605,16 @@ NSString * const emailRegEx =
 }
 
 -(void)webViewStartedLoading {
-    [stopOrReloadButton setImage:self.stopImage forState:UIControlStateNormal];
+    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeStop];
 }
 
 -(void)webViewCancelledLoading {
-    [stopOrReloadButton setImage:self.reloadImage forState:UIControlStateNormal];
+    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
     [self.searchBar cancel];
 }
 
 -(void)webViewFinishedLoading {
-    [stopOrReloadButton setImage:self.reloadImage forState:UIControlStateNormal];
+    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
     [self.searchBar finish];
 }
 
@@ -739,7 +727,7 @@ NSString * const emailRegEx =
         [self clearAddressBar];
     }
     
-    self.searchBar.searchField.rightView = nil;
+    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
     [self revealBackground:YES animated:YES];
     
     [self.searchBar setShowsBangButton:YES animated:YES];
@@ -771,15 +759,17 @@ NSString * const emailRegEx =
         [_searchHandler searchControllerAddressBarWillCancel];
     
     [self revealBackground:NO animated:YES];
-    if(self.state == DDGSearchControllerStateWeb)
-        self.searchBar.searchField.rightView = stopOrReloadButton;
-        
-    [self.searchBar setShowsBangButton:NO animated:YES];
+    if(self.state == DDGSearchControllerStateWeb) {
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+    }
+    
+    //[self.searchBar setShowsBangButton:NO animated:YES];
     
     [self.bangInfoPopover dismissPopoverAnimated:YES];
     self.bangInfoPopover = nil;
     
     //self.searchBar.showsLeftButton = YES;
+    self.searchBar.showsBangButton = NO;
     self.searchBar.showsCancelButton = NO;
     [self.searchBar layoutIfNeeded:0.25];
 }
@@ -839,7 +829,7 @@ NSString * const emailRegEx =
 
 -(void)clearAddressBar {
     self.searchBar.searchField.text = @"";
-    self.searchBar.searchField.rightView = nil;
+    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
 }
 
 #pragma mark - DDGPopoverViewControllerDelegate

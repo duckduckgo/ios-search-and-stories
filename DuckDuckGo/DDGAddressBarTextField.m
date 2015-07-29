@@ -41,12 +41,36 @@
         if(newText!=nil && [newText length]>0) {
             [self hidePlaceholder];
         }
+        [self textWasUpdated:nil];
     }
 }
 
 
+-(void)textWasUpdated:(id)source {
+    NSString* newText = self.text;
+    if(newText!=nil && [newText length]>0) {
+        self.clearButton.hidden = FALSE;
+    } else {
+        self.clearButton.hidden = TRUE;
+    }
+}
+
 -(void)setup
 {
+    self.stopButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.stopButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+    self.stopButton.frame = CGRectMake(0,0,23,23);
+    
+    self.reloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.reloadButton setImage:[UIImage imageNamed:@"refresh.png"] forState:UIControlStateNormal];
+    self.reloadButton.frame = CGRectMake(0,0,23,23);
+    
+    self.clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.clearButton setImage:[UIImage imageNamed:@"clear.png"] forState:UIControlStateNormal];
+    self.clearButton.frame = CGRectMake(0,0,23,23);
+    
+    [self addTarget:self action:@selector(textWasUpdated:) forControlEvents:UIControlEventEditingChanged];
+    
     self.actualPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
                                                                  attributes:@{NSForegroundColorAttributeName: [UIColor duckSearchFieldPlaceholderForeground]}];
     self.inactivePlaceholderText = [[NSAttributedString alloc] initWithString:@" " attributes:@{}];
@@ -64,9 +88,40 @@
     self.tintColor = [UIColor duckSearchFieldForeground];
     self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
     
+    [self.clearButton addTarget:self action:@selector(clear:) forControlEvents:UIControlEventTouchUpInside];
+    
     CALayer *layer = self.layer;
     layer.cornerRadius = 4.0f;
     layer.masksToBounds = NO;
+}
+
+-(void)setRightButtonMode:(DDGAddressBarRightButtonMode)newMode {
+    switch (newMode) {
+        case DDGAddressBarRightButtonModeDefault:
+            NSLog(@"button mode: default; button: %@", self.clearButton);
+            self.rightView = self.clearButton;
+            self.rightViewMode = UITextFieldViewModeWhileEditing;
+            break;
+        case DDGAddressBarRightButtonModeRefresh:
+            NSLog(@"button mode: reload; button: %@", self.reloadButton);
+            self.rightView = self.reloadButton;
+            self.rightViewMode = UITextFieldViewModeAlways;
+            break;
+        case DDGAddressBarRightButtonModeStop:
+            NSLog(@"button mode: stop; button: %@", self.stopButton);
+            self.rightView = self.stopButton;
+            self.rightViewMode = UITextFieldViewModeAlways;
+            break;
+        case DDGAddressBarRightButtonModeNone:
+            NSLog(@"button mode: none; button: %@", self.reloadButton);
+            self.rightView = self.reloadButton;
+            self.rightViewMode = UITextFieldViewModeNever;
+            break;
+    }
+}
+
+-(IBAction)clear:(id)sender {
+    self.text = @"";
 }
 
 -(void)hidePlaceholder {

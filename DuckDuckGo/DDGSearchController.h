@@ -25,7 +25,6 @@ typedef enum {
     BOOL barUpdated;
     BOOL autocompleteOpen;
     
-    UIButton *stopOrReloadButton;
     DDGInputAccessoryView *inputAccessory;
     NSRange currentWordRange;
     NSMutableArray *unusedBangButtons;
