@@ -30,6 +30,7 @@ CGFloat const DDGStoriesInterRowSpacing = 10;
 CGFloat const DDGStoriesBetweenItemsSpacing = 10;
 CGFloat const DDGStoriesMulticolumnWidthThreshold = 500;
 CGFloat const DDGStoryImageRatio = 2.08f;  //1.597f = measured from iPhone screenshot; 1.36f = measured from iPad screenshot
+CGFloat const DDGStoryImageRatioMosaic = 1.356f;
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
@@ -132,7 +133,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
     CGFloat rowHeight;
     if(mosaicMode) { // set to the height of the larger story
-        rowHeight = ((size.width - DDGStoriesBetweenItemsSpacing)*2/3) / DDGStoryImageRatio;
+        rowHeight = ((size.width - DDGStoriesBetweenItemsSpacing)*2/3) / DDGStoryImageRatioMosaic;
     } else { // set to the height
         rowHeight = size.width / DDGStoryImageRatio;
     }
