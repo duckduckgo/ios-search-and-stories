@@ -35,7 +35,7 @@
         self.shareButton = [self setupToolbarButton:@"webbar-share"];
         self.tabsButton = [self setupToolbarButton:@"webbar-tabs"];
         
-        NSArray* buttons = @[ self.backButton, self.forwardButton, self.favButton, self.shareButton, self.tabsButton];
+        NSArray* buttons = @[ self.backButton, self.forwardButton, self.favButton, self.shareButton]; // self.tabsButton omitted
         
         CGFloat numButtons = buttons.count;
         CGFloat halfSpace = (0.5f/numButtons);

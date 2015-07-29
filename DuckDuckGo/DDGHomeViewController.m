@@ -64,7 +64,6 @@
 }
 
 -(void)setAlternateButtonBar:(UIView *)alternateButtonBar {
-    NSLog(@"setting alternate button bar to %@", alternateButtonBar);
     if(alternateButtonBar!=_alternateButtonBar) {
         if(alternateButtonBar) {
             [self.alternateToolbarContainer addSubview:alternateButtonBar];

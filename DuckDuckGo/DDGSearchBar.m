@@ -10,10 +10,8 @@
 
 @interface DDGSearchBar ()
 
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldLeftAlignToSuperview;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldLeftAlignToLeftButton;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldRightAlignToSuperview;
-@property (strong, nonatomic) IBOutlet NSLayoutConstraint *addressFieldRightAlignToCancelButton;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *cancelButtonXConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *leftButtonXConstraint;
 
 @end
 
@@ -43,51 +41,32 @@
     return self;
 }
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    self.addressFieldRightAlignToCancelButton = [NSLayoutConstraint constraintWithItem:self.searchField
-                                                                             attribute:NSLayoutAttributeTrailing
-                                                                             relatedBy:NSLayoutRelationEqual
-                                                                                toItem:self.cancelButton
-                                                                             attribute:NSLayoutAttributeLeading
-                                                                            multiplier:1 constant:-13];
-    self.addressFieldLeftAlignToLeftButton = [NSLayoutConstraint constraintWithItem:self.searchField
-                                                                          attribute:NSLayoutAttributeLeading
-                                                                          relatedBy:NSLayoutRelationEqual
-                                                                             toItem:self.leftButton
-                                                                          attribute:NSLayoutAttributeTrailing
-                                                                         multiplier:1 constant:8];
-}
-
-
-
 
 - (void)setShowsCancelButton:(BOOL)show {
     _showsCancelButton = show;
     if(show) {
-        [self removeConstraint:self.addressFieldRightAlignToSuperview];
-        [self addConstraint:self.addressFieldRightAlignToCancelButton];
+        self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 13);
     } else {
-        [self removeConstraint:self.addressFieldRightAlignToCancelButton];
-        [self addConstraint:self.addressFieldRightAlignToSuperview];
+        self.cancelButtonXConstraint.constant = 0;
     }
+    [self layoutIfNeeded];
+
 }
 
 - (void)setShowsLeftButton:(BOOL)show {
     _showsLeftButton = show;
     if(show) {
-        [self removeConstraint:self.addressFieldLeftAlignToSuperview];
-        [self addConstraint:self.addressFieldLeftAlignToLeftButton];
+        self.leftButtonXConstraint.constant = self.leftButton.frame.size.width + 10;
     } else {
-        [self removeConstraint:self.addressFieldLeftAlignToLeftButton];
-        [self addConstraint:self.addressFieldLeftAlignToSuperview];
+        self.leftButtonXConstraint.constant = 0;
     }
+    [self layoutIfNeeded];
 }
 
 - (void)setShowsBangButton:(BOOL)show {
     _showsBangButton = show;
     self.searchField.additionalLeftSideInset = show ? 39 : 0;
+    [self layoutIfNeeded];
 }
 
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated {

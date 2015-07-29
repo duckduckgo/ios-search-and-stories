@@ -45,6 +45,12 @@ NSString * const emailRegEx =
 @property (nonatomic) BOOL showBangTooltip;
 @property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
 @property (nonatomic, weak) UIView* customToolbar;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* contentBottomConstraint;
+
+@property (nonatomic) UIImage* stopImage;
+@property (nonatomic) UIImage* reloadImage;
+@property (nonatomic) UIImage* clearImage;
+
 
 @end
 
@@ -66,6 +72,10 @@ NSString * const emailRegEx =
         self.managedObjectContext = managedObjectContext;
         self.controllers = [NSMutableArray arrayWithCapacity:2];
         self.showBangTooltip = ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingSuppressBangTooltip];
+        
+        self.stopImage = [UIImage imageNamed:@"stop.png"];
+        self.reloadImage = [UIImage imageNamed:@"refresh.png"];
+        self.clearImage = [UIImage imageNamed:@"clear.png"];
 	}
 	return self;
 }
@@ -207,9 +217,10 @@ NSString * const emailRegEx =
 //		NSLog (@"DDGSearchController:viewWILLLayoutSubviews \n%@", s);
 
 		// repair damage occuring deep in the bowels of this view hiearchy
-		CGRect r = self.view.frame;
-		r.origin.y = 0.0;
-		self.view.frame = r;
+//		CGRect r = self.view.frame;
+//		r.origin.y = 0.0;
+        self.contentBottomConstraint.constant = 0;
+        //self.view.frame = r;
 	}
 }
 
@@ -437,17 +448,13 @@ NSString * const emailRegEx =
         double delayInSeconds = (show ? [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] : 0.0);
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            CGRect f = self.view.frame;
-            CGRect superviewF = self.view.superview.bounds;
-            
-            if(show)
-                f.size.height = superviewF.size.height - f.origin.y - keyboardEnd.size.height;
-            else
-                f.size.height = superviewF.size.height - f.origin.y;
-            
-            self.view.frame = f;
+            if(show) {
+                self.contentBottomConstraint.constant = -keyboardEnd.size.height;
+            } else {
+                self.contentBottomConstraint.constant = 0;
+            }
         });
-                
+        
     } else {
         double duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
         [self revealInputAccessory:show animationDuration:duration];
@@ -460,13 +467,14 @@ NSString * const emailRegEx =
                               delay:0
                             options:[[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]
                          animations:^{
-                             if ([controller isKindOfClass:[DDGDuckViewController class]]) {
-                                 [(DDGDuckViewController *)controller updateContainerHeightConstraint:show];
-                                 [controller.view layoutIfNeeded];
-                             }
-                             CGRect f = self.view.frame;
-                             f.size.height = keyboardEnd.origin.y - f.origin.y;
-                             self.view.frame = f;
+//                             if ([controller isKindOfClass:[DDGDuckViewController class]]) {
+//                                 [(DDGDuckViewController *)controller updateContainerHeightConstraint:show];
+//                                 [controller.view layoutIfNeeded];
+//                             }
+//                             CGRect f = self.view.frame;
+//                             f.size.height = keyboardEnd.origin.y - f.origin.y;
+//                             self.view.frame = f;
+//                             self.contentBottomConstraint.constant = -keyboardEnd.size.height;
                          } completion:nil];
     }
 }
@@ -599,7 +607,6 @@ NSString * const emailRegEx =
         self.searchBar.showsBangButton = NO;
         self.homeController.alternateButtonBar = self.customToolbar;
         self.searchBar.searchField.rightView = stopOrReloadButton;
-        
         if (duration > 0)
             [self.searchBar layoutIfNeeded:duration];        
     }
@@ -610,16 +617,16 @@ NSString * const emailRegEx =
 }
 
 -(void)webViewStartedLoading {
-    [stopOrReloadButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+    [stopOrReloadButton setImage:self.stopImage forState:UIControlStateNormal];
 }
 
 -(void)webViewCancelledLoading {
-    [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];
+    [stopOrReloadButton setImage:self.reloadImage forState:UIControlStateNormal];
     [self.searchBar cancel];
 }
 
 -(void)webViewFinishedLoading {
-    [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];
+    [stopOrReloadButton setImage:self.reloadImage forState:UIControlStateNormal];
     [self.searchBar finish];
 }
 

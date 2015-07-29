@@ -28,7 +28,7 @@
                     </constraints>
                 </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D1U-79-qbz" userLabel="back">
-                    <rect key="frame" x="36" y="1" width="48" height="48"/>
+                    <rect key="frame" x="51" y="1" width="48" height="48"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="jhN-q4-xcJ"/>
                         <constraint firstAttribute="width" constant="48" id="vUf-7n-E0u"/>
@@ -42,7 +42,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9s9-Ft-ueK" userLabel="forward">
-                    <rect key="frame" x="156" y="1" width="48" height="48"/>
+                    <rect key="frame" x="201" y="1" width="48" height="48"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="04R-3d-8w5"/>
                         <constraint firstAttribute="width" constant="48" id="AUf-g3-oFx"/>
@@ -56,7 +56,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rdb-X1-aus" userLabel="fav">
-                    <rect key="frame" x="276" y="1" width="48" height="48"/>
+                    <rect key="frame" x="351" y="1" width="48" height="48"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="MuV-wr-TwW"/>
                         <constraint firstAttribute="width" constant="48" id="RKQ-yD-q6V"/>
@@ -70,7 +70,7 @@
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bTS-Cl-kXM" userLabel="share">
-                    <rect key="frame" x="396" y="1" width="48" height="48"/>
+                    <rect key="frame" x="501" y="1" width="48" height="48"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="48" id="APA-Yi-MzD"/>
                         <constraint firstAttribute="height" constant="48" id="xsk-ct-sba"/>
@@ -83,7 +83,7 @@
                         <action selector="shareButtonPressed" destination="-1" eventType="touchUpInside" id="MRG-pd-m99"/>
                     </connections>
                 </button>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZIq-Fa-jkb" userLabel="tabs">
+                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZIq-Fa-jkb" userLabel="tabs">
                     <rect key="frame" x="516" y="1" width="48" height="48"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="48" id="Eop-WJ-KLX"/>
@@ -100,15 +100,15 @@
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="D1U-79-qbz" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.1" id="2jt-Ou-7Wi" userLabel="back left align"/>
+                <constraint firstItem="D1U-79-qbz" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.125" id="2jt-Ou-7Wi" userLabel="back left align"/>
                 <constraint firstAttribute="trailing" secondItem="PlC-IS-zn3" secondAttribute="trailing" id="7aG-LX-nIO" userLabel="border right align"/>
-                <constraint firstItem="bTS-Cl-kXM" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.7" id="BDe-t8-qAU" userLabel="share left align"/>
+                <constraint firstItem="bTS-Cl-kXM" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.875" id="BDe-t8-qAU" userLabel="share left align"/>
                 <constraint firstAttribute="centerY" secondItem="bTS-Cl-kXM" secondAttribute="centerY" id="FGP-9C-4Vv" userLabel="share vertical center"/>
                 <constraint firstItem="ZIq-Fa-jkb" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.9" id="H0r-C1-kJ5" userLabel="tabs left align"/>
                 <constraint firstItem="D1U-79-qbz" firstAttribute="centerY" secondItem="YM8-Zt-olG" secondAttribute="centerY" id="Jvf-WO-QAE" userLabel="back vertical center"/>
-                <constraint firstItem="9s9-Ft-ueK" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.3" id="S35-Ut-ILi" userLabel="forward left align"/>
+                <constraint firstItem="9s9-Ft-ueK" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.375" id="S35-Ut-ILi" userLabel="forward left align"/>
                 <constraint firstItem="PlC-IS-zn3" firstAttribute="leading" secondItem="YM8-Zt-olG" secondAttribute="leading" id="Spq-dQ-7m6" userLabel="border left align"/>
-                <constraint firstItem="rdb-X1-aus" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.5" id="XII-bx-aDK" userLabel="fav left align"/>
+                <constraint firstItem="rdb-X1-aus" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.625" id="XII-bx-aDK" userLabel="fav left align"/>
                 <constraint firstAttribute="height" constant="50" id="dLj-kG-hTS" userLabel="tab bar height"/>
                 <constraint firstAttribute="centerY" secondItem="rdb-X1-aus" secondAttribute="centerY" id="fqC-tD-d3f" userLabel="fav vertical center"/>
                 <constraint firstItem="ZIq-Fa-jkb" firstAttribute="centerY" secondItem="YM8-Zt-olG" secondAttribute="centerY" id="mBV-3Z-s4y" userLabel="tabs vertical center"/>
