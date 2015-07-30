@@ -98,22 +98,18 @@
 -(void)setRightButtonMode:(DDGAddressBarRightButtonMode)newMode {
     switch (newMode) {
         case DDGAddressBarRightButtonModeDefault:
-            NSLog(@"button mode: default; button: %@", self.clearButton);
             self.rightView = self.clearButton;
             self.rightViewMode = UITextFieldViewModeWhileEditing;
             break;
         case DDGAddressBarRightButtonModeRefresh:
-            NSLog(@"button mode: reload; button: %@", self.reloadButton);
             self.rightView = self.reloadButton;
             self.rightViewMode = UITextFieldViewModeAlways;
             break;
         case DDGAddressBarRightButtonModeStop:
-            NSLog(@"button mode: stop; button: %@", self.stopButton);
             self.rightView = self.stopButton;
             self.rightViewMode = UITextFieldViewModeAlways;
             break;
         case DDGAddressBarRightButtonModeNone:
-            NSLog(@"button mode: none; button: %@", self.reloadButton);
             self.rightView = self.reloadButton;
             self.rightViewMode = UITextFieldViewModeNever;
             break;
