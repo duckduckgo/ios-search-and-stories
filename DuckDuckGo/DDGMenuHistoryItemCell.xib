@@ -14,84 +14,53 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="umN-QZ-6wk" userLabel="Button Container">
-                        <rect key="frame" x="246" y="0.0" width="66" height="43"/>
-                        <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Delete" translatesAutoresizingMaskIntoConstraints="NO" id="9Ky-6Z-ANd" userLabel="Button Background">
-                                <rect key="frame" x="0.0" y="5" width="66" height="34"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="34" id="4LG-8g-hBP"/>
-                                    <constraint firstAttribute="width" constant="66" id="9qe-Wi-07K"/>
-                                </constraints>
-                            </imageView>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Delete" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bN4-Kb-wl4" userLabel="Button Title">
-                                <rect key="frame" x="0.0" y="5" width="66" height="34"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="34" id="EJy-dU-heG"/>
-                                    <constraint firstAttribute="width" constant="66" id="WU8-f1-iyF"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                        </subviews>
-                        <constraints>
-                            <constraint firstAttribute="centerY" secondItem="9Ky-6Z-ANd" secondAttribute="centerY" id="0OO-Ui-KAw"/>
-                            <constraint firstAttribute="centerX" secondItem="9Ky-6Z-ANd" secondAttribute="centerX" id="9hA-XZ-9fU"/>
-                            <constraint firstAttribute="height" constant="43" id="Rpc-lQ-Tck"/>
-                            <constraint firstAttribute="width" constant="66" id="UYs-Hl-K9W"/>
-                            <constraint firstAttribute="centerX" secondItem="bN4-Kb-wl4" secondAttribute="centerX" id="Uef-HA-0oJ"/>
-                            <constraint firstAttribute="centerY" secondItem="bN4-Kb-wl4" secondAttribute="centerY" id="bXr-fT-zag"/>
-                        </constraints>
-                    </view>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4fu-vO-iG6" userLabel="Content Container">
-                        <rect key="frame" x="0.0" y="0.0" width="246" height="43"/>
+                        <rect key="frame" x="0.0" y="0.0" width="276" height="43"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A97-YL-AYi" userLabel="Favicon">
-                                <rect key="frame" x="15" y="14" width="16" height="16"/>
+                                <rect key="frame" x="15" y="12" width="19" height="19"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="16" id="Fev-Gg-0oP"/>
-                                    <constraint firstAttribute="height" constant="16" id="eB1-JJ-6XR"/>
-                                </constraints>
-                            </imageView>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6YO-QK-YwU" userLabel="Auxiliary">
-                                <rect key="frame" x="215" y="14" width="16" height="16"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="16" id="6VK-Ku-ejH"/>
-                                    <constraint firstAttribute="height" constant="16" id="eEU-sU-Uid"/>
+                                    <constraint firstAttribute="width" constant="19" id="Fev-Gg-0oP"/>
+                                    <constraint firstAttribute="height" constant="19" id="eB1-JJ-6XR"/>
                                 </constraints>
                             </imageView>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="150" translatesAutoresizingMaskIntoConstraints="NO" id="Ams-D9-cNe" userLabel="Content">
-                                <rect key="frame" x="48" y="0.0" width="150" height="43"/>
+                                <rect key="frame" x="51" y="0.0" width="225" height="43"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="6YO-QK-YwU" secondAttribute="trailing" constant="15" id="3Q5-CY-iBa"/>
                             <constraint firstAttribute="centerY" secondItem="A97-YL-AYi" secondAttribute="centerY" id="90Z-jb-UlO"/>
                             <constraint firstItem="A97-YL-AYi" firstAttribute="leading" secondItem="4fu-vO-iG6" secondAttribute="leading" constant="15" id="FsQ-lU-UXt"/>
                             <constraint firstItem="Ams-D9-cNe" firstAttribute="top" secondItem="4fu-vO-iG6" secondAttribute="top" id="NLv-RN-sPk"/>
                             <constraint firstItem="Ams-D9-cNe" firstAttribute="leading" secondItem="A97-YL-AYi" secondAttribute="trailing" constant="17" id="Ovx-bN-vZT"/>
                             <constraint firstAttribute="bottom" secondItem="Ams-D9-cNe" secondAttribute="bottom" id="cF7-RA-jfm"/>
-                            <constraint firstAttribute="centerY" secondItem="6YO-QK-YwU" secondAttribute="centerY" id="gYe-iN-HnR"/>
-                            <constraint firstAttribute="width" constant="246" id="jeg-37-D56"/>
-                            <constraint firstAttribute="trailing" secondItem="Ams-D9-cNe" secondAttribute="trailing" constant="48" id="p3u-u6-q65"/>
+                            <constraint firstAttribute="trailing" secondItem="Ams-D9-cNe" secondAttribute="trailing" id="p3u-u6-q65"/>
                         </constraints>
                     </view>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9WF-La-y3a">
+                        <rect key="frame" x="276" y="0.0" width="44" height="44"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="44" id="RPy-JR-Nj1"/>
+                            <constraint firstAttribute="width" constant="44" id="iXj-ib-eI8"/>
+                        </constraints>
+                        <state key="normal" image="add">
+                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                        </state>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="4fu-vO-iG6" firstAttribute="top" secondItem="QO4-43-iC6" secondAttribute="top" id="5mZ-31-Bdr"/>
+                    <constraint firstItem="4fu-vO-iG6" firstAttribute="trailing" secondItem="QO4-43-iC6" secondAttribute="trailing" constant="-44" id="CC4-TE-PQ1"/>
                     <constraint firstAttribute="bottom" secondItem="4fu-vO-iG6" secondAttribute="bottom" id="QB1-jJ-yhD"/>
-                    <constraint firstAttribute="centerY" secondItem="umN-QZ-6wk" secondAttribute="centerY" id="YIH-gY-kiA"/>
-                    <constraint firstItem="umN-QZ-6wk" firstAttribute="leading" secondItem="4fu-vO-iG6" secondAttribute="trailing" id="gnu-vN-bK5"/>
+                    <constraint firstItem="9WF-La-y3a" firstAttribute="bottom" secondItem="QO4-43-iC6" secondAttribute="bottom" id="UyL-0G-HBk"/>
+                    <constraint firstItem="9WF-La-y3a" firstAttribute="top" secondItem="QO4-43-iC6" secondAttribute="top" id="WnM-Ca-RkH"/>
+                    <constraint firstAttribute="trailing" secondItem="9WF-La-y3a" secondAttribute="trailing" id="kS5-Ll-SRG"/>
                     <constraint firstItem="4fu-vO-iG6" firstAttribute="leading" secondItem="QO4-43-iC6" secondAttribute="leading" id="xmc-eI-gFN"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="auxiliaryImageView" destination="6YO-QK-YwU" id="MKY-Wu-XrH"/>
-                <outlet property="buttonContainerView" destination="umN-QZ-6wk" id="ncw-jj-Ls2"/>
-                <outlet property="contentContainerWidthConstraint" destination="jeg-37-D56" id="uTK-Ko-MQI"/>
                 <outlet property="contentLabel" destination="Ams-D9-cNe" id="oos-oX-Xpr"/>
                 <outlet property="faviconImageView" destination="A97-YL-AYi" id="rxn-O2-kQB"/>
             </connections>
@@ -99,7 +68,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="Delete" width="66" height="34"/>
+        <image name="add" width="14" height="14"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

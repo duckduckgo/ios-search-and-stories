@@ -42,16 +42,14 @@
     
     NSParameterAssert(nil != self.searchController);
     
-    [self.tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil] forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
-    [self.tableView setBackgroundColor:[UIColor clearColor]];
-    [self.tableView setOpaque:NO];
+    [self.tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil]
+         forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
     [self.tableView setRowHeight:44.0f];
-    [self.tableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    self.tableView.frame = self.view.bounds;
-    [self.view addSubview:self.tableView];    
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorColor = self.tableView.backgroundColor;
     
     self.searchIcon = [UIImage imageNamed:@"search_icon"];
-            
+    
     UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
     [button setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
@@ -104,24 +102,6 @@
     [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
     NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
     [self.tableView reloadRowsAtIndexPaths:indexPaths withRowAnimation:UITableViewRowAnimationAutomatic];
-}
-
-- (void)viewWillLayoutSubviews
-{
-	CGPoint cl = self.navigationItem.leftBarButtonItem.customView.center;
-//	CGPoint cr = self.navigationItem.rightBarButtonItem.customView.center;
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
-	{
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
-//		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 40, 23);
-	}
-	else
-	{
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
-//		self.navigationItem.rightBarButtonItem.customView.frame = CGRectMake(0, 0, 58, 33);
-	}
-	self.navigationItem.leftBarButtonItem.customView.center = cl;
-//	self.navigationItem.rightBarButtonItem.customView.center = cr;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -203,19 +183,6 @@
         [weakSelf delete:sender];
     }];
     return cell;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 50.0f;
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UINib *nib = [UINib nibWithNibName:@"DDGMenuSectionHeaderView" bundle:nil];
-    DDGMenuSectionHeaderView *sectionHeaderView = (DDGMenuSectionHeaderView *)[nib instantiateWithOwner:nil options:nil][0];
-    sectionHeaderView.title = @"Favorites";
-    return sectionHeaderView;
 }
 
 #pragma mark - Table view delegate

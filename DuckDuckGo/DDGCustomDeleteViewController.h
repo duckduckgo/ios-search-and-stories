@@ -8,8 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DDGCustomDeleteViewController : UIViewController <UITableViewDelegate, UIGestureRecognizerDelegate>
-@property (nonatomic, strong) UITableView *tableView;
+@interface DDGCustomDeleteViewController : UITableViewController <UITableViewDelegate, UIGestureRecognizerDelegate>
 @property (nonatomic, strong) NSMutableSet *deletingIndexPaths;
 - (void)cancelDeletingIndexPathsAnimated:(BOOL)animated;
 @end

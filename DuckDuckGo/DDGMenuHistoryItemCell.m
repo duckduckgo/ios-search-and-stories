@@ -24,7 +24,6 @@
 - (void)awakeFromNib
 {
     [super awakeFromNib];
-    self.backgroundColor = [UIColor clearColor];
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDeleteButtonTap:)];
     [self.buttonContainerView addGestureRecognizer:tapGestureRecognizer];
     [self.buttonContainerView setHidden:YES];
@@ -128,7 +127,7 @@
     if (notification) {
         image = [[UIImage imageNamed:@"Notification"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     } else {
-        image = [[UIImage imageNamed:@"Search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        image = [UIImage imageNamed:@"favorite-small"];// imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
     [self.faviconImageView setImage:image];
 }
