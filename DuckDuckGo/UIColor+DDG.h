@@ -20,6 +20,8 @@
 + (UIColor *)duckNoContentColor;
 + (UIColor *)duckRed;
 + (UIColor *)duckStoryReadColor;
++ (UIColor *)duckStoryTitleBackground;
++ (UIColor *)duckStoryDropShadowColor;
 
 + (UIColor *)duckSearchFieldBackground;
 + (UIColor *)duckSearchBarBackground;
@@ -28,6 +30,8 @@
 
 + (UIColor*)duckProgressBarForeground;
 + (UIColor*)duckProgressBarBackground;
+
++ (UIColor*)duckStoriesBackground;
 
 + (UIColor*)duckTabBarBackground;
 + (UIColor*)duckTabBarForeground;

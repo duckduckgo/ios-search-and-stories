@@ -37,8 +37,6 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 NSInteger const DDGLargeImageViewTag = 1;
 
 @interface DDGStoriesViewController () {
-    BOOL isRefreshing;
-    EGORefreshTableHeaderView *refreshHeaderView;
     CIContext *_blurContext;
 }
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
@@ -59,6 +57,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) NSMutableSet *enqueuedDecompressionOperations;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
+@property (nonatomic, strong) UIRefreshControl* refreshControl;
 @end
 
 
@@ -201,17 +200,17 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     CGFloat rowWidth = frameSize.width;
     BOOL oddRow = (row % 2) == 1;
     
-    CGRect storyRect = CGRectMake(0, row * rowHeight + DDGStoriesInterRowSpacing,
-                                  rowWidth, rowHeight - DDGStoriesInterRowSpacing);
+    CGRect storyRect = CGRectMake(0, row * (rowHeight + DDGStoriesBetweenItemsSpacing),
+                                  rowWidth, rowHeight);
     if(self.mosaicMode) {
         if(oddRow) {
             if(column==0) { // top left of three
                 storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
-                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing*2)/2;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing)/2;
             } else if(column==1) { // bottom left of three
                 storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
-                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing*2)/2;
-                storyRect.origin.y += rowHeight - storyRect.size.height - DDGStoriesBetweenItemsSpacing;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing)/2;
+                storyRect.origin.y += rowHeight - storyRect.size.height;
             } else { // if(column==2) // the large right-side story
                 storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)*2/3;
                 storyRect.origin.x += rowWidth - storyRect.size.width;
@@ -219,12 +218,12 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         } else { // even row
             if(column==1) { // top right of three
                 storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
-                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing*2)/2;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing)/2;
                 storyRect.origin.x += rowWidth - storyRect.size.width;
             } else if(column==2) { // bottom right of three
                 storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
-                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing*2)/2;
-                storyRect.origin.y += rowHeight - storyRect.size.height - DDGStoriesBetweenItemsSpacing;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing)/2;
+                storyRect.origin.y += rowHeight - storyRect.size.height;
                 storyRect.origin.x += rowWidth - storyRect.size.width;
             } else { // if(column==0) // the large left-side story
                 storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)*2/3;
@@ -349,12 +348,15 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     DDGStoriesLayout* storyLayout = [[DDGStoriesLayout alloc] init];
     storyLayout.storiesController = self;
     UICollectionView* storyView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:storyLayout];
-    storyView.backgroundColor = [UIColor duckNoContentColor];
+    storyView.backgroundColor = [UIColor duckStoriesBackground];
     storyView.dataSource = self;
     storyView.delegate = self;
     storyView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [storyView registerClass:DDGStoryCell.class forCellWithReuseIdentifier:DDGStoryCellIdentifier];
-    
+    self.refreshControl = [[UIRefreshControl alloc]init];
+    [storyView addSubview:self.refreshControl];
+    [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
+
     [self.view addSubview:storyView];
     self.storyView = storyView;
     
@@ -362,16 +364,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     [self prepareUpcomingCellContent];
     
-    if (!self.savedStoriesOnly && refreshHeaderView == nil) {
-		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.storyView.bounds.size.height, self.view.frame.size.width, self.storyView.bounds.size.height)];
-		refreshHeaderView.backgroundColor = [UIColor duckSearchBarBackground];
-        refreshHeaderView.delegate = self;
-		[self.storyView addSubview:refreshHeaderView];
-        [refreshHeaderView refreshLastUpdatedDate];
-	}
-	
-    [refreshHeaderView refreshLastUpdatedDate];
-        
     //    // force-decompress the first 10 images
     //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
     //        NSArray *stories = self.stories;
@@ -850,34 +842,12 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     if (nil != self.swipeViewIndexPath)
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
     
-    if(scrollView.contentOffset.y <= 0) {
-        [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    }
-    
     [self prepareUpcomingCellContent];
-}
-
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
     if (nil != self.swipeViewIndexPath)
         [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-}
-
-#pragma mark - EGORefreshTableHeaderDelegate Methods
-
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
-    [self refreshStoriesTriggeredManually:YES includeSources:NO];
-}
-
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
-    return isRefreshing;
-}
-
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];;
 }
 
 #pragma mark - collection view data source
@@ -1051,6 +1021,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     }
 }
 
+- (void)refreshManually {
+    [self.refreshControl endRefreshing];
+    [self refreshStories:TRUE];
+}
+
 - (void)refreshStories:(BOOL)manual {
     if (!self.storyFetcher.isRefreshing) {
         
@@ -1073,12 +1048,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             NSArray *newStories = [self.fetchedResultsController fetchedObjects];
             NSInteger changes = [weakSelf replaceStories:oldStories withStories:newStories focusOnStory:nil];
             [weakSelf prepareUpcomingCellContent];
-            
-            isRefreshing = NO;
-            /* Should only call this method if the refresh was triggered by a PTR */
-            if (manual) {
-                [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:weakSelf.storyView];
-            }
             
             if(changes > 0 && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
                 SystemSoundID quack;
@@ -1213,8 +1182,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.displaysDropShadow = (indexPath.item == ([self.storyView numberOfItemsInSection:0] - 1));
-    cell.displaysInnerShadow = (indexPath.item != 0);
+    cell.displaysDropShadow = YES; //(indexPath.item == ([self.storyView numberOfItemsInSection:0] - 1));
+    cell.displaysInnerShadow = NO; //(indexPath.item != 0);
     cell.title = story.title;
     cell.read = story.readValue;
     if (story.feed) {

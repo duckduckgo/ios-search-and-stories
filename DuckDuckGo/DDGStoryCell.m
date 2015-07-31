@@ -95,7 +95,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 
 - (void)configure
 {
-    self.displaysDropShadow = NO;
+    self.displaysDropShadow = YES;
     self.displaysInnerShadow = NO;
     
     UIImageView *backgroundImageView = [UIImageView new];
@@ -105,13 +105,13 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     self.backgroundImageView = backgroundImageView;
     
     UIView *contentBackgroundView = [UIView new];
-    contentBackgroundView.backgroundColor = [UIColor duckLightGray];
+    contentBackgroundView.backgroundColor = [UIColor duckStoryTitleBackground];
     [self.contentView addSubview:contentBackgroundView];
     self.contentBackgroundView = contentBackgroundView;
     
     UIView *dropShadowView = [UIView new];
-    dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
-    dropShadowView.opaque = NO;
+    dropShadowView.backgroundColor = [UIColor duckStoryDropShadowColor];
+    dropShadowView.opaque = YES;
     [self addSubview:dropShadowView];
     self.dropShadowView = dropShadowView;
     
@@ -211,7 +211,7 @@ CGFloat const DDGTitleBarHeight = 35.0f;
 {
     [super prepareForReuse];
     [self.backgroundImageView setImage:nil];
-    self.displaysDropShadow = NO;
+    self.displaysDropShadow = YES;
     self.displaysInnerShadow = NO;
 }
 

@@ -201,11 +201,10 @@
         self.favoritesTabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
         self.favoritesTabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
         self.favoritesTabViewController.controlView.backgroundColor = [UIColor duckSearchBarBackground];
-        [self.favoritesTabViewController.segmentedControl sizeToFit];
         
         CGRect controlBounds = self.favoritesTabViewController.controlView.bounds;
         CGSize segmentSize = self.favoritesTabViewController.segmentedControl.frame.size;
-        segmentSize.width = controlBounds.size.width - 10.0;
+        segmentSize.width = controlBounds.size.width - 20.0;
         CGRect controlRect = CGRectMake(controlBounds.origin.x + ((controlBounds.size.width - segmentSize.width) / 2.0),
                                         controlBounds.origin.y + ((controlBounds.size.height - segmentSize.height) / 2.0),
                                         segmentSize.width,
@@ -232,7 +231,6 @@
         DDGHistoryViewController* history = [[DDGHistoryViewController alloc] initWithSearchHandler:self
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]
                                                                                                mode:DDGHistoryViewControllerModeUnder];
-        
         history.title = NSLocalizedString(@"Recent Searches", @"segmented button option and table header: Recent Searches");
         
         self.recentsTopController.state = DDGSearchControllerStateHome;
@@ -242,19 +240,15 @@
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         stories.savedStoriesOnly = YES;
         stories.title = NSLocalizedString(@"Recent Stories", @"Table section header title");
-        //        history.searchController = search;
-        //        history.searchHandler = search;
         
         self.recentsController = [[DDGTabViewController alloc] initWithViewControllers:@[stories, history]];
-        
         self.recentsController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
         self.recentsController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
         self.recentsController.controlView.backgroundColor = [UIColor duckSearchBarBackground];
-        [self.recentsController.segmentedControl sizeToFit];
         
         CGRect controlBounds = self.recentsController.controlView.bounds;
         CGSize segmentSize = self.recentsController.segmentedControl.frame.size;
-        segmentSize.width = controlBounds.size.width - 10.0;
+        segmentSize.width = controlBounds.size.width - 20.0;
         CGRect controlRect = CGRectMake(controlBounds.origin.x + ((controlBounds.size.width - segmentSize.width) / 2.0),
                                         controlBounds.origin.y + ((controlBounds.size.height - segmentSize.height) / 2.0),
                                         segmentSize.width,
@@ -272,18 +266,6 @@
                                                                              image:[[UIImage imageNamed:@"Tab-Recents"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                                                                      selectedImage:[[UIImage imageNamed:@"Tab-Recents-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         [controllers addObject:self.recentsTopController];
-        
-        
-        ////////////
-        //    self.recentsController.additionalSectionsDelegate = self;
-        //    self.recentsController.view.frame = self.view.bounds;
-        //    self.recentsController.tableView.scrollsToTop = NO;
-        //    [self.recentsController.tableView registerNib:[UINib nibWithNibName:@"DDGMenuItemCell" bundle:nil]
-        //                           forCellReuseIdentifier:@"DDGMenuItemCell"];
-        //
-        //    self.recentsController.overhangWidth = 74;
-        
-
     }
     
     

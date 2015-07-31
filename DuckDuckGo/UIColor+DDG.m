@@ -68,6 +68,11 @@
     return [UIColor whiteColor];
 }
 
++(UIColor*)duckStoriesBackground
+{
+    return UIColorFromRGB(0xEEEEEE);
+}
+
 
 + (UIColor*)duckSegmentBarBackground { return [UIColor duckSearchBarBackground]; }
 + (UIColor*)duckSegmentBarForeground { return [UIColor whiteColor]; }
@@ -90,6 +95,17 @@
 {
     return RGBA(158.0f, 158.0f, 158.0f, 1.0f);
 }
+
++ (UIColor *)duckStoryTitleBackground
+{
+    return [UIColor whiteColor];
+}
+
++ (UIColor *)duckStoryDropShadowColor
+{
+    return UIColorFromRGB(0xDADADA);
+}
+
 
 + (UIColor *)duckSearchFieldBackground
 {
