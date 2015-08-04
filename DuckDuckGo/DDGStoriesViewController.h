@@ -14,13 +14,18 @@
 
 CGFloat DDG_rowHeightWithContainerSize(CGSize containerSize);
 
+typedef enum : NSUInteger {
+    DDGStoriesListModeNormal,
+    DDGStoriesListModeFavorites,
+    DDGStoriesListModeRecents,
+} DDGStoriesListMode;
 
 @interface DDGStoriesViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, NSFetchedResultsControllerDelegate>
 {}
 @property (nonatomic, strong) IBOutlet UIView *noStoriesView;
 @property (nonatomic, readonly, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic) BOOL savedStoriesOnly;
+@property (nonatomic) DDGStoriesListMode storiesMode;
 @property (nonatomic, strong) UIImage *searchControllerBackButtonIconDDG;
 
 - (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

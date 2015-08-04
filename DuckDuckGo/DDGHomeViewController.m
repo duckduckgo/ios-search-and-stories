@@ -190,7 +190,7 @@
         
         DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.favoritesTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        stories.savedStoriesOnly = YES;
+        stories.storiesMode = DDGStoriesListModeFavorites;
         stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
         
         self.favoritesTabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[stories, bookmarks]];
@@ -230,7 +230,7 @@
                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         DDGHistoryViewController* history = [[DDGHistoryViewController alloc] initWithSearchHandler:self
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]
-                                                                                               mode:DDGHistoryViewControllerModeUnder];
+                                                                                               mode:DDGHistoryViewControllerModeNormal];
         history.title = NSLocalizedString(@"Recent Searches", @"segmented button option and table header: Recent Searches");
         
         self.recentsTopController.state = DDGSearchControllerStateHome;
@@ -238,7 +238,7 @@
         
         DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.recentsTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        stories.savedStoriesOnly = YES;
+        stories.storiesMode = DDGStoriesListModeRecents;
         stories.title = NSLocalizedString(@"Recent Stories", @"Table section header title");
         
         self.recentsController = [[DDGTabViewController alloc] initWithViewControllers:@[stories, history]];
@@ -255,7 +255,7 @@
                                         segmentSize.height);
         self.recentsController.segmentedControl.frame = CGRectIntegral(controlRect);
         self.recentsController.segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-        self.recentsController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Saved"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        self.recentsController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Tab-Recents"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
         [self.recentsController.controlView addSubview:self.recentsController.segmentedControl];
         self.recentsController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];

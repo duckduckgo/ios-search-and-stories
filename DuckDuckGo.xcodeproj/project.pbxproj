@@ -55,7 +55,6 @@
 		4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EC015D9826900B44342 /* DDGJSONViewController.m */; };
 		4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE015DACE8B00B44342 /* ECSlidingViewController.m */; };
 		4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EE215DACE8B00B44342 /* UIImage+ImageWithUIView.m */; };
-		4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */; };
 		4C4B7E8E15C4EC9E00340B59 /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */; };
 		4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E8D15C4EC9E00340B59 /* SVProgressHUD.m */; };
 		4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4C4B7E9215C4F1AA00340B59 /* DDGBookmarksViewController.m */; };
@@ -157,7 +156,6 @@
 		5B7A1BC916E74C3500354310 /* DDGStoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1BC816E74C3500354310 /* DDGStoriesViewController.m */; };
 		5B7A1BCE16E78E4A00354310 /* DDGDuckViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1BCC16E78E4A00354310 /* DDGDuckViewController.m */; };
 		5B7A1BCF16E78E4A00354310 /* DDGDuckViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1BCD16E78E4A00354310 /* DDGDuckViewController.xib */; };
-		5B7A1C3716E9EEB800354310 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */; };
 		5B7A1C8416EF5D2200354310 /* icon_stories_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8016EF5D2200354310 /* icon_stories_selected.png */; };
 		5B7A1C8516EF5D2200354310 /* icon_stories_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8116EF5D2200354310 /* icon_stories_selected@2x.png */; };
 		5B7A1C8616EF5D2200354310 /* icon_stories.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8216EF5D2200354310 /* icon_stories.png */; };
@@ -328,8 +326,8 @@
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		8464976D1B3D3FE600BAF256 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */; };
+		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
 		84B3AEFE1B32FAA800FF3453 /* DuckDuckGo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */; };
-		84B3AF351B3AF2E500FF3453 /* DDGUnderViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84B3AF341B3AF2E500FF3453 /* DDGUnderViewController.xib */; };
 		84BFA1231B6142B700C4C139 /* DDGWebToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */; };
 		84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */; };
 		C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = C1894FD6178F56830076C179 /* UIColor+DDG.m */; };
@@ -385,8 +383,6 @@
 		4C4A0EE015DACE8B00B44342 /* ECSlidingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ECSlidingViewController.m; sourceTree = "<group>"; };
 		4C4A0EE115DACE8B00B44342 /* UIImage+ImageWithUIView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+ImageWithUIView.h"; sourceTree = "<group>"; };
 		4C4A0EE215DACE8B00B44342 /* UIImage+ImageWithUIView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+ImageWithUIView.m"; sourceTree = "<group>"; };
-		4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewController.h; sourceTree = "<group>"; };
-		4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewController.m; sourceTree = "<group>"; };
 		4C4A0F0815DDC1DA00B44342 /* NSOperationStack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSOperationStack.h; sourceTree = "<group>"; };
 		4C4A0F0915DDC1DA00B44342 /* NSOperationStack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSOperationStack.m; sourceTree = "<group>"; };
 		4C4B7E8B15C4EC9E00340B59 /* SVProgressHUD.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVProgressHUD.bundle; sourceTree = "<group>"; };
@@ -531,8 +527,6 @@
 		5B7A1BCB16E78E4A00354310 /* DDGDuckViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGDuckViewController.h; sourceTree = "<group>"; };
 		5B7A1BCC16E78E4A00354310 /* DDGDuckViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGDuckViewController.m; sourceTree = "<group>"; };
 		5B7A1BCD16E78E4A00354310 /* DDGDuckViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGDuckViewController.xib; sourceTree = "<group>"; };
-		5B7A1C3516E9EEB700354310 /* DDGUnderViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewControllerCell.h; sourceTree = "<group>"; };
-		5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewControllerCell.m; sourceTree = "<group>"; };
 		5B7A1C8016EF5D2200354310 /* icon_stories_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_stories_selected.png; sourceTree = "<group>"; };
 		5B7A1C8116EF5D2200354310 /* icon_stories_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_stories_selected@2x.png"; sourceTree = "<group>"; };
 		5B7A1C8216EF5D2200354310 /* icon_stories.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_stories.png; sourceTree = "<group>"; };
@@ -765,16 +759,17 @@
 		8409F5EB1B5E917E001F897F /* proximanova-light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-light.otf"; path = "fonts/licensed/proximanova-light.otf"; sourceTree = "<group>"; };
 		8409F5EC1B5E917E001F897F /* proximanova-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-regular.otf"; path = "fonts/licensed/proximanova-regular.otf"; sourceTree = "<group>"; };
 		8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "fonts/licensed/proximanova-semibold.otf"; sourceTree = "<group>"; };
-		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDGProgressBar.h; path = DuckDuckGo/DDGProgressBar.h; sourceTree = "<group>"; };
-		845993311B4BD41B006F2CE7 /* DDGProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDGProgressBar.m; path = DuckDuckGo/DDGProgressBar.m; sourceTree = "<group>"; };
+		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBar.h; sourceTree = "<group>"; };
+		845993311B4BD41B006F2CE7 /* DDGProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBar.m; sourceTree = "<group>"; };
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
 		8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGHomeViewController.xib; sourceTree = "<group>"; };
-		84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = DuckDuckGo.storyboard; path = DuckDuckGo/UI/DuckDuckGo.storyboard; sourceTree = "<group>"; };
-		84B3AF341B3AF2E500FF3453 /* DDGUnderViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGUnderViewController.xib; sourceTree = "<group>"; };
-		84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DDGWebToolbar.xib; path = DuckDuckGo/DDGWebToolbar.xib; sourceTree = "<group>"; };
-		84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDGWebToolbar.h; path = DuckDuckGo/DDGWebToolbar.h; sourceTree = "<group>"; };
-		84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDGWebToolbar.m; path = DuckDuckGo/DDGWebToolbar.m; sourceTree = "<group>"; };
+		84A640A01B6FBCB300643A39 /* DDGUnderViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewControllerCell.h; sourceTree = "<group>"; };
+		84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewControllerCell.m; sourceTree = "<group>"; };
+		84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = DuckDuckGo.storyboard; path = UI/DuckDuckGo.storyboard; sourceTree = "<group>"; };
+		84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGWebToolbar.xib; sourceTree = "<group>"; };
+		84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebToolbar.h; sourceTree = "<group>"; };
+		84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebToolbar.m; sourceTree = "<group>"; };
 		84D9A82C1B3CB74B00AF00CF /* DuckDuckGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DuckDuckGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		C1894FD5178F56830076C179 /* UIColor+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DDG.h"; sourceTree = "<group>"; };
 		C1894FD6178F56830076C179 /* UIColor+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DDG.m"; sourceTree = "<group>"; };
@@ -1084,6 +1079,8 @@
 		5B07086C17008ED30058718F /* History */ = {
 			isa = PBXGroup;
 			children = (
+				84A640A01B6FBCB300643A39 /* DDGUnderViewControllerCell.h */,
+				84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */,
 				4CCDC2AD1527B18C00CB6907 /* DDGHistoryProvider.h */,
 				4CCDC2AE1527B18C00CB6907 /* DDGHistoryProvider.m */,
 				5B07086617008ECD0058718F /* _DDGHistoryItem.h */,
@@ -1231,17 +1228,18 @@
 			isa = PBXGroup;
 			children = (
 				7BCE31DA18E4498B00C87EF4 /* Visual Refresh */,
-				4C4A0EFD15DAD62200B44342 /* DDGUnderViewController.h */,
-				4C4A0EFE15DAD62200B44342 /* DDGUnderViewController.m */,
-				5B7A1C3516E9EEB700354310 /* DDGUnderViewControllerCell.h */,
-				5B7A1C3616E9EEB700354310 /* DDGUnderViewControllerCell.m */,
 				5B7C3CA8171C4B1800B9E009 /* DDGFixedSizeImageView.h */,
 				5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */,
-				84B3AF341B3AF2E500FF3453 /* DDGUnderViewController.xib */,
 				84D9A82C1B3CB74B00AF00CF /* DuckDuckGo-Bridging-Header.h */,
 				846497691B3D3FE600BAF256 /* DDGHomeViewController.h */,
 				8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */,
 				8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */,
+				84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */,
+				84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */,
+				84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */,
+				845993301B4BD41B006F2CE7 /* DDGProgressBar.h */,
+				845993311B4BD41B006F2CE7 /* DDGProgressBar.m */,
+				84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */,
 			);
 			name = "Main Menu";
 			sourceTree = "<group>";
@@ -1482,12 +1480,6 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
-				84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */,
-				84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */,
-				84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */,
-				845993301B4BD41B006F2CE7 /* DDGProgressBar.h */,
-				845993311B4BD41B006F2CE7 /* DDGProgressBar.m */,
-				84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
@@ -1767,7 +1759,6 @@
 				5B5C844E172543F400EBD62E /* icon-notification_large@2x.png in Resources */,
 				5B5C845517256A9A00EBD62E /* DDGHistoryNoResultsDisabledView.xib in Resources */,
 				5B15F3181727EB5E00912482 /* btn-bg_plus_search-suggestions.png in Resources */,
-				84B3AF351B3AF2E500FF3453 /* DDGUnderViewController.xib in Resources */,
 				5B15F3191727EB5E00912482 /* btn-bg_plus_search-suggestions@2x.png in Resources */,
 				5B15F31C1727EC7500912482 /* btn-icon_plus_search-suggestions.png in Resources */,
 				5B15F31D1727EC7500912482 /* btn-icon_plus_search-suggestions@2x.png in Resources */,
@@ -1850,6 +1841,7 @@
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
+				84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */,
 				4C2E001215B87C700096C994 /* DDGChooseSourcesViewController.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
 				4C4B7E9415C4F1AA00340B59 /* DDGBookmarksViewController.m in Sources */,
@@ -1864,7 +1856,6 @@
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
 				7B6E2D8918E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m in Sources */,
 				4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */,
-				4C4A0EFF15DAD62200B44342 /* DDGUnderViewController.m in Sources */,
 				8398DAC816419FFD00A559C3 /* DDGChooseRegionViewController.m in Sources */,
 				8398DACC1641DA9F00A559C3 /* DDGRegionProvider.m in Sources */,
 				8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */,
@@ -1889,7 +1880,6 @@
 				5B88DBDA16DB9C84007A935D /* DDGPanGestureRecognizer.m in Sources */,
 				5B7A1BC916E74C3500354310 /* DDGStoriesViewController.m in Sources */,
 				5B7A1BCE16E78E4A00354310 /* DDGDuckViewController.m in Sources */,
-				5B7A1C3716E9EEB800354310 /* DDGUnderViewControllerCell.m in Sources */,
 				5BD23C3816EE235800C2FBDA /* DDGActivityViewController.m in Sources */,
 				5B7A1C9816F0836400354310 /* IGFormButton.m in Sources */,
 				5B7A1C9916F0836400354310 /* IGFormElement.m in Sources */,

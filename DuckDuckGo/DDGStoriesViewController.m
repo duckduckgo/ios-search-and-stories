@@ -7,7 +7,6 @@
 //
 
 #import "DDGStoriesViewController.h"
-#import "DDGUnderViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGPanGestureRecognizer.h"
 #import "DDGStory.h"
@@ -288,10 +287,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     [super didReceiveMemoryWarning];
     
+    // clear the cache, except for the currently visible items
     NSMutableDictionary *cachedImages = [NSMutableDictionary new];
     NSArray *indexPaths = [self.storyView indexPathsForVisibleItems];
     for (NSIndexPath *indexPath in indexPaths) {
-        DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
         if (story) {
             UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
             if (image) {
@@ -418,7 +418,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     NSNumber *lastStoryID = [[NSUserDefaults standardUserDefaults] objectForKey:DDGLastViewedStoryKey];
     if (nil != lastStoryID) {
-        NSArray *stories = self.fetchedResultsController.fetchedObjects;
+        NSArray *stories = [self fetchedStories];
         NSArray *storyIDs = [stories valueForKey:@"id"];
         NSInteger index = [storyIDs indexOfObject:lastStoryID];
         if (index != NSNotFound) {
@@ -426,11 +426,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         }
     }
     
-    if (!self.savedStoriesOnly) {
+    if (self.storiesMode!=DDGStoriesListModeFavorites) {
         if ([self shouldRefresh]) {
             [self refreshStoriesTriggeredManually:NO includeSources:YES];
         }
-    } else if ([self.fetchedResultsController.fetchedObjects count] == 0) {
+    } else if ([self fetchedStories].count == 0) {
         [self showNoStoriesView];
     }
 }
@@ -498,7 +498,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             UIButton *button = (UIButton *)sender;
             CGPoint point = [button convertPoint:button.bounds.origin toView:self.storyView];
             NSIndexPath *indexPath = [self.storyView indexPathForItemAtPoint:point];
-            story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+            story = [self fetchedStoryAtIndexPath:indexPath];
         }
         
         if (nil != self.sourceFilter) {
@@ -511,8 +511,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         if (nil != self.sourceFilter)
             predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
 
-        NSArray *oldStories = [self.fetchedResultsController fetchedObjects];
-        
+        NSArray *oldStories = [self fetchedStories];
         [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
         self.fetchedResultsController.delegate = nil;
         self.fetchedResultsController = nil;
@@ -520,7 +519,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
         self.fetchedResultsController = [self fetchedResultsController:feedDate];
         
-        NSArray *newStories = [self.fetchedResultsController fetchedObjects];
+        NSArray *newStories = [self fetchedStories];
         
         [self replaceStories:oldStories withStories:newStories focusOnStory:story];
     };
@@ -555,24 +554,28 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 }
 
 - (NSInteger)replaceStories:(NSArray *)oldStories withStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
-    
+    NSString* storyMode = nil;
+    switch(self.storiesMode) {
+        case DDGStoriesListModeFavorites:
+            storyMode = @"favorites";
+            break;
+        case DDGStoriesListModeRecents:
+            storyMode = @"recents";
+            break;
+        default:
+            storyMode = @"normal/other";
+            break;
+    }
+
     NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:oldStories];
     NSArray *removedStories = [self indexPathsofStoriesInArray:oldStories andNotArray:newStories];
     NSInteger changes = [addedStories count] + [removedStories count];
     
     // update the table view with added and removed stories
-    //[self.storyView beginUpdates];
-    
-//    if(removedStories.count > 0) {
-//        [self.storyView deleteItemsAtIndexPaths:removedStories];
-//    }
-//    if(addedStories.count > 0) {
-//        [self.storyView insertItemsAtIndexPaths:addedStories];
-//    }
-    NSLog(@"updating with %lu deleted items and %lu new items", removedStories.count, addedStories.count);
+    DLog(@"updating %@ with %lu deleted items and %lu new items", storyMode, removedStories.count, addedStories.count);
     [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 
-    if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0) {
+    if (self.storiesMode!=DDGStoriesListModeNormal && [self fetchedStories].count == 0) {
         [self showNoStoriesView];
     } else {
         [self hideNoStoriesView];
@@ -593,7 +596,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL
 {
-    [(DDGUnderViewController *)[self.slideOverMenuController menuViewController] loadQueryOrURL:queryOrURL];
+    [self.searchControllerDDG loadQueryOrURL:queryOrURL];
 }
 
 #pragma mark - Swipe View
@@ -602,7 +605,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     if (nil == self.swipeViewIndexPath)
         return;
     
-    NSArray *stories = self.fetchedResultsController.fetchedObjects;
+    NSArray *stories = [self fetchedStories];
     DDGStory *story = [stories objectAtIndex:self.swipeViewIndexPath.item];
     
     
@@ -624,7 +627,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     if (nil == self.swipeViewIndexPath)
         return;
     
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
+    DDGStory *story = [self fetchedStoryAtIndexPath:self.swipeViewIndexPath];
     
     double delayInSeconds = 0.2;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -648,7 +651,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     if (nil == self.swipeViewIndexPath)
         return;
     
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
+    DDGStory *story = [self fetchedStoryAtIndexPath:self.swipeViewIndexPath];
     
     double delayInSeconds = 0.2;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
@@ -705,7 +708,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
         }
         [self.swipeView setTintColor:[UIColor whiteColor]];
-        DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
         BOOL saved = story.savedValue;
         NSString *imageName = (saved) ? @"Unfavorite" : @"Favorite";
         [self.swipeViewSafariButton setImage:[[UIImage imageNamed:@"Safari"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
@@ -809,7 +812,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 #pragma mark - Scroll view delegate
 
 - (void)prepareUpcomingCellContent {
-    NSArray *stories = [self.fetchedResultsController fetchedObjects];
+    NSArray *stories = [self fetchedStories];
     NSInteger count = [stories count];
     
     NSInteger lowestIndex = count;
@@ -825,11 +828,12 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     for (NSInteger i = lowestIndex; i<highestIndex; i++) {
         DDGStory *story = [stories objectAtIndex:i];
+        if([story isEqual:[NSNull null]]) continue;
         UIImage *decompressedImage = [self.decompressedImages objectForKey:story.cacheKey];
         
         if (nil == decompressedImage) {
             if (story.isImageDownloaded) {
-                [self decompressAndDisplayImageForStory:story];
+                [self decompressAndDisplayImageForStoryAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
             } else  {
                 [self.storyFetcher downloadImageForStory:story];
             }
@@ -887,7 +891,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
 
     story.readValue = YES;
     
@@ -913,9 +917,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     return YES;
 }
 
-- (void)decompressAndDisplayImageForStory:(DDGStory *)story;
+- (void)decompressAndDisplayImageForStoryAtIndexPath:(NSIndexPath*)indexPath;
 {
-    if (nil == story.image || nil == story.cacheKey)
+    DDGStory* story = [self fetchedStoryAtIndexPath:indexPath];
+    if (nil == story || nil == story.image || nil == story.cacheKey)
         return;
     
     NSString *cacheKey = story.cacheKey;
@@ -926,7 +931,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     __weak DDGStoriesViewController *weakSelf = self;
     
     void (^completionBlock)() = ^() {
-        NSIndexPath *indexPath = [weakSelf.fetchedResultsController indexPathForObject:story];
         if (nil != indexPath) {
             [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
         }
@@ -934,9 +938,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     UIImage *image = story.image;
     
-    if (nil == image)
+    if (nil == image) {
         completionBlock();
-    else {
+    } else {
         [self.enqueuedDecompressionOperations addObject:cacheKey];
         [self.imageDecompressionQueue addOperationWithBlock:^{
             //Draw the received image in a graphics context.
@@ -979,9 +983,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)focusOnStory:(DDGStory *)story animated:(BOOL)animated {
     if (nil != story) {
-        NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:story];
-        if (nil != indexPath)
-            [self.storyView scrollToItemAtIndexPath:indexPath atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+        NSUInteger itemIndex = [[self fetchedStories] indexOfObject:story];
+        if (itemIndex != NSNotFound) {
+            [self.storyView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]
+                                   atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+        }
     }
 }
 
@@ -1033,19 +1039,19 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         DDGStoriesViewController *weakSelf = self;
         
         void (^willSave)() = ^() {
-            oldStories = [self.fetchedResultsController fetchedObjects];
+            oldStories = [self fetchedStories];
             
             [NSFetchedResultsController deleteCacheWithName:weakSelf.fetchedResultsController.cacheName];
             weakSelf.fetchedResultsController.delegate = nil;
         };
         
         void (^completion)(NSDate *lastFetchDate) = ^(NSDate *feedDate) {
-            NSArray *oldStories = [weakSelf.fetchedResultsController fetchedObjects];
+            NSArray *oldStories = [weakSelf fetchedStories];
 
             weakSelf.fetchedResultsController = nil;
             weakSelf.fetchedResultsController = [self fetchedResultsController:feedDate];
             
-            NSArray *newStories = [self.fetchedResultsController fetchedObjects];
+            NSArray *newStories = [self fetchedStories];
             NSInteger changes = [weakSelf replaceStories:oldStories withStories:newStories focusOnStory:nil];
             [weakSelf prepareUpcomingCellContent];
             
@@ -1063,6 +1069,16 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 #pragma mark - NSFetchedResultsController
 
+-(NSArray*)fetchedStories
+{
+    
+    NSArray* results = self.fetchedResultsController.fetchedObjects;
+    if(self.storiesMode==DDGStoriesListModeRecents) {
+        results = [results valueForKey:@"story"];
+    }
+    return results;
+}
+
 - (NSFetchedResultsController *)fetchedResultsController:(NSDate *)feedDate
 {
     if (_fetchedResultsController != nil) {
@@ -1071,8 +1087,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [DDGStory entityInManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
+    if(self.storiesMode==DDGStoriesListModeRecents) {
+        [fetchRequest setEntity:[DDGHistoryItem entityInManagedObjectContext:self.managedObjectContext]];
+    } else {
+        [fetchRequest setEntity:[DDGStory entityInManagedObjectContext:self.managedObjectContext]];
+    }
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
@@ -1085,36 +1104,54 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     NSMutableArray *predicates = [NSMutableArray array];
     
-    NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
-    if (readabilityMode == DDGReadabilityModeOnExclusive && !self.savedStoriesOnly)
-        [predicates addObject:[NSPredicate predicateWithFormat:@"articleURLString.length > 0"]];
+    if(self.storiesMode!=DDGStoriesListModeRecents) {
+        NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+        if (readabilityMode == DDGReadabilityModeOnExclusive && self.storiesMode!=DDGStoriesListModeFavorites) {
+            [predicates addObject:[NSPredicate predicateWithFormat:@"articleURLString.length > 0"]];
+        }
     
-    if (nil != self.sourceFilter)
-        [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
-    if (self.savedStoriesOnly)
-        [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
-    if (nil != feedDate && !self.savedStoriesOnly)
-        [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];    
-    if ([predicates count] > 0)
+        if (nil != self.sourceFilter) {
+            [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
+        }
+    }
+    
+    switch(self.storiesMode) {
+        case DDGStoriesListModeFavorites:
+            DLog(@"loading favorites");
+            [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
+            break;
+        case DDGStoriesListModeRecents:
+            DLog(@"loading recents");
+            //[predicates addObject:[NSPredicate predicateWithFormat:@"read == %@", @(YES)]];
+            [predicates addObject:[NSPredicate predicateWithFormat:@"section == %@", DDGHistoryItemSectionNameStories]];
+            break;
+        default:
+            DLog(@"loading normal/other with feedDate: %@", feedDate);
+            if (feedDate) {
+                [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];
+            }
+            break;
+    }
+    if ([predicates count] > 0) {
         [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
+    }
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+                                                                                                managedObjectContext:self.managedObjectContext
+                                                                                                  sectionNameKeyPath:nil
+                                                                                                           cacheName:nil];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     
 	NSError *error = nil;
 	if (![self.fetchedResultsController performFetch:&error]) {
         // Replace this implementation with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+        // abort() causes the application to generate a crash log and terminate. You should not
+        // use this function in a shipping application, although it may be useful during development.
 	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
 	}
-    
-//    NSLog(@"feedDate: %@", feedDate);
-//    for (DDGStory *story in [_fetchedResultsController fetchedObjects]) {
-//        NSLog(@"story.feedDate: %@ (isEqual: %i)", story.feedDate, [feedDate isEqual:story.feedDate]);
-//    }
     
     return _fetchedResultsController;
 }
@@ -1147,31 +1184,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-//    UICollectionView *storyView = self.storyView;
-//
-//    switch(type) {
-//        case NSFetchedResultsChangeInsert:
-//            [storyView insertItemsAtIndexPaths:@[newIndexPath]];
-//            break;
-//            
-//        case NSFetchedResultsChangeDelete:
-//        {
-//            [storyView deleteItemsAtIndexPaths:@[indexPath]];
-//            if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0)
-//                [self performSelector:@selector(showNoStoriesView) withObject:nil afterDelay:0.2];
-//            
-//        }
-//            break;
-//            
-//        case NSFetchedResultsChangeUpdate:
-//            [self configureCell:(DDGStoryCell *)[storyView cellForItemAtIndexPath:indexPath] atIndexPath:indexPath];
-//            break;
-//            
-//        case NSFetchedResultsChangeMove:
-//            [storyView deleteItemsAtIndexPaths:@[indexPath]];
-//            [storyView insertItemsAtIndexPaths:@[newIndexPath]];
-//            break;
-//    }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
@@ -1179,9 +1191,18 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     //[self.storyView endUpdates];
 }
 
+-(DDGStory*)fetchedStoryAtIndexPath:(NSIndexPath*)indexPath
+{
+    id fetchedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if(self.storiesMode==DDGStoriesListModeRecents) {
+        return ((DDGHistoryItem*)fetchedObject).story;
+    }
+    return (DDGStory*)fetchedObject;
+}
+
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
     cell.displaysDropShadow = YES; //(indexPath.item == ([self.storyView numberOfItemsInSection:0] - 1));
     cell.displaysInnerShadow = NO; //(indexPath.item != 0);
     cell.title = story.title;
@@ -1194,7 +1215,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         cell.image = image;
     } else {
         if (story.isImageDownloaded) {
-            [self decompressAndDisplayImageForStory:story];
+            [self decompressAndDisplayImageForStoryAtIndexPath:indexPath];
         } else {
             __weak typeof(self) weakSelf = self;
             [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {

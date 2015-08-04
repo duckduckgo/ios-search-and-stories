@@ -12,11 +12,12 @@
 
 - (DDGSlideOverMenuController *)slideOverMenuController
 {
-    UIViewController *viewController = self.parentViewController ? self.parentViewController : self.presentingViewController;
-    while (!(viewController == nil || [viewController isKindOfClass:[DDGSlideOverMenuController class]])) {
-        viewController = viewController.parentViewController ? viewController.parentViewController : viewController.presentingViewController;
-    }
-    return (DDGSlideOverMenuController *)viewController;
+    return nil;
+//    UIViewController *viewController = self.parentViewController ? self.parentViewController : self.presentingViewController;
+//    while (!(viewController == nil || [viewController isKindOfClass:[DDGSlideOverMenuController class]])) {
+//        viewController = viewController.parentViewController ? viewController.parentViewController : viewController.presentingViewController;
+//    }
+//    return (DDGSlideOverMenuController *)viewController;
 }
 
 @end

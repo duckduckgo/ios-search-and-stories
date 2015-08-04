@@ -59,7 +59,7 @@
     NSArray *existingItems = [self itemsForStory:story];
     if ([existingItems count] > 0) {
         [self relogHistoryItem:[existingItems objectAtIndex:0]];
-    } else {        
+    } else {
         NSManagedObjectContext *context = self.managedObjectContext;
         [context performBlock:^{
             DDGHistoryItem *item = [DDGHistoryItem insertInManagedObjectContext:self.managedObjectContext];

@@ -91,13 +91,16 @@
             [self.controlView removeFromSuperview];
             break;
     }
-    
-    [UIView animateWithDuration:0
-                     animations:^{
-                         [self.controlView setFrame:toolbarFrame];
-                         [self.currentViewController.view setFrame:viewControllerFrame];
-                     }
-     ];
+
+    [self.controlView setFrame:toolbarFrame];
+    [self.currentViewController.view setFrame:viewControllerFrame];
+//
+//    [UIView animateWithDuration:0
+//                     animations:^{
+//                         [self.controlView setFrame:toolbarFrame];
+//                         [self.currentViewController.view setFrame:viewControllerFrame];
+//                     }
+//     ];
 }
 
 - (UISegmentedControl *)segmentedControl {

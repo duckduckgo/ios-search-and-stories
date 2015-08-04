@@ -11,7 +11,6 @@
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
 #import "SVProgressHUD.h"
-#import "DDGUnderViewController.h"
 #import "DDGUtility.h"
 #import "DDGStory.h"
 #import "AFNetworking.h"
@@ -197,7 +196,7 @@
     }
     
     NSString *pageTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    NSString *feed = [self.webViewURL absoluteString];
+    //NSString *feed = [self.webViewURL absoluteString];
     
     DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
     [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", pageTitle, shareURL] forActivityType:UIActivityTypeMail];
