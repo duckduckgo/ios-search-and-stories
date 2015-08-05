@@ -17,7 +17,7 @@
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4fu-vO-iG6" userLabel="Content Container">
                         <rect key="frame" x="0.0" y="0.0" width="276" height="43"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="A97-YL-AYi" userLabel="Favicon">
+                            <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="recent-small" translatesAutoresizingMaskIntoConstraints="NO" id="A97-YL-AYi" userLabel="Favicon">
                                 <rect key="frame" x="15" y="12" width="19" height="19"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="19" id="Fev-Gg-0oP"/>
@@ -62,13 +62,13 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="contentLabel" destination="Ams-D9-cNe" id="oos-oX-Xpr"/>
-                <outlet property="faviconImageView" destination="A97-YL-AYi" id="rxn-O2-kQB"/>
             </connections>
             <point key="canvasLocation" x="265" y="240"/>
         </tableViewCell>
     </objects>
     <resources>
         <image name="add" width="14" height="14"/>
+        <image name="recent-small" width="19" height="19"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

@@ -17,7 +17,6 @@
 #import "DDGUnderViewControllerCell.h"
 
 #import "DDGMenuHistoryItemCell.h"
-#import "DDGMenuSectionHeaderView.h"
 
 
 @interface DDGHistoryViewController () <UIGestureRecognizerDelegate> {
@@ -28,7 +27,6 @@
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic) DDGHistoryViewControllerMode mode;
 @property (nonatomic, weak) IBOutlet UIImageView *chatBubbleImageView;
-@property (nonatomic, strong) UIImage* recentSearchIcon;
 @end
 
 @implementation DDGHistoryViewController
@@ -41,7 +39,6 @@
         self.searchHandler = searchHandler;
         self.showsHistory = YES;
         self.mode = mode;
-        self.recentSearchIcon = [UIImage imageNamed:@"recent-small"];
     }
     return self;
 }
@@ -52,11 +49,11 @@
 
     if (nil == self.tableView) {
         UITableView *tableView = nil;
-        tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+        tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
         
         tableView.delegate = self;
         tableView.dataSource = self;
-        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         
         tableView.backgroundColor = [UIColor clearColor];
@@ -65,7 +62,6 @@
         [tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil] forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
         
         self.view = tableView;
-        //[self.view addSubview:tableView];
         self.tableView = tableView;
     }
     
@@ -410,11 +406,6 @@
     NSString *content = nil;
     DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
     DDGStory *story = historyItem.story;
-    if (story) {
-        cell.faviconImage = story.feed.image;
-    } else {
-        cell.faviconImage = self.recentSearchIcon;
-    }
     content = historyItem.title;
     __weak typeof(self) weakSelf = self;
     [cell setDeleteBlock:^(id sender) {

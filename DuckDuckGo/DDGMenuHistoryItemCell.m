@@ -15,7 +15,6 @@
 @property (nonatomic, weak) IBOutlet UILabel *contentLabel;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *contentContainerWidthConstraint;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *contentLabelRightConstraint;
-@property (nonatomic, weak) IBOutlet UIImageView *faviconImageView;
 
 @end
 
@@ -52,7 +51,6 @@
 {
     [self.auxiliaryImageView setImage:[UIImage imageNamed:@"Plus"]];
     self.auxiliaryViewHidden = YES;
-    [self.faviconImageView setContentMode:UIViewContentModeCenter];
     self.notification = NO;
     [self setDeletable:NO animated:NO];
 }
@@ -106,13 +104,6 @@
     }
 }
 
-- (void)setFaviconImage:(UIImage *)faviconImage
-{
-    _faviconImage = faviconImage;
-    [self.faviconImageView setContentMode:UIViewContentModeScaleAspectFit];
-    [self.faviconImageView setImage:faviconImage];
-}
-
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
     [super setHighlighted:highlighted animated:animated];
@@ -129,7 +120,6 @@
     } else {
         image = [UIImage imageNamed:@"favorite-small"];// imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     }
-    [self.faviconImageView setImage:image];
 }
 
 - (BOOL)shouldCauseMenuPanGestureToFail

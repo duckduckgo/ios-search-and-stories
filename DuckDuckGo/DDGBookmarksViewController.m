@@ -11,7 +11,6 @@
 #import "DDGSearchController.h"
 #import "DDGPlusButton.h"
 #import "DDGMenuHistoryItemCell.h"
-#import "DDGMenuSectionHeaderView.h"
 
 @interface DDGBookmarksViewController ()
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
@@ -71,7 +70,7 @@
                                                              target:self
                                                              action:@selector(editAction:)];    
 	// force 1st time through for iOS < 6.0
-	[self viewWillLayoutSubviews];
+    [self viewWillLayoutSubviews];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -130,34 +129,36 @@
 - (void)showNoBookmarksView {
     
     [UIView animateWithDuration:0 animations:^{
-        [self.tableView removeFromSuperview];
+        //[self.tableView removeFromSuperview];
         self.noBookmarksView.frame = self.view.bounds;
-        [self.view addSubview:self.noBookmarksView];
+      //        [self.view addSubview:self.noBookmarksView];
+      self.view = self.noBookmarksView;
     }];
 }
 
 - (void)hideNoBookmarksView {
     if (nil == self.tableView.superview) {
         [UIView animateWithDuration:0 animations:^{
-            [self.noBookmarksView removeFromSuperview];
+            //[self.noBookmarksView removeFromSuperview];
             self.tableView.frame = self.view.bounds;
-            [self.view addSubview:self.tableView];
+            //[self.view addSubview:self.tableView];
+            self.view = self.tableView;
         }];
     }
 }
 
-- (IBAction)delete:(id)sender {
-    NSSet *indexPaths = [self.deletingIndexPaths copy];
-    [self cancelDeletingIndexPathsAnimated:YES];
-    
-    for (NSIndexPath *indexPath in indexPaths) {
-        [[DDGBookmarksProvider sharedProvider] deleteBookmarkAtIndex:indexPath.row];
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
-        if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0)
-            [self performSelector:@selector(showNoBookmarksView) withObject:nil afterDelay:0.2];
-    }
-}
+//- (IBAction)delete:(id)sender {
+//    NSSet *indexPaths = [self.deletingIndexPaths copy];
+//    [self cancelDeletingIndexPathsAnimated:YES];
+//    
+//    for (NSIndexPath *indexPath in indexPaths) {
+//        [[DDGBookmarksProvider sharedProvider] deleteBookmarkAtIndex:indexPath.row];
+//        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//        
+//        if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0)
+//            [self performSelector:@selector(showNoBookmarksView) withObject:nil afterDelay:0.2];
+//    }
+//}
 
 #pragma mark - Table view data source
 

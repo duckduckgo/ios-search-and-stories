@@ -184,9 +184,12 @@
         
         DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
         bookmarks.title = NSLocalizedString(@"Favorite Searches", @"View controller title: Saved Searches");
+        bookmarks.searchController = self.favoritesTopController;
+        bookmarks.searchHandler = self.favoritesTopController;
         
         self.favoritesTopController.state = DDGSearchControllerStateHome;
         self.favoritesTopController.shouldPushSearchHandlerEvents = YES;
+        
         
         DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.favoritesTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
@@ -194,10 +197,6 @@
         stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
         
         self.favoritesTabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[stories, bookmarks]];
-        
-        bookmarks.searchController = self.favoritesTopController;
-        bookmarks.searchHandler = self.favoritesTopController;
-        
         self.favoritesTabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
         self.favoritesTabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
         self.favoritesTabViewController.controlView.backgroundColor = [UIColor duckSearchBarBackground];
@@ -228,7 +227,7 @@
         self.recentsTopController = [[DDGSearchController alloc] initWithSearchHandler:self
                                                                         homeController:self
                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        DDGHistoryViewController* history = [[DDGHistoryViewController alloc] initWithSearchHandler:self
+        DDGHistoryViewController* history = [[DDGHistoryViewController alloc] initWithSearchHandler:self.recentsTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]
                                                                                                mode:DDGHistoryViewControllerModeNormal];
         history.title = NSLocalizedString(@"Recent Searches", @"segmented button option and table header: Recent Searches");
