@@ -16,8 +16,7 @@
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
 @property (nonatomic, strong) UIImage *searchIcon;
-
-@property (nonatomic, weak) IBOutlet UIImageView *largeIconImageView;
+@property (nonatomic, strong) UIImage *favoriteIcon;
 
 @end
 
@@ -37,10 +36,9 @@
     
     [self.view setBackgroundColor:[UIColor duckNoContentColor]];
     
-    [self.largeIconImageView setImage:[UIImage imageNamed:@"empty-favorites"]];
-    
     NSParameterAssert(nil != self.searchController);
     
+    self.favoriteIcon = [UIImage imageNamed:@"favorite-small"];
     [self.tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil]
          forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
     [self.tableView setRowHeight:44.0f];
@@ -179,6 +177,7 @@
     DDGMenuHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
     cell.auxiliaryViewHidden = NO;
     cell.content = bookmark[@"title"];
+    cell.favIconView.image = self.favoriteIcon;
     __weak typeof(self) weakSelf = self;
     [cell setDeleteBlock:^(id sender) {
         [weakSelf delete:sender];

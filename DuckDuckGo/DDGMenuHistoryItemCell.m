@@ -114,12 +114,12 @@
 - (void)setNotification:(BOOL)notification
 {
     _notification = notification;
-    UIImage *image = nil;
-    if (notification) {
-        image = [[UIImage imageNamed:@"Notification"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    } else {
-        image = [UIImage imageNamed:@"favorite-small"];// imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    }
+//    UIImage *image = nil;
+//    if (notification) {
+//        image = [[UIImage imageNamed:@"Notification"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//    } else {
+//        image = [UIImage imageNamed:@"favorite-small"];// imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//    }
 }
 
 - (BOOL)shouldCauseMenuPanGestureToFail

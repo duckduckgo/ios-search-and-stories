@@ -62,6 +62,7 @@
             </tableViewCellContentView>
             <connections>
                 <outlet property="contentLabel" destination="Ams-D9-cNe" id="oos-oX-Xpr"/>
+                <outlet property="favIconView" destination="A97-YL-AYi" id="n2V-aL-cjG"/>
             </connections>
             <point key="canvasLocation" x="265" y="240"/>
         </tableViewCell>

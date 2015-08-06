@@ -277,6 +277,20 @@
     return [[self.fetchedResultsController sections][0]  numberOfObjects];
 }
 
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
+{
+    if(section==0) return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 2)];
+    return nil;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 2;
+}
+
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DDGMenuHistoryItemCell *historyItemCell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
@@ -405,7 +419,6 @@
 {
     NSString *content = nil;
     DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    DDGStory *story = historyItem.story;
     content = historyItem.title;
     __weak typeof(self) weakSelf = self;
     [cell setDeleteBlock:^(id sender) {

@@ -15,6 +15,7 @@
 @property (nonatomic, copy) void (^deleteBlock)(id sender);
 @property (nonatomic, strong) UIImage *faviconImage;
 @property (nonatomic, assign, getter = isNotification) BOOL notification;
+@property (nonatomic, strong) IBOutlet UIImageView* favIconView;
 
 - (void)setDeletable:(BOOL)deletable animated:(BOOL)animated;
 
