@@ -80,6 +80,7 @@
 + (UIColor*)duckSegmentBarForegroundSelected { return [UIColor duckSearchBarBackground]; }
 + (UIColor*)duckSegmentBarBorder { return [UIColor whiteColor]; }
 
++ (UIColor*)duckStoryMenuButtonBackground { return [[UIColor blackColor] colorWithAlphaComponent:0.5f]; }
 
 + (UIColor *)duckNoContentColor
 {

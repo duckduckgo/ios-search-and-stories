@@ -22,6 +22,7 @@
     </entity>
     <entity name="Story" representedClassName="DDGStory">
         <attribute name="articleURLString" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="descriptionString" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="feedDate" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="htmlDownloaded" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
@@ -42,6 +43,6 @@
     <elements>
         <element name="Feed" positionX="160" positionY="192" width="128" height="210"/>
         <element name="HistoryItem" positionX="160" positionY="192" width="128" height="120"/>
-        <element name="Story" positionX="261" positionY="189" width="128" height="255"/>
+        <element name="Story" positionX="261" positionY="189" width="128" height="270"/>
     </elements>
 </model>

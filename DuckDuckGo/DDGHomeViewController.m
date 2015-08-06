@@ -205,7 +205,7 @@
         CGSize segmentSize = self.favoritesTabViewController.segmentedControl.frame.size;
         segmentSize.width = controlBounds.size.width - 20.0;
         CGRect controlRect = CGRectMake(controlBounds.origin.x + ((controlBounds.size.width - segmentSize.width) / 2.0),
-                                        controlBounds.origin.y + ((controlBounds.size.height - segmentSize.height) / 2.0),
+                                        3.0,
                                         segmentSize.width,
                                         segmentSize.height);
         self.favoritesTabViewController.segmentedControl.frame = CGRectIntegral(controlRect);
@@ -249,7 +249,7 @@
         CGSize segmentSize = self.recentsController.segmentedControl.frame.size;
         segmentSize.width = controlBounds.size.width - 20.0;
         CGRect controlRect = CGRectMake(controlBounds.origin.x + ((controlBounds.size.width - segmentSize.width) / 2.0),
-                                        controlBounds.origin.y + ((controlBounds.size.height - segmentSize.height) / 2.0),
+                                        3.0,
                                         segmentSize.width,
                                         segmentSize.height);
         self.recentsController.segmentedControl.frame = CGRectIntegral(controlRect);

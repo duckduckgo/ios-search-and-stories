@@ -8,18 +8,24 @@
 
 #import "DDGFaviconButton.h"
 #import "DDGStoryCell.h"
+#import "DDGStoryFeed.h"
+#import "UIFont+DDG.h"
 
 NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
-CGFloat const DDGTitleBarHeight = 35.0f;
+CGFloat const DDGTitleBarHeight = 57.0f;
+CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 == mosaicmode,    114/475 == 0.24 == normalmode   other: 114/360
 
 @interface DDGStoryCell ()
 
 @property (nonatomic, strong) UIImageView *backgroundImageView;
-@property (nonatomic, strong) UIView *contentBackgroundView;
+@property (nonatomic, strong) UIButton *menuButton;
+@property (nonatomic, strong) UIView *titleBackgroundView;
 @property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) UIView *innerShadowView;
 @property (nonatomic, strong) UILabel* textLabel;
+@property (nonatomic, strong) UIButton* categoryLabel;
+@property (nonatomic, assign, getter = isRead) BOOL read;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
 
 @end
@@ -58,12 +64,6 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     [self setNeedsLayout];
 }
 
-- (void)setFavicon:(UIImage *)favicon
-{
-    _favicon = favicon;
-    [self.faviconButton setImage:favicon forState:UIControlStateNormal];
-}
-
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
     // Empty stub!
@@ -85,11 +85,17 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     // Empty stub!
 }
 
-- (void)setTitle:(NSString *)title
+- (void)setStory:(DDGStory *)story
 {
-    _title = [title copy];
-    [self.textLabel setText:title];
+    _story = story;
+    self.textLabel.text = story.title;
+    [self.categoryLabel setTitle:story.category forState:UIControlStateNormal];
+    self.read = story.readValue;
+    if (story.feed) {
+        [self.faviconButton setImage:[story.feed image] forState:UIControlStateNormal];
+    }
 }
+
 
 #pragma mark -
 
@@ -98,16 +104,28 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     self.displaysDropShadow = YES;
     self.displaysInnerShadow = NO;
     
-    UIImageView *backgroundImageView = [UIImageView new];
-    backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
-    backgroundImageView.clipsToBounds = YES;
-    [self.contentView addSubview:backgroundImageView];
-    self.backgroundImageView = backgroundImageView;
+    self.backgroundImageView = [UIImageView new];
+    self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
+    self.backgroundImageView.clipsToBounds = YES;
+    [self.contentView addSubview:self.backgroundImageView];
     
-    UIView *contentBackgroundView = [UIView new];
-    contentBackgroundView.backgroundColor = [UIColor duckStoryTitleBackground];
-    [self.contentView addSubview:contentBackgroundView];
-    self.contentBackgroundView = contentBackgroundView;
+    self.menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.menuButton.backgroundColor = [UIColor duckStoryMenuButtonBackground];
+    [self.menuButton setImage:[UIImage imageNamed:@"menu-white"] forState:UIControlStateNormal];
+    self.menuButton.layer.cornerRadius = 4.5f;
+    [self.contentView addSubview:self.menuButton];
+    
+    self.categoryLabel = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.categoryLabel.backgroundColor = [UIColor duckStoryMenuButtonBackground];
+    self.categoryLabel.titleLabel.textColor = [UIColor whiteColor];
+    self.categoryLabel.titleLabel.textAlignment = NSTextAlignmentCenter;
+    //self.categoryLabel.opaque = NO;
+    self.categoryLabel.layer.cornerRadius = 4.5f;
+    [self.contentView addSubview:self.categoryLabel];
+    
+    self.titleBackgroundView = [UIView new];
+    self.titleBackgroundView.backgroundColor = [UIColor duckStoryTitleBackground];
+    [self.contentView addSubview:self.titleBackgroundView];
     
     UIView *dropShadowView = [UIView new];
     dropShadowView.backgroundColor = [UIColor duckStoryDropShadowColor];
@@ -123,13 +141,12 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     
     self.textLabel = [UILabel new];
     self.textLabel.backgroundColor = [UIColor clearColor];
-    self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0f];
     self.textLabel.numberOfLines = 2;
     self.textLabel.opaque = NO;
     [self.contentView addSubview:self.textLabel];
     
-    DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
-    faviconButton.frame = CGRectMake(0.0f, 0.0f, 40.0f, 40.0f);
+DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
+    faviconButton.frame = CGRectMake(15.0f, 15.0f, 27.0f, 27.0f);
     faviconButton.opaque = NO;
     faviconButton.backgroundColor = [UIColor clearColor];
 #pragma clang diagnostic push
@@ -150,9 +167,12 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     //Let's set everything up.
     CGRect bounds = self.contentView.bounds;
     
-    CGRect backgroundImageViewBounds = bounds;
-    backgroundImageViewBounds.size.height -= DDGTitleBarHeight;
-    [self.backgroundImageView setFrame:backgroundImageViewBounds];
+    BOOL compactMode = bounds.size.width < 300; // a bit arbitrary
+    NSLog(@"compact mode: %i", compactMode);
+    
+    // adjust the font sizes according to the space available
+    self.categoryLabel.titleLabel.font = compactMode ? [UIFont duckStoryCategorySmall] : [UIFont duckStoryCategory];
+    self.textLabel.font = compactMode ? [UIFont duckStoryTitleSmall] : [UIFont duckStoryTitle];
     
     if (self.displaysDropShadow) {
         CGRect dropShadowBounds = bounds;
@@ -168,40 +188,36 @@ CGFloat const DDGTitleBarHeight = 35.0f;
     }
     
     CGRect faviconFrame = self.faviconButton.frame;    
-    
-    CGFloat textWidth = bounds.size.width - faviconFrame.size.width - 16.0;
+    CGFloat textWidth = bounds.size.width - faviconFrame.origin.x  -  faviconFrame.size.width - 30;
     NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-    CGSize textSize = CGRectIntegral([self.textLabel.text boundingRectWithSize:CGSizeMake(textWidth, MAXFLOAT)
-                                                                       options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
-                                                                    attributes:@{NSFontAttributeName: self.textLabel.font,
-                                                                                 NSParagraphStyleAttributeName: paragraphStyle}
-                                                                          context:nil]).size;
+    CGRect titleBackgroundFrame = [self.titleBackgroundView frame];
     
-    CGRect contentBackgroundFrame = [self.contentBackgroundView frame];
-    CGFloat lineHeight = self.textLabel.font.lineHeight + 2.0;
+    titleBackgroundFrame.size.height = DDGTitleBarHeight; //MAX(lineHeight, DDGTitleBarHeight);
     
-    BOOL multiLine = (textSize.height > lineHeight);
+    CGRect backgroundImageViewBounds = bounds;
+    backgroundImageViewBounds.size.height -= titleBackgroundFrame.size.height;
+    self.backgroundImageView.frame = backgroundImageViewBounds;
     
-    if (multiLine) {
-        contentBackgroundFrame.size.height = 51.0f;
-    } else {
-        contentBackgroundFrame.size.height = MAX(lineHeight, DDGTitleBarHeight);
-    }
+    titleBackgroundFrame.origin.x = 0;
+    titleBackgroundFrame.origin.y = bounds.size.height - titleBackgroundFrame.size.height;
+    titleBackgroundFrame.size.width = bounds.size.width;
     
-    contentBackgroundFrame.origin.x = 0;
-    contentBackgroundFrame.origin.y = bounds.size.height - contentBackgroundFrame.size.height;
-    contentBackgroundFrame.size.width = bounds.size.width;
+    [self.titleBackgroundView setFrame:titleBackgroundFrame];
     
-    [self.contentBackgroundView setFrame:contentBackgroundFrame];
+    CGSize categorySize = [self.categoryLabel sizeThatFits:CGSizeMake(MAXFLOAT, 25)];
+    categorySize.width += 20; // add some space on either side of the text
+    self.categoryLabel.frame = CGRectMake(bounds.size.width - 40 - 8 - 8 - categorySize.width, 8, categorySize.width, 25);
+    self.menuButton.frame = CGRectMake(bounds.size.width - 40 - 8, 8, 40, 25);
+    self.categoryLabel.hidden = self.story.category==nil;
     
     CGPoint center = [self.faviconButton center];
-    center.y = CGRectGetMidY(contentBackgroundFrame);
+    center.y = CGRectGetMidY(titleBackgroundFrame);
     [self.faviconButton setCenter:center];
     
-    CGRect textFrame = [self.contentBackgroundView frame];
-    textFrame.origin.y += 1.0;
-    textFrame.origin.x += faviconFrame.size.width;
+    CGRect textFrame = [self.titleBackgroundView frame];
+    //textFrame.origin.y += 1.0;
+    textFrame.origin.x = 57; //+= faviconFrame.size.width;
     textFrame.size.width = textWidth;
         
     self.textLabel.frame = textFrame;

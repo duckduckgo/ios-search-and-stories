@@ -179,7 +179,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
             
             if ([JSON isKindOfClass:[NSArray class]]) {
                 NSArray *items = (NSArray *)JSON;
-                                
+                
                 NSDictionary *feedsByID = [self feedsByIDInContext:context enabledFeedsOnly:NO];
                 
                 feedDate = [NSDate date];
@@ -216,6 +216,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                     [story setValue:[feedsByID objectForKey:feedID] forKey:@"feed"];
                     
                     story.descriptionString = [storyDict valueForKey:@"description"];
+                    story.category = [storyDict valueForKey:@"category"];
                     story.imageURLString = [storyDict valueForKey:@"image"];
                     story.urlString = [storyDict valueForKey:@"url"];
                     story.title = [storyDict valueForKey:@"title"];

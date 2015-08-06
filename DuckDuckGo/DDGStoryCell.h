@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DDGStory.h"
 
 extern NSString *const DDGStoryCellIdentifier;
 
@@ -14,9 +15,7 @@ extern NSString *const DDGStoryCellIdentifier;
 
 @property (nonatomic, assign) BOOL displaysDropShadow;
 @property (nonatomic, assign) BOOL displaysInnerShadow;
-@property (nonatomic, strong) UIImage *favicon;
 @property (nonatomic, strong) UIImage *image;
-@property (nonatomic, assign, getter = isRead) BOOL read;
-@property (nonatomic, copy) NSString *title;
+@property (nonatomic, strong) DDGStory* story;
 
 @end

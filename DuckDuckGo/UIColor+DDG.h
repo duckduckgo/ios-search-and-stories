@@ -43,6 +43,8 @@
 + (UIColor*)duckSegmentBarForegroundSelected;
 + (UIColor*)duckSegmentBarBorder;
 
++ (UIColor*)duckStoryMenuButtonBackground;
+
 + (UIColor *)autocompleteDetailColor;
 + (UIColor *)autocompleteHeaderColor;
 + (UIColor *)autocompleteTextColor;

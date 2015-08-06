@@ -324,6 +324,7 @@
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		8464976D1B3D3FE600BAF256 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */; };
 		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
+		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
 		84B3AEFE1B32FAA800FF3453 /* DuckDuckGo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */; };
 		84BFA1231B6142B700C4C139 /* DDGWebToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */; };
 		84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */; };
@@ -758,6 +759,9 @@
 		8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGHomeViewController.xib; sourceTree = "<group>"; };
 		84A640A01B6FBCB300643A39 /* DDGUnderViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewControllerCell.h; sourceTree = "<group>"; };
 		84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewControllerCell.m; sourceTree = "<group>"; };
+		84A640A31B72DC6C00643A39 /* Stories v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Stories v3.xcdatamodel"; sourceTree = "<group>"; };
+		84A640A71B7368D800643A39 /* UIFont+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+DDG.h"; sourceTree = "<group>"; };
+		84A640A81B7368D800643A39 /* UIFont+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+DDG.m"; sourceTree = "<group>"; };
 		84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = DuckDuckGo.storyboard; path = UI/DuckDuckGo.storyboard; sourceTree = "<group>"; };
 		84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGWebToolbar.xib; sourceTree = "<group>"; };
 		84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebToolbar.h; sourceTree = "<group>"; };
@@ -1460,6 +1464,8 @@
 				5B2FCABB16F231150045A5FE /* NSString+URLEncodingDDG.m */,
 				C1894FD5178F56830076C179 /* UIColor+DDG.h */,
 				C1894FD6178F56830076C179 /* UIColor+DDG.m */,
+				84A640A71B7368D800643A39 /* UIFont+DDG.h */,
+				84A640A81B7368D800643A39 /* UIFont+DDG.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -1805,7 +1811,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "cd \"$SRCROOT/DuckDuckGo\"\n/usr/local/bin/mogenerator --template-var arc=true -m \"Stories.xcdatamodeld/Stories v2.xcdatamodel\"";
+			shellScript = "cd \"$SRCROOT/DuckDuckGo\"\n/usr/local/bin/mogenerator --template-var arc=true -m \"Stories.xcdatamodeld/Stories v3.xcdatamodel\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1822,6 +1828,7 @@
 				7B76FECB18E1E4A500674702 /* UIViewController+DDGSlideOverMenuController.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
 				4CCDC2AF1527B18C00CB6907 /* DDGHistoryProvider.m in Sources */,
+				84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */,
 				4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */,
 				4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */,
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
@@ -2245,10 +2252,11 @@
 		5BFF24C216F77F9E00844D3B /* Stories.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				84A640A31B72DC6C00643A39 /* Stories v3.xcdatamodel */,
 				7BD55F10192F7D2A007B1518 /* Stories v2.xcdatamodel */,
 				5BFF24C316F77F9F00844D3B /* Stories.xcdatamodel */,
 			);
-			currentVersion = 7BD55F10192F7D2A007B1518 /* Stories v2.xcdatamodel */;
+			currentVersion = 84A640A31B72DC6C00643A39 /* Stories v3.xcdatamodel */;
 			path = Stories.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

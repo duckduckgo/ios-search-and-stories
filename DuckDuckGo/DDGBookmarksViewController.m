@@ -37,7 +37,7 @@
     
     [self.view setBackgroundColor:[UIColor duckNoContentColor]];
     
-    [self.largeIconImageView setImage:[UIImage imageNamed:@"NoFavorites"]];
+    [self.largeIconImageView setImage:[UIImage imageNamed:@"empty-favorites"]];
     
     NSParameterAssert(nil != self.searchController);
     

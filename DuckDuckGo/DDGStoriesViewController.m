@@ -28,7 +28,7 @@ NSString *const DDGLastViewedStoryKey = @"last_story";
 CGFloat const DDGStoriesInterRowSpacing = 10;
 CGFloat const DDGStoriesBetweenItemsSpacing = 10;
 CGFloat const DDGStoriesMulticolumnWidthThreshold = 500;
-CGFloat const DDGStoryImageRatio = 2.08f;  //1.597f = measured from iPhone screenshot; 1.36f = measured from iPad screenshot
+CGFloat const DDGStoryImageRatio = 1/0.48f; // 2.083333f;  //1.597f = measured from iPhone screenshot; 1.36f = measured from iPad screenshot
 CGFloat const DDGStoryImageRatioMosaic = 1.356f;
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
@@ -50,6 +50,9 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, weak) IBOutlet UIButton *swipeViewSaveButton;
 @property (nonatomic, weak) IBOutlet UIButton *swipeViewSafariButton;
 @property (nonatomic, weak) IBOutlet UIButton *swipeViewShareButton;
+@property (nonatomic, weak) IBOutlet UILabel* noStoriesTitle;
+@property (nonatomic, weak) IBOutlet UILabel* noStoriesSubtitle;
+
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
 @property (nonatomic, strong) NSMutableDictionary *decompressedImages;
@@ -228,6 +231,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
                 storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)*2/3;
             }
         }
+        storyRect.origin.y += DDGStoriesBetweenItemsSpacing;
     } else { // not a mosaic
         // the defaults are good enough
     }
@@ -317,10 +321,29 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 #pragma mark - No Stories
 
 - (void)showNoStoriesView {
+    if(self.storiesMode == DDGStoriesListModeNormal) return; // we don't show the no-stories view if in normal mode
+    
     if (nil == self.noStoriesView) {
         [[NSBundle mainBundle] loadNibNamed:@"NoStoriesView" owner:self options:nil];
         UIImageView *largeImageView = (UIImageView *)[self.noStoriesView viewWithTag:DDGLargeImageViewTag];
-        largeImageView.image = [UIImage imageNamed:@"NoFavorites"];
+        switch(self.storiesMode) {
+            case DDGStoriesListModeNormal: // won't get here anyway
+                break;
+            case DDGStoriesListModeFavorites:
+                largeImageView.image = [UIImage imageNamed:@"empty-favorites"];
+                self.noStoriesTitle.text = NSLocalizedString(@"No Favorites",
+                                                             @"the title of the view which is shown when there are no favorited stories");
+                self.noStoriesSubtitle.text = NSLocalizedString(@"Add searches and stories to your favorites, and they will be shown here.",
+                                                                @"title detail text in the view which is shown when there are no recently viewed stories");
+                break;
+            case DDGStoriesListModeRecents:
+                largeImageView.image = [UIImage imageNamed:@"empty-recents"];
+                self.noStoriesTitle.text = NSLocalizedString(@"No Recents",
+                                                             @"the title of the view which is shown when there are no recently viewed stories");
+                self.noStoriesSubtitle.text = NSLocalizedString(@"Browse stories and search the web, and your recents will be shown here.",
+                                                                @"title detail text in the view which is shown when there are no recently viewed stories");
+                break;
+        }
     }
     
     [UIView animateWithDuration:0 animations:^{
@@ -1205,11 +1228,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
     cell.displaysDropShadow = YES; //(indexPath.item == ([self.storyView numberOfItemsInSection:0] - 1));
     cell.displaysInnerShadow = NO; //(indexPath.item != 0);
-    cell.title = story.title;
-    cell.read = story.readValue;
-    if (story.feed) {
-        cell.favicon = [story.feed image];
-    }
+    cell.story = story;
     UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
     if (image) {
         cell.image = image;
