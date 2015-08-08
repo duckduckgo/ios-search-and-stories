@@ -10,23 +10,128 @@
 #import "DDGStoryCell.h"
 #import "DDGStoryFeed.h"
 #import "UIFont+DDG.h"
+#import "DDGPopoverViewController.h"
+#import "SVProgressHUD.h"
+#import "DDGActivityItemProvider.h"
+#import "DDGActivityViewController.h"
+#import "DDGSafariActivity.h"
+#import "DDGStoriesViewController.h"
 
 NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 CGFloat const DDGTitleBarHeight = 57.0f;
 CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 == mosaicmode,    114/475 == 0.24 == normalmode   other: 114/360
 
+
+@interface DDGStoryMenu : UITableViewController <UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, strong) DDGStoryCell* storyCell;
+
+@end
+
+
+
+@implementation DDGStoryMenu
+
+
++(DDGStoryMenu*)menuForStoryCell:(DDGStoryCell*)storyCell
+{
+    DDGStoryMenu* menu = [[DDGStoryMenu alloc] init];
+    menu.storyCell = storyCell;
+    return menu;
+}
+
+-(id)init
+{
+    self = [super initWithStyle:UITableViewStylePlain];
+    if(self) {
+        self.tableView.rowHeight = 44;
+    }
+    return self;
+}
+
+-(void)viewDidLoad
+{
+    [super viewDidLoad];
+    self.preferredContentSize = CGSizeMake(180, 44 * [self tableView:self.tableView numberOfRowsInSection:0]);
+    self.tableView.scrollEnabled = FALSE;
+}
+
+-(NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
+{
+    NSUInteger rows = 3; // add/remove-fave, share, view-in-browser.  ...what about remove(?)
+    return rows;
+}
+
+-(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DDGStoryMenuCell"];
+    if(cell==nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DDGStoryMenuCell"];
+    }
+    cell.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
+    if(indexPath.section==0) {
+        switch(indexPath.row) {
+            case 0:
+                if(self.storyCell.story.savedValue) {
+                    cell.textLabel.text = NSLocalizedString(@"Unfavorite", @"story menu item to remove the current story from the favorites");
+
+                } else {
+                    cell.textLabel.text = NSLocalizedString(@"Add to Favorites", @"story menu item to add the current story to the favorites");
+                }
+                break;
+            case 1:
+                cell.textLabel.text = NSLocalizedString(@"Share", @"story menu item to share the current story");
+                break;
+            case 2:
+                cell.textLabel.text = NSLocalizedString(@"View in Browser", @"story menu item to open the current story in an external browser");
+                break;
+            case 3:
+                cell.textLabel.text = NSLocalizedString(@"Remove", @"story menu item to... I'm not sure what to remove from.  Probably favorites?  Or the list of sources?");
+                break;
+            default:
+                cell.textLabel.text = @"?";
+        }
+    } else {
+        cell.textLabel.text = @"?";
+    }
+    return cell;
+}
+
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    switch(indexPath.row) {
+        case 0: // fave/un-fave
+            [self.storyCell toggleSavedState];
+            break;
+        case 1: // share
+            [self.storyCell share];
+            break;
+        case 2: // open in browser
+            [self.storyCell openInBrowser];
+            break;
+    }
+}
+
+@end // DDGStoryMenu implementation
+
+
+
+
+
 @interface DDGStoryCell ()
 
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIButton *menuButton;
+@property (nonatomic, strong) UIButton* categoryButton;
 @property (nonatomic, strong) UIView *titleBackgroundView;
 @property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) UIView *innerShadowView;
 @property (nonatomic, strong) UILabel* textLabel;
-@property (nonatomic, strong) UIButton* categoryLabel;
 @property (nonatomic, assign, getter = isRead) BOOL read;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
+
+@property (nonatomic, strong) DDGPopoverViewController* menuPopover;
 
 @end
 
@@ -47,6 +152,76 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 {
     return DDGStoryCellIdentifier;
 }
+
+
+-(void)toggleSavedState
+{
+    DDGPopoverViewController* popover = self.menuPopover;
+    void(^toggleState)() = ^() {
+        self.story.savedValue = !self.story.savedValue;
+        NSManagedObjectContext *context = self.story.managedObjectContext;
+        [context performBlock:^{
+            NSError *error = nil;
+            if (![context save:&error])
+                NSLog(@"error: %@", error);
+        }];
+        NSString *status = self.story.savedValue ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
+        UIImage *image = self.story.savedValue ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [SVProgressHUD
+         showImage:image status:status];
+    };
+    if(popover==nil) {
+        toggleState();
+    } else {
+        [popover dismissViewControllerAnimated:TRUE completion:toggleState];
+    }
+}
+
+
+-(void)share
+{
+    DDGPopoverViewController* popover = self.menuPopover;
+    void(^share)() = ^() {
+        NSString *shareTitle = self.story.title;
+        NSURL *shareURL = self.story.URL;
+        
+        DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
+        [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", shareTitle, shareURL] forActivityType:UIActivityTypeMail];
+        
+        DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];
+        NSArray *items = @[titleProvider, urlItem];
+        
+        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:@[]];
+        [self.storiesController presentViewController:avc animated:YES completion:NULL];
+
+    };
+    if(popover==nil) {
+        share();
+    } else {
+        [popover dismissViewControllerAnimated:TRUE completion:share];
+    }
+}
+
+
+
+-(void)openInBrowser
+{
+    DDGPopoverViewController* popover = self.menuPopover;
+    void(^openInBrowser)() = ^() {
+        NSURL *storyURL = self.story.URL;
+        
+        if (nil == storyURL)
+            return;
+        
+        [[UIApplication sharedApplication] openURL:storyURL];
+    };
+    if(popover==nil) {
+        openInBrowser();
+    } else {
+        [popover dismissViewControllerAnimated:TRUE completion:openInBrowser];
+    }
+}
+
 
 
 #pragma mark -
@@ -89,11 +264,26 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 {
     _story = story;
     self.textLabel.text = story.title;
-    [self.categoryLabel setTitle:story.category forState:UIControlStateNormal];
+    [self.categoryButton setTitle:story.category forState:UIControlStateNormal];
     self.read = story.readValue;
     if (story.feed) {
         [self.faviconButton setImage:[story.feed image] forState:UIControlStateNormal];
     }
+}
+
+-(void)menuButtonSelected:(id)sender
+{
+    DDGStoryMenu* menu = [DDGStoryMenu menuForStoryCell:self];
+    self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu];
+    [self.menuPopover presentPopoverFromRect:self.menuButton.frame
+                                      inView:self
+                    permittedArrowDirections:UIPopoverArrowDirectionAny
+                                    animated:TRUE];
+}
+
+-(void)categoryButtonSelected:(id)sender
+{
+    
 }
 
 
@@ -113,15 +303,16 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
     self.menuButton.backgroundColor = [UIColor duckStoryMenuButtonBackground];
     [self.menuButton setImage:[UIImage imageNamed:@"menu-white"] forState:UIControlStateNormal];
     self.menuButton.layer.cornerRadius = 4.5f;
+    [self.menuButton addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.menuButton];
     
-    self.categoryLabel = [UIButton buttonWithType:UIButtonTypeCustom];
-    self.categoryLabel.backgroundColor = [UIColor duckStoryMenuButtonBackground];
-    self.categoryLabel.titleLabel.textColor = [UIColor whiteColor];
-    self.categoryLabel.titleLabel.textAlignment = NSTextAlignmentCenter;
+    self.categoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    self.categoryButton.backgroundColor = [UIColor duckStoryMenuButtonBackground];
+    self.categoryButton.titleLabel.textColor = [UIColor whiteColor];
+    self.categoryButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     //self.categoryLabel.opaque = NO;
-    self.categoryLabel.layer.cornerRadius = 4.5f;
-    [self.contentView addSubview:self.categoryLabel];
+    self.categoryButton.layer.cornerRadius = 4.5f;
+    [self.contentView addSubview:self.categoryButton];
     
     self.titleBackgroundView = [UIView new];
     self.titleBackgroundView.backgroundColor = [UIColor duckStoryTitleBackground];
@@ -171,7 +362,7 @@ DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeC
     NSLog(@"compact mode: %i", compactMode);
     
     // adjust the font sizes according to the space available
-    self.categoryLabel.titleLabel.font = compactMode ? [UIFont duckStoryCategorySmall] : [UIFont duckStoryCategory];
+    self.categoryButton.titleLabel.font = compactMode ? [UIFont duckStoryCategorySmall] : [UIFont duckStoryCategory];
     self.textLabel.font = compactMode ? [UIFont duckStoryTitleSmall] : [UIFont duckStoryTitle];
     
     if (self.displaysDropShadow) {
@@ -205,11 +396,11 @@ DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeC
     
     [self.titleBackgroundView setFrame:titleBackgroundFrame];
     
-    CGSize categorySize = [self.categoryLabel sizeThatFits:CGSizeMake(MAXFLOAT, 25)];
+    CGSize categorySize = [self.categoryButton sizeThatFits:CGSizeMake(MAXFLOAT, 25)];
     categorySize.width += 20; // add some space on either side of the text
-    self.categoryLabel.frame = CGRectMake(bounds.size.width - 40 - 8 - 8 - categorySize.width, 8, categorySize.width, 25);
+    self.categoryButton.frame = CGRectMake(bounds.size.width - 40 - 8 - 8 - categorySize.width, 8, categorySize.width, 25);
     self.menuButton.frame = CGRectMake(bounds.size.width - 40 - 8, 8, 40, 25);
-    self.categoryLabel.hidden = self.story.category==nil;
+    self.categoryButton.hidden = self.story.category==nil;
     
     CGPoint center = [self.faviconButton center];
     center.y = CGRectGetMidY(titleBackgroundFrame);

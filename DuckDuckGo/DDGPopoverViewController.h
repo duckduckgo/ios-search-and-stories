@@ -20,8 +20,8 @@
 
 - (id)initWithContentViewController:(UIViewController *)viewController;
 
-- (void)presentPopoverFromRect:(CGRect)rect
-                        inView:(UIView *)view
+- (void)presentPopoverFromRect:(CGRect)originRect
+                        inView:(UIView *)originView
       permittedArrowDirections:(UIPopoverArrowDirection)arrowDirections
                       animated:(BOOL)animated;
 

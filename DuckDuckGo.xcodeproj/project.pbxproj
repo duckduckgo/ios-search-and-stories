@@ -116,12 +116,8 @@
 		5B15F32C1728389F00912482 /* menu_bang-default.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3241728389F00912482 /* menu_bang-default.png */; };
 		5B15F32D1728389F00912482 /* menu_bang-default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3251728389F00912482 /* menu_bang-default@2x.png */; };
 		5B15F3D017394CC100912482 /* DDGPopoverViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B15F3CF17394CC000912482 /* DDGPopoverViewController.m */; };
-		5B15F3D817394CDF00912482 /* bang-info_frame.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3D217394CDF00912482 /* bang-info_frame.png */; };
-		5B15F3D917394CDF00912482 /* bang-info_frame@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3D317394CDF00912482 /* bang-info_frame@2x.png */; };
 		5B15F3DA17394CDF00912482 /* bang-info_icon-close.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3D417394CDF00912482 /* bang-info_icon-close.png */; };
 		5B15F3DB17394CDF00912482 /* bang-info_icon-close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3D517394CDF00912482 /* bang-info_icon-close@2x.png */; };
-		5B15F3DC17394CDF00912482 /* bang-info_indicator.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3D617394CDF00912482 /* bang-info_indicator.png */; };
-		5B15F3DD17394CDF00912482 /* bang-info_indicator@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3D717394CDF00912482 /* bang-info_indicator@2x.png */; };
 		5B15F3DF17394E2C00912482 /* DDGBangInfo.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B15F3DE17394E2B00912482 /* DDGBangInfo.xib */; };
 		5B2FCABC16F231150045A5FE /* NSString+URLEncodingDDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCABB16F231150045A5FE /* NSString+URLEncodingDDG.m */; };
 		5B2FCABF16F3235E0045A5FE /* DDGBookmarkActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B2FCABE16F3235E0045A5FE /* DDGBookmarkActivity.m */; };
@@ -462,12 +458,8 @@
 		5B15F3251728389F00912482 /* menu_bang-default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "menu_bang-default@2x.png"; sourceTree = "<group>"; };
 		5B15F3CE17394CC000912482 /* DDGPopoverViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGPopoverViewController.h; sourceTree = "<group>"; };
 		5B15F3CF17394CC000912482 /* DDGPopoverViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGPopoverViewController.m; sourceTree = "<group>"; };
-		5B15F3D217394CDF00912482 /* bang-info_frame.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang-info_frame.png"; sourceTree = "<group>"; };
-		5B15F3D317394CDF00912482 /* bang-info_frame@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang-info_frame@2x.png"; sourceTree = "<group>"; };
 		5B15F3D417394CDF00912482 /* bang-info_icon-close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang-info_icon-close.png"; sourceTree = "<group>"; };
 		5B15F3D517394CDF00912482 /* bang-info_icon-close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang-info_icon-close@2x.png"; sourceTree = "<group>"; };
-		5B15F3D617394CDF00912482 /* bang-info_indicator.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang-info_indicator.png"; sourceTree = "<group>"; };
-		5B15F3D717394CDF00912482 /* bang-info_indicator@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bang-info_indicator@2x.png"; sourceTree = "<group>"; };
 		5B15F3DE17394E2B00912482 /* DDGBangInfo.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGBangInfo.xib; sourceTree = "<group>"; };
 		5B2FCABA16F231150045A5FE /* NSString+URLEncodingDDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+URLEncodingDDG.h"; sourceTree = "<group>"; };
 		5B2FCABB16F231150045A5FE /* NSString+URLEncodingDDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+URLEncodingDDG.m"; sourceTree = "<group>"; };
@@ -1105,12 +1097,8 @@
 			children = (
 				5B15F3CE17394CC000912482 /* DDGPopoverViewController.h */,
 				5B15F3CF17394CC000912482 /* DDGPopoverViewController.m */,
-				5B15F3D217394CDF00912482 /* bang-info_frame.png */,
-				5B15F3D317394CDF00912482 /* bang-info_frame@2x.png */,
 				5B15F3D417394CDF00912482 /* bang-info_icon-close.png */,
 				5B15F3D517394CDF00912482 /* bang-info_icon-close@2x.png */,
-				5B15F3D617394CDF00912482 /* bang-info_indicator.png */,
-				5B15F3D717394CDF00912482 /* bang-info_indicator@2x.png */,
 			);
 			name = Popover;
 			sourceTree = "<group>";
@@ -1761,12 +1749,8 @@
 				5B15F32B1728389F00912482 /* menu_bang-active@2x.png in Resources */,
 				5B15F32C1728389F00912482 /* menu_bang-default.png in Resources */,
 				5B15F32D1728389F00912482 /* menu_bang-default@2x.png in Resources */,
-				5B15F3D817394CDF00912482 /* bang-info_frame.png in Resources */,
-				5B15F3D917394CDF00912482 /* bang-info_frame@2x.png in Resources */,
 				5B15F3DA17394CDF00912482 /* bang-info_icon-close.png in Resources */,
 				5B15F3DB17394CDF00912482 /* bang-info_icon-close@2x.png in Resources */,
-				5B15F3DC17394CDF00912482 /* bang-info_indicator.png in Resources */,
-				5B15F3DD17394CDF00912482 /* bang-info_indicator@2x.png in Resources */,
 				5B15F3DF17394E2C00912482 /* DDGBangInfo.xib in Resources */,
 				5BDC6A51174BB1AA0065BB8D /* welcome_logo.png in Resources */,
 				5BDC6A52174BB1AA0065BB8D /* welcome_logo@2x.png in Resources */,

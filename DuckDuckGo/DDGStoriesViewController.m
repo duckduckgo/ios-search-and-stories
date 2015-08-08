@@ -8,7 +8,6 @@
 
 #import "DDGStoriesViewController.h"
 #import "DDGSettingsViewController.h"
-#import "DDGPanGestureRecognizer.h"
 #import "DDGStory.h"
 #import "DDGStoryFeed.h"
 #import "DDGStoryCell.h"
@@ -43,13 +42,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
 @property (nonatomic, strong) NSOperationQueue *imageDecompressionQueue;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
-@property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
-@property (nonatomic, strong) DDGPanGestureRecognizer *panLeftGestureRecognizer;
 @property (nonatomic, strong) IBOutlet UICollectionView *storyView;
-@property (strong, nonatomic) IBOutlet UIView *swipeView;
-@property (nonatomic, weak) IBOutlet UIButton *swipeViewSaveButton;
-@property (nonatomic, weak) IBOutlet UIButton *swipeViewSafariButton;
-@property (nonatomic, weak) IBOutlet UIButton *swipeViewShareButton;
 @property (nonatomic, weak) IBOutlet UILabel* noStoriesTitle;
 @property (nonatomic, weak) IBOutlet UILabel* noStoriesSubtitle;
 
@@ -274,9 +267,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     [self.imageDownloadQueue cancelAllOperations];
     self.imageDownloadQueue = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
 }
 
 - (DDGHistoryProvider *)historyProvider {
@@ -376,10 +366,13 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     storyView.delegate = self;
     storyView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [storyView registerClass:DDGStoryCell.class forCellWithReuseIdentifier:DDGStoryCellIdentifier];
-    self.refreshControl = [[UIRefreshControl alloc]init];
-    [storyView addSubview:self.refreshControl];
-    [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
-
+    
+    if(self.storiesMode==DDGStoriesListModeNormal) {
+        self.refreshControl = [[UIRefreshControl alloc] init];
+        [storyView addSubview:self.refreshControl];
+        [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
+    }
+    
     [self.view addSubview:storyView];
     self.storyView = storyView;
     
@@ -394,12 +387,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     //            [[stories objectAtIndex:i] prefetchAndDecompressImage];
     //    });
         
-    DDGPanGestureRecognizer* panLeftGestureRecognizer = [[DDGPanGestureRecognizer alloc] initWithTarget:self action:@selector(panLeft:)];
-    panLeftGestureRecognizer.maximumNumberOfTouches = 1;
-    
-    self.panLeftGestureRecognizer = panLeftGestureRecognizer;
-    [[self.slideOverMenuController panGesture] requireGestureRecognizerToFail:panLeftGestureRecognizer];
-    
     NSOperationQueue *queue = [NSOperationQueue new];
     queue.maxConcurrentOperationCount = 2;
     queue.name = @"DDG Watercooler Image Download Queue";
@@ -416,7 +403,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 }
 
 - (void)viewDidUnload {
-    [self setSwipeView:nil];
     [super viewDidUnload];
     
     self.decompressedImages = nil;
@@ -428,9 +414,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     self.enqueuedDownloadOperations = nil;
     self.enqueuedDecompressionOperations = nil;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -470,25 +453,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             _storyView.transform = CGAffineTransformIdentity;
         }];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(slidingViewUnderLeftWillAppear:)
-                                                 name:DDGSlideOverMenuWillAppearNotification
-                                               object:nil];
-    
-    [self.storyView addGestureRecognizer:self.panLeftGestureRecognizer];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
-    
-    [self.storyView removeGestureRecognizer:self.panLeftGestureRecognizer];
 	[super viewWillDisappear:animated];
     
     [self.imageDownloadQueue cancelAllOperations];
@@ -513,44 +481,36 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 #ifndef __clang_analyzer__
 - (IBAction)filter:(id)sender {
+    DDGStory *story = nil;
     
-    void (^completion)() = ^() {
-        DDGStory *story = nil;
-        
-        if ([sender isKindOfClass:[UIButton class]]) {
-            UIButton *button = (UIButton *)sender;
-            CGPoint point = [button convertPoint:button.bounds.origin toView:self.storyView];
-            NSIndexPath *indexPath = [self.storyView indexPathForItemAtPoint:point];
-            story = [self fetchedStoryAtIndexPath:indexPath];
-        }
-        
-        if (nil != self.sourceFilter) {
-            self.sourceFilter = nil;
-        } else if ([sender isKindOfClass:[UIButton class]]) {
-            self.sourceFilter = story.feed;
-        }
-
-        NSPredicate *predicate = nil;
-        if (nil != self.sourceFilter)
-            predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
-
-        NSArray *oldStories = [self fetchedStories];
-        [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
-        self.fetchedResultsController.delegate = nil;
-        self.fetchedResultsController = nil;
-        
-        NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
-        self.fetchedResultsController = [self fetchedResultsController:feedDate];
-        
-        NSArray *newStories = [self fetchedStories];
-        
-        [self replaceStories:oldStories withStories:newStories focusOnStory:story];
-    };
+    if ([sender isKindOfClass:[UIButton class]]) {
+        UIButton *button = (UIButton *)sender;
+        CGPoint point = [button convertPoint:button.bounds.origin toView:self.storyView];
+        NSIndexPath *indexPath = [self.storyView indexPathForItemAtPoint:point];
+        story = [self fetchedStoryAtIndexPath:indexPath];
+    }
     
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:completion];
-    else
-        completion();
+    if (nil != self.sourceFilter) {
+        self.sourceFilter = nil;
+    } else if ([sender isKindOfClass:[UIButton class]]) {
+        self.sourceFilter = story.feed;
+    }
+    
+    NSPredicate *predicate = nil;
+    if (nil != self.sourceFilter)
+        predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
+    
+    NSArray *oldStories = [self fetchedStories];
+    [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
+    self.fetchedResultsController.delegate = nil;
+    self.fetchedResultsController = nil;
+    
+    NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
+    self.fetchedResultsController = [self fetchedResultsController:feedDate];
+    
+    NSArray *newStories = [self fetchedStories];
+    
+    [self replaceStories:oldStories withStories:newStories focusOnStory:story];
 }
 #endif
 
@@ -624,213 +584,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 #pragma mark - Swipe View
 
-- (IBAction)openInSafari:(id)sender {
-    if (nil == self.swipeViewIndexPath)
-        return;
-    
-    NSArray *stories = [self fetchedStories];
-    DDGStory *story = [stories objectAtIndex:self.swipeViewIndexPath.item];
-    
-    
-    double delayInSeconds = 0.2;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-        
-        NSURL *storyURL = story.URL;
-        
-        if (nil == storyURL)
-            return;
-        
-        [[UIApplication sharedApplication] openURL:storyURL];
-    });
-}
-
-- (void)save:(id)sender {
-    if (nil == self.swipeViewIndexPath)
-        return;
-    
-    DDGStory *story = [self fetchedStoryAtIndexPath:self.swipeViewIndexPath];
-    
-    double delayInSeconds = 0.2;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-            story.savedValue = !story.savedValue;
-            NSManagedObjectContext *context = story.managedObjectContext;
-            [context performBlock:^{
-                NSError *error = nil;
-                if (![context save:&error])
-                    NSLog(@"error: %@", error);
-            }];
-            NSString *status = story.savedValue ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
-            UIImage *image = story.savedValue ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-            [SVProgressHUD showImage:image status:status];
-        }];
-    });    
-}
-
-- (void)share:(id)sender {
-    if (nil == self.swipeViewIndexPath)
-        return;
-    
-    DDGStory *story = [self fetchedStoryAtIndexPath:self.swipeViewIndexPath];
-    
-    double delayInSeconds = 0.2;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-            NSString *shareTitle = story.title;
-            NSURL *shareURL = story.URL;
-            
-            DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
-            [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", shareTitle, shareURL] forActivityType:UIActivityTypeMail];
-            
-            DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];            
-            NSArray *items = @[titleProvider, urlItem];
-            
-            DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:@[]];
-            [self presentViewController:avc animated:YES completion:NULL];
-        }];
-    });
-}
-
-- (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-    
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:DDGLastViewedStoryKey];
-}
-
-- (void)hideSwipeViewForIndexPath:(NSIndexPath *)indexPath completion:(void (^)())completion {
-    UICollectionViewCell* cell = [self.storyView cellForItemAtIndexPath:indexPath];
-    self.swipeViewIndexPath = nil;
-    
-    UIView *swipeView = self.swipeView;
-    self.swipeView = nil;
-    
-    [UIView animateWithDuration:0.1
-                     animations:^{
-                         cell.contentView.frame = swipeView.frame;
-                     } completion:^(BOOL finished) {
-                         [swipeView removeFromSuperview];
-                         if (NULL != completion)
-                             completion();
-                     }];
-    
-    [[self.slideOverMenuController panGesture] setEnabled:YES];
-}
-
-- (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath
-{
-    UICollectionViewCell* cell = [self.storyView cellForItemAtIndexPath:indexPath];
-    if (cell) {
-        UIView *behindView = cell.contentView;
-        CGRect swipeFrame = behindView.frame;
-        if (!self.swipeView) {
-            [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
-        }
-        [self.swipeView setTintColor:[UIColor whiteColor]];
-        DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
-        BOOL saved = story.savedValue;
-        NSString *imageName = (saved) ? @"Unfavorite" : @"Favorite";
-        [self.swipeViewSafariButton setImage:[[UIImage imageNamed:@"Safari"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                    forState:UIControlStateNormal];
-        [self.swipeViewSaveButton setImage:[[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                  forState:UIControlStateNormal];
-        [self.swipeViewShareButton setImage:[[UIImage imageNamed:@"ShareSwipe"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                   forState:UIControlStateNormal];
-        self.swipeView.frame = swipeFrame;
-        [behindView.superview insertSubview:self.swipeView belowSubview:behindView];
-        self.swipeViewIndexPath = indexPath;
-    }
-}
-
-- (void)showSwipeViewForIndexPath:(NSIndexPath *)indexPath {
-    
-    UICollectionViewCell* cell = [self.storyView cellForItemAtIndexPath:indexPath];
-    
-    void(^completion)() = ^() {
-        if (nil != cell) {
-            UIView *behindView = cell.contentView;
-            CGRect swipeFrame = behindView.frame;
-            [self insertSwipeViewForIndexPath:indexPath];
-            [UIView animateWithDuration:0.2
-                             animations:^{
-                                 behindView.frame = CGRectMake(swipeFrame.origin.x - swipeFrame.size.width,
-                                                               swipeFrame.origin.y,
-                                                               swipeFrame.size.width,
-                                                               swipeFrame.size.height);
-                             }];
-        }
-    };
-    
-    if (nil != self.swipeViewIndexPath) {
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:completion];
-    } else {
-        completion();
-    }
-}
-
-// Called when a left swipe occurred
-
-- (void)panLeft:(DDGPanGestureRecognizer *)recognizer {
-    
-    if (recognizer.state == UIGestureRecognizerStateFailed) {
-        
-    } else if (recognizer.state == UIGestureRecognizerStateEnded
-               || recognizer.state == UIGestureRecognizerStateCancelled) {
-        
-        if (nil != self.swipeViewIndexPath) {
-            UICollectionViewCell* cell = [self.storyView cellForItemAtIndexPath:self.swipeViewIndexPath];
-            CGPoint origin = self.swipeView.frame.origin;
-            CGRect contentFrame = cell.contentView.frame;
-            CGFloat offset = origin.x - contentFrame.origin.x;
-            CGFloat percent = offset / contentFrame.size.width;
-            
-            CGPoint velocity = [recognizer velocityInView:recognizer.view];
-            
-            [[self.slideOverMenuController panGesture] setEnabled:NO];
-            
-            if (velocity.x < 0 && percent > 0.25) {
-                CGFloat distanceRemaining = contentFrame.size.width - offset;
-                CGFloat duration = MIN(distanceRemaining / fabs(velocity.x), 0.4);
-                [UIView animateWithDuration:duration
-                                 animations:^{
-                                     cell.contentView.frame = CGRectMake(origin.x - contentFrame.size.width,
-                                                                         contentFrame.origin.y,
-                                                                         contentFrame.size.width,
-                                                                         contentFrame.size.height);
-                                 }];
-                
-            } else {
-                [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-            }
-        }
-        
-    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGPoint location = [recognizer locationInView:self.storyView];
-        NSIndexPath *indexPath = [self.storyView indexPathForItemAtPoint:location];
-        
-        if (nil != self.swipeViewIndexPath
-            && ![self.swipeViewIndexPath isEqual:indexPath]) {
-            [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-        }
-        
-        if (nil == self.swipeViewIndexPath) {
-            [self insertSwipeViewForIndexPath:indexPath];
-        }
-        
-        DDGStoryCell *cell = (DDGStoryCell *)[self.storyView cellForItemAtIndexPath:self.swipeViewIndexPath];
-        CGPoint translation = [recognizer translationInView:recognizer.view];
-        
-        CGPoint center = cell.contentView.center;
-        cell.contentView.center = CGPointMake(center.x + translation.x, center.y);
-        
-        [recognizer setTranslation:CGPointZero inView:recognizer.view];
-    }
-    
-}
 
 #pragma mark - Scroll view delegate
 
@@ -865,16 +618,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-    
     [self prepareUpcomingCellContent];
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
 }
 
 #pragma mark - collection view data source
@@ -904,11 +648,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (nil != self.swipeViewIndexPath) {
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-        return FALSE;
-    }
-    
     return TRUE;
 }
 
@@ -1225,6 +964,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
+    cell.storiesController = self;
     DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
     cell.displaysDropShadow = YES; //(indexPath.item == ([self.storyView numberOfItemsInSection:0] - 1));
     cell.displaysInnerShadow = NO; //(indexPath.item != 0);
