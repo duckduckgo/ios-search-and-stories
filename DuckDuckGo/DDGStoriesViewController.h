@@ -11,6 +11,7 @@
 
 #import "DDGSearchHandler.h"
 #import "DDGSearchController.h"
+#import "DDGStoryCell.h"
 
 CGFloat DDG_rowHeightWithContainerSize(CGSize containerSize);
 
@@ -20,7 +21,7 @@ typedef enum : NSUInteger {
     DDGStoriesListModeRecents,
 } DDGStoriesListMode;
 
-@interface DDGStoriesViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, NSFetchedResultsControllerDelegate>
+@interface DDGStoriesViewController : UIViewController <DDGStoryCellDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, NSFetchedResultsControllerDelegate>
 {}
 @property (nonatomic, strong) IBOutlet UIView *noStoriesView;
 @property (nonatomic, readonly, weak) id <DDGSearchHandler> searchHandler;

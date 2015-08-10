@@ -58,7 +58,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    //self.view.backgroundColor = [[UIColor blueColor] colorWithAlphaComponent:0.5];
+    self.view.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.5];
     self.view.opaque = NO;
     [self.view addSubview:self.backgroundView];
 }

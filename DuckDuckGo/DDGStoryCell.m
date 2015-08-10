@@ -158,17 +158,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 {
     DDGPopoverViewController* popover = self.menuPopover;
     void(^toggleState)() = ^() {
-        self.story.savedValue = !self.story.savedValue;
-        NSManagedObjectContext *context = self.story.managedObjectContext;
-        [context performBlock:^{
-            NSError *error = nil;
-            if (![context save:&error])
-                NSLog(@"error: %@", error);
-        }];
-        NSString *status = self.story.savedValue ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
-        UIImage *image = self.story.savedValue ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        [SVProgressHUD
-         showImage:image status:status];
+        [self.storyDelegate toggleStorySaved:self.story];
     };
     if(popover==nil) {
         toggleState();
@@ -182,18 +172,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 {
     DDGPopoverViewController* popover = self.menuPopover;
     void(^share)() = ^() {
-        NSString *shareTitle = self.story.title;
-        NSURL *shareURL = self.story.URL;
-        
-        DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
-        [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", shareTitle, shareURL] forActivityType:UIActivityTypeMail];
-        
-        DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];
-        NSArray *items = @[titleProvider, urlItem];
-        
-        DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:@[]];
-        [self.storiesController presentViewController:avc animated:YES completion:NULL];
-
+        [self.storyDelegate shareStory:self.story];
     };
     if(popover==nil) {
         share();
@@ -208,12 +187,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 {
     DDGPopoverViewController* popover = self.menuPopover;
     void(^openInBrowser)() = ^() {
-        NSURL *storyURL = self.story.URL;
-        
-        if (nil == storyURL)
-            return;
-        
-        [[UIApplication sharedApplication] openURL:storyURL];
+        [self.storyDelegate openStoryInBrowser:self.story];
     };
     if(popover==nil) {
         openInBrowser();
@@ -283,7 +257,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 
 -(void)categoryButtonSelected:(id)sender
 {
-    
+    [self.storyDelegate toggleCategoryPressed:self.story.category onStory:self.story];
 }
 
 
@@ -312,6 +286,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
     self.categoryButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     //self.categoryLabel.opaque = NO;
     self.categoryButton.layer.cornerRadius = 4.5f;
+    [self.categoryButton addTarget:self action:@selector(categoryButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.categoryButton];
     
     self.titleBackgroundView = [UIView new];

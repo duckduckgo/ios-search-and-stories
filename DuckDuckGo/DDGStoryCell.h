@@ -11,7 +11,15 @@
 
 extern NSString *const DDGStoryCellIdentifier;
 
-@class DDGStoriesViewController;
+@protocol DDGStoryCellDelegate <NSObject>
+
+-(void)shareStory:(DDGStory*)story;
+-(void)toggleStorySaved:(DDGStory*)story;
+-(void)openStoryInBrowser:(DDGStory*)story;
+-(void)toggleCategoryPressed:(NSString*)categoryName onStory:(DDGStory*)story;
+
+@end
+
 
 @interface DDGStoryCell : UICollectionViewCell
 
@@ -19,7 +27,7 @@ extern NSString *const DDGStoryCellIdentifier;
 @property (nonatomic, assign) BOOL displaysInnerShadow;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) DDGStory* story;
-@property (nonatomic, weak) DDGStoriesViewController* storiesController;
+@property (nonatomic, weak) id<DDGStoryCellDelegate> storyDelegate;
 
 -(void)toggleSavedState;
 -(void)share;

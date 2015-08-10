@@ -48,6 +48,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
+@property (nonatomic, strong) NSString* categoryFilter;
 @property (nonatomic, strong) NSMutableDictionary *decompressedImages;
 @property (nonatomic, strong) NSMutableSet *enqueuedDecompressionOperations;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
@@ -353,6 +354,70 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         }];        
     }
 }
+
+#pragma mark - DDGStoryDelegate
+
+-(void)shareStory:(DDGStory*)story
+{
+    NSURL *shareURL = story.URL;
+    
+    DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
+    [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", story.title, shareURL] forActivityType:UIActivityTypeMail];
+    
+    DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];
+    NSArray *items = @[titleProvider, urlItem];
+    
+    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:@[]];
+    [self presentViewController:avc animated:YES completion:NULL];
+}
+
+
+-(void)toggleStorySaved:(DDGStory*)story
+{
+    story.savedValue = !story.savedValue;
+    NSManagedObjectContext *context = story.managedObjectContext;
+    [context performBlock:^{
+        NSError *error = nil;
+        if (![context save:&error])
+            NSLog(@"error: %@", error);
+    }];
+    NSString *status = story.savedValue ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
+    UIImage *image = story.savedValue ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [SVProgressHUD showImage:image status:status];
+}
+
+
+-(void)openStoryInBrowser:(DDGStory*)story
+{
+    NSURL *storyURL = story.URL;
+    if (nil == storyURL)
+        return;
+    
+    [[UIApplication sharedApplication] openURL:storyURL];
+}
+
+
+-(void)toggleCategoryPressed:(NSString*)categoryName onStory:(DDGStory*)story
+{
+    if (self.categoryFilter==nil) {
+        self.categoryFilter = categoryName;
+    } else {
+        self.categoryFilter = nil;
+    }
+    
+    NSArray *oldStories = [self fetchedStories];
+    [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
+    self.fetchedResultsController.delegate = nil;
+    self.fetchedResultsController = nil;
+    
+    NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
+    self.fetchedResultsController = [self fetchedResultsController:feedDate];
+    
+    NSArray *newStories = [self fetchedStories];
+    [self replaceStories:oldStories withStories:newStories focusOnStory:story];
+}
+
+
 
 #pragma mark - UIViewController
 
@@ -843,6 +908,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (NSFetchedResultsController *)fetchedResultsController:(NSDate *)feedDate
 {
+    DLog(@"gathering stories %@", feedDate);
+    
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
     }
@@ -871,11 +938,17 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         if (readabilityMode == DDGReadabilityModeOnExclusive && self.storiesMode!=DDGStoriesListModeFavorites) {
             [predicates addObject:[NSPredicate predicateWithFormat:@"articleURLString.length > 0"]];
         }
-    
-        if (nil != self.sourceFilter) {
-            [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
-        }
     }
+    
+    if (nil != self.sourceFilter) {
+        [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
+    }
+    DLog(@"feed filter: %@", self.sourceFilter);
+    
+    if (nil != self.categoryFilter) {
+        [predicates addObject:[NSPredicate predicateWithFormat:@"category == %@", self.categoryFilter]];
+    }
+    DLog(@"category filter: %@", self.categoryFilter);
     
     switch(self.storiesMode) {
         case DDGStoriesListModeFavorites:
@@ -964,7 +1037,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
-    cell.storiesController = self;
+    cell.storyDelegate = self;
     DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
     cell.displaysDropShadow = YES; //(indexPath.item == ([self.storyView numberOfItemsInSection:0] - 1));
     cell.displaysInnerShadow = NO; //(indexPath.item != 0);
