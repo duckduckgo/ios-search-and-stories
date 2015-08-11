@@ -28,6 +28,7 @@
 	self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
 	self.tableView.allowsSelectionDuringEditing = YES;
+    self.tableView.rowHeight = 50;
     self.title = @"Sources";
     
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -142,7 +143,7 @@
             cell.imageView.alpha = 0;
 			cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 34, 34)];
+            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 40, 40)];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.tag = 100;
             [cell addSubview:imageView];
