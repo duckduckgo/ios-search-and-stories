@@ -10,12 +10,14 @@
 #import "DDGStoryCell.h"
 #import "DDGStoryFeed.h"
 #import "UIFont+DDG.h"
+#import "UIColor+DDG.h"
 #import "DDGPopoverViewController.h"
 #import "SVProgressHUD.h"
 #import "DDGActivityItemProvider.h"
 #import "DDGActivityViewController.h"
 #import "DDGSafariActivity.h"
 #import "DDGStoriesViewController.h"
+#import "DDGHistoryItem.h"
 
 NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
@@ -23,9 +25,38 @@ CGFloat const DDGTitleBarHeight = 57.0f;
 CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 == mosaicmode,    114/475 == 0.24 == normalmode   other: 114/360
 
 
+
+@interface DDGStoryMenuCell : UITableViewCell
+
+@property (nonatomic, strong) UIView* separatorView;
+@end
+
+
+@implementation DDGStoryMenuCell
+
+-(id)init {
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DDGStoryMenuCell"];
+    if(self) {
+        CGRect sepRect = self.contentView.frame;
+        sepRect.origin.x = -2;
+        sepRect.origin.y = sepRect.size.height-1;
+        sepRect.size.height = 1;
+        sepRect.size.width += 4;
+        self.separatorView = [[UIView alloc] initWithFrame:sepRect];
+        self.separatorView.backgroundColor = UIColorFromRGB(0xdddddd);
+        self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+        [self.contentView addSubview:self.separatorView];
+    }
+    return self;
+}
+
+@end
+
+
 @interface DDGStoryMenu : UITableViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, strong) DDGStoryCell* storyCell;
+@property (nonatomic, assign) BOOL showRemoveAction;
 
 @end
 
@@ -34,18 +65,12 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 @implementation DDGStoryMenu
 
 
-+(DDGStoryMenu*)menuForStoryCell:(DDGStoryCell*)storyCell
-{
-    DDGStoryMenu* menu = [[DDGStoryMenu alloc] init];
-    menu.storyCell = storyCell;
-    return menu;
-}
-
--(id)init
+-(id)initWithStoryCell:(DDGStoryCell*)cell
 {
     self = [super initWithStyle:UITableViewStylePlain];
     if(self) {
-        self.tableView.rowHeight = 44;
+        self.storyCell = cell;
+        self.preferredContentSize = CGSizeMake(180, 44 * [self tableView:self.tableView numberOfRowsInSection:0]);
     }
     return self;
 }
@@ -53,21 +78,27 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-    self.preferredContentSize = CGSizeMake(180, 44 * [self tableView:self.tableView numberOfRowsInSection:0]);
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.scrollEnabled = FALSE;
 }
 
 -(NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSUInteger rows = 3; // add/remove-fave, share, view-in-browser.  ...what about remove(?)
+    NSUInteger rows = 3; // add/remove-fave, share, view-in-browser[, remove]
+    if(self.storyCell.historyItem!=nil) rows++;
     return rows;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 44.0;
 }
 
 -(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DDGStoryMenuCell"];
+    DDGStoryMenuCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DDGStoryMenuCell"];
+    cell.indentationWidth = 0;
     if(cell==nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DDGStoryMenuCell"];
+        cell = [[DDGStoryMenuCell alloc] init];
     }
     cell.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
     if(indexPath.section==0) {
@@ -87,7 +118,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
                 cell.textLabel.text = NSLocalizedString(@"View in Browser", @"story menu item to open the current story in an external browser");
                 break;
             case 3:
-                cell.textLabel.text = NSLocalizedString(@"Remove", @"story menu item to... I'm not sure what to remove from.  Probably favorites?  Or the list of sources?");
+                cell.textLabel.text = NSLocalizedString(@"Remove", @"story menu item to remove the current story from the history");
                 break;
             default:
                 cell.textLabel.text = @"?";
@@ -95,6 +126,8 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
     } else {
         cell.textLabel.text = @"?";
     }
+
+    cell.separatorView.hidden = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
     return cell;
 }
 
@@ -110,7 +143,14 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
         case 2: // open in browser
             [self.storyCell openInBrowser];
             break;
+        case 3:
+            [self.storyCell removeHistoryItem];
+            break;
+        default:
+            NSLog(@"Warning: unexpected row selected in DDGStoryCellMenu: %@", indexPath);
+            break;
     }
+
 }
 
 @end // DDGStoryMenu implementation
@@ -197,6 +237,20 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 }
 
 
+-(void)removeHistoryItem
+{
+    DDGPopoverViewController* popover = self.menuPopover;
+    void(^removeItem)() = ^() {
+        [self.storyDelegate removeHistoryItem:self.historyItem];
+    };
+    if(popover==nil) {
+        removeItem();
+    } else {
+        [popover dismissViewControllerAnimated:TRUE completion:removeItem];
+    }
+}
+
+
 
 #pragma mark -
 
@@ -245,9 +299,17 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
     }
 }
 
+- (void)setHistoryItem:(DDGHistoryItem *)historyItem
+{
+    if(historyItem!=nil) {
+        self.story = historyItem.story;
+    }
+    _historyItem = historyItem;
+}
+
 -(void)menuButtonSelected:(id)sender
 {
-    DDGStoryMenu* menu = [DDGStoryMenu menuForStoryCell:self];
+    DDGStoryMenu* menu = [[DDGStoryMenu alloc] initWithStoryCell:self];
     self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu];
     [self.menuPopover presentPopoverFromRect:self.menuButton.frame
                                       inView:self
@@ -330,7 +392,6 @@ DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeC
     //Always call your parents.
     [super layoutSubviews];
     
-    //Let's set everything up.
     CGRect bounds = self.contentView.bounds;
     
     BOOL compactMode = bounds.size.width < 300; // a bit arbitrary

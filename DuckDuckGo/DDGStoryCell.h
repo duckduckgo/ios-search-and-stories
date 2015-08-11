@@ -16,6 +16,7 @@ extern NSString *const DDGStoryCellIdentifier;
 -(void)shareStory:(DDGStory*)story;
 -(void)toggleStorySaved:(DDGStory*)story;
 -(void)openStoryInBrowser:(DDGStory*)story;
+-(void)removeHistoryItem:(DDGHistoryItem*)historyItem;
 -(void)toggleCategoryPressed:(NSString*)categoryName onStory:(DDGStory*)story;
 
 @end
@@ -27,10 +28,12 @@ extern NSString *const DDGStoryCellIdentifier;
 @property (nonatomic, assign) BOOL displaysInnerShadow;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) DDGStory* story;
+@property (nonatomic, strong) DDGHistoryItem* historyItem;
 @property (nonatomic, weak) id<DDGStoryCellDelegate> storyDelegate;
 
 -(void)toggleSavedState;
 -(void)share;
 -(void)openInBrowser;
+-(void)removeHistoryItem;
 
 @end

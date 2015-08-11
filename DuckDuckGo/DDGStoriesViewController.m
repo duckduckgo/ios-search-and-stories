@@ -396,6 +396,15 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     [[UIApplication sharedApplication] openURL:storyURL];
 }
 
+-(void)removeHistoryItem:(DDGHistoryItem*)historyItem
+{
+    NSManagedObjectContext *context = historyItem.managedObjectContext;
+    [context performBlock:^{
+        [context deleteObject:historyItem];
+    }];
+    NSString *status = NSLocalizedString(@"Removed", @"Recents Activity Confirmation: Removed item from history");
+    [SVProgressHUD showSuccessWithStatus:status];
+}
 
 -(void)toggleCategoryPressed:(NSString*)categoryName onStory:(DDGStory*)story
 {
@@ -898,7 +907,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(NSArray*)fetchedStories
 {
-    
     NSArray* results = self.fetchedResultsController.fetchedObjects;
     if(self.storiesMode==DDGStoriesListModeRecents) {
         results = [results valueForKey:@"story"];
@@ -915,11 +923,27 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     }
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
-    if(self.storiesMode==DDGStoriesListModeRecents) {
+    NSMutableArray *predicates = [NSMutableArray array];
+    if(self.storiesMode==DDGStoriesListModeRecents) { // we query the history items list
+        DLog(@"loading recents");
         [fetchRequest setEntity:[DDGHistoryItem entityInManagedObjectContext:self.managedObjectContext]];
+        [predicates addObject:[NSPredicate predicateWithFormat:@"section == %@", DDGHistoryItemSectionNameStories]];
     } else {
         [fetchRequest setEntity:[DDGStory entityInManagedObjectContext:self.managedObjectContext]];
+        switch(self.storiesMode) {
+            case DDGStoriesListModeFavorites:
+                DLog(@"loading favorites");
+                [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
+                break;
+            case DDGStoriesListModeNormal:
+                DLog(@"loading normal/other with feedDate: %@", feedDate);
+                if (feedDate) {
+                    [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];
+                }
+                break;
+            default:
+                break;
+        }
     }
     
     // Set the batch size to a suitable number.
@@ -931,8 +955,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    NSMutableArray *predicates = [NSMutableArray array];
-    
     if(self.storiesMode!=DDGStoriesListModeRecents) {
         NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
         if (readabilityMode == DDGReadabilityModeOnExclusive && self.storiesMode!=DDGStoriesListModeFavorites) {
@@ -942,33 +964,16 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     if (nil != self.sourceFilter) {
         NSString* predicateKey = self.storiesMode==DDGStoriesListModeRecents ? @"feed" : @"feed";
-        [predicates addObject:[NSPredicate predicateWithFormat:@"%@ == %@", predicateKey, self.sourceFilter]];
+        [predicates addObject:[NSPredicate predicateWithFormat:@"%K == %@", predicateKey, self.sourceFilter]];
     }
     DLog(@"feed filter: %@", self.sourceFilter);
     
     if (nil != self.categoryFilter) {
         NSString* predicateKey = self.storiesMode==DDGStoriesListModeRecents ? @"story.category" : @"category";
-        [predicates addObject:[NSPredicate predicateWithFormat:@"%@ == %@", predicateKey, self.categoryFilter]];
+        [predicates addObject:[NSPredicate predicateWithFormat:@"%K == %@", predicateKey, self.categoryFilter]];
     }
     DLog(@"category filter: %@", self.categoryFilter);
     
-    switch(self.storiesMode) {
-        case DDGStoriesListModeFavorites:
-            DLog(@"loading favorites");
-            [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
-            break;
-        case DDGStoriesListModeRecents:
-            DLog(@"loading recents");
-            //[predicates addObject:[NSPredicate predicateWithFormat:@"read == %@", @(YES)]];
-            [predicates addObject:[NSPredicate predicateWithFormat:@"section == %@", DDGHistoryItemSectionNameStories]];
-            break;
-        default:
-            DLog(@"loading normal/other with feedDate: %@", feedDate);
-            if (feedDate) {
-                [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];
-            }
-            break;
-    }
     if ([predicates count] > 0) {
         [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
     }
@@ -1040,10 +1045,17 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 - (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     cell.storyDelegate = self;
-    DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
-    cell.displaysDropShadow = YES; //(indexPath.item == ([self.storyView numberOfItemsInSection:0] - 1));
-    cell.displaysInnerShadow = NO; //(indexPath.item != 0);
+    
+    DDGStory* story = nil;
+    DDGHistoryItem* historyItem = nil;
+    if(self.storiesMode==DDGStoriesListModeRecents) {
+        historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        story = historyItem.story;
+    } else {
+        story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    }
     cell.story = story;
+    cell.historyItem = historyItem;
     UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
     if (image) {
         cell.image = image;
