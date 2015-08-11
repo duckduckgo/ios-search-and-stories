@@ -3,17 +3,17 @@
     {
       "idiom" : "universal",
       "scale" : "1x",
-      "filename" : "popover-indicator.png"
+      "filename" : "popover-indicator-up.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "popover-indicator@2x.png"
+      "filename" : "popover-indicator-up@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "popover-indicator@3x.png"
+      "filename" : "popover-indicator-up@3x.png"
     }
   ],
   "info" : {

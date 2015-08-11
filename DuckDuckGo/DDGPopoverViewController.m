@@ -11,14 +11,13 @@
 @interface DDGPopoverBackgroundView : UIView
 @property (nonatomic, strong) UIImage *backgroundImage;
 @property (nonatomic, strong) UIImage *arrowImage;
+@property (nonatomic, strong) UIImage *orientedArrowImage;
 @property (nonatomic) CGRect arrowRect;
 @end
 
 @implementation DDGPopoverBackgroundView
 
 - (void)drawRect:(CGRect)rect {
-    NSLog(@"drawing popover background in %@  with self.frame: %@ and arrowrect: %@",
-          NSStringFromCGRect(rect), NSStringFromCGRect(self.frame), NSStringFromCGRect(self.arrowRect));
     [self.backgroundImage drawInRect:rect];
     [self.arrowImage drawInRect:self.arrowRect blendMode:kCGBlendModeNormal alpha:1.0];
 }
@@ -30,6 +29,7 @@
 @property (nonatomic) UIEdgeInsets edgeInsets;
 @property (nonatomic, strong) DDGPopoverBackgroundView *backgroundView;
 @property (nonatomic, strong) UIImage* upArrowImage;
+@property (nonatomic, assign) CGFloat intrusion;
 @end
 
 @implementation DDGPopoverViewController
@@ -42,6 +42,7 @@
     if (self) {
         self.contentViewController = viewController;
         self.edgeInsets = UIEdgeInsetsMake(12.0, 12.0, 12.0, 12.0);
+        self.intrusion = 3;
     }
     return self;
 }
@@ -129,9 +130,10 @@
     if(arrowDirections & UIPopoverArrowDirectionUp && backgroundRect.origin.y + backgroundRect.size.height <= self.view.frame.size.height) {
         // the arrow can point up and has enough room to do so... the current rect is acceptable
         arrowDir = UIPopoverArrowDirectionUp;
+        backgroundRect.origin.y -= self.intrusion;
     } else if(arrowDirections & UIPopoverArrowDirectionDown) { // backgroundRect.origin.y - originRect.size.height - backgroundRect.size.height > 0
         // the arrow can point down.  We may not have room for it to do so, but we'll do it anyway because there wasn't room or the option to point up
-        backgroundRect.origin.y -= originRect.size.height + backgroundRect.size.height;
+        backgroundRect.origin.y -= originRect.size.height + backgroundRect.size.height - self.intrusion;
         arrowDir = UIPopoverArrowDirectionDown;
     }
     contentView.frame = UIEdgeInsetsInsetRect(backgroundRect, insets);
@@ -143,16 +145,16 @@
     switch(arrowDir) {
         case UIPopoverArrowDirectionDown:
             self.backgroundView.arrowRect = CGRectMake(originRect.origin.x - backgroundRect.origin.x + (originRect.size.width/2.0) - (arrowSize.width / 2.0),
-                                                       backgroundRect.size.height - arrowSize.height,
+                                                       backgroundRect.size.height - arrowSize.height - 1,
                                                        arrowSize.width,
                                                        arrowSize.height);
-            self.backgroundView.arrowImage = [UIImage imageWithCGImage:self.upArrowImage.CGImage scale:self.upArrowImage.scale orientation:UIImageOrientationUpMirrored];
+            self.backgroundView.arrowImage = [UIImage imageWithCGImage:self.upArrowImage.CGImage scale:self.upArrowImage.scale orientation:UIImageOrientationDownMirrored];
             NSLog(@"flipping arrow image");
             break;
         case UIPopoverArrowDirectionUp:
         default:
             self.backgroundView.arrowRect = CGRectMake(originRect.origin.x - backgroundRect.origin.x + (originRect.size.width/2.0) - (arrowSize.width / 2.0),
-                                                       0,
+                                                       1,
                                                        arrowSize.width,
                                                        arrowSize.height);
             self.backgroundView.arrowImage = self.upArrowImage;
