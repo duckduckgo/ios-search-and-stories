@@ -136,8 +136,8 @@ NSString * const emailRegEx =
                                          weakSelf.transitioningViewControllers = NO;
                                      }];
     
-    if (self.controllers.count == 1)
-        [self configurePanGestureForViewController:contentController];
+//    if (self.controllers.count == 1)
+//        [self configurePanGestureForViewController:contentController];
 }
 
 - (void)configurePanGestureForViewController:(UIViewController *)viewController {
@@ -178,7 +178,6 @@ NSString * const emailRegEx =
                                          completion:^(BOOL finished) {
                                              weakSelf.transitioningViewControllers = NO;
                                          }];
-        
         [contentController reenableScrollsToTop];
     }
 }
@@ -275,8 +274,8 @@ NSString * const emailRegEx =
     UIPageViewController *pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
                                                                                navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
                                                                                              options:@{
-                                                       UIPageViewControllerOptionInterPageSpacingKey: @10.f
-                                                }];
+                                                                                                       UIPageViewControllerOptionInterPageSpacingKey: @10.f
+                                                                                                       }];
     pageViewController.delegate = self;
     pageViewController.dataSource = self;
     
@@ -318,10 +317,10 @@ NSString * const emailRegEx =
     [super viewDidAppear:animated];
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
-    
-    if ([self.controllers count] > 0) {
-        [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
-    }
+//    
+//    if ([self.controllers count] > 0) {
+//        [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
+//    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -723,9 +722,9 @@ NSString * const emailRegEx =
         oldSearchText = self.searchBar.searchField.text;
     barUpdated = NO;
     
-    if(![self isQuery:self.searchBar.searchField.text]) {
-        [self clearAddressBar];
-    }
+//    if(![self isQuery:self.searchBar.searchField.text]) {
+//        [self clearAddressBar];
+//    }
     
     [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
     [self revealBackground:YES animated:YES];
@@ -736,7 +735,7 @@ NSString * const emailRegEx =
     self.searchBar.showsCancelButton = YES;
     [self.searchBar layoutIfNeeded:0.25];
     
-    [[self.slideOverMenuController panGesture] setEnabled:NO];
+//    [[self.slideOverMenuController panGesture] setEnabled:NO];
     
     autocompleteOpen = YES;
 }
@@ -1086,6 +1085,7 @@ NSString * const emailRegEx =
 	// only open autocomplete if not already open and it is enabled for use
     if(!autocompleteOpen && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete])
         [self revealAutocomplete];
+    [textField selectAll:self];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
