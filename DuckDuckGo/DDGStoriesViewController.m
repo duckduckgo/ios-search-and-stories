@@ -941,12 +941,14 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     }
     
     if (nil != self.sourceFilter) {
-        [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
+        NSString* predicateKey = self.storiesMode==DDGStoriesListModeRecents ? @"feed" : @"feed";
+        [predicates addObject:[NSPredicate predicateWithFormat:@"%@ == %@", predicateKey, self.sourceFilter]];
     }
     DLog(@"feed filter: %@", self.sourceFilter);
     
     if (nil != self.categoryFilter) {
-        [predicates addObject:[NSPredicate predicateWithFormat:@"category == %@", self.categoryFilter]];
+        NSString* predicateKey = self.storiesMode==DDGStoriesListModeRecents ? @"story.category" : @"category";
+        [predicates addObject:[NSPredicate predicateWithFormat:@"%@ == %@", predicateKey, self.categoryFilter]];
     }
     DLog(@"category filter: %@", self.categoryFilter);
     

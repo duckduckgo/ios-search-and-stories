@@ -10,6 +10,7 @@
 #import "DDGChooseSourcesViewController.h"
 #import "DDGChooseRegionViewController.h"
 #import "DDGActivityViewController.h"
+#import "UIFont+DDG.h"
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
 #import "DDGHistoryProvider.h"
@@ -70,7 +71,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
-        
+    self.tableView.sectionHeaderHeight = 44;
+    
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
 }
@@ -149,7 +151,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     [self addSectionWithTitle:@"Stories" footer:nil];
     [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
-        DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
+        DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStylePlain];
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
         [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
     }];
@@ -270,13 +272,50 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         @"iPod2,1"   : @"iPod touch 2G",
         @"iPod3,1"   : @"iPod touch 3G",
         @"iPod4,1"   : @"iPod touch 4G",
+        @"iPod5,1"   : @"iPod touch 5G",
+        @"iPod7,1"   : @"iPod touch 6G",
         @"iPhone1,1" : @"iPhone",
         @"iPhone1,2" : @"iPhone 3G",
         @"iPhone2,1" : @"iPhone 3GS",
         @"iPad1,1"   : @"iPad",
         @"iPad2,1"   : @"iPad 2",
+        @"iPad2,2"   : @"iPad 2",
+        @"iPad2,3"   : @"iPad 2",
+        @"iPad2,4"   : @"iPad 2",
+        @"iPad3,1"   : @"iPad 3rd Gen",
+        @"iPad3,2"   : @"iPad 3rd Gen",
+        @"iPad3,3"   : @"iPad 3rd Gen",
+        @"iPad3,4"   : @"iPad 4th Gen",
+        @"iPad3,5"   : @"iPad 4th Gen",
+        @"iPad3,6"   : @"iPad 4th Gen",
+        @"iPad4,1"   : @"iPad Air",
+        @"iPad4,2"   : @"iPad Air",
+        @"iPad4,3"   : @"iPad Air",
+        @"iPad5,3"   : @"iPad Air 2",
+        @"iPad5,4"   : @"iPad Air 2",
+        
+        @"iPad2,5"   : @"iPad Mini",
+        @"iPad2,6"   : @"iPad Mini",
+        @"iPad2,7"   : @"iPad Mini",
+        @"iPad4,4"   : @"iPad Mini 2",
+        @"iPad4,5"   : @"iPad Mini 2",
+        @"iPad4,6"   : @"iPad Mini 2",
+        @"iPad4,7"   : @"iPad Mini 3",
+        @"iPad4,8"   : @"iPad Mini 3",
+        @"iPad4,9"   : @"iPad Mini 3",
+        
         @"iPhone3,1" : @"iPhone 4",
-        @"iPhone4,1" : @"iPhone 4S"
+        @"iPhone3,2" : @"iPhone 4",
+        @"iPhone3,3" : @"iPhone 4",
+        @"iPhone4,1" : @"iPhone 4S",
+        @"iPhone5,1" : @"iPhone 5",
+        @"iPhone5,2" : @"iPhone 5",
+        @"iPhone5,3" : @"iPhone 5c",
+        @"iPhone5,4" : @"iPhone 5c",
+        @"iPhone6,1" : @"iPhone 5s",
+        @"iPhone6,2" : @"iPhone 5s",
+        @"iPhone7,2" : @"iPhone 6",
+        @"iPhone7,1" : @"iPhone 6+"
     };
     if([deviceNames objectForKey:device])
         device = [deviceNames objectForKey:device];
@@ -287,19 +326,63 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     return [NSString stringWithFormat:@"DuckDuckGo v%@ on an %@ (iOS %@)",appVersion,device,osVersion];
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view;
-    DDG_SETTINGS_HEADER(view, [self tableView:tableView titleForHeaderInSection:section])
+
++(UIView*)createSectionHeaderView:(NSString*)title
+{
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    view.opaque = NO;
+    view.backgroundColor = [UIColor clearColor];
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectInset(view.bounds, 16.0, 0.0)];
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    titleLabel.opaque = NO;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont duckFontWithSize:15.0];
+    titleLabel.text = title;
+    titleLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
+    [view addSubview:titleLabel];
+    
     return view;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    UIView *view = nil;
-    NSString *title = [self tableView:tableView titleForFooterInSection:section];
-    if (nil != title) {
-        DDG_SETTINGS_FOOTER(view, title)
-    }
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    return [DDGSettingsViewController createSectionHeaderView:[self tableView:tableView titleForHeaderInSection:section]];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 44.0;
+}
+
++(void)configureSettingsCell:(UITableViewCell*)cell
+{
+    cell.textLabel.font = [UIFont duckFontWithSize:17.0];
+    cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
+    cell.detailTextLabel.font = [UIFont duckFontWithSize:15.0];
+    cell.detailTextLabel.textColor = [UIColor colorWithRed:137.0f/255.0f green:137.0f/255.0f blue:137.0f/255.0f alpha:1.0f];
+}
+
++(UIView*)createSectionFooterView:(NSString *)title
+{
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    view.opaque = NO;
+    view.backgroundColor = [UIColor clearColor];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectInset(view.bounds, 16.0, 0.0)];
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    titleLabel.opaque = NO;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont duckFontWithSize:13];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.text = title;
+    titleLabel.textColor = [UIColor colorWithRed:0.341 green:0.376 blue:0.424 alpha:1.000];
+    [view addSubview:titleLabel];
     return view;
+}
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    NSString* title = [self tableView:tableView titleForFooterInSection:section];
+    return title.length > 0 ? [DDGSettingsViewController createSectionFooterView:title] : nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -310,8 +393,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
-    DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
-    DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)    
+    [DDGSettingsViewController configureSettingsCell:cell];
+    //[DDGSettingsViewController configureSettingsCellDetail:cell];
     
     return cell;
 }

@@ -16,5 +16,6 @@
 +(UIFont*)duckStoryCategory;
 +(UIFont*)duckStoryCategorySmall;
 +(UIFont*)duckGeneral;
++(UIFont*)duckFontWithSize:(CGFloat)size;
 
 @end

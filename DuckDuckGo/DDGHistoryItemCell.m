@@ -9,6 +9,7 @@
 #import "DDGHistoryItemCell.h"
 #import "DDGDeleteButton.h"
 #import "UIColor+DDG.h"
+#import "UIFont+DDG.h"
 
 @interface DDGHistoryItemCell ()
 //@property (nonatomic, weak, readwrite) UIButton *deleteButton;
@@ -17,7 +18,7 @@
 @implementation DDGHistoryItemCell
 
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    NSAssert(NO, @"Use - (id)initWithCellMode:(DDGHistoryItemCellMode)mode reuseIdentifier:(NSString *)reuseIdentifier");
+    NSAssert(NO, @"Use - (id)initWithReuseIdentifier:(NSString *)reuseIdentifier");
     return nil;
 }
 
@@ -29,10 +30,9 @@
         
         self.fixedSizeImageView.size = CGSizeMake(16.0, 16.0);
         self.textLabel.textColor = [UIColor colorWithRed:0.780 green:0.808 blue:0.851 alpha:1.000];
-        
+        self.textLabel.font = [UIFont duckFontWithSize:19.0];
         self.imageView.contentMode = UIViewContentModeScaleAspectFit;
-		self.textLabel.numberOfLines = 2;
-		self.textLabel.font = [UIFont fontWithName:@"HelveticaNeue" size:14.0];
+        self.textLabel.numberOfLines = 2;
         self.textLabel.highlightedTextColor = [UIColor whiteColor];
     }
     return self;

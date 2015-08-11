@@ -89,7 +89,7 @@
 
 + (UIColor *)duckRed
 {
-    return [UIColor colorWithRed:208.0f/255.0f green:99.0f/255.0f blue:85.0f/255.0f alpha:1.0f];
+    return UIColorFromRGB(0xDE5833);
 }
 
 + (UIColor *)duckStoryReadColor

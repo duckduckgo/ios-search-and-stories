@@ -210,7 +210,6 @@
                                         segmentSize.height);
         self.favoritesTabViewController.segmentedControl.frame = CGRectIntegral(controlRect);
         self.favoritesTabViewController.segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-        self.favoritesTabViewController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Saved"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
         [self.favoritesTabViewController.controlView addSubview:self.favoritesTabViewController.segmentedControl];
         self.favoritesTabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
@@ -254,7 +253,6 @@
                                         segmentSize.height);
         self.recentsController.segmentedControl.frame = CGRectIntegral(controlRect);
         self.recentsController.segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-        self.recentsController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Tab-Recents"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         
         [self.recentsController.controlView addSubview:self.recentsController.segmentedControl];
         self.recentsController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];

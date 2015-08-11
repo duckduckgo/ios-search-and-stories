@@ -334,7 +334,6 @@ DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeC
     CGRect bounds = self.contentView.bounds;
     
     BOOL compactMode = bounds.size.width < 300; // a bit arbitrary
-    NSLog(@"compact mode: %i", compactMode);
     
     // adjust the font sizes according to the space available
     self.categoryButton.titleLabel.font = compactMode ? [UIFont duckStoryCategorySmall] : [UIFont duckStoryCategory];

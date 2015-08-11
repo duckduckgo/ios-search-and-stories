@@ -11,6 +11,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "SVProgressHUD.h"
 #import "DDGSettingsViewController.h"
+#import "UIFont+DDG.h"
 
 @interface DDGChooseSourcesViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
@@ -124,6 +125,7 @@
                 cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
                 cell.textLabel.text = @"Suggest a Story Source";
                 cell.textLabel.textAlignment = NSTextAlignmentCenter;
+                cell.textLabel.font = [UIFont duckFontWithSize:cell.textLabel.font.pointSize];
                 cell.accessoryType = UITableViewCellAccessoryNone;
 				cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
             }
@@ -133,8 +135,7 @@
         if(!cell)
 		{
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
-            DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
-            DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)
+            [DDGSettingsViewController configureSettingsCell:cell];
             
             // keep using the default imageview for layout/spacing purposes, but use our own one for displaying the image
             cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
@@ -154,9 +155,7 @@
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view;
-    DDG_SETTINGS_HEADER(view, [self tableView:tableView titleForHeaderInSection:section])
-    return view;
+    return [DDGSettingsViewController createSectionHeaderView:[self tableView:tableView titleForHeaderInSection:section]];
 }
 
 #pragma mark - Mail sender deleagte

@@ -20,4 +20,6 @@
 
 +(UIFont*)duckGeneral { return [UIFont fontWithName:@"ProximaNova-Regular" size:12.0f]; }
 
++(UIFont*)duckFontWithSize:(CGFloat)size { return [UIFont fontWithName:@"ProximaNova-Regular" size:size]; }
+
 @end

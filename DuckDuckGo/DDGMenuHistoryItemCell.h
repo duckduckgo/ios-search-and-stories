@@ -7,16 +7,21 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DDGHistoryItem.h"
+
+@protocol DDGHistoryItemCellDelegate <NSObject>
+
+-(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem;
+
+@end
+
 
 @interface DDGMenuHistoryItemCell : UITableViewCell
 
-@property (nonatomic, assign, getter = isAuxiliaryViewHidden) BOOL auxiliaryViewHidden;
-@property (nonatomic, copy) NSString *content;
-@property (nonatomic, copy) void (^deleteBlock)(id sender);
-@property (nonatomic, strong) UIImage *faviconImage;
-@property (nonatomic, assign, getter = isNotification) BOOL notification;
-@property (nonatomic, strong) IBOutlet UIImageView* favIconView;
+@property (nonatomic, strong) DDGHistoryItem* historyItem;
+@property (nonatomic, strong) NSDictionary* bookmarkItem;
+@property (nonatomic, strong) id<DDGHistoryItemCellDelegate> historyDelegate;
 
-- (void)setDeletable:(BOOL)deletable animated:(BOOL)animated;
+-(id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
 
 @end

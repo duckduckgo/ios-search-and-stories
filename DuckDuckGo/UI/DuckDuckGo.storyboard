@@ -78,7 +78,7 @@ Stay Informed.</string>
                                 </constraints>
                             </imageView>
                         </subviews>
-                        <color key="backgroundColor" red="0.81568627450980391" green="0.38823529411764707" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" red="0.8901960784313725" green="0.44313725490196076" blue="0.31764705882352939" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstAttribute="centerX" secondItem="Kmb-EP-ra2" secondAttribute="centerX" id="D0n-hy-lsT"/>
                             <constraint firstAttribute="centerY" secondItem="Kmb-EP-ra2" secondAttribute="centerY" id="nrO-y9-JBM"/>

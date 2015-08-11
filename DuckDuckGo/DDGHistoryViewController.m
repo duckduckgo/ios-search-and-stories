@@ -55,11 +55,12 @@
         tableView.dataSource = self;
         tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        tableView.allowsMultipleSelectionDuringEditing = FALSE;
         
         tableView.backgroundColor = [UIColor clearColor];
         tableView.opaque = NO;
         tableView.rowHeight = 44.0;
-        [tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil] forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
+        //[tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil] forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
         
         self.view = tableView;
         self.tableView = tableView;
@@ -114,24 +115,16 @@
     return [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 }
 
-- (IBAction)plus:(id)sender {
-    UIButton *button = nil;
-    if ([sender isKindOfClass:[UIButton class]])
-        button = (UIButton *)sender;
-    
-    if (button) {
-        CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
-        NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];
-        DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:tappedIndex];
-        DDGSearchController *searchController = [self searchControllerDDG];
-        if (searchController) {
-            DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
-            [searchField becomeFirstResponder];
-            searchField.text = historyItem.title;
-            [searchController searchFieldDidChange:nil];            
-        } else if ([self.searchHandler respondsToSelector:@selector(beginSearchInputWithString:)]) {
-            [self.searchHandler beginSearchInputWithString:historyItem.title];
-        }
+-(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem
+{
+    DDGSearchController *searchController = [self searchControllerDDG];
+    if (searchController) {
+        DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
+        [searchField becomeFirstResponder];
+        searchField.text = historyItem.title;
+        [searchController searchFieldDidChange:nil];
+    } else if ([self.searchHandler respondsToSelector:@selector(beginSearchInputWithString:)]) {
+        [self.searchHandler beginSearchInputWithString:historyItem.title];
     }
 }
 
@@ -293,9 +286,13 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    DDGMenuHistoryItemCell *historyItemCell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
-    [self configureHistoryItemCell:historyItemCell atIndexPath:indexPath];
-    return historyItemCell;
+    DDGMenuHistoryItemCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
+    if(cell==nil) {
+        cell = [[DDGMenuHistoryItemCell alloc] initWithReuseIdentifier:@"DDGMenuHistoryItemCell"];
+    }
+    cell.historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    cell.historyDelegate = self;
+    return cell;
 }
 
 //-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
@@ -366,8 +363,9 @@
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureHistoryItemCell:(DDGMenuHistoryItemCell *)[tableView cellForRowAtIndexPath:indexPath]
-                               atIndexPath:indexPath];
+            [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //            [self configureHistoryItemCell:(DDGMenuHistoryItemCell *)[tableView cellForRowAtIndexPath:indexPath]
+            //                               atIndexPath:indexPath];
             break;
         case NSFetchedResultsChangeMove:
             [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -392,39 +390,27 @@
     }
 }
 
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    DDGHistoryItemCell *underCell = (DDGHistoryItemCell *)cell;
-    
-    underCell.imageView.image = nil;
-    underCell.imageView.highlightedImage = nil;
-    
-    UILabel *lbl = cell.textLabel;
-
-    // we have history and it is enabled
-    DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    DDGStory *story = item.story;
-    
-    if (nil != story) {
-        underCell.fixedSizeImageView.image = story.feed.image;
-        cell.accessoryView = nil;
-    } else {
-        underCell.fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
-        cell.accessoryView = [DDGPlusButton plusButton];
-    }
-    lbl.text = item.title;
-}
-
-- (void)configureHistoryItemCell:(DDGMenuHistoryItemCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    NSString *content = nil;
-    DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    content = historyItem.title;
-    __weak typeof(self) weakSelf = self;
-    [cell setDeleteBlock:^(id sender) {
-        [weakSelf delete:sender];
-    }];
-    cell.content = content;
-}
+//- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
+//{
+//    DDGHistoryItemCell *underCell = (DDGHistoryItemCell *)cell;
+//    
+//    underCell.imageView.image = nil;
+//    underCell.imageView.highlightedImage = nil;
+//    
+//    UILabel *lbl = cell.textLabel;
+//
+//    // we have history and it is enabled
+//    DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
+//    DDGStory *story = item.story;
+//    
+//    if (nil != story) {
+//        underCell.fixedSizeImageView.image = story.feed.image;
+//        cell.accessoryView = nil;
+//    } else {
+//        underCell.fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
+//        cell.accessoryView = [DDGPlusButton plusButton];
+//    }
+//    lbl.text = item.title;
+//}
 
 @end

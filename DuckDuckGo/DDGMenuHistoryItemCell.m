@@ -10,121 +10,81 @@
 
 @interface DDGMenuHistoryItemCell ()
 
-@property (nonatomic, weak) IBOutlet UIImageView *auxiliaryImageView;
-@property (nonatomic, weak) IBOutlet UIView *buttonContainerView;
-@property (nonatomic, weak) IBOutlet UILabel *contentLabel;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contentContainerWidthConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contentLabelRightConstraint;
 
 @end
 
 @implementation DDGMenuHistoryItemCell
 
-- (void)awakeFromNib
+-(id)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
-    [super awakeFromNib];
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDeleteButtonTap:)];
-    [self.buttonContainerView addGestureRecognizer:tapGestureRecognizer];
-    [self.buttonContainerView setHidden:YES];
-    self.opaque = NO;
-    UIView *selectedBackgroundView = [[UIView alloc] init];
-    selectedBackgroundView.backgroundColor = [UIColor duckRed];
-    self.selectedBackgroundView = selectedBackgroundView;
-    self.tintColor = [UIColor duckRed];
-    [self reset];
-}
-
-- (void)handleDeleteButtonTap:(UITapGestureRecognizer *)recognizer
-{
-    if (self.deleteBlock) {
-        self.deleteBlock(self);
+    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+    if(self) {
+        UIButton* plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        plusButton.frame = CGRectMake(0, 0, 44, 44);
+        self.tintColor = [UIColor duckRed];
+        UIImage* plusImage = [UIImage imageNamed:@"Plus"];
+        [plusButton setImage:plusImage forState:UIControlStateNormal];
+        self.accessoryView = plusButton;
+        self.imageView.image = [UIImage imageNamed:@"recent-small"];
+        
+        [plusButton addTarget:self action:@selector(plusButtonWasPushed:) forControlEvents:UIControlEventTouchUpInside];
     }
+    return self;
 }
 
-- (void)prepareForReuse
+-(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem;
 {
-    [super prepareForReuse];
-    [self reset];
+    [self.historyDelegate plusButtonWasPushed:self.historyItem];
 }
 
-- (void)reset
+-(void)viewDidLoad
 {
-    [self.auxiliaryImageView setImage:[UIImage imageNamed:@"Plus"]];
-    self.auxiliaryViewHidden = YES;
-    self.notification = NO;
-    [self setDeletable:NO animated:NO];
+    NSLog(@"TEST:  in DDGMenuHistoryItemCell viewDidLoad");
 }
 
-- (void)setAuxiliaryViewHidden:(BOOL)hidden
+-(void)setBookmarkItem:(NSDictionary*)bookmark
 {
-    _auxiliaryViewHidden = hidden;
-    [self.auxiliaryImageView setHidden:hidden];
-    [self.contentLabelRightConstraint setConstant:hidden ? 15.0f : 39.0f];
-    [self layoutIfNeeded];
+    _bookmarkItem = bookmark;
+    NSString* title = bookmark[@"title"];
+    self.textLabel.text = title;
 }
 
-- (void)setContent:(NSString *)content
-{
-    _content = [content copy];
-    [self.contentLabel setText:content];
-    if (content && content.length > 0) {
-        BOOL isBang = [[content substringToIndex:1] isEqualToString:@"!"];
-        if (isBang) {
-            self.faviconImage = [[UIImage imageNamed:@"TinyBang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        }
-    }
-}
 
-- (void)setDeletable:(BOOL)deletable animated:(BOOL)animated
+-(void)setHistoryItem:(DDGHistoryItem*)historyItem
 {
-    [self.contentView layoutIfNeeded];    
-    if (animated) {
-        if (deletable) {
-            [self.buttonContainerView setHidden:NO];
-        }
-        [UIView animateWithDuration:0.25
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             if (!self.auxiliaryViewHidden) {
-                                 [self.auxiliaryImageView setAlpha:deletable ? 0.0f : 1.0f];
-                             }
-                             CGFloat width = CGRectGetWidth(self.bounds);
-                             [self.contentContainerWidthConstraint setConstant:deletable ? (width - 74.0f) : width];
-                             [self layoutIfNeeded];
-                         } completion:^(BOOL finished) {
-                             if (!deletable) {
-                                 [self.buttonContainerView setHidden:YES];
-                             }
-                         }];
-    } else {
-        [self.buttonContainerView setHidden:!deletable];
-        [self.contentContainerWidthConstraint setConstant:deletable ? 246.0f : CGRectGetWidth(self.bounds)];
-        [self layoutIfNeeded];
-    }
-}
-
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
-{
-    [super setHighlighted:highlighted animated:animated];
-    self.tintColor = highlighted ? [UIColor whiteColor] : [UIColor duckRed];
-    [self.contentLabel setTextColor:highlighted ? [UIColor whiteColor] : [UIColor duckBlack]];
-}
-
-- (void)setNotification:(BOOL)notification
-{
-    _notification = notification;
-//    UIImage *image = nil;
-//    if (notification) {
-//        image = [[UIImage imageNamed:@"Notification"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    _historyItem = historyItem;
+    NSString* title = historyItem.title;
+    self.textLabel.text = title;
+    
+//    if (title.length > 0 && [title hasPrefix:@"!"]) {
+//        self.faviconImage = [[UIImage imageNamed:@"TinyBang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
 //    } else {
-//        image = [UIImage imageNamed:@"favorite-small"];// imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+//        self.imageView.image = [UIImage imageNamed:@"recent-small"];
 //    }
+
 }
 
-- (BOOL)shouldCauseMenuPanGestureToFail
-{
-    return YES;
-}
+//- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+//{
+//    [super setHighlighted:highlighted animated:animated];
+//    self.tintColor = highlighted ? [UIColor whiteColor] : [UIColor duckRed];
+//    [self.contentLabel setTextColor:highlighted ? [UIColor whiteColor] : [UIColor duckBlack]];
+//}
+//
+//- (void)setNotification:(BOOL)notification
+//{
+//    _notification = notification;
+////    UIImage *image = nil;
+////    if (notification) {
+////        image = [[UIImage imageNamed:@"Notification"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+////    } else {
+////        image = [UIImage imageNamed:@"favorite-small"];// imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+////    }
+//}
+//
+//- (BOOL)shouldCauseMenuPanGestureToFail
+//{
+//    return YES;
+//}
 
 @end

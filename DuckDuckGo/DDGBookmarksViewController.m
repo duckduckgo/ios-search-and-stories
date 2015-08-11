@@ -39,8 +39,8 @@
     NSParameterAssert(nil != self.searchController);
     
     self.favoriteIcon = [UIImage imageNamed:@"favorite-small"];
-    [self.tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil]
-         forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
+//    [self.tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil]
+//         forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
     [self.tableView setRowHeight:44.0f];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = self.tableView.backgroundColor;
@@ -91,6 +91,23 @@
     [super viewWillDisappear:animated];
     [self.tableView setEditing:NO animated:animated];
 }
+
+
+
+-(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem
+{
+    DDGSearchController *searchController = [self searchControllerDDG];
+    if (searchController) {
+        DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
+        [searchField becomeFirstResponder];
+        searchField.text = historyItem.title;
+        [searchController searchFieldDidChange:nil];
+    } else if ([self.searchHandler respondsToSelector:@selector(beginSearchInputWithString:)]) {
+        [self.searchHandler beginSearchInputWithString:historyItem.title];
+    }
+}
+
+
 
 #pragma mark - Rotation
 
@@ -175,13 +192,12 @@
 {
     NSDictionary *bookmark = [[[DDGBookmarksProvider sharedProvider] bookmarks] objectAtIndex:indexPath.row];
     DDGMenuHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
-    cell.auxiliaryViewHidden = NO;
-    cell.content = bookmark[@"title"];
-    cell.favIconView.image = self.favoriteIcon;
-    __weak typeof(self) weakSelf = self;
-    [cell setDeleteBlock:^(id sender) {
-        [weakSelf delete:sender];
-    }];
+    if(cell==nil) {
+        cell = [[DDGMenuHistoryItemCell alloc] initWithReuseIdentifier:@"DDGMenuHistoryItemCell"];
+    }
+    cell.bookmarkItem = bookmark;
+    cell.historyDelegate = self;
+    cell.imageView.image = self.favoriteIcon;
     return cell;
 }
 
@@ -192,6 +208,25 @@
     [self.searchHandler loadQueryOrURL:[bookmark objectForKey:@"url"]];
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
+
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return TRUE;
+}
+
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        //add code here for when you hit delete
+        [[DDGBookmarksProvider sharedProvider] deleteBookmarkAtIndex:indexPath.row];
+        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        
+        if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0) {
+            [self performSelector:@selector(showNoBookmarksView) withObject:nil afterDelay:0.2];
+        }
+    }
 }
 
 @end

@@ -50,26 +50,17 @@ NSString * const DDGReadabilityModeKey = @"readability";
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view;
-    DDG_SETTINGS_HEADER(view, [self tableView:tableView titleForHeaderInSection:section])
-    return view;
+    return [DDGSettingsViewController createSectionHeaderView:[self tableView:tableView titleForHeaderInSection:section]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    
-    DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
-    DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)
-    
+    [DDGSettingsViewController configureSettingsCell:cell];
     return cell;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    UIView *view = nil;
     NSString *title = [self tableView:tableView titleForFooterInSection:section];
-    if (nil != title) {
-        DDG_SETTINGS_FOOTER(view, title)
-    }
-    return view;
+    return title.length > 0 ? [DDGSettingsViewController createSectionFooterView:title] : nil;
 }
 @end
