@@ -21,10 +21,6 @@
 
 NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
-CGFloat const DDGTitleBarHeight = 57.0f;
-CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 == mosaicmode,    114/475 == 0.24 == normalmode   other: 114/360
-
-
 
 @interface DDGStoryMenuCell : UITableViewCell
 

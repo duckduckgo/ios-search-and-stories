@@ -128,9 +128,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
     CGFloat rowHeight;
     if(mosaicMode) { // set to the height of the larger story
-        rowHeight = ((size.width - DDGStoriesBetweenItemsSpacing)*2/3) / DDGStoryImageRatioMosaic;
+        rowHeight = ((size.width - DDGStoriesBetweenItemsSpacing)*2/3) / DDGStoryImageRatio  + DDGTitleBarHeight;
     } else { // set to the height
-        rowHeight = size.width / DDGStoryImageRatio;
+        rowHeight = size.width / DDGStoryImageRatio + DDGTitleBarHeight;
     }
     return MAX(10.0f, rowHeight); // a little safety
 }
@@ -141,8 +141,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     CGSize size = self.collectionView.frame.size;
     self.mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
     NSUInteger cellsPerRow = self.mosaicMode ? 3 : 1;
-    CGFloat rowHeight = DDG_rowHeightWithContainerSize(size);
-    NSUInteger numRows = numStories/3;
+    CGFloat rowHeight = DDG_rowHeightWithContainerSize(size) + DDGStoriesBetweenItemsSpacing;
+    NSUInteger numRows = numStories/cellsPerRow;
     if(numStories%cellsPerRow!=0) numRows++;
     size.height = rowHeight * numRows;
     return size;
@@ -155,7 +155,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     NSMutableArray* elementAttributes = [NSMutableArray new];
     CGSize size = self.collectionView.frame.size;
     BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
-    CGFloat rowHeight = DDG_rowHeightWithContainerSize(size);
+    CGFloat rowHeight = DDG_rowHeightWithContainerSize(size) + DDGStoriesBetweenItemsSpacing;
     
     NSUInteger cellsPerRow = mosaicMode ? 3 : 1;
     NSUInteger rowsBeforeRect = floor(rect.origin.y / rowHeight);
@@ -629,7 +629,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     NSInteger changes = [addedStories count] + [removedStories count];
     
     // update the table view with added and removed stories
-    DLog(@"updating %@ with %lu deleted items and %lu new items", storyMode, removedStories.count, addedStories.count);
+    //DLog(@"updating %@ with %lu deleted items and %lu new items", storyMode, removedStories.count, addedStories.count);
     [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 
     if (self.storiesMode!=DDGStoriesListModeNormal && [self fetchedStories].count == 0) {
@@ -916,8 +916,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (NSFetchedResultsController *)fetchedResultsController:(NSDate *)feedDate
 {
-    DLog(@"gathering stories %@", feedDate);
-    
     if (_fetchedResultsController != nil) {
         return _fetchedResultsController;
     }
@@ -925,18 +923,15 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     NSMutableArray *predicates = [NSMutableArray array];
     if(self.storiesMode==DDGStoriesListModeRecents) { // we query the history items list
-        DLog(@"loading recents");
         [fetchRequest setEntity:[DDGHistoryItem entityInManagedObjectContext:self.managedObjectContext]];
         [predicates addObject:[NSPredicate predicateWithFormat:@"section == %@", DDGHistoryItemSectionNameStories]];
     } else {
         [fetchRequest setEntity:[DDGStory entityInManagedObjectContext:self.managedObjectContext]];
         switch(self.storiesMode) {
             case DDGStoriesListModeFavorites:
-                DLog(@"loading favorites");
                 [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
                 break;
             case DDGStoriesListModeNormal:
-                DLog(@"loading normal/other with feedDate: %@", feedDate);
                 if (feedDate) {
                     [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];
                 }
@@ -966,13 +961,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         NSString* predicateKey = self.storiesMode==DDGStoriesListModeRecents ? @"feed" : @"feed";
         [predicates addObject:[NSPredicate predicateWithFormat:@"%K == %@", predicateKey, self.sourceFilter]];
     }
-    DLog(@"feed filter: %@", self.sourceFilter);
     
     if (nil != self.categoryFilter) {
         NSString* predicateKey = self.storiesMode==DDGStoriesListModeRecents ? @"story.category" : @"category";
         [predicates addObject:[NSPredicate predicateWithFormat:@"%K == %@", predicateKey, self.categoryFilter]];
     }
-    DLog(@"category filter: %@", self.categoryFilter);
     
     if ([predicates count] > 0) {
         [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
