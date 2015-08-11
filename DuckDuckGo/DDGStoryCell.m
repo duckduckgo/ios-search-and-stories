@@ -42,6 +42,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
         sepRect.origin.y = sepRect.size.height-1;
         sepRect.size.height = 1;
         sepRect.size.width += 4;
+        self.backgroundColor = [UIColor clearColor];
         self.separatorView = [[UIView alloc] initWithFrame:sepRect];
         self.separatorView.backgroundColor = UIColorFromRGB(0xdddddd);
         self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
@@ -78,6 +79,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 -(void)viewDidLoad
 {
     [super viewDidLoad];
+    self.tableView.backgroundColor = [UIColor clearColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.scrollEnabled = FALSE;
 }

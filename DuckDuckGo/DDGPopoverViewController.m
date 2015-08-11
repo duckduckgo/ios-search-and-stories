@@ -26,7 +26,8 @@
 
 @interface DDGPopoverViewController ()
 @property (nonatomic, strong, readwrite) UIViewController *contentViewController;
-@property (nonatomic) UIEdgeInsets edgeInsets;
+@property (nonatomic) UIEdgeInsets contentInsets;     // the insets from the outer popover edges to the content view
+@property (nonatomic) UIEdgeInsets borderInsets;   // the insets of the popover border
 @property (nonatomic, strong) DDGPopoverBackgroundView *backgroundView;
 @property (nonatomic, strong) UIImage* upArrowImage;
 @property (nonatomic, assign) CGFloat intrusion;
@@ -41,7 +42,8 @@
     self = [super initWithNibName:nil bundle:nil];
     if (self) {
         self.contentViewController = viewController;
-        self.edgeInsets = UIEdgeInsetsMake(12.0, 12.0, 12.0, 12.0);
+        self.contentInsets = UIEdgeInsetsMake(8, 8, 8, 8);
+        self.borderInsets = UIEdgeInsetsMake(12, 12, 4, 12);
         self.intrusion = 3;
     }
     return self;
@@ -51,7 +53,7 @@
     self.upArrowImage = [UIImage imageNamed:@"popover-indicator"];
     self.backgroundView = [[DDGPopoverBackgroundView alloc] initWithFrame:CGRectZero];
     self.backgroundView.backgroundColor = [UIColor clearColor];
-    self.backgroundView.backgroundImage = [[UIImage imageNamed:@"popover-frame"] resizableImageWithCapInsets:self.edgeInsets];
+    self.backgroundView.backgroundImage = [[UIImage imageNamed:@"popover-frame"] resizableImageWithCapInsets:UIEdgeInsetsMake(12,12,12,12)];
     self.view = [UIView new];
 }
 
@@ -77,7 +79,7 @@
     CGSize contentSize = self.contentViewController.preferredContentSize;
     CGRect contentBounds = CGRectMake(0, 0, contentSize.width, contentSize.height);
     
-    UIEdgeInsets insets = self.edgeInsets;
+    UIEdgeInsets insets = self.borderInsets;
     UIEdgeInsets inverseInsets = UIEdgeInsetsMake(-insets.top, -insets.left, -insets.bottom, -insets.right);
     
     CGRect outsetRect = UIEdgeInsetsInsetRect(contentBounds, inverseInsets);
@@ -136,7 +138,8 @@
         backgroundRect.origin.y -= originRect.size.height + backgroundRect.size.height - self.intrusion;
         arrowDir = UIPopoverArrowDirectionDown;
     }
-    contentView.frame = UIEdgeInsetsInsetRect(backgroundRect, insets);
+    contentView.frame = UIEdgeInsetsInsetRect(backgroundRect, self.contentInsets);
+    contentView.layer.cornerRadius = 4;
     
     self.backgroundView.frame = backgroundRect; // the popover frame image should be placed around the content
     
