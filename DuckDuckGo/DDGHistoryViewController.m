@@ -53,7 +53,8 @@
         
         tableView.delegate = self;
         tableView.dataSource = self;
-        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        tableView.separatorColor = [UIColor duckTableSeparator];
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         tableView.allowsMultipleSelectionDuringEditing = FALSE;
         
@@ -293,6 +294,7 @@
     }
     cell.historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.historyDelegate = self;
+    cell.separatorView.hidden = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
     return cell;
 }
 

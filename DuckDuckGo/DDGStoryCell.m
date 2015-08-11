@@ -40,9 +40,10 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
         sepRect.size.width += 4;
         self.backgroundColor = [UIColor clearColor];
         self.separatorView = [[UIView alloc] initWithFrame:sepRect];
-        self.separatorView.backgroundColor = UIColorFromRGB(0xdddddd);
+        self.separatorView.backgroundColor = [UIColor duckTableSeparator];
         self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
         [self.contentView addSubview:self.separatorView];
+        self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
     }
     return self;
 }

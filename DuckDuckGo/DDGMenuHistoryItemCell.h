@@ -21,6 +21,7 @@
 @property (nonatomic, strong) DDGHistoryItem* historyItem;
 @property (nonatomic, strong) NSDictionary* bookmarkItem;
 @property (nonatomic, strong) id<DDGHistoryItemCellDelegate> historyDelegate;
+@property (nonatomic, strong) UIView* separatorView;
 
 -(id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
 

@@ -42,7 +42,7 @@
 //    [self.tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil]
 //         forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
     [self.tableView setRowHeight:44.0f];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.separatorColor = self.tableView.backgroundColor;
     
     self.searchIcon = [UIImage imageNamed:@"search_icon"];
@@ -198,6 +198,7 @@
     cell.bookmarkItem = bookmark;
     cell.historyDelegate = self;
     cell.imageView.image = self.favoriteIcon;
+    cell.separatorView.hidden = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
     return cell;
 }
 

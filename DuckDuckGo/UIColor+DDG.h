@@ -22,6 +22,7 @@
 + (UIColor *)duckStoryReadColor;
 + (UIColor *)duckStoryTitleBackground;
 + (UIColor *)duckStoryDropShadowColor;
++ (UIColor *)duckTableSeparator;
 
 + (UIColor *)duckSearchFieldBackground;
 + (UIColor *)duckSearchBarBackground;

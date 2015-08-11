@@ -107,6 +107,11 @@
     return UIColorFromRGB(0xDADADA);
 }
 
++ (UIColor *)duckTableSeparator
+{
+    return UIColorFromRGB(0xdddddd);
+}
+
 
 + (UIColor *)duckSearchFieldBackground
 {

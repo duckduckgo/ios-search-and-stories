@@ -6,10 +6,11 @@
 //
 //
 
+
 #import "DDGMenuHistoryItemCell.h"
+#import "UIFont+DDG.h"
 
 @interface DDGMenuHistoryItemCell ()
-
 
 @end
 
@@ -19,13 +20,31 @@
 {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
     if(self) {
-        UIButton* plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        plusButton.frame = CGRectMake(0, 0, 44, 44);
         self.tintColor = [UIColor duckRed];
-        UIImage* plusImage = [UIImage imageNamed:@"Plus"];
-        [plusButton setImage:plusImage forState:UIControlStateNormal];
-        self.accessoryView = plusButton;
         self.imageView.image = [UIImage imageNamed:@"recent-small"];
+
+        CGRect plusRect = self.frame;
+        plusRect.origin.x = plusRect.size.width-44;
+        plusRect.size.width = 44;
+        UIButton* plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [plusButton setImage:[UIImage imageNamed:@"Plus"] forState:UIControlStateNormal];
+        plusButton.frame = plusRect;
+        plusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin;
+        [self addSubview:plusButton];
+        
+        CGRect sepRect = self.frame;
+        sepRect.origin.x = 15;
+        sepRect.origin.y = sepRect.size.height-1;
+        sepRect.size.height = 1;
+        sepRect.size.width -= 15;
+        self.separatorView = [[UIView alloc] initWithFrame:sepRect];
+        self.separatorView.backgroundColor = [UIColor duckTableSeparator];
+        self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+        [self addSubview:self.separatorView];
+        
+        self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
+        
+        self.textLabel.font = [UIFont duckFontWithSize:self.textLabel.font.pointSize];
         
         [plusButton addTarget:self action:@selector(plusButtonWasPushed:) forControlEvents:UIControlEventTouchUpInside];
     }
@@ -35,11 +54,6 @@
 -(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem;
 {
     [self.historyDelegate plusButtonWasPushed:self.historyItem];
-}
-
--(void)viewDidLoad
-{
-    NSLog(@"TEST:  in DDGMenuHistoryItemCell viewDidLoad");
 }
 
 -(void)setBookmarkItem:(NSDictionary*)bookmark
