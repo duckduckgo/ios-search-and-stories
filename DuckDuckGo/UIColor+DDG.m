@@ -84,7 +84,7 @@
 
 + (UIColor *)duckNoContentColor
 {
-    return UIColorFromRGB(0xEAEAEA);
+    return UIColorFromRGB(0xEEEEEE);
 }
 
 + (UIColor *)duckRed

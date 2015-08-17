@@ -38,7 +38,7 @@
                         <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                     </state>
                     <connections>
-                        <action selector="backButtonPressed" destination="-1" eventType="touchUpInside" id="egz-2V-gEC"/>
+                        <action selector="backButtonPressed:" destination="-1" eventType="touchUpInside" id="bTK-0a-Pk7"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9s9-Ft-ueK" userLabel="forward">
@@ -52,7 +52,7 @@
                         <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                     </state>
                     <connections>
-                        <action selector="forwardButtonPressed" destination="-1" eventType="touchUpInside" id="6it-Tf-qqI"/>
+                        <action selector="forwardButtonPressed:" destination="-1" eventType="touchUpInside" id="YVI-D5-Xut"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rdb-X1-aus" userLabel="fav">
@@ -66,7 +66,7 @@
                         <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                     </state>
                     <connections>
-                        <action selector="favButtonPressed" destination="-1" eventType="touchUpInside" id="QoP-FI-p7W"/>
+                        <action selector="favButtonPressed:" destination="-1" eventType="touchUpInside" id="RgN-Y2-KAS"/>
                     </connections>
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bTS-Cl-kXM" userLabel="share">
@@ -80,7 +80,7 @@
                         <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                     </state>
                     <connections>
-                        <action selector="shareButtonPressed" destination="-1" eventType="touchUpInside" id="MRG-pd-m99"/>
+                        <action selector="shareButtonPressed:" destination="-1" eventType="touchUpInside" id="rvs-FX-X3J"/>
                     </connections>
                 </button>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZIq-Fa-jkb" userLabel="tabs">
@@ -94,7 +94,7 @@
                         <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                     </state>
                     <connections>
-                        <action selector="tabsButtonPressed" destination="-1" eventType="touchUpInside" id="xgm-1a-eON"/>
+                        <action selector="tabsButtonPressed:" destination="-1" eventType="touchUpInside" id="q4f-Z0-4sr"/>
                     </connections>
                 </button>
             </subviews>

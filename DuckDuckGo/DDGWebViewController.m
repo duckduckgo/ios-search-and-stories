@@ -184,7 +184,7 @@
     _isFavorited = isFavorited;
 }
 
--(void)searchControllerActionButtonPressed
+-(void)searchControllerActionButtonPressed:(id)sender
 {
     // strip extra params from DDG search URLs
     NSURL *shareURL = self.webViewURL;
@@ -218,6 +218,12 @@
     }
     
     DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:applicationActivities];
+    
+    if ( [avc respondsToSelector:@selector(popoverPresentationController)] ) {
+        // iOS8
+        avc.popoverPresentationController.sourceView = sender;
+    }
+    
     [self presentViewController:avc animated:YES completion:NULL];
 }
 
@@ -228,7 +234,7 @@
         [self.searchController.searchBar.searchField becomeFirstResponder];
 }
 
--(IBAction)backButtonPressed {
+-(IBAction)backButtonPressed:(id)sender {
     if (self.webView.canGoBack) {
         [self.webView goBack];
     } else if ([self.searchController canPopContentViewController]) {
@@ -236,13 +242,13 @@
     }
 }
 
--(IBAction)forwardButtonPressed {
+-(IBAction)forwardButtonPressed:(id)sender {
     if (self.webView.canGoForward) {
         [self.webView goForward];
     }
 }
 
--(IBAction)favButtonPressed {
+-(IBAction)favButtonPressed:(id)sender {
     NSURL *shareURL = self.webViewURL;
     NSString *query = [self.searchController queryFromDDGURL:shareURL];
     NSString *feed = [self.webViewURL absoluteString];
@@ -293,11 +299,11 @@
     [SVProgressHUD showImage:image status:status];
 }
 
--(IBAction)shareButtonPressed {
-    [self searchControllerActionButtonPressed];
+-(IBAction)shareButtonPressed:(id)sender {
+    [self searchControllerActionButtonPressed:sender];
 }
 
--(IBAction)tabsButtonPressed {
+-(IBAction)tabsButtonPressed:(id)sender {
     NSLog(@"tabsButtonPressed");
 }
 

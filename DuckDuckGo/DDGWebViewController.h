@@ -34,10 +34,10 @@
 
 -(UIView*)alternateToolbar;
 
--(void)backButtonPressed;
--(void)forwardButtonPressed;
--(void)favButtonPressed;
--(void)shareButtonPressed;
--(void)tabsButtonPressed;
+-(IBAction)backButtonPressed:(id)sender;
+-(IBAction)forwardButtonPressed:(id)sender;
+-(IBAction)favButtonPressed:(id)sender;
+-(IBAction)shareButtonPressed:(id)sender;
+-(IBAction)tabsButtonPressed:(id)sender;
 
 @end

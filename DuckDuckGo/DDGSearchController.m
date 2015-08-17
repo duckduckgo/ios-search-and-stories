@@ -166,6 +166,7 @@ NSString * const emailRegEx =
         [self.controllers removeLastObject];
         [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
         [self setSearchBarOrangeButtonImage];        
+        [self.searchBar.searchField resetField];
         
         UIViewController *contentController = [self.controllers lastObject];
         [contentController reenableScrollsToTop];
@@ -480,15 +481,17 @@ NSString * const emailRegEx =
     }
 }
 
--(void)searchControllerActionButtonPressed {
+-(void)searchControllerActionButtonPressed:(id)sender {
     UIViewController *contentViewController = [self.controllers lastObject];
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         UIViewController <DDGSearchHandler> *searchHandler = (UIViewController <DDGSearchHandler> *)contentViewController;
-        if([searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
-            [searchHandler searchControllerActionButtonPressed];
+        if([searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed:)]) {
+            [searchHandler searchControllerActionButtonPressed:sender];
+        }
     } else {
-        if([_searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
-            [_searchHandler searchControllerActionButtonPressed];
+        if([_searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed:)]) {
+            [_searchHandler searchControllerActionButtonPressed:sender];
+        }
     }
 }
 
@@ -549,7 +552,7 @@ NSString * const emailRegEx =
 #pragma mark - Interactions with search handler
 
 - (IBAction)actionButtonPressed:(id)sender {
-    [self searchControllerActionButtonPressed];
+    [self searchControllerActionButtonPressed:sender];
 }
 
 -(IBAction)bangButtonPressed:(UIButton*)sender {

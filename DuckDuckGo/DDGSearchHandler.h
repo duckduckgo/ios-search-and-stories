@@ -21,6 +21,6 @@
 -(void)searchControllerStopOrReloadButtonPressed;
 -(void)searchControllerAddressBarWillOpen;
 -(void)searchControllerAddressBarWillCancel;
--(void)searchControllerActionButtonPressed;
+-(void)searchControllerActionButtonPressed:(id)sender;
 
 @end

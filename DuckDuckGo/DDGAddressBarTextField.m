@@ -116,6 +116,13 @@
     }
 }
 
+-(void)resetField
+{
+    [self clear:nil];
+    [self showPlaceholder];
+}
+
+
 -(IBAction)clear:(id)sender {
     self.text = @"";
 }

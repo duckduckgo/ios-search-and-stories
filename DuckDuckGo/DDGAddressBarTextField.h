@@ -29,4 +29,7 @@ typedef enum {
 
 -(void)setRightButtonMode:(DDGAddressBarRightButtonMode)newMode;
 
+-(void)resetField;
+
+
 @end
