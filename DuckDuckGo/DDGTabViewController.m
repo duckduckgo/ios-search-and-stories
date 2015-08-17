@@ -91,7 +91,7 @@
             [self.controlView removeFromSuperview];
             break;
     }
-
+    
     [self.controlView setFrame:toolbarFrame];
     [self.currentViewController.view setFrame:viewControllerFrame];
 //

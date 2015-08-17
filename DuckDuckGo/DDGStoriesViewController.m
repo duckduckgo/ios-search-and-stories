@@ -20,6 +20,7 @@
 #import "DDGStoryFetcher.h"
 #import "DDGSafariActivity.h"
 #import "DDGActivityItemProvider.h"
+#import "DDGNoContentViewController.h"
 #import <CoreImage/CoreImage.h>
 #import "DDGTableView.h"
 
@@ -43,8 +44,6 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) NSOperationQueue *imageDecompressionQueue;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) IBOutlet UICollectionView *storyView;
-@property (nonatomic, weak) IBOutlet UILabel* noStoriesTitle;
-@property (nonatomic, weak) IBOutlet UILabel* noStoriesSubtitle;
 
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
@@ -54,6 +53,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) UIRefreshControl* refreshControl;
+@property (nonatomic, strong) DDGNoContentViewController* noContentView;
 @end
 
 
@@ -311,49 +311,14 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 #pragma mark - No Stories
 
-- (void)showNoStoriesView {
-    if(self.storiesMode == DDGStoriesListModeNormal) return; // we don't show the no-stories view if in normal mode
-    
-    if (nil == self.noStoriesView) {
-        [[NSBundle mainBundle] loadNibNamed:@"NoStoriesView" owner:self options:nil];
-        UIImageView *largeImageView = (UIImageView *)[self.noStoriesView viewWithTag:DDGLargeImageViewTag];
-        switch(self.storiesMode) {
-            case DDGStoriesListModeNormal: // won't get here anyway
-                break;
-            case DDGStoriesListModeFavorites:
-                largeImageView.image = [UIImage imageNamed:@"empty-favorites"];
-                self.noStoriesTitle.text = NSLocalizedString(@"No Favorites",
-                                                             @"the title of the view which is shown when there are no favorited stories");
-                self.noStoriesSubtitle.text = NSLocalizedString(@"Add searches and stories to your favorites, and they will be shown here.",
-                                                                @"title detail text in the view which is shown when there are no recently viewed stories");
-                break;
-            case DDGStoriesListModeRecents:
-                largeImageView.image = [UIImage imageNamed:@"empty-recents"];
-                self.noStoriesTitle.text = NSLocalizedString(@"No Recents",
-                                                             @"the title of the view which is shown when there are no recently viewed stories");
-                self.noStoriesSubtitle.text = NSLocalizedString(@"Browse stories and search the web, and your recents will be shown here.",
-                                                                @"title detail text in the view which is shown when there are no recently viewed stories");
-                break;
-        }
-    }
-    
+- (void)setShowNoContent:(BOOL)showNoContent {
     [UIView animateWithDuration:0 animations:^{
-        [self.storyView removeFromSuperview];
-        self.noStoriesView.frame = self.view.bounds;
-        [self.view addSubview:self.noStoriesView];
+        self.storyView.hidden = showNoContent;
+        self.noContentView.view.hidden = !showNoContent;
     }];
 }
 
-- (void)hideNoStoriesView {
-    if (nil == self.storyView.superview) {
-        [UIView animateWithDuration:0 animations:^{
-            [self.noStoriesView removeFromSuperview];
-            self.noStoriesView = nil;
-            self.storyView.frame = self.view.bounds;
-            [self.view addSubview:self.storyView];
-        }];        
-    }
-}
+
 
 #pragma mark - DDGStoryDelegate
 
@@ -450,6 +415,18 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     [self.view addSubview:storyView];
     self.storyView = storyView;
     
+    self.noContentView = [[DDGNoContentViewController alloc] init];
+    [self.view addSubview:self.noContentView.view];
+    
+    self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
+    self.noContentView.noContentTitle.text = NSLocalizedString(@"No Favorites",
+                                                               @"title for the view shown when no favorite searches/urls are found");
+    self.noContentView.noContentSubtitle.text = NSLocalizedString(@"Add stories to your favorites, and they will be shown here.",
+                                                                  @"details text for the view shown when no favorite stories are found");
+    self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.noContentView.view.frame = self.view.bounds;
+    
+    
     self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
     [self prepareUpcomingCellContent];
@@ -510,9 +487,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         if ([self shouldRefresh]) {
             [self refreshStoriesTriggeredManually:NO includeSources:YES];
         }
-    } else if ([self fetchedStories].count == 0) {
-        [self showNoStoriesView];
     }
+
+    self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -611,19 +588,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 }
 
 - (NSInteger)replaceStories:(NSArray *)oldStories withStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
-    NSString* storyMode = nil;
-    switch(self.storiesMode) {
-        case DDGStoriesListModeFavorites:
-            storyMode = @"favorites";
-            break;
-        case DDGStoriesListModeRecents:
-            storyMode = @"recents";
-            break;
-        default:
-            storyMode = @"normal/other";
-            break;
-    }
-
     NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:oldStories];
     NSArray *removedStories = [self indexPathsofStoriesInArray:oldStories andNotArray:newStories];
     NSInteger changes = [addedStories count] + [removedStories count];
@@ -632,11 +596,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     //DLog(@"updating %@ with %lu deleted items and %lu new items", storyMode, removedStories.count, addedStories.count);
     [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
 
-    if (self.storiesMode!=DDGStoriesListModeNormal && [self fetchedStories].count == 0) {
-        [self showNoStoriesView];
-    } else {
-        [self hideNoStoriesView];
-    }
+    self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
     
     [self focusOnStory:story animated:YES];
     
@@ -897,6 +857,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
                 AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &quack);
                 AudioServicesPlaySystemSound(quack);
             }
+            self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
         };
         
         [self.storyFetcher refreshStories:willSave completion:completion];
@@ -1019,11 +980,13 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+    self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     //[self.storyView endUpdates];
+    self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
 }
 
 -(DDGStory*)fetchedStoryAtIndexPath:(NSIndexPath*)indexPath

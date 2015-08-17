@@ -59,7 +59,7 @@
                 <constraint firstItem="klm-Ay-r6d" firstAttribute="top" secondItem="12" secondAttribute="bottom" constant="22" id="xcy-k3-w5S"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-            <point key="canvasLocation" x="537" y="530"/>
+            <point key="canvasLocation" x="537" y="516"/>
         </view>
     </objects>
     <resources>

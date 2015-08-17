@@ -25,4 +25,6 @@
 
 -(id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
 
+-(void)setIsLastItem:(BOOL)isLastItem;
+
 @end

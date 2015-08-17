@@ -4,82 +4,48 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <mutableArray key="proximanova-regular.otf">
-            <string>ProximaNova-Regular</string>
-        </mutableArray>
-        <mutableArray key="proximanova-semibold.otf">
-            <string>ProximaNova-Semibold</string>
-        </mutableArray>
-    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DDGBookmarksViewController">
             <connections>
-                <outlet property="noBookmarksView" destination="8" id="14"/>
+                <outlet property="separatorView" destination="t8O-jg-Fvf" id="MlN-fL-Yn1"/>
                 <outlet property="tableView" destination="4" id="Bef-pU-OHB"/>
-                <outlet property="view" destination="4" id="CW1-SV-fy5"/>
+                <outlet property="view" destination="Bkv-vJ-F5U" id="wca-8y-SEh"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="8" userLabel="no favorites view">
-            <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-            <subviews>
-                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" image="empty-favorites" translatesAutoresizingMaskIntoConstraints="NO" id="gwh-RK-Pki">
-                    <rect key="frame" x="138" y="100" width="44" height="44"/>
-                </imageView>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="No Favorites" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Yq-Sz-1rQ">
-                    <rect key="frame" x="20" y="166" width="280" height="18"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="280" id="cky-oN-VtG"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="ProximaNova-Semibold" family="Proxima Nova" pointSize="18"/>
-                    <color key="textColor" red="0.12941176469999999" green="0.12941176469999999" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Add searches and stories to your favorites, and they will be shown here" textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="OhU-GS-v5a">
-                    <rect key="frame" x="56" y="207" width="207" height="51"/>
-                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="207" id="luQ-Wk-Kpw"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="17"/>
-                    <color key="textColor" red="0.45882352939999999" green="0.45882352939999999" blue="0.45882352939999999" alpha="1" colorSpace="calibratedRGB"/>
-                    <nil key="highlightedColor"/>
-                    <size key="shadowOffset" width="0.0" height="0.0"/>
-                </label>
-            </subviews>
-            <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
-            <constraints>
-                <constraint firstAttribute="centerX" secondItem="5Yq-Sz-1rQ" secondAttribute="centerX" id="93B-lI-mc7"/>
-                <constraint firstItem="5Yq-Sz-1rQ" firstAttribute="top" secondItem="gwh-RK-Pki" secondAttribute="bottom" constant="22" id="DeR-Dd-R9s"/>
-                <constraint firstItem="gwh-RK-Pki" firstAttribute="top" secondItem="8" secondAttribute="top" constant="100" id="GKo-LF-JS2"/>
-                <constraint firstItem="OhU-GS-v5a" firstAttribute="top" secondItem="5Yq-Sz-1rQ" secondAttribute="bottom" constant="23" id="ToL-pt-WcR"/>
-                <constraint firstAttribute="centerX" secondItem="OhU-GS-v5a" secondAttribute="centerX" id="b3j-mm-Bha"/>
-                <constraint firstAttribute="centerX" secondItem="gwh-RK-Pki" secondAttribute="centerX" id="wKW-pv-LRQ"/>
-            </constraints>
-            <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-        </view>
-        <view contentMode="scaleToFill" id="16" userLabel="table view">
+        <view contentMode="scaleToFill" id="Bkv-vJ-F5U">
             <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
-                <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" bouncesZoom="NO" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="4">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                <tableView opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" bouncesZoom="NO" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="4">
+                    <rect key="frame" x="0.0" y="1" width="320" height="567"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="separatorColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <connections>
                         <outlet property="dataSource" destination="-1" id="6"/>
                         <outlet property="delegate" destination="-1" id="7"/>
                     </connections>
                 </tableView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t8O-jg-Fvf" userLabel="separator">
+                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="0.5" id="1Hg-TO-ofu"/>
+                    </constraints>
+                </view>
             </subviews>
-            <color key="backgroundColor" red="0.96470594409999999" green="0.96470594409999999" blue="0.96470594409999999" alpha="1" colorSpace="deviceRGB"/>
-            <nil key="simulatedStatusBarMetrics"/>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="4" firstAttribute="leading" secondItem="Bkv-vJ-F5U" secondAttribute="leading" id="3qt-VH-XAN"/>
+                <constraint firstItem="4" firstAttribute="top" secondItem="t8O-jg-Fvf" secondAttribute="bottom" id="NwP-57-GBP"/>
+                <constraint firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="Y57-WQ-YlC"/>
+                <constraint firstAttribute="trailing" secondItem="t8O-jg-Fvf" secondAttribute="trailing" id="it7-sx-9uz"/>
+                <constraint firstAttribute="bottom" secondItem="4" secondAttribute="bottom" id="uB5-cd-rYC"/>
+                <constraint firstItem="t8O-jg-Fvf" firstAttribute="top" secondItem="Bkv-vJ-F5U" secondAttribute="top" id="v3B-sh-tyP"/>
+                <constraint firstItem="t8O-jg-Fvf" firstAttribute="leading" secondItem="Bkv-vJ-F5U" secondAttribute="leading" id="v7T-Xa-HyS"/>
+            </constraints>
+            <point key="canvasLocation" x="46" y="257"/>
         </view>
     </objects>
-    <resources>
-        <image name="empty-favorites" width="44" height="44"/>
-    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>

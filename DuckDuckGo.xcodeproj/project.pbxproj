@@ -320,6 +320,8 @@
 		8464976D1B3D3FE600BAF256 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */; };
 		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
 		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
+		84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */; };
+		84A640B01B82130D00643A39 /* DDGNoContentViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84A640AE1B82130D00643A39 /* DDGNoContentViewController.xib */; };
 		84B3AEFE1B32FAA800FF3453 /* DuckDuckGo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */; };
 		84BFA1231B6142B700C4C139 /* DDGWebToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */; };
 		84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */; };
@@ -752,6 +754,9 @@
 		84A640A31B72DC6C00643A39 /* Stories v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Stories v3.xcdatamodel"; sourceTree = "<group>"; };
 		84A640A71B7368D800643A39 /* UIFont+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIFont+DDG.h"; sourceTree = "<group>"; };
 		84A640A81B7368D800643A39 /* UIFont+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+DDG.m"; sourceTree = "<group>"; };
+		84A640AC1B82130D00643A39 /* DDGNoContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGNoContentViewController.h; sourceTree = "<group>"; };
+		84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNoContentViewController.m; sourceTree = "<group>"; };
+		84A640AE1B82130D00643A39 /* DDGNoContentViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGNoContentViewController.xib; sourceTree = "<group>"; };
 		84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = DuckDuckGo.storyboard; path = UI/DuckDuckGo.storyboard; sourceTree = "<group>"; };
 		84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGWebToolbar.xib; sourceTree = "<group>"; };
 		84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebToolbar.h; sourceTree = "<group>"; };
@@ -1079,6 +1084,9 @@
 				5B7C3CAC171C4D1E00B9E009 /* DDGHistoryItemCell.m */,
 				5B7C3CA1171851F700B9E009 /* DDGDeleteButton.h */,
 				5B7C3CA2171851F700B9E009 /* DDGDeleteButton.m */,
+				84A640AC1B82130D00643A39 /* DDGNoContentViewController.h */,
+				84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */,
+				84A640AE1B82130D00643A39 /* DDGNoContentViewController.xib */,
 			);
 			name = History;
 			sourceTree = "<group>";
@@ -1691,6 +1699,7 @@
 				5B7A1C8516EF5D2200354310 /* icon_stories_selected@2x.png in Resources */,
 				5B7A1C8616EF5D2200354310 /* icon_stories.png in Resources */,
 				5B7A1C8716EF5D2200354310 /* icon_stories@2x.png in Resources */,
+				84A640B01B82130D00643A39 /* DDGNoContentViewController.xib in Resources */,
 				5B2FCAD816F32BE10045A5FE /* TUSafariActivity.strings in Resources */,
 				5B2FCAD916F32BE10045A5FE /* Safari.png in Resources */,
 				5B2FCADA16F32BE10045A5FE /* Safari@2x.png in Resources */,
@@ -1881,6 +1890,7 @@
 				5B070884170460250058718F /* DDGActivityItemProvider.m in Sources */,
 				5B0708871704A3BE0058718F /* DDGSafariActivity.m in Sources */,
 				5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */,
+				84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */,
 				5B7C3BDF170B098C00B9E009 /* DDGFirstRunViewController.m in Sources */,
 				845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */,
 				5B7C3BEF170DA03E00B9E009 /* DDGSearchBar.m in Sources */,

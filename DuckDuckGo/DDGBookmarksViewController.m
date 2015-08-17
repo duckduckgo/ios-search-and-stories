@@ -11,12 +11,15 @@
 #import "DDGSearchController.h"
 #import "DDGPlusButton.h"
 #import "DDGMenuHistoryItemCell.h"
+#import "DDGNoContentViewController.h"
 
 @interface DDGBookmarksViewController ()
+@property (nonatomic, strong) IBOutlet UITableView *tableView;
+@property (nonatomic, strong) IBOutlet UIView *separatorView;
 @property (nonatomic, strong) UIBarButtonItem *editBarButtonItem;
 @property (nonatomic, strong) UIBarButtonItem *doneBarButtonItem;
 @property (nonatomic, strong) UIImage *searchIcon;
-@property (nonatomic, strong) UIImage *favoriteIcon;
+@property (nonatomic, strong) DDGNoContentViewController* noContentView;
 
 @end
 
@@ -35,15 +38,11 @@
     [super viewDidLoad];
     
     [self.view setBackgroundColor:[UIColor duckNoContentColor]];
+    self.separatorView.backgroundColor = [UIColor duckTableSeparator];
     
     NSParameterAssert(nil != self.searchController);
     
-    self.favoriteIcon = [UIImage imageNamed:@"favorite-small"];
-//    [self.tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil]
-//         forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
     [self.tableView setRowHeight:44.0f];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.separatorColor = self.tableView.backgroundColor;
     
     self.searchIcon = [UIImage imageNamed:@"search_icon"];
     
@@ -54,7 +53,7 @@
     // we need to offset the triforce image by 1px down to compensate for the shadow in the image
     float topInset = 1.0f;
     button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
-
+    
     [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 
@@ -66,25 +65,27 @@
     self.editBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Edit", @"Menu button label: Edit")
                                                               style:UIBarButtonItemStyleBordered
                                                              target:self
-                                                             action:@selector(editAction:)];    
-	// force 1st time through for iOS < 6.0
-    [self viewWillLayoutSubviews];
+                                                             action:@selector(editAction:)];
+    
+    self.noContentView = [[DDGNoContentViewController alloc] init];
+    [self.view addSubview:self.noContentView.view];
+    
+    self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
+    self.noContentView.noContentTitle.text = NSLocalizedString(@"No Favorites",
+                                                               @"title for the view shown when no favorite searches/urls are found");
+    self.noContentView.noContentSubtitle.text = NSLocalizedString(@"Add searches to your favorites, and they will be shown here.",
+                                                                  @"details text for the view shown when no favorite searches/urls are found");
+    self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.noContentView.view.frame = self.view.bounds;
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     
-    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
-    for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
-        if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
-            [panGesture requireGestureRecognizerToFail:gr];
-    }
-    
     self.navigationItem.rightBarButtonItem = ([DDGBookmarksProvider sharedProvider].bookmarks.count)  ? self.editBarButtonItem : nil;
     
-    if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0)
-        [self showNoBookmarksView];
+    self.showNoContent = [DDGBookmarksProvider sharedProvider].bookmarks.count == 0;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -92,6 +93,14 @@
     [self.tableView setEditing:NO animated:animated];
 }
 
+
+- (void)setShowNoContent:(BOOL)showNoContent {
+    
+    [UIView animateWithDuration:0 animations:^{
+        self.tableView.hidden = showNoContent;
+        self.noContentView.view.hidden = !showNoContent;
+    }];
+}
 
 
 -(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem
@@ -139,29 +148,6 @@
     self.tableView.scrollsToTop = YES;
 }
 
-#pragma mark - No Bookmarks
-
-- (void)showNoBookmarksView {
-    
-    [UIView animateWithDuration:0 animations:^{
-        //[self.tableView removeFromSuperview];
-        self.noBookmarksView.frame = self.view.bounds;
-      //        [self.view addSubview:self.noBookmarksView];
-      self.view = self.noBookmarksView;
-    }];
-}
-
-- (void)hideNoBookmarksView {
-    if (nil == self.tableView.superview) {
-        [UIView animateWithDuration:0 animations:^{
-            //[self.noBookmarksView removeFromSuperview];
-            self.tableView.frame = self.view.bounds;
-            //[self.view addSubview:self.tableView];
-            self.view = self.tableView;
-        }];
-    }
-}
-
 //- (IBAction)delete:(id)sender {
 //    NSSet *indexPaths = [self.deletingIndexPaths copy];
 //    [self cancelDeletingIndexPathsAnimated:YES];
@@ -197,8 +183,7 @@
     }
     cell.bookmarkItem = bookmark;
     cell.historyDelegate = self;
-    cell.imageView.image = self.favoriteIcon;
-    cell.separatorView.hidden = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
+    cell.isLastItem = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
     return cell;
 }
 
@@ -224,9 +209,7 @@
         [[DDGBookmarksProvider sharedProvider] deleteBookmarkAtIndex:indexPath.row];
         [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
         
-        if ([DDGBookmarksProvider sharedProvider].bookmarks.count == 0) {
-            [self performSelector:@selector(showNoBookmarksView) withObject:nil afterDelay:0.2];
-        }
+        self.showNoContent = [DDGBookmarksProvider sharedProvider].bookmarks.count == 0;
     }
 }
 

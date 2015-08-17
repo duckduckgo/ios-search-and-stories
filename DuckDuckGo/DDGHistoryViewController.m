@@ -15,7 +15,7 @@
 #import "DDGSearchController.h"
 #import "DDGHistoryItemCell.h"
 #import "DDGUnderViewControllerCell.h"
-
+#import "DDGNoContentViewController.h"
 #import "DDGMenuHistoryItemCell.h"
 
 
@@ -27,6 +27,8 @@
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic) DDGHistoryViewControllerMode mode;
 @property (nonatomic, weak) IBOutlet UIImageView *chatBubbleImageView;
+@property (nonatomic, strong) DDGNoContentViewController* noContentView;
+@property (nonatomic, strong) UIView* separatorView;
 @end
 
 @implementation DDGHistoryViewController
@@ -37,7 +39,6 @@
     if (self) {
         self.managedObjectContext = managedObjectContext;
         self.searchHandler = searchHandler;
-        self.showsHistory = YES;
         self.mode = mode;
     }
     return self;
@@ -46,7 +47,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     if (nil == self.tableView) {
         UITableView *tableView = nil;
         tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
@@ -61,10 +62,29 @@
         tableView.backgroundColor = [UIColor clearColor];
         tableView.opaque = NO;
         tableView.rowHeight = 44.0;
-        //[tableView registerNib:[UINib nibWithNibName:@"DDGMenuHistoryItemCell" bundle:nil] forCellReuseIdentifier:@"DDGMenuHistoryItemCell"];
         
-        self.view = tableView;
         self.tableView = tableView;
+        [self.view addSubview:self.tableView];
+        
+        CGRect sepRect = self.view.frame;
+        sepRect.origin.x = 0;
+        sepRect.origin.y = 0;
+        sepRect.size.height = 0.5;
+        self.separatorView = [[UIView alloc] initWithFrame:sepRect];
+        self.separatorView.backgroundColor = [UIColor duckTableSeparator];
+        self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleWidth;
+        [self.view addSubview:self.separatorView];
+        
+        self.noContentView = [[DDGNoContentViewController alloc] init];
+        [self.view addSubview:self.noContentView.view];
+        
+        self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-recents"];
+        self.noContentView.noContentTitle.text = NSLocalizedString(@"No Recents",
+                                                                   @"title for the view shown when no recent searches/urls are found");
+        self.noContentView.noContentSubtitle.text = NSLocalizedString(@"Browse stories and search the web, and your recents will be shown here.",
+                                                                      @"details text for the view shown when no recent searches/urls are found");
+        self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+        self.noContentView.view.frame = self.view.bounds;
     }
     
     [self fetchedResultsController];
@@ -81,7 +101,7 @@
 }
 
 - (NSFetchedResultsController *)fetchedResultsController {
-    if (nil == _fetchedResultsController && self.showsHistory) {
+    if (nil == _fetchedResultsController) {
         NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
         [request setPredicate:[NSPredicate predicateWithFormat:@"section == %@", DDGHistoryItemSectionNameSearches]];
         NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
@@ -97,7 +117,7 @@
         if (![fetchedResultsController performFetch:&error])
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         
-        self.fetchedResultsController = fetchedResultsController;
+        _fetchedResultsController = fetchedResultsController;
     }
     
     return _fetchedResultsController;
@@ -133,103 +153,26 @@
     [super viewWillAppear:animated];
     
     [self.tableView reloadData];
-    
-    if ([self shouldShowNoHistoryView]) {
-        [self showNoResultsView];
-    } else {
-        [self.noResultsView removeFromSuperview];
-        self.noResultsView = nil;
-    }
-    
-    if ([self shouldShowNoHistorySection]) {
-        [self showNoResultsSection];
-    }
-}
-
-- (BOOL)shouldShowNoHistorySection {
-    return ([[self.fetchedResultsController fetchedObjects] count] == 0)
-    && FALSE // nil != self.additionalSectionsDelegate
-    && self.showsHistory;
-}
-
-- (void)showNoResultsSection {
-    if (!_showingNoResultsSection) {
-        _showingNoResultsSection = YES;
-        [self.tableView beginUpdates];
-        
-        NSInteger sections = [[self.fetchedResultsController sections] count];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:(sections)];
-        
-        [self.tableView insertSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView insertRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        
-        [self.tableView endUpdates];
-    }
-}
-
-- (void)hideNoResultsSection {
-    if (_showingNoResultsSection) {
-        _showingNoResultsSection = NO;
-        [self.tableView beginUpdates];
-        
-        NSInteger sections = [[self.fetchedResultsController sections] count];
-        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:(sections)];
-        
-        [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-        [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:indexPath.section] withRowAnimation:UITableViewRowAnimationFade];
-        
-        [self.tableView endUpdates];        
-    }
-}
-
-- (BOOL)shouldShowNoHistoryView {
-    return ([[self.fetchedResultsController fetchedObjects] count] == 0)
-    && self.showsHistory;
-}
-
-- (void)showNoResultsView {
-    // show no results view
-    if (nil == self.noResultsView) {
-        if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
-            [[NSBundle mainBundle] loadNibNamed:@"DDGHistoryNoResultsView" owner:self options:nil];
-        else
-            [[NSBundle mainBundle] loadNibNamed:@"DDGHistoryNoResultsDisabledView" owner:self options:nil];
-    }
-    [self.noResultsView setTintColor:[UIColor whiteColor]];
-    [self.chatBubbleImageView setImage:[[UIImage imageNamed:@"Chat"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-    [self.noResultsView setFrame:[self.view bounds]];
-    [self.view addSubview:self.noResultsView];
+    [self checkOnNoContent];
 }
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    
-    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
-    for (UIGestureRecognizer *gr in self.tableView.gestureRecognizers) {
-        if ([gr isKindOfClass:[UISwipeGestureRecognizer class]])
-            [panGesture requireGestureRecognizerToFail:gr];
-    }
 }
 
-- (void)setShowsHistory:(BOOL)showsHistory {
-    if (showsHistory == _showsHistory)
-        return;
-    
-    _showsHistory = showsHistory;
-    
-    if (!showsHistory)
-        self.fetchedResultsController = nil;
-    
-    [self.tableView reloadData];
+
+-(void)checkOnNoContent
+{
+    self.showNoContent = [self.fetchedResultsController fetchedObjects].count <= 0;
 }
 
-#pragma mark - UIGestureRecognizerDelegate
-
-- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer {
-    CGPoint point = [gestureRecognizer locationInView:self.tableView];
-    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-    return (nil != indexPath);
+- (void)setShowNoContent:(BOOL)showNoContent {
+    [UIView animateWithDuration:0 animations:^{
+        self.tableView.hidden = showNoContent;
+        self.noContentView.view.hidden = !showNoContent;
+    }];
 }
+
 
 #pragma mark - UITableViewDelegate
 
@@ -294,32 +237,9 @@
     }
     cell.historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
     cell.historyDelegate = self;
-    cell.separatorView.hidden = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
+    cell.isLastItem = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
     return cell;
 }
-
-//-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-//{
-//    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
-//    if (section < additionalSections) {
-//        if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:heightForFooterInSection:)])
-//            return [self.additionalSectionsDelegate tableView:tableView heightForFooterInSection:section];
-//    }
-//    
-//    return 0.0;
-//}
-//
-//-(UIView *) tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-//{
-//    NSInteger additionalSections = [self.additionalSectionsDelegate numberOfAdditionalSections];
-//    if (section < additionalSections) {
-//        if ([self.additionalSectionsDelegate respondsToSelector:@selector(tableView:viewForFooterInSection:)])
-//            return [self.additionalSectionsDelegate tableView:tableView viewForFooterInSection:section];
-//        return nil;
-//    }
-//        
-//    return nil;
-//}
 
 #pragma mark - NSFetchedResultsControllerDelegate
 
@@ -346,6 +266,7 @@
         case NSFetchedResultsChangeUpdate:
             break;
     }
+    [self checkOnNoContent];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
@@ -375,45 +296,14 @@
             [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
+    [self checkOnNoContent];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
     [self.tableView endUpdates];
     
-    if ([self shouldShowNoHistoryView]) {
-        [self.noResultsView removeFromSuperview];
-        self.noResultsView = nil;
-    } else if ([self shouldShowNoHistorySection]) {
-        [self showNoResultsSection];
-    } else {
-        [self hideNoResultsSection];
-        [self.noResultsView removeFromSuperview];
-        self.noResultsView = nil;        
-    }
+    [self checkOnNoContent];
 }
-
-//- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-//{
-//    DDGHistoryItemCell *underCell = (DDGHistoryItemCell *)cell;
-//    
-//    underCell.imageView.image = nil;
-//    underCell.imageView.highlightedImage = nil;
-//    
-//    UILabel *lbl = cell.textLabel;
-//
-//    // we have history and it is enabled
-//    DDGHistoryItem *item = [self.fetchedResultsController objectAtIndexPath:indexPath];
-//    DDGStory *story = item.story;
-//    
-//    if (nil != story) {
-//        underCell.fixedSizeImageView.image = story.feed.image;
-//        cell.accessoryView = nil;
-//    } else {
-//        underCell.fixedSizeImageView.image = [UIImage imageNamed:@"search_icon"];
-//        cell.accessoryView = [DDGPlusButton plusButton];
-//    }
-//    lbl.text = item.title;
-//}
 
 @end
