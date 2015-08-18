@@ -14,9 +14,9 @@
 
 +(UIFont*)duckStoryTitleSmall  { return [UIFont fontWithName:@"ProximaNova-Regular" size:12.0f]; }
 
-+(UIFont*)duckStoryCategory { return [UIFont fontWithName:@"ProximaNova-Regular" size:12.0f]; }
++(UIFont*)duckStoryCategory { return [UIFont fontWithName:@"ProximaNova-Regular" size:13.0f]; }
 
-+(UIFont*)duckStoryCategorySmall { return [UIFont fontWithName:@"ProximaNova-Regular" size:10.0f]; }
++(UIFont*)duckStoryCategorySmall { return [UIFont fontWithName:@"ProximaNova-Regular" size:11.0f]; }
 
 +(UIFont*)duckGeneral { return [UIFont fontWithName:@"ProximaNova-Regular" size:12.0f]; }
 

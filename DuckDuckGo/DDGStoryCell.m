@@ -35,8 +35,8 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     if(self) {
         CGRect sepRect = self.contentView.frame;
         sepRect.origin.x = -2;
-        sepRect.origin.y = sepRect.size.height-1;
-        sepRect.size.height = 1;
+        sepRect.origin.y = sepRect.size.height-0.5f;
+        sepRect.size.height = 0.5f;
         sepRect.size.width += 4;
         self.backgroundColor = [UIColor clearColor];
         self.separatorView = [[UIView alloc] initWithFrame:sepRect];
@@ -339,7 +339,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.menuButton.backgroundColor = [UIColor duckStoryMenuButtonBackground];
     [self.menuButton setImage:[UIImage imageNamed:@"menu-white"] forState:UIControlStateNormal];
-    self.menuButton.layer.cornerRadius = 4.5f;
+    self.menuButton.layer.cornerRadius = 4.0f;
     [self.menuButton addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.menuButton];
     
@@ -348,7 +348,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.categoryButton.titleLabel.textColor = [UIColor whiteColor];
     self.categoryButton.titleLabel.textAlignment = NSTextAlignmentCenter;
     //self.categoryLabel.opaque = NO;
-    self.categoryButton.layer.cornerRadius = 4.5f;
+    self.categoryButton.layer.cornerRadius = 4.0f;
     [self.categoryButton addTarget:self action:@selector(categoryButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.categoryButton];
     
