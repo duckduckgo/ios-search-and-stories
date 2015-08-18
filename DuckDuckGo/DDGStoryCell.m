@@ -44,6 +44,8 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
         self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
         [self.contentView addSubview:self.separatorView];
         self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
+        
+        self.textLabel.font = [UIFont duckFontWithSize:self.textLabel.font.pointSize];
     }
     return self;
 }

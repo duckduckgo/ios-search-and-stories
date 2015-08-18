@@ -134,6 +134,10 @@
 }
 
 
++(UIColor*)duckPopoverBackground
+{
+    return [UIColor clearColor];
+}
 
 + (UIColor *)autocompleteDetailColor
 {

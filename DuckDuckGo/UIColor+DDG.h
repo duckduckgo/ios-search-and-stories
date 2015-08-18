@@ -29,6 +29,8 @@
 + (UIColor *)duckSearchFieldForeground;
 + (UIColor *)duckSearchFieldPlaceholderForeground;
 
++ (UIColor*)duckPopoverBackground;
+
 + (UIColor*)duckProgressBarForeground;
 + (UIColor*)duckProgressBarBackground;
 
