@@ -486,6 +486,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     if (self.storiesMode!=DDGStoriesListModeFavorites) {
         if ([self shouldRefresh]) {
             [self refreshStoriesTriggeredManually:NO includeSources:YES];
+        } else {
+            NSLog(@"NOT refreshing stories in normal mode");
         }
     }
 

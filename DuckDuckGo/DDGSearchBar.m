@@ -43,36 +43,23 @@
 
 
 - (void)setShowsCancelButton:(BOOL)show {
-    _showsCancelButton = show;
-    if(show) {
-        self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 13);
-    } else {
-        self.cancelButtonXConstraint.constant = 0;
-    }
-    [self layoutIfNeeded];
-
+    [self setShowsCancelButton:show animated:TRUE];
 }
 
 - (void)setShowsLeftButton:(BOOL)show {
-    _showsLeftButton = show;
-    if(show) {
-        self.leftButtonXConstraint.constant = self.leftButton.frame.size.width + 10;
-    } else {
-        self.leftButtonXConstraint.constant = 0;
-    }
-    [self layoutIfNeeded];
+    [self setShowsLeftButton:show animated:TRUE];
 }
 
 - (void)setShowsBangButton:(BOOL)show {
-    _showsBangButton = show;
-    self.searchField.additionalLeftSideInset = show ? 39 : 0;
-    [self setNeedsLayout];
+    [self setShowsBangButton:show animated:TRUE];
 }
 
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated {
-    self.showsBangButton = show;
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [self layoutIfNeeded:duration];
+    self.searchField.additionalLeftSideInset = show ? 39 : 0;
+    [self layoutIfNeeded];
+    _showsBangButton = show;
+    [self setNeedsLayout];
+    [self layoutIfNeeded:(animated ? 0.2 : 0)];
 }
 
 - (void)layoutIfNeeded:(NSTimeInterval)animationDuration {
@@ -82,20 +69,29 @@
 }
 
 - (void)setShowsCancelButton:(BOOL)show animated:(BOOL)animated {
-    self.showsCancelButton = show;
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [self layoutIfNeeded:duration];
+    _showsCancelButton = show;
+    if(show) {
+        self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 13);
+    } else {
+        self.cancelButtonXConstraint.constant = 0;
+    }
+    [self layoutIfNeeded:((animated) ? 0.2 : 0.0)];
 }
 
 - (void)setShowsLeftButton:(BOOL)show animated:(BOOL)animated {
-    self.showsLeftButton = show;
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [self layoutIfNeeded:duration];
+    _showsLeftButton = show;
+    if(show) {
+        self.leftButtonXConstraint.constant = self.leftButton.frame.size.width + 10;
+    } else {
+        self.leftButtonXConstraint.constant = 0;
+    }
+    [self layoutIfNeeded:((animated) ? 0.2 : 0.0)];
 }
 
 - (void)layoutSubviews {
     self.leftButton.hidden = !self.showsLeftButton;
-    self.bangButton.hidden = !self.showsBangButton;
+    //self.bangButton.hidden = !self.showsBangButton;
+    self.bangButton.alpha = self.showsBangButton ? 1 : 0;
     self.cancelButton.hidden = !self.showsCancelButton;
 
     [self setNeedsDisplay];

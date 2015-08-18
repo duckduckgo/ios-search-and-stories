@@ -7,6 +7,7 @@
     <customFonts key="customFonts">
         <mutableArray key="proximanova-regular.otf">
             <string>ProximaNova-Regular</string>
+            <string>ProximaNova-Regular</string>
         </mutableArray>
     </customFonts>
     <objects>
@@ -60,6 +61,9 @@
                             <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="search" enablesReturnKeyAutomatically="YES"/>
                             <connections>
                                 <outlet property="delegate" destination="-1" id="76"/>
+                                <outlet property="placeholderIconView" destination="Ong-Rn-OOF" id="mhK-Ed-ASP"/>
+                                <outlet property="placeholderTextCenter" destination="Ktn-LB-dY1" id="dr3-bd-WAO"/>
+                                <outlet property="placeholderTextLeft" destination="PVH-H0-057" id="LC0-q6-Gfs"/>
                                 <outlet property="placeholderView" destination="IlG-e8-l4A" id="aBa-FD-JDZ"/>
                             </connections>
                         </textField>
@@ -92,15 +96,15 @@
                             </connections>
                         </button>
                         <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IlG-e8-l4A" userLabel="placeholder container">
-                            <rect key="frame" x="0.0" y="7" width="600" height="29"/>
+                            <rect key="frame" x="10" y="7" width="580" height="29"/>
                             <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="SearchBar-Search" translatesAutoresizingMaskIntoConstraints="NO" id="Ong-Rn-OOF">
-                                    <rect key="frame" x="221" y="8" width="13" height="13"/>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="SearchBar-Search" translatesAutoresizingMaskIntoConstraints="NO" id="Ong-Rn-OOF">
+                                    <rect key="frame" x="211" y="8" width="13" height="13"/>
                                 </imageView>
-                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Search DuckDuckGo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SCO-Zc-2cb">
-                                    <rect key="frame" x="244" y="6" width="135" height="17"/>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Search DuckDuckGo" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="SCO-Zc-2cb">
+                                    <rect key="frame" x="234" y="6" width="135" height="17"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                    <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="14"/>
                                     <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <nil key="highlightedColor"/>
                                 </label>
@@ -110,9 +114,10 @@
                                 <constraint firstItem="SCO-Zc-2cb" firstAttribute="top" secondItem="IlG-e8-l4A" secondAttribute="top" id="7ma-RW-cef"/>
                                 <constraint firstAttribute="bottom" secondItem="SCO-Zc-2cb" secondAttribute="bottom" id="B5r-45-Woj"/>
                                 <constraint firstItem="SCO-Zc-2cb" firstAttribute="leading" secondItem="IlG-e8-l4A" secondAttribute="leading" id="EZq-gC-LqP"/>
-                                <constraint firstAttribute="centerX" secondItem="SCO-Zc-2cb" secondAttribute="centerX" constant="-12" id="Ktn-LB-dY1"/>
+                                <constraint firstAttribute="centerX" secondItem="SCO-Zc-2cb" secondAttribute="centerX" constant="-12" id="Ktn-LB-dY1" userLabel="placeholder text center"/>
                                 <constraint firstAttribute="height" constant="29" id="LP8-Rg-Lrb"/>
                                 <constraint firstAttribute="trailing" secondItem="SCO-Zc-2cb" secondAttribute="trailing" id="N9H-4k-zVI"/>
+                                <constraint firstItem="SCO-Zc-2cb" firstAttribute="leading" secondItem="IlG-e8-l4A" secondAttribute="leading" priority="1" constant="38" id="PVH-H0-057" userLabel="placeholder text left"/>
                                 <constraint firstAttribute="centerY" secondItem="SCO-Zc-2cb" secondAttribute="centerY" id="Qpg-8n-cUQ"/>
                                 <constraint firstItem="Ong-Rn-OOF" firstAttribute="trailing" secondItem="SCO-Zc-2cb" secondAttribute="leading" constant="-10" id="VFq-7a-Gxr"/>
                                 <constraint firstItem="Ong-Rn-OOF" firstAttribute="centerY" secondItem="SCO-Zc-2cb" secondAttribute="centerY" id="cug-vp-Rrc"/>
@@ -140,13 +145,13 @@
                         <constraint firstItem="69" firstAttribute="trailing" secondItem="67" secondAttribute="leading" id="1Rg-Zp-ybP" userLabel="left button left alignment"/>
                         <constraint firstItem="83" firstAttribute="leading" secondItem="70" secondAttribute="leading" id="Dct-Gh-JLG" userLabel="bang button left alignment"/>
                         <constraint firstItem="70" firstAttribute="bottom" secondItem="67" secondAttribute="bottom" constant="-8" id="GQ1-Ic-Qcx" userLabel="address field bottom alignment"/>
-                        <constraint firstItem="IlG-e8-l4A" firstAttribute="trailing" secondItem="67" secondAttribute="trailing" id="Hdy-3v-FII" userLabel="placeholder right alignment"/>
+                        <constraint firstItem="IlG-e8-l4A" firstAttribute="trailing" secondItem="67" secondAttribute="trailing" constant="-10" id="Hdy-3v-FII" userLabel="placeholder right alignment"/>
                         <constraint firstItem="8B2-xM-tuN" firstAttribute="leading" secondItem="67" secondAttribute="leading" id="Hkw-Ht-jNo"/>
                         <constraint firstItem="8B2-xM-tuN" firstAttribute="bottom" secondItem="67" secondAttribute="bottom" id="Ieq-2o-cxQ"/>
                         <constraint firstItem="IlG-e8-l4A" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="QgQ-JD-KGf" userLabel="placeholder vertical center"/>
                         <constraint firstAttribute="height" constant="44" id="WGv-23-cEv" userLabel="search bar height"/>
                         <constraint firstItem="83" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="aGc-Ts-A3A" userLabel="bang button vertical center"/>
-                        <constraint firstItem="IlG-e8-l4A" firstAttribute="leading" secondItem="67" secondAttribute="leading" id="ceA-DN-h4L"/>
+                        <constraint firstItem="IlG-e8-l4A" firstAttribute="leading" secondItem="67" secondAttribute="leading" constant="10" id="ceA-DN-h4L"/>
                         <constraint firstItem="72" firstAttribute="leading" secondItem="70" secondAttribute="trailing" constant="10" id="do7-vC-DfC" userLabel="address X to cancel button"/>
                         <constraint firstItem="69" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="h2C-Sq-7w2" userLabel="left button vertical center"/>
                         <constraint firstItem="70" firstAttribute="leading" secondItem="69" secondAttribute="trailing" constant="10" id="hru-Nf-Ie2" userLabel="address X to left button"/>

@@ -994,7 +994,7 @@ NSString * const emailRegEx =
     scrollView.hidden = YES;
     [self positionNavControllerForInputAccessoryForceHidden:NO];
     
-    self.searchBar.bangButton.hidden = NO;
+    self.searchBar.showsBangButton = TRUE;
 }
 
 #pragma mark - Text field delegate

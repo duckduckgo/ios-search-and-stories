@@ -13,6 +13,10 @@
 @property NSAttributedString* actualPlaceholderText;
 @property NSAttributedString* inactivePlaceholderText;
 
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *placeholderTextLeft;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *placeholderTextCenter;
+@property (strong, nonatomic) IBOutlet UIImageView *placeholderIconView;
+
 @end
 
 @implementation DDGAddressBarTextField
@@ -128,11 +132,26 @@
 }
 
 -(void)hidePlaceholder {
-    self.placeholderView.hidden = TRUE;
-    self.attributedPlaceholder = self.actualPlaceholderText;
+    [UIView animateWithDuration:0.2 animations:^{
+        self.placeholderTextLeft.active = TRUE;
+        self.placeholderTextCenter.active = FALSE;
+        self.placeholderIconView.alpha = 0;
+        [self.placeholderView layoutIfNeeded];
+    } completion:^(BOOL finished) {
+        self.attributedPlaceholder = self.actualPlaceholderText;
+        self.placeholderView.hidden = TRUE;
+    }];
 }
 
 -(void)showPlaceholder {
+    [UIView animateWithDuration:0.2 animations:^{
+        self.placeholderTextLeft.active = FALSE;
+        self.placeholderTextCenter.active = TRUE;
+        self.placeholderIconView.alpha = 1;
+        [self.placeholderView layoutIfNeeded];
+    } completion:^(BOOL finished) {
+    }];
+    
     NSString* text = self.text;
     self.placeholderView.hidden = !(text==nil || text.length<=0);
     self.attributedPlaceholder = self.inactivePlaceholderText;
