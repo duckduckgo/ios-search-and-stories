@@ -98,10 +98,10 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                     feed.feedDate = feedDate;
                     
                     if (!feed.isImageDownloaded) {
-                        NSLog(@"feed image is NOT downloaded, queueing download %@", feed.title);
+                        //NSLog(@"feed image is NOT downloaded, queueing download %@", feed.title);
                         [self downloadIconForFeed:feed];
                     } else {
-                        NSLog(@"feed image IS downloaded %@", feed.title);
+                        //NSLog(@"feed image IS downloaded %@", feed.title);
                     }
 
                 }

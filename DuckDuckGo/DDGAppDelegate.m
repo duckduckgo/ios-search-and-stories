@@ -47,9 +47,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
-    NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
-    [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:DDGLastRefreshAttemptKey];
-    
     //Set the global URL cache to SDURLCache, which caches to disk
     SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
                                                          diskCapacity:1024*1024*10 // 10MB disk cache
@@ -283,13 +280,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     NSURL *storeURL = [docsDir URLByAppendingPathComponent:storeName];
     NSURL *storeWriteAheadLogURL = [docsDir URLByAppendingPathComponent:[storeName stringByAppendingString:@"-wal"]];
     NSURL *storeSharedMemoryURL = [docsDir URLByAppendingPathComponent:[storeName stringByAppendingString:@"-shm"]];
-    
-    if(![[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {
-        // this can happen if we were restored from an icloud backup, which can exclude the sqlite DB file.
-        // in those cases, we should require a refresh
-        NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
-        [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:DDGLastRefreshAttemptKey];
-    }
     
     NSError *error = nil;
     NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption: @YES,

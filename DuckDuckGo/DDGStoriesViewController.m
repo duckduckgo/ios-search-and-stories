@@ -44,6 +44,9 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) NSOperationQueue *imageDecompressionQueue;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
 @property (nonatomic, strong) IBOutlet UICollectionView *storyView;
+@property (readonly) NSString* lastRefreshDefaultsKey;
+@property (nonatomic, strong) NSDate* lastRefreshAttempt;
+
 
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
@@ -483,7 +486,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         }
     }
     
-    if (self.storiesMode!=DDGStoriesListModeFavorites) {
+    if (self.storiesMode==DDGStoriesListModeNormal) {
         if ([self shouldRefresh]) {
             [self refreshStoriesTriggeredManually:NO includeSources:YES];
         } else {
@@ -707,12 +710,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (BOOL)shouldRefresh
 {
-    NSDate *lastAttempt = (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:DDGLastRefreshAttemptKey];
-    if (lastAttempt) {
-        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:lastAttempt];
-        return (timeInterval > DDGMinimumRefreshInterval);
-    }
-    return YES;
+    return [[NSDate date] timeIntervalSinceDate:self.lastRefreshAttempt] > DDGMinimumRefreshInterval;
 }
 
 - (void)decompressAndDisplayImageForStoryAtIndexPath:(NSIndexPath*)indexPath;
@@ -796,9 +794,40 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     return _storyFetcher;
 }
 
+
+-(NSString*)lastRefreshDefaultsKey
+{
+    switch(self.storiesMode) {
+        case DDGStoriesListModeNormal:
+            return @"lastRefreshAttempt";
+        case DDGStoriesListModeFavorites:
+            return @"lastRefreshFavorites";
+        case DDGStoriesListModeRecents:
+            return @"lastRefreshRecents";
+        default:
+            return @"lastRefreshMisc";
+    }
+
+}
+-(NSDate*)lastRefreshAttempt
+{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    NSString* refreshKey = self.lastRefreshDefaultsKey;
+    id value = [defaults objectForKey:refreshKey];
+    if(value==nil) return [NSDate dateWithTimeIntervalSince1970:0];
+    if([value isKindOfClass:NSDate.class]) return (NSDate*)value;
+    return [NSDate dateWithTimeIntervalSince1970:0];
+}
+
+
+-(void)setLastRefreshAttempt:(NSDate*)referenceDate
+{
+    [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:self.lastRefreshDefaultsKey];
+}
+
 - (void)refreshStoriesTriggeredManually:(BOOL)manual includeSources:(BOOL)includeSources
 {
-    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:DDGLastRefreshAttemptKey];
+    self.lastRefreshAttempt = [NSDate date];
     if (includeSources) {
         [self refreshSources:manual];
     } else {
