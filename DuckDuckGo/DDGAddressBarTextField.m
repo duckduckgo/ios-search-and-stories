@@ -71,7 +71,7 @@
     
     self.clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.clearButton setImage:[UIImage imageNamed:@"clear.png"] forState:UIControlStateNormal];
-    self.clearButton.frame = CGRectMake(0,0,23,23);
+    self.clearButton.frame = CGRectMake(0,0,30,23);
     
     [self addTarget:self action:@selector(textWasUpdated:) forControlEvents:UIControlEventEditingChanged];
     
