@@ -114,8 +114,9 @@
         fetchedResultsController.delegate = self;
         
         NSError *error = nil;
-        if (![fetchedResultsController performFetch:&error])
+        if (![fetchedResultsController performFetch:&error]) {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        }
         
         _fetchedResultsController = fetchedResultsController;
     }

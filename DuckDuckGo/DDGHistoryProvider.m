@@ -151,32 +151,42 @@
     return history;
 }
 
--(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix {
-    // there are certain cases in which we don't want to return any history
-    if(nil == prefix || [prefix isEqualToString:@""] || ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
-        return @[];
+-(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix
+{
+    CGRect f = [[[[UIApplication sharedApplication] windows] firstObject] frame];
+    return [self pastHistoryItemsForPrefix:prefix withMaximumCount:(f.size.height > 645 ? 5 : 3)];
+}
+
+-(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix withMaximumCount:(NSInteger)maxItems {
+    // if we don't track the history, don't bother querying
+    if(![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) return @[];
+    if(nil == prefix) return @[];
     
-    NSMutableArray *results = [[NSMutableArray alloc] init];
-    
-    for(DDGHistoryItem *historyItem in [self allHistoryItems])
-	{
-        NSString *text = historyItem.title;
-		// be case insensitive when comparing search strings (and not URL's)
-        if ([[text lowercaseString] hasPrefix:[prefix lowercaseString]]			||
-			[text hasPrefix:[@"http://" stringByAppendingString:prefix]]		||
-			[text hasPrefix:[@"https://" stringByAppendingString:prefix]]		||
-			[text hasPrefix:[@"http://www." stringByAppendingString:prefix]]	||
-			[text hasPrefix:[@"https://www." stringByAppendingString:prefix]]
-           )
-            [results addObject:historyItem];
+    NSMutableArray *history = [[NSMutableArray alloc] init];
+    if(prefix.length<=0) {
+        [history addObjectsFromArray:[self allHistoryItems]];
+    } else {
+        NSString* lowerPrefix = [prefix lowercaseString];
+        for(DDGHistoryItem *historyItem in [self allHistoryItems]) {
+            NSString *text = historyItem.title;
+            // be case insensitive when comparing search strings (and not URL's)
+            if ([[text lowercaseString] hasPrefix:lowerPrefix]			||
+                [text hasPrefix:[@"http://" stringByAppendingString:prefix]]		||
+                [text hasPrefix:[@"https://" stringByAppendingString:prefix]]		||
+                [text hasPrefix:[@"http://www." stringByAppendingString:prefix]]	||
+                [text hasPrefix:[@"https://www." stringByAppendingString:prefix]] ) {
+                [history addObject:historyItem];
+            }
+        }
     }
     
     // if the array is too large, remove all but the 3 most recent items
-    while(results.count > 3)
-        [results removeObjectAtIndex:0];
-
-    // the array is currently in ascending chronological order; reverse it and make it non-mutable
-    return [[results reverseObjectEnumerator] allObjects];
+    NSArray* results = history;
+    if(maxItems>0 && history.count > maxItems) {
+        results = [history objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, maxItems)]];
+    }
+    
+    return results;
 }
 
 -(void)removeOldHistoryItemsWithoutSaving {

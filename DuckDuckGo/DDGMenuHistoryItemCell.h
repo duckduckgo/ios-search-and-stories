@@ -9,9 +9,11 @@
 #import <UIKit/UIKit.h>
 #import "DDGHistoryItem.h"
 
+@class DDGMenuHistoryItemCell;
+
 @protocol DDGHistoryItemCellDelegate <NSObject>
 
--(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem;
+-(void)plusButtonWasPushed:(DDGMenuHistoryItemCell*)menuCell;
 
 @end
 

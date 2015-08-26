@@ -74,7 +74,6 @@
 		4CCDC2AF1527B18C00CB6907 /* DDGHistoryProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCDC2AE1527B18C00CB6907 /* DDGHistoryProvider.m */; };
 		4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */; };
 		4CD9247E15C9ED0900EB062F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9247D15C9ED0900EB062F /* Constants.m */; };
-		4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */; };
 		4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */; };
 		4CF9ED59154DFCD80075C23E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF9ED56154DFC460075C23E /* MessageUI.framework */; };
 		5B044EBC16D392B6005A9584 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5B044EBB16D392B6005A9584 /* Accounts.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -150,7 +149,6 @@
 		5B7A1B7916E649B500354310 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C0BC93715B8C314008C6FC4 /* AVFoundation.framework */; };
 		5B7A1BC916E74C3500354310 /* DDGStoriesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1BC816E74C3500354310 /* DDGStoriesViewController.m */; };
 		5B7A1BCE16E78E4A00354310 /* DDGDuckViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7A1BCC16E78E4A00354310 /* DDGDuckViewController.m */; };
-		5B7A1BCF16E78E4A00354310 /* DDGDuckViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1BCD16E78E4A00354310 /* DDGDuckViewController.xib */; };
 		5B7A1C8416EF5D2200354310 /* icon_stories_selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8016EF5D2200354310 /* icon_stories_selected.png */; };
 		5B7A1C8516EF5D2200354310 /* icon_stories_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8116EF5D2200354310 /* icon_stories_selected@2x.png */; };
 		5B7A1C8616EF5D2200354310 /* icon_stories.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7A1C8216EF5D2200354310 /* icon_stories.png */; };
@@ -409,8 +407,6 @@
 		4CCEA042150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchSuggestionsProvider.m; sourceTree = "<group>"; };
 		4CD9247C15C9ED0900EB062F /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		4CD9247D15C9ED0900EB062F /* Constants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constants.m; sourceTree = "<group>"; };
-		4CD9249815CD7D8C00EB062F /* DDGAutocompleteViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAutocompleteViewController.h; sourceTree = "<group>"; };
-		4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAutocompleteViewController.m; sourceTree = "<group>"; };
 		4CE458FC15963729009225F5 /* DuckDuckGo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = DuckDuckGo.entitlements; sourceTree = "<group>"; };
 		4CF9543A158A6FB30076465E /* DDGInputAccessoryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGInputAccessoryView.h; sourceTree = "<group>"; };
 		4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGInputAccessoryView.m; sourceTree = "<group>"; };
@@ -515,7 +511,6 @@
 		5B7A1BC816E74C3500354310 /* DDGStoriesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoriesViewController.m; sourceTree = "<group>"; };
 		5B7A1BCB16E78E4A00354310 /* DDGDuckViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGDuckViewController.h; sourceTree = "<group>"; };
 		5B7A1BCC16E78E4A00354310 /* DDGDuckViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGDuckViewController.m; sourceTree = "<group>"; };
-		5B7A1BCD16E78E4A00354310 /* DDGDuckViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGDuckViewController.xib; sourceTree = "<group>"; };
 		5B7A1C8016EF5D2200354310 /* icon_stories_selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_stories_selected.png; sourceTree = "<group>"; };
 		5B7A1C8116EF5D2200354310 /* icon_stories_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_stories_selected@2x.png"; sourceTree = "<group>"; };
 		5B7A1C8216EF5D2200354310 /* icon_stories.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_stories.png; sourceTree = "<group>"; };
@@ -971,8 +966,6 @@
 		4C4B7E9015C4F18800340B59 /* Autocomplete */ = {
 			isa = PBXGroup;
 			children = (
-				4CD9249815CD7D8C00EB062F /* DDGAutocompleteViewController.h */,
-				4CD9249915CD7D8C00EB062F /* DDGAutocompleteViewController.m */,
 				5BDC6B33174F6A2A0065BB8D /* DDGAutocompleteHeaderView.h */,
 				5BDC6B34174F6A2C0065BB8D /* DDGAutocompleteHeaderView.m */,
 				5BDC6A53174CF5790065BB8D /* DDGAutocompleteCell.h */,
@@ -1198,7 +1191,6 @@
 			children = (
 				5B7A1BCB16E78E4A00354310 /* DDGDuckViewController.h */,
 				5B7A1BCC16E78E4A00354310 /* DDGDuckViewController.m */,
-				5B7A1BCD16E78E4A00354310 /* DDGDuckViewController.xib */,
 			);
 			name = "Duck Mode";
 			sourceTree = "<group>";
@@ -1694,7 +1686,6 @@
 				5B7A1B6C16E4DCA900354310 /* toolbar_bg@2x.png in Resources */,
 				5B7A1B6F16E4DEDB00354310 /* toolbar_shadow.png in Resources */,
 				5B7A1B7016E4DEDB00354310 /* toolbar_shadow@2x.png in Resources */,
-				5B7A1BCF16E78E4A00354310 /* DDGDuckViewController.xib in Resources */,
 				5B7A1C8416EF5D2200354310 /* icon_stories_selected.png in Resources */,
 				5B7A1C8516EF5D2200354310 /* icon_stories_selected@2x.png in Resources */,
 				5B7A1C8616EF5D2200354310 /* icon_stories.png in Resources */,
@@ -1830,7 +1821,6 @@
 				8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */,
 				4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */,
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
-				4CD9249A15CD7D8C00EB062F /* DDGAutocompleteViewController.m in Sources */,
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,

@@ -12,7 +12,6 @@
 #import "DDGBangsProvider.h"
 #import "DDGInputAccessoryView.h"
 #import "DDGBookmarksViewController.h"
-#import "DDGAutocompleteViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
@@ -35,6 +34,7 @@ NSString * const emailRegEx =
 @interface DDGSearchController () <DDGPopoverViewControllerDelegate>
 @property (nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
+@property (nonatomic, strong) DDGDuckViewController* autocompleteController;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) NSMutableArray *controllers;
 @property (nonatomic, getter = isDraggingTopViewController) BOOL draggingTopViewController;
@@ -115,7 +115,7 @@ NSString * const emailRegEx =
     if (self.isTransitioningViewControllers)
         return;
     
-    NSTimeInterval duration = (animated) ? 0.3 : 0.0;    
+    NSTimeInterval duration = (animated) ? 0.3 : 0.0;
     
     [self.controllers addObject:contentController];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
@@ -126,7 +126,7 @@ NSString * const emailRegEx =
     [contentController reenableScrollsToTop];
     
     self.homeController.alternateButtonBar = [contentController alternateToolbar];
-
+    
     self.transitioningViewControllers = YES;
     __weak DDGSearchController *weakSelf = self;
     [self.pageViewController setViewControllers:@[contentController]
@@ -222,15 +222,16 @@ NSString * const emailRegEx =
     self.edgesForExtendedLayout = UIRectEdgeNone;
     [self.searchBar setBackgroundColor:[UIColor duckSearchBarBackground]];
     
-    DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
-    autocompleteVC.historyProvider = self.historyProvider;
-    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:autocompleteVC];
-    _autocompleteNavigationController.delegate = self;
-    [self addChildViewController:_autocompleteNavigationController];
-    [_background addSubview:_autocompleteNavigationController.view];
-    _autocompleteNavigationController.view.frame = _background.bounds;
-    [_autocompleteNavigationController didMoveToParentViewController:self];
-    // [_autocompleteNavigationController pushViewController:autocompleteVC animated:NO];
+    if(self.autocompleteController==nil) {
+        self.autocompleteController = [[DDGDuckViewController alloc] initWithSearchController:self managedObjectContext:self.managedObjectContext];
+        self.autocompleteController.historyProvider = self.historyProvider;
+    }
+    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:self.autocompleteController];
+    self.autocompleteNavigationController.delegate = self;
+    [self addChildViewController:self.autocompleteNavigationController];
+    [_background addSubview:self.autocompleteNavigationController.view];
+    self.autocompleteNavigationController.view.frame = _background.bounds;
+    [self.autocompleteNavigationController didMoveToParentViewController:self];
     
     [self revealBackground:NO animated:NO];
     
@@ -556,7 +557,7 @@ NSString * const emailRegEx =
 }
 
 -(IBAction)bangButtonPressed:(UIButton*)sender {
-    [_autocompleteNavigationController popViewControllerAnimated:YES];
+    [self.autocompleteNavigationController popViewControllerAnimated:YES];
     [self bangButtonPressed];
 }
 
@@ -778,29 +779,32 @@ NSString * const emailRegEx =
 
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
 - (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
+    if(self.autocompleteController==[self.contentControllers lastObject]) return;
+    DLog(@"fading in/out autocomplete controller");
+    if(reveal) {
+        [self.autocompleteNavigationController viewWillAppear:animated];
+    } else {
+        [self.autocompleteNavigationController viewWillDisappear:animated];
+    }
     
-    if(reveal)
-        [_autocompleteNavigationController viewWillAppear:animated];
-    else
-        [_autocompleteNavigationController viewWillDisappear:animated];
-    
-    if(animated)
+    if(animated) {
         [UIView animateWithDuration:0.25 animations:^{
             _background.alpha = (reveal ? 1.0 : 0.0);
         } completion:^(BOOL finished) {
-            if(reveal)
-                [_autocompleteNavigationController viewDidAppear:animated];
-            else
-                [_autocompleteNavigationController viewDidDisappear:animated];
+            if(reveal) {
+                [self.autocompleteNavigationController viewDidAppear:animated];
+            } else {
+                [self.autocompleteNavigationController viewDidDisappear:animated];
+            }
         }];
-    else {
+    } else {
         _background.alpha = (reveal ? 1.0 : 0.0);
-        if(reveal)
-            [_autocompleteNavigationController viewDidAppear:animated];
-        else
-            [_autocompleteNavigationController viewDidDisappear:animated];
+        if(reveal) {
+            [self.autocompleteNavigationController viewDidAppear:animated];
+        } else {
+            [self.autocompleteNavigationController viewDidDisappear:animated];
+        }
     }
-    
 }
 
 // fade in or out the input accessory– to be used on keyboard show/hide
@@ -862,13 +866,13 @@ NSString * const emailRegEx =
 -(void)positionNavControllerForInputAccessoryForceHidden:(BOOL)forceHidden {
     UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
     
-    CGRect f = _autocompleteNavigationController.view.frame;
+    CGRect f = self.autocompleteNavigationController.view.frame;
     if(scrollView.hidden || inputAccessory.hidden || inputAccessory.alpha < 0.1 || forceHidden) {
-        f.size.height = _autocompleteNavigationController.view.superview.bounds.size.height;
+        f.size.height = self.autocompleteNavigationController.view.superview.bounds.size.height;
     } else {
-        f.size.height = _autocompleteNavigationController.view.superview.bounds.size.height - 44.0;
+        f.size.height = self.autocompleteNavigationController.view.superview.bounds.size.height - 44.0;
     }
-    _autocompleteNavigationController.view.frame = f;
+    self.autocompleteNavigationController.view.frame = f;
 }
 
 - (IBAction)hideBangTooltipForever:(id)sender {
@@ -924,14 +928,15 @@ NSString * const emailRegEx =
     
     NSString *text = searchField.text;
     NSString *textToAdd;
-    if(text.length==0 || [text characterAtIndex:text.length-1]==' ')
+    if(text.length==0 || [text characterAtIndex:text.length-1]==' ') {
         textToAdd = @"!";
-    else
+    } else {
         textToAdd = @" !";
+    }
     
     [self textField:searchField shouldChangeCharactersInRange:NSMakeRange(text.length, 0) replacementString:textToAdd];
     searchField.text = [searchField.text stringByAppendingString:textToAdd];
-    [(DDGAutocompleteViewController *)searchField.delegate searchFieldDidChange:nil];
+    [self.autocompleteController searchFieldDidChange:nil];
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
@@ -1004,10 +1009,10 @@ NSString * const emailRegEx =
 	if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete])
 	{
 		// autocomplete only when enabled
-		DDGAutocompleteViewController *autocompleteViewController = [_autocompleteNavigationController.viewControllers objectAtIndex:0];
-		if(_autocompleteNavigationController.topViewController != autocompleteViewController)
-			[_autocompleteNavigationController popToRootViewControllerAnimated:NO];
-		
+		DDGDuckViewController *autocompleteViewController = [self.autocompleteNavigationController.viewControllers objectAtIndex:0];
+		if(self.autocompleteNavigationController.topViewController != autocompleteViewController)
+			[self.autocompleteNavigationController popToRootViewControllerAnimated:NO];
+        
 		[autocompleteViewController searchFieldDidChange:self.searchBar.searchField];
 	}
 }

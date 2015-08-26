@@ -7,12 +7,20 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DDGHistoryProvider.h"
+#import "DDGSearchSuggestionsProvider.h"
 
 @class DDGSearchController;
 
-@interface DDGDuckViewController : UIViewController
+@interface DDGDuckViewController : UITableViewController
 
-- (instancetype)initWithSearchController:(DDGSearchController *)searchController;
+@property (nonatomic, strong) DDGHistoryProvider *historyProvider;
+
+- (instancetype)initWithSearchController:(DDGSearchController *)searchController
+                    managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
 - (void)updateContainerHeightConstraint:(BOOL)keyboardShowing;
+
+- (void)searchFieldDidChange:(id)sender;
 
 @end

@@ -146,7 +146,8 @@
 
 + (UIColor *)autocompleteHeaderColor
 {
-    return RGBA(225.0f, 225.0f, 225.0f, 1.0f);
+    return [UIColor clearColor];
+    //return RGBA(225.0f, 225.0f, 225.0f, 1.0f);
 }
 
 + (UIColor *)autocompleteTextColor

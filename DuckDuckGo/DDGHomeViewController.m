@@ -149,7 +149,8 @@
                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.searchTopController.state = DDGSearchControllerStateHome;
         self.searchTopController.shouldPushSearchHandlerEvents = YES;
-        self.searchController = [[DDGDuckViewController alloc] initWithSearchController:self.searchTopController];
+        self.searchController = [[DDGDuckViewController alloc] initWithSearchController:self.searchTopController
+                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         [self.searchTopController pushContentViewController:self.searchController animated:NO];
         self.searchTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                                             image:[[UIImage imageNamed:@"Tab-Search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]

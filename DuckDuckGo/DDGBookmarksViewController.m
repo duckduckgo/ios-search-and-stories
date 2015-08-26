@@ -103,16 +103,20 @@
 }
 
 
--(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem
+-(void)plusButtonWasPushed:(DDGMenuHistoryItemCell*)menuCell
 {
     DDGSearchController *searchController = [self searchControllerDDG];
     if (searchController) {
         DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
         [searchField becomeFirstResponder];
-        searchField.text = historyItem.title;
+        if(menuCell.historyItem) {
+            searchField.text = menuCell.historyItem.title;
+        } else if(menuCell.bookmarkItem) {
+            searchField.text = menuCell.bookmarkItem[@"title"];
+        }
         [searchController searchFieldDidChange:nil];
     } else if ([self.searchHandler respondsToSelector:@selector(beginSearchInputWithString:)]) {
-        [self.searchHandler beginSearchInputWithString:historyItem.title];
+        [self.searchHandler beginSearchInputWithString:menuCell.historyItem.title];
     }
 }
 

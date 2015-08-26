@@ -7,6 +7,7 @@
 //
 
 #import "DDGAutocompleteHeaderView.h"
+#import "UIFont+DDG.h"
 
 @interface DDGAutocompleteHeaderView ()
 
@@ -21,12 +22,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.backgroundColor = [UIColor autocompleteHeaderColor];
+        self.opaque = FALSE;
 
         UILabel *label = [[UILabel alloc] initWithFrame:UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(0, 8.0, 0, 0))];
         label.backgroundColor = [UIColor clearColor];
         label.opaque = NO;
         label.textColor = [UIColor autocompleteTextColor];
-        label.font = [UIFont systemFontOfSize:13.0f];
+        label.font = [UIFont duckFontWithSize:13.0f];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         [self addSubview:label];
