@@ -71,7 +71,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
-    self.tableView.sectionHeaderHeight = 44;
+    self.tableView.sectionHeaderHeight = 64;
     
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
@@ -148,9 +148,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     __weak DDGSettingsViewController *weakSelf = self;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
+
     [self addSectionWithTitle:@"Stories" footer:nil];
-    [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addButton:@"Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStylePlain];
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
         [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
@@ -163,19 +163,16 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 //    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
     IGFormSwitch *quackSwitch = [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
-    [self addSectionWithTitle:@"Autosuggest" footer:nil];
-    IGFormSwitch *suggestionsSwitch = [self addSwitch:@"Suggestions" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
-    
-    [self addSectionWithTitle:@"Search Results" footer:nil];
-    [self addButton:@"Region Boost" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:@"Search" footer:nil];
+    IGFormSwitch *suggestionsSwitch = [self addSwitch:@"Autocomplete" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
+    [self addButton:@"Region" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
         [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
     }];
     
     [self addSectionWithTitle:@"Privacy" footer:nil];
     IGFormSwitch *recentSwitch = [self addSwitch:@"Save Recent" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
-    [self addSectionWithTitle:nil footer:@"Only stored on your phone"];
-    [self addButton:@"Clear Recent" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:@"Clear Recents" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
                                                                  delegate:weakSelf
                                                         cancelButtonTitle:@"Cancel"
@@ -187,7 +184,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     for (IGFormSwitch *s in @[quackSwitch, suggestionsSwitch, recentSwitch])
         [s.switchControl addTarget:self action:@selector(save:) forControlEvents:UIControlEventValueChanged];
     
-    [self addSectionWithTitle:nil footer:nil];
+    [self addSectionWithTitle:@"Other" footer:nil];
     
     [self addButton:@"Send Feedback" forKey:@"feedback" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
@@ -197,13 +194,13 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
         [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
-    [self addButton:@"Share App" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:@"Share" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         NSString *shareTitle = @"Check out the DuckDuckGo iOS app!";
         NSURL *shareURL = [NSURL URLWithString:@"https://itunes.apple.com/app/id663592361"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
-    [self addButton:@"Rate App" forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:@"Leave a Rating" forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=663592361&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
     }];
 
@@ -218,6 +215,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         versionInfo = [versionInfo stringByAppendingFormat:@" (%@)", bundleVersion];
     
     [self addSectionWithTitle:nil footer:versionInfo];
+    self.tableView.sectionFooterHeight = 0;
 }
 
 -(IBAction)save:(id)sender {
@@ -329,12 +327,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 +(UIView*)createSectionHeaderView:(NSString*)title
 {
-    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
     view.opaque = NO;
     view.backgroundColor = [UIColor clearColor];
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectInset(view.bounds, 16.0, 0.0)];
-    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     titleLabel.opaque = NO;
     titleLabel.backgroundColor = [UIColor clearColor];
     titleLabel.font = [UIFont duckFontWithSize:15.0];
@@ -351,15 +349,17 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
-    return 44.0;
+    return 64.0;
 }
 
 +(void)configureSettingsCell:(UITableViewCell*)cell
 {
     cell.textLabel.font = [UIFont duckFontWithSize:17.0];
-    cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
+    cell.textLabel.textColor = UIColor.duckSettingsLabel;
+    cell.textLabel.textAlignment = NSTextAlignmentNatural;
     cell.detailTextLabel.font = [UIFont duckFontWithSize:15.0];
-    cell.detailTextLabel.textColor = [UIColor colorWithRed:137.0f/255.0f green:137.0f/255.0f blue:137.0f/255.0f alpha:1.0f];
+    cell.detailTextLabel.textColor = UIColor.duckSettingsDetailLabel;
+    cell.tintColor = UIColor.duckRed;
 }
 
 +(UIView*)createSectionFooterView:(NSString *)title
@@ -381,8 +381,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    NSString* title = [self tableView:tableView titleForFooterInSection:section];
-    return title.length > 0 ? [DDGSettingsViewController createSectionFooterView:title] : nil;
+    return nil;
+//    NSString* title = [self tableView:tableView titleForFooterInSection:section];
+//    return title.length > 0 ? [DDGSettingsViewController createSectionFooterView:title] : nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {

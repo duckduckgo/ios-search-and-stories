@@ -19,6 +19,13 @@
 
 @implementation DDGChooseSourcesViewController
 
+
+-(void)resetSourcesToDefault
+{
+#warning Need implementation for resetting to default sources
+    DLog(@"NEED TO RESET TO DEFAULT");
+}
+
 #pragma mark - View controller methods
 
 - (void)viewDidLoad
@@ -84,71 +91,79 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [[self.fetchedResultsController sections] count] + 1;
+    return [[self.fetchedResultsController sections] count] + 2;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(section==[[self.fetchedResultsController sections] count])
+    if(section==0) return 1;
+    section--;
+    if(section==[[self.fetchedResultsController sections] count]) {
         return 1;
-    else {
+    } else {
         id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
         return [sectionInfo numberOfObjects];
     }
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(section==[[self.fetchedResultsController sections] count])
+    if(section==0) return NSLocalizedString(@"Options", @"Header for the Options section in the Source selection view");
+    section--;
+
+    if(section==[[self.fetchedResultsController sections] count]) { // this is the last section, for suggesting new sources
         return nil;
-    else {
+    } else {
         id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
         return [sectionInfo name];
     }
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    return (indexPath.section == 0);
+    NSInteger section = indexPath.section-1;
+    return section == 0;
+}
+
+-(UITableViewCell*)buttonCellWithTitle:(NSString*)title forTableView:(UITableView*)tableView
+{
+    static NSString *ButtonCellIdentifier = @"ButtonCell";
+    UITableViewCell* buttonCell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
+    if(!buttonCell) {
+        buttonCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
+    }
+    buttonCell.textLabel.text = title;
+    //buttonCell.textLabel.textAlignment = NSTextAlignmentCenter;
+    buttonCell.textLabel.font = [UIFont duckFontWithSize:buttonCell.textLabel.font.pointSize];
+    buttonCell.accessoryType = UITableViewCellAccessoryNone;
+    buttonCell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
+    return buttonCell;
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+    static NSString *SourceCellIdentifier = @"DDGSourceCell";
     
-    static NSString *SourceCellIdentifier = @"SourceCell";
-    static NSString *ButtonCellIdentifier = @"ButtonCell";
+    if(indexPath.section==0) {
+        return [self buttonCellWithTitle:NSLocalizedString(@"Reset to Default", @"Table button/row to reset the list of sources to the default values")
+                            forTableView:tableView];
+    }
+    indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
     
     UITableViewCell *cell = nil;
-    
-    if(indexPath.section == [[self.fetchedResultsController sections] count])
-	{
-        if(indexPath.row == 0)
-		{
-            cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellIdentifier];
-            if(!cell)
-			{
-                cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:ButtonCellIdentifier];
-                cell.textLabel.text = @"Suggest a Story Source";
-                cell.textLabel.textAlignment = NSTextAlignmentCenter;
-                cell.textLabel.font = [UIFont duckFontWithSize:cell.textLabel.font.pointSize];
-                cell.accessoryType = UITableViewCellAccessoryNone;
-				cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
-            }
-        }        
+
+    if(indexPath.section == [[self.fetchedResultsController sections] count]) {
+        if(indexPath.row == 0) {
+            return [self buttonCellWithTitle:NSLocalizedString(@"Suggest a Source", @"Table button/row to suggest a new source")
+                                forTableView:tableView];
+        }
     } else {
         cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
-        if(!cell)
-		{
+        if(!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
-            [DDGSettingsViewController configureSettingsCell:cell];
-            
-            // keep using the default imageview for layout/spacing purposes, but use our own one for displaying the image
-            cell.imageView.contentMode = UIViewContentModeScaleAspectFill;
-            cell.imageView.alpha = 0;
-			cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
-            cell.textLabel.textAlignment = NSTextAlignmentLeft;
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 40, 40)];
             imageView.contentMode = UIViewContentModeScaleAspectFill;
             imageView.tag = 100;
             [cell addSubview:imageView];
         }
-        
+        [DDGSettingsViewController configureSettingsCell:cell];
         [self configureCell:cell atIndexPath:indexPath];
     }
     
@@ -178,11 +193,18 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if(indexPath.section == [[self.fetchedResultsController sections] count])
-	{
+    if(indexPath.section==0) {
+        [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
+        [self resetSourcesToDefault];
+        return;
+    }
+    
+    NSIndexPath* originalIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
+    indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
+
+    if(indexPath.section == [[self.fetchedResultsController sections] count]) {
 		// send an email to make a suggestion for a new source
-		if ([MFMailComposeViewController canSendMail])
-		{
+		if ([MFMailComposeViewController canSendMail]) {
 			MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
 			mailVC.mailComposeDelegate = self;
 			[mailVC setToRecipients:@[@"stories@duckduckgo.com"]];
@@ -195,7 +217,7 @@
 	{
         DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
         feed.feedState = (feed.feedState == DDGStoryFeedStateEnabled) ? DDGStoryFeedStateDisabled : DDGStoryFeedStateEnabled;
-        
+        DLog(@"toggling feed state for %@", feed.title);
         NSManagedObjectContext *context = feed.managedObjectContext;
         [context performBlock:^{
             NSError *error = nil;
@@ -203,9 +225,10 @@
             if (!success)
                 NSLog(@"error: %@", error);
         }];
+        //[self.tableView reloadRowsAtIndexPaths:@[originalIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [self.tableView deselectRowAtIndexPath:originalIndexPath animated:YES];
 }
 
 #pragma mark - NSFetchedResultsController
@@ -247,8 +270,10 @@
     [self.tableView beginUpdates];
 }
 
-- (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
-           atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
+- (void)controller:(NSFetchedResultsController *)controller
+  didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
+           atIndex:(NSUInteger)sectionIndex
+     forChangeType:(NSFetchedResultsChangeType)type
 {
     NSUInteger tableViewSectionIndex = sectionIndex+1;
     
@@ -272,23 +297,27 @@
       newIndexPath:(NSIndexPath *)newIndexPath
 {
     UITableView *tableView = self.tableView;
-        
+    //indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1];
+    //newIndexPath = [NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section+1];
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section+1]]
+                             withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            [self configureCell:[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]]
+                    atIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]];
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section+1]] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -301,18 +330,25 @@
 - (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
 {
     DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
-
+    cell.imageView.alpha = 0;
+    UIImageView* imageView = (UIImageView *)[cell viewWithTag:100];
+    imageView.image = feed.image;
+    imageView.contentMode = UIViewContentModeScaleAspectFill;//ScaleAspectFill;
+    imageView.frame = CGRectMake(15, 5, 40, 40);
+    imageView.autoresizingMask = UIViewAutoresizingNone;
+    
     cell.textLabel.text = feed.title;
     cell.detailTextLabel.text = feed.descriptionString;
+    cell.imageView.image = feed.image;
     
-    UIImage *image = feed.image;    
-    cell.imageView.image = image;
-    ((UIImageView *)[cell viewWithTag:100]).image = image;
+    //    cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
+    //    cell.textLabel.textAlignment = NSTextAlignmentLeft;
     
-    if(feed.feedState == DDGStoryFeedStateEnabled)
+    if(feed.feedState == DDGStoryFeedStateEnabled) {
         cell.accessoryType = UITableViewCellAccessoryCheckmark;
-    else
+    } else {
         cell.accessoryType = UITableViewCellAccessoryNone;
+    }
 }
 
 @end

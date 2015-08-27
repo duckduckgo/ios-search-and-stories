@@ -73,6 +73,16 @@
     return UIColorFromRGB(0xEEEEEE);
 }
 
++(UIColor*)duckSettingsLabel
+{
+    return [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
+}
+
++(UIColor*)duckSettingsDetailLabel
+{
+    return [UIColor colorWithRed:137.0f/255.0f green:137.0f/255.0f blue:137.0f/255.0f alpha:1.0f];
+}
+
 
 + (UIColor*)duckSegmentBarBackground { return [UIColor duckSearchBarBackground]; }
 + (UIColor*)duckSegmentBarForeground { return [UIColor whiteColor]; }
