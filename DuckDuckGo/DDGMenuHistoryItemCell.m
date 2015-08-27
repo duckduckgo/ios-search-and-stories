@@ -9,10 +9,13 @@
 
 #import "DDGMenuHistoryItemCell.h"
 #import "UIFont+DDG.h"
+#import "UIColor+DDG.h"
 
 @interface DDGMenuHistoryItemCell () {
     BOOL _isLastItem;
 }
+
+@property BOOL autocompleteMode;
 
 @end
 
@@ -20,10 +23,11 @@
 
 -(id)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+    self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
     if(self) {
         self.tintColor = [UIColor duckRed];
         self.imageView.contentMode = UIViewContentModeLeft;
+        self.autocompleteMode = FALSE;
         _isLastItem = FALSE;
         
         CGRect plusRect = self.frame;
@@ -48,6 +52,7 @@
         self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
         
         self.textLabel.font = [UIFont duckFontWithSize:self.textLabel.font.pointSize];
+        self.detailTextLabel.font = [UIFont duckFontWithSize:self.detailTextLabel.font.pointSize];
         
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         //self.imageView.frame = CGRectMake(15, 5, 40, 40);
@@ -56,6 +61,15 @@
         [plusButton addTarget:self action:@selector(plusButtonWasPushed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
+}
+
+-(void)configureForAutocompletion
+{
+    self.autocompleteMode = TRUE;
+    self.textLabel.textColor = [UIColor autocompleteTextColor];
+    self.textLabel.font = [UIFont duckFontWithSize:17.0f];
+    self.detailTextLabel.textColor = [UIColor autocompleteDetailColor];
+    self.detailTextLabel.font = [UIFont duckFontWithSize:15.0f];
 }
 
 

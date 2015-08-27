@@ -343,11 +343,12 @@ static NSString *historyCellID = @"HCell";
         default: {
             NSArray *suggestions = self.suggestions;
             NSDictionary *suggestionItem = indexPath.row < suggestions.count ? [suggestions objectAtIndex:indexPath.row] : nil;
-            DDGMenuHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
+            DDGMenuHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDGAutocompletionCell"];
             if(cell==nil) {
-                cell = [[DDGMenuHistoryItemCell alloc] initWithReuseIdentifier:@"DDGMenuHistoryItemCell"];
+                cell = [[DDGMenuHistoryItemCell alloc] initWithReuseIdentifier:@"DDGAutocompletionCell"];
+                [cell configureForAutocompletion];
             }
-
+            
             cell.suggestionItem = suggestionItem;
             cell.historyDelegate = self;
             
@@ -366,12 +367,7 @@ static NSString *historyCellID = @"HCell";
 {
     switch(indexPath.section) {
         case SUGGESTION_SECTION: {
-            NSDictionary* suggestion = self.suggestions[indexPath.row];
-            if (suggestion[@"image"] && [suggestion[@"image"] length] > 0) {
-                return 60.0f;
-            } else {
-                return 44.0f;
-            }
+            return 50.0f;
         }
         case RECENTS_SECTION:
         case FAVORITES_SECTION:

@@ -28,6 +28,8 @@
 
 -(id)initWithReuseIdentifier:(NSString*)reuseIdentifier;
 
+-(void)configureForAutocompletion;
+
 -(void)setIsLastItem:(BOOL)isLastItem;
 
 -(void)setIcon:(UIImage*)image;
