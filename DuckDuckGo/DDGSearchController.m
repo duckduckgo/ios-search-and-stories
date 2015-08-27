@@ -780,7 +780,6 @@ NSString * const emailRegEx =
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
 - (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
     if(self.autocompleteController==[self.contentControllers lastObject]) return;
-    DLog(@"fading in/out autocomplete controller");
     if(reveal) {
         [self.autocompleteNavigationController viewWillAppear:animated];
     } else {

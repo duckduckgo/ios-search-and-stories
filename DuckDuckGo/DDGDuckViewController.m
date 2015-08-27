@@ -27,6 +27,10 @@
 
 #define MAX_FAVORITE_SUGGESTIONS 5
 
+#define SUGGESTION_SECTION 2
+#define RECENTS_SECTION 0
+#define FAVORITES_SECTION 1
+
 @interface DDGDuckViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, DDGHistoryItemCellDelegate>
 
 @property (nonatomic, weak) DDGSearchController *searchController;
@@ -72,46 +76,14 @@ static NSString *historyCellID = @"HCell";
 
 -(void)reloadHistory
 {
-    // load our new best cached result, and download new autocomplete suggestions.
-    CGRect f = self.view.frame;
-    DLog(@"loading history for frame %@", NSStringFromCGRect(f));
-    NSInteger maxItems = f.size.height > 600 ? 5 : 3;
-    self.history = [self.historyProvider pastHistoryItemsForPrefix:self.filterString withMaximumCount:maxItems];
-    DLog(@"loaded history with prefix/substring: %@ and got %li results", self.filterString, self.history.count);
-//
-//    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
-//    NSFetchedResultsController* historyController = [[NSFetchedResultsController alloc] initWithFetchRequest:request
-//                                                                                        managedObjectContext:self.managedObjectContext
-//                                                                                          sectionNameKeyPath:@"section"
-//                                                                                                   cacheName:nil];
-//    historyController.delegate = self;
-//    [request setPredicate:[NSPredicate predicateWithFormat:@"section == %@", DDGHistoryItemSectionNameSearches]];
-//    NSString* filter = self.filterString;
-//    if(filter.length>0) {
-//        [request setPredicate:[NSPredicate predicateWithFormat:@"title CONTAINS %@", self.filterString]];
-//    }
-//    
-//    NSSortDescriptor *timeSort = [NSSortDescriptor sortDescriptorWithKey:@"timeStamp" ascending:NO];
-//    [request setSortDescriptors:@[timeSort]];
-//    
-//    NSError *error = nil;
-//    if (![historyController performFetch:&error]) {
-//        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-//    }
-//    
-//    NSArray* fetchedHistory = historyController.fetchedObjects;
-//    if(fetchedHistory.count > MAX_HISTORY_SUGGESTIONS) {
-//        self.history = [fetchedHistory objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, MAX_HISTORY_SUGGESTIONS)]];
-//    } else {
-//        self.history = historyController.fetchedObjects;
-//    }
+    self.history = [self.historyProvider pastHistoryItemsForPrefix:self.filterString
+                                                  withMaximumCount:self.view.frame.size.height > 600 ? 5 : 3];
 }
 
 
 -(void)reloadFavorites
 {
     NSMutableArray* fetchedBookmarks = [[NSMutableArray alloc] initWithArray:[[[DDGBookmarksProvider sharedProvider].bookmarks reverseObjectEnumerator] allObjects]];
-    NSInteger unfilteredBookmarkCount = fetchedBookmarks.count;
     NSString* filter = self.filterString;
     if(filter.length>0) {
         for(NSInteger i=fetchedBookmarks.count-1; i>=0; i--) {
@@ -125,7 +97,6 @@ static NSString *historyCellID = @"HCell";
     } else {
         self.favorites = fetchedBookmarks;
     }
-    DLog(@"limited favorites to %lu  (was %li)", (unsigned long)self.favorites.count, (long)unfilteredBookmarkCount);
 }
 
 -(void)reloadAll
@@ -207,30 +178,13 @@ static NSString *historyCellID = @"HCell";
             searchField.text = menuCell.historyItem.title;
         } else if(menuCell.bookmarkItem) {
             searchField.text = menuCell.bookmarkItem[@"title"];
+        } else if(menuCell.suggestionItem) {
+            searchField.text = [menuCell.suggestionItem objectForKey:@"phrase"];
         }
         [searchController searchFieldDidChange:nil];
     }
 }
 
-
-- (IBAction)plus:(id)sender {
-    UIButton *button = nil;
-    if ([sender isKindOfClass:[UIButton class]])
-        button = (UIButton *)sender;
-    
-    if (button) {
-        CGPoint tappedPoint = [self.tableView convertPoint:button.center fromView:button.superview];
-        NSIndexPath *tappedIndex = [self.tableView indexPathForRowAtPoint:tappedPoint];
-        NSDictionary *suggestionItem = [self.suggestions objectAtIndex:tappedIndex.row];
-        DDGSearchController *searchController = [self searchControllerDDG];
-        if (searchController) {
-            DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
-            [searchField becomeFirstResponder];
-            searchField.text = [suggestionItem objectForKey:@"phrase"];
-            [searchController searchFieldDidChange:nil];
-        }
-    }
-}
 
 - (void)setSuggestions:(NSArray *)suggestions {
     if (suggestions == _suggestions)
@@ -238,7 +192,7 @@ static NSString *historyCellID = @"HCell";
     
     [self.imageRequestQueue cancelAllOperations];
     
-    _suggestions = [suggestions copy];
+    _suggestions = suggestions;//[suggestions copy];
     [self.tableView reloadData];
     
     for (NSDictionary *suggestionItem in suggestions) {
@@ -248,12 +202,28 @@ static NSString *historyCellID = @"HCell";
                 __weak DDGDuckViewController *weakSelf = self;
                 void (^success)(UIImage *image) = ^(UIImage *image) {
                     if(image==nil || URL==nil) return; // avoid crash if image is nil (it happened!)
+                    
+                    // resize the image appropriately
+                    CGSize newSize = CGSizeMake(25, 25);
+                    float widthRatio = newSize.width/image.size.width;
+                    float heightRatio = newSize.height/image.size.height;
+                    
+                    if(widthRatio > heightRatio) {
+                        newSize = CGSizeMake(image.size.width*heightRatio, image.size.height*heightRatio);
+                    } else {
+                        newSize = CGSizeMake(image.size.width*widthRatio, image.size.height*widthRatio);
+                    }
+                    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+                    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+                    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                    image = newImage;
+                    
                     [weakSelf.imageCache setObject:image forKey:URL];
                     NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
                     if (row != NSNotFound) {
-                        DDGAutocompleteCell *cell = (DDGAutocompleteCell *)[weakSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:1]];
-                        [cell.imageView setImage:image];
-                        [cell setNeedsLayout];
+                        [weakSelf.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:SUGGESTION_SECTION]]
+                                                  withRowAnimation:UITableViewRowAnimationFade];
                     }
                 };
                 
@@ -267,17 +237,12 @@ static NSString *historyCellID = @"HCell";
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    DLog(@"rotated, baby");
-    [self reloadHistory];
+    [self reloadHistory]; // reload the history because if we're on a shorter screen we'll show fewer items
     [self.tableView reloadData];
-    
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
-    if(interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown) {
-        return TRUE;
-    }
-    return FALSE;
+    return interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown;
 }
 
 -(DDGSearchController *)searchController {
@@ -312,13 +277,13 @@ static NSString *historyCellID = @"HCell";
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     switch(section) {
-        case 0:
+        case RECENTS_SECTION:
             if(self.history.count<=0) return nil;
             break;
-        case 1:
+        case FAVORITES_SECTION:
             if(self.favorites.count<=0) return nil;
             break;
-        case 2:
+        case SUGGESTION_SECTION:
             if(self.suggestions.count<=0) return nil;
             break;
     }
@@ -331,9 +296,9 @@ static NSString *historyCellID = @"HCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     switch(section) {
-        case 0: return self.history.count<=0 ? 0 : 25.0;
-        case 1: return self.favorites.count<=0 ? 0 : 25.0;
-        case 2: return self.suggestions.count<=0 ? 0 : 25.0;
+        case RECENTS_SECTION: return self.history.count<=0 ? 0 : 25.0;
+        case FAVORITES_SECTION: return self.favorites.count<=0 ? 0 : 25.0;
+        case SUGGESTION_SECTION: return self.suggestions.count<=0 ? 0 : 25.0;
         default: return 0.0;
     }
 }
@@ -341,9 +306,9 @@ static NSString *historyCellID = @"HCell";
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     switch (section) {
-        case 0: return self.history.count;
-        case 1: return self.favorites.count;
-        case 2: return self.suggestions.count;
+        case RECENTS_SECTION: return self.history.count;
+        case FAVORITES_SECTION: return self.favorites.count;
+        case SUGGESTION_SECTION: return self.suggestions.count;
     }
     return 0;
 
@@ -353,7 +318,7 @@ static NSString *historyCellID = @"HCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch(indexPath.section) {
-        case 0: {
+        case RECENTS_SECTION: {
             DDGMenuHistoryItemCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
             if(cell==nil) {
                 cell = [[DDGMenuHistoryItemCell alloc] initWithReuseIdentifier:@"DDGMenuHistoryItemCell"];
@@ -363,7 +328,7 @@ static NSString *historyCellID = @"HCell";
             cell.isLastItem = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
             return cell;
         }
-        case 1: {
+        case FAVORITES_SECTION: {
             NSDictionary *bookmark = self.favorites[indexPath.row];
             DDGMenuHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
             if(cell==nil) {
@@ -374,44 +339,24 @@ static NSString *historyCellID = @"HCell";
             cell.isLastItem = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
             return cell;
         }
+        case SUGGESTION_SECTION:
         default: {
-            BOOL lineHidden = NO;
-            DDGAutocompleteCell *cell = [tableView dequeueReusableCellWithIdentifier:suggestionCellID];
-            if (!cell) {
-                cell = [[DDGAutocompleteCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:suggestionCellID];
-            }
-            [cell setAdorned:NO];
-            
-            lineHidden = (indexPath.row == self.suggestions.count - 1) ? YES : NO;
-            
             NSArray *suggestions = self.suggestions;
-            
-            // the tableview sometimes requests rows that don't exist. in this case the table's reloading anyway so just return whatever and don't crash.
-            NSDictionary *suggestionItem;
-            if(indexPath.row < suggestions.count)
-                suggestionItem = [suggestions objectAtIndex:indexPath.row];
-            
-            cell.textLabel.text = [suggestionItem objectForKey:@"phrase"];
-            cell.detailTextLabel.text = [suggestionItem objectForKey:@"snippet"];
-            cell.showsSeparatorLine = !lineHidden;
-            
-            [cell addTarget:self action:@selector(plus:) forControlEvents:UIControlEventTouchUpInside];
+            NSDictionary *suggestionItem = indexPath.row < suggestions.count ? [suggestions objectAtIndex:indexPath.row] : nil;
+            DDGMenuHistoryItemCell *cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
+            if(cell==nil) {
+                cell = [[DDGMenuHistoryItemCell alloc] initWithReuseIdentifier:@"DDGMenuHistoryItemCell"];
+            }
+
+            cell.suggestionItem = suggestionItem;
+            cell.historyDelegate = self;
             
             if([[suggestionItem objectForKey:@"image"] length]) {
                 NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
-                UIImage *image = [self.imageCache objectForKey:URL];
-                [cell setAdorned:YES];
-                //            cell.roundedImageView.image = image;
-                //            cell.imageView.image = [UIImage imageNamed:@"spacer64x64.png"];
-                [cell.imageView setImage:image];
+                [cell setIcon:[self.imageCache objectForKey:URL]];
             }
             
-            if([suggestionItem objectForKey:@"calls"] && [[suggestionItem objectForKey:@"calls"] count]) {
-                cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
-            } else {
-                cell.accessoryType = UITableViewCellAccessoryNone;
-            }
-            
+            cell.isLastItem = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
             return cell;
         }
     }
@@ -420,7 +365,7 @@ static NSString *historyCellID = @"HCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch(indexPath.section) {
-        case 2: {
+        case SUGGESTION_SECTION: {
             NSDictionary* suggestion = self.suggestions[indexPath.row];
             if (suggestion[@"image"] && [suggestion[@"image"] length] > 0) {
                 return 60.0f;
@@ -428,8 +373,8 @@ static NSString *historyCellID = @"HCell";
                 return 44.0f;
             }
         }
-        case 0:
-        case 1:
+        case RECENTS_SECTION:
+        case FAVORITES_SECTION:
         default:
             return 44.0f;
     }
@@ -440,7 +385,7 @@ static NSString *historyCellID = @"HCell";
 - (void)tableView:(UITableView *)tv didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     DDGSearchController *searchController = [self searchControllerDDG];
-    if(indexPath.section == 0) {  // a recent item was tapped
+    if(indexPath.section == RECENTS_SECTION) {  // a recent item was tapped
         DDGHistoryItem *item = self.history[indexPath.row];
         [self.historyProvider relogHistoryItem:item];
         DDGStory *story = item.story;
@@ -452,11 +397,11 @@ static NSString *historyCellID = @"HCell";
         }
         
         [searchController dismissAutocomplete];
-    } else if(indexPath.section == 1) {  // a favorite item was tapped
+    } else if(indexPath.section == FAVORITES_SECTION) {  // a favorite item was tapped
         NSDictionary* bookmark = self.favorites[indexPath.row];
         [searchController loadQueryOrURL:[bookmark objectForKey:@"url"]];
         
-    } else if (indexPath.section == 2) { // a suggestion was tapped
+    } else if (indexPath.section == SUGGESTION_SECTION) { // a suggestion was tapped
         NSDictionary* suggestionItem = self.suggestions[indexPath.row];
         DDGAddressBarTextField *searchField = self.searchController.searchBar.searchField;
         NSString *searchText = searchField.text;

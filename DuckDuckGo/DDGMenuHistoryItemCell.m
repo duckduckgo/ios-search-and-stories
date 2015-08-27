@@ -49,6 +49,10 @@
         
         self.textLabel.font = [UIFont duckFontWithSize:self.textLabel.font.pointSize];
         
+        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        //self.imageView.frame = CGRectMake(15, 5, 40, 40);
+        self.imageView.autoresizingMask = UIViewAutoresizingNone;
+        
         [plusButton addTarget:self action:@selector(plusButtonWasPushed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
@@ -93,6 +97,24 @@
     self.imageView.image = [UIImage imageNamed:@"favorite-small"];
 }
 
+-(void)setSuggestionItem:(NSDictionary *)suggestion
+{
+    _suggestionItem = suggestion;
+    self.textLabel.text = [suggestion objectForKey:@"phrase"];
+    self.detailTextLabel.text = [suggestion objectForKey:@"snippet"];
+    self.imageView.image = nil; // the image should be set in the view controller, which can maintain a shared image cache
+    
+    if([suggestion objectForKey:@"calls"] && [[suggestion objectForKey:@"calls"] count]) {
+        self.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+    } else {
+        self.accessoryType = UITableViewCellAccessoryNone;
+    }
+}
+
+-(void)setIcon:(UIImage *)image
+{
+    self.imageView.image = image;
+}
 
 
 -(void)setIsLastItem:(BOOL)isLastItem
