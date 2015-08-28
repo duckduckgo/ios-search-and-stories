@@ -40,23 +40,12 @@
         plusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:plusButton];
         
-//        CGRect sepRect = self.frame;
-//        sepRect.origin.x = 15;
-//        sepRect.origin.y = sepRect.size.height-0.5;
-//        sepRect.size.height = 0.5;
-//        sepRect.size.width -= 15;
-//        self.separatorView = [[UIView alloc] initWithFrame:sepRect];
-//        self.separatorView.backgroundColor = [UIColor duckTableSeparator];
-//        self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-//        [self addSubview:self.separatorView];
-        
         self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
         
         self.textLabel.font = [UIFont duckFontWithSize:17.0f];
         self.detailTextLabel.font = [UIFont duckFontWithSize:15.0f];
         
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
-        //self.imageView.frame = CGRectMake(15, 5, 40, 40);
         self.imageView.autoresizingMask = UIViewAutoresizingNone;
         
         [plusButton addTarget:self action:@selector(plusButtonWasPushed:) forControlEvents:UIControlEventTouchUpInside];

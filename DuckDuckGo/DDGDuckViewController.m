@@ -204,7 +204,7 @@ static NSString *historyCellID = @"HCell";
                     if(image==nil || URL==nil) return; // avoid crash if image is nil (it happened!)
                     
                     // resize the image appropriately
-                    CGSize newSize = CGSizeMake(25, 25);
+                    CGSize newSize = CGSizeMake(16, 16);
                     float widthRatio = newSize.width/image.size.width;
                     float heightRatio = newSize.height/image.size.height;
                     
