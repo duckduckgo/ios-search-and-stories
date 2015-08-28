@@ -39,6 +39,9 @@
 +(UIColor*)duckSettingsLabel;
 +(UIColor*)duckSettingsDetailLabel;
 
++(UIColor*)duckSegmentedForeground;
++(UIColor*)duckSegmentedBackground;
+
 + (UIColor*)duckTabBarBackground;
 + (UIColor*)duckTabBarForeground;
 + (UIColor*)duckTabBarForegroundSelected;

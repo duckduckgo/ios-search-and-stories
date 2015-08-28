@@ -35,7 +35,7 @@
         self.layer.borderWidth = 1.0f;
         self.selectedView = [[UIView alloc] initWithFrame:frame];
         self.selectedView.layer.cornerRadius = 4.0f;
-        self.selectedView.backgroundColor = [UIColor whiteColor];
+        self.selectedView.backgroundColor = [UIColor duckSegmentedForeground];
         self.buttonItems = [NSMutableArray new];
         self.buttons = [NSMutableArray new];
         self.selectedSegmentIndex = 0;
@@ -53,8 +53,8 @@
     UIButton* button = [UIButton buttonWithType:UIButtonTypeCustom];
     
     [button setTitle:buttonItem.title forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor duckTabBarForeground] forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor duckTabBarBackground] forState:UIControlStateSelected];
+    [button setTitleColor:[UIColor duckSegmentedForeground] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor duckSegmentedBackground] forState:UIControlStateSelected];
     button.titleLabel.font = [UIFont duckFontWithSize:button.titleLabel.font.pointSize];
     [button addTarget:self action:@selector(buttonWasPressed:) forControlEvents:UIControlEventTouchUpInside];
     

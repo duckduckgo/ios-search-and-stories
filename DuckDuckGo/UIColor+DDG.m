@@ -42,19 +42,31 @@
     return [UIColor colorWithRed:component green:component blue:component alpha:1.0f];
 }
 
-+ (UIColor*)duckTabBarBackground
-{
-    return [UIColor duckSearchBarBackground];
-}
 
-+ (UIColor*)duckTabBarForeground
++(UIColor*)duckSegmentedForeground
 {
     return [UIColor whiteColor];
 }
 
++(UIColor*)duckSegmentedBackground
+{
+    return [UIColor duckSearchBarBackground];
+}
+
+
++ (UIColor*)duckTabBarBackground
+{
+    return [UIColor whiteColor];
+}
+
++ (UIColor*)duckTabBarForeground
+{
+    return UIColorFromRGB(0xADADAD);
+}
+
 + (UIColor*)duckTabBarForegroundSelected
 {
-    return [UIColor duckTabBarBackground];
+    return UIColorFromRGB(0xDF5833);
 }
 
 
