@@ -36,6 +36,7 @@
 	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
 	self.tableView.allowsSelectionDuringEditing = YES;
     self.tableView.rowHeight = 50;
+    self.tableView.sectionHeaderHeight = 64;
     self.title = @"Sources";
     
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
