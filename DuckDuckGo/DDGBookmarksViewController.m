@@ -46,6 +46,7 @@
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     self.tableView.backgroundColor = [UIColor duckNoContentColor];
     self.tableView.sectionFooterHeight = 1;
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
     
     self.searchIcon = [UIImage imageNamed:@"search_icon"];
     

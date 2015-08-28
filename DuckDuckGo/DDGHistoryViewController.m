@@ -56,6 +56,8 @@
         tableView.dataSource = self;
         tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         tableView.separatorColor = [UIColor duckTableSeparator];
+        tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
+        
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         tableView.allowsMultipleSelectionDuringEditing = FALSE;
         tableView.sectionFooterHeight = 1;
