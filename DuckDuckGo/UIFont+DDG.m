@@ -10,9 +10,9 @@
 
 @implementation UIFont (DDG)
 
-+(UIFont*)duckStoryTitle { return [UIFont fontWithName:@"ProximaNova-Regular" size:14.0f]; }
++(UIFont*)duckStoryTitle { return [UIFont fontWithName:@"ProximaNova-Regular" size:16.0f]; }
 
-+(UIFont*)duckStoryTitleSmall  { return [UIFont fontWithName:@"ProximaNova-Regular" size:12.0f]; }
++(UIFont*)duckStoryTitleSmall  { return [UIFont fontWithName:@"ProximaNova-Regular" size:14.0f]; }
 
 +(UIFont*)duckStoryCategory { return [UIFont fontWithName:@"ProximaNova-Regular" size:13.0f]; }
 
