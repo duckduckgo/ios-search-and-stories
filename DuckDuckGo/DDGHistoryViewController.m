@@ -54,12 +54,13 @@
         
         tableView.delegate = self;
         tableView.dataSource = self;
-        tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
         tableView.separatorColor = [UIColor duckTableSeparator];
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         tableView.allowsMultipleSelectionDuringEditing = FALSE;
+        tableView.sectionFooterHeight = 1;
         
-        tableView.backgroundColor = [UIColor clearColor];
+        tableView.backgroundColor = [UIColor duckNoContentColor];
         tableView.opaque = NO;
         tableView.rowHeight = 44.0;
         
@@ -220,8 +221,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    if(section==0) return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 2)];
-    return nil;
+    return nil; //if(section==0) return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 2)];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section

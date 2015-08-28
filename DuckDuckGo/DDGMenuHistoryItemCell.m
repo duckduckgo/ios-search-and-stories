@@ -16,6 +16,7 @@
 }
 
 @property BOOL autocompleteMode;
+//@property (nonatomic, strong) UIView* separatorView;
 
 @end
 
@@ -39,15 +40,15 @@
         plusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
         [self addSubview:plusButton];
         
-        CGRect sepRect = self.frame;
-        sepRect.origin.x = 15;
-        sepRect.origin.y = sepRect.size.height-0.5;
-        sepRect.size.height = 0.5;
-        sepRect.size.width -= 15;
-        self.separatorView = [[UIView alloc] initWithFrame:sepRect];
-        self.separatorView.backgroundColor = [UIColor duckTableSeparator];
-        self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-        [self addSubview:self.separatorView];
+//        CGRect sepRect = self.frame;
+//        sepRect.origin.x = 15;
+//        sepRect.origin.y = sepRect.size.height-0.5;
+//        sepRect.size.height = 0.5;
+//        sepRect.size.width -= 15;
+//        self.separatorView = [[UIView alloc] initWithFrame:sepRect];
+//        self.separatorView.backgroundColor = [UIColor duckTableSeparator];
+//        self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+//        [self addSubview:self.separatorView];
         
         self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
         
@@ -73,7 +74,7 @@
 }
 
 
-- (void)layoutSubviews {
+-(void)layoutSubviews {
     [super layoutSubviews];
     
     CGRect imgRect = self.imageView.frame;
@@ -88,13 +89,13 @@
     tmpFrame.origin.x = 50;
     self.detailTextLabel.frame = tmpFrame;
     
-    CGFloat sepIndent = _isLastItem ? 0 : 15;
-    CGRect sepRect = self.frame;
-    sepRect.origin.x = sepIndent;
-    sepRect.origin.y = sepRect.size.height-0.5;
-    sepRect.size.height = 0.5;
-    sepRect.size.width -= sepIndent;
-    self.separatorView.frame = sepRect;
+//    CGFloat sepIndent = _isLastItem ? 0 : 15;
+//    CGRect sepRect = self.frame;
+//    sepRect.origin.x = sepIndent;
+//    sepRect.origin.y = sepRect.size.height-0.5;
+//    sepRect.size.height = 0.5;
+//    sepRect.size.width -= sepIndent;
+//    self.separatorView.frame = sepRect;
 }
 
 

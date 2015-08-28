@@ -72,8 +72,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
     self.tableView.sectionHeaderHeight = 64;
-    
-	// force 1st time through for iOS < 6.0
+    self.tableView.separatorColor = [UIColor duckTableSeparator];
+    // force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
 }
 

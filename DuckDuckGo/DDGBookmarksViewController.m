@@ -42,7 +42,10 @@
     
     NSParameterAssert(nil != self.searchController);
     
-    [self.tableView setRowHeight:44.0f];
+    self.tableView.rowHeight = 44.0f;
+    self.tableView.separatorColor = [UIColor duckTableSeparator];
+    self.tableView.backgroundColor = [UIColor duckNoContentColor];
+    self.tableView.sectionFooterHeight = 1;
     
     self.searchIcon = [UIImage imageNamed:@"search_icon"];
     
@@ -190,6 +193,11 @@
     cell.isLastItem = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
     return cell;
 }
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return nil;
+}
+
 
 #pragma mark - Table view delegate
 
