@@ -323,6 +323,7 @@
 		84B3AEFE1B32FAA800FF3453 /* DuckDuckGo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84B3AEFD1B32FAA800FF3453 /* DuckDuckGo.storyboard */; };
 		84BFA1231B6142B700C4C139 /* DDGWebToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */; };
 		84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */; };
+		84E722F51B90907B00CA0198 /* DDGSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */; };
 		C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = C1894FD6178F56830076C179 /* UIColor+DDG.m */; };
 		C1A97EE5176BD3560099EDA1 /* btn-bg_bang_example_query.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */; };
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
@@ -757,6 +758,8 @@
 		84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebToolbar.h; sourceTree = "<group>"; };
 		84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebToolbar.m; sourceTree = "<group>"; };
 		84D9A82C1B3CB74B00AF00CF /* DuckDuckGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DuckDuckGo-Bridging-Header.h"; sourceTree = "<group>"; };
+		84E722F31B90907B00CA0198 /* DDGSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSegmentedControl.h; sourceTree = "<group>"; };
+		84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSegmentedControl.m; sourceTree = "<group>"; };
 		C1894FD5178F56830076C179 /* UIColor+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DDG.h"; sourceTree = "<group>"; };
 		C1894FD6178F56830076C179 /* UIColor+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DDG.m"; sourceTree = "<group>"; };
 		C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang_example_query.png"; sourceTree = "<group>"; };
@@ -1485,6 +1488,7 @@
 				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
 				5B7A1BA516E74C0E00354310 /* Stories */,
 				4CD9249B15CD7DAB00EB062F /* Bookmarks */,
+				84E722F21B908CFC00CA0198 /* Custom Views */,
 				4C573C1215B7313E00790F60 /* Settings */,
 				4C660A741591487C001AB510 /* Search controller */,
 				5BD23C3516EE233800C2FBDA /* Sharing */,
@@ -1519,6 +1523,15 @@
 				8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */,
 			);
 			name = Fonts;
+			sourceTree = "<group>";
+		};
+		84E722F21B908CFC00CA0198 /* Custom Views */ = {
+			isa = PBXGroup;
+			children = (
+				84E722F31B90907B00CA0198 /* DDGSegmentedControl.h */,
+				84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */,
+			);
+			name = "Custom Views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1828,6 +1841,7 @@
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
 				7B6E2D8918E477CA00C1EF75 /* UIView+DDGSlideOverMenuController.m in Sources */,
 				4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */,
+				84E722F51B90907B00CA0198 /* DDGSegmentedControl.m in Sources */,
 				8398DAC816419FFD00A559C3 /* DDGChooseRegionViewController.m in Sources */,
 				8398DACC1641DA9F00A559C3 /* DDGRegionProvider.m in Sources */,
 				8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */,

@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DDGSegmentedControl.h"
 
 typedef enum DDGTabViewControllerToolbarPosition {
     DDGTabViewControllerControlViewPositionNone = 0,
@@ -22,7 +23,7 @@ typedef enum DDGTabViewControllerToolbarPosition {
 
 @interface DDGTabViewController : UIViewController {}
 
-@property (nonatomic, strong, readonly) UISegmentedControl *segmentedControl;
+@property (nonatomic, strong, readonly) DDGSegmentedControl *segmentedControl;
 @property (nonatomic, copy, readonly) NSArray *viewControllers;
 @property (nonatomic, weak, readonly) UIViewController *currentViewController;
 @property (nonatomic) NSInteger currentViewControllerIndex;

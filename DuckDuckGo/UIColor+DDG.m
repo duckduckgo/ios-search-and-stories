@@ -44,17 +44,17 @@
 
 + (UIColor*)duckTabBarBackground
 {
-    return [UIColor whiteColor];
+    return [UIColor duckSearchBarBackground];
 }
 
 + (UIColor*)duckTabBarForeground
 {
-    return UIColorFromRGB(0xADADAD);
+    return [UIColor whiteColor];
 }
 
 + (UIColor*)duckTabBarForegroundSelected
 {
-    return UIColorFromRGB(0xDF5833);
+    return [UIColor duckTabBarBackground];
 }
 
 

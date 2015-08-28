@@ -9,7 +9,7 @@
 #import "DDGTabViewController.h"
 
 @interface DDGTabViewController ()
-@property (nonatomic, strong, readwrite) UISegmentedControl *segmentedControl;
+@property (nonatomic, strong, readwrite) DDGSegmentedControl *segmentedControl;
 @property (nonatomic, copy, readwrite) NSArray *viewControllers;
 @property (nonatomic, weak, readwrite) UIViewController *currentViewController;
 @property (nonatomic, strong) UIView *toolbarDropShadowView;
@@ -103,30 +103,28 @@
 //     ];
 }
 
-- (UISegmentedControl *)segmentedControl {
+- (DDGSegmentedControl*)segmentedControl {
     if (nil == _segmentedControl) {        
-        NSMutableArray *items = [NSMutableArray arrayWithCapacity:[[self childViewControllers] count]];
+        DDGSegmentedControl *segmentedControl = [[DDGSegmentedControl alloc] initWithFrame:CGRectMake(0, 0, 0, 29)];
         for (UIViewController *viewController in _viewControllers) {
-            NSString *title = [viewController title];
-            if (nil == title)
-                title = NSLocalizedString(@"untitled", @"SSPTabViewController segmented control title for untitled view controller");
-            [items addObject:title];
-        }        
-        
-        UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:items];
-        [segmentedControl addTarget:self action:@selector(_switchViewController:) forControlEvents:UIControlEventValueChanged];
+            [segmentedControl addSegment:[[UIBarButtonItem alloc] initWithTitle:viewController.title
+                                                                          style:UIBarButtonItemStylePlain
+                                                                         target:nil action:nil]];
+        }
         segmentedControl.backgroundColor = [UIColor duckSegmentBarBackground];
         segmentedControl.tintColor = [UIColor duckSegmentBarForeground];
+        [segmentedControl addTarget:self action:@selector(segmentWasSelected:) forControlEvents:UIControlEventValueChanged];
+        
         self.segmentedControl = segmentedControl;
     }
     
     return _segmentedControl;
 }
 
-- (IBAction)_switchViewController:(id)sender {
+- (IBAction)segmentWasSelected:(id)sender {
     if (sender != self.segmentedControl)
         return;
-    [self setCurrentViewControllerIndex:[self.segmentedControl selectedSegmentIndex]];
+    [self setCurrentViewControllerIndex:self.segmentedControl.selectedSegmentIndex];
 }
 
 - (NSInteger)currentViewControllerIndex {
