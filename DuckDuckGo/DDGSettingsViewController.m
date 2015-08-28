@@ -151,7 +151,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
     [self addSectionWithTitle:@"Stories" footer:nil];
     [self addButton:@"Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
-        DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStylePlain];
+        DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
         [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
     }];
