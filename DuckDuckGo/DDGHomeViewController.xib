@@ -17,6 +17,7 @@
                 <outlet property="searchTabButton" destination="Iqm-n3-jod" id="F3S-04-wtt"/>
                 <outlet property="settingsTabButton" destination="w9s-2z-UbG" id="Auf-4g-A1Q"/>
                 <outlet property="storiesTabButton" destination="zhq-iC-hVf" id="08H-GD-xtX"/>
+                <outlet property="tabBarTopBorderConstraint" destination="qY5-lM-5G3" id="F1x-qr-mCM"/>
                 <outlet property="tabContentView" destination="nOn-A2-4XZ" id="YsK-tH-YCA"/>
                 <outlet property="topAlignmentConstraint" destination="Okf-nx-ZKD" id="h1Y-EG-3bR"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>

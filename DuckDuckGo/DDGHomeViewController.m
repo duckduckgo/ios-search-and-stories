@@ -49,7 +49,7 @@
 
 @property (nonatomic, strong) IBOutlet UIView* alternateToolbarContainer;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* alternateToolbarBottom;
-
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint;
 @end
 
 @implementation DDGHomeViewController
@@ -128,7 +128,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.tabBarTopBorderConstraint.constant = 0.5f;
     self.tabButtons = @[self.searchTabButton, self.storiesTabButton, self.favoritesTabButton, self.recentsTabButton, self.settingsTabButton ];
     
     self.tabController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
