@@ -151,7 +151,7 @@
 
 + (UIColor *)autocompleteDetailColor
 {
-    return RGBA(140.0f, 145.0f, 148.0f, 1.0f);
+    return UIColorFromRGB(0x999999);
 }
 
 + (UIColor *)autocompleteHeaderColor
@@ -162,7 +162,7 @@
 
 + (UIColor *)autocompleteTextColor
 {
-    return RGBA(57.0f, 57.0f, 57.0f, 1.0f);
+    return UIColorFromRGB(0x222222);
 }
 
 + (UIColor *)autocompleteTitleColor

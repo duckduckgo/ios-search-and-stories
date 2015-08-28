@@ -52,8 +52,8 @@
         
         self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
         
-        self.textLabel.font = [UIFont duckFontWithSize:self.textLabel.font.pointSize];
-        self.detailTextLabel.font = [UIFont duckFontWithSize:self.detailTextLabel.font.pointSize];
+        self.textLabel.font = [UIFont duckFontWithSize:17.0f];
+        self.detailTextLabel.font = [UIFont duckFontWithSize:15.0f];
         
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         //self.imageView.frame = CGRectMake(15, 5, 40, 40);
@@ -68,9 +68,7 @@
 {
     self.autocompleteMode = TRUE;
     self.textLabel.textColor = [UIColor autocompleteTextColor];
-    self.textLabel.font = [UIFont duckFontWithSize:17.0f];
     self.detailTextLabel.textColor = [UIColor autocompleteDetailColor];
-    self.detailTextLabel.font = [UIFont duckFontWithSize:15.0f];
 }
 
 
