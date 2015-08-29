@@ -17,9 +17,6 @@
 
 	#import "Always.h"
     #import "Constants.h"
-    #import "UIImage+DDGSlideOverMenuController.h"
-    #import "UIView+DDGSlideOverMenuController.h"
-    #import "UIViewController+DDGSlideOverMenuController.h"
     #import "UIColor+DDG.h"
 
     #define RGBA(R, G, B, A) ([UIColor colorWithRed:R/255.0f green:G/255.0f blue:B/255.0f alpha:A])

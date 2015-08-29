@@ -15,7 +15,6 @@
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
-#import "DDGPanGestureRecognizer.h"
 
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
@@ -36,12 +35,11 @@ NSString * const emailRegEx =
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) DDGDuckViewController* autocompleteController;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong) NSMutableArray *controllers;
 @property (nonatomic, getter = isDraggingTopViewController) BOOL draggingTopViewController;
 @property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
 @property (nonatomic, strong) DDGPopoverViewController *bangInfoPopover;
 @property (nonatomic, strong) NSPredicate *emailPredicate;
-@property (nonatomic, strong) UIPageViewController *pageViewController;
+@property (nonatomic, strong) UINavigationController *navController;
 @property (nonatomic) BOOL showBangTooltip;
 @property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
 @property (nonatomic, weak) UIView* customToolbar;
@@ -65,7 +63,6 @@ NSString * const emailRegEx =
         self.homeController = homeController;
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
-        self.controllers = [NSMutableArray arrayWithCapacity:2];
         self.showBangTooltip = ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingSuppressBangTooltip];
 	}
 	return self;
@@ -75,7 +72,6 @@ NSString * const emailRegEx =
     if (nil != self.keyboardDidHideBlock)
         self.keyboardDidHideBlock(NO);
     self.keyboardDidHideBlock = nil;
-//    [[NSNotificationCenter defaultCenter] removeObserver:self];
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     [center removeObserver:keyboardWillShowObserver];
     [center removeObserver:keyboardWillHideObserver];
@@ -86,26 +82,28 @@ NSString * const emailRegEx =
 - (CGRect)contentRect {
     [self view];
     
-    CGRect searchbarRect = self.searchBar.frame;
-    CGRect frame = self.view.bounds;
-    CGRect intersection = CGRectIntersection(frame, searchbarRect);
-    frame.origin.y = intersection.origin.y + intersection.size.height;
-    frame.size.height = frame.size.height - frame.origin.y;
-    
-    return frame;
+    return self.background.frame;
+//    CGRect searchbarRect = self.searchBar.frame;
+//    CGRect frame = self.view.bounds;
+//    CGRect intersection = CGRectIntersection(frame, searchbarRect);
+//    frame.origin.y = searchbarRect.origin.y;
+//    frame.size.height = frame.size.height - frame.origin.y;
+//    
+//    return frame;
 }
 
 - (void)setSearchBarOrangeButtonImage {
     
     UIImage *image = nil;
     
-    if ([self.controllers count] > 1) {
-        UIViewController *incommingViewController = [self.controllers objectAtIndex:self.controllers.count-2];
-        image = [incommingViewController searchControllerBackButtonIconDDG];
+    if(self.navController.viewControllers.count > 1) {
+        UIViewController *incomingViewController = self.rootViewInNavigator;
+        image = incomingViewController.searchControllerBackButtonIconDDG;
     }
     
-    if (image == nil)
+    if (image == nil) {
         image = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    }
     
     [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
     //[self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];
@@ -115,76 +113,34 @@ NSString * const emailRegEx =
     if (self.isTransitioningViewControllers)
         return;
     
-    NSTimeInterval duration = (animated) ? 0.3 : 0.0;
-    
-    [self.controllers addObject:contentController];
-    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
-    [self setSearchBarOrangeButtonImage];
-    NSInteger count = self.controllers.count-1;
-    for (NSInteger i=0; i<count; i++)
-        [self clearScrollsToTop:[[self.controllers objectAtIndex:i] view]];
-    [contentController reenableScrollsToTop];
-    
-    self.homeController.alternateButtonBar = [contentController alternateToolbar];
-    
-    self.transitioningViewControllers = YES;
-    __weak DDGSearchController *weakSelf = self;
-    [self.pageViewController setViewControllers:@[contentController]
-                                      direction:UIPageViewControllerNavigationDirectionForward
-                                       animated:animated
-                                     completion:^(BOOL finished) {
-                                         weakSelf.transitioningViewControllers = NO;
-                                     }];
-    
-//    if (self.controllers.count == 1)
-//        [self configurePanGestureForViewController:contentController];
-}
-
-- (void)configurePanGestureForViewController:(UIViewController *)viewController {
-    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
-    if (nil == panGesture)
-        return;
-    
-    for (UIGestureRecognizer *g in viewController.view.gestureRecognizers) {
-        if ([g isKindOfClass:[UIPanGestureRecognizer class]])
-            [g requireGestureRecognizerToFail:panGesture];
-    }
-    [viewController.view addGestureRecognizer:panGesture];
+    [self view]; // force the view to be loaded
+    [self.navController pushViewController:contentController animated:animated];
+    [self updateToolbars:FALSE];
 }
 
 - (BOOL)canPopContentViewController {
-    return ([self.controllers count] > 1 && !self.isTransitioningViewControllers);
+    return self.navController.viewControllers.count > 1 && !self.isTransitioningViewControllers;
 }
 
 - (void)popContentViewControllerAnimated:(BOOL)animated {
     if ([self canPopContentViewController]) {
         NSTimeInterval duration = (animated) ? 0.3 : 0.0;
         
-        UIViewController *popped = [self.controllers lastObject];
-        [self clearScrollsToTop:popped.view];
-        
-        [self.controllers removeLastObject];
-        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
-        [self setSearchBarOrangeButtonImage];        
+        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
+        [self setSearchBarOrangeButtonImage];
         [self.searchBar.searchField resetField];
         
-        UIViewController *contentController = [self.controllers lastObject];
-        [contentController reenableScrollsToTop];
-        
-        self.transitioningViewControllers = YES;        
-        __weak DDGSearchController *weakSelf = self;
-        [self.pageViewController setViewControllers:@[contentController]
-                                          direction:UIPageViewControllerNavigationDirectionReverse
-                                           animated:animated
-                                         completion:^(BOOL finished) {
-                                             weakSelf.transitioningViewControllers = NO;
-                                         }];
-        [contentController reenableScrollsToTop];
+        [self.navController popViewControllerAnimated:animated];
     }
 }
 
+-(UIViewController*)rootViewInNavigator {
+    NSArray* navigableViewControllers = self.navController.viewControllers;
+    return navigableViewControllers.count>0 ? navigableViewControllers[0] : nil;
+}
+
 - (NSArray *)contentControllers {
-    return [self.controllers copy];
+    return [self.navController.viewControllers copy];
 }
 
 - (DDGHistoryProvider *)historyProvider {
@@ -200,8 +156,7 @@ NSString * const emailRegEx =
 
 - (void)viewWillLayoutSubviews
 {
-	if (self.view.frame.origin.y < 0.0)
-	{
+	if (self.view.frame.origin.y < 0.0)	{
 //		// uncoment these lines to get/see a nicely formatted view hiearchy dump
 //		NSMutableString *s = [NSMutableString string];
 //		[s dumpView:self.view atIndent:0];
@@ -273,22 +228,18 @@ NSString * const emailRegEx =
         }
     }];
     
-    UIPageViewController *pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
-                                                                               navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
-                                                                                             options:@{
-                                                                                                       UIPageViewControllerOptionInterPageSpacingKey: @10.f
-                                                                                                       }];
-    pageViewController.delegate = self;
-    pageViewController.dataSource = self;
+    UINavigationController* navController = [[UINavigationController alloc] init];
+    navController.navigationBarHidden = TRUE;
+    navController.view.backgroundColor = [UIColor duckNoContentColor];
+    navController.interactivePopGestureRecognizer.enabled = TRUE;
+    navController.interactivePopGestureRecognizer.delegate = self;
+    navController.delegate = self;
+    navController.view.frame = [self contentRect];
+    [self addChildViewController:navController];
+    [self.view insertSubview:navController.view belowSubview:self.background];
+    [navController didMoveToParentViewController:self];
     
-    pageViewController.view.backgroundColor = [UIColor duckNoContentColor];
-    pageViewController.view.frame = [self contentRect];
-    
-    [self addChildViewController:pageViewController];
-    [self.view insertSubview:pageViewController.view belowSubview:self.background];
-    [pageViewController didMoveToParentViewController:self];
-    
-    self.pageViewController = pageViewController;
+    self.navController = navController;
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
@@ -319,10 +270,6 @@ NSString * const emailRegEx =
     [super viewDidAppear:animated];
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
-//    
-//    if ([self.controllers count] > 0) {
-//        [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
-//    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -335,64 +282,7 @@ NSString * const emailRegEx =
     [super viewDidDisappear:animated];
 }
 
-#pragma mark - UIPageViewControllerDelegate, UIPageViewControllerDataSource
 
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
-      viewControllerBeforeViewController:(UIViewController *)viewController {
-    
-    NSUInteger i = [self.controllers indexOfObject:viewController];
-    if (i == NSNotFound || i == 0) {
-        return nil;
-    }
-    return self.controllers[i - 1];
-}
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
-       viewControllerAfterViewController:(UIViewController *)viewController {
-    
-    NSUInteger i = [self.controllers indexOfObject:viewController];
-    if (i == NSNotFound || i == (self.controllers.count - 1)) {
-        return nil;
-    }
-    return self.controllers[i + 1];
-}
-
-- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
-    self.transitioningViewControllers = YES;
-}
-
-- (void)pageViewController:(UIPageViewController *)pageViewController
-        didFinishAnimating:(BOOL)finished
-   previousViewControllers:(NSArray *)previousViewControllers
-       transitionCompleted:(BOOL)completed {
-    self.transitioningViewControllers = NO;
-    
-    /* Workaround for the fact didFinishAnimating and transitionCompleted always return YES */
-    /* [self.pageViewControllers viewControllers] only ever holds a single object; the current view controller */
-    UIViewController *currentViewController = [[self.pageViewController viewControllers] firstObject];
-    /* We only ever push or pop a single view controller at a time */
-    UIViewController *previousViewController = [previousViewControllers firstObject];
-    /* If the current view controller is the same as the previous one, we haven't changed page, despite what transitionCompleted states */
-    if (currentViewController == previousViewController) {
-        return;
-    }
-    
-    if (completed) {
-        UIViewController *viewController = [previousViewControllers lastObject];
-        NSUInteger index = [self.controllers indexOfObject:viewController];
-        if (index != NSNotFound) {
-            NSRange range = NSMakeRange(index, self.controllers.count - index);
-            NSArray *poppedControllers = [self.controllers subarrayWithRange:range];
-            for (UIViewController *v in poppedControllers) {
-                [self clearScrollsToTop:v.view];
-            }
-            [self.controllers removeObjectsInRange:range];
-        }        
-        [[self.controllers lastObject] reenableScrollsToTop];
-        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:0.2];
-        [self setSearchBarOrangeButtonImage];
-    }
-}
 
 #pragma mark - Keyboard notifications
 
@@ -401,17 +291,10 @@ NSString * const emailRegEx =
 }
 
 -(void)keyboardWillShow:(NSNotification *)notification {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(slidingViewTopDidAnchorRight:)
-                                                 name:DDGSlideOverMenuDidAppearNotification
-                                               object:nil];
     [self keyboardWillShow:YES notification:notification];
 }
 
 -(void)keyboardWillHide:(NSNotification *)notification {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuDidAppearNotification
-                                                  object:nil];
     [self keyboardWillShow:NO notification:notification];
 }
 
@@ -448,7 +331,7 @@ NSString * const emailRegEx =
         double duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
         [self revealInputAccessory:show animationDuration:duration];
         
-        UIViewController *controller = [self.controllers lastObject];
+        UIViewController *controller = self.navController.visibleViewController;
         if ([controller isKindOfClass:[DDGDuckViewController class]]) {
             [controller.view layoutIfNeeded];
         }
@@ -471,7 +354,7 @@ NSString * const emailRegEx =
 #pragma mark - DDGSearchHandler
 
 -(void)searchControllerStopOrReloadButtonPressed {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         UIViewController <DDGSearchHandler> *searchHandler = (UIViewController <DDGSearchHandler> *)contentViewController;
         if([searchHandler respondsToSelector:@selector(searchControllerStopOrReloadButtonPressed)])
@@ -483,7 +366,7 @@ NSString * const emailRegEx =
 }
 
 -(void)searchControllerActionButtonPressed:(id)sender {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         UIViewController <DDGSearchHandler> *searchHandler = (UIViewController <DDGSearchHandler> *)contentViewController;
         if([searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed:)]) {
@@ -498,19 +381,20 @@ NSString * const emailRegEx =
 
 -(void)searchControllerLeftButtonPressed {
     [self.searchBar.searchField resignFirstResponder];
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController searchControllerLeftButtonPressed];
     } else {
-        if ([self.controllers count] > 1)
+        if (self.navController.viewControllers.count > 1) {
             [self popContentViewControllerAnimated:YES];
-        else
+        } else {
             [_searchHandler searchControllerLeftButtonPressed];
+        }
     }
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController loadQueryOrURL:queryOrURLString];
     } else {
@@ -526,7 +410,7 @@ NSString * const emailRegEx =
 }
 
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController loadStory:story readabilityMode:readabilityMode];
     } else {
@@ -542,7 +426,7 @@ NSString * const emailRegEx =
 }
 
 -(void)prepareForUserInput {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController prepareForUserInput];
     } else {
@@ -574,34 +458,38 @@ NSString * const emailRegEx =
         return;
     
 	_state = searchControllerState;
-    
     [self view];
     
     if(_state == DDGSearchControllerStateHome) {
-//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
-        
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = NO;
         self.homeController.alternateButtonBar = nil;
         
-        if (duration > 0)
-            [self.searchBar layoutIfNeeded:duration];
+        if (duration > 0) [self.searchBar layoutIfNeeded:duration];
         
         [self clearAddressBar];
         
     } else if (_state == DDGSearchControllerStateWeb) {
-//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
-//        [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = YES;
         self.searchBar.showsBangButton = NO;
         self.homeController.alternateButtonBar = self.customToolbar;
         
-        if (duration > 0)
-            [self.searchBar layoutIfNeeded:duration];        
+        if (duration > 0) [self.searchBar layoutIfNeeded:duration];
     }
 }
+
+-(void)updateToolbars:(BOOL)animated
+{
+//    BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
+//    [self.searchBar setShowsLeftButton:showBackButton animated:YES];
+    NSTimeInterval duration = (animated) ? 0.3 : 0.0;
+    
+    self.homeController.alternateButtonBar = self.navController.topViewController.alternateToolbar;
+    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
+    [self setSearchBarOrangeButtonImage];
+}
+
 
 -(void)stopOrReloadButtonPressed {
     [self searchControllerStopOrReloadButtonPressed];
@@ -710,11 +598,22 @@ NSString * const emailRegEx =
 #pragma mark - Nav controller delegate
 
 -(void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    if(!autocompleteOpen)
-        return;
-    
-    BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
-    [self.searchBar setShowsLeftButton:showBackButton animated:YES];
+    if(self.autocompleteNavigationController==navigationController) {
+        if(!autocompleteOpen)
+            return;
+        
+        BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
+        [self.searchBar setShowsLeftButton:showBackButton animated:YES];
+    }
+}
+
+-(void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if(self.navController==navigationController) {
+        [self updateToolbars:animated];
+        if(viewController==self.rootViewInNavigator) {
+            [self.searchBar.searchField resetField];
+        }
+    }
 }
 
 #pragma mark - View management
@@ -739,8 +638,6 @@ NSString * const emailRegEx =
     self.searchBar.showsCancelButton = YES;
     [self.searchBar layoutIfNeeded:0.25];
     
-//    [[self.slideOverMenuController panGesture] setEnabled:NO];
-    
     autocompleteOpen = YES;
 }
 
@@ -751,8 +648,6 @@ NSString * const emailRegEx =
     
     autocompleteOpen = NO;
 
-    [[self.slideOverMenuController panGesture] setEnabled:YES];
-    
     [self.searchBar.searchField resignFirstResponder];
     if(!barUpdated) {
         self.searchBar.searchField.text = oldSearchText;
@@ -836,6 +731,7 @@ NSString * const emailRegEx =
     self.searchBar.searchField.text = @"";
     [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
 }
+
 
 #pragma mark - DDGPopoverViewControllerDelegate
 
@@ -1080,10 +976,6 @@ NSString * const emailRegEx =
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
         [_searchHandler searchControllerAddressBarWillOpen];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dismissAutocomplete)
-                                                 name:DDGSlideOverMenuWillAppearNotification
-                                               object:nil];
 	return YES;
 }
 
@@ -1100,9 +992,6 @@ NSString * const emailRegEx =
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {

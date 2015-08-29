@@ -611,11 +611,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 #pragma mark - Search handler
 
--(void)searchControllerLeftButtonPressed
-{
-    [self.slideOverMenuController showMenu];
-}
-
 -(void)loadQueryOrURL:(NSString *)queryOrURL
 {
     [self.searchControllerDDG loadQueryOrURL:queryOrURL];

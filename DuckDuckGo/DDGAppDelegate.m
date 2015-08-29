@@ -19,7 +19,6 @@
 #import "DDGSearchHandler.h"
 #import "NSString+URLEncodingDDG.h"
 #import "DDGFirstRunViewController.h"
-#import "DDGSlideOverMenuController.h"
 #import "DDGURLProtocol.h"
 #import "DDGHomeViewController.h"
 

@@ -19,7 +19,7 @@
 #import "DDGMenuHistoryItemCell.h"
 
 
-@interface DDGHistoryViewController () <UIGestureRecognizerDelegate> {
+@interface DDGHistoryViewController () {
     BOOL _showingNoResultsSection;
 }
 @property (nonatomic, weak, readwrite) id <DDGSearchHandler> searchHandler;

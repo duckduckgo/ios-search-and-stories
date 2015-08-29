@@ -46,27 +46,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:DDGSlideOverMenuWillAppearNotification object:nil];
-}
-
 #pragma mark - View lifecycle
 
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
-    
-	button.imageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	button.autoresizesSubviews = YES;
-    
-    float topInset = 1.0f;
-    button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
-    
-    [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 	self.navigationItem.rightBarButtonItem = nil;
     
     self.tableView.backgroundView = nil;
@@ -75,11 +59,6 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     // force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
-}
-
--(void)leftButtonPressed
-{
-    [self.slideOverMenuController showMenu];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -94,29 +73,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self.tableView reloadData];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(slidingViewUnderLeftWillAppear:)
-                                                 name:DDGSlideOverMenuWillAppearNotification
-                                               object:nil];
-}
-
 - (void)reenableScrollsToTop {
     self.tableView.scrollsToTop = YES;
 }
 
 - (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
     [self save:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
 }
 
 - (void)viewWillLayoutSubviews

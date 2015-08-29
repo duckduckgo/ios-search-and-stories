@@ -339,14 +339,14 @@
     [searchController pushContentViewController:webVC animated:NO];
     searchController.state = DDGSearchControllerStateWeb;
     
-    [self.slideOverMenuController setContentViewController:searchController];
+    //[self.slideOverMenuController setContentViewController:searchController];
     
     [searchController.searchBar.searchField becomeFirstResponder];
 }
 
 
 -(void)searchControllerLeftButtonPressed {
-    [self.slideOverMenuController showMenu];
+    //[self.slideOverMenuController showMenu];
 }
 
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
@@ -362,10 +362,10 @@
     [webVC loadStory:story readabilityMode:readabilityMode];
     //self.menuIndexPath = nil;
     
-    if (searchController) {
-        [self.slideOverMenuController setContentViewController:searchController];
-        [self.slideOverMenuController hideMenu];
-    }
+//    if (searchController) {
+//        [self.slideOverMenuController setContentViewController:searchController];
+//        [self.slideOverMenuController hideMenu];
+//    }
     
 }
 
@@ -382,10 +382,10 @@
     [webVC loadQueryOrURL:queryOrURL];
     //self.menuIndexPath = nil;
     
-    if (searchController) {
-        [self.slideOverMenuController setContentViewController:searchController];
-        [self.slideOverMenuController hideMenu];
-    }
+//    if (searchController) {
+//        [self.slideOverMenuController setContentViewController:searchController];
+//        [self.slideOverMenuController hideMenu];
+//    }
 }
 
 -(void)setSelectedButton:(UIButton*)newlySelectedTabButton

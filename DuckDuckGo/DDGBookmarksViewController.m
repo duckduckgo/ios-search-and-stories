@@ -147,11 +147,6 @@
     [self.navigationItem setRightBarButtonItem:(edit ? self.doneBarButtonItem : self.editBarButtonItem) animated:NO];
 }
 
--(void)leftButtonPressed
-{
-    [self.slideOverMenuController showMenu];
-}
-
 - (void)reenableScrollsToTop {
     self.tableView.scrollsToTop = YES;
 }

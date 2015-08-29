@@ -317,9 +317,11 @@
 }
 
 -(void)searchControllerStopOrReloadButtonPressed {
-    if(self.webView.isLoading)
+    if(self.webView.isLoading) {
+        DLog(@"stopping loading");
         [self.webView stopLoading];
-    else {
+    } else {
+        DLog(@"refreshing");
         if (self.inReadabilityMode)
             [self loadStory:self.story readabilityMode:YES];
         else
