@@ -92,27 +92,24 @@
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    return [[self.fetchedResultsController sections] count] + 2;
+    return [[self.fetchedResultsController sections] count] + 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    if(section==0) return 1;
-    section--;
-    if(section==[[self.fetchedResultsController sections] count]) {
-        return 1;
+    if(section==0) {
+        return 2;
     } else {
+        section--;
         id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
         return [sectionInfo numberOfObjects];
     }
 }
 
 -(NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    if(section==0) return NSLocalizedString(@"Options", @"Header for the Options section in the Source selection view");
-    section--;
-
-    if(section==[[self.fetchedResultsController sections] count]) { // this is the last section, for suggesting new sources
-        return nil;
+    if(section==0) {
+        return NSLocalizedString(@"Options", @"Header for the Options section in the Source selection view");
     } else {
+        section--;
         id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
         return [sectionInfo name];
     }
@@ -143,20 +140,20 @@
     static NSString *SourceCellIdentifier = @"DDGSourceCell";
     
     if(indexPath.section==0) {
-        return [self buttonCellWithTitle:NSLocalizedString(@"Reset to Default", @"Table button/row to reset the list of sources to the default values")
-                            forTableView:tableView];
-    }
-    indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
-    
-    UITableViewCell *cell = nil;
-
-    if(indexPath.section == [[self.fetchedResultsController sections] count]) {
-        if(indexPath.row == 0) {
-            return [self buttonCellWithTitle:NSLocalizedString(@"Suggest a Source", @"Table button/row to suggest a new source")
-                                forTableView:tableView];
+        switch(indexPath.row) {
+            case 0:
+                return [self buttonCellWithTitle:NSLocalizedString(@"Reset to Default", @"Table button/row to reset the list of sources to the default values")
+                                    forTableView:tableView];
+            case 1:
+            default:
+                return [self buttonCellWithTitle:NSLocalizedString(@"Suggest a Source", @"Table button/row to suggest a new source")
+                                    forTableView:tableView];
+                
         }
     } else {
-        cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
+        indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
+        
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
         if(!cell) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 40, 40)];
@@ -166,9 +163,8 @@
         }
         [DDGSettingsViewController configureSettingsCell:cell];
         [self configureCell:cell atIndexPath:indexPath];
+        return cell;
     }
-    
-    return cell;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -196,26 +192,23 @@
 {
     if(indexPath.section==0) {
         [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
-        [self resetSourcesToDefault];
-        return;
-    }
-    
-    NSIndexPath* originalIndexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section];
-    indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
-
-    if(indexPath.section == [[self.fetchedResultsController sections] count]) {
-		// send an email to make a suggestion for a new source
-		if ([MFMailComposeViewController canSendMail]) {
-			MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
-			mailVC.mailComposeDelegate = self;
-			[mailVC setToRecipients:@[@"stories@duckduckgo.com"]];
-			[mailVC setSubject:@"Suggestion: Story Source"];
-			[mailVC setMessageBody:@"Please let us know the source you would like us to investigate adding and why. Note that we will only consider sources that have some sort of aggregated feed like \"most up-voted\" or \"most shared\". Also, if you have any feedback about the Stories feature, we would love to hear it!" isHTML:NO];
-			[self presentViewController:mailVC animated:YES completion:NULL];
-		}
-    }
-	else
-	{
+        if(indexPath.row==0) {
+                [self resetSourcesToDefault];
+        } else {
+            // send an email to make a suggestion for a new source
+            if ([MFMailComposeViewController canSendMail]) {
+                MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
+                mailVC.mailComposeDelegate = self;
+                [mailVC setToRecipients:@[@"stories@duckduckgo.com"]];
+                [mailVC setSubject:@"Suggestion: Story Source"];
+                [mailVC setMessageBody:@"Please let us know the source you would like us to investigate adding and why. Note that we will only consider sources that have some sort of aggregated feed like \"most up-voted\" or \"most shared\". Also, if you have any feedback about the Stories feature, we would love to hear it!" isHTML:NO];
+                [self presentViewController:mailVC animated:YES completion:NULL];
+            }
+        }
+    } else {
+        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+        
+        indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
         DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
         feed.feedState = (feed.feedState == DDGStoryFeedStateEnabled) ? DDGStoryFeedStateDisabled : DDGStoryFeedStateEnabled;
         DLog(@"toggling feed state for %@", feed.title);
@@ -229,7 +222,6 @@
         //[self.tableView reloadRowsAtIndexPaths:@[originalIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
     
-    [self.tableView deselectRowAtIndexPath:originalIndexPath animated:YES];
 }
 
 #pragma mark - NSFetchedResultsController
