@@ -63,15 +63,15 @@
 {
     self.stopButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.stopButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
-    self.stopButton.frame = CGRectMake(0,0,23,23);
+    self.stopButton.frame = CGRectMake(0,0,27,23);
     
     self.reloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.reloadButton setImage:[UIImage imageNamed:@"refresh.png"] forState:UIControlStateNormal];
-    self.reloadButton.frame = CGRectMake(0,0,23,23);
+    self.reloadButton.frame = CGRectMake(0,0,27,23);
     
     self.clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [self.clearButton setImage:[UIImage imageNamed:@"clear.png"] forState:UIControlStateNormal];
-    self.clearButton.frame = CGRectMake(0,0,30,23);
+    self.clearButton.frame = CGRectMake(0,0,27,23);
     
     [self addTarget:self action:@selector(textWasUpdated:) forControlEvents:UIControlEventEditingChanged];
     
