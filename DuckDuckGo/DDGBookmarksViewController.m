@@ -45,8 +45,10 @@
     self.tableView.rowHeight = 44.0f;
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     self.tableView.backgroundColor = [UIColor duckNoContentColor];
-    self.tableView.sectionFooterHeight = 1;
+    self.tableView.sectionFooterHeight = 0;
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
+    self.tableView.sectionFooterHeight = 1;
+    self.tableView.sectionHeaderHeight = 1;
     
     self.searchIcon = [UIImage imageNamed:@"search_icon"];
     
@@ -190,9 +192,10 @@
     return cell;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    return nil;
-}
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section { return nil; }
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section { return nil; }
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section { return 1; }
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section { return 0.001; }
 
 
 #pragma mark - Table view delegate

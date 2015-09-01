@@ -31,6 +31,10 @@
                 <userLayoutGuide location="29" affinity="minX"/>
             </userGuides>
             <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nOn-A2-4XZ" userLabel="tab content">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                    <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HQm-a7-mxw" userLabel="tab bar">
                     <rect key="frame" x="0.0" y="550" width="600" height="50"/>
                     <subviews>
@@ -139,15 +143,10 @@
                     </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kyo-JD-Ybe" userLabel="alternate bar">
-                    <rect key="frame" x="0.0" y="500" width="600" height="50"/>
-                    <color key="backgroundColor" red="0.87058823529999996" green="0.34509803919999998" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <rect key="frame" x="0.0" y="600" width="600" height="50"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="Jmc-ri-m98" userLabel="tab bar height"/>
                     </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nOn-A2-4XZ" userLabel="tab content">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="550"/>
-                    <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                 </view>
             </subviews>
             <color key="backgroundColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -155,10 +154,10 @@
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="07T-AZ-Z0Z"/>
                 <constraint firstAttribute="trailing" secondItem="nOn-A2-4XZ" secondAttribute="trailing" id="8IO-Gj-RIU"/>
                 <constraint firstAttribute="trailing" secondItem="kyo-JD-Ybe" secondAttribute="trailing" id="Gzw-YP-3Oo"/>
-                <constraint firstItem="nOn-A2-4XZ" firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="top" id="NpH-tL-gD5"/>
+                <constraint firstItem="nOn-A2-4XZ" firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="bottom" id="NpH-tL-gD5"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Okf-nx-ZKD"/>
                 <constraint firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="bottom" id="RQA-Dl-sUw" userLabel="tab bar bottom"/>
-                <constraint firstAttribute="bottom" secondItem="kyo-JD-Ybe" secondAttribute="bottom" constant="50" id="Thk-lu-eHV"/>
+                <constraint firstAttribute="bottom" secondItem="kyo-JD-Ybe" secondAttribute="bottom" constant="-50" id="Thk-lu-eHV"/>
                 <constraint firstItem="HQm-a7-mxw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="m9c-VI-hov" userLabel="tab bar left"/>
                 <constraint firstAttribute="trailing" secondItem="HQm-a7-mxw" secondAttribute="trailing" id="xvc-4s-9ct" userLabel="tab bar right"/>
                 <constraint firstItem="kyo-JD-Ybe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="y4x-qn-0jc"/>

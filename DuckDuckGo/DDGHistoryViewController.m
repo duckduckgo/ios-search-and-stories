@@ -50,7 +50,7 @@
     
     if (nil == self.tableView) {
         UITableView *tableView = nil;
-        tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
+        tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
         
         tableView.delegate = self;
         tableView.dataSource = self;
@@ -61,6 +61,7 @@
         tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         tableView.allowsMultipleSelectionDuringEditing = FALSE;
         tableView.sectionFooterHeight = 1;
+        tableView.sectionHeaderHeight = 1;
         
         tableView.backgroundColor = [UIColor duckNoContentColor];
         tableView.opaque = NO;
@@ -221,15 +222,10 @@
 
 
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
-{
-    return nil; //if(section==0) return [[UIView alloc] initWithFrame:CGRectMake(0, 0, 10, 2)];
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return 2;
-}
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section { return nil; }
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section { return nil; }
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section { return 1; }
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section { return 0.001; }
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath

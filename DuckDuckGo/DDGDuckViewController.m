@@ -129,16 +129,19 @@ static NSString *historyCellID = @"HCell";
     
     // use our custom table view class
     self.tableView = [[DDGAutocompleteTableView alloc] initWithFrame:self.tableView.frame
-                                                               style:UITableViewStylePlain];
+                                                               style:UITableViewStyleGrouped];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    self.tableView.sectionFooterHeight = 1;
     self.clearsSelectionOnViewWillAppear = FALSE;
     self.tableView.backgroundColor = [UIColor duckStoriesBackground];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
+    self.tableView.separatorColor = [UIColor duckTableSeparator];
+    self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
     
-    self.tableView.scrollsToTop = NO;
+    //self.tableView.scrollsToTop = NO;
     
     self.imageCache = [NSCache new];
     
@@ -301,6 +304,10 @@ static NSString *historyCellID = @"HCell";
         case SUGGESTION_SECTION: return self.suggestions.count<=0 ? 0 : 25.0;
         default: return 0.0;
     }
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return nil;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

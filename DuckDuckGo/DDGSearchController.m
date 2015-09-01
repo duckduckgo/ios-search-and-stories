@@ -79,19 +79,6 @@ NSString * const emailRegEx =
     [self.view removeFromSuperview];
 }
 
-- (CGRect)contentRect {
-    [self view];
-    
-    return self.background.frame;
-//    CGRect searchbarRect = self.searchBar.frame;
-//    CGRect frame = self.view.bounds;
-//    CGRect intersection = CGRectIntersection(frame, searchbarRect);
-//    frame.origin.y = searchbarRect.origin.y;
-//    frame.size.height = frame.size.height - frame.origin.y;
-//    
-//    return frame;
-}
-
 - (void)setSearchBarOrangeButtonImage {
     
     UIImage *image = nil;
@@ -114,6 +101,7 @@ NSString * const emailRegEx =
         return;
     
     [self view]; // force the view to be loaded
+    contentController.view.frame = self.background.frame;
     [self.navController pushViewController:contentController animated:animated];
     [self updateToolbars:FALSE];
 }
@@ -227,19 +215,19 @@ NSString * const emailRegEx =
             [weakSelf keyboardDidHide:note];
         }
     }];
-    
     UINavigationController* navController = [[UINavigationController alloc] init];
     navController.navigationBarHidden = TRUE;
     navController.view.backgroundColor = [UIColor duckNoContentColor];
     navController.interactivePopGestureRecognizer.enabled = TRUE;
     navController.interactivePopGestureRecognizer.delegate = self;
     navController.delegate = self;
-    navController.view.frame = [self contentRect];
+    navController.view.frame = self.background.frame;
     [self addChildViewController:navController];
     [self.view insertSubview:navController.view belowSubview:self.background];
     [navController didMoveToParentViewController:self];
     
     self.navController = navController;
+    
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
