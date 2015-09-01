@@ -50,7 +50,7 @@
                             </connections>
                         </button>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="70" customClass="DDGAddressBarTextField">
-                            <rect key="frame" x="10" y="7" width="580" height="29"/>
+                            <rect key="frame" x="8" y="7" width="584" height="29"/>
                             <color key="backgroundColor" red="0.83137254900000002" green="0.34901960780000002" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -68,7 +68,7 @@
                             </connections>
                         </textField>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="83" userLabel="Bang Button" customClass="DDGSearchBarButton">
-                            <rect key="frame" x="10" y="1" width="29" height="40"/>
+                            <rect key="frame" x="8" y="1" width="29" height="40"/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="29" id="59a-Ow-lad"/>
@@ -152,9 +152,9 @@
                         <constraint firstAttribute="height" constant="44" id="WGv-23-cEv" userLabel="search bar height"/>
                         <constraint firstItem="83" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="aGc-Ts-A3A" userLabel="bang button vertical center"/>
                         <constraint firstItem="IlG-e8-l4A" firstAttribute="leading" secondItem="67" secondAttribute="leading" constant="10" id="ceA-DN-h4L"/>
-                        <constraint firstItem="72" firstAttribute="leading" secondItem="70" secondAttribute="trailing" constant="10" id="do7-vC-DfC" userLabel="address X to cancel button"/>
+                        <constraint firstItem="72" firstAttribute="leading" secondItem="70" secondAttribute="trailing" constant="8" id="do7-vC-DfC" userLabel="address X to cancel button"/>
                         <constraint firstItem="69" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="h2C-Sq-7w2" userLabel="left button vertical center"/>
-                        <constraint firstItem="70" firstAttribute="leading" secondItem="69" secondAttribute="trailing" constant="10" id="hru-Nf-Ie2" userLabel="address X to left button"/>
+                        <constraint firstItem="70" firstAttribute="leading" secondItem="69" secondAttribute="trailing" constant="8" id="hru-Nf-Ie2" userLabel="address X to left button"/>
                         <constraint firstAttribute="trailing" secondItem="8B2-xM-tuN" secondAttribute="trailing" id="mR4-BO-5IR"/>
                         <constraint firstItem="72" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="ouo-Tj-78m" userLabel="cancel button vertical center"/>
                         <constraint firstItem="72" firstAttribute="leading" secondItem="67" secondAttribute="trailing" id="uUF-hP-mDv" userLabel="cancel button right alignment"/>
