@@ -16,7 +16,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 
 @protocol DDGStoryCellDelegate <NSObject>
 
--(void)shareStory:(DDGStory*)story;
+-(void)shareStory:(DDGStory*)story fromView:(UIView*)sourceView;
 -(void)toggleStorySaved:(DDGStory*)story;
 -(void)openStoryInBrowser:(DDGStory*)story;
 -(void)removeHistoryItem:(DDGHistoryItem*)historyItem;

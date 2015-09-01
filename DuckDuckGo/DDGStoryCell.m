@@ -171,7 +171,6 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 @property (nonatomic, strong) UILabel* textLabel;
 @property (nonatomic, assign, getter = isRead) BOOL read;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
-
 @property (nonatomic, strong) DDGPopoverViewController* menuPopover;
 
 @end
@@ -213,7 +212,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 {
     DDGPopoverViewController* popover = self.menuPopover;
     void(^share)() = ^() {
-        [self.storyDelegate shareStory:self.story];
+        [self.storyDelegate shareStory:self.story fromView:self.menuButton];
     };
     if(popover==nil) {
         share();
