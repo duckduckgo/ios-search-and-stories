@@ -168,15 +168,13 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
     NSString *bundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
     NSString *shortBundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-    NSString *appName = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
-    if (appName == nil)
-        appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
     
-    NSString *versionInfo = [NSString stringWithFormat:@"%@ %@", appName, shortBundleVersion];
+    NSString *versionInfo = [NSString stringWithFormat:@"Version %@", shortBundleVersion];
     if (![shortBundleVersion isEqualToString:bundleVersion])
         versionInfo = [versionInfo stringByAppendingFormat:@" (%@)", bundleVersion];
     
-    [self addSectionWithTitle:nil footer:versionInfo];
+    [self addSectionWithTitle:versionInfo footer:nil];
+    
     self.tableView.sectionFooterHeight = 0;
 }
 
@@ -305,8 +303,30 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     return view;
 }
 
++(UIView*)createVersionView:(NSString*)title
+{
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    view.opaque = NO;
+    view.backgroundColor = [UIColor clearColor];
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectInset(view.bounds, 16.0, 0.0)];
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    titleLabel.opaque = NO;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont duckFontWithSize:15.0];
+    titleLabel.text = title;
+    titleLabel.textColor = UIColorFromRGB(0x999999);
+    [view addSubview:titleLabel];
+    
+    return view;
+}
+
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    return [DDGSettingsViewController createSectionHeaderView:[self tableView:tableView titleForHeaderInSection:section]];
+    if(section+1 == [self numberOfSectionsInTableView:tableView]) {
+        return [DDGSettingsViewController createVersionView:[self tableView:tableView titleForHeaderInSection:section]];
+    } else {
+        return [DDGSettingsViewController createSectionHeaderView:[self tableView:tableView titleForHeaderInSection:section]];
+    }
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -319,7 +339,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     cell.textLabel.font = [UIFont duckFontWithSize:17.0];
     cell.textLabel.textColor = UIColor.duckSettingsLabel;
     cell.textLabel.textAlignment = NSTextAlignmentNatural;
-    cell.detailTextLabel.font = [UIFont duckFontWithSize:15.0];
+    cell.detailTextLabel.font = [UIFont duckFontWithSize:17.0];
     cell.detailTextLabel.textColor = UIColor.duckSettingsDetailLabel;
     cell.tintColor = UIColor.duckRed;
 }

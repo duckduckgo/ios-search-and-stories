@@ -319,6 +319,7 @@
 		84BFA1231B6142B700C4C139 /* DDGWebToolbar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 84BFA1221B6142B700C4C139 /* DDGWebToolbar.xib */; };
 		84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */; };
 		84E722F51B90907B00CA0198 /* DDGSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */; };
+		84E723001B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E722FF1B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m */; };
 		C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = C1894FD6178F56830076C179 /* UIColor+DDG.m */; };
 		C1A97EE5176BD3560099EDA1 /* btn-bg_bang_example_query.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */; };
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
@@ -744,6 +745,8 @@
 		84D9A82C1B3CB74B00AF00CF /* DuckDuckGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DuckDuckGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		84E722F31B90907B00CA0198 /* DDGSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSegmentedControl.h; sourceTree = "<group>"; };
 		84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSegmentedControl.m; sourceTree = "<group>"; };
+		84E722FE1B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSourceSettingCellTableViewCell.h; sourceTree = "<group>"; };
+		84E722FF1B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSourceSettingCellTableViewCell.m; sourceTree = "<group>"; };
 		C1894FD5178F56830076C179 /* UIColor+DDG.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+DDG.h"; sourceTree = "<group>"; };
 		C1894FD6178F56830076C179 /* UIColor+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+DDG.m"; sourceTree = "<group>"; };
 		C1A97EE3176BD3560099EDA1 /* btn-bg_bang_example_query.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang_example_query.png"; sourceTree = "<group>"; };
@@ -985,6 +988,8 @@
 				5BDC6AF4174E2F510065BB8D /* DDGGroupedTableViewCell.m */,
 				5BDC6B17174E34D40065BB8D /* DDGGroupedTableViewCellValue1.xib */,
 				5BDC6B16174E2FB00065BB8D /* Images */,
+				84E722FE1B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.h */,
+				84E722FF1B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m */,
 			);
 			name = Settings;
 			sourceTree = "<group>";
@@ -1831,6 +1836,7 @@
 				5BA321EB16C9056B0066BCB0 /* SDURLCache.m in Sources */,
 				5BA321EC16C9056D0066BCB0 /* SDCachedURLResponse.m in Sources */,
 				5BA321F116C907650066BCB0 /* NSOperationStack.m in Sources */,
+				84E723001B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m in Sources */,
 				5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */,
 				5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */,
 				5B7A1BC916E74C3500354310 /* DDGStoriesViewController.m in Sources */,

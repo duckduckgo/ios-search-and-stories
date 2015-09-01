@@ -45,12 +45,10 @@
 
 - (void)loadView {
     [super loadView];
-    self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    self.view.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    
-    self.webView = [[DDGWebView alloc] initWithFrame:self.view.bounds];
+    self.webView = [[DDGWebView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];//self.view.bounds];
     self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.webView.delegate = self;
+    self.view = self.webView;
     
     self.webView.scalesPageToFit = YES;
     _webViewLoadingDepth = 0;
@@ -59,8 +57,6 @@
     self.toolbar = [[UINib nibWithNibName:@"DDGWebToolbar" bundle:nil] instantiateWithOwner:self options:nil][0];
     self.backButton.enabled = FALSE;
     self.forwardButton.enabled = FALSE;
-    
-    [self.view addSubview:self.webView];
 }
 
 -(UIView*)alternateToolbar {

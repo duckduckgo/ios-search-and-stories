@@ -55,7 +55,7 @@
     [button setTitle:buttonItem.title forState:UIControlStateNormal];
     [button setTitleColor:[UIColor duckSegmentedForeground] forState:UIControlStateNormal];
     [button setTitleColor:[UIColor duckSegmentedBackground] forState:UIControlStateSelected];
-    button.titleLabel.font = [UIFont duckFontWithSize:button.titleLabel.font.pointSize];
+    button.titleLabel.font = [UIFont duckFontWithSize:button.titleLabel.font.pointSize-2];
     [button addTarget:self action:@selector(buttonWasPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     [self.buttons addObject:button];

@@ -11,6 +11,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "SVProgressHUD.h"
 #import "DDGSettingsViewController.h"
+#import "DDGSourceSettingCellTableViewCell.h"
 #import "UIFont+DDG.h"
 
 @interface DDGChooseSourcesViewController ()
@@ -153,16 +154,13 @@
     } else {
         indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
         
-        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
+        DDGSourceSettingCellTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:SourceCellIdentifier];
         if(!cell) {
-            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:SourceCellIdentifier];
-            UIImageView *imageView = [[UIImageView alloc] initWithFrame:CGRectMake(15, 5, 40, 40)];
-            imageView.contentMode = UIViewContentModeScaleAspectFill;
-            imageView.tag = 100;
-            [cell addSubview:imageView];
+            cell = [[DDGSourceSettingCellTableViewCell alloc] initWithReuseIdentifier:SourceCellIdentifier];
         }
         [DDGSettingsViewController configureSettingsCell:cell];
-        [self configureCell:cell atIndexPath:indexPath];
+        cell.feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        //[self configureCell:cell atIndexPath:indexPath];
         return cell;
     }
 }
@@ -211,13 +209,13 @@
         indexPath = [NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section-1];
         DDGStoryFeed *feed = [self.fetchedResultsController objectAtIndexPath:indexPath];
         feed.feedState = (feed.feedState == DDGStoryFeedStateEnabled) ? DDGStoryFeedStateDisabled : DDGStoryFeedStateEnabled;
-        DLog(@"toggling feed state for %@", feed.title);
         NSManagedObjectContext *context = feed.managedObjectContext;
         [context performBlock:^{
             NSError *error = nil;
             BOOL success = [context save:&error];
-            if (!success)
+            if (!success) {
                 NSLog(@"error: %@", error);
+            }
         }];
         //[self.tableView reloadRowsAtIndexPaths:@[originalIndexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     }
@@ -300,17 +298,20 @@
             break;
             
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]]
+                             withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]]
-                    atIndexPath:[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section]];
+            [self.tableView reloadRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]]
+                                  withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section+1]] withRowAnimation:UITableViewRowAnimationFade];
+            [tableView deleteRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:indexPath.row inSection:indexPath.section+1]]
+                             withRowAnimation:UITableViewRowAnimationFade];
+            [tableView insertRowsAtIndexPaths:@[[NSIndexPath indexPathForRow:newIndexPath.row inSection:newIndexPath.section+1]]
+                             withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -333,6 +334,11 @@
     cell.textLabel.text = feed.title;
     cell.detailTextLabel.text = feed.descriptionString;
     cell.imageView.image = feed.image;
+    
+    CGRect textRect = cell.textLabel.frame;
+    textRect.origin.x = 10;
+    cell.textLabel.frame = textRect;
+    cell.textLabel.backgroundColor = [UIColor redColor];
     
     //    cell.textLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
     //    cell.textLabel.textAlignment = NSTextAlignmentLeft;

@@ -374,7 +374,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.textLabel.opaque = NO;
     [self.contentView addSubview:self.textLabel];
     
-DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
+    DDGFaviconButton *faviconButton = [DDGFaviconButton buttonWithType:UIButtonTypeCustom];
     faviconButton.frame = CGRectMake(15.0f, 15.0f, 27.0f, 27.0f);
     faviconButton.opaque = NO;
     faviconButton.backgroundColor = [UIColor clearColor];
