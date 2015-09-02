@@ -154,20 +154,30 @@
 -(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix
 {
     CGRect f = [[[[UIApplication sharedApplication] windows] firstObject] frame];
-    return [self pastHistoryItemsForPrefix:prefix withMaximumCount:(f.size.height > 645 ? 5 : 3)];
+    return [self pastHistoryItemsForPrefix:prefix excludeStories:FALSE withMaximumCount:(f.size.height > 645 ? 5 : 3)];
 }
 
--(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix withMaximumCount:(NSInteger)maxItems {
+-(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix
+                       excludeStories:(BOOL)excludeStories
+                     withMaximumCount:(NSInteger)maxItems {
     // if we don't track the history, don't bother querying
     if(![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) return @[];
     if(nil == prefix) return @[];
     
     NSMutableArray *history = [[NSMutableArray alloc] init];
     if(prefix.length<=0) {
-        [history addObjectsFromArray:[self allHistoryItems]];
+        if(excludeStories) {
+            for(DDGHistoryItem *historyItem in [self allHistoryItems]) {
+                if(excludeStories && historyItem.story!=nil) continue;
+                [history addObject:historyItem];
+            }
+        } else {
+            [history addObjectsFromArray:[self allHistoryItems]];
+        }
     } else {
         NSString* lowerPrefix = [prefix lowercaseString];
         for(DDGHistoryItem *historyItem in [self allHistoryItems]) {
+            if(excludeStories && historyItem.story!=nil) continue;
             NSString *text = historyItem.title;
             // be case insensitive when comparing search strings (and not URL's)
             if ([[text lowercaseString] hasPrefix:lowerPrefix]			||

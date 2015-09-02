@@ -21,6 +21,8 @@
 - (void)logStory:(DDGStory *)story;
 
 -(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix;
--(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix withMaximumCount:(NSInteger)maxItems;
+-(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix
+                      excludeStories:(BOOL)excludeStories
+                    withMaximumCount:(NSInteger)maxItems;
 -(NSArray*)allHistoryItems;
 @end
