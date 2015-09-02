@@ -10,7 +10,6 @@
 #import "DDGDuckViewController.h"
 #import "DDGSearchBar.h"
 #import "DDGSearchController.h"
-#import "DDGAutocompleteTableView.h"
 #import "DDGSearchSuggestionsProvider.h"
 #import "DDGAutocompleteCell.h"
 #import "DDGMenuHistoryItemCell.h"
@@ -128,8 +127,8 @@ static NSString *historyCellID = @"HCell";
     [super viewDidLoad];
     
     // use our custom table view class
-    self.tableView = [[DDGAutocompleteTableView alloc] initWithFrame:self.tableView.frame
-                                                               style:UITableViewStyleGrouped];
+    self.tableView = [[UITableView alloc] initWithFrame:self.tableView.frame
+                                                  style:UITableViewStyleGrouped];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
@@ -267,6 +266,16 @@ static NSString *historyCellID = @"HCell";
 -(void)tableViewBackgroundTouched {
     [self.searchController dismissAutocomplete];
 }
+
+-(void)duckGoToTopLevel
+{
+    if(self.navigationController.viewControllers.count>1) {
+        [self.navigationController popToRootViewControllerAnimated:TRUE];
+    }
+    [self.tableView scrollRectToVisible:CGRectZero animated:TRUE];
+    [self.searchController.searchBar.searchField becomeFirstResponder];
+}
+
 
 #pragma mark - Table view data source
 

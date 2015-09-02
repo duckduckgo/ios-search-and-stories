@@ -73,6 +73,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self.tableView reloadData];
 }
 
+-(void)duckGoToTopLevel
+{
+    [self.tableView scrollRectToVisible:CGRectZero animated:TRUE];
+}
+
 - (void)reenableScrollsToTop {
     self.tableView.scrollsToTop = YES;
 }

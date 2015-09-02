@@ -31,7 +31,6 @@ NSString * const emailRegEx =
 @"-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 
 @interface DDGSearchController () <DDGPopoverViewControllerDelegate>
-@property (nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) DDGDuckViewController* autocompleteController;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
@@ -53,15 +52,13 @@ NSString * const emailRegEx =
     id keyboardWillHideObserver;
 }
 
--(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler
-            homeController:(DDGHomeViewController*)homeController
+-(id)initWithHomeController:(DDGHomeViewController*)homeController
       managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
 	self = [super initWithNibName:@"DDGSearchController" bundle:nil];
     
 	if (self) {
         self.homeController = homeController;
-        self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
         self.showBangTooltip = ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingSuppressBangTooltip];
 	}

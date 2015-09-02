@@ -17,6 +17,7 @@
 #import "DDGDuckViewController.h"
 #import "DDGBookmarksViewController.h"
 #import "UIColor+DDG.h"
+#import "UIViewController+DDGSearchController.h"
 
 @interface DDGHomeViewController ()
 @property (nonatomic, strong) IBOutlet UIView* tabContentView;
@@ -101,27 +102,46 @@
 }
 
 -(IBAction)showRecents {
-    self.tabController.selectedViewController = self.recentsTopController;
+    if(self.tabController.selectedViewController!=self.recentsTopController) {
+        self.tabController.selectedViewController = self.recentsTopController;
+    } else {
+        [self.recentsController duckGoToTopLevel];
+    }
     [self setSelectedButton:self.recentsTabButton];
 }
 
 -(IBAction)showFavorites {
-    self.tabController.selectedViewController = self.favoritesTopController;
+    if(self.tabController.selectedViewController!=self.favoritesTopController) {
+        self.tabController.selectedViewController = self.favoritesTopController;
+    } else {
+        [self.favoritesTabViewController duckGoToTopLevel];
+    }
     [self setSelectedButton:self.favoritesTabButton];
 }
 
 -(IBAction)showStories {
-    self.tabController.selectedViewController = self.storiesTopController;
+    if(self.tabController.selectedViewController!=self.storiesTopController) {
+       self.tabController.selectedViewController = self.storiesTopController;
+    } else {
+        [self.storiesController duckGoToTopLevel];
+    }
     [self setSelectedButton:self.storiesTabButton];
 }
 
 -(IBAction)showDuck {
-    self.tabController.selectedViewController = self.searchTopController;
+    if(self.tabController.selectedViewController!=self.searchTopController) {
+        self.tabController.selectedViewController = self.searchTopController;
+    }
+    [self.searchController duckGoToTopLevel];
     [self setSelectedButton:self.searchTabButton];
 }
 
 -(IBAction)showSettings {
-    self.tabController.selectedViewController = self.settingsTopController;
+    if(self.tabController.selectedViewController!=self.settingsTopController) {
+        self.tabController.selectedViewController = self.settingsTopController;
+    } else {
+        [self.settingsController duckGoToTopLevel];
+    }
     [self setSelectedButton:self.settingsTabButton];
 }
 
@@ -144,9 +164,8 @@
     NSMutableArray* controllers = [NSMutableArray new];
     
     { // configure the search view controller
-        self.searchTopController = [[DDGSearchController alloc] initWithSearchHandler:self
-                                                                       homeController:self
-                                                                 managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        self.searchTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.searchTopController.state = DDGSearchControllerStateHome;
         self.searchTopController.shouldPushSearchHandlerEvents = YES;
         self.searchController = [[DDGDuckViewController alloc] initWithSearchController:self.searchTopController
@@ -159,9 +178,8 @@
     }
     
     { // configure the stories view controller
-        self.storiesTopController = [[DDGSearchController alloc] initWithSearchHandler:self
-                                                                        homeController:self
-                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        self.storiesTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.storiesTopController.shouldPushSearchHandlerEvents = YES;
         self.storiesController = [[DDGStoriesViewController alloc] initWithSearchHandler:self.storiesTopController
                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
@@ -179,9 +197,8 @@
     
     
     { // configure the favorites view controller
-        self.favoritesTopController = [[DDGSearchController alloc] initWithSearchHandler:self
-                                                                          homeController:self
-                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        self.favoritesTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         
         DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
         bookmarks.title = NSLocalizedString(@"Favorite Searches", @"View controller title: Saved Searches");
@@ -224,9 +241,8 @@
     }
     
     { // configure the recents/history view controller
-        self.recentsTopController = [[DDGSearchController alloc] initWithSearchHandler:self
-                                                                        homeController:self
-                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        self.recentsTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         DDGHistoryViewController* history = [[DDGHistoryViewController alloc] initWithSearchHandler:self.recentsTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]
                                                                                                mode:DDGHistoryViewControllerModeNormal];
@@ -268,9 +284,8 @@
     
     
     { // configure the settings view controller
-        self.settingsTopController = [[DDGSearchController alloc] initWithSearchHandler:self
-                                                                         homeController:self
-                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        self.settingsTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.settingsTopController.state = DDGSearchControllerStateHome;
         self.settingsController = [[DDGSettingsViewController alloc] initWithDefaults];
         self.settingsController.managedObjectContext = [DDGAppDelegate sharedManagedObjectContext];
@@ -331,9 +346,8 @@
 
 - (void)prepareForUserInput {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
-                                                                                homeController:self
-                                                                          managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
@@ -351,9 +365,8 @@
 
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
-                                                                                homeController:self
-                                                                          managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];
@@ -371,9 +384,8 @@
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL {
     DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithSearchHandler:webVC
-                                                                                homeController:self
-                                                                          managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+    DDGSearchController *searchController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
     webVC.searchController = searchController;
     
     [searchController pushContentViewController:webVC animated:NO];

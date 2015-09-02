@@ -30,6 +30,11 @@
     return nil;
 }
 
+- (void)duckGoToTopLevel
+{
+    DLog(@"duckToToTopLevel");
+}
+
 - (void)reenableScrollsToTop {
     for (UIViewController *v in self.childViewControllers)
         [v reenableScrollsToTop];

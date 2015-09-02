@@ -7,6 +7,7 @@
 //
 
 #import "DDGTabViewController.h"
+#import "UIViewController+DDGSearchController.h"
 
 @interface DDGTabViewController ()
 @property (nonatomic, strong, readwrite) DDGSegmentedControl *segmentedControl;
@@ -26,6 +27,14 @@
     }
     return self;
 }
+
+
+-(void)duckGoToTopLevel
+{
+    [self.currentViewController duckGoToTopLevel];
+}
+
+
 
 #pragma mark - View lifecycle
 

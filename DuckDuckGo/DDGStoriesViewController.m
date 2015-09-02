@@ -612,6 +612,16 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 }
 
 
+-(void)duckGoToTopLevel
+{
+    if([self collectionView:self.storyView numberOfItemsInSection:0] > 0) {
+        [self.storyView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:TRUE];
+        if(self.navigationController.viewControllers.count>1) {
+            [self.navigationController popToRootViewControllerAnimated:TRUE];
+        }
+    }
+}
+
 #pragma mark - Search handler
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL

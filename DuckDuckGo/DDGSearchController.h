@@ -52,9 +52,8 @@ typedef enum {
 -(IBAction)cancelButtonPressed:(id)sender;
 - (IBAction)hideBangTooltipForever:(id)sender;
 
--(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler
-            homeController:(DDGHomeViewController*)homeController
-      managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+-(id)initWithHomeController:(DDGHomeViewController*)homeController
+       managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
 // managing the search controller
 -(void)updateBarWithURL:(NSURL *)url;
