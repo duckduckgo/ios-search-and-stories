@@ -30,6 +30,8 @@
     NSManagedObjectContext *context = self.managedObjectContext;
     [self performBlockWithHistoryItems:^(NSArray *history) {
         for (DDGHistoryItem *item in history) {
+            DDGStory* story = item.story;
+            if(story) story.readValue = NO;
             [context deleteObject:item];
         }
     } save:YES];
