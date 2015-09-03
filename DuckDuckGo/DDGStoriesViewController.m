@@ -371,6 +371,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     NSManagedObjectContext *context = historyItem.managedObjectContext;
     [context performBlock:^{
+        DDGStory* story = historyItem.story;
+        if(story) {
+            story.readValue = NO;
+        }
         [context deleteObject:historyItem];
     }];
     NSString *status = NSLocalizedString(@"Removed", @"Recents Activity Confirmation: Removed item from history");

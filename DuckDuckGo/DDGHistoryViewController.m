@@ -213,6 +213,10 @@
 {
     if(editingStyle==UITableViewCellEditingStyleDelete) {
         DDGHistoryItem *historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        DDGStory* story = historyItem.story;
+        if(story) {
+            story.readValue = NO;
+        }
         [historyItem.managedObjectContext deleteObject:historyItem];
     }
 }
