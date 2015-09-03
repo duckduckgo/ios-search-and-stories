@@ -18,5 +18,6 @@
 @property (nonatomic, strong) UIView* alternateButtonBar;
 
 +(DDGHomeViewController*)newHomeController;
+-(id<DDGSearchHandler>)currentSearchHandler;
 
 @end

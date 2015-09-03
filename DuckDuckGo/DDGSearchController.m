@@ -21,6 +21,7 @@
 #import "DDGPopoverViewController.h"
 #import "DDGDuckViewController.h"
 #import "UIViewController+DDGSearchController.h"
+#import "UIFont+DDG.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -450,6 +451,7 @@ NSString * const emailRegEx =
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = NO;
         self.homeController.alternateButtonBar = nil;
+        self.searchBar.progressView.percentCompleted = 100;
         [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
         
         if (duration > 0) [self.searchBar layoutIfNeeded:duration];
@@ -483,17 +485,23 @@ NSString * const emailRegEx =
 }
 
 -(void)webViewStartedLoading {
-    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeStop];
+    if([self canPopContentViewController]) {
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeStop];
+    }
 }
 
 -(void)webViewCancelledLoading {
-    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
-    [self.searchBar cancel];
+    if([self canPopContentViewController]) {
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
+        [self.searchBar cancel];
+    }
 }
 
 -(void)webViewFinishedLoading {
-    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
-    [self.searchBar finish];
+    if([self canPopContentViewController]) {
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
+        [self.searchBar finish];
+    }
 }
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
@@ -851,7 +859,7 @@ NSString * const emailRegEx =
             [unusedBangButtons removeLastObject];
         } else {
             button = [UIButton buttonWithType:UIButtonTypeCustom];   
-            [button.titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
+            [button.titleLabel setFont:[UIFont duckFontWithSize:17]];
             [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
             [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [button.titleLabel setShadowOffset:CGSizeMake(0, 1)];

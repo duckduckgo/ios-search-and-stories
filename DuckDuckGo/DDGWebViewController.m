@@ -185,23 +185,19 @@
     // strip extra params from DDG search URLs
     NSURL *shareURL = self.webViewURL;
     NSString *query = [self.searchController queryFromDDGURL:shareURL];
-    if(query)
-    {
+    NSString *pageTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+    if(query) {
         NSString *escapedQuery = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
         shareURL = [NSURL URLWithString:[@"https://duckduckgo.com/?q=" stringByAppendingString:escapedQuery]];
+    } else if(self.story) {
+        shareURL = self.story.URL;
+        pageTitle = self.story.title;
     }
     
-    NSString *pageTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    //NSString *feed = [self.webViewURL absoluteString];
-    
-    DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
-    [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", pageTitle, shareURL] forActivityType:UIActivityTypeMail];
-    // [NSString stringWithFormat:@"mailto:?subject=%@&body=%@", [pageTitle URLEncodedStringDDG], [[shareURL absoluteString] URLEncodedStringDDG]]
-    
-    DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];    
+    NSString* shareString = [NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS", pageTitle, shareURL];
     
     NSArray *applicationActivities = @[];
-    NSArray *items = @[titleProvider, urlItem, self];
+    NSArray *items = @[shareString, shareURL];
     
     if (self.inReadabilityMode) {
         DDGReadabilityToggleActivity *toggleActivity = [[DDGReadabilityToggleActivity alloc] init];

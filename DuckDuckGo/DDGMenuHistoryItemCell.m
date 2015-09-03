@@ -16,6 +16,7 @@
 }
 
 @property BOOL autocompleteMode;
+@property UIButton* plusButton;
 //@property (nonatomic, strong) UIView* separatorView;
 
 @end
@@ -34,11 +35,11 @@
         CGRect plusRect = self.frame;
         plusRect.origin.x = plusRect.size.width-44;
         plusRect.size.width = 44;
-        UIButton* plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [plusButton setImage:[UIImage imageNamed:@"Plus"] forState:UIControlStateNormal];
-        plusButton.frame = plusRect;
-        plusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-        [self addSubview:plusButton];
+        self.plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.plusButton setImage:[UIImage imageNamed:@"Plus"] forState:UIControlStateNormal];
+        self.plusButton.frame = plusRect;
+        self.plusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self addSubview:self.plusButton];
         
         self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
         
@@ -48,7 +49,7 @@
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         self.imageView.autoresizingMask = UIViewAutoresizingNone;
         
-        [plusButton addTarget:self action:@selector(plusButtonWasPushed:) forControlEvents:UIControlEventTouchUpInside];
+        [self.plusButton addTarget:self action:@selector(plusButtonWasPushed:) forControlEvents:UIControlEventTouchUpInside];
     }
     return self;
 }
@@ -64,16 +65,19 @@
 -(void)layoutSubviews {
     [super layoutSubviews];
     
+    CGRect frame = self.frame;
     CGRect imgRect = self.imageView.frame;
     imgRect.origin.x = 15;
     self.imageView.frame = imgRect;
     
     CGRect tmpFrame = self.textLabel.frame;
     tmpFrame.origin.x = 50;
+    tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
     self.textLabel.frame = tmpFrame;
     
     tmpFrame = self.detailTextLabel.frame;
     tmpFrame.origin.x = 50;
+    tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
     self.detailTextLabel.frame = tmpFrame;
     
 //    CGFloat sepIndent = _isLastItem ? 0 : 15;

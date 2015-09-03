@@ -23,7 +23,7 @@
 #import "DDGHomeViewController.h"
 
 @interface DDGAppDelegate ()
-@property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
+@property (nonatomic, strong) DDGHomeViewController* homeController;
 @property (readwrite, strong, nonatomic) NSManagedObjectContext *masterManagedObjectContext;
 @property (readwrite, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readwrite, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
@@ -78,24 +78,22 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [DDGSettingsViewController loadDefaultSettings];
       
     [[UINavigationBar appearance] setBackgroundColor:[UIColor duckSearchBarBackground]];
-    [[UINavigationBar appearance] setTintColor:[UIColor duckSearchBarBackground]];
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setTintColor:[UIColor duckSearchFieldForeground]];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];
     
     // main view controller
-    DDGHomeViewController* home = [DDGHomeViewController newHomeController];
-    self.searchHandler = home;
+    self.homeController = [DDGHomeViewController newHomeController];
     
-    home.viewDidAppearCompletion = ^(DDGHomeViewController *homeController) {
+    self.homeController.viewDidAppearCompletion = ^(DDGHomeViewController *homeController) {
         if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey]) {
             DDGFirstRunViewController *firstRunViewController = [DDGFirstRunViewController new];
             [homeController presentViewController:firstRunViewController animated:YES completion:nil];
         }
     };
     
-    self.window.rootViewController = home;
+    self.window.rootViewController = self.homeController;
     
     [self.window makeKeyAndVisible];
     return YES;
@@ -110,7 +108,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     if(![[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"])
         return NO;
     
-    //Let's see what the query is.
+    // Let's see what the query is.
     NSString *query = nil;
     NSArray *params = [[url query] componentsSeparatedByString:@"&"];
     for (NSString *param in params) {
@@ -121,9 +119,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     }
     
     if (query) {
-        [self.searchHandler loadQueryOrURL:query];
+        [self.homeController.currentSearchHandler loadQueryOrURL:query];
     } else {
-        [self.searchHandler prepareForUserInput];
+        [self.homeController.currentSearchHandler prepareForUserInput];
     }
 
     return YES;

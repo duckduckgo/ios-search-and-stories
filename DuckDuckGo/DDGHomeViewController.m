@@ -17,6 +17,7 @@
 #import "DDGDuckViewController.h"
 #import "DDGBookmarksViewController.h"
 #import "UIColor+DDG.h"
+#include "DDGSearchHandler.h"
 #import "UIViewController+DDGSearchController.h"
 
 @interface DDGHomeViewController ()
@@ -99,6 +100,17 @@
     }
     _alternateButtonBar = alternateButtonBar;
     //    self.searchButtonBar.hidden = TRUE;
+}
+
+-(id<DDGSearchHandler>)currentSearchHandler
+{
+    [self view]; // initialise the view controllers/search handlers, if we haven't already
+    UIViewController* selectedVC = self.tabController.selectedViewController;
+    if([selectedVC conformsToProtocol:@protocol(DDGSearchHandler)]) {
+        return (id<DDGSearchHandler>)selectedVC;
+    } else {
+        return self.searchTopController;
+    }
 }
 
 -(IBAction)showRecents {
@@ -333,72 +345,6 @@
     // Dispose of any resources that can be recreated.
 }
 
-
-#pragma mark - DDGSearchHandler
-
-- (void)beginSearchInputWithString:(NSString *)string
-{
-    DDGAddressBarTextField *searchField = [self.searchController.searchControllerDDG.searchBar searchField];
-    [searchField becomeFirstResponder];
-    searchField.text = string;
-    [self.searchController.searchControllerDDG searchFieldDidChange:nil];
-}
-
-- (void)prepareForUserInput {
-    DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithHomeController:self
-                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-    webVC.searchController = searchController;
-    
-    [searchController pushContentViewController:webVC animated:NO];
-    searchController.state = DDGSearchControllerStateWeb;
-    
-    //[self.slideOverMenuController setContentViewController:searchController];
-    
-    [searchController.searchBar.searchField becomeFirstResponder];
-}
-
-
--(void)searchControllerLeftButtonPressed {
-    //[self.slideOverMenuController showMenu];
-}
-
--(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
-    DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithHomeController:self
-                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-    webVC.searchController = searchController;
-    
-    [searchController pushContentViewController:webVC animated:NO];
-    searchController.state = DDGSearchControllerStateWeb;
-    
-    [webVC loadStory:story readabilityMode:readabilityMode];
-    //self.menuIndexPath = nil;
-    
-//    if (searchController) {
-//        [self.slideOverMenuController setContentViewController:searchController];
-//        [self.slideOverMenuController hideMenu];
-//    }
-    
-}
-
--(void)loadQueryOrURL:(NSString *)queryOrURL {
-    DDGWebViewController *webVC = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
-    DDGSearchController *searchController = [[DDGSearchController alloc] initWithHomeController:self
-                                                                           managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-    webVC.searchController = searchController;
-    
-    [searchController pushContentViewController:webVC animated:NO];
-    searchController.state = DDGSearchControllerStateWeb;
-    
-    [webVC loadQueryOrURL:queryOrURL];
-    //self.menuIndexPath = nil;
-    
-//    if (searchController) {
-//        [self.slideOverMenuController setContentViewController:searchController];
-//        [self.slideOverMenuController hideMenu];
-//    }
-}
 
 -(void)setSelectedButton:(UIButton*)newlySelectedTabButton
 {

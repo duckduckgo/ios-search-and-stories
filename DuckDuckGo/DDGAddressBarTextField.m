@@ -75,7 +75,7 @@
     
     [self addTarget:self action:@selector(textWasUpdated:) forControlEvents:UIControlEventEditingChanged];
     
-    self.actualPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
+    self.actualPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search DuckDuckGo", @"The placeholder text when the search field is receiving input")
                                                                  attributes:@{NSForegroundColorAttributeName: [UIColor duckSearchFieldPlaceholderForeground]}];
     self.inactivePlaceholderText = [[NSAttributedString alloc] initWithString:@" " attributes:@{}];
     self.attributedPlaceholder = self.inactivePlaceholderText; // need to set to a non-empty string in order to prevent it sliding in from {0,0} when made visible
