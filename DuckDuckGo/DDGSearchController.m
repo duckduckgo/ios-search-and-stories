@@ -15,6 +15,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
+#import "DDGAddressBarTextField.h"
 
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
@@ -449,6 +450,7 @@ NSString * const emailRegEx =
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = NO;
         self.homeController.alternateButtonBar = nil;
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
         
         if (duration > 0) [self.searchBar layoutIfNeeded:duration];
         
@@ -633,11 +635,11 @@ NSString * const emailRegEx =
     
     autocompleteOpen = NO;
 
-    [self.searchBar.searchField resignFirstResponder];
     if(!barUpdated) {
         self.searchBar.searchField.text = oldSearchText;
         oldSearchText = nil;
     }
+    [self.searchBar.searchField resignFirstResponder];
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
         [_searchHandler searchControllerAddressBarWillCancel];
     
