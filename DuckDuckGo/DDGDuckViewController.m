@@ -308,12 +308,19 @@ static NSString *historyCellID = @"HCell";
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
+    CGFloat headerHeight = 0.01f;
     switch(section) {
-        case RECENTS_SECTION: return self.history.count<=0 ? 0 : 25.0;
-        case FAVORITES_SECTION: return self.favorites.count<=0 ? 0 : 25.0;
-        case SUGGESTION_SECTION: return self.suggestions.count<=0 ? 0 : 25.0;
-        default: return 0.0;
+        case RECENTS_SECTION:
+            headerHeight = self.history.count<=0 ? 0.01 : 25.0;
+            break;
+        case FAVORITES_SECTION:
+            headerHeight = self.favorites.count<=0 ? 0.01 : 25.0;
+            break;
+        case SUGGESTION_SECTION:
+            headerHeight = self.suggestions.count<=0 ? 0.01 : 25.0;
+            break;
     }
+    return headerHeight;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
@@ -413,7 +420,7 @@ static NSString *historyCellID = @"HCell";
     } else if(indexPath.section == FAVORITES_SECTION) {  // a favorite item was tapped
         NSDictionary* bookmark = self.favorites[indexPath.row];
         [searchController loadQueryOrURL:[bookmark objectForKey:@"url"]];
-        
+        [searchController dismissAutocomplete];
     } else if (indexPath.section == SUGGESTION_SECTION) { // a suggestion was tapped
         NSDictionary* suggestionItem = self.suggestions[indexPath.row];
         DDGAddressBarTextField *searchField = self.searchController.searchBar.searchField;
