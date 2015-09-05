@@ -13,16 +13,44 @@
 @property (nonatomic, strong) UIImage *arrowImage;
 @property (nonatomic, strong) UIImage *orientedArrowImage;
 @property (nonatomic) CGRect arrowRect;
+@property (nonatomic) CGRect popoverRect;
+@property (nonatomic) CGRect debugRect;
+
+@property (nonatomic, weak) UIView* touchPassthroughView;
+@property (nonatomic, weak) DDGPopoverViewController* popoverViewController;
 @end
 
 @implementation DDGPopoverBackgroundView
 
 - (void)drawRect:(CGRect)rect {
-    [self.backgroundImage drawInRect:rect];
+    [super drawRect:rect];
+    [self.backgroundImage drawInRect:self.popoverRect];
     [self.arrowImage drawInRect:self.arrowRect blendMode:kCGBlendModeNormal alpha:1.0];
 }
 
+
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
+{
+    UIView *hitView = [super hitTest:point withEvent:event];
+    
+    // If the hitView is THIS view, return the view that you want to receive the touch instead:
+    if (hitView == self) {
+        [self performSelector:@selector(goAwayNow) withObject:nil afterDelay:0.02];
+        return [self.touchPassthroughView hitTest:[self.touchPassthroughView convertPoint:point
+                                                                                 fromView:self]
+                                        withEvent:event];
+    }
+    // Else return the hitView (as it could be one of this view's buttons):
+    return hitView;
+}
+
+-(void)goAwayNow {
+    [self.popoverViewController dismissPopoverAnimated:TRUE];
+}
+
+
 @end
+
 
 @interface DDGPopoverViewController ()
 @property (nonatomic, strong, readwrite) UIViewController *contentViewController;
@@ -31,11 +59,13 @@
 @property (nonatomic, strong) DDGPopoverBackgroundView *backgroundView;
 @property (nonatomic, strong) UIImage* upArrowImage;
 @property (nonatomic, assign) CGFloat intrusion;
+@property (nonatomic, weak) UIView* touchPassthroughView;
 @end
 
 @implementation DDGPopoverViewController
 
 - (id)initWithContentViewController:(UIViewController *)viewController
+                  andTouchPassthroughView:(UIView*)touchPassthroughView
 {
     NSParameterAssert(nil != viewController);
     
@@ -45,16 +75,19 @@
         self.contentInsets = UIEdgeInsetsMake(8, 8, 8, 8);
         self.borderInsets = UIEdgeInsetsMake(12, 12, 4, 12);
         self.intrusion = 3;
+        self.touchPassthroughView = touchPassthroughView;
     }
     return self;
 }
 
 - (void)loadView {
     self.upArrowImage = [UIImage imageNamed:@"popover-indicator"];
-    self.backgroundView = [[DDGPopoverBackgroundView alloc] initWithFrame:CGRectZero];
-    self.backgroundView.backgroundColor = [UIColor clearColor];
-    self.backgroundView.backgroundImage = [[UIImage imageNamed:@"popover-frame"] resizableImageWithCapInsets:UIEdgeInsetsMake(12,12,12,12)];
-    self.view = [UIView new];
+    self.backgroundView = [[DDGPopoverBackgroundView alloc] initWithFrame:self.touchPassthroughView.frame];
+    self.backgroundView.popoverViewController = self;
+    self.backgroundView.touchPassthroughView = self.touchPassthroughView;
+    self.backgroundView.backgroundColor = [UIColor redColor];
+    self.backgroundView.backgroundImage = [[UIImage imageNamed:@"popover-frame"] resizableImageWithCapInsets:UIEdgeInsetsMake(11,11,11,11)];
+    self.view = self.backgroundView;
 }
 
 
@@ -63,7 +96,7 @@
     
     self.view.backgroundColor = [UIColor duckPopoverBackground];
     self.view.opaque = NO;
-    [self.view addSubview:self.backgroundView];
+    //[self.view addSubview:self.backgroundView];
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration {
@@ -114,7 +147,7 @@
     [self.view addSubview:contentView];
     [self.contentViewController didMoveToParentViewController:self];
 
-    self.view.alpha = 0.0;
+    self.view.alpha = 0.5;
     self.view.layer.shouldRasterize = YES;
     self.view.layer.rasterizationScale = [[UIScreen mainScreen] scale];
     
@@ -139,25 +172,25 @@
         arrowDir = UIPopoverArrowDirectionDown;
     }
     contentView.frame = UIEdgeInsetsInsetRect(backgroundRect, self.contentInsets);
+    self.backgroundView.debugRect = contentView.frame;
     contentView.layer.cornerRadius = 4;
     
-    self.backgroundView.frame = backgroundRect; // the popover frame image should be placed around the content
+    self.backgroundView.popoverRect = backgroundRect; // the popover frame image should be placed around the content
     
     CGSize arrowSize = self.upArrowImage.size;
     
     switch(arrowDir) {
         case UIPopoverArrowDirectionDown:
-            self.backgroundView.arrowRect = CGRectMake(originRect.origin.x - backgroundRect.origin.x + (originRect.size.width/2.0) - (arrowSize.width / 2.0),
-                                                       backgroundRect.size.height - arrowSize.height - 1,
+            self.backgroundView.arrowRect = CGRectMake(originRect.origin.x + (originRect.size.width/2.0) - (arrowSize.width / 2.0),
+                                                       originRect.origin.y - arrowSize.height + self.intrusion - 1,
                                                        arrowSize.width,
                                                        arrowSize.height);
             self.backgroundView.arrowImage = [UIImage imageWithCGImage:self.upArrowImage.CGImage scale:self.upArrowImage.scale orientation:UIImageOrientationDownMirrored];
-            NSLog(@"flipping arrow image");
             break;
         case UIPopoverArrowDirectionUp:
         default:
-            self.backgroundView.arrowRect = CGRectMake(originRect.origin.x - backgroundRect.origin.x + (originRect.size.width/2.0) - (arrowSize.width / 2.0),
-                                                       1,
+            self.backgroundView.arrowRect = CGRectMake(originRect.origin.x + (originRect.size.width/2.0) - (arrowSize.width / 2.0),
+                                                       originRect.origin.y + originRect.size.height - self.intrusion,
                                                        arrowSize.width,
                                                        arrowSize.height);
             self.backgroundView.arrowImage = self.upArrowImage;
@@ -216,12 +249,5 @@
                      }];
 
 }
-
-
--(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    [self dismissPopoverAnimated:TRUE];
-}
-
 
 @end

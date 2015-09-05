@@ -78,7 +78,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 -(void)viewDidLoad
 {
     [super viewDidLoad];
-    self.tableView.backgroundColor = [UIColor clearColor];
+    self.tableView.backgroundColor = [UIColor whiteColor];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
     self.tableView.scrollEnabled = FALSE;
 }
@@ -310,7 +310,8 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 -(void)menuButtonSelected:(id)sender
 {
     DDGStoryMenu* menu = [[DDGStoryMenu alloc] initWithStoryCell:self];
-    self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu];
+    self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu
+                                                               andTouchPassthroughView:self.touchPassthroughView];
     [self.menuPopover presentPopoverFromRect:self.menuButton.frame
                                       inView:self
                     permittedArrowDirections:UIPopoverArrowDirectionAny

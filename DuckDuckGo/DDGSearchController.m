@@ -810,7 +810,8 @@ NSString * const emailRegEx =
         
         viewController.preferredContentSize = frame.size;
         
-        DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
+        DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController
+                                                                                    andTouchPassthroughView:self.view];
         popover.delegate = self;
         CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
         [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];

@@ -410,6 +410,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     DDGStoriesLayout* storyLayout = [[DDGStoriesLayout alloc] init];
     storyLayout.storiesController = self;
     UICollectionView* storyView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:storyLayout];
+    storyView.canCancelContentTouches = TRUE;
     storyView.backgroundColor = [UIColor duckStoriesBackground];
     storyView.dataSource = self;
     storyView.delegate = self;
@@ -691,6 +692,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     if (!cell) {
         cell = [DDGStoryCell new];
     }
+    cell.touchPassthroughView = collectionView;
     [self configureCell:cell atIndexPath:indexPath];
 	return cell;
 }

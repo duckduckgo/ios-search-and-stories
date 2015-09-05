@@ -33,6 +33,7 @@ CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 
 @property (nonatomic, strong) DDGStory* story;
 @property (nonatomic, strong) DDGHistoryItem* historyItem;
 @property (nonatomic, weak) id<DDGStoryCellDelegate> storyDelegate;
+@property (nonatomic, strong) UIView* touchPassthroughView;
 
 -(void)toggleSavedState;
 -(void)share;

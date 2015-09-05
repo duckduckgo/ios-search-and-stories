@@ -18,7 +18,8 @@
 @property (nonatomic, strong, readonly) UIViewController *contentViewController;
 @property (nonatomic, weak) id <DDGPopoverViewControllerDelegate> delegate;
 
-- (id)initWithContentViewController:(UIViewController *)viewController;
+- (id)initWithContentViewController:(UIViewController *)viewController
+            andTouchPassthroughView:(UIView*)backgroundView;
 
 - (void)presentPopoverFromRect:(CGRect)originRect
                         inView:(UIView *)originView
