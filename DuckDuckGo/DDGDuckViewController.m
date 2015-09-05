@@ -76,7 +76,7 @@ static NSString *historyCellID = @"HCell";
 -(void)reloadHistory
 {
     self.history = [self.historyProvider pastHistoryItemsForPrefix:self.filterString
-                                                    excludeStories:TRUE
+                                                    onlyQueries:TRUE
                                                   withMaximumCount:self.view.frame.size.height > 600 ? 5 : 3];
 }
 

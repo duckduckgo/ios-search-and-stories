@@ -21,6 +21,7 @@
 #import "DDGPopoverViewController.h"
 #import "DDGDuckViewController.h"
 #import "UIViewController+DDGSearchController.h"
+#import "DDGUtility.h"
 #import "UIFont+DDG.h"
 
 NSString * const emailRegEx =
@@ -1004,8 +1005,9 @@ NSString * const emailRegEx =
 
 - (void)performSearch:(NSString *)query;
 {
-    if (query.length > 0)
+    if (query.length > 0) {
         [self.historyProvider logSearchResultWithTitle:query];
+    }
     
     __weak DDGSearchController *weakSelf = self;
     [self dismissKeyboard:^(BOOL completed) {

@@ -10,6 +10,7 @@
 #import "DDGHistoryProvider.h"
 #import "DDGSettingsViewController.h"
 #import "DDGStory.h"
+#import "DDGUtility.h"
 
 @interface DDGHistoryProvider ()
 @property (nonatomic, strong, readwrite) NSManagedObjectContext *managedObjectContext;
@@ -40,6 +41,9 @@
 - (void)logSearchResultWithTitle:(NSString *)title {
     if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory])
         return;
+    
+    if([DDGUtility looksLikeURL:title]) return; // don't log raw URLs
+    
     NSArray *existingItems = [self itemsWithTitle:title];
     if ([existingItems count] > 0) {
         [self relogHistoryItem:[existingItems objectAtIndex:0]];
@@ -156,11 +160,11 @@
 -(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix
 {
     CGRect f = [[[[UIApplication sharedApplication] windows] firstObject] frame];
-    return [self pastHistoryItemsForPrefix:prefix excludeStories:FALSE withMaximumCount:(f.size.height > 645 ? 5 : 3)];
+    return [self pastHistoryItemsForPrefix:prefix onlyQueries:FALSE withMaximumCount:(f.size.height > 645 ? 5 : 3)];
 }
 
 -(NSArray *)pastHistoryItemsForPrefix:(NSString *)prefix
-                       excludeStories:(BOOL)excludeStories
+                       onlyQueries:(BOOL)onlyQueries
                      withMaximumCount:(NSInteger)maxItems {
     // if we don't track the history, don't bother querying
     if(![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingRecordHistory]) return @[];
@@ -168,9 +172,10 @@
     
     NSMutableArray *history = [[NSMutableArray alloc] init];
     if(prefix.length<=0) {
-        if(excludeStories) {
+        if(onlyQueries) {
             for(DDGHistoryItem *historyItem in [self allHistoryItems]) {
-                if(excludeStories && historyItem.story!=nil) continue;
+                if(onlyQueries && historyItem.story!=nil) continue;
+                if(onlyQueries && [DDGUtility looksLikeURL:historyItem.title]) continue;
                 [history addObject:historyItem];
             }
         } else {
@@ -179,8 +184,9 @@
     } else {
         NSString* lowerPrefix = [prefix lowercaseString];
         for(DDGHistoryItem *historyItem in [self allHistoryItems]) {
-            if(excludeStories && historyItem.story!=nil) continue;
+            if(onlyQueries && historyItem.story!=nil) continue;
             NSString *text = historyItem.title;
+            if(onlyQueries && [DDGUtility looksLikeURL:text]) continue;
             // be case insensitive when comparing search strings (and not URL's)
             if ([[text lowercaseString] hasPrefix:lowerPrefix]			||
                 [text hasPrefix:[@"http://" stringByAppendingString:prefix]]		||

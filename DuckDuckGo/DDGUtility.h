@@ -12,5 +12,6 @@
 
 + (NSString*)agentDDG;
 + (NSURLRequest *)requestWithURL:(NSURL *)URL;
++ (BOOL)looksLikeURL:(NSString*)text;
 
 @end

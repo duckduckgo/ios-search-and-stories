@@ -22,7 +22,7 @@
 
 -(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix;
 -(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix
-                      excludeStories:(BOOL)excludeStories
+                         onlyQueries:(BOOL)onlyQueries
                     withMaximumCount:(NSInteger)maxItems;
 -(NSArray*)allHistoryItems;
 @end
