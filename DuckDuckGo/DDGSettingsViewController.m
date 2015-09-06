@@ -180,7 +180,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     [self addSectionWithTitle:versionInfo footer:nil];
     
-    self.tableView.sectionFooterHeight = 0;
+    self.tableView.sectionFooterHeight = 0.01;
 }
 
 -(IBAction)save:(id)sender {
@@ -338,6 +338,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 {
     return 64.0;
 }
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01f;
+}
+
 
 +(void)configureSettingsCell:(UITableViewCell*)cell
 {
