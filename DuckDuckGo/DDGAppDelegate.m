@@ -21,6 +21,7 @@
 #import "DDGFirstRunViewController.h"
 #import "DDGURLProtocol.h"
 #import "DDGHomeViewController.h"
+#import "UIFont+DDG.h"
 
 @interface DDGAppDelegate ()
 @property (nonatomic, strong) DDGHomeViewController* homeController;
@@ -77,8 +78,11 @@ static void uncaughtExceptionHandler(NSException *exception) {
     //Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
       
-    [[UINavigationBar appearance] setBackgroundColor:[UIColor duckSearchBarBackground]];
-    [[UINavigationBar appearance] setTintColor:[UIColor duckSearchFieldForeground]];
+    [[UINavigationBar appearance] setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
+    [[UINavigationBar appearance] setBarTintColor:[UIColor duckSearchBarBackground]];
+    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];
