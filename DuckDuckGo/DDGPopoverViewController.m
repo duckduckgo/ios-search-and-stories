@@ -35,7 +35,7 @@
     
     // If the hitView is THIS view, return the view that you want to receive the touch instead:
     if (hitView == self) {
-        [self performSelector:@selector(goAwayNow) withObject:nil afterDelay:0.02];
+        [self performSelector:@selector(goAwayNow) withObject:nil afterDelay:0.001];
         return [self.touchPassthroughView hitTest:[self.touchPassthroughView convertPoint:point
                                                                                  fromView:self]
                                         withEvent:event];
