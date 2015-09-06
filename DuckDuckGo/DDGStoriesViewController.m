@@ -329,11 +329,12 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     NSURL *shareURL = story.URL;
     
-    NSString* shareString = [NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS", story.title, shareURL];
+    NSString* shareString = [NSString stringWithFormat:@"%@\n\nvia DuckDuckGo for iOS\n", story.title];
     
     NSArray *items = @[shareString, shareURL];
     
-    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:@[]];
+    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items
+                                                                        applicationActivities:@[  ]];
     if ( [avc respondsToSelector:@selector(popoverPresentationController)] ) {
         // iOS8
         avc.popoverPresentationController.sourceView = storySource;
