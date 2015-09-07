@@ -194,7 +194,7 @@
         pageTitle = self.story.title;
     }
     
-    NSString* shareString = [NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS", pageTitle, shareURL];
+    NSString* shareString = [NSString stringWithFormat:@"%@\n\nvia DuckDuckGo for iOS\n\n", pageTitle];
     
     NSArray *applicationActivities = @[];
     NSArray *items = @[shareString, shareURL];

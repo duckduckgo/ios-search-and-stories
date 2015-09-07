@@ -329,7 +329,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     NSURL *shareURL = story.URL;
     
-    NSString* shareString = [NSString stringWithFormat:@"%@\n\nvia DuckDuckGo for iOS\n", story.title];
+    NSString* shareString = [NSString stringWithFormat:@"%@\n\nvia DuckDuckGo for iOS\n\n", story.title];
     
     NSArray *items = @[shareString, shareURL];
     
