@@ -114,7 +114,7 @@ NSString * const emailRegEx =
     if ([self canPopContentViewController]) {
         NSTimeInterval duration = (animated) ? 0.3 : 0.0;
         
-        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
+        [self setState:DDGSearchControllerStateHome animationDuration:duration];
         [self setSearchBarOrangeButtonImage];
         [self.searchBar.searchField resetField];
         
@@ -379,6 +379,7 @@ NSString * const emailRegEx =
             [_searchHandler searchControllerLeftButtonPressed];
         }
     }
+    [self.searchBar.searchField resignFirstResponder];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString {
@@ -453,8 +454,8 @@ NSString * const emailRegEx =
         self.searchBar.showsLeftButton = NO;
         self.homeController.alternateButtonBar = nil;
         self.searchBar.progressView.percentCompleted = 100;
+        self.searchBar.showsBangButton = FALSE;
         [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
-        
         if (duration > 0) [self.searchBar layoutIfNeeded:duration];
         
         [self clearAddressBar];
@@ -726,6 +727,7 @@ NSString * const emailRegEx =
 -(void)clearAddressBar {
     self.searchBar.searchField.text = @"";
     [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+    [self dismissAutocomplete];
 }
 
 
