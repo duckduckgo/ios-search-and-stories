@@ -76,6 +76,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 -(void)duckGoToTopLevel
 {
     [self.tableView scrollRectToVisible:CGRectZero animated:TRUE];
+    if(self.navigationController.viewControllers.count>1) {
+        [self.navigationController popToRootViewControllerAnimated:TRUE];
+    }
 }
 
 - (void)reenableScrollsToTop {
