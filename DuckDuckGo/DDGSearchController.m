@@ -191,12 +191,6 @@ NSString * const emailRegEx =
     searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	searchField.delegate = self;    
     
-    /*
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
-    */
-    
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     NSOperationQueue *queue = [NSOperationQueue mainQueue];
     __weak typeof(self) weakSelf = self;
@@ -618,8 +612,7 @@ NSString * const emailRegEx =
 // set up and reveal the autocomplete view
 -(void)revealAutocomplete {    
     // save search text in case user cancels input without navigating somewhere
-    if(!oldSearchText)
-        oldSearchText = self.searchBar.searchField.text;
+    if(!oldSearchText) oldSearchText = self.searchBar.searchField.text;
     barUpdated = NO;
     
 //    if(![self isQuery:self.searchBar.searchField.text]) {
@@ -631,7 +624,7 @@ NSString * const emailRegEx =
     
     [self.searchBar setShowsBangButton:YES animated:YES];
             
-    //self.searchBar.showsLeftButton = YES;
+    self.searchBar.showsLeftButton = NO;
     self.searchBar.showsCancelButton = YES;
     [self.searchBar layoutIfNeeded:0.25];
     
@@ -663,7 +656,7 @@ NSString * const emailRegEx =
     [self.bangInfoPopover dismissPopoverAnimated:YES];
     self.bangInfoPopover = nil;
     
-    //self.searchBar.showsLeftButton = YES;
+    [self.searchBar setShowsLeftButton:(self.navController.viewControllers.count > 1) animated:YES];
     self.searchBar.showsBangButton = NO;
     self.searchBar.showsCancelButton = NO;
     [self.searchBar layoutIfNeeded:0.25];
