@@ -26,4 +26,20 @@
     return self;
 }
 
+// this was a failed attempt to get the mail and message sheets to use the UIStatusBarStyleLightContent status bar
+//- (void)presentViewController:(UIViewController *)viewControllerToPresent animated:(BOOL)flag completion:(void (^)(void))completion {
+//    [super presentViewController:viewControllerToPresent animated:flag completion:^{
+//        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+//        if (completion) {
+//            completion();
+//        }
+//    }];
+//}
+//
+//-(UIStatusBarStyle)preferredStatusBarStyle
+//{
+//    return UIStatusBarStyleLightContent;
+//}
+
+
 @end

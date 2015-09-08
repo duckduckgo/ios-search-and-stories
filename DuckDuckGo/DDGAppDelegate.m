@@ -75,15 +75,19 @@ static void uncaughtExceptionHandler(NSException *exception) {
         NSLog(@"%s audioSession setActive:YES error=%@", __PRETTY_FUNCTION__, error);
     
     
-    //Load default settings.
+    // Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
-      
     [[UINavigationBar appearance] setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
     [[UINavigationBar appearance] setBarTintColor:[UIColor duckSearchBarBackground]];
     [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UIBarButtonItem appearance] setTintColor:[UIColor whiteColor]];
+    [[UINavigationBar appearance] setBarStyle:UIBarStyleDefault];
     [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor whiteColor],
                                                             NSFontAttributeName: [UIFont duckFontWithSize:21.0] }];
+    [[UIBarButtonItem appearance] setTintColor:[UIColor whiteColor]];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor whiteColor],
+                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }
+                                                forState:UIControlStateNormal];
+    [[UINavigationBar appearance] setTranslucent:FALSE];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];

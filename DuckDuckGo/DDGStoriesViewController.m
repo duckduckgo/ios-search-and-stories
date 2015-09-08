@@ -339,7 +339,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         // iOS8
         avc.popoverPresentationController.sourceView = storySource;
     }
-
+    
     [self presentViewController:avc animated:YES completion:NULL];
 }
 
@@ -403,6 +403,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 }
 
 
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
 
 #pragma mark - UIViewController
 
