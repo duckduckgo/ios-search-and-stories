@@ -43,7 +43,7 @@
         
         self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
         
-        self.textLabel.font = [UIFont duckFontWithSize:18.0f];
+        self.textLabel.font = [UIFont duckFontWithSize:17.0f];
         self.detailTextLabel.font = [UIFont duckFontWithSize:15.0f];
         
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
