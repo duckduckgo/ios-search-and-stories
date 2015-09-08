@@ -611,9 +611,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     NSInteger changes = [addedStories count] + [removedStories count];
     
     // update the table view with added and removed stories
-    //DLog(@"updating %@ with %lu deleted items and %lu new items", storyMode, removedStories.count, addedStories.count);
-    [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
-
+    //DLog(@"updating %@ with %lu deleted items and %lu new items", self, removedStories.count, addedStories.count);
+    if(removedStories.count!=0 || addedStories.count!=0) {
+        [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+    }
+    
     self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
     
     [self focusOnStory:story animated:YES];
