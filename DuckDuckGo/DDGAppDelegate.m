@@ -47,6 +47,12 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"lastRefreshAttempt"];
+    [defaults removeObjectForKey:@"lastRefreshFavorites"];
+    [defaults removeObjectForKey:@"lastRefreshRecents"];
+    [defaults removeObjectForKey:@"lastRefreshMisc"];
+    
     //Set the global URL cache to SDURLCache, which caches to disk
     SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
                                                          diskCapacity:1024*1024*10 // 10MB disk cache
@@ -71,23 +77,17 @@ static void uncaughtExceptionHandler(NSException *exception) {
         
     //Active your audio session.
     ok = [audioSession setActive:YES error:&error];
-    if(!ok)
-        NSLog(@"%s audioSession setActive:YES error=%@", __PRETTY_FUNCTION__, error);
+    if(!ok) NSLog(@"%s audioSession setActive:YES error=%@", __PRETTY_FUNCTION__, error);
     
     
     // Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
-    [[UINavigationBar appearance] setBackgroundImage:nil forBarMetrics:UIBarMetricsDefault];
-    [[UINavigationBar appearance] setBarTintColor:[UIColor duckSearchBarBackground]];
-    [[UINavigationBar appearance] setTintColor:[UIColor whiteColor]];
-    [[UINavigationBar appearance] setBarStyle:UIBarStyleDefault];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor whiteColor],
+    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor duckRed],
                                                             NSFontAttributeName: [UIFont duckFontWithSize:21.0] }];
-    [[UIBarButtonItem appearance] setTintColor:[UIColor whiteColor]];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor whiteColor],
+    [[UIBarButtonItem appearance] setTintColor:[UIColor duckRed]];
+    [[UIBarButtonItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor duckRed],
                                                             NSFontAttributeName: [UIFont duckFontWithSize:21.0] }
                                                 forState:UIControlStateNormal];
-    [[UINavigationBar appearance] setTranslucent:FALSE];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];
