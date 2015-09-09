@@ -82,12 +82,11 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     // Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
-    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor duckRed],
-                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }];
-    [[UIBarButtonItem appearance] setTintColor:[UIColor duckRed]];
-    [[UIBarButtonItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor duckRed],
-                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }
-                                                forState:UIControlStateNormal];
+//    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor duckRed],
+//                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }];
+//    [[UIBarButtonItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor duckRed],
+//                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }
+//                                                forState:UIControlStateNormal];
     
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];

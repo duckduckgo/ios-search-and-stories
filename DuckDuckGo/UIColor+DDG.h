@@ -36,8 +36,8 @@
 
 + (UIColor*)duckStoriesBackground;
 
-+(UIColor*)duckSettingsLabel;
-+(UIColor*)duckSettingsDetailLabel;
+//+(UIColor*)duckSettingsLabel;
+//+(UIColor*)duckSettingsDetailLabel;
 
 +(UIColor*)duckSegmentedForeground;
 +(UIColor*)duckSegmentedBackground;
@@ -54,9 +54,11 @@
 
 + (UIColor*)duckStoryMenuButtonBackground;
 
-+ (UIColor *)autocompleteDetailColor;
 + (UIColor *)autocompleteHeaderColor;
-+ (UIColor *)autocompleteTextColor;
 + (UIColor *)autocompleteTitleColor;
+
++ (UIColor *)duckListItemTextForeground;
++ (UIColor *)duckListItemDetailForeground;
+
 
 @end

@@ -138,9 +138,9 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
 - (void)setAdorned:(BOOL)adorned
 {
     [self.textLabel setFont:adorned ? [UIFont boldSystemFontOfSize:17.0f] : [UIFont systemFontOfSize:17.0f]];
-    [self.textLabel setTextColor:adorned ? [UIColor autocompleteTitleColor] : [UIColor autocompleteTextColor]];
+    [self.textLabel setTextColor:adorned ? [UIColor autocompleteTitleColor] : [UIColor duckListItemTextForeground]];
     [self.detailTextLabel setFont:adorned ? [UIFont systemFontOfSize:15.0f] : [UIFont systemFontOfSize:15.0f]];
-    [self.detailTextLabel setTextColor:adorned ? [UIColor autocompleteDetailColor] : [UIColor autocompleteTextColor]];
+    [self.detailTextLabel setTextColor:adorned ? [UIColor duckListItemDetailForeground] : [UIColor duckListItemTextForeground]];
 }
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents

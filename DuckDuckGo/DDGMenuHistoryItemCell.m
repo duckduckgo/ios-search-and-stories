@@ -46,6 +46,9 @@
         self.textLabel.font = [UIFont duckFontWithSize:17.0f];
         self.detailTextLabel.font = [UIFont duckFontWithSize:15.0f];
         
+        self.textLabel.textColor = [UIColor duckListItemTextForeground];
+        self.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
+        
         self.imageView.contentMode = UIViewContentModeScaleAspectFill;
         self.imageView.autoresizingMask = UIViewAutoresizingNone;
         
@@ -57,8 +60,6 @@
 -(void)configureForAutocompletion
 {
     self.autocompleteMode = TRUE;
-    self.textLabel.textColor = [UIColor autocompleteTextColor];
-    self.detailTextLabel.textColor = [UIColor autocompleteDetailColor];
 }
 
 

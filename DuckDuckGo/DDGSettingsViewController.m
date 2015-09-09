@@ -75,10 +75,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 -(void)duckGoToTopLevel
 {
-    [self.tableView scrollRectToVisible:CGRectZero animated:TRUE];
     if(self.navigationController.viewControllers.count>1) {
         [self.navigationController popToRootViewControllerAnimated:TRUE];
     }
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]
+                          atScrollPosition:UITableViewScrollPositionTop animated:TRUE];
 }
 
 - (void)reenableScrollsToTop {
@@ -359,10 +360,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 +(void)configureSettingsCell:(UITableViewCell*)cell
 {
     cell.textLabel.font = [UIFont duckFontWithSize:17.0];
-    cell.textLabel.textColor = UIColor.duckSettingsLabel;
+    cell.textLabel.textColor = [UIColor duckListItemTextForeground];
     cell.textLabel.textAlignment = NSTextAlignmentNatural;
     cell.detailTextLabel.font = [UIFont duckFontWithSize:17.0];
-    cell.detailTextLabel.textColor = UIColor.duckSettingsDetailLabel;
+    cell.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
     cell.tintColor = UIColor.duckRed;
 }
 

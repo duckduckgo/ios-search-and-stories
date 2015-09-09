@@ -85,16 +85,17 @@
     return UIColorFromRGB(0xEEEEEE);
 }
 
-+(UIColor*)duckSettingsLabel
-{
-    return [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
-}
-
-+(UIColor*)duckSettingsDetailLabel
-{
-    return [UIColor colorWithRed:137.0f/255.0f green:137.0f/255.0f blue:137.0f/255.0f alpha:1.0f];
-}
-
+//+(UIColor*)duckSettingsLabel
+//{
+//    //return [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
+//    return UIColorFromRGB(0x222222);
+//}
+//
+//+(UIColor*)duckSettingsDetailLabel
+//{
+//    return [UIColor colorWithRed:137.0f/255.0f green:137.0f/255.0f blue:137.0f/255.0f alpha:1.0f];
+//}
+//
 
 + (UIColor*)duckSegmentBarBackground { return [UIColor duckSearchBarBackground]; }
 + (UIColor*)duckSegmentBarForeground { return [UIColor whiteColor]; }
@@ -161,21 +162,23 @@
     return [UIColor clearColor];
 }
 
-+ (UIColor *)autocompleteDetailColor
-{
-    return UIColorFromRGB(0x999999);
-}
-
 + (UIColor *)autocompleteHeaderColor
 {
     return [UIColor clearColor];
-    //return RGBA(225.0f, 225.0f, 225.0f, 1.0f);
 }
 
-+ (UIColor *)autocompleteTextColor
+
+
++ (UIColor *)duckListItemTextForeground
 {
     return UIColorFromRGB(0x222222);
 }
++ (UIColor *)duckListItemDetailForeground
+{
+    //return UIColorFromRGB(0x999999);
+    return [UIColor colorWithRed:137.0f/255.0f green:137.0f/255.0f blue:137.0f/255.0f alpha:1.0f];
+}
+
 
 + (UIColor *)autocompleteTitleColor
 {

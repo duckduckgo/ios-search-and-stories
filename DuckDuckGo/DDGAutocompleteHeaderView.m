@@ -27,7 +27,7 @@
         UILabel *label = [[UILabel alloc] initWithFrame:UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(0, 8.0, 0, 0))];
         label.backgroundColor = [UIColor clearColor];
         label.opaque = NO;
-        label.textColor = [UIColor autocompleteTextColor];
+        label.textColor = [UIColor autocompleteTitleColor];
         label.font = [UIFont duckFontWithSize:13.0f];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
