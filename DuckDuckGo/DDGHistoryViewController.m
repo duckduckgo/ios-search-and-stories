@@ -218,12 +218,13 @@
             story.readValue = NO;
         }
         [historyItem.managedObjectContext deleteObject:historyItem];
+        [self.managedObjectContext save:nil];
     }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return [[self.fetchedResultsController sections] count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
