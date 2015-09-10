@@ -117,6 +117,7 @@ NSString * const emailRegEx =
         [self setState:DDGSearchControllerStateHome animationDuration:duration];
         [self setSearchBarOrangeButtonImage];
         [self.searchBar.searchField resetField];
+        [self setProgress:1.0f animated:FALSE];
         
         [self.navController popViewControllerAnimated:animated];
     }
@@ -509,7 +510,11 @@ NSString * const emailRegEx =
 }
 
 -(void)setProgress:(CGFloat)progress {
-    self.searchBar.progressView.percentCompleted = (NSUInteger)(progress * 100);
+    [self setProgress:progress animated:TRUE];
+}
+
+-(void)setProgress:(CGFloat)progress animated:(BOOL)animated {
+    [self.searchBar.progressView setPercentCompleted:((NSUInteger)(progress * 100)) animated:animated];
 }
 
 #pragma mark - Helper methods
@@ -603,6 +608,7 @@ NSString * const emailRegEx =
         [self updateToolbars:animated];
         if(viewController==self.rootViewInNavigator) {
             [self.searchBar.searchField resetField];
+            [self setProgress:1.0f animated:FALSE];
         }
     }
 }
@@ -614,10 +620,6 @@ NSString * const emailRegEx =
     // save search text in case user cancels input without navigating somewhere
     if(!oldSearchText) oldSearchText = self.searchBar.searchField.text;
     barUpdated = NO;
-    
-//    if(![self isQuery:self.searchBar.searchField.text]) {
-//        [self clearAddressBar];
-//    }
     
     [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
     [self revealBackground:YES animated:YES];

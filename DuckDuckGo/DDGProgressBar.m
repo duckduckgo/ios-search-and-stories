@@ -89,10 +89,15 @@
 
 -(void)setPercentCompleted:(NSUInteger)percentCompleted
 {
+    [self setPercentCompleted:percentCompleted animated:TRUE];
+}
+
+-(void)setPercentCompleted:(NSUInteger)percentCompleted animated:(BOOL)animated
+{
     if(_percentCompleted!=percentCompleted) {
         BOOL didIncrease = percentCompleted > _percentCompleted;
         _percentCompleted = percentCompleted;
-        [self updateProgressWithDuration: didIncrease ? 0.25 : 0];
+        [self updateProgressWithDuration: (didIncrease && animated) ? 0.25 : 0];
     }
 }
 

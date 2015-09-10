@@ -12,4 +12,6 @@
 
 @property (assign) NSUInteger percentCompleted;
 
+-(void)setPercentCompleted:(NSUInteger)percentCompleted animated:(BOOL)animated;
+
 @end
