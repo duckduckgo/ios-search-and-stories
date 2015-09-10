@@ -667,10 +667,14 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         UIImage *decompressedImage = [self.decompressedImages objectForKey:story.cacheKey];
         
         if (nil == decompressedImage) {
+            NSIndexPath* indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (story.isImageDownloaded) {
-                [self decompressAndDisplayImageForStoryAtIndexPath:[NSIndexPath indexPathForItem:i inSection:0]];
+                [self decompressAndDisplayImageForStoryAtIndexPath:indexPath];
             } else  {
-                [self.storyFetcher downloadImageForStory:story];
+                __weak DDGStoriesViewController *weakSelf = self;
+                [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {
+                    [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
+                }];
             }
         }
     }
@@ -742,8 +746,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     NSString *cacheKey = story.cacheKey;
     
-    if ([self.enqueuedDecompressionOperations containsObject:cacheKey])
+    if ([self.enqueuedDecompressionOperations containsObject:cacheKey]) {
+        // this image is already in the queue for decompression
         return;
+    }
     
     __weak DDGStoriesViewController *weakSelf = self;
     
@@ -765,27 +771,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
             UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-            
-            //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
-            /*
-            if (!story.blurredImage) {
-                CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
-                
-                CGAffineTransform transform = CGAffineTransformIdentity;
-                CIFilter *clampFilter = [CIFilter filterWithName:@"CIAffineClamp"];
-                [clampFilter setValue:imageToBlur forKey:@"inputImage"];
-                [clampFilter setValue:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
-                
-                CIFilter *blurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
-                [blurFilter setValue:clampFilter.outputImage forKey:@"inputImage"];
-                [blurFilter setValue:@10 forKey:@"inputRadius"];
-                
-                CGImageRef filteredImage = [_blurContext createCGImage:blurFilter.outputImage fromRect:[imageToBlur extent]];
-                story.blurredImage = [UIImage imageWithCGImage:filteredImage];
-                CGImageRelease(filteredImage);
-            }
-             */
-            
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [weakSelf.decompressedImages setObject:decompressed forKey:cacheKey];
             }];
@@ -1073,7 +1058,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         } else {
             __weak typeof(self) weakSelf = self;
             [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {
-                [weakSelf configureCell:cell atIndexPath:indexPath];
+                [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
             }];
         }
     }
