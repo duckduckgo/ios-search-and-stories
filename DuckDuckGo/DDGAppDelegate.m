@@ -88,7 +88,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
 //                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }
 //                                                forState:UIControlStateNormal];
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    //self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window setBackgroundColor:[UIColor duckNoContentColor]];
     
     // main view controller
