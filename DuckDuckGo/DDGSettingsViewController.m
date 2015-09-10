@@ -37,7 +37,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     NSDictionary *defaults = @{
         DDGSettingRecordHistory: @(YES),
         DDGSettingQuackOnRefresh: @(NO),
-		DDGSettingRegion: @"us-en",
+		DDGSettingRegion: @"wt-wt",
 		DDGSettingAutocomplete: @(YES),
 		DDGSettingStoriesReadabilityMode: @(DDGReadabilityModeOnIfAvailable),
         DDGSettingHomeView: DDGSettingHomeViewTypeStories,
