@@ -83,10 +83,10 @@
         [self.view addSubview:self.noContentView.view];
         
         self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-recents"];
-        self.noContentView.noContentTitle.text = NSLocalizedString(@"No Recents",
-                                                                   @"title for the view shown when no recent searches/urls are found");
-        self.noContentView.noContentSubtitle.text = NSLocalizedString(@"Browse stories and search the web, and your recents will be shown here.",
-                                                                      @"details text for the view shown when no recent searches/urls are found");
+        self.noContentView.contentTitle = NSLocalizedString(@"No Recents",
+                                                            @"title for the view shown when no recent searches/urls are found");
+        self.noContentView.contentSubtitle = NSLocalizedString(@"Browse stories and search the web, and your recents will be shown here.",
+                                                               @"details text for the view shown when no recent searches/urls are found");
         self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         self.noContentView.view.frame = self.view.bounds;
     }

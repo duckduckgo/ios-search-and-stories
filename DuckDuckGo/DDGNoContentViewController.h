@@ -10,8 +10,9 @@
 
 @interface DDGNoContentViewController : UIViewController
 
-@property (nonatomic, weak) IBOutlet UILabel* noContentTitle;
-@property (nonatomic, weak) IBOutlet UILabel* noContentSubtitle;
+@property (nonatomic, strong) NSString* contentTitle;
+@property (nonatomic, strong) NSString* contentSubtitle;
+
 @property (nonatomic, weak) IBOutlet UIImageView* noContentImageview;
 
 

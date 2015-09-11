@@ -52,17 +52,6 @@
     
     self.searchIcon = [UIImage imageNamed:@"search_icon"];
     
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
-    
-    // we need to offset the triforce image by 1px down to compensate for the shadow in the image
-    float topInset = 1.0f;
-    button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
-    
-    [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-
     self.doneBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"Done", @"Menu button label: Done")
                                                               style:UIBarButtonItemStyleBordered
                                                              target:self
@@ -77,9 +66,9 @@
     [self.view addSubview:self.noContentView.view];
     
     self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
-    self.noContentView.noContentTitle.text = NSLocalizedString(@"No Favorites",
+    self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
                                                                @"title for the view shown when no favorite searches/urls are found");
-    self.noContentView.noContentSubtitle.text = NSLocalizedString(@"Add searches to your favorites, and they will be shown here.",
+    self.noContentView.contentSubtitle = NSLocalizedString(@"Add searches to your favorites, and they will be shown here.",
                                                                   @"details text for the view shown when no favorite searches/urls are found");
     self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.noContentView.view.frame = self.view.bounds;

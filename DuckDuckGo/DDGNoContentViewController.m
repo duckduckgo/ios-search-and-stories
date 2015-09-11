@@ -10,6 +10,10 @@
 
 @interface DDGNoContentViewController ()
 
+@property (nonatomic, weak) IBOutlet UILabel* noContentTitle;
+@property (nonatomic, weak) IBOutlet UILabel* noContentSubtitle;
+
+
 @end
 
 @implementation DDGNoContentViewController
@@ -25,9 +29,39 @@
 }
 
 
+-(NSString*)contentTitle {
+    return self.noContentSubtitle.text;
+}
+
+-(void)setContentTitle:(NSString *)labelText
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineSpacing:4];
+    [paragraphStyle setAlignment:NSTextAlignmentCenter];
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [labelText length])];
+    self.noContentSubtitle.attributedText = attributedString;
+}
+
+
+-(NSString*)contentSubtitle {
+    return self.noContentSubtitle.text;
+}
+
+-(void)setContentSubtitle:(NSString *)labelText
+{
+    NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
+    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+    [paragraphStyle setLineSpacing:4];
+    [paragraphStyle setAlignment:NSTextAlignmentCenter];
+    [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [labelText length])];
+    self.noContentSubtitle.attributedText = attributedString;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     // Do any additional setup after loading the view from its nib.
 }
 
