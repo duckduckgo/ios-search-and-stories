@@ -312,6 +312,7 @@
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		8464976D1B3D3FE600BAF256 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */; };
 		846D6B971BA35CBA00EB16BC /* DDGTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */; };
+		846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */; };
 		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
 		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
 		84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */; };
@@ -732,6 +733,8 @@
 		8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGHomeViewController.xib; sourceTree = "<group>"; };
 		846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGTabViewController.xib; sourceTree = "<group>"; };
+		846D6B981BA4BE7A00EB16BC /* DDGChooseHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGChooseHomeViewController.h; sourceTree = "<group>"; };
+		846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGChooseHomeViewController.m; sourceTree = "<group>"; };
 		84A640A01B6FBCB300643A39 /* DDGUnderViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewControllerCell.h; sourceTree = "<group>"; };
 		84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewControllerCell.m; sourceTree = "<group>"; };
 		84A640A31B72DC6C00643A39 /* Stories v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Stories v3.xcdatamodel"; sourceTree = "<group>"; };
@@ -980,6 +983,8 @@
 				4C2E001115B87C700096C994 /* DDGChooseSourcesViewController.m */,
 				8398DAC516419FFD00A559C3 /* DDGChooseRegionViewController.h */,
 				8398DAC616419FFD00A559C3 /* DDGChooseRegionViewController.m */,
+				846D6B981BA4BE7A00EB16BC /* DDGChooseHomeViewController.h */,
+				846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */,
 				8398DACA1641DA9F00A559C3 /* DDGRegionProvider.h */,
 				8398DACB1641DA9F00A559C3 /* DDGRegionProvider.m */,
 				5B3896F21740F367009582C8 /* DDGReadabilitySettingViewController.h */,
@@ -1829,6 +1834,7 @@
 				7BFE72171A0B83C00024C53F /* DDGTableView.m in Sources */,
 				7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */,
 				5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */,
+				846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */,
 				5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */,
 				5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */,
 				5BA321BF16C904BA0066BCB0 /* AFJSONRequestOperation.m in Sources */,

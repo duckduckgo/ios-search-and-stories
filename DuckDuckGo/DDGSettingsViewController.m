@@ -9,6 +9,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGChooseSourcesViewController.h"
 #import "DDGChooseRegionViewController.h"
+#import "DDGChooseHomeViewController.h"
 #import "DDGActivityViewController.h"
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
@@ -69,6 +70,17 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
             [(IGFormButton *)element setDetailTitle:regionTitle];
         }
     }
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
+    NSArray *homeItems = [self elementsForKey:DDGSettingHomeView];
+    NSString *homeTitle = [DDGChooseHomeViewController homeViewNameForID:homeViewMode];
+    for (IGFormElement *element in homeItems) {
+        if ([element isKindOfClass:[IGFormButton class]]) {
+            [(IGFormButton *)element setDetailTitle:homeTitle];
+        }
+    }
+    
     [self.tableView reloadData];
 }
 
@@ -119,13 +131,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    [self addSectionWithTitle:@"Home" footer:nil];
-    
-    NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
-    [self addRadioOptionWithTitle:@"Search Only" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
-    [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
-    [self addRadioOptionWithTitle:@"Favorites" value:DDGSettingHomeViewTypeSaved key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];
-    [self addRadioOptionWithTitle:@"Recent" value:DDGSettingHomeViewTypeRecents key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeRecents]];
+    [self addSectionWithTitle:@"General" footer:nil];
+    [self addButton:@"Home" forKey:DDGSettingHomeView detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+        DDGChooseHomeViewController *hvc = [[DDGChooseHomeViewController alloc] initWithDefaults];
+        [weakSelf.searchControllerDDG pushContentViewController:hvc animated:YES];
+    }];
     
     [self addSectionWithTitle:@"Stories" footer:nil];
     [self addButton:@"Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
