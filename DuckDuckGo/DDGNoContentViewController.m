@@ -37,10 +37,10 @@
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setLineSpacing:4];
+    [paragraphStyle setLineSpacing:3];
     [paragraphStyle setAlignment:NSTextAlignmentCenter];
     [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [labelText length])];
-    self.noContentSubtitle.attributedText = attributedString;
+    self.noContentTitle.attributedText = attributedString;
 }
 
 
@@ -52,7 +52,7 @@
 {
     NSMutableAttributedString *attributedString = [[NSMutableAttributedString alloc] initWithString:labelText];
     NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    [paragraphStyle setLineSpacing:4];
+    [paragraphStyle setLineSpacing:3];
     [paragraphStyle setAlignment:NSTextAlignmentCenter];
     [attributedString addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0, [labelText length])];
     self.noContentSubtitle.attributedText = attributedString;

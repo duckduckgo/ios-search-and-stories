@@ -39,10 +39,10 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Browse stories and search the web, and your recents will be shown here." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Jb0-ff-AUx">
-                    <rect key="frame" x="196" y="195.5" width="207" height="59.5"/>
+                    <rect key="frame" x="196" y="185" width="207" height="70"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="60" id="0UN-PP-rVp"/>
+                        <constraint firstAttribute="height" constant="70" id="0UN-PP-rVp"/>
                         <constraint firstAttribute="width" constant="207" id="7Wu-Jr-icF"/>
                     </constraints>
                     <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="17"/>
@@ -51,9 +51,9 @@
                     <size key="shadowOffset" width="0.0" height="0.0"/>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="Jb0-ff-AUx" firstAttribute="top" secondItem="eSA-2j-bFK" secondAttribute="bottom" constant="23" id="9h1-No-bey"/>
+                <constraint firstItem="Jb0-ff-AUx" firstAttribute="top" secondItem="eSA-2j-bFK" secondAttribute="bottom" constant="13" id="9h1-No-bey"/>
                 <constraint firstItem="eSA-2j-bFK" firstAttribute="top" secondItem="3b1-sM-snO" secondAttribute="bottom" constant="22" id="aUe-kc-WCq"/>
                 <constraint firstAttribute="centerX" secondItem="3b1-sM-snO" secondAttribute="centerX" id="cMd-5f-CYq"/>
                 <constraint firstAttribute="centerX" secondItem="eSA-2j-bFK" secondAttribute="centerX" id="g1U-j4-3yh"/>
