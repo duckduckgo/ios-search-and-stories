@@ -9,8 +9,6 @@
 #import "DDGFaviconButton.h"
 #import "DDGStoryCell.h"
 #import "DDGStoryFeed.h"
-#import "UIFont+DDG.h"
-#import "UIColor+DDG.h"
 #import "DDGPopoverViewController.h"
 #import "SVProgressHUD.h"
 #import "DDGActivityItemProvider.h"

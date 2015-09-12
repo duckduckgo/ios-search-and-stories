@@ -10,7 +10,6 @@
 #import "DDGChooseSourcesViewController.h"
 #import "DDGChooseRegionViewController.h"
 #import "DDGActivityViewController.h"
-#import "UIFont+DDG.h"
 #import "SVProgressHUD.h"
 #import <sys/utsname.h>
 #import "DDGHistoryProvider.h"

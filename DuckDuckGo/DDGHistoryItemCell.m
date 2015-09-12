@@ -8,8 +8,6 @@
 
 #import "DDGHistoryItemCell.h"
 #import "DDGDeleteButton.h"
-#import "UIColor+DDG.h"
-#import "UIFont+DDG.h"
 
 @interface DDGHistoryItemCell ()
 //@property (nonatomic, weak, readwrite) UIButton *deleteButton;

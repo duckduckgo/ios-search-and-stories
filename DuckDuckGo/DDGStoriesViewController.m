@@ -435,10 +435,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     [self.view addSubview:self.noContentView.view];
     
     self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
-    self.noContentView.noContentTitle.text = NSLocalizedString(@"No Favorites",
-                                                               @"title for the view shown when no favorite searches/urls are found");
-    self.noContentView.noContentSubtitle.text = NSLocalizedString(@"Add stories to your favorites, and they will be shown here.",
-                                                                  @"details text for the view shown when no favorite stories are found");
+    self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
+                                                        @"title for the view shown when no favorite searches/urls are found");
+    self.noContentView.contentSubtitle = NSLocalizedString(@"Add stories to your favorites, and they will be shown here.",
+                                                           @"details text for the view shown when no favorite stories are found");
     self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.noContentView.view.frame = self.view.bounds;
     

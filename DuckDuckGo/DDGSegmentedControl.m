@@ -7,8 +7,6 @@
 //
 
 #import "DDGSegmentedControl.h"
-#import "UIColor+DDG.h"
-#import "UIFont+DDG.h"
 
 
 @interface DDGSegmentedControl () {
@@ -25,27 +23,42 @@
 
 @implementation DDGSegmentedControl
 
+-(id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super initWithCoder:aDecoder];
+    if(self) {
+        [self configure];
+    }
+    return self;
+}
+
 
 -(id)initWithFrame:(CGRect)frame
 {
     self = [super initWithFrame:frame];
     if(self) {
-        self.layer.cornerRadius = 4.0f;
-        self.layer.borderColor = [UIColor whiteColor].CGColor;
-        self.layer.borderWidth = 1.0f;
-        self.selectedView = [[UIView alloc] initWithFrame:frame];
-        self.selectedView.layer.cornerRadius = 4.0f;
-        self.selectedView.backgroundColor = [UIColor duckSegmentedForeground];
-        self.buttonItems = [NSMutableArray new];
-        self.buttons = [NSMutableArray new];
-        self.selectedSegmentIndex = 0;
-
-        self.foregroundColor = [UIColor whiteColor];
-        self.backgroundColor = [UIColor duckSearchBarBackground];
-        [self addSubview:self.selectedView];
-        [self setNeedsLayout];
+        [self configure];
     }
     return self;
+}
+
+-(void)configure
+{
+    self.layer.cornerRadius = 4.0f;
+    self.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.layer.borderWidth = 1.0f;
+    self.selectedView = [[UIView alloc] init];
+    self.selectedView.layer.cornerRadius = 4.0f;
+    self.selectedView.backgroundColor = [UIColor duckSegmentedForeground];
+    self.buttonItems = [NSMutableArray new];
+    self.buttons = [NSMutableArray new];
+    self.selectedSegmentIndex = 0;
+    
+    self.foregroundColor = [UIColor whiteColor];
+    self.backgroundColor = [UIColor duckSearchBarBackground];
+    [self addSubview:self.selectedView];
+    [self setNeedsLayout];
+
 }
 
 - (void)addSegment:(UIBarButtonItem*)buttonItem

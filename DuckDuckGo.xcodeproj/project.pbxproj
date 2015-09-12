@@ -311,6 +311,7 @@
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		8464976D1B3D3FE600BAF256 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */; };
+		846D6B971BA35CBA00EB16BC /* DDGTabViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */; };
 		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
 		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
 		84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */; };
@@ -730,6 +731,7 @@
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
 		8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGHomeViewController.xib; sourceTree = "<group>"; };
+		846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGTabViewController.xib; sourceTree = "<group>"; };
 		84A640A01B6FBCB300643A39 /* DDGUnderViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewControllerCell.h; sourceTree = "<group>"; };
 		84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewControllerCell.m; sourceTree = "<group>"; };
 		84A640A31B72DC6C00643A39 /* Stories v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Stories v3.xcdatamodel"; sourceTree = "<group>"; };
@@ -1439,6 +1441,7 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
+				846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
@@ -1621,6 +1624,7 @@
 				83864C47163838AD00F66AAA /* icon_settings.png in Resources */,
 				83864C4B1638398F00F66AAA /* icon_home@2x.png in Resources */,
 				83864C4C1638398F00F66AAA /* icon_saved-pages@2x.png in Resources */,
+				846D6B971BA35CBA00EB16BC /* DDGTabViewController.xib in Resources */,
 				83864C4D1638398F00F66AAA /* icon_settings@2x.png in Resources */,
 				83864C541638421000F66AAA /* icon_home_selected.png in Resources */,
 				83864C551638421000F66AAA /* icon_home_selected@2x.png in Resources */,

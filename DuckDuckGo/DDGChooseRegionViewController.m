@@ -30,20 +30,8 @@
 
 - (void)configure
 {
-	self.title = @"Region";
-
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
+    self.title = NSLocalizedString(@"Region", @"Title or label for the region setting");
     
-    // we need to offset the triforce image by 1px down to compensate for the shadow in the image
-    float topInset = 1.0f;
-    button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
-    [button addTarget:self action:@selector(saveAndExit) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-	
-	// force 1st time through for iOS < 6.0
-	[self viewWillLayoutSubviews];
-
     for(NSDictionary *regionSet in [DDGRegionProvider shared].regions) {
         for(NSString *regionKey in regionSet) {
             NSString *value = [[DDGRegionProvider shared] titleForRegion:regionKey];
@@ -59,16 +47,6 @@
 }
 
 #pragma mark - Rotation
-
-- (void)viewWillLayoutSubviews
-{
-	CGPoint center = self.navigationItem.leftBarButtonItem.customView.center;
-	if (UIInterfaceOrientationIsLandscape(self.interfaceOrientation) && ([[UIDevice currentDevice] userInterfaceIdiom]==UIUserInterfaceIdiomPhone))
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 26, 21);
-	else
-		self.navigationItem.leftBarButtonItem.customView.frame = CGRectMake(0, 0, 38, 31);
-	self.navigationItem.leftBarButtonItem.customView.center = center;
-}
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations

@@ -13,7 +13,6 @@
 #import "DDGSearchSuggestionsProvider.h"
 #import "DDGAutocompleteCell.h"
 #import "DDGMenuHistoryItemCell.h"
-#import "UIColor+DDG.h"
 #import "AFNetworking.h"
 
 #import "DDGBookmarksViewController.h"

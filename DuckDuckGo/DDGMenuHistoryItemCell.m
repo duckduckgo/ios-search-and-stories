@@ -8,8 +8,6 @@
 
 
 #import "DDGMenuHistoryItemCell.h"
-#import "UIFont+DDG.h"
-#import "UIColor+DDG.h"
 
 @interface DDGMenuHistoryItemCell () {
     BOOL _isLastItem;

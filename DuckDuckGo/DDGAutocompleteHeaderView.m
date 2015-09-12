@@ -7,7 +7,6 @@
 //
 
 #import "DDGAutocompleteHeaderView.h"
-#import "UIFont+DDG.h"
 
 @interface DDGAutocompleteHeaderView ()
 

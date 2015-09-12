@@ -72,8 +72,10 @@
     _showsCancelButton = show;
     if(show) {
         self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 13);
+        self.cancelButton.alpha = 1;
     } else {
         self.cancelButtonXConstraint.constant = 0;
+        self.cancelButton.alpha = 0;
     }
     [self layoutIfNeeded:((animated) ? 0.2 : 0.0)];
 }
@@ -82,8 +84,10 @@
     _showsLeftButton = show;
     if(show) {
         self.leftButtonXConstraint.constant = self.leftButton.frame.size.width + 10;
+        self.leftButton.alpha = 1;
     } else {
         self.leftButtonXConstraint.constant = 0;
+        self.leftButton.alpha = 0;
     }
     [self layoutIfNeeded:((animated) ? 0.2 : 0.0)];
 }

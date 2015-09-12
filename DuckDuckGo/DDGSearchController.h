@@ -31,6 +31,7 @@ typedef enum {
 }
 
 @property (nonatomic, weak) IBOutlet DDGSearchBar *searchBar;
+@property (nonatomic, weak) IBOutlet UIView *searchBarWrapper;
 @property (nonatomic, weak) IBOutlet UIView *background;
 @property (nonatomic, weak) IBOutlet UIView *bangInfo;
 @property (weak, nonatomic) IBOutlet UITextView *bangTextView;

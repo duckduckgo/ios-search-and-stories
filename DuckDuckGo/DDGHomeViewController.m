@@ -16,7 +16,6 @@
 #import "DDGSettingsViewController.h"
 #import "DDGDuckViewController.h"
 #import "DDGBookmarksViewController.h"
-#import "UIColor+DDG.h"
 #include "DDGSearchHandler.h"
 #import "UIViewController+DDGSearchController.h"
 
@@ -179,7 +178,6 @@
         self.searchTopController = [[DDGSearchController alloc] initWithHomeController:self
                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.searchTopController.state = DDGSearchControllerStateHome;
-        self.searchTopController.shouldPushSearchHandlerEvents = YES;
         self.searchController = [[DDGDuckViewController alloc] initWithSearchController:self.searchTopController
                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         [self.searchTopController pushContentViewController:self.searchController animated:NO];
@@ -192,7 +190,6 @@
     { // configure the stories view controller
         self.storiesTopController = [[DDGSearchController alloc] initWithHomeController:self
                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        self.storiesTopController.shouldPushSearchHandlerEvents = YES;
         self.storiesController = [[DDGStoriesViewController alloc] initWithSearchHandler:self.storiesTopController
                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         //self.storiesController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
@@ -218,31 +215,15 @@
         bookmarks.searchHandler = self.favoritesTopController;
         
         self.favoritesTopController.state = DDGSearchControllerStateHome;
-        self.favoritesTopController.shouldPushSearchHandlerEvents = YES;
-        
         
         DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.favoritesTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         stories.storiesMode = DDGStoriesListModeFavorites;
         stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
         
-        self.favoritesTabViewController = [[DDGTabViewController alloc] initWithViewControllers:@[stories, bookmarks]];
-        self.favoritesTabViewController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
-        self.favoritesTabViewController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-        self.favoritesTabViewController.controlView.backgroundColor = [UIColor duckSearchBarBackground];
-        
-        CGRect controlBounds = self.favoritesTabViewController.controlView.bounds;
-        CGSize segmentSize = self.favoritesTabViewController.segmentedControl.frame.size;
-        segmentSize.width = controlBounds.size.width - 16.0;
-        CGRect controlRect = CGRectMake(controlBounds.origin.x + ((controlBounds.size.width - segmentSize.width) / 2.0),
-                                        3.0,
-                                        segmentSize.width,
-                                        segmentSize.height);
-        self.favoritesTabViewController.segmentedControl.frame = CGRectIntegral(controlRect);
-        self.favoritesTabViewController.segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-        
-        [self.favoritesTabViewController.controlView addSubview:self.favoritesTabViewController.segmentedControl];
-        self.favoritesTabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
+        self.favoritesTabViewController = [[DDGTabViewController alloc] initWithNibName:@"DDGTabViewController" bundle:nil];
+        self.favoritesTabViewController.viewControllers = @[stories, bookmarks];
+        self.favoritesTabViewController.segmentAlignmentView = self.favoritesTopController.searchBar;
         self.favoritesTabViewController.delegate = self;
         
         [self.favoritesTopController pushContentViewController:self.favoritesTabViewController animated:NO];
@@ -250,6 +231,8 @@
                                                           image:[[UIImage imageNamed:@"Tab-Favorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                                                   selectedImage:[[UIImage imageNamed:@"Tab-Favorites-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         [controllers addObject:self.favoritesTopController];
+        
+        self.favoritesTabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
     }
     
     { // configure the recents/history view controller
@@ -261,30 +244,15 @@
         history.title = NSLocalizedString(@"Recent Searches", @"segmented button option and table header: Recent Searches");
         
         self.recentsTopController.state = DDGSearchControllerStateHome;
-        self.recentsTopController.shouldPushSearchHandlerEvents = YES;
         
         DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.recentsTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         stories.storiesMode = DDGStoriesListModeRecents;
         stories.title = NSLocalizedString(@"Recent Stories", @"Table section header title");
         
-        self.recentsController = [[DDGTabViewController alloc] initWithViewControllers:@[stories, history]];
-        self.recentsController.controlViewPosition = DDGTabViewControllerControlViewPositionTop;
-        self.recentsController.controlView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
-        self.recentsController.controlView.backgroundColor = [UIColor duckSearchBarBackground];
-        
-        CGRect controlBounds = self.recentsController.controlView.bounds;
-        CGSize segmentSize = self.recentsController.segmentedControl.frame.size;
-        segmentSize.width = controlBounds.size.width - 16.0;
-        CGRect controlRect = CGRectMake(controlBounds.origin.x + ((controlBounds.size.width - segmentSize.width) / 2.0),
-                                        3.0,
-                                        segmentSize.width,
-                                        segmentSize.height);
-        self.recentsController.segmentedControl.frame = CGRectIntegral(controlRect);
-        self.recentsController.segmentedControl.autoresizingMask = (UIViewAutoresizingFlexibleWidth);
-        
-        [self.recentsController.controlView addSubview:self.recentsController.segmentedControl];
-        self.recentsController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
+        self.recentsController = [[DDGTabViewController alloc] initWithNibName:@"DDGTabViewController" bundle:nil];
+        self.recentsController.viewControllers = @[ stories, history];
+        self.recentsController.segmentAlignmentView = self.recentsTopController.searchBar;
         self.recentsController.delegate = self;
         
         [self.recentsTopController pushContentViewController:self.recentsController animated:NO];
@@ -292,6 +260,8 @@
                                                                              image:[[UIImage imageNamed:@"Tab-Recents"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                                                                      selectedImage:[[UIImage imageNamed:@"Tab-Recents-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         [controllers addObject:self.recentsTopController];
+        
+        self.recentsController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
     }
     
     
@@ -303,9 +273,8 @@
         self.settingsController.managedObjectContext = [DDGAppDelegate sharedManagedObjectContext];
         [self.settingsTopController pushContentViewController:self.settingsController animated:NO];
         self.settingsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                          image:[[UIImage imageNamed:@"Tab-Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                  selectedImage:[[UIImage imageNamed:@"Tab-Settings-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-
+                                                                              image:[[UIImage imageNamed:@"Tab-Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+                                                                      selectedImage:[[UIImage imageNamed:@"Tab-Settings-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         [controllers addObject:self.settingsTopController];
     }
     

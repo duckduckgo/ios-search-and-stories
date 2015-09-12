@@ -21,7 +21,6 @@
 #import "DDGFirstRunViewController.h"
 #import "DDGURLProtocol.h"
 #import "DDGHomeViewController.h"
-#import "UIFont+DDG.h"
 
 @interface DDGAppDelegate ()
 @property (nonatomic, strong) DDGHomeViewController* homeController;

@@ -7,8 +7,6 @@
 //
 
 #import "DDGSourceSettingCellTableViewCell.h"
-#import "UIFont+DDG.h"
-#import "UIColor+DDG.h"
 
 @implementation DDGSourceSettingCellTableViewCell
 

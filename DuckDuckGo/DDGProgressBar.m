@@ -8,7 +8,6 @@
 
 
 #import "DDGProgressBar.h"
-#import "UIColor+DDG.h"
 
 @interface DDGProgressBar ()
 {

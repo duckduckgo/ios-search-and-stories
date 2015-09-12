@@ -67,9 +67,9 @@
     
     self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
     self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
-                                                               @"title for the view shown when no favorite searches/urls are found");
+                                                        @"title for the view shown when no favorite searches/urls are found");
     self.noContentView.contentSubtitle = NSLocalizedString(@"Add searches to your favorites, and they will be shown here.",
-                                                                  @"details text for the view shown when no favorite searches/urls are found");
+                                                           @"details text for the view shown when no favorite searches/urls are found");
     self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.noContentView.view.frame = self.view.bounds;
 }

@@ -12,7 +12,6 @@
 #import "SVProgressHUD.h"
 #import "DDGSettingsViewController.h"
 #import "DDGSourceSettingCellTableViewCell.h"
-#import "UIFont+DDG.h"
 
 @interface DDGChooseSourcesViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;

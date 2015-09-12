@@ -22,7 +22,6 @@
 #import "DDGDuckViewController.h"
 #import "UIViewController+DDGSearchController.h"
 #import "DDGUtility.h"
-#import "UIFont+DDG.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -64,6 +63,7 @@ NSString * const emailRegEx =
         self.homeController = homeController;
         self.managedObjectContext = managedObjectContext;
         self.showBangTooltip = ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingSuppressBangTooltip];
+        self.shouldPushSearchHandlerEvents = YES;
 	}
 	return self;
 }
@@ -93,7 +93,6 @@ NSString * const emailRegEx =
     }
     
     [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
-    //[self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];
 }
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
@@ -162,9 +161,9 @@ NSString * const emailRegEx =
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
     self.edgesForExtendedLayout = UIRectEdgeNone;
     [self.searchBar setBackgroundColor:[UIColor duckSearchBarBackground]];
+    [self.searchBarWrapper setBackgroundColor:[UIColor duckSearchBarBackground]];
     
     if(self.autocompleteController==nil) {
         self.autocompleteController = [[DDGDuckViewController alloc] initWithSearchController:self managedObjectContext:self.managedObjectContext];
@@ -502,11 +501,12 @@ NSString * const emailRegEx =
 }
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
-    if(canGoBack)
+    if(canGoBack) {
         [self.searchBar.orangeButton setImage:[[UIImage imageNamed:@"Back"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                                      forState:UIControlStateNormal];
-    else
+    } else {
         [self setSearchBarOrangeButtonImage];
+    }
 }
 
 -(void)setProgress:(CGFloat)progress {
