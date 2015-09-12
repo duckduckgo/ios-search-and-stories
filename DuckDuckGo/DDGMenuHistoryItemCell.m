@@ -70,22 +70,14 @@
     self.imageView.frame = imgRect;
     
     CGRect tmpFrame = self.textLabel.frame;
-    tmpFrame.origin.x = 50;
+    tmpFrame.origin.x = 49;
     tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
     self.textLabel.frame = tmpFrame;
     
     tmpFrame = self.detailTextLabel.frame;
-    tmpFrame.origin.x = 50;
+    tmpFrame.origin.x = 49;
     tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
     self.detailTextLabel.frame = tmpFrame;
-    
-//    CGFloat sepIndent = _isLastItem ? 0 : 15;
-//    CGRect sepRect = self.frame;
-//    sepRect.origin.x = sepIndent;
-//    sepRect.origin.y = sepRect.size.height-0.5;
-//    sepRect.size.height = 0.5;
-//    sepRect.size.width -= sepIndent;
-//    self.separatorView.frame = sepRect;
 }
 
 

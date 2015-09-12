@@ -71,10 +71,10 @@
 - (void)setShowsCancelButton:(BOOL)show animated:(BOOL)animated {
     _showsCancelButton = show;
     if(show) {
-        self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 13);
+        self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 12);
         self.cancelButton.alpha = 1;
     } else {
-        self.cancelButtonXConstraint.constant = 0;
+        self.cancelButtonXConstraint.constant = 2;
         self.cancelButton.alpha = 0;
     }
     [self layoutIfNeeded:((animated) ? 0.2 : 0.0)];
