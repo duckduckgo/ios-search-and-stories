@@ -36,20 +36,20 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
     
-    [self addRadioOptionWithTitle:@"Search"
+    [self addRadioOptionWithTitle:[DDGChooseHomeViewController homeViewNameForID:DDGSettingHomeViewTypeDuck]
                             value:DDGSettingHomeViewTypeDuck
                               key:DDGSettingHomeView
                          selected:[homeViewMode
                                    isEqual:DDGSettingHomeViewTypeDuck]];
-    [self addRadioOptionWithTitle:@"Stories (Default)"
+    [self addRadioOptionWithTitle:[DDGChooseHomeViewController homeViewNameForID:DDGSettingHomeViewTypeStories]
                             value:DDGSettingHomeViewTypeStories
                               key:DDGSettingHomeView
                          selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
-    [self addRadioOptionWithTitle:@"Favorites"
+    [self addRadioOptionWithTitle:[DDGChooseHomeViewController homeViewNameForID:DDGSettingHomeViewTypeSaved]
                             value:DDGSettingHomeViewTypeSaved
                               key:DDGSettingHomeView
                          selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];
-    [self addRadioOptionWithTitle:@"Recent"
+    [self addRadioOptionWithTitle:[DDGChooseHomeViewController homeViewNameForID:DDGSettingHomeViewTypeRecents]
                             value:DDGSettingHomeViewTypeRecents
                               key:DDGSettingHomeView
                          selected:[homeViewMode isEqual:DDGSettingHomeViewTypeRecents]];
@@ -59,7 +59,7 @@
     if([viewID isEqualToString:DDGSettingHomeViewTypeDuck]) {
         return NSLocalizedString(@"Search", @"The name of the search view");
     } else if([viewID isEqualToString:DDGSettingHomeViewTypeStories]) {
-        return NSLocalizedString(@"Stories", @"The name of the stories view");
+        return NSLocalizedString(@"Stories (Default)", @"The name of the stories view");
     } else if([viewID isEqualToString:DDGSettingHomeViewTypeSaved]) {
         return NSLocalizedString(@"Favorites", @"The name of the favorites/bookmarks view");
     } else if([viewID isEqualToString:DDGSettingHomeViewTypeRecents]) {

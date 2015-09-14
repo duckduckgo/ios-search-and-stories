@@ -159,7 +159,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     }];
     
     [self addSectionWithTitle:@"Privacy" footer:nil];
-    IGFormSwitch *recentSwitch = [self addSwitch:@"Save Recent" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
+    IGFormSwitch *recentSwitch = [self addSwitch:@"Save Recents" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
     [self addButton:@"Clear Recents" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
                                                                  delegate:weakSelf
