@@ -72,17 +72,22 @@
 
 + (UIColor*)duckProgressBarForeground
 {
-    return [UIColor duckSearchBarBackground];
+    return UIColorFromRGB(0x4495d4);
 }
 
 + (UIColor*)duckProgressBarBackground
 {
-    return [UIColor whiteColor];
+    return UIColorFromRGB(0x98c5e7);
 }
 
 +(UIColor*)duckStoriesBackground
 {
     return UIColorFromRGB(0xEEEEEE);
+}
+
++(UIColor*)duckRefreshColor
+{
+    return UIColorFromRGB(0xAAAAAA);
 }
 
 //+(UIColor*)duckSettingsLabel

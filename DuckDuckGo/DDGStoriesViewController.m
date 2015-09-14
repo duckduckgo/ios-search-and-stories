@@ -424,6 +424,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     if(self.storiesMode==DDGStoriesListModeNormal) {
         self.refreshControl = [[UIRefreshControl alloc] init];
+        self.refreshControl.tintColor = [UIColor duckRefreshColor];
         [storyView addSubview:self.refreshControl];
         [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
     }

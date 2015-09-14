@@ -36,6 +36,8 @@
 
 + (UIColor*)duckStoriesBackground;
 
++ (UIColor*)duckRefreshColor;
+
 //+(UIColor*)duckSettingsLabel;
 //+(UIColor*)duckSettingsDetailLabel;
 
