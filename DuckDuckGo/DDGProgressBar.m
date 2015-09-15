@@ -42,6 +42,8 @@
 - (void)commonInit {
     _percentCompleted = 100;
     self.backgroundColor = [UIColor duckProgressBarBackground];
+    self.completedForeground = [UIColor duckSearchBarBackground];
+    self.noncompletedForeground = [UIColor duckProgressBarForeground];
     [self addSubview:self.completedView];
     [self updateProgress];
     //[self setNeedsLayout];
@@ -74,8 +76,8 @@
     
     if(self.completedView==nil) {
         self.completedView = [[UIView alloc] initWithFrame:frame];
-        self.completedView.backgroundColor = [UIColor duckProgressBarForeground];
     }
+    self.completedView.backgroundColor = progress >= 100 ? self.completedForeground : self.noncompletedForeground;
     if(duration!=0) {
         [UIView animateWithDuration:duration animations:^{
             [self.completedView setFrame:frame];

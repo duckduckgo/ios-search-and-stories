@@ -11,6 +11,8 @@
 @interface DDGProgressBar : UIView
 
 @property (assign) NSUInteger percentCompleted;
+@property (strong) UIColor* noncompletedForeground;
+@property (strong) UIColor* completedForeground;
 
 -(void)setPercentCompleted:(NSUInteger)percentCompleted animated:(BOOL)animated;
 
