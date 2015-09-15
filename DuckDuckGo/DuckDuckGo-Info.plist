@@ -43,6 +43,11 @@
 	<string>518</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2014 DuckDuckGo, Inc. All Rights Reserved.</string>
 	<key>UIBackgroundModes</key>
