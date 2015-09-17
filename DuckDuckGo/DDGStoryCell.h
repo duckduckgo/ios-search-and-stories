@@ -9,9 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "DDGStory.h"
 
-#define DDGTitleBarHeight 57.0f
-
 extern NSString *const DDGStoryCellIdentifier;
+
+CGFloat const DDGTitleBarHeight = 57.0f;
+CGFloat const DDGTitleBarHeightRatio = 240.0f/740.0f; // 240/740 == 0.324324324 == mosaicmode,    114/475 == 0.24 == normalmode   other: 114/360
 
 @protocol DDGStoryCellDelegate <NSObject>
 
