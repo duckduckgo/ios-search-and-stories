@@ -166,6 +166,7 @@
     self.tabController.delegate = self;
     [self addChildViewController:self.tabController];
     self.tabController.view.frame = self.tabContentView.frame;
+    self.tabContentView.backgroundColor = [UIColor duckSearchBarBackground]; // hack to workaround app switcher flickering issue
     [self.tabContentView addSubview:self.tabController.view];
     [self.tabController didMoveToParentViewController:self];
     self.tabController.tabBar.hidden = TRUE;

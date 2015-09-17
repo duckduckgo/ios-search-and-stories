@@ -211,7 +211,7 @@ NSString * const emailRegEx =
     }];
     UINavigationController* navController = [[UINavigationController alloc] init];
     navController.navigationBarHidden = TRUE;
-    navController.view.backgroundColor = [UIColor duckNoContentColor];
+    navController.view.backgroundColor = [UIColor duckSearchBarBackground];
     navController.interactivePopGestureRecognizer.enabled = TRUE;
     navController.interactivePopGestureRecognizer.delegate = self;
     navController.delegate = self;
