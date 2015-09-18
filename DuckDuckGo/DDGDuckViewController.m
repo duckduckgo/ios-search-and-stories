@@ -74,9 +74,10 @@ static NSString *historyCellID = @"HCell";
 
 -(void)reloadHistory
 {
+    NSUInteger maxHistory = self.popoverMode ? 5 : (self.view.frame.size.height > 600 ? 5 : 3);
     self.history = [self.historyProvider pastHistoryItemsForPrefix:self.filterString
                                                     onlyQueries:TRUE
-                                                  withMaximumCount:self.view.frame.size.height > 600 ? 5 : 3];
+                                                  withMaximumCount:maxHistory];
 }
 
 
@@ -133,12 +134,13 @@ static NSString *historyCellID = @"HCell";
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
-    self.tableView.sectionFooterHeight = 1;
+    self.tableView.sectionFooterHeight = 0.01f;
     self.clearsSelectionOnViewWillAppear = FALSE;
-    self.tableView.backgroundColor = [UIColor duckStoriesBackground];
+    self.tableView.backgroundColor = self.popoverMode ? [UIColor whiteColor] : [UIColor duckStoriesBackground];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
+    self.view = self.tableView;
     
     //self.tableView.scrollsToTop = NO;
     
@@ -247,9 +249,9 @@ static NSString *historyCellID = @"HCell";
     return interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown;
 }
 
--(DDGSearchController *)searchController {
-    return (DDGSearchController *)self.navigationController.parentViewController;
-}
+//-(DDGSearchController *)searchController {
+//    return (DDGSearchController *)self.navigationController.parentViewController;
+//}
 
 - (void)searchFieldDidChange:(id)sender
 {
@@ -280,10 +282,8 @@ static NSString *historyCellID = @"HCell";
 #pragma mark - Table view data source
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+    if(self.underPopoverMode) return 0;
     return 3;
-//    NSInteger numHistoryResults = self.historyController.fetchedObjects.count;
-//    NSInteger numFavResults = self.favoritesController.fetchedObjects.count;
-//    NSInteger acResults = self.suggestions.count;
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -308,16 +308,35 @@ static NSString *historyCellID = @"HCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
 {
     CGFloat headerHeight = 0.01f;
-    switch(section) {
-        case RECENTS_SECTION:
-            headerHeight = self.history.count<=0 ? 0.01 : 25.0;
-            break;
-        case FAVORITES_SECTION:
-            headerHeight = self.favorites.count<=0 ? 0.01 : 25.0;
-            break;
-        case SUGGESTION_SECTION:
-            headerHeight = self.suggestions.count<=0 ? 0.01 : 25.0;
-            break;
+    NSUInteger historyCount = self.history.count;
+    NSUInteger favCount = self.favorites.count;
+    NSUInteger suggestionCount = self.suggestions.count;
+
+    if(self.popoverMode) {
+        // if we're in popover mode, we only show a section header if there is a non-empty section above us
+        switch(section) {
+            case RECENTS_SECTION:
+                //headerHeight = historyCount<=0 ? 0.01 : 25.0; // the history section never has another section above it
+                break;
+            case FAVORITES_SECTION:
+                headerHeight = favCount<=0 ? 0.01 : (historyCount>0 ? 25.0 : 0.01f);
+                break;
+            case SUGGESTION_SECTION:
+                headerHeight = suggestionCount<=0 ? 0.01 : (historyCount+favCount>0 ? 25.0 : 0.01f);
+                break;
+        }
+    } else {
+        switch(section) {
+            case RECENTS_SECTION:
+                headerHeight = historyCount<=0 ? 0.01 : 25.0;
+                break;
+            case FAVORITES_SECTION:
+                headerHeight = favCount<=0 ? 0.01 : 25.0;
+                break;
+            case SUGGESTION_SECTION:
+                headerHeight = suggestionCount<=0 ? 0.01 : 25.0;
+                break;
+        }
     }
     return headerHeight;
 }
@@ -328,6 +347,7 @@ static NSString *historyCellID = @"HCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    if(self.underPopoverMode) return 0;
     switch (section) {
         case RECENTS_SECTION: return self.history.count;
         case FAVORITES_SECTION: return self.favorites.count;

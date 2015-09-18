@@ -39,6 +39,7 @@ NSString * const emailRegEx =
 @property (nonatomic, getter = isDraggingTopViewController) BOOL draggingTopViewController;
 @property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
 @property (nonatomic, strong) DDGPopoverViewController *bangInfoPopover;
+@property (nonatomic, strong) DDGPopoverViewController *autocompletePopover;
 @property (nonatomic, strong) NSPredicate *emailPredicate;
 @property (nonatomic, strong) UINavigationController *navController;
 @property (nonatomic) BOOL showBangTooltip;
@@ -98,7 +99,9 @@ NSString * const emailRegEx =
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
     if (self.isTransitioningViewControllers)
         return;
-    
+    if([contentController isKindOfClass:DDGDuckViewController.class]) {
+        ((DDGDuckViewController*)contentController).underPopoverMode = self.autocompleteController.popoverMode;
+    }
     [self view]; // force the view to be loaded
     contentController.view.frame = self.background.frame;
     [self.navController pushViewController:contentController animated:animated];
@@ -145,16 +148,7 @@ NSString * const emailRegEx =
 - (void)viewWillLayoutSubviews
 {
 	if (self.view.frame.origin.y < 0.0)	{
-//		// uncoment these lines to get/see a nicely formatted view hiearchy dump
-//		NSMutableString *s = [NSMutableString string];
-//		[s dumpView:self.view atIndent:0];
-//		NSLog (@"DDGSearchController:viewWILLLayoutSubviews \n%@", s);
-
-		// repair damage occuring deep in the bowels of this view hiearchy
-//		CGRect r = self.view.frame;
-//		r.origin.y = 0.0;
         self.contentBottomConstraint.constant = 0;
-        //self.view.frame = r;
 	}
 }
 
@@ -162,21 +156,30 @@ NSString * const emailRegEx =
 {
     [super viewDidLoad];
     self.edgesForExtendedLayout = UIRectEdgeNone;
-    [self.searchBar setBackgroundColor:[UIColor duckSearchBarBackground]];
     [self.searchBarWrapper setBackgroundColor:[UIColor duckSearchBarBackground]];
     
     if(self.autocompleteController==nil) {
         self.autocompleteController = [[DDGDuckViewController alloc] initWithSearchController:self managedObjectContext:self.managedObjectContext];
         self.autocompleteController.historyProvider = self.historyProvider;
     }
-    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:self.autocompleteController];
-    self.autocompleteNavigationController.delegate = self;
-    [self addChildViewController:self.autocompleteNavigationController];
-    [_background addSubview:self.autocompleteNavigationController.view];
-    self.autocompleteNavigationController.view.frame = _background.bounds;
-    [self.autocompleteNavigationController didMoveToParentViewController:self];
+    if(IPAD) {
+        [self.background removeFromSuperview];
+        self.autocompleteController.popoverMode = TRUE;
+        self.autocompletePopover = [[DDGPopoverViewController alloc] initWithContentViewController:self.autocompleteController
+                                                                           andTouchPassthroughView:self.view];
+        self.autocompletePopover.popoverParentController = self;
+        self.autocompletePopover.shouldDismissUponOutsideTap = FALSE;
+    } else {
+        self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:self.autocompleteController];
+        self.autocompleteNavigationController.delegate = self;
+        
+        [self addChildViewController:self.autocompleteNavigationController];
+        [_background addSubview:self.autocompleteNavigationController.view];
+        self.autocompleteNavigationController.view.frame = _background.bounds;
+        [self.autocompleteNavigationController didMoveToParentViewController:self];
+    }
     
-    [self revealBackground:NO animated:NO];
+    [self revealAutocomplete:NO animated:NO];
     
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
     [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
@@ -237,6 +240,18 @@ NSString * const emailRegEx =
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    if(self.autocompletePopover.isBeingPresented) {
+        CGRect autocompleteRect = self.autocompleteController.view.frame;
+        autocompleteRect.origin.x = 0;
+        autocompleteRect.origin.y = 0;
+        autocompleteRect.size.width = self.searchBar.frame.size.width + 20;
+        autocompleteRect.size.height = 490;
+        self.autocompleteController.preferredContentSize = autocompleteRect.size;
+        //self.autocompletePopover.preferredContentSize = autocompleteRect.size;
+    }
+}
+
 - (void)viewDidUnload {
     [self setAutocompleteNavigationController:nil];
     [super viewDidUnload];
@@ -252,6 +267,16 @@ NSString * const emailRegEx =
     [super viewDidAppear:animated];
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
+    
+    if(self.autocompletePopover.isBeingPresented) {
+        CGRect autocompleteRect = self.autocompleteController.view.frame;
+        autocompleteRect.origin.x = 0;
+        autocompleteRect.origin.y = 0;
+        autocompleteRect.size.width = self.searchBar.frame.size.width + 20;
+        autocompleteRect.size.height = 490;
+        self.autocompleteController.preferredContentSize = autocompleteRect.size;
+        //self.autocompletePopover.preferredContentSize = autocompleteRect.size;
+    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -425,6 +450,7 @@ NSString * const emailRegEx =
 
 -(IBAction)bangButtonPressed:(UIButton*)sender {
     [self.autocompleteNavigationController popViewControllerAnimated:YES];
+    [self.autocompletePopover dismissPopoverAnimated:TRUE];
     [self bangButtonPressed];
 }
 
@@ -622,7 +648,7 @@ NSString * const emailRegEx =
     barUpdated = NO;
     
     [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
-    [self revealBackground:YES animated:YES];
+    [self revealAutocomplete:YES animated:YES];
     
     [self.searchBar setShowsBangButton:YES animated:YES];
             
@@ -648,7 +674,7 @@ NSString * const emailRegEx =
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
         [_searchHandler searchControllerAddressBarWillCancel];
     
-    [self revealBackground:NO animated:YES];
+    [self revealAutocomplete:NO animated:YES];
     if(self.state == DDGSearchControllerStateWeb) {
         [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
     }
@@ -665,32 +691,50 @@ NSString * const emailRegEx =
 }
 
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
-- (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
-    if(self.autocompleteController==[self.contentControllers lastObject]) return;
-    if(reveal) {
-        [self.autocompleteNavigationController viewWillAppear:animated];
+- (void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
+    if(IPAD) {
+        if(reveal) {
+            self.autocompletePopover.intrusion = 4;
+            CGRect autocompleteRect = self.autocompleteController.view.frame;
+            autocompleteRect.origin.x = 0;
+            autocompleteRect.origin.y = 0;
+            autocompleteRect.size.width = self.searchBar.frame.size.width + 20;
+            autocompleteRect.size.height = 490;
+            self.autocompleteController.view.frame = autocompleteRect;
+            self.autocompletePopover.preferredContentSize = autocompleteRect.size;
+            [self.autocompletePopover presentPopoverFromView:self.searchBar permittedArrowDirections:UIPopoverArrowDirectionAny animated:animated];
+        } else {
+            [self.autocompletePopover dismissPopoverAnimated:animated];
+        }
+        
     } else {
-        [self.autocompleteNavigationController viewWillDisappear:animated];
-    }
-    
-    if(animated) {
-        [UIView animateWithDuration:0.25 animations:^{
+        if(self.autocompleteController==[self.contentControllers lastObject]) return;
+        if(reveal) {
+            [self.autocompleteNavigationController viewWillAppear:animated];
+        } else {
+            [self.autocompleteNavigationController viewWillDisappear:animated];
+        }
+        
+        if(animated) {
+            [UIView animateWithDuration:0.25 animations:^{
+                _background.alpha = (reveal ? 1.0 : 0.0);
+            } completion:^(BOOL finished) {
+                if(reveal) {
+                    [self.autocompleteNavigationController viewDidAppear:animated];
+                } else {
+                    [self.autocompleteNavigationController viewDidDisappear:animated];
+                }
+            }];
+        } else {
             _background.alpha = (reveal ? 1.0 : 0.0);
-        } completion:^(BOOL finished) {
             if(reveal) {
                 [self.autocompleteNavigationController viewDidAppear:animated];
             } else {
                 [self.autocompleteNavigationController viewDidDisappear:animated];
             }
-        }];
-    } else {
-        _background.alpha = (reveal ? 1.0 : 0.0);
-        if(reveal) {
-            [self.autocompleteNavigationController viewDidAppear:animated];
-        } else {
-            [self.autocompleteNavigationController viewDidDisappear:animated];
         }
     }
+    
 }
 
 // fade in or out the input accessory– to be used on keyboard show/hide
@@ -802,8 +846,9 @@ NSString * const emailRegEx =
                                                                context:nil]).size;
         
         frame.size.height = textSize.height + 28.0;
-        if(frame.size.height < self.bangInfo.frame.size.height)
+        if(frame.size.height < self.bangInfo.frame.size.height) {
             frame.size.height = self.bangInfo.frame.size.height;
+        }
         
         viewController.preferredContentSize = frame.size;
         
@@ -811,7 +856,7 @@ NSString * const emailRegEx =
                                                                                     andTouchPassthroughView:self.view];
         popover.delegate = self;
         CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
-        [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
         self.bangInfoPopover = popover;
     }
     
@@ -895,15 +940,18 @@ NSString * const emailRegEx =
 
 -(void)searchFieldDidChange:(id)sender
 {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete])
-	{
-		// autocomplete only when enabled
-		DDGDuckViewController *autocompleteViewController = [self.autocompleteNavigationController.viewControllers objectAtIndex:0];
-		if(self.autocompleteNavigationController.topViewController != autocompleteViewController)
-			[self.autocompleteNavigationController popToRootViewControllerAnimated:NO];
-        
-		[autocompleteViewController searchFieldDidChange:self.searchBar.searchField];
-	}
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete]) {
+        // autocomplete only when enabled
+        DDGDuckViewController *autocompleteViewController = [self.autocompleteNavigationController.viewControllers objectAtIndex:0];
+        if(self.autocompleteController!=nil) {
+            [self.autocompleteController searchFieldDidChange:self.searchBar.searchField];
+        } else {
+            if(self.autocompleteNavigationController.topViewController != autocompleteViewController) {
+                [self.autocompleteNavigationController popToRootViewControllerAnimated:NO];
+            }
+            [autocompleteViewController searchFieldDidChange:self.searchBar.searchField];
+        }
+    }
 }
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {

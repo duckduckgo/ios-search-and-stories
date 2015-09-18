@@ -15,6 +15,8 @@
 @interface DDGDuckViewController : UITableViewController
 
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
+@property BOOL popoverMode;
+@property BOOL underPopoverMode;
 
 - (instancetype)initWithSearchController:(DDGSearchController *)searchController
                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext;

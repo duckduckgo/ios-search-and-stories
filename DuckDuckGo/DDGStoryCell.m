@@ -310,8 +310,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     DDGStoryMenu* menu = [[DDGStoryMenu alloc] initWithStoryCell:self];
     self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu
                                                                andTouchPassthroughView:self.touchPassthroughView];
-    [self.menuPopover presentPopoverFromRect:self.menuButton.frame
-                                      inView:self
+    [self.menuPopover presentPopoverFromView:self.menuButton
                     permittedArrowDirections:UIPopoverArrowDirectionAny
                                     animated:TRUE];
 }
