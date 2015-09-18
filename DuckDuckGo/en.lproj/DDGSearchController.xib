@@ -128,7 +128,7 @@
                                     </variation>
                                 </view>
                             </subviews>
-                            <color key="backgroundColor" red="0.87058823529999996" green="0.34509803919999998" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="69" firstAttribute="trailing" secondItem="67" secondAttribute="leading" id="1Rg-Zp-ybP" userLabel="left button left alignment"/>
@@ -187,7 +187,7 @@
                 </view>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="21" userLabel="content">
                     <rect key="frame" x="0.0" y="44" width="600" height="556"/>
-                    <color key="backgroundColor" red="0.91764705882352937" green="0.91764705882352937" blue="0.91764705882352937" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                    <color key="backgroundColor" red="0.91764705879999997" green="0.91764705879999997" blue="0.91764705879999997" alpha="1" colorSpace="deviceRGB"/>
                 </view>
             </subviews>
             <color key="backgroundColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>

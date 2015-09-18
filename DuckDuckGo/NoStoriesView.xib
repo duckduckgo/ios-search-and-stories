@@ -28,8 +28,8 @@
                 <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" image="empty-favorites" translatesAutoresizingMaskIntoConstraints="NO" id="12">
                     <rect key="frame" x="138" y="100" width="44" height="44"/>
                 </imageView>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="No Recents" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="klm-Ay-r6d">
-                    <rect key="frame" x="20" y="166" width="280" height="21"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="No Recents" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="klm-Ay-r6d">
+                    <rect key="frame" x="20" y="166" width="280" height="18"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="280" id="jXg-Uc-TZd"/>
                     </constraints>
@@ -37,8 +37,8 @@
                     <color key="textColor" red="0.12941176469999999" green="0.12941176469999999" blue="0.12941176469999999" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" misplaced="YES" text="Browse stories and search the web, and your recents will be shown here." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Mt9-XP-0Fh">
-                    <rect key="frame" x="56.5" y="210" width="207" height="59.5"/>
+                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Browse stories and search the web, and your recents will be shown here." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="207" translatesAutoresizingMaskIntoConstraints="NO" id="Mt9-XP-0Fh">
+                    <rect key="frame" x="56" y="207" width="207" height="51"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="207" id="wvN-vQ-eYR"/>

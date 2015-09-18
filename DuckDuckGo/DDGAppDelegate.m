@@ -88,7 +88,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
 //                                                forState:UIControlStateNormal];
     
     //self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setBackgroundColor:[UIColor duckNoContentColor]];
+    [self.window setBackgroundColor:[UIColor duckSearchBarBackground]];
     
     // main view controller
     self.homeController = [DDGHomeViewController newHomeController];

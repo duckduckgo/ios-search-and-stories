@@ -144,7 +144,7 @@
 
 -(void)duckGoToTopLevel
 {
-    if([self tableView:nil numberOfRowsInSection:0]>0) {
+    if([self tableView:self.tableView numberOfRowsInSection:0]>0) {
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:0] atScrollPosition:UITableViewScrollPositionTop animated:TRUE];
     }
 }

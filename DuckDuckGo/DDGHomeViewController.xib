@@ -35,16 +35,16 @@
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NwH-at-kPi" userLabel="border">
+                    <rect key="frame" x="0.0" y="549" width="600" height="1"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="qY5-lM-5G3"/>
+                    </constraints>
+                </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HQm-a7-mxw" userLabel="tab bar">
                     <rect key="frame" x="0.0" y="550" width="600" height="50"/>
                     <subviews>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NwH-at-kPi" userLabel="border">
-                            <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
-                            <color key="backgroundColor" red="0.792156862745098" green="0.792156862745098" blue="0.792156862745098" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="1" id="qY5-lM-5G3"/>
-                            </constraints>
-                        </view>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iqm-n3-jod" userLabel="search">
                             <rect key="frame" x="36" y="1" width="48" height="48"/>
                             <constraints>
@@ -119,15 +119,12 @@
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="centerY" secondItem="w9s-2z-UbG" secondAttribute="centerY" id="3Rv-UV-7Es"/>
-                        <constraint firstItem="NwH-at-kPi" firstAttribute="trailing" secondItem="HQm-a7-mxw" secondAttribute="trailing" id="7pP-PJ-mhB" userLabel="border right alignment"/>
                         <constraint firstAttribute="height" constant="50" id="Hyt-Se-5ZJ" userLabel="tab bar height"/>
-                        <constraint firstItem="NwH-at-kPi" firstAttribute="top" secondItem="HQm-a7-mxw" secondAttribute="top" id="Kbg-Ao-qad" userLabel="border top alignment"/>
                         <constraint firstAttribute="centerY" secondItem="FmX-HN-8WI" secondAttribute="centerY" id="Ovc-bO-MAg"/>
                         <constraint firstItem="w9s-2z-UbG" firstAttribute="centerY" secondItem="HQm-a7-mxw" secondAttribute="centerY" id="UxL-9y-vFg" userLabel="settings vertical center"/>
                         <constraint firstItem="Iqm-n3-jod" firstAttribute="centerY" secondItem="HQm-a7-mxw" secondAttribute="centerY" id="WAl-1B-MNE" userLabel="search vertical center"/>
                         <constraint firstItem="zhq-iC-hVf" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.3" id="YPu-mC-tlb"/>
                         <constraint firstItem="Iqm-n3-jod" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.1" id="ZzH-qR-EMK" userLabel="search left align"/>
-                        <constraint firstItem="NwH-at-kPi" firstAttribute="leading" secondItem="HQm-a7-mxw" secondAttribute="leading" id="a8k-ER-xPd" userLabel="border left alignment"/>
                         <constraint firstItem="w9s-2z-UbG" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.9" id="dy6-FT-QXb"/>
                         <constraint firstItem="FmX-HN-8WI" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.5" id="eQT-W3-2hq"/>
                         <constraint firstAttribute="centerY" secondItem="zhq-iC-hVf" secondAttribute="centerY" id="gPM-BQ-a5w"/>
@@ -155,10 +152,13 @@
                 <constraint firstAttribute="trailing" secondItem="nOn-A2-4XZ" secondAttribute="trailing" id="8IO-Gj-RIU"/>
                 <constraint firstAttribute="trailing" secondItem="kyo-JD-Ybe" secondAttribute="trailing" id="Gzw-YP-3Oo"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="bottom" id="NpH-tL-gD5"/>
+                <constraint firstItem="NwH-at-kPi" firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="top" id="OZ5-Sb-okf"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Okf-nx-ZKD"/>
                 <constraint firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="bottom" id="RQA-Dl-sUw" userLabel="tab bar bottom"/>
                 <constraint firstAttribute="bottom" secondItem="kyo-JD-Ybe" secondAttribute="bottom" constant="-50" id="Thk-lu-eHV"/>
                 <constraint firstItem="HQm-a7-mxw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="m9c-VI-hov" userLabel="tab bar left"/>
+                <constraint firstItem="NwH-at-kPi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="sMg-RR-87x"/>
+                <constraint firstAttribute="trailing" secondItem="NwH-at-kPi" secondAttribute="trailing" id="wue-NG-Gi3"/>
                 <constraint firstAttribute="trailing" secondItem="HQm-a7-mxw" secondAttribute="trailing" id="xvc-4s-9ct" userLabel="tab bar right"/>
                 <constraint firstItem="kyo-JD-Ybe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="y4x-qn-0jc"/>
             </constraints>

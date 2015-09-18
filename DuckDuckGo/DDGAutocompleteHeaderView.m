@@ -20,8 +20,8 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor autocompleteHeaderColor];
-        self.opaque = FALSE;
+        self.backgroundColor = [UIColor duckStoriesBackground];
+        self.opaque = TRUE;
 
         UILabel *label = [[UILabel alloc] initWithFrame:UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(0, 8.0, 0, 0))];
         label.backgroundColor = [UIColor clearColor];

@@ -66,7 +66,7 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
         [self.imageView setBackgroundColor:[UIColor whiteColor]];
         CALayer *layer = [self.imageView layer];
         layer.cornerRadius = 4.0f;
-        layer.masksToBounds = YES;
+        //layer.masksToBounds = YES;
         
         // self contained separator lines
         CGRect frame = self.contentView.bounds;

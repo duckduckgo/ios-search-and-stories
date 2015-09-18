@@ -96,7 +96,7 @@
     
     CALayer *layer = self.layer;
     layer.cornerRadius = 4.0f;
-    layer.masksToBounds = NO;
+    //layer.masksToBounds = NO;
 }
 
 -(void)setRightButtonMode:(DDGAddressBarRightButtonMode)newMode {
