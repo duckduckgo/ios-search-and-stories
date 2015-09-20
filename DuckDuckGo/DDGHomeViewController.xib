@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
@@ -33,10 +33,12 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nOn-A2-4XZ" userLabel="tab content">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="550"/>
+                    <animations/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NwH-at-kPi" userLabel="border">
                     <rect key="frame" x="0.0" y="549" width="600" height="1"/>
+                    <animations/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="1" id="qY5-lM-5G3"/>
@@ -47,6 +49,8 @@
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iqm-n3-jod" userLabel="search">
                             <rect key="frame" x="36" y="1" width="48" height="48"/>
+                            <animations/>
+                            <accessibility key="accessibilityConfiguration" label="Search"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="48" id="dP2-cS-0qY"/>
                                 <constraint firstAttribute="height" constant="48" id="dwo-Sp-v9F"/>
@@ -61,6 +65,8 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zhq-iC-hVf" userLabel="stories">
                             <rect key="frame" x="156" y="1" width="48" height="48"/>
+                            <animations/>
+                            <accessibility key="accessibilityConfiguration" label="Stories"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="48" id="5pA-6A-EYg"/>
                                 <constraint firstAttribute="height" constant="48" id="MtU-u9-KtW"/>
@@ -75,6 +81,8 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmX-HN-8WI" userLabel="favorites">
                             <rect key="frame" x="276" y="1" width="48" height="48"/>
+                            <animations/>
+                            <accessibility key="accessibilityConfiguration" label="Favorites"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="48" id="CsL-oc-22u"/>
                                 <constraint firstAttribute="width" constant="48" id="ue7-6q-aww"/>
@@ -89,6 +97,8 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5xv-00-irE" userLabel="recents">
                             <rect key="frame" x="396" y="1" width="48" height="48"/>
+                            <animations/>
+                            <accessibility key="accessibilityConfiguration" label="Recents"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="48" id="IRv-gq-M6N"/>
                                 <constraint firstAttribute="height" constant="48" id="Rjc-KQ-XJZ"/>
@@ -103,6 +113,8 @@
                         </button>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w9s-2z-UbG" userLabel="settings">
                             <rect key="frame" x="516" y="1" width="48" height="48"/>
+                            <animations/>
+                            <accessibility key="accessibilityConfiguration" label="Settings"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="48" id="5Dn-sS-Hhq"/>
                                 <constraint firstAttribute="width" constant="48" id="WJF-NJ-cPT"/>
@@ -116,6 +128,7 @@
                             </connections>
                         </button>
                     </subviews>
+                    <animations/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstAttribute="centerY" secondItem="w9s-2z-UbG" secondAttribute="centerY" id="3Rv-UV-7Es"/>
@@ -141,11 +154,13 @@
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kyo-JD-Ybe" userLabel="alternate bar">
                     <rect key="frame" x="0.0" y="600" width="600" height="50"/>
+                    <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="Jmc-ri-m98" userLabel="tab bar height"/>
                     </constraints>
                 </view>
             </subviews>
+            <animations/>
             <color key="backgroundColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="07T-AZ-Z0Z"/>
