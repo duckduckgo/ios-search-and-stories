@@ -308,6 +308,7 @@
 		8409F5EF1B5E917E001F897F /* proximanova-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EB1B5E917E001F897F /* proximanova-light.otf */; };
 		8409F5F01B5E917E001F897F /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EC1B5E917E001F897F /* proximanova-regular.otf */; };
 		8409F5F11B5E917E001F897F /* proximanova-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */; };
+		8410AD4F1BAF40F300CC83DB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8410AD4E1BAF40F300CC83DB /* LaunchScreen.storyboard */; settings = {ASSET_TAGS = (); }; };
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		8464976D1B3D3FE600BAF256 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */; };
@@ -727,6 +728,7 @@
 		8409F5EB1B5E917E001F897F /* proximanova-light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-light.otf"; path = "fonts/licensed/proximanova-light.otf"; sourceTree = "<group>"; };
 		8409F5EC1B5E917E001F897F /* proximanova-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-regular.otf"; path = "fonts/licensed/proximanova-regular.otf"; sourceTree = "<group>"; };
 		8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "fonts/licensed/proximanova-semibold.otf"; sourceTree = "<group>"; };
+		8410AD4E1BAF40F300CC83DB /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBar.h; sourceTree = "<group>"; };
 		845993311B4BD41B006F2CE7 /* DDGProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBar.m; sourceTree = "<group>"; };
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
@@ -1413,6 +1415,7 @@
 				838E906C149A76D400C11E41 /* Localizable.strings */,
 				8398DAC316419EB100A559C3 /* regions.json */,
 				4C5F81F3158F96D6007B745A /* bangs.json */,
+				8410AD4E1BAF40F300CC83DB /* LaunchScreen.storyboard */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1600,6 +1603,7 @@
 				4C1FD7FE1548FF65006B2511 /* search_field.png in Resources */,
 				4C1FD7FF1548FF65006B2511 /* search_field@2x.png in Resources */,
 				4C1FD8021548FF65006B2511 /* spacer8x16.png in Resources */,
+				8410AD4F1BAF40F300CC83DB /* LaunchScreen.storyboard in Resources */,
 				4C1FD8031548FF65006B2511 /* spacer44x44.png in Resources */,
 				4C5F81F4158F96D6007B745A /* bangs.json in Resources */,
 				4C5F81FA158FEA94007B745A /* bang_button.png in Resources */,
@@ -1995,6 +1999,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -2125,6 +2130,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -2160,6 +2166,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";

@@ -55,7 +55,7 @@
 		<string>audio</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>DDGLaunchScreen</string>
+	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>DuckDuckGo</string>
 	<key>UIRequiredDeviceCapabilities</key>
