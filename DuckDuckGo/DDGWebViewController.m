@@ -35,6 +35,7 @@
 @property IBOutlet UIButton* favButton;
 @property IBOutlet UIButton* shareButton;
 @property IBOutlet UIButton* tabsButton;
+@property IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
 
 @property BOOL isFavorited;
 
@@ -70,7 +71,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.tabBarTopBorderConstraint.constant = 0.5f;
     UIMenuItem *search = [[UIMenuItem alloc] initWithTitle:@"Search" action:@selector(search:)];
     UIMenuItem *saveImage = [[UIMenuItem alloc] initWithTitle:@"Save Image" action:@selector(saveImage:)];
     [[UIMenuController sharedMenuController] setMenuItems:@[search, saveImage]];
