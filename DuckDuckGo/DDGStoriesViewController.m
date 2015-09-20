@@ -422,6 +422,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     storyView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     [storyView registerClass:DDGStoryCell.class forCellWithReuseIdentifier:DDGStoryCellIdentifier];
     
+    self.storyView = storyView;
+    
     if(self.storiesMode==DDGStoriesListModeNormal) {
         self.refreshControl = [[UIRefreshControl alloc] init];
         self.refreshControl.tintColor = [UIColor duckRefreshColor];
@@ -429,12 +431,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
     }
     
-    [self.view addSubview:storyView];
-    self.storyView = storyView;
-    
     self.noContentView = [[DDGNoContentViewController alloc] init];
-    [self.view addSubview:self.noContentView.view];
-    
+
     self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
     self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
                                                         @"title for the view shown when no favorite searches/urls are found");
@@ -443,6 +441,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.noContentView.view.frame = self.view.bounds;
     
+    [self.view addSubview:self.noContentView.view];
+    [self.view addSubview:self.storyView];
     
     self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
@@ -509,6 +509,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     }
 
     self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
+}
+
+-(void)viewDidLayoutSubviews
+{
+    self.storyView.contentInset = UIEdgeInsetsZero;
 }
 
 - (void)viewDidAppear:(BOOL)animated

@@ -25,6 +25,7 @@
 
 @interface DDGWebViewController () {
     BOOL _isFavorited;
+    CGPoint lastOffset;
 }
 @property (nonatomic, readwrite) BOOL inReadabilityMode;
 
@@ -76,7 +77,8 @@
     
     //    UIView*
     
-    self.hidesBottomBarWhenPushed = TRUE;
+    //self.hidesBottomBarWhenPushed = TRUE;
+    lastOffset = self.webView.scrollView.contentOffset;
 }
 
 - (void)setSearchController:(DDGSearchController *)searchController {
@@ -97,6 +99,12 @@
     [UIMenuController sharedMenuController].menuItems = nil;
 }
 
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    self.webView.scrollView.contentInset = UIEdgeInsetsZero;
+    lastOffset = self.webView.scrollView.contentOffset;
+}
 
 -(void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
@@ -285,8 +293,13 @@
     
     self.isFavorited = !self.isFavorited;
     
-    NSString *status = self.isFavorited ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
-    UIImage *image = self.isFavorited ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    NSString *status = self.isFavorited
+    ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved")
+    : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
+    
+    UIImage *image = self.isFavorited
+    ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
+    : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     
     [SVProgressHUD showImage:image status:status];
 }

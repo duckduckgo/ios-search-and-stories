@@ -732,7 +732,7 @@
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
 		8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		8464976B1B3D3FE600BAF256 /* DDGHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGHomeViewController.xib; sourceTree = "<group>"; };
-		846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGTabViewController.xib; sourceTree = "<group>"; };
+		846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = DDGTabViewController.xib; path = ../DDGTabViewController.xib; sourceTree = "<group>"; };
 		846D6B981BA4BE7A00EB16BC /* DDGChooseHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGChooseHomeViewController.h; sourceTree = "<group>"; };
 		846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGChooseHomeViewController.m; sourceTree = "<group>"; };
 		84A640A01B6FBCB300643A39 /* DDGUnderViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewControllerCell.h; sourceTree = "<group>"; };
@@ -1044,6 +1044,7 @@
 		4CD9249B15CD7DAB00EB062F /* Bookmarks */ = {
 			isa = PBXGroup;
 			children = (
+				846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */,
 				5BFF24EF16FB53D800844D3B /* DDGTabViewController.h */,
 				5BFF24F016FB53D800844D3B /* DDGTabViewController.m */,
 				4C4B7E9115C4F1AA00340B59 /* DDGBookmarksViewController.h */,
@@ -1446,7 +1447,6 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
-				846D6B961BA35CB900EB16BC /* DDGTabViewController.xib */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,

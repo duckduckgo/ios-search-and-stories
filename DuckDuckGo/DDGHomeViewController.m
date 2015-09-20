@@ -50,7 +50,7 @@
 
 @property (nonatomic, strong) IBOutlet UIView* alternateToolbarContainer;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* alternateToolbarBottom;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
 @end
 
 @implementation DDGHomeViewController
@@ -222,7 +222,7 @@
         stories.storiesMode = DDGStoriesListModeFavorites;
         stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
         
-        self.favoritesTabViewController = [[DDGTabViewController alloc] initWithNibName:@"DDGTabViewController" bundle:nil];
+        self.favoritesTabViewController = [[DDGTabViewController alloc] init];
         self.favoritesTabViewController.viewControllers = @[stories, bookmarks];
         self.favoritesTabViewController.segmentAlignmentView = self.favoritesTopController.searchBar;
         self.favoritesTabViewController.delegate = self;
@@ -251,7 +251,7 @@
         stories.storiesMode = DDGStoriesListModeRecents;
         stories.title = NSLocalizedString(@"Recent Stories", @"Table section header title");
         
-        self.recentsController = [[DDGTabViewController alloc] initWithNibName:@"DDGTabViewController" bundle:nil];
+        self.recentsController = [[DDGTabViewController alloc] init];
         self.recentsController.viewControllers = @[ stories, history];
         self.recentsController.segmentAlignmentView = self.recentsTopController.searchBar;
         self.recentsController.delegate = self;

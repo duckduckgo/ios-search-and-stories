@@ -19,14 +19,17 @@
 
 @implementation DDGTabViewController
 
+
+-(id)init
+{
+    self = [super initWithNibName:@"DDGTabViewController" bundle:nil];
+    return self;
+}
+
 -(void)viewDidLoad
 {
   [super viewDidLoad];
-    [[UINib nibWithNibName:@"DDGTabViewController" bundle:nil] instantiateWithOwner:self options:nil];
     self.controlView.backgroundColor = [UIColor duckSearchBarBackground];
-    //self.segmentedControl.backgroundColor = [UIColor duckSegmentBarBackground];
-    //  self.segmentedControl.tintColor = [UIColor duckSegmentBarForeground];
-    
     for (UIViewController *viewController in self.viewControllers) {
         [self.segmentedControl addSegment:[[UIBarButtonItem alloc] initWithTitle:viewController.title
                                                                            style:UIBarButtonItemStylePlain
@@ -35,6 +38,7 @@
     self.view.backgroundColor = [UIColor blueColor];
     
     [self.segmentedControl addTarget:self action:@selector(segmentWasSelected:) forControlEvents:UIControlEventValueChanged];
+    
 }
 
 
@@ -46,7 +50,7 @@
 -(void)viewDidLayoutSubviews
 {
   if(self.segmentAlignmentView) {
-    self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 16;
+    self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 18;
   } else {
     self.segmentWidthConstraint.constant = self.controlView.frame.size.width-16;
   }
@@ -123,11 +127,6 @@
         [self setCurrentViewControllerIndex:index];        
     }
         
-}
-
-- (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 @end
