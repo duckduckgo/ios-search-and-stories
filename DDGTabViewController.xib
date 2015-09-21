@@ -42,16 +42,26 @@
                     <rect key="frame" x="0.0" y="40" width="600" height="560"/>
                     <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
+                <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WYn-1f-P3h" userLabel="shadow">
+                    <rect key="frame" x="0.0" y="40" width="600" height="0.5"/>
+                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="0.5" id="ckz-fW-AWg"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstItem="WYn-1f-P3h" firstAttribute="top" secondItem="7G6-zK-ECN" secondAttribute="bottom" id="4Ne-gI-URg"/>
                 <constraint firstItem="7G6-zK-ECN" firstAttribute="top" secondItem="gIf-K6-M3o" secondAttribute="top" id="54X-gg-B3h"/>
                 <constraint firstItem="5rg-Zc-zHX" firstAttribute="top" secondItem="7G6-zK-ECN" secondAttribute="bottom" id="6BP-JJ-7w0"/>
                 <constraint firstAttribute="bottom" secondItem="5rg-Zc-zHX" secondAttribute="bottom" id="6bX-Sq-OGi"/>
                 <constraint firstAttribute="trailing" secondItem="7G6-zK-ECN" secondAttribute="trailing" id="9zd-TN-e63"/>
+                <constraint firstAttribute="trailing" secondItem="WYn-1f-P3h" secondAttribute="trailing" id="LIq-cX-acu"/>
                 <constraint firstItem="7G6-zK-ECN" firstAttribute="leading" secondItem="gIf-K6-M3o" secondAttribute="leading" id="QUD-dM-uJK"/>
                 <constraint firstAttribute="trailing" secondItem="5rg-Zc-zHX" secondAttribute="trailing" id="bHc-qe-ero"/>
                 <constraint firstItem="5rg-Zc-zHX" firstAttribute="leading" secondItem="gIf-K6-M3o" secondAttribute="leading" id="qgh-iQ-8jn"/>
+                <constraint firstItem="WYn-1f-P3h" firstAttribute="leading" secondItem="gIf-K6-M3o" secondAttribute="leading" id="vR0-7s-ZUJ"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
             <point key="canvasLocation" x="78" y="419"/>

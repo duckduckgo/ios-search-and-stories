@@ -167,6 +167,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 @property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) UIView *innerShadowView;
 @property (nonatomic, strong) UILabel* textLabel;
+@property (nonatomic, weak) DDGStoryMenu* menu;
 @property (nonatomic, assign, getter = isRead) BOOL read;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
 @property (nonatomic, strong) DDGPopoverViewController* menuPopover;
@@ -197,11 +198,14 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     DDGPopoverViewController* popover = self.menuPopover;
     void(^toggleState)() = ^() {
         [self.storyDelegate toggleStorySaved:self.story];
+        [self.menu.tableView reloadData];
     };
-    if(popover==nil) {
-        toggleState();
-    } else {
+    
+    if(popover && self.storyDelegate.storiesListMode==DDGStoriesListModeFavorites) {
+        // we should remove the popover if the story has disappeared
         [popover dismissViewControllerAnimated:TRUE completion:toggleState];
+    } else {
+        toggleState();
     }
 }
 
@@ -252,19 +256,6 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 #pragma mark -
 
-- (void)setDisplaysDropShadow:(BOOL)displaysDropShadow
-{
-    _displaysDropShadow = displaysDropShadow;
-    self.clipsToBounds = !displaysDropShadow;
-    [self setNeedsLayout];
-}
-
-- (void)setDisplaysInnerShadow:(BOOL)displaysInnerShadow
-{
-    _displaysInnerShadow = displaysInnerShadow;
-    [self setNeedsLayout];
-}
-
 - (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
 {
     // Empty stub!
@@ -308,6 +299,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 -(void)menuButtonSelected:(id)sender
 {
     DDGStoryMenu* menu = [[DDGStoryMenu alloc] initWithStoryCell:self];
+    self.menu = menu;
     self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu
                                                                andTouchPassthroughView:self.touchPassthroughView];
     [self.menuPopover presentPopoverFromView:self.menuButton
@@ -325,9 +317,6 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 - (void)configure
 {
-    self.displaysDropShadow = YES;
-    self.displaysInnerShadow = NO;
-    
     self.backgroundImageView = [UIImageView new];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.backgroundImageView.clipsToBounds = YES;
@@ -355,12 +344,12 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     
     UIView *dropShadowView = [UIView new];
     dropShadowView.backgroundColor = [UIColor duckStoryDropShadowColor];
-    dropShadowView.opaque = YES;
+    dropShadowView.opaque = NO;
     [self addSubview:dropShadowView];
     self.dropShadowView = dropShadowView;
     
     UIView *innerShadowView = [UIView new];
-    innerShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
+    innerShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.15f];
     innerShadowView.opaque = NO;
     [self.contentView addSubview:innerShadowView];
     self.innerShadowView = innerShadowView;
@@ -398,20 +387,10 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.categoryButton.titleLabel.font = compactMode ? [UIFont duckStoryCategorySmall] : [UIFont duckStoryCategory];
     self.textLabel.font = compactMode ? [UIFont duckStoryTitleSmall] : [UIFont duckStoryTitle];
     
-    if (self.displaysDropShadow) {
-        CGRect dropShadowBounds = bounds;
-        dropShadowBounds.origin.y = CGRectGetHeight(bounds);
-        dropShadowBounds.size.height = 0.5f;
-        [self.dropShadowView setFrame:dropShadowBounds];
-    }
+    self.innerShadowView.frame = CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width, 0.5f);
+    self.dropShadowView.frame = CGRectMake(bounds.origin.x, bounds.size.height-0.5, bounds.size.width, 0.5);
     
-    if (self.displaysInnerShadow) {
-        CGRect innerShadowBounds = bounds;
-        innerShadowBounds.size.height = 0.5f;
-        [self.innerShadowView setFrame:innerShadowBounds];
-    }
-    
-    CGRect faviconFrame = self.faviconButton.frame;    
+    CGRect faviconFrame = self.faviconButton.frame;
     CGFloat textWidth = bounds.size.width - faviconFrame.origin.x  -  faviconFrame.size.width - 30;
     NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
@@ -451,8 +430,6 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 {
     [super prepareForReuse];
     [self.backgroundImageView setImage:nil];
-    self.displaysDropShadow = YES;
-    self.displaysInnerShadow = NO;
 }
 
 @end

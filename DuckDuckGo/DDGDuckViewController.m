@@ -31,6 +31,7 @@
 
 @interface DDGDuckViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, DDGHistoryItemCellDelegate>
 
+@property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, weak) DDGSearchController *searchController;
 @property (nonatomic, strong, readwrite) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, weak) IBOutlet NSLayoutConstraint *containerViewHeightConstraint;
@@ -56,7 +57,7 @@ static NSString *historyCellID = @"HCell";
 - (instancetype)initWithSearchController:(DDGSearchController *)searchController
                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext
 {
-    self = [super initWithStyle:UITableViewStyleGrouped];
+    self = [super init];
     if(self) {
         self.searchController = searchController;
         self.managedObjectContext = managedObjectContext;
@@ -128,31 +129,28 @@ static NSString *historyCellID = @"HCell";
     [super viewDidLoad];
     
     // use our custom table view class
-    self.tableView = [[UITableView alloc] initWithFrame:self.tableView.frame
-                                                  style:UITableViewStyleGrouped];
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin = CGPointMake(0, 0);
+    self.tableView = [[UITableView alloc] initWithFrame:viewFrame style:UITableViewStyleGrouped];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
     self.tableView.sectionFooterHeight = 0.01f;
-    self.clearsSelectionOnViewWillAppear = FALSE;
     self.tableView.backgroundColor = self.popoverMode ? [UIColor whiteColor] : [UIColor duckStoriesBackground];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
-    self.view = self.tableView;
-    
-    //self.tableView.scrollsToTop = NO;
+    [self.view addSubview:self.tableView];
     
     self.imageCache = [NSCache new];
-    
-    //[self.view addSubview:self.tableView];
     
     [self searchFieldDidChange:@""];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     
     NSOperationQueue *queue = [NSOperationQueue new];

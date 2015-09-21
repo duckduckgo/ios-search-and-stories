@@ -63,15 +63,14 @@
                                                              action:@selector(editAction:)];
     
     self.noContentView = [[DDGNoContentViewController alloc] init];
-    [self.view addSubview:self.noContentView.view];
-    
+    self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.noContentView.view.frame = self.view.bounds;
     self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
     self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
                                                         @"title for the view shown when no favorite searches/urls are found");
     self.noContentView.contentSubtitle = NSLocalizedString(@"Add searches to your favorites, and they will be shown here.",
                                                            @"details text for the view shown when no favorite searches/urls are found");
-    self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    self.noContentView.view.frame = self.view.bounds;
+    [self.view addSubview:self.noContentView.view];
 }
 
 -(void)viewWillAppear:(BOOL)animated {

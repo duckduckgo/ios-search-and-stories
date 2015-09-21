@@ -325,6 +325,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 #pragma mark - DDGStoryDelegate
 
+-(NSUInteger)storiesListMode {
+    return self.storiesMode;
+}
+
 -(void)shareStory:(DDGStory*)story fromView:(UIView*)storySource;
 {
     NSURL *shareURL = story.URL;
@@ -353,9 +357,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         if (![context save:&error])
             NSLog(@"error: %@", error);
     }];
-    NSString *status = story.savedValue ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
-    UIImage *image = story.savedValue ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    [SVProgressHUD showImage:image status:status];
 }
 
 
@@ -378,8 +379,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         }
         [context deleteObject:historyItem];
     }];
-    NSString *status = NSLocalizedString(@"Removed", @"Recents Activity Confirmation: Removed item from history");
-    [SVProgressHUD showSuccessWithStatus:status];
 }
 
 -(void)toggleCategoryPressed:(NSString*)categoryName onStory:(DDGStory*)story
@@ -468,6 +467,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     self.enqueuedDownloadOperations = [NSMutableSet new];
     self.enqueuedDecompressionOperations = [NSMutableSet set];    
+    self.storyView.contentInset = UIEdgeInsetsZero;
 }
 
 - (void)viewDidUnload {

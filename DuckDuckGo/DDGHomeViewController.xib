@@ -165,11 +165,13 @@
             <constraints>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="07T-AZ-Z0Z"/>
                 <constraint firstAttribute="trailing" secondItem="nOn-A2-4XZ" secondAttribute="trailing" id="8IO-Gj-RIU"/>
+                <constraint firstAttribute="bottom" secondItem="NwH-at-kPi" secondAttribute="bottom" priority="1" id="CdO-vI-mzy"/>
                 <constraint firstAttribute="trailing" secondItem="kyo-JD-Ybe" secondAttribute="trailing" id="Gzw-YP-3Oo"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="top" id="NpH-tL-gD5"/>
-                <constraint firstItem="NwH-at-kPi" firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="top" id="OZ5-Sb-okf"/>
+                <constraint firstItem="NwH-at-kPi" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="HQm-a7-mxw" secondAttribute="top" id="OZ5-Sb-okf"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Okf-nx-ZKD"/>
                 <constraint firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="bottom" id="RQA-Dl-sUw" userLabel="tab bar bottom"/>
+                <constraint firstItem="NwH-at-kPi" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="kyo-JD-Ybe" secondAttribute="top" id="TAL-yo-lqJ"/>
                 <constraint firstAttribute="bottom" secondItem="kyo-JD-Ybe" secondAttribute="bottom" constant="-50" id="Thk-lu-eHV"/>
                 <constraint firstItem="HQm-a7-mxw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="m9c-VI-hov" userLabel="tab bar left"/>
                 <constraint firstItem="NwH-at-kPi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="sMg-RR-87x"/>
