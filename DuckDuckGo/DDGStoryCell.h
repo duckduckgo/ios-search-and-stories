@@ -15,6 +15,8 @@ extern NSString *const DDGStoryCellIdentifier;
 
 @protocol DDGStoryCellDelegate <NSObject>
 
+@property (readonly) NSUInteger storiesListMode;
+
 -(void)shareStory:(DDGStory*)story fromView:(UIView*)sourceView;
 -(void)toggleStorySaved:(DDGStory*)story;
 -(void)openStoryInBrowser:(DDGStory*)story;

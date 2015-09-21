@@ -167,6 +167,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 @property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) UIView *innerShadowView;
 @property (nonatomic, strong) UILabel* textLabel;
+@property (nonatomic, weak) DDGStoryMenu* menu;
 @property (nonatomic, assign, getter = isRead) BOOL read;
 @property (nonatomic, strong) DDGFaviconButton *faviconButton;
 @property (nonatomic, strong) DDGPopoverViewController* menuPopover;
@@ -197,11 +198,14 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     DDGPopoverViewController* popover = self.menuPopover;
     void(^toggleState)() = ^() {
         [self.storyDelegate toggleStorySaved:self.story];
+        [self.menu.tableView reloadData];
     };
-    if(popover==nil) {
-        toggleState();
-    } else {
+    
+    if(popover && self.storyDelegate.storiesListMode==DDGStoriesListModeFavorites) {
+        // we should remove the popover if the story has disappeared
         [popover dismissViewControllerAnimated:TRUE completion:toggleState];
+    } else {
+        toggleState();
     }
 }
 
@@ -308,6 +312,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 -(void)menuButtonSelected:(id)sender
 {
     DDGStoryMenu* menu = [[DDGStoryMenu alloc] initWithStoryCell:self];
+    self.menu = menu;
     self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu
                                                                andTouchPassthroughView:self.touchPassthroughView];
     [self.menuPopover presentPopoverFromView:self.menuButton
