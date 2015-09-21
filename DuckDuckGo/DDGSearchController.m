@@ -46,6 +46,7 @@ NSString * const emailRegEx =
 @property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
 @property (nonatomic, weak) UIView* customToolbar;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* contentBottomConstraint;
+@property UIView* shadowView;
 
 @end
 
@@ -222,8 +223,15 @@ NSString * const emailRegEx =
     [self addChildViewController:navController];
     [self.view insertSubview:navController.view belowSubview:self.background];
     [navController didMoveToParentViewController:self];
-    
     self.navController = navController;
+    
+    CGRect searchBarFrame = self.searchBar.frame;
+    self.shadowView = [[UIView alloc] initWithFrame:CGRectMake(0, searchBarFrame.origin.y + searchBarFrame.size.height,
+                                                               self.view.frame.size.width, 0.5)];
+    self.shadowView.opaque = FALSE;
+    self.shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.15];
+    self.shadowView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    [self.view addSubview:self.shadowView];
     
     [self setNeedsStatusBarAppearanceUpdate];
 }
@@ -626,6 +634,8 @@ NSString * const emailRegEx =
         
         BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
         [self.searchBar setShowsLeftButton:showBackButton animated:YES];
+    } else if(self.navController==navigationController) {
+        self.shadowView.hidden = [viewController isKindOfClass:DDGTabViewController.class];
     }
 }
 

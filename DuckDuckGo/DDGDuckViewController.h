@@ -12,7 +12,7 @@
 
 @class DDGSearchController;
 
-@interface DDGDuckViewController : UITableViewController
+@interface DDGDuckViewController : UIViewController
 
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property BOOL popoverMode;

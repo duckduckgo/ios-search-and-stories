@@ -467,6 +467,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     self.enqueuedDownloadOperations = [NSMutableSet new];
     self.enqueuedDecompressionOperations = [NSMutableSet set];    
+    self.storyView.contentInset = UIEdgeInsetsZero;
 }
 
 - (void)viewDidUnload {

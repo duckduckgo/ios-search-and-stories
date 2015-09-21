@@ -7,7 +7,6 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DDGBookmarksViewController">
             <connections>
-                <outlet property="separatorView" destination="t8O-jg-Fvf" id="MlN-fL-Yn1"/>
                 <outlet property="tableView" destination="4" id="Bef-pU-OHB"/>
                 <outlet property="view" destination="Bkv-vJ-F5U" id="wca-8y-SEh"/>
             </connections>
@@ -26,22 +25,13 @@
                         <outlet property="delegate" destination="-1" id="7"/>
                     </connections>
                 </tableView>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t8O-jg-Fvf" userLabel="separator">
-                    <rect key="frame" x="0.0" y="0.0" width="320" height="1"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="0.5" id="1Hg-TO-ofu"/>
-                    </constraints>
-                </view>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="4" firstAttribute="leading" secondItem="Bkv-vJ-F5U" secondAttribute="leading" id="3qt-VH-XAN"/>
-                <constraint firstItem="4" firstAttribute="top" secondItem="t8O-jg-Fvf" secondAttribute="bottom" id="NwP-57-GBP"/>
                 <constraint firstAttribute="trailing" secondItem="4" secondAttribute="trailing" id="Y57-WQ-YlC"/>
-                <constraint firstAttribute="trailing" secondItem="t8O-jg-Fvf" secondAttribute="trailing" id="it7-sx-9uz"/>
+                <constraint firstItem="4" firstAttribute="top" secondItem="Bkv-vJ-F5U" secondAttribute="top" constant="1" id="kVX-WD-ABo"/>
                 <constraint firstAttribute="bottom" secondItem="4" secondAttribute="bottom" id="uB5-cd-rYC"/>
-                <constraint firstItem="t8O-jg-Fvf" firstAttribute="top" secondItem="Bkv-vJ-F5U" secondAttribute="top" id="v3B-sh-tyP"/>
-                <constraint firstItem="t8O-jg-Fvf" firstAttribute="leading" secondItem="Bkv-vJ-F5U" secondAttribute="leading" id="v7T-Xa-HyS"/>
             </constraints>
             <point key="canvasLocation" x="46" y="257"/>
         </view>
