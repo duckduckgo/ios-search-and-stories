@@ -12,7 +12,6 @@
                 <outlet property="favButton" destination="rdb-X1-aus" id="5IU-e0-NKm"/>
                 <outlet property="forwardButton" destination="9s9-Ft-ueK" id="LiL-Uf-S8f"/>
                 <outlet property="shareButton" destination="bTS-Cl-kXM" id="LEs-Vq-9Q8"/>
-                <outlet property="tabBarTopBorderConstraint" destination="dFg-4u-D5Y" id="f8l-bn-75n"/>
                 <outlet property="tabsButton" destination="ZIq-Fa-jkb" id="yMH-Ni-QeF"/>
                 <outlet property="webToolbar" destination="YM8-Zt-olG" id="xwQ-Pa-2B7"/>
             </connections>
@@ -21,13 +20,6 @@
         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YM8-Zt-olG" userLabel="web toolbar">
             <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
             <subviews>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PlC-IS-zn3" userLabel="border">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
-                    <color key="backgroundColor" red="0.79215686269999996" green="0.79215686269999996" blue="0.79215686269999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="1" id="dFg-4u-D5Y"/>
-                    </constraints>
-                </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D1U-79-qbz" userLabel="back">
                     <rect key="frame" x="51" y="1" width="48" height="48"/>
                     <constraints>
@@ -102,18 +94,15 @@
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="D1U-79-qbz" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.125" id="2jt-Ou-7Wi" userLabel="back left align"/>
-                <constraint firstAttribute="trailing" secondItem="PlC-IS-zn3" secondAttribute="trailing" id="7aG-LX-nIO" userLabel="border right align"/>
                 <constraint firstItem="bTS-Cl-kXM" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.875" id="BDe-t8-qAU" userLabel="share left align"/>
                 <constraint firstAttribute="centerY" secondItem="bTS-Cl-kXM" secondAttribute="centerY" id="FGP-9C-4Vv" userLabel="share vertical center"/>
                 <constraint firstItem="ZIq-Fa-jkb" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.9" id="H0r-C1-kJ5" userLabel="tabs left align"/>
                 <constraint firstItem="D1U-79-qbz" firstAttribute="centerY" secondItem="YM8-Zt-olG" secondAttribute="centerY" id="Jvf-WO-QAE" userLabel="back vertical center"/>
                 <constraint firstItem="9s9-Ft-ueK" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.375" id="S35-Ut-ILi" userLabel="forward left align"/>
-                <constraint firstItem="PlC-IS-zn3" firstAttribute="leading" secondItem="YM8-Zt-olG" secondAttribute="leading" id="Spq-dQ-7m6" userLabel="border left align"/>
                 <constraint firstItem="rdb-X1-aus" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.625" id="XII-bx-aDK" userLabel="fav left align"/>
                 <constraint firstAttribute="height" constant="50" id="dLj-kG-hTS" userLabel="tab bar height"/>
                 <constraint firstAttribute="centerY" secondItem="rdb-X1-aus" secondAttribute="centerY" id="fqC-tD-d3f" userLabel="fav vertical center"/>
                 <constraint firstItem="ZIq-Fa-jkb" firstAttribute="centerY" secondItem="YM8-Zt-olG" secondAttribute="centerY" id="mBV-3Z-s4y" userLabel="tabs vertical center"/>
-                <constraint firstItem="PlC-IS-zn3" firstAttribute="top" secondItem="YM8-Zt-olG" secondAttribute="top" id="r7t-KY-Nx3" userLabel="border height"/>
                 <constraint firstAttribute="centerY" secondItem="9s9-Ft-ueK" secondAttribute="centerY" id="xiW-hY-JW9" userLabel="forward vertical center"/>
             </constraints>
             <nil key="simulatedStatusBarMetrics"/>
