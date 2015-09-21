@@ -28,8 +28,6 @@ extern NSString *const DDGStoryCellIdentifier;
 
 @interface DDGStoryCell : UICollectionViewCell
 
-@property (nonatomic, assign) BOOL displaysDropShadow;
-@property (nonatomic, assign) BOOL displaysInnerShadow;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) DDGStory* story;
 @property (nonatomic, strong) DDGHistoryItem* historyItem;

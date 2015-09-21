@@ -47,14 +47,16 @@
 
 - (void)loadView {
     [super loadView];
-    self.webView = [[DDGWebView alloc] initWithFrame:CGRectMake(0, 0, 50, 50)];//self.view.bounds];
+    CGRect viewFrame = self.view.frame;
+    viewFrame.origin = CGPointMake(0, 0);
+    self.webView = [[DDGWebView alloc] initWithFrame:viewFrame];
     self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.webView.delegate = self;
-    self.view = self.webView;
-    
     self.webView.scalesPageToFit = YES;
     _webViewLoadingDepth = 0;
     self.webView.backgroundColor = [UIColor duckNoContentColor];
+    
+    [self.view addSubview:self.webView];
     
     self.toolbar = [[UINib nibWithNibName:@"DDGWebToolbar" bundle:nil] instantiateWithOwner:self options:nil][0];
     self.backButton.enabled = FALSE;
