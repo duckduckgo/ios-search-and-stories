@@ -50,7 +50,7 @@
                                     <animations/>
                                     <color key="backgroundColor" red="0.83137254900000002" green="0.34901960780000002" blue="0.21176470589999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <accessibility key="accessibilityConfiguration" label="Search Duck Duck Go"/>
+                                    <accessibility key="accessibilityConfiguration" label="Search DuckDuckGo"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="29" id="af5-Fq-VI3"/>
                                     </constraints>
