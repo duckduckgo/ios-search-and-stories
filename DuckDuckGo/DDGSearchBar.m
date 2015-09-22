@@ -70,14 +70,27 @@
 
 - (void)setShowsCancelButton:(BOOL)show animated:(BOOL)animated {
     _showsCancelButton = show;
-    if(show) {
-        self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 12);
-        self.cancelButton.alpha = 1;
+    
+    void(^makeChanges)() = ^() {
+        if(show) {
+            self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 12);
+            self.cancelButton.alpha = 1;
+        } else {
+            self.cancelButtonXConstraint.constant = 2;
+            self.cancelButton.alpha = 0;
+        }
+        if(animated) {
+            [self layoutIfNeeded];
+        } else {
+            [self setNeedsLayout];
+        }
+    };
+    if(animated) {
+        [UIView animateWithDuration:2.0f animations:makeChanges];
     } else {
-        self.cancelButtonXConstraint.constant = 2;
-        self.cancelButton.alpha = 0;
+        makeChanges();
     }
-    [self layoutIfNeeded:((animated) ? 0.2 : 0.0)];
+
 }
 
 - (void)setShowsLeftButton:(BOOL)show animated:(BOOL)animated {

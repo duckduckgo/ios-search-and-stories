@@ -458,7 +458,6 @@ NSString * const emailRegEx =
 
 -(IBAction)bangButtonPressed:(UIButton*)sender {
     [self.autocompleteNavigationController popViewControllerAnimated:YES];
-    [self.autocompletePopover dismissPopoverAnimated:TRUE];
     [self bangButtonPressed];
 }
 
@@ -660,11 +659,12 @@ NSString * const emailRegEx =
     [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
     [self revealAutocomplete:YES animated:YES];
     
-    [self.searchBar setShowsBangButton:YES animated:YES];
-            
-    self.searchBar.showsLeftButton = NO;
-    self.searchBar.showsCancelButton = YES;
-    [self.searchBar layoutIfNeeded:0.25];
+    [UIView animateWithDuration:0.2f animations:^{
+        [self.searchBar setShowsBangButton:YES animated:FALSE];
+        [self.searchBar setShowsLeftButton:NO animated:FALSE];
+        [self.searchBar setShowsCancelButton:YES animated:FALSE];
+        [self.searchBar layoutIfNeeded];
+    }];
     
     autocompleteOpen = YES;
 }
@@ -685,19 +685,21 @@ NSString * const emailRegEx =
         [_searchHandler searchControllerAddressBarWillCancel];
     
     [self revealAutocomplete:NO animated:YES];
-    if(self.state == DDGSearchControllerStateWeb) {
-        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
-    }
-    
-    //[self.searchBar setShowsBangButton:NO animated:YES];
     
     [self.bangInfoPopover dismissPopoverAnimated:YES];
     self.bangInfoPopover = nil;
     
-    [self.searchBar setShowsLeftButton:(self.navController.viewControllers.count > 1) animated:YES];
-    self.searchBar.showsBangButton = NO;
-    self.searchBar.showsCancelButton = NO;
-    [self.searchBar layoutIfNeeded:0.25];
+    [UIView animateWithDuration:0.2f animations:^{
+        if(self.state == DDGSearchControllerStateWeb) {
+            [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+        }
+        
+        [self.searchBar setShowsLeftButton:(self.navController.viewControllers.count > 1) animated:NO];
+        [self.searchBar setShowsBangButton:NO animated:NO];
+        [self.searchBar setShowsCancelButton:NO animated:NO];
+        [self.searchBar layoutIfNeeded];
+    }];
+
 }
 
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
@@ -791,7 +793,7 @@ NSString * const emailRegEx =
 -(void)createInputAccessory {
     inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46, self.view.bounds.size.width, 46)];
     inputAccessory.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    inputAccessory.alpha = 0.0;
+    //inputAccessory.alpha = 0.0;
     [self.view addSubview:inputAccessory];
     
     // add scroll view
@@ -800,7 +802,7 @@ NSString * const emailRegEx =
     scrollView.showsHorizontalScrollIndicator = YES;
     scrollView.contentSize = CGSizeMake(0, 46);
     scrollView.tag = 102;
-    scrollView.hidden = YES;
+    scrollView.hidden = NO; // YES
     [inputAccessory addSubview:scrollView];
 }
 
@@ -837,38 +839,38 @@ NSString * const emailRegEx =
 -(void)bangButtonPressed {
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
     
-    if (self.showBangTooltip && nil == self.bangInfoPopover) {
-        if (!self.bangInfo)
-            [[NSBundle mainBundle] loadNibNamed:@"DDGBangInfo" owner:self options:nil];
-        
-        UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
-        viewController.view = self.bangInfo;
-        CGRect frame = self.bangInfo.frame;
-        frame.size.width = self.view.bounds.size.width - 20.0;
-        
-        CGRect textRect = CGRectInset(frame, 12.0, 0.0);
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-        CGSize textSize = CGRectIntegral([self.bangTextView.text boundingRectWithSize:CGSizeMake(textRect.size.width, MAXFLOAT)
-                                                               options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
-                                                            attributes:@{NSFontAttributeName: self.bangTextView.font,
-                                                                         NSParagraphStyleAttributeName: paragraphStyle}
-                                                               context:nil]).size;
-        
-        frame.size.height = textSize.height + 28.0;
-        if(frame.size.height < self.bangInfo.frame.size.height) {
-            frame.size.height = self.bangInfo.frame.size.height;
-        }
-        
-        viewController.preferredContentSize = frame.size;
-        
-        DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController
-                                                                                    andTouchPassthroughView:self.view];
-        popover.delegate = self;
-        CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
-        [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
-        self.bangInfoPopover = popover;
-    }
+//    if (self.showBangTooltip && nil == self.bangInfoPopover) {
+//        if (!self.bangInfo)
+//            [[NSBundle mainBundle] loadNibNamed:@"DDGBangInfo" owner:self options:nil];
+//        
+//        UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
+//        viewController.view = self.bangInfo;
+//        CGRect frame = self.bangInfo.frame;
+//        frame.size.width = self.view.bounds.size.width - 20.0;
+//        
+//        CGRect textRect = CGRectInset(frame, 12.0, 0.0);
+//        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+//        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+//        CGSize textSize = CGRectIntegral([self.bangTextView.text boundingRectWithSize:CGSizeMake(textRect.size.width, MAXFLOAT)
+//                                                               options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+//                                                            attributes:@{NSFontAttributeName: self.bangTextView.font,
+//                                                                         NSParagraphStyleAttributeName: paragraphStyle}
+//                                                               context:nil]).size;
+//        
+//        frame.size.height = textSize.height + 28.0;
+//        if(frame.size.height < self.bangInfo.frame.size.height) {
+//            frame.size.height = self.bangInfo.frame.size.height;
+//        }
+//        
+//        viewController.preferredContentSize = frame.size;
+//        
+//        DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController
+//                                                                                    andTouchPassthroughView:self.view];
+//        popover.delegate = self;
+//        CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
+//        [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+//        self.bangInfoPopover = popover;
+//    }
     
     NSString *text = searchField.text;
     NSString *textToAdd;
@@ -1006,7 +1008,7 @@ NSString * const emailRegEx =
     else
         currentWord = [newString substringWithRange:currentWordRange];
     
-    [self clearBangSuggestions];
+    //[self clearBangSuggestions];
     if(currentWord.length > 0 && [currentWord characterAtIndex:0]=='!') {
         [self loadSuggestionsForBang:currentWord];
     }
