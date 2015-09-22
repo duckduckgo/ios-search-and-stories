@@ -315,10 +315,12 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 #pragma mark - No Stories
 
 - (void)setShowNoContent:(BOOL)showNoContent {
-    [UIView animateWithDuration:0 animations:^{
-        self.storyView.hidden = showNoContent;
-        self.noContentView.view.hidden = !showNoContent;
-    }];
+    if(showNoContent!=self.storyView.hidden) {
+        [UIView animateWithDuration:0 animations:^{
+            self.storyView.hidden = showNoContent;
+            self.noContentView.view.hidden = !showNoContent;
+        }];
+    }
 }
 
 
@@ -617,7 +619,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     NSInteger changes = [addedStories count] + [removedStories count];
     
     // update the table view with added and removed stories
-    //DLog(@"updating %@ with %lu deleted items and %lu new items", self, removedStories.count, addedStories.count);
     if(removedStories.count!=0 || addedStories.count!=0) {
         [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
     }
@@ -1022,7 +1023,18 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+    switch(type) {
+        case NSFetchedResultsChangeDelete:
+            [self.storyView deleteItemsAtIndexPaths:@[indexPath]];
+            break;
+        case NSFetchedResultsChangeInsert:
+        case NSFetchedResultsChangeMove:
+            [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+            break;
+        case NSFetchedResultsChangeUpdate:
+            [self.storyView reloadItemsAtIndexPaths:@[indexPath]];
+            break;
+    }
     self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
 }
 
@@ -1068,6 +1080,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             }];
         }
     }
+    [cell setNeedsLayout];
 }
 
 
