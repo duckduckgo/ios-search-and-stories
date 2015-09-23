@@ -168,12 +168,6 @@
 		5B7C3BD4170AF18900B9E009 /* btn-icon_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD0170AF18900B9E009 /* btn-icon_plus.png */; };
 		5B7C3BD5170AF18900B9E009 /* btn-icon_plus@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD1170AF18900B9E009 /* btn-icon_plus@2x.png */; };
 		5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BD7170AF1AA00B9E009 /* DDGPlusButton.m */; };
-		5B7C3BDF170B098C00B9E009 /* DDGFirstRunViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BDD170B098C00B9E009 /* DDGFirstRunViewController.m */; };
-		5B7C3BE0170B098C00B9E009 /* DDGFirstRunViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BDE170B098C00B9E009 /* DDGFirstRunViewController.xib */; };
-		5B7C3BE7170B0C1000B9E009 /* btn_get-started.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */; };
-		5B7C3BE8170B0C1000B9E009 /* btn_get-started@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */; };
-		5B7C3BEB170B0C1A00B9E009 /* icon_close.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BE9170B0C1A00B9E009 /* icon_close.png */; };
-		5B7C3BEC170B0C1A00B9E009 /* icon_close@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */; };
 		5B7C3BEF170DA03E00B9E009 /* DDGSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BEE170DA03E00B9E009 /* DDGSearchBar.m */; };
 		5B7C3BF5170EECFF00B9E009 /* UIViewController+DDGSearchController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3BF4170EECFF00B9E009 /* UIViewController+DDGSearchController.m */; };
 		5B7C3C301715AF8900B9E009 /* DDGHistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5B7C3C2F1715AF8900B9E009 /* DDGHistoryViewController.m */; };
@@ -210,8 +204,6 @@
 		5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BB3F50416CAA49300281A2B /* DDGStoryCell.m */; };
 		5BB3F51B16D26AD300281A2B /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5BB3F51A16D26AD300281A2B /* CoreImage.framework */; };
 		5BD23C3816EE235800C2FBDA /* DDGActivityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */; };
-		5BDC6A51174BB1AA0065BB8D /* welcome_logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6A4F174BB1AA0065BB8D /* welcome_logo.png */; };
-		5BDC6A52174BB1AA0065BB8D /* welcome_logo@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6A50174BB1AA0065BB8D /* welcome_logo@2x.png */; };
 		5BDC6A55174CF5790065BB8D /* DDGAutocompleteCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC6A54174CF5790065BB8D /* DDGAutocompleteCell.m */; };
 		5BDC6AF5174E2F520065BB8D /* DDGGroupedTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC6AF4174E2F510065BB8D /* DDGGroupedTableViewCell.m */; };
 		5BDC6B06174E2FAA0065BB8D /* SettingsBottomCellBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 5BDC6AF6174E2FA30065BB8D /* SettingsBottomCellBackground.png */; };
@@ -539,13 +531,6 @@
 		5B7C3BD1170AF18900B9E009 /* btn-icon_plus@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-icon_plus@2x.png"; sourceTree = "<group>"; };
 		5B7C3BD6170AF1AA00B9E009 /* DDGPlusButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGPlusButton.h; sourceTree = "<group>"; };
 		5B7C3BD7170AF1AA00B9E009 /* DDGPlusButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGPlusButton.m; sourceTree = "<group>"; };
-		5B7C3BDC170B098C00B9E009 /* DDGFirstRunViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGFirstRunViewController.h; sourceTree = "<group>"; };
-		5B7C3BDD170B098C00B9E009 /* DDGFirstRunViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGFirstRunViewController.m; sourceTree = "<group>"; };
-		5B7C3BDE170B098C00B9E009 /* DDGFirstRunViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDGFirstRunViewController.xib; sourceTree = "<group>"; };
-		5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_get-started.png"; sourceTree = "<group>"; };
-		5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_get-started@2x.png"; sourceTree = "<group>"; };
-		5B7C3BE9170B0C1A00B9E009 /* icon_close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon_close.png; sourceTree = "<group>"; };
-		5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon_close@2x.png"; sourceTree = "<group>"; };
 		5B7C3BED170DA03E00B9E009 /* DDGSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSearchBar.h; sourceTree = "<group>"; };
 		5B7C3BEE170DA03E00B9E009 /* DDGSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSearchBar.m; sourceTree = "<group>"; };
 		5B7C3BF3170EECFE00B9E009 /* UIViewController+DDGSearchController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+DDGSearchController.h"; sourceTree = "<group>"; };
@@ -599,8 +584,6 @@
 		5BB3F51A16D26AD300281A2B /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 		5BD23C3616EE235800C2FBDA /* DDGActivityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGActivityViewController.h; sourceTree = "<group>"; };
 		5BD23C3716EE235800C2FBDA /* DDGActivityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGActivityViewController.m; sourceTree = "<group>"; };
-		5BDC6A4F174BB1AA0065BB8D /* welcome_logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = welcome_logo.png; sourceTree = "<group>"; };
-		5BDC6A50174BB1AA0065BB8D /* welcome_logo@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "welcome_logo@2x.png"; sourceTree = "<group>"; };
 		5BDC6A53174CF5790065BB8D /* DDGAutocompleteCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGAutocompleteCell.h; sourceTree = "<group>"; };
 		5BDC6A54174CF5790065BB8D /* DDGAutocompleteCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGAutocompleteCell.m; sourceTree = "<group>"; };
 		5BDC6AF3174E2F510065BB8D /* DDGGroupedTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGGroupedTableViewCell.h; sourceTree = "<group>"; };
@@ -1224,22 +1207,6 @@
 			name = "Main Menu";
 			sourceTree = "<group>";
 		};
-		5B7C3BDB170B096A00B9E009 /* First Run */ = {
-			isa = PBXGroup;
-			children = (
-				5B7C3BE5170B0C1000B9E009 /* btn_get-started.png */,
-				5B7C3BE6170B0C1000B9E009 /* btn_get-started@2x.png */,
-				5BDC6A4F174BB1AA0065BB8D /* welcome_logo.png */,
-				5BDC6A50174BB1AA0065BB8D /* welcome_logo@2x.png */,
-				5B7C3BE9170B0C1A00B9E009 /* icon_close.png */,
-				5B7C3BEA170B0C1A00B9E009 /* icon_close@2x.png */,
-				5B7C3BDC170B098C00B9E009 /* DDGFirstRunViewController.h */,
-				5B7C3BDD170B098C00B9E009 /* DDGFirstRunViewController.m */,
-				5B7C3BDE170B098C00B9E009 /* DDGFirstRunViewController.xib */,
-			);
-			name = "First Run";
-			sourceTree = "<group>";
-		};
 		5B7C3C26170EF7C400B9E009 /* Search Bar */ = {
 			isa = PBXGroup;
 			children = (
@@ -1471,7 +1438,6 @@
 			children = (
 				4C6AC43514DDA95500A1ACA1 /* 3rd Party */,
 				5B7C3BD9170B092D00B9E009 /* App */,
-				5B7C3BDB170B096A00B9E009 /* First Run */,
 				5B7C3BDA170B093300B9E009 /* Main Menu */,
 				5B07086C17008ED30058718F /* History */,
 				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
@@ -1726,11 +1692,6 @@
 				5B7C3BD3170AF18900B9E009 /* btn-bg_plus@2x.png in Resources */,
 				5B7C3BD4170AF18900B9E009 /* btn-icon_plus.png in Resources */,
 				5B7C3BD5170AF18900B9E009 /* btn-icon_plus@2x.png in Resources */,
-				5B7C3BE0170B098C00B9E009 /* DDGFirstRunViewController.xib in Resources */,
-				5B7C3BE7170B0C1000B9E009 /* btn_get-started.png in Resources */,
-				5B7C3BE8170B0C1000B9E009 /* btn_get-started@2x.png in Resources */,
-				5B7C3BEB170B0C1A00B9E009 /* icon_close.png in Resources */,
-				5B7C3BEC170B0C1A00B9E009 /* icon_close@2x.png in Resources */,
 				5B7C3CA6171852BC00B9E009 /* btn-list_delete.png in Resources */,
 				5B7C3CA7171852BC00B9E009 /* btn-list_delete@2x.png in Resources */,
 				5B375C34171D3F9A00C53772 /* button_menu_glyph_stories.png in Resources */,
@@ -1753,8 +1714,6 @@
 				5B15F3DA17394CDF00912482 /* bang-info_icon-close.png in Resources */,
 				5B15F3DB17394CDF00912482 /* bang-info_icon-close@2x.png in Resources */,
 				5B15F3DF17394E2C00912482 /* DDGBangInfo.xib in Resources */,
-				5BDC6A51174BB1AA0065BB8D /* welcome_logo.png in Resources */,
-				5BDC6A52174BB1AA0065BB8D /* welcome_logo@2x.png in Resources */,
 				5BDC6B06174E2FAA0065BB8D /* SettingsBottomCellBackground.png in Resources */,
 				5BDC6B07174E2FAA0065BB8D /* SettingsBottomCellBackground@2x.png in Resources */,
 				5BDC6B08174E2FAA0065BB8D /* SettingsBottomCellBackgroundHighlighted.png in Resources */,
@@ -1883,7 +1842,6 @@
 				5B0708871704A3BE0058718F /* DDGSafariActivity.m in Sources */,
 				5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */,
 				84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */,
-				5B7C3BDF170B098C00B9E009 /* DDGFirstRunViewController.m in Sources */,
 				845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */,
 				5B7C3BEF170DA03E00B9E009 /* DDGSearchBar.m in Sources */,
 				7BA49624197678440001B88C /* NSString+MD5.m in Sources */,

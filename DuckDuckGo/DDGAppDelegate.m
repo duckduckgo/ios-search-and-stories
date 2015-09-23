@@ -18,7 +18,6 @@
 #import "DDGSearchController.h"
 #import "DDGSearchHandler.h"
 #import "NSString+URLEncodingDDG.h"
-#import "DDGFirstRunViewController.h"
 #import "DDGURLProtocol.h"
 #import "DDGHomeViewController.h"
 
@@ -92,14 +91,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     
     // main view controller
     self.homeController = [DDGHomeViewController newHomeController];
-    
-    self.homeController.viewDidAppearCompletion = ^(DDGHomeViewController *homeController) {
-        if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey]) {
-            DDGFirstRunViewController *firstRunViewController = [DDGFirstRunViewController new];
-            [homeController presentViewController:firstRunViewController animated:YES completion:nil];
-        }
-    };
-    
     self.window.rootViewController = self.homeController;
     
     [self.window makeKeyAndVisible];
