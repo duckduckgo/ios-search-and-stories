@@ -9,7 +9,6 @@
 #import "DDGChooseSourcesViewController.h"
 #import "DDGStoryFeed.h"
 #import "UIImageView+AFNetworking.h"
-#import "SVProgressHUD.h"
 #import "DDGSettingsViewController.h"
 #import "DDGSourceSettingCellTableViewCell.h"
 
@@ -172,14 +171,6 @@
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
-	if(result == MFMailComposeResultSent)
-	{
-		[SVProgressHUD showSuccessWithStatus:@"Mail sent!"];
-	}
-	else if (result == MFMailComposeResultFailed)
-	{
-		[SVProgressHUD showErrorWithStatus:@"Mail send failed!"];
-	}
 	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 

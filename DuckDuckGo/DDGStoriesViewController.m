@@ -14,7 +14,6 @@
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGHistoryProvider.h"
 #import "DDGBookmarksProvider.h"
-#import "SVProgressHUD.h"
 #import "AFNetworking.h"
 #import "DDGActivityViewController.h"
 #import "DDGStoryFetcher.h"

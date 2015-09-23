@@ -11,7 +11,6 @@
 #import "DDGChooseRegionViewController.h"
 #import "DDGChooseHomeViewController.h"
 #import "DDGActivityViewController.h"
-#import "SVProgressHUD.h"
 #import <sys/utsname.h>
 #import "DDGHistoryProvider.h"
 #import "DDGRegionProvider.h"
@@ -166,7 +165,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
                                                         cancelButtonTitle:@"Cancel"
                                                    destructiveButtonTitle:nil
                                                         otherButtonTitles:@"Clear Recent", nil];
-        [actionSheet showInView:weakSelf.view.window];
+        [actionSheet showInView:weakSelf.view];
     }];
     
     for (IGFormSwitch *s in @[quackSwitch, suggestionsSwitch, recentSwitch])
@@ -225,16 +224,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     if(buttonIndex == 0) {
         DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
         [historyProvider clearHistory];
-        [SVProgressHUD showSuccessWithStatus:@"Recents cleared!"];
     }
 }
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    if(result == MFMailComposeResultSent) {
-        [SVProgressHUD showSuccessWithStatus:@"Feedback sent!"];
-    } else if(result == MFMailComposeResultFailed) {
-        [SVProgressHUD showErrorWithStatus:@"Feedback send failed!"];
-    }
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 

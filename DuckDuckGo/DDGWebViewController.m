@@ -10,7 +10,6 @@
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
 #import "DDGBookmarksProvider.h"
-#import "SVProgressHUD.h"
 #import "DDGUtility.h"
 #import "DDGStory.h"
 #import "AFNetworking.h"
@@ -294,16 +293,6 @@
     }
     
     self.isFavorited = !self.isFavorited;
-    
-    NSString *status = self.isFavorited
-    ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved")
-    : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
-    
-    UIImage *image = self.isFavorited
-    ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-    : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    
-    [SVProgressHUD showImage:image status:status];
 }
 
 -(IBAction)shareButtonPressed:(id)sender {
@@ -508,14 +497,6 @@
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error
 {
-	if(result == MFMailComposeResultSent)
-	{
-		[SVProgressHUD showSuccessWithStatus:@"Mail sent!"];
-	}
-	else if (result == MFMailComposeResultFailed)
-	{
-		[SVProgressHUD showErrorWithStatus:@"Mail send failed!"];
-	}
 	[self dismissViewControllerAnimated:YES completion:NULL];
 }
 

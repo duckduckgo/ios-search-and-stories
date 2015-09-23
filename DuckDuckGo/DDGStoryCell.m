@@ -10,7 +10,6 @@
 #import "DDGStoryCell.h"
 #import "DDGStoryFeed.h"
 #import "DDGPopoverViewController.h"
-#import "SVProgressHUD.h"
 #import "DDGActivityItemProvider.h"
 #import "DDGActivityViewController.h"
 #import "DDGSafariActivity.h"
