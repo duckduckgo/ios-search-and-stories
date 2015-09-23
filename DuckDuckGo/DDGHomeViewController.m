@@ -298,9 +298,6 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    if (self.viewDidAppearCompletion) {
-        self.viewDidAppearCompletion(self);
-    }
 }
 
 -(void)viewDidLayoutSubviews
