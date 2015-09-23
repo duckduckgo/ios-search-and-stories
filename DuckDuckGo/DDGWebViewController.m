@@ -59,8 +59,7 @@
     [self.view addSubview:self.webView];
     
     self.toolbar = [[UINib nibWithNibName:@"DDGWebToolbar" bundle:nil] instantiateWithOwner:self options:nil][0];
-    self.backButton.enabled = FALSE;
-    self.forwardButton.enabled = FALSE;
+    [self updateButtons];
 }
 
 -(UIView*)alternateToolbar {
@@ -603,7 +602,7 @@
 
 
 -(void)updateButtons {
-    self.backButton.enabled = self.webView.canGoBack || [self.searchController canPopContentViewController];
+    self.backButton.enabled = self.webView.canGoBack || self.navigationController.viewControllers.count>1;
     self.forwardButton.enabled = self.webView.canGoForward;
     
     if (nil != self.story && !self.webView.canGoBack) {
@@ -626,8 +625,7 @@
 {    
     [self updateBarWithRequest:theWebView.request];
     //[self.searchController webViewCanGoBack:theWebView.canGoBack];
-    [self.backButton setEnabled:theWebView.canGoBack];
-    [self.forwardButton setEnabled:theWebView.canGoForward];
+    [self updateButtons];
     [self decrementLoadingDepthCancelled:NO];
 
     
