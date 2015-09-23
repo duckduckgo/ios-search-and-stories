@@ -141,7 +141,7 @@ static NSString *historyCellID = @"HCell";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
-    [self.view addSubview:self.tableView];
+    self.view = self.tableView;
     
     self.imageCache = [NSCache new];
     

@@ -30,6 +30,11 @@
     return nil;
 }
 
+- (UIView*)dimmableContentView
+{
+    return self.view;
+}
+
 - (void)duckGoToTopLevel
 {
     DLog(@"duckToToTopLevel");

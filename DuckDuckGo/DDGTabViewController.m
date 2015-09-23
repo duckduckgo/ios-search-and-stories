@@ -41,6 +41,10 @@
     
 }
 
+- (UIView*)dimmableContentView
+{
+    return self.contentView;
+}
 
 -(void)duckGoToTopLevel
 {

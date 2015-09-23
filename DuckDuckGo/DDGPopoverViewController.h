@@ -21,6 +21,8 @@
 @property (nonatomic, weak) id <DDGPopoverViewControllerDelegate> delegate;
 @property (nonatomic, assign) CGFloat intrusion;
 @property (nonatomic) BOOL shouldDismissUponOutsideTap;
+@property (nonatomic) BOOL largeMode;
+@property (nonatomic, weak) UIView* dimmedBackgroundView;
 @property (nonatomic) CGRect anchorRect;
 
 - (id)initWithContentViewController:(UIViewController *)viewController

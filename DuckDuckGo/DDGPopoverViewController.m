@@ -15,7 +15,7 @@
 @property (nonatomic) CGRect arrowRect;
 @property (nonatomic) CGRect popoverRect;
 @property (nonatomic) CGRect debugRect;
-
+@property UIEdgeInsets borderInsets;
 @property (nonatomic, weak) UIView* touchPassthroughView;
 @property (nonatomic, weak) DDGPopoverViewController* popoverViewController;
 @end
@@ -24,10 +24,10 @@
 
 @interface DDGPopoverViewController ()
 @property (nonatomic, strong) UIViewController *contentViewController;
-@property (nonatomic) UIEdgeInsets contentInsets;  // the insets from the outer popover edges to the content view
 @property (nonatomic) UIEdgeInsets borderInsets;   // the insets of the popover border
 @property (nonatomic, strong) DDGPopoverBackgroundView *backgroundView;
 @property (nonatomic, strong) UIImage* upArrowImage;
+@property (nonatomic, strong) UIImage* downArrowImage;
 @property (nonatomic, weak) UIView* touchPassthroughView;
 @property (nonatomic, weak) UIView* anchorView;
 @property UIPopoverArrowDirection arrowDirections;
@@ -37,7 +37,15 @@
 @implementation DDGPopoverBackgroundView
 
 - (void)drawRect:(CGRect)rect {
+    UIView* dimView = self.popoverViewController.dimmedBackgroundView;
+    if(dimView) {
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGContextSetFillColorWithColor(context, [UIColor duckDimmedPopoverBackground].CGColor);
+        CGContextFillRect(context, [self convertRect:dimView.frame fromView:dimView]);
+    }
+    
     [super drawRect:rect];
+    
     [self.backgroundImage drawInRect:self.popoverRect];
     [self.arrowImage drawInRect:self.arrowRect blendMode:kCGBlendModeNormal alpha:1.0];
     
@@ -52,6 +60,11 @@
 //    CGContextFillRect(context, self.popoverRect);
 }
 
+-(void)setBackgroundImage:(UIImage *)backgroundImage
+{
+    self.borderInsets = UIEdgeInsetsMake(11, 11, 11, 11);
+    _backgroundImage = [backgroundImage resizableImageWithCapInsets:self.borderInsets];
+}
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
@@ -98,7 +111,7 @@
         contentSize = self.popoverViewController.contentViewController.view.frame.size;
     }
     
-    UIEdgeInsets insets = self.popoverViewController.borderInsets;
+    UIEdgeInsets insets = self.borderInsets;
     CGSize arrowSize = self.popoverViewController.upArrowImage.size;
     
     CGRect originRect = self.originRect;
@@ -130,28 +143,27 @@
         insets.bottom = MAX(insets.top, arrowSize.height);
     }
     
-    self.popoverRect = CGRectMake(popoverX, popoverY, popoverWidth, popoverHeight); // the popover frame image should be placed around the content
-    self.popoverViewController.contentViewController.view.frame = UIEdgeInsetsInsetRect(self.popoverRect, insets);
-    
     switch(arrowDir) {
         case UIPopoverArrowDirectionDown:
             self.arrowRect = CGRectMake(originRect.origin.x + (originRect.size.width/2.0) - (arrowSize.width / 2.0),
                                         popoverY + popoverHeight - arrowSize.height,
                                         arrowSize.width,
                                         arrowSize.height);
-            self.arrowImage = [UIImage imageWithCGImage:self.popoverViewController.upArrowImage.CGImage
-                                                  scale:self.popoverViewController.upArrowImage.scale
-                                            orientation:UIImageOrientationDownMirrored];
+            self.arrowImage = self.popoverViewController.downArrowImage;
             break;
         case UIPopoverArrowDirectionUp:
         default:
             self.arrowRect = CGRectMake(originRect.origin.x + (originRect.size.width/2.0) - (arrowSize.width / 2.0),
-                                        popoverY,
+                                        popoverY + 1,
                                         arrowSize.width,
                                         arrowSize.height);
             self.arrowImage = self.popoverViewController.upArrowImage;
+            popoverY += arrowSize.height - self.borderInsets.top + self.popoverViewController.intrusion;
             break;
     }
+    
+    self.popoverRect = CGRectMake(popoverX, popoverY, popoverWidth, popoverHeight); // the popover frame image should be placed around the content
+    self.popoverViewController.contentViewController.view.frame = self.popoverRect; //UIEdgeInsetsInsetRect(self.popoverRect, inverseInsets);
     
     [self setNeedsDisplay];
     //[self setNeedsUpdateConstraints];
@@ -172,8 +184,6 @@
     if (self) {
         self.contentViewController = viewController;
         self.touchPassthroughView = touchPassthroughView;
-        self.contentInsets = UIEdgeInsetsMake(8, 8, 8, 8);
-        self.borderInsets = UIEdgeInsetsMake(8, 8, 8, 8);
         self.intrusion = 3;
         self.shouldDismissUponOutsideTap = TRUE;
     }
@@ -184,25 +194,19 @@
 -(void)loadView
 {
     [super loadView];
-    
-    self.upArrowImage = [UIImage imageNamed:@"popover-indicator"];
     self.backgroundView = [[DDGPopoverBackgroundView alloc] initWithFrame:self.touchPassthroughView.frame];
     self.backgroundView.popoverViewController = self;
-    self.backgroundView.touchPassthroughView = self.touchPassthroughView;
-    self.backgroundView.backgroundColor = [UIColor redColor];
-    self.backgroundView.backgroundImage = [[UIImage imageNamed:@"popover-frame"] resizableImageWithCapInsets:UIEdgeInsetsMake(11,11,11,11)];
-    self.backgroundView.alpha = 0.0;
     self.view = self.backgroundView;
-    self.view.backgroundColor = [UIColor duckPopoverBackground];
+    self.view.backgroundColor = [UIColor clearColor];
     self.view.opaque = NO;
     
     UIView *contentView = self.contentViewController.view;
+    [self addChildViewController:self.contentViewController]; // calls [childViewController willMoveToParentViewController:self]
+    [self.view addSubview:contentView];
     contentView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     contentView.opaque = NO;
     contentView.layer.cornerRadius = 4.0;
-    [self addChildViewController:self.contentViewController]; // calls [childViewController willMoveToParentViewController:self]
-    [self.view addSubview:contentView];
-    contentView.alpha = 1;
+    //contentView.alpha = 1;
     [self.contentViewController didMoveToParentViewController:self];
     
     self.view.layer.shouldRasterize = YES;
@@ -211,6 +215,16 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.backgroundView.touchPassthroughView = self.touchPassthroughView;
+    self.backgroundView.backgroundImage = [UIImage imageNamed:@"popover-frame"];
+    self.backgroundView.alpha = 0.0;
+    
+    NSString* arrowImageName = self.largeMode ? @"popover-indicator-large" : @"popover-indicator";
+    self.upArrowImage = [UIImage imageNamed:arrowImageName];
+    self.downArrowImage = [UIImage imageWithCGImage:self.upArrowImage.CGImage
+                                              scale:self.upArrowImage.scale
+                                        orientation:UIImageOrientationDownMirrored];
     //[self.view addSubview:self.backgroundView];
 }
 

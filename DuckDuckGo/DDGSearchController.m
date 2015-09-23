@@ -153,6 +153,18 @@ NSString * const emailRegEx =
 	}
 }
 
+-(BOOL)shouldUsePopover {
+    if(IPAD) return TRUE;
+    else return FALSE;
+    
+//    
+//    if([self respondsToSelector:@selector(traitCollection)]) {
+//        BOOL isRegularWidth = self.traitCollection.horizontalSizeClass==UIUserInterfaceSizeClassRegular;
+//        return isRegularWidth;
+//    }
+//    return NO;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -163,24 +175,6 @@ NSString * const emailRegEx =
         self.autocompleteController = [[DDGDuckViewController alloc] initWithSearchController:self managedObjectContext:self.managedObjectContext];
         self.autocompleteController.historyProvider = self.historyProvider;
     }
-    if(IPAD) {
-        [self.background removeFromSuperview];
-        self.autocompleteController.popoverMode = TRUE;
-        self.autocompletePopover = [[DDGPopoverViewController alloc] initWithContentViewController:self.autocompleteController
-                                                                           andTouchPassthroughView:self.view];
-        self.autocompletePopover.popoverParentController = self;
-        self.autocompletePopover.shouldDismissUponOutsideTap = FALSE;
-    } else {
-        self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:self.autocompleteController];
-        self.autocompleteNavigationController.delegate = self;
-        
-        [self addChildViewController:self.autocompleteNavigationController];
-        [_background addSubview:self.autocompleteNavigationController.view];
-        self.autocompleteNavigationController.view.frame = _background.bounds;
-        [self.autocompleteNavigationController didMoveToParentViewController:self];
-    }
-    
-    [self revealAutocomplete:NO animated:NO];
     
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
     [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
@@ -268,6 +262,50 @@ NSString * const emailRegEx =
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    if([self shouldUsePopover]) {
+        if(self.autocompleteNavigationController) {
+            [self.autocompleteNavigationController.view removeFromSuperview];
+            [self.autocompleteNavigationController removeFromParentViewController];
+            self.autocompleteNavigationController = nil;
+            
+            [self.autocompleteController removeFromParentViewController];
+            [self.autocompleteController.view removeFromSuperview];
+        }
+        
+        [self.background removeFromSuperview];
+        self.autocompleteController.popoverMode = TRUE;
+        if(self.autocompletePopover==nil) {
+            self.autocompletePopover = [[DDGPopoverViewController alloc] initWithContentViewController:self.autocompleteController
+                                                                               andTouchPassthroughView:self.view];
+            self.autocompletePopover.largeMode = TRUE;
+            self.autocompletePopover.popoverParentController = self;
+            self.autocompletePopover.shouldDismissUponOutsideTap = FALSE;
+        }
+    } else {
+        if(self.autocompletePopover) {
+            [self.autocompletePopover removeFromParentViewController];
+            [self.autocompletePopover.view removeFromSuperview];
+            self.autocompletePopover = nil;
+            
+            [self.autocompleteController removeFromParentViewController];
+            [self.autocompleteController.view removeFromSuperview];
+        }
+        
+        if(self.autocompleteNavigationController==nil) {
+            [self.autocompleteController removeFromParentViewController];
+            self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:self.autocompleteController];
+            self.autocompleteNavigationController.delegate = self;
+            [self addChildViewController:self.autocompleteNavigationController];
+            self.autocompleteNavigationController.view.frame = _background.bounds;
+            [self.background addSubview:self.autocompleteNavigationController.view];
+            [self.autocompleteNavigationController didMoveToParentViewController:self];
+        }
+    }
+    
+    [self revealAutocomplete:NO animated:NO];
+    
+
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -630,10 +668,10 @@ NSString * const emailRegEx =
     if(self.autocompleteNavigationController==navigationController) {
         if(!autocompleteOpen)
             return;
-        
         BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
         [self.searchBar setShowsLeftButton:showBackButton animated:YES];
     } else if(self.navController==navigationController) {
+        self.autocompletePopover.dimmedBackgroundView = viewController.dimmableContentView;
         self.shadowView.hidden = [viewController isKindOfClass:DDGTabViewController.class];
     }
 }
@@ -704,7 +742,7 @@ NSString * const emailRegEx =
 
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
 - (void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
-    if(IPAD) {
+    if(self.autocompletePopover) {
         if(reveal) {
             self.autocompletePopover.intrusion = 4;
             CGRect autocompleteRect = self.autocompleteController.view.frame;
@@ -718,8 +756,7 @@ NSString * const emailRegEx =
         } else {
             [self.autocompletePopover dismissPopoverAnimated:animated];
         }
-        
-    } else {
+    } else if(self.autocompleteNavigationController) {
         if(self.autocompleteController==[self.contentControllers lastObject]) return;
         if(reveal) {
             [self.autocompleteNavigationController viewWillAppear:animated];

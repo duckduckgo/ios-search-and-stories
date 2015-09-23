@@ -30,6 +30,7 @@
 + (UIColor *)duckSearchFieldPlaceholderForeground;
 
 + (UIColor*)duckPopoverBackground;
++ (UIColor*)duckDimmedPopoverBackground;
 
 + (UIColor*)duckProgressBarForeground;
 + (UIColor*)duckProgressBarBackground;

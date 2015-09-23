@@ -167,6 +167,8 @@
     return [UIColor clearColor];
 }
 
++(UIColor*)duckDimmedPopoverBackground { return [[UIColor blackColor] colorWithAlphaComponent:0.35]; }
+
 + (UIColor *)autocompleteHeaderColor
 {
     return [UIColor clearColor];
