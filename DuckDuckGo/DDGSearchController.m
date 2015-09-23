@@ -101,7 +101,7 @@ NSString * const emailRegEx =
     if (self.isTransitioningViewControllers)
         return;
     if([contentController isKindOfClass:DDGDuckViewController.class]) {
-        ((DDGDuckViewController*)contentController).underPopoverMode = self.autocompleteController.popoverMode;
+        ((DDGDuckViewController*)contentController).underPopoverMode = [self shouldUsePopover];
     }
     [self view]; // force the view to be loaded
     contentController.view.frame = self.background.frame;
@@ -154,15 +154,11 @@ NSString * const emailRegEx =
 }
 
 -(BOOL)shouldUsePopover {
-    if(IPAD) return TRUE;
-    else return FALSE;
-    
-//    
-//    if([self respondsToSelector:@selector(traitCollection)]) {
-//        BOOL isRegularWidth = self.traitCollection.horizontalSizeClass==UIUserInterfaceSizeClassRegular;
-//        return isRegularWidth;
-//    }
-//    return NO;
+    if([self respondsToSelector:@selector(traitCollection)]) {
+        BOOL isRegularWidth = self.traitCollection.horizontalSizeClass==UIUserInterfaceSizeClassRegular;
+        return isRegularWidth;
+    }
+    return IPAD;
 }
 
 - (void)viewDidLoad
