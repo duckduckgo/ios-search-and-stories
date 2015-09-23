@@ -36,7 +36,7 @@
 	self.tableView.allowsSelectionDuringEditing = YES;
     self.tableView.rowHeight = 50;
     self.tableView.sectionHeaderHeight = 64;
-    self.title = @"Sources";
+    self.title = NSLocalizedString(@"Sources", "View Controller Title: Sources");
     
 	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
     [button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];

@@ -124,56 +124,56 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 #pragma mark - Form view controller
 
 -(void)configure {
-    self.title = @"Settings";
+    self.title = NSLocalizedString(@"Settings", @"View Controller Title: Settings");
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    [self addSectionWithTitle:@"General" footer:nil];
-    [self addButton:@"Home" forKey:DDGSettingHomeView detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:NSLocalizedString(@"General", @"Header for general settings section") footer:nil];
+    [self addButton:NSLocalizedString(@"Home", @"Button: What screen should be presented when launching the app") forKey:DDGSettingHomeView detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseHomeViewController *hvc = [[DDGChooseHomeViewController alloc] initWithDefaults];
         [weakSelf.searchControllerDDG pushContentViewController:hvc animated:YES];
     }];
     
-    [self addSectionWithTitle:@"Stories" footer:nil];
-    [self addButton:@"Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:NSLocalizedString(@"Stories", @"Header for Stories settings section") footer:nil];
+    [self addButton:NSLocalizedString(@"Sources", @"Button: Sources") forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
         [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
     }];
     
-    [self addButton:@"Readability" forKey:@"readability" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addButton:NSLocalizedString(@"Readability", @"Button: Readability") forKey:@"readability" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGReadabilitySettingViewController *rvc = [[DDGReadabilitySettingViewController alloc] initWithDefaults];
         [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
     }];
 //    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
-    IGFormSwitch *quackSwitch = [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
+    IGFormSwitch *quackSwitch = [self addSwitch:NSLocalizedString(@"Quack on Refresh", @"Switch: Quack on Refresh") forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
-    [self addSectionWithTitle:@"Search" footer:nil];
-    IGFormSwitch *suggestionsSwitch = [self addSwitch:@"Autocomplete" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
-    [self addButton:@"Region" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:NSLocalizedString(@"Search", @"Header for Search settings section") footer:nil];
+    IGFormSwitch *suggestionsSwitch = [self addSwitch:NSLocalizedString(@"Autocomplete", @"Switch: Autocomplete") forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
+    [self addButton:NSLocalizedString(@"Region", @"Button: Region") forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
         [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
     }];
     
-    [self addSectionWithTitle:@"Privacy" footer:nil];
-    IGFormSwitch *recentSwitch = [self addSwitch:@"Save Recents" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
-    [self addButton:@"Clear Recents" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
+    [self addSectionWithTitle:NSLocalizedString(@"Privacy", @"Header for Privacy settings section") footer:nil];
+    IGFormSwitch *recentSwitch = [self addSwitch:NSLocalizedString(@"Save Recents", @"Switch: Save recent searches") forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
+    [self addButton:NSLocalizedString(@"Clear Recents", @"Clear recent search results") forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Are you sure you want to clear history? This cannot be undone.", @"Ask for confirmation of clearing the history and state that this cannot be undone")
                                                                  delegate:weakSelf
-                                                        cancelButtonTitle:@"Cancel"
+                                                        cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                    destructiveButtonTitle:nil
-                                                        otherButtonTitles:@"Clear Recent", nil];
-        [actionSheet showInView:weakSelf.view];
+                              otherButtonTitles:NSLocalizedString(@"Clear Recent", @"Clear Recent"), nil];
+        [actionSheet showInView:weakSelf.view.window];
     }];
     
     for (IGFormSwitch *s in @[quackSwitch, suggestionsSwitch, recentSwitch])
         [s.switchControl addTarget:self action:@selector(save:) forControlEvents:UIControlEventValueChanged];
     
-    [self addSectionWithTitle:@"Other" footer:nil];
+    [self addSectionWithTitle:NSLocalizedString(@"Other", @"Heading for Other options section") footer:nil];
     
-    [self addButton:@"Send Feedback" forKey:@"feedback" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:NSLocalizedString(@"Send Feedback", @"Button: Send Feedback") forKey:@"feedback" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
         mailVC.mailComposeDelegate = weakSelf;
         [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
@@ -181,20 +181,20 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
         [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
-    [self addButton:@"Share" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
-        NSString *shareTitle = @"Check out the DuckDuckGo iOS app!";
+    [self addButton:NSLocalizedString(@"Share", @"Button: Share") forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+        NSString *shareTitle = NSLocalizedString(@"Check out the DuckDuckGo iOS app!", @"Share title: Check out the DuckDuckGo iOS app!");
         NSURL *shareURL = [NSURL URLWithString:@"https://itunes.apple.com/app/id663592361"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
-    [self addButton:@"Leave a Rating" forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:NSLocalizedString(@"Leave a Rating", @"Button: Leave a Rating") forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=663592361&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
     }];
 
     NSString *bundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
     NSString *shortBundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
     
-    NSString *versionInfo = [NSString stringWithFormat:@"Version %@", shortBundleVersion];
+    NSString *versionInfo = [NSString stringWithFormat:NSLocalizedString(@"Version %@", @"Version %@"), shortBundleVersion];
     if (![shortBundleVersion isEqualToString:bundleVersion])
         versionInfo = [versionInfo stringByAppendingFormat:@" (%@)", bundleVersion];
     

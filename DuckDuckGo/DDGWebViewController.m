@@ -72,8 +72,8 @@
 {
     [super viewDidLoad];
     self.tabBarTopBorderConstraint.constant = 0.5f;
-    UIMenuItem *search = [[UIMenuItem alloc] initWithTitle:@"Search" action:@selector(search:)];
-    UIMenuItem *saveImage = [[UIMenuItem alloc] initWithTitle:@"Save Image" action:@selector(saveImage:)];
+    UIMenuItem *search = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Search", @"Search") action:@selector(search:)];
+    UIMenuItem *saveImage = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save Image", @"Save the image to the photo library") action:@selector(saveImage:)];
     [[UIMenuController sharedMenuController] setMenuItems:@[search, saveImage]];
     
     //    UIView*
@@ -203,7 +203,7 @@
         pageTitle = self.story.title;
     }
     
-    NSString* shareString = [NSString stringWithFormat:@"%@\n\nvia DuckDuckGo for iOS\n\n", pageTitle];
+    NSString* shareString = [NSString stringWithFormat:NSLocalizedString(@"%@\n\nvia DuckDuckGo for iOS\n\n", @"%@\n\nvia DuckDuckGo for iOS\n\n"), pageTitle];
     
     NSArray *applicationActivities = @[];
     NSArray *items = @[shareString, shareURL];
@@ -475,10 +475,10 @@
                 ALAssetsLibrary *library = [ALAssetsLibrary new];
                 [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)image.imageOrientation completionBlock:^(NSURL *assetURL, NSError *error) {
                     if (error) {
-                        [[[UIAlertView alloc] initWithTitle:@"Save Imaged Failed"
-                                                    message:@"The image couldn't be saved to your camera roll at this time. Please try again later."
+                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Save Imaged Failed", @"Alert Title: Saving Image Failed")
+                                                    message:NSLocalizedString(@"The image couldn't be saved to your camera roll at this time. Please try again later.", @"Alert Message: The image could not be saved at this time. Please try again later.")
                                                    delegate:nil
-                                          cancelButtonTitle:@"OK"
+                                          cancelButtonTitle:NSLocalizedString(@"OK", @"Dismiss Alert Button: OK")
                                           otherButtonTitles:nil, nil] show];
                     }
                 }];
