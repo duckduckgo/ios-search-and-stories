@@ -16,6 +16,7 @@
                 <outlet property="background" destination="21" id="23"/>
                 <outlet property="contentBottomConstraint" destination="DsX-Il-jIf" id="Str-dT-kEd"/>
                 <outlet property="searchBar" destination="67" id="68"/>
+                <outlet property="searchBarMaxWidthConstraint" destination="WQk-4I-V9H" id="YXt-LN-zdh"/>
                 <outlet property="searchBarWrapper" destination="VVG-ik-zzG" id="AJJ-pc-3bS"/>
                 <outlet property="view" destination="8" id="12"/>
             </connections>

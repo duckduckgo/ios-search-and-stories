@@ -46,6 +46,7 @@ NSString * const emailRegEx =
 @property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
 @property (nonatomic, weak) UIView* customToolbar;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* contentBottomConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* searchBarMaxWidthConstraint;
 @property UIView* shadowView;
 
 @end
@@ -155,8 +156,7 @@ NSString * const emailRegEx =
 
 -(BOOL)shouldUsePopover {
     if([self respondsToSelector:@selector(traitCollection)]) {
-        BOOL isRegularWidth = self.traitCollection.horizontalSizeClass==UIUserInterfaceSizeClassRegular;
-        return isRegularWidth;
+        return self.traitCollection.horizontalSizeClass==UIUserInterfaceSizeClassRegular;
     }
     return IPAD;
 }
@@ -235,7 +235,29 @@ NSString * const emailRegEx =
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return YES;
+}
+
+-(void)updateiPadSearchBarToLandscape:(BOOL)isLandscape
+{
+    if(IPAD) {
+        self.searchBarMaxWidthConstraint.constant = isLandscape ? 514 : 414;
+    }
+}
+
+//-(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+//{
+//    if(IPAD) {
+//        [self updateiPadSearchBarToLandscape:(size.width > size.height)];
+//    }
+//}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [self updateiPadSearchBarToLandscape:UIInterfaceOrientationIsLandscape(toInterfaceOrientation)];
+    if(self.autocompletePopover.isBeingPresented) {
+        //self.autocompletePopover.view.alpha = 0.0;
+    }
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
@@ -246,7 +268,7 @@ NSString * const emailRegEx =
         autocompleteRect.size.width = self.searchBar.frame.size.width + 0;
         autocompleteRect.size.height = 490;
         self.autocompleteController.preferredContentSize = autocompleteRect.size;
-        //self.autocompletePopover.preferredContentSize = autocompleteRect.size;
+        //self.autocompletePopover.view.alpha = 1.0;
     }
 }
 
@@ -258,6 +280,8 @@ NSString * const emailRegEx =
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self updateiPadSearchBarToLandscape:UIInterfaceOrientationIsLandscape(self.interfaceOrientation)];
     
     if([self shouldUsePopover]) {
         if(self.autocompleteNavigationController) {
