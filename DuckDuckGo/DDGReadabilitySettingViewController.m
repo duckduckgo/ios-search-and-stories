@@ -28,12 +28,11 @@ NSString * const DDGReadabilityModeKey = @"readability";
     
     NSInteger readabilitySetting = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
     
-    [self addSectionWithTitle:@"Readability" footer:nil];
+    [self addSectionWithTitle:NSLocalizedString(@"Readability", @"Title for settings that improve readability") footer:nil];
     
-    [self addRadioOptionWithTitle:@"Off" value:@(DDGReadabilityModeOff) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOff)];
-    [self addRadioOptionWithTitle:@"On when available" value:@(DDGReadabilityModeOnIfAvailable) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnIfAvailable)];
-    [self addRadioOptionWithTitle:@"Only show articles with Readability" value:@(DDGReadabilityModeOnExclusive) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnExclusive)];
-    
+    [self addRadioOptionWithTitle:NSLocalizedString(@"Off", @"Readability is turned off") value:@(DDGReadabilityModeOff) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOff)];
+    [self addRadioOptionWithTitle:NSLocalizedString(@"On when available", @"Setting to use readability if it's available") value:@(DDGReadabilityModeOnIfAvailable) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnIfAvailable)];
+    [self addRadioOptionWithTitle:NSLocalizedString(@"Only show articles with Readability", @"Show only articles that can be viewed with Readability") value:@(DDGReadabilityModeOnExclusive) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnExclusive)];
 }
 
 -(void)saveData:(NSDictionary *)formData {
