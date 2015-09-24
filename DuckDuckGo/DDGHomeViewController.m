@@ -49,7 +49,8 @@
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* topAlignmentConstraint;
 
 @property (nonatomic, strong) IBOutlet UIView* alternateToolbarContainer;
-@property (nonatomic, strong) IBOutlet NSLayoutConstraint* alternateToolbarBottom;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* toolbarTop;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* homeToolbarLeft;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
 @end
 
@@ -64,37 +65,81 @@
     return self.searchButtonBar.hidden;
 }
 
+-(void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.homeToolbarLeft.constant = 0;
+    self.toolbarTop.constant = -50;
+    [self.view layoutSubviews];
+}
+
+-(void)setHideToolbar:(BOOL)hideToolbar withScrollview:(UIScrollView*)scrollView
+{
+    CGFloat newConstant = hideToolbar ? 0 : -50;
+    if(self.toolbarTop.constant!=newConstant) {
+        self.toolbarTop.constant = newConstant;
+        [self.toolbarContainer setNeedsUpdateConstraints];
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutSubviews];
+        }];
+    }
+}
+
 -(void)setAlternateButtonBar:(UIView *)alternateButtonBar {
+    [self setAlternateButtonBar:alternateButtonBar animated:FALSE];
+}
+
+-(void)setAlternateButtonBar:(UIView *)alternateButtonBar animated:(BOOL)animated {
     if(alternateButtonBar!=_alternateButtonBar) {
         if(alternateButtonBar) {
+            NSLog(@"adding alternate button bar");
             [self.alternateToolbarContainer addSubview:alternateButtonBar];
             [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeLeading
                                                                                        relatedBy:NSLayoutRelationEqual
                                                                                           toItem:self.alternateToolbarContainer
                                                                                        attribute:NSLayoutAttributeLeading
                                                                                       multiplier:1 constant:0]];
-            [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeTrailing
+            [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeWidth
                                                                                        relatedBy:NSLayoutRelationEqual
                                                                                           toItem:self.alternateToolbarContainer
-                                                                                       attribute:NSLayoutAttributeTrailing
+                                                                                       attribute:NSLayoutAttributeWidth
                                                                                       multiplier:1 constant:0]];
             [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeTop
                                                                                        relatedBy:NSLayoutRelationEqual
                                                                                           toItem:self.alternateToolbarContainer
                                                                                        attribute:NSLayoutAttributeTop
                                                                                       multiplier:1 constant:0]];
-            [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeBottom
+            [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeHeight
                                                                                        relatedBy:NSLayoutRelationEqual
                                                                                           toItem:self.alternateToolbarContainer
-                                                                                       attribute:NSLayoutAttributeBottom
+                                                                                       attribute:NSLayoutAttributeHeight
                                                                                       multiplier:1 constant:0]];
-            self.alternateToolbarBottom.constant = 0;
-            [self.alternateToolbarContainer setNeedsUpdateConstraints];
+            [self.view layoutSubviews];
+            
+            self.homeToolbarLeft.constant = -self.view.frame.size.width;
+            self.toolbarTop.constant = -50;
+
+            if(animated) {
+                [UIView animateWithDuration:0.25 animations:^{ [self.view layoutSubviews]; }];
+            } else {
+                [self.view layoutSubviews];
+            }
         } else {
+            NSLog(@"REMOVING alternate button bar");
             // show the default home button bar
-            self.alternateToolbarBottom.constant = 50;
-            [_alternateButtonBar removeFromSuperview];
-            [self.alternateToolbarContainer removeConstraints:self.alternateToolbarContainer.constraints];
+            self.homeToolbarLeft.constant = 0;
+            self.toolbarTop.constant = -50;
+            [self.toolbarContainer setNeedsUpdateConstraints];
+            if(animated) {
+                [UIView animateWithDuration:0.25 animations:^{
+                    [self.view layoutSubviews];
+                } completion:^(BOOL finished) {
+                    //                [_alternateButtonBar removeFromSuperview];
+                    //                [self.alternateToolbarContainer removeConstraints:self.alternateToolbarContainer.constraints];
+                }];
+            } else {
+                [self.view layoutSubviews];
+            }
         }
     }
     _alternateButtonBar = alternateButtonBar;

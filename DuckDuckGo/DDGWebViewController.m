@@ -22,7 +22,7 @@
 #import "DDGSafariActivity.h"
 #import "DDGWebView.h"
 
-@interface DDGWebViewController () {
+@interface DDGWebViewController () <UIScrollViewDelegate> {
     BOOL _isFavorited;
     CGPoint lastOffset;
 }
@@ -77,7 +77,7 @@
     [[UIMenuController sharedMenuController] setMenuItems:@[search, saveImage]];
     
     //    UIView*
-    
+    self.webView.scrollView.delegate = self;
     //self.hidesBottomBarWhenPushed = TRUE;
     lastOffset = self.webView.scrollView.contentOffset;
 }
@@ -129,13 +129,32 @@
     [super viewDidUnload];
 }
 
+-(void)autoHideOrShowToolbarBasedOnScrolling {
+    CGPoint offset = self.webView.scrollView.contentOffset;
+    if(offset.y==0) {
+        // we're at the top... show the toolbar
+        [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
+    } else if(offset.y  > lastOffset.y) {
+        // we're scrolling down... hide the toolbar, unless we're already very close to the bottom
+        BOOL atBottom =  offset.y+50 >= (self.webView.scrollView.contentSize.height - self.webView.scrollView.frame.size.height);
+        [self.searchControllerDDG.homeController setHideToolbar:!atBottom withScrollview:self.webView.scrollView];
+    } else {
+        // we're scrolling up... show the toolbar
+        [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
+    }
+    lastOffset = offset;
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    [self autoHideOrShowToolbarBasedOnScrolling];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
-	if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone)
-	{
-	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
-	}
+    if ([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone) {
+        return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    }
 	return YES;
 }
 

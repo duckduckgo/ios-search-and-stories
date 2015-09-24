@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
@@ -9,9 +9,9 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DDGHomeViewController">
             <connections>
-                <outlet property="alternateToolbarBottom" destination="Thk-lu-eHV" id="f6Y-4b-FjT"/>
                 <outlet property="alternateToolbarContainer" destination="kyo-JD-Ybe" id="fxf-PG-oaf"/>
                 <outlet property="favoritesTabButton" destination="FmX-HN-8WI" id="mEJ-3X-bw0"/>
+                <outlet property="homeToolbarLeft" destination="m9c-VI-hov" id="GNa-uU-rLc"/>
                 <outlet property="recentsTabButton" destination="5xv-00-irE" id="0UH-0J-2ed"/>
                 <outlet property="searchButtonBar" destination="HQm-a7-mxw" id="j8l-zf-631"/>
                 <outlet property="searchTabButton" destination="Iqm-n3-jod" id="F3S-04-wtt"/>
@@ -19,6 +19,7 @@
                 <outlet property="storiesTabButton" destination="zhq-iC-hVf" id="08H-GD-xtX"/>
                 <outlet property="tabBarTopBorderConstraint" destination="qY5-lM-5G3" id="F1x-qr-mCM"/>
                 <outlet property="tabContentView" destination="nOn-A2-4XZ" id="YsK-tH-YCA"/>
+                <outlet property="toolbarTop" destination="CdO-vI-mzy" id="nfI-rB-Zva"/>
                 <outlet property="topAlignmentConstraint" destination="Okf-nx-ZKD" id="h1Y-EG-3bR"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -32,12 +33,12 @@
             </userGuides>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nOn-A2-4XZ" userLabel="tab content">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="550"/>
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
                     <animations/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NwH-at-kPi" userLabel="border">
-                    <rect key="frame" x="0.0" y="549" width="600" height="1"/>
+                    <rect key="frame" x="0.0" y="550" width="600" height="1"/>
                     <animations/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
                     <constraints>
@@ -45,7 +46,7 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HQm-a7-mxw" userLabel="tab bar">
-                    <rect key="frame" x="0.0" y="550" width="600" height="50"/>
+                    <rect key="frame" x="0.0" y="551" width="600" height="50"/>
                     <subviews>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iqm-n3-jod" userLabel="search">
                             <rect key="frame" x="36" y="1" width="48" height="48"/>
@@ -153,7 +154,7 @@
                     </variation>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kyo-JD-Ybe" userLabel="alternate bar">
-                    <rect key="frame" x="0.0" y="600" width="600" height="50"/>
+                    <rect key="frame" x="600" y="551" width="600" height="50"/>
                     <animations/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="Jmc-ri-m98" userLabel="tab bar height"/>
@@ -165,19 +166,17 @@
             <constraints>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="07T-AZ-Z0Z"/>
                 <constraint firstAttribute="trailing" secondItem="nOn-A2-4XZ" secondAttribute="trailing" id="8IO-Gj-RIU"/>
-                <constraint firstAttribute="bottom" secondItem="NwH-at-kPi" secondAttribute="bottom" priority="1" id="CdO-vI-mzy"/>
-                <constraint firstAttribute="trailing" secondItem="kyo-JD-Ybe" secondAttribute="trailing" id="Gzw-YP-3Oo"/>
+                <constraint firstItem="NwH-at-kPi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" priority="1" constant="-50" id="CdO-vI-mzy"/>
+                <constraint firstItem="kyo-JD-Ybe" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="Fyi-04-bna"/>
+                <constraint firstItem="HQm-a7-mxw" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="NcP-Tt-9xB"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="top" id="NpH-tL-gD5"/>
-                <constraint firstItem="NwH-at-kPi" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="HQm-a7-mxw" secondAttribute="top" id="OZ5-Sb-okf"/>
+                <constraint firstItem="HQm-a7-mxw" firstAttribute="top" secondItem="NwH-at-kPi" secondAttribute="bottom" id="OZ5-Sb-okf"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Okf-nx-ZKD"/>
-                <constraint firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="bottom" id="RQA-Dl-sUw" userLabel="tab bar bottom"/>
-                <constraint firstItem="NwH-at-kPi" firstAttribute="bottom" relation="lessThanOrEqual" secondItem="kyo-JD-Ybe" secondAttribute="top" id="TAL-yo-lqJ"/>
-                <constraint firstAttribute="bottom" secondItem="kyo-JD-Ybe" secondAttribute="bottom" constant="-50" id="Thk-lu-eHV"/>
+                <constraint firstItem="kyo-JD-Ybe" firstAttribute="top" secondItem="NwH-at-kPi" secondAttribute="bottom" id="TAL-yo-lqJ"/>
                 <constraint firstItem="HQm-a7-mxw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="m9c-VI-hov" userLabel="tab bar left"/>
+                <constraint firstItem="kyo-JD-Ybe" firstAttribute="leading" secondItem="HQm-a7-mxw" secondAttribute="trailing" id="qOA-xR-CpL"/>
                 <constraint firstItem="NwH-at-kPi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="sMg-RR-87x"/>
                 <constraint firstAttribute="trailing" secondItem="NwH-at-kPi" secondAttribute="trailing" id="wue-NG-Gi3"/>
-                <constraint firstAttribute="trailing" secondItem="HQm-a7-mxw" secondAttribute="trailing" id="xvc-4s-9ct" userLabel="tab bar right"/>
-                <constraint firstItem="kyo-JD-Ybe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="y4x-qn-0jc"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
             <point key="canvasLocation" x="360" y="469"/>

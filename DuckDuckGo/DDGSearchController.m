@@ -561,7 +561,7 @@ NSString * const emailRegEx =
 //    [self.searchBar setShowsLeftButton:showBackButton animated:YES];
     NSTimeInterval duration = (animated) ? 0.3 : 0.0;
     
-    self.homeController.alternateButtonBar = self.navController.topViewController.alternateToolbar;
+    [self.homeController setAlternateButtonBar:self.navController.topViewController.alternateToolbar animated:animated];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
     [self setSearchBarOrangeButtonImage];
 }
