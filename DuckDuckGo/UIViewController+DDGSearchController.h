@@ -18,8 +18,7 @@
 - (DDGSearchController *)searchControllerDDG;
 - (UIImage *)searchControllerBackButtonIconDDG;
 - (UIView*)alternateToolbar;
-- (UIView*)dimmableContentView;
+- (UIView*)dimmableContentView; // the view that should be dimmed if a DDGPopoverViewController is shown from this VC
 - (void)duckGoToTopLevel; // go to the top level, or at least up a level from the current position
-- (void)reenableScrollsToTop;   // overridden by subclasses who want scrollsToTop
-- (void)clearScrollsToTop:(UIView *)view;
+
 @end

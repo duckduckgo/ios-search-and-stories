@@ -314,7 +314,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 #pragma mark - No Stories
 
 - (void)setShowNoContent:(BOOL)showNoContent {
-    if(showNoContent!=self.storyView.hidden) {
+    if(showNoContent==self.noContentView.view.hidden) {
         [UIView animateWithDuration:0 animations:^{
             self.storyView.hidden = showNoContent;
             self.noContentView.view.hidden = !showNoContent;
@@ -432,7 +432,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     }
     
     self.noContentView = [[DDGNoContentViewController alloc] init];
-
+    [self.noContentView view]; // force the xib to load
     self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
     self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
                                                         @"title for the view shown when no favorite searches/urls are found");
@@ -441,8 +441,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.noContentView.view.frame = self.view.bounds;
     
-    [self.view addSubview:self.noContentView.view];
     [self.view addSubview:self.storyView];
+    [self.view addSubview:self.noContentView.view];
     
     self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
