@@ -1918,7 +1918,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		5B66097416D783620006B5DE /* Release (Testflight) */ = {
+		5B66097416D783620006B5DE /* Release-testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -1951,9 +1951,9 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = "Release (Testflight)";
+			name = "Release-testflight";
 		};
-		5B66097516D783620006B5DE /* Release (Testflight) */ = {
+		5B66097516D783620006B5DE /* Release-testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1976,7 +1976,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
+				PROVISIONING_PROFILE = "aaa4539c-badc-42af-9b9b-14bcb3f30f6d";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
@@ -1984,7 +1984,7 @@
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
 			};
-			name = "Release (Testflight)";
+			name = "Release-testflight";
 		};
 		5BFF24BC16F77EF900844D3B /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -1993,19 +1993,19 @@
 			};
 			name = Debug;
 		};
-		5BFF24BD16F77EF900844D3B /* Release */ = {
+		5BFF24BD16F77EF900844D3B /* Release-adhoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = Release;
+			name = "Release-adhoc";
 		};
-		5BFF24BE16F77EF900844D3B /* Release (Testflight) */ = {
+		5BFF24BE16F77EF900844D3B /* Release-testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
-			name = "Release (Testflight)";
+			name = "Release-testflight";
 		};
 		83F32277149290EF00A61BC5 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2048,7 +2048,7 @@
 			};
 			name = Debug;
 		};
-		83F32278149290EF00A61BC5 /* Release */ = {
+		83F32278149290EF00A61BC5 /* Release-adhoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -2082,7 +2082,7 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
-			name = Release;
+			name = "Release-adhoc";
 		};
 		83F3227A149290EF00A61BC5 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -2120,7 +2120,7 @@
 			};
 			name = Debug;
 		};
-		83F3227B149290EF00A61BC5 /* Release */ = {
+		83F3227B149290EF00A61BC5 /* Release-adhoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2143,7 +2143,7 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
+				PROVISIONING_PROFILE = "f32d1197-91e4-4eb1-8d56-a6526effbb3e";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
@@ -2151,7 +2151,82 @@
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
 			};
-			name = Release;
+			name = "Release-adhoc";
+		};
+		8410AD501BB42EEC00CC83DB /* Release-appstore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_RESOURCE_RULES_PATH = "";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
+				SDKROOT = iphoneos;
+				STRIP_INSTALLED_PRODUCT = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-appstore";
+		};
+		8410AD511BB42EEC00CC83DB /* Release-appstore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				DEBUG = 1;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DuckDuckGo/DuckDuckGo-Prefix.pch";
+				GENERATE_PROFILING_CODE = YES;
+				HEADER_SEARCH_PATHS = "Submodules/**";
+				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-ObjC",
+					"-all_load",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "96e2ec9e-c9c3-4bbe-8a59-a47b1e7e74e4";
+				RUN_CLANG_STATIC_ANALYZER = YES;
+				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				USER_HEADER_SEARCH_PATHS = "Submodules/**";
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Release-appstore";
+		};
+		8410AD521BB42EEC00CC83DB /* Release-appstore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Release-appstore";
 		};
 /* End XCBuildConfiguration section */
 
@@ -2160,31 +2235,34 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5BFF24BC16F77EF900844D3B /* Debug */,
-				5BFF24BD16F77EF900844D3B /* Release */,
-				5BFF24BE16F77EF900844D3B /* Release (Testflight) */,
+				5BFF24BD16F77EF900844D3B /* Release-adhoc */,
+				5BFF24BE16F77EF900844D3B /* Release-testflight */,
+				8410AD521BB42EEC00CC83DB /* Release-appstore */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-adhoc";
 		};
 		83F32252149290EF00A61BC5 /* Build configuration list for PBXProject "DuckDuckGo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83F32277149290EF00A61BC5 /* Debug */,
-				83F32278149290EF00A61BC5 /* Release */,
-				5B66097416D783620006B5DE /* Release (Testflight) */,
+				83F32278149290EF00A61BC5 /* Release-adhoc */,
+				5B66097416D783620006B5DE /* Release-testflight */,
+				8410AD501BB42EEC00CC83DB /* Release-appstore */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-adhoc";
 		};
 		83F32279149290EF00A61BC5 /* Build configuration list for PBXNativeTarget "DuckDuckGo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83F3227A149290EF00A61BC5 /* Debug */,
-				83F3227B149290EF00A61BC5 /* Release */,
-				5B66097516D783620006B5DE /* Release (Testflight) */,
+				83F3227B149290EF00A61BC5 /* Release-adhoc */,
+				5B66097516D783620006B5DE /* Release-testflight */,
+				8410AD511BB42EEC00CC83DB /* Release-appstore */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = "Release-adhoc";
 		};
 /* End XCConfigurationList section */
 
