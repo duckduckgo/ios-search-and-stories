@@ -137,7 +137,7 @@ static NSString *historyCellID = @"HCell";
     self.tableView.dataSource = self;
     
     self.tableView.sectionFooterHeight = 0.01f;
-    self.tableView.backgroundColor = self.popoverMode ? [UIColor whiteColor] : [UIColor duckStoriesBackground];
+    self.tableView.backgroundColor = [UIColor duckStoriesBackground];
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
