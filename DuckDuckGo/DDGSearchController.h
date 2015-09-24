@@ -18,14 +18,13 @@ typedef enum {
 	DDGSearchControllerStateWeb
 } DDGSearchControllerState;
 
-@class DDGSearchSuggestionsProvider, DDGHistoryProvider, DDGInputAccessoryView;
+@class DDGSearchSuggestionsProvider, DDGHistoryProvider;
 
 @interface DDGSearchController : UIViewController <UITextFieldDelegate, UINavigationControllerDelegate, DDGSearchHandler, UIGestureRecognizerDelegate> {
     NSString *oldSearchText;
     BOOL barUpdated;
     BOOL autocompleteOpen;
     
-    DDGInputAccessoryView *inputAccessory;
     NSRange currentWordRange;
     NSMutableArray *unusedBangButtons;
 }

@@ -180,7 +180,6 @@ NSString * const emailRegEx =
     
     unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];
     
-    [self createInputAccessory];
     searchField.leftViewMode = UITextFieldViewModeAlways;
     searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	searchField.delegate = self;    
@@ -847,35 +846,6 @@ NSString * const emailRegEx =
 
 #pragma mark - Input accessory (the bang button/bar)
 
--(void)createInputAccessory {
-    inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46, self.view.bounds.size.width, 46)];
-    inputAccessory.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    //inputAccessory.alpha = 0.0;
-    [self.view addSubview:inputAccessory];
-    
-    // add scroll view
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, inputAccessory.bounds.size.width, 46)];
-    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    scrollView.showsHorizontalScrollIndicator = YES;
-    scrollView.contentSize = CGSizeMake(0, 46);
-    scrollView.tag = 102;
-    scrollView.hidden = NO; // YES
-    [inputAccessory addSubview:scrollView];
-}
-
-// if the input accessory isn't hidden, but is about to hide, you can set forceHidden to position nav controller as though input accessory is hidden. Use this e.g. when animating inputAccessory, so the nav controller shows up behind it.
--(void)positionNavControllerForInputAccessoryForceHidden:(BOOL)forceHidden {
-    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
-    
-    CGRect f = self.autocompleteNavigationController.view.frame;
-    if(scrollView.hidden || inputAccessory.hidden || inputAccessory.alpha < 0.1 || forceHidden) {
-        f.size.height = self.autocompleteNavigationController.view.superview.bounds.size.height;
-    } else {
-        f.size.height = self.autocompleteNavigationController.view.superview.bounds.size.height - 44.0;
-    }
-    self.autocompleteNavigationController.view.frame = f;
-}
-
 - (IBAction)hideBangTooltipForever:(id)sender {
     self.showBangTooltip = NO;
     [self.bangInfoPopover dismissPopoverAnimated:YES];
@@ -954,57 +924,6 @@ NSString * const emailRegEx =
     }
 }
 
--(void)loadSuggestionsForBang:(NSString *)bang {
-    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
-    
-    NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
-    if(suggestions.count > 0) {
-        scrollView.hidden = NO;
-        [self positionNavControllerForInputAccessoryForceHidden:NO];
-    }
-
-    for(NSDictionary *suggestionDict in suggestions) {
-        NSString *suggestion = [suggestionDict objectForKey:@"name"];
-
-        UIButton *button;
-        if([unusedBangButtons count] > 0) {
-            button = [unusedBangButtons lastObject];
-            [unusedBangButtons removeLastObject];
-        } else {
-            button = [UIButton buttonWithType:UIButtonTypeCustom];   
-            [button.titleLabel setFont:[UIFont duckFontWithSize:17]];
-            [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [button.titleLabel setShadowOffset:CGSizeMake(0, 1)];
-        }
-
-        [button setTitle:suggestion forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        CGSize titleSize = [suggestion sizeWithAttributes:@{NSFontAttributeName: button.titleLabel.font}];
-        
-        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, (titleSize.width > 30 ? titleSize.width + 20 : 50), 46)];
-        scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + button.frame.size.width, 46);
-        [scrollView addSubview:button];
-    }
-}
-
--(void)clearBangSuggestions {
-    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
-    
-    scrollView.contentSize = CGSizeMake(0, 46);
-    for(UIView *subview in scrollView.subviews) {
-        if([subview isKindOfClass:[UIButton class]]) {
-            [subview removeFromSuperview];
-            [unusedBangButtons addObject:subview];
-        }
-    }
-    
-    scrollView.hidden = YES;
-    [self positionNavControllerForInputAccessoryForceHidden:NO];
-    
-    self.searchBar.showsBangButton = TRUE;
-}
-
 #pragma mark - Text field delegate
 
 -(void)searchFieldDidChange:(id)sender
@@ -1039,7 +958,6 @@ NSString * const emailRegEx =
 
     if(newString.length == 0) {
         currentWordRange = NSMakeRange(NSNotFound, 0);
-        [self clearBangSuggestions];
         return YES; // there's nothing we can do with an empty string
     }
     
@@ -1059,17 +977,6 @@ NSString * const emailRegEx =
     
     currentWordRange = NSMakeRange(wordBeginning, wordEnd-wordBeginning);
     
-    NSString *currentWord;
-    if(currentWordRange.length == 0)
-        currentWord = @"";
-    else
-        currentWord = [newString substringWithRange:currentWordRange];
-    
-    //[self clearBangSuggestions];
-    if(currentWord.length > 0 && [currentWord characterAtIndex:0]=='!') {
-        [self loadSuggestionsForBang:currentWord];
-    }
-    
     return YES;
 }
 
@@ -1077,8 +984,6 @@ NSString * const emailRegEx =
 	// save search text in case user cancels input without navigating somewhere
     if(!oldSearchText)
         oldSearchText = textField.text;
-    
-    [self clearBangSuggestions];
     
     return YES;
 }
