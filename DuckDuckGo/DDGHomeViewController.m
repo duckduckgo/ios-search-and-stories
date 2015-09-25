@@ -51,6 +51,7 @@
 @property (nonatomic, strong) IBOutlet UIView* alternateToolbarContainer;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* toolbarTop;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* homeToolbarLeft;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* altToolbarLeft;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
 @end
 
@@ -68,7 +69,7 @@
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.homeToolbarLeft.constant = 0;
+    self.altToolbarLeft.priority = 850;
     self.toolbarTop.constant = -50;
     [self.view layoutSubviews];
 }
@@ -116,9 +117,9 @@
                                                                                       multiplier:1 constant:0]];
             [self.view layoutSubviews];
             
-            self.homeToolbarLeft.constant = -self.view.frame.size.width;
+            self.altToolbarLeft.priority = 950;
             self.toolbarTop.constant = -50;
-
+            
             if(animated) {
                 [UIView animateWithDuration:0.25 animations:^{ [self.view layoutSubviews]; }];
             } else {
@@ -127,7 +128,7 @@
         } else {
             NSLog(@"REMOVING alternate button bar");
             // show the default home button bar
-            self.homeToolbarLeft.constant = 0;
+            self.altToolbarLeft.priority = 850;
             self.toolbarTop.constant = -50;
             [self.toolbarContainer setNeedsUpdateConstraints];
             if(animated) {

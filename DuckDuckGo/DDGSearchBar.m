@@ -86,7 +86,7 @@
         }
     };
     if(animated) {
-        [UIView animateWithDuration:2.0f animations:makeChanges];
+        [UIView animateWithDuration:0.2f animations:makeChanges];
     } else {
         makeChanges();
     }

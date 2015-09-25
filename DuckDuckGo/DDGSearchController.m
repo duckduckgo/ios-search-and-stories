@@ -692,6 +692,7 @@ NSString * const emailRegEx =
     } else if(self.navController==navigationController) {
         self.autocompletePopover.dimmedBackgroundView = viewController.dimmableContentView;
         self.shadowView.hidden = [viewController isKindOfClass:DDGTabViewController.class];
+        [self updateToolbars:animated];
     }
 }
 
