@@ -89,6 +89,11 @@
     _searchController = searchController;
 }
 
+-(void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    self.webView.scrollView.contentInset = UIEdgeInsetsZero;
+}
+
 -(void)viewWillDisappear:(BOOL)animated {
     if (self.webView.isLoading)
         [self.webView stopLoading];

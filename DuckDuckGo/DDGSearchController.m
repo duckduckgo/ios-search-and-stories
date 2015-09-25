@@ -165,6 +165,8 @@ NSString * const emailRegEx =
 {
     [super viewDidLoad];
     self.edgesForExtendedLayout = UIRectEdgeNone;
+    [self.searchBar setShowsBangButton:NO animated:NO];
+    
     [self.searchBarWrapper setBackgroundColor:[UIColor duckSearchBarBackground]];
     
     if(self.autocompleteController==nil) {
@@ -492,6 +494,7 @@ NSString * const emailRegEx =
             webViewController.searchController = self;
             [self pushContentViewController:webViewController animated:YES];
             [webViewController loadStory:story readabilityMode:readabilityMode];
+            [self updateToolbars:TRUE];
         } else {
             [_searchHandler loadStory:story readabilityMode:readabilityMode];
         }
@@ -538,7 +541,7 @@ NSString * const emailRegEx =
         self.searchBar.showsLeftButton = NO;
         self.homeController.alternateButtonBar = nil;
         self.searchBar.progressView.percentCompleted = 100;
-        self.searchBar.showsBangButton = FALSE;
+        self.searchBar.showsBangButton = NO;
         [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
         if (duration > 0) [self.searchBar layoutIfNeeded:duration];
         
@@ -692,7 +695,6 @@ NSString * const emailRegEx =
     } else if(self.navController==navigationController) {
         self.autocompletePopover.dimmedBackgroundView = viewController.dimmableContentView;
         self.shadowView.hidden = [viewController isKindOfClass:DDGTabViewController.class];
-        [self updateToolbars:animated];
     }
 }
 
@@ -713,6 +715,9 @@ NSString * const emailRegEx =
     // save search text in case user cancels input without navigating somewhere
     if(!oldSearchText) oldSearchText = self.searchBar.searchField.text;
     barUpdated = NO;
+    
+    self.searchBar.searchField.additionalLeftSideInset = 39; // set this inset before the animation begins
+    [self.searchBar.searchField layoutSubviews];
     
     [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
     [self revealAutocomplete:YES animated:YES];
@@ -999,8 +1004,9 @@ NSString * const emailRegEx =
 - (void)textFieldDidBeginEditing:(UITextField *)textField {
     currentWordRange = NSMakeRange(NSNotFound, 0);
 	// only open autocomplete if not already open and it is enabled for use
-    if(!autocompleteOpen && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete])
+    if(!autocompleteOpen && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete]) {
         [self revealAutocomplete];
+    }
     [textField selectAll:self];
 }
 

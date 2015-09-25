@@ -51,7 +51,7 @@
 }
 
 - (void)setShowsBangButton:(BOOL)show {
-    [self setShowsBangButton:show animated:TRUE];
+    [self setShowsBangButton:show animated:FALSE];
 }
 
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated {
@@ -63,9 +63,13 @@
 }
 
 - (void)layoutIfNeeded:(NSTimeInterval)animationDuration {
-    [UIView animateWithDuration:animationDuration animations:^{
+    if(animationDuration<=0) {
         [self layoutIfNeeded];
-    }];
+    } else {
+        [UIView animateWithDuration:animationDuration animations:^{
+            [self layoutIfNeeded];
+        }];
+    }
 }
 
 - (void)setShowsCancelButton:(BOOL)show animated:(BOOL)animated {

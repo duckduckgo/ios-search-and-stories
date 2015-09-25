@@ -79,7 +79,6 @@
     CGFloat newConstant = hideToolbar ? 0 : -50;
     if(self.toolbarTop.constant!=newConstant) {
         self.toolbarTop.constant = newConstant;
-        [self.toolbarContainer setNeedsUpdateConstraints];
         [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutSubviews];
         }];
@@ -93,7 +92,6 @@
 -(void)setAlternateButtonBar:(UIView *)alternateButtonBar animated:(BOOL)animated {
     if(alternateButtonBar!=_alternateButtonBar) {
         if(alternateButtonBar) {
-            NSLog(@"adding alternate button bar");
             [self.alternateToolbarContainer addSubview:alternateButtonBar];
             [self.alternateToolbarContainer addConstraint:[NSLayoutConstraint constraintWithItem:alternateButtonBar attribute:NSLayoutAttributeLeading
                                                                                        relatedBy:NSLayoutRelationEqual
@@ -126,7 +124,6 @@
                 [self.view layoutSubviews];
             }
         } else {
-            NSLog(@"REMOVING alternate button bar");
             // show the default home button bar
             self.altToolbarLeft.priority = 850;
             self.toolbarTop.constant = -50;
