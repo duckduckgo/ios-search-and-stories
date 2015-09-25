@@ -379,6 +379,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             story.readValue = NO;
         }
         [context deleteObject:historyItem];
+        
+        NSError *error = nil;
+        if (![context save:&error])
+            NSLog(@"error: %@", error);
     }];
 }
 
@@ -433,11 +437,19 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     self.noContentView = [[DDGNoContentViewController alloc] init];
     [self.noContentView view]; // force the xib to load
-    self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
-    self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
-                                                        @"title for the view shown when no favorite searches/urls are found");
-    self.noContentView.contentSubtitle = NSLocalizedString(@"Add stories to your favorites, and they will be shown here.",
-                                                           @"details text for the view shown when no favorite stories are found");
+    if(self.storiesMode==DDGStoriesListModeFavorites) {
+        self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
+        self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
+                                                            @"title for the view shown when no favorite searches/urls are found");
+        self.noContentView.contentSubtitle = NSLocalizedString(@"Add stories to your favorites, and they will be shown here.",
+                                                               @"details text for the view shown when no favorite stories are found");
+    } else {
+        self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-recents"];
+        self.noContentView.contentTitle = NSLocalizedString(@"No Recents",
+                                                            @"title for the view shown when no favorite searches/urls are found");
+        self.noContentView.contentSubtitle = NSLocalizedString(@"Browse stories and search the web, and your recents will be shown here.",
+                                                               @"details text for the view shown when no recent stories are found");
+    }
     self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
     self.noContentView.view.frame = self.view.bounds;
     
