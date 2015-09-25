@@ -16,6 +16,7 @@
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
 #import "DDGReadabilitySettingViewController.h"
+#import "DDGUtility.h"
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
@@ -40,6 +41,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 		DDGSettingAutocomplete: @(YES),
 		DDGSettingStoriesReadabilityMode: @(DDGReadabilityModeOnIfAvailable),
         DDGSettingHomeView: DDGSettingHomeViewTypeStories,
+        @"UserAgent": [DDGUtility agentDDG],
     };
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
