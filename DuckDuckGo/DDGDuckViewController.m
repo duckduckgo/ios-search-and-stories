@@ -29,7 +29,9 @@
 #define RECENTS_SECTION 0
 #define FAVORITES_SECTION 1
 
-@interface DDGDuckViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, DDGHistoryItemCellDelegate>
+@interface DDGDuckViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, DDGHistoryItemCellDelegate> {
+    BOOL _underPopoverMode;
+}
 
 @property (nonatomic, strong) UITableView* tableView;
 @property (nonatomic, weak) DDGSearchController *searchController;
@@ -63,6 +65,7 @@ static NSString *historyCellID = @"HCell";
         self.managedObjectContext = managedObjectContext;
         self.historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
         self.filterString = @"";
+        self.underPopoverMode = FALSE;
     }
     return self;
 }
@@ -185,6 +188,16 @@ static NSString *historyCellID = @"HCell";
         }
         [searchController searchFieldDidChange:nil];
     }
+}
+
+-(BOOL)underPopoverMode {
+    return _underPopoverMode;
+}
+
+-(void)setUnderPopoverMode:(BOOL)underPopoverMode
+{
+    _underPopoverMode = underPopoverMode;
+    [self.tableView reloadData];
 }
 
 
