@@ -36,6 +36,9 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 @interface DDGStoriesViewController () {
     CIContext *_blurContext;
+    NSMutableArray* _sectionChanges;
+    NSMutableArray* _objectChanges;
+    
 }
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
@@ -256,6 +259,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         self.title = NSLocalizedString(@"Stories", @"View controller title: Stories");
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
+        
+        _sectionChanges = [NSMutableArray new];
+        _objectChanges = [NSMutableArray new];
         
         //Create the context where the blur is going on.
         EAGLContext *eaglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -1015,43 +1021,101 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    NSMutableDictionary *change = [NSMutableDictionary new];
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [self.storyView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex]];
+            change[@(type)] = @[@(sectionIndex)];
             break;
-            
         case NSFetchedResultsChangeDelete:
-            [self.storyView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex]];
+            change[@(type)] = @[@(sectionIndex)];
             break;
-      
         case NSFetchedResultsChangeMove:
         case NSFetchedResultsChangeUpdate:
             break;
     }
+    [_sectionChanges addObject:change];
 }
+
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    NSMutableDictionary *change = [NSMutableDictionary new];
     switch(type) {
-        case NSFetchedResultsChangeDelete:
-            [self.storyView deleteItemsAtIndexPaths:@[indexPath]];
-            break;
         case NSFetchedResultsChangeInsert:
-        case NSFetchedResultsChangeMove:
-            [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
+            change[@(type)] = newIndexPath;
+            break;
+        case NSFetchedResultsChangeDelete:
+            change[@(type)] = indexPath;
             break;
         case NSFetchedResultsChangeUpdate:
-            [self.storyView reloadItemsAtIndexPaths:@[indexPath]];
+            change[@(type)] = indexPath;
+            break;
+        case NSFetchedResultsChangeMove:
+            change[@(type)] = @[indexPath, newIndexPath];
             break;
     }
-    self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
+    [_objectChanges addObject:change];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    //[self.storyView endUpdates];
+    if ([_sectionChanges count] > 0) {
+        [self.storyView performBatchUpdates:^{
+            
+            for (NSDictionary *change in _sectionChanges) {
+                [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
+                    
+                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                    switch (type) {
+                        case NSFetchedResultsChangeInsert:
+                            [self.storyView insertSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                            break;
+                        case NSFetchedResultsChangeDelete:
+                            [self.storyView deleteSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                            break;
+                        case NSFetchedResultsChangeUpdate:
+                            [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                            break;
+                        case NSFetchedResultsChangeMove:
+                            break;
+                    }
+                }];
+            }
+        } completion:nil];
+    }
+    
+    
+    if ([_objectChanges count] > 0 && [_sectionChanges count] == 0) {
+        [self.storyView performBatchUpdates:^{
+            for (NSDictionary *change in _objectChanges) {
+                [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
+                    
+                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                    switch (type) {
+                        case NSFetchedResultsChangeInsert:
+                            [self.storyView insertItemsAtIndexPaths:@[obj]];
+                            break;
+                        case NSFetchedResultsChangeDelete:
+                            [self.storyView deleteItemsAtIndexPaths:@[obj]];
+                            break;
+                        case NSFetchedResultsChangeUpdate:
+                            [self.storyView reloadItemsAtIndexPaths:@[obj]];
+                            break;
+                        case NSFetchedResultsChangeMove:
+                            [self.storyView moveItemAtIndexPath:obj[0] toIndexPath:obj[1]];
+                            break;
+                    }
+                }];
+            }
+        } completion:nil];
+    }
+    
+    [_sectionChanges removeAllObjects];
+    [_objectChanges removeAllObjects];
+    
     self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
 }
 

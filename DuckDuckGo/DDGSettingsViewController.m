@@ -166,8 +166,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
                                                                  delegate:weakSelf
                                                         cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                    destructiveButtonTitle:nil
-                              otherButtonTitles:NSLocalizedString(@"Clear Recent", @"Clear Recent"), nil];
-        [actionSheet showInView:weakSelf.view.window];
+                                                        otherButtonTitles:NSLocalizedString(@"Clear Recent", @"Clear Recent"), nil];
+        [actionSheet showInView:weakSelf.view];
     }];
     
     for (IGFormSwitch *s in @[quackSwitch, suggestionsSwitch, recentSwitch])
