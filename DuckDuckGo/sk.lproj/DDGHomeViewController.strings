@@ -1,0 +1,15 @@
+
+/* Class = "UIButton"; accessibilityLabel = "Recents"; ObjectID = "5xv-00-irE"; */
+"5xv-00-irE.accessibilityLabel" = "Recents";
+
+/* Class = "UIButton"; accessibilityLabel = "Favorites"; ObjectID = "FmX-HN-8WI"; */
+"FmX-HN-8WI.accessibilityLabel" = "Favorites";
+
+/* Class = "UIButton"; accessibilityLabel = "Search"; ObjectID = "Iqm-n3-jod"; */
+"Iqm-n3-jod.accessibilityLabel" = "Search";
+
+/* Class = "UIButton"; accessibilityLabel = "Settings"; ObjectID = "w9s-2z-UbG"; */
+"w9s-2z-UbG.accessibilityLabel" = "Settings";
+
+/* Class = "UIButton"; accessibilityLabel = "Stories"; ObjectID = "zhq-iC-hVf"; */
+"zhq-iC-hVf.accessibilityLabel" = "Stories";

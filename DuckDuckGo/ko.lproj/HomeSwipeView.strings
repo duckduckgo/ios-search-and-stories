@@ -1,0 +1,9 @@
+
+/* Class = "UIButton"; accessibilityLabel = "Share"; ObjectID = "4"; */
+"4.accessibilityLabel" = "Share";
+
+/* Class = "UIButton"; accessibilityLabel = "Save"; ObjectID = "5"; */
+"5.accessibilityLabel" = "Save";
+
+/* Class = "UIButton"; accessibilityLabel = "Open in Safari"; ObjectID = "18"; */
+"18.accessibilityLabel" = "Open in Safari";
