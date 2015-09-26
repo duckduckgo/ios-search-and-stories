@@ -152,6 +152,10 @@ NSString * const emailRegEx =
 	if (self.view.frame.origin.y < 0.0)	{
         self.contentBottomConstraint.constant = 0;
 	}
+    UIViewController* contentController = [self.contentControllers lastObject];
+    if([contentController isKindOfClass:DDGDuckViewController.class]) {
+        ((DDGDuckViewController*)contentController).underPopoverMode = [self shouldUsePopover];
+    }
 }
 
 -(BOOL)shouldUsePopover {
