@@ -224,6 +224,12 @@ NSString * const emailRegEx =
     self.shadowView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
     [self.view addSubview:self.shadowView];
     
+    // this is a hack to workaround an iOS text field bug that causes the first setText: to
+    // animate the text in from {0,0} instead of just setting it.
+    self.searchBar.searchField.text = @" ";
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.searchBar.searchField.text = @"";
+    });
     [self setNeedsStatusBarAppearanceUpdate];
 }
 
