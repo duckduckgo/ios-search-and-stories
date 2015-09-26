@@ -185,6 +185,14 @@
 {
     if ([otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
         [self findImageForTap:[otherGestureRecognizer locationInView:self.webView]];
+        return NO;
+    } else {
+        CGPoint tapPoint = [otherGestureRecognizer locationInView:self.webView];
+        if(tapPoint.y + 50 > self.webView.frame.size.height) {
+            // this tap point is where the auto-hidden toolbar should be. Let's un-auto-hide it
+            [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
+            return NO;
+        }
     }
     return YES;
 }
