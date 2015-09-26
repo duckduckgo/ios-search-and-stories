@@ -1,0 +1,18 @@
+
+/* Class = "UIButton"; accessibilityLabel = "Left Button"; ObjectID = "69"; */
+"69.accessibilityLabel" = "Left Button";
+
+/* Class = "UITextField"; accessibilityLabel = "Search DuckDuckGo"; ObjectID = "70"; */
+"70.accessibilityLabel" = "Search DuckDuckGo";
+
+/* Class = "UIButton"; accessibilityLabel = "Cancel"; ObjectID = "72"; */
+"72.accessibilityLabel" = "Cancel";
+
+/* Class = "UIButton"; normalTitle = "Cancel"; ObjectID = "72"; */
+"72.normalTitle" = "Cancel";
+
+/* Class = "UIButton"; accessibilityLabel = "Bang"; ObjectID = "83"; */
+"83.accessibilityLabel" = "Bang";
+
+/* Class = "UILabel"; text = "Search DuckDuckGo"; ObjectID = "SCO-Zc-2cb"; */
+"SCO-Zc-2cb.text" = "Search DuckDuckGo";
