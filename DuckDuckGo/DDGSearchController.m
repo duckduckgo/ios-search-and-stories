@@ -482,8 +482,8 @@ NSString * const emailRegEx =
         if (self.shouldPushSearchHandlerEvents) {
             DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
             webViewController.searchController = self;
-            [self pushContentViewController:webViewController animated:YES];
             [webViewController loadQueryOrURL:queryOrURLString];
+            [self pushContentViewController:webViewController animated:YES];
         } else {
             [_searchHandler loadQueryOrURL:queryOrURLString];
         }
