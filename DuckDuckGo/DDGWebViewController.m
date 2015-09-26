@@ -184,9 +184,7 @@
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     if ([otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
-        CGPoint point = [otherGestureRecognizer locationInView:self.webView];
-        NSLog(@"long press detected at point %@", NSStringFromCGPoint(point));
-        [self findImageForTap:point];
+        [self findImageForTap:[otherGestureRecognizer locationInView:self.webView]];
     }
     return YES;
 }
