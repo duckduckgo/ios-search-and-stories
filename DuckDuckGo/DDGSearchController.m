@@ -394,9 +394,6 @@ NSString * const emailRegEx =
     if(ABS(dy) < 1) {
         
         // this isn't a standard up/down animation so don't try animating
-        
-        [self revealInputAccessory:show animationDuration:0.0];
-        
         double delayInSeconds = (show ? [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] : 0.0);
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -408,26 +405,10 @@ NSString * const emailRegEx =
         });
         
     } else {
-        double duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        [self revealInputAccessory:show animationDuration:duration];
-        
         UIViewController *controller = self.navController.visibleViewController;
         if ([controller isKindOfClass:[DDGDuckViewController class]]) {
             [controller.view layoutIfNeeded];
         }
-        [UIView animateWithDuration:duration
-                              delay:0
-                            options:[[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]
-                         animations:^{
-//                             if ([controller isKindOfClass:[DDGDuckViewController class]]) {
-//                                 [(DDGDuckViewController *)controller updateContainerHeightConstraint:show];
-//                                 [controller.view layoutIfNeeded];
-//                             }
-//                             CGRect f = self.view.frame;
-//                             f.size.height = keyboardEnd.origin.y - f.origin.y;
-//                             self.view.frame = f;
-//                             self.contentBottomConstraint.constant = -keyboardEnd.size.height;
-                         } completion:nil];
     }
 }
 
@@ -565,8 +546,6 @@ NSString * const emailRegEx =
 
 -(void)updateToolbars:(BOOL)animated
 {
-//    BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
-//    [self.searchBar setShowsLeftButton:showBackButton animated:YES];
     NSTimeInterval duration = (animated) ? 0.3 : 0.0;
     
     [self.homeController setAlternateButtonBar:self.navController.topViewController.alternateToolbar animated:animated];
@@ -817,22 +796,6 @@ NSString * const emailRegEx =
     
 }
 
-// fade in or out the input accessory– to be used on keyboard show/hide
--(void)revealInputAccessory:(BOOL)reveal animationDuration:(CGFloat)animationDuration {
-//    if(reveal) {
-//        [UIView animateWithDuration:animationDuration animations:^{
-//            inputAccessory.alpha = 1.0;
-//        } completion:^(BOOL finished) {
-//            [self positionNavControllerForInputAccessoryForceHidden:NO];
-//        }];
-//    } else {
-//        [self positionNavControllerForInputAccessoryForceHidden:YES];
-//        [UIView animateWithDuration:animationDuration animations:^{
-//            inputAccessory.alpha = 0.0;
-//        }];
-//    }
-}
-
 -(IBAction)cancelButtonPressed:(id)sender {
     [self dismissAutocomplete];
 }
@@ -1007,9 +970,9 @@ NSString * const emailRegEx =
 	return YES;
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
     currentWordRange = NSMakeRange(NSNotFound, 0);
-	// only open autocomplete if not already open and it is enabled for use
+    // only open autocomplete if not already open and it is enabled for use
     if(!autocompleteOpen && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete]) {
         [self revealAutocomplete];
     }
