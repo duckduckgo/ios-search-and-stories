@@ -18,7 +18,7 @@
     NSUInteger _webViewLoadingDepth;
 }
 
-@property (nonatomic, strong) DDGWebView *webView;
+@property (nonatomic, strong) UIWebView *webView;
 @property (nonatomic, weak) DDGSearchController *searchController;
 @property (nonatomic, strong) NSDictionary *params;
 @property (nonatomic, strong) NSURL *webViewURL;

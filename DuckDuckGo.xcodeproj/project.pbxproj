@@ -246,7 +246,6 @@
 		7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */; };
 		7B15790318C72415002F229B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7B15790218C72415002F229B /* Images.xcassets */; };
 		7B2BDFA018E997C8003B8078 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B2BDF9F18E997C8003B8078 /* CoreText.framework */; };
-		7B3BB7F7192E0F0A00E94055 /* DDGWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */; };
 		7B3BB7F9192E350900E94055 /* AssetsLibrary.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7B3BB7F8192E350900E94055 /* AssetsLibrary.framework */; };
 		7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */; };
 		7B6E2D8C18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B6E2D8B18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m */; };
@@ -306,6 +305,7 @@
 		8409F5EF1B5E917E001F897F /* proximanova-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EB1B5E917E001F897F /* proximanova-light.otf */; };
 		8409F5F01B5E917E001F897F /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EC1B5E917E001F897F /* proximanova-regular.otf */; };
 		8409F5F11B5E917E001F897F /* proximanova-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */; };
+		8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */; settings = {ASSET_TAGS = (); }; };
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */; };
@@ -638,8 +638,6 @@
 		7B09EDEA18E45F1D0042BB27 /* DDGMenuItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuItemCell.m; sourceTree = "<group>"; };
 		7B15790218C72415002F229B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		7B2BDF9F18E997C8003B8078 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		7B3BB7F5192E0F0A00E94055 /* DDGWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebView.h; sourceTree = "<group>"; };
-		7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebView.m; sourceTree = "<group>"; };
 		7B3BB7F8192E350900E94055 /* AssetsLibrary.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AssetsLibrary.framework; path = System/Library/Frameworks/AssetsLibrary.framework; sourceTree = SDKROOT; };
 		7B6450FC18E5901C005ED543 /* DDGMenuHistoryItemCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGMenuHistoryItemCell.h; sourceTree = "<group>"; };
 		7B6450FD18E5901C005ED543 /* DDGMenuHistoryItemCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGMenuHistoryItemCell.m; sourceTree = "<group>"; };
@@ -717,6 +715,8 @@
 		8409F5EB1B5E917E001F897F /* proximanova-light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-light.otf"; path = "fonts/licensed/proximanova-light.otf"; sourceTree = "<group>"; };
 		8409F5EC1B5E917E001F897F /* proximanova-regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-regular.otf"; path = "fonts/licensed/proximanova-regular.otf"; sourceTree = "<group>"; };
 		8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "fonts/licensed/proximanova-semibold.otf"; sourceTree = "<group>"; };
+		8410AD531BB7353500CC83DB /* DDGImageActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGImageActivityItemProvider.h; sourceTree = "<group>"; };
+		8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGImageActivityItemProvider.m; sourceTree = "<group>"; };
 		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBar.h; sourceTree = "<group>"; };
 		845993311B4BD41B006F2CE7 /* DDGProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBar.m; sourceTree = "<group>"; };
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
@@ -1105,8 +1105,6 @@
 		5B2FCB5B16F3786D0045A5FE /* Web View */ = {
 			isa = PBXGroup;
 			children = (
-				7B3BB7F5192E0F0A00E94055 /* DDGWebView.h */,
-				7B3BB7F6192E0F0A00E94055 /* DDGWebView.m */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				5B2FCB5C16F3789F0045A5FE /* DDGReadabilityToggleActivity.h */,
@@ -1282,6 +1280,8 @@
 				5B070883170460250058718F /* DDGActivityItemProvider.m */,
 				5B0708851704A3BE0058718F /* DDGSafariActivity.h */,
 				5B0708861704A3BE0058718F /* DDGSafariActivity.m */,
+				8410AD531BB7353500CC83DB /* DDGImageActivityItemProvider.h */,
+				8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */,
 			);
 			name = Sharing;
 			sourceTree = "<group>";
@@ -1801,6 +1801,7 @@
 				846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */,
 				5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */,
 				5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */,
+				8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */,
 				5BA321BF16C904BA0066BCB0 /* AFJSONRequestOperation.m in Sources */,
 				5BA321C016C904BA0066BCB0 /* AFNetworkActivityIndicatorManager.m in Sources */,
 				5BA321C116C904BA0066BCB0 /* AFPropertyListRequestOperation.m in Sources */,
@@ -1850,7 +1851,6 @@
 				5B7C3C301715AF8900B9E009 /* DDGHistoryViewController.m in Sources */,
 				5B7C3CA3171851F800B9E009 /* DDGDeleteButton.m in Sources */,
 				5B7C3CAA171C4B1800B9E009 /* DDGFixedSizeImageView.m in Sources */,
-				7B3BB7F7192E0F0A00E94055 /* DDGWebView.m in Sources */,
 				5B7C3CAD171C4D1E00B9E009 /* DDGHistoryItemCell.m in Sources */,
 				5B15F3D017394CC100912482 /* DDGPopoverViewController.m in Sources */,
 				7BFC64DF18BCEEC800C48753 /* DDGStoryBackgroundView.m in Sources */,

@@ -20,9 +20,9 @@
 #import "DDGReadabilityToggleActivity.h"
 #import "DDGActivityItemProvider.h"
 #import "DDGSafariActivity.h"
-#import "DDGWebView.h"
+#import "DDGImageActivityItemProvider.h"
 
-@interface DDGWebViewController () <UIScrollViewDelegate> {
+@interface DDGWebViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
     BOOL _isFavorited;
     CGPoint lastOffset;
 }
@@ -48,7 +48,7 @@
     [super loadView];
     CGRect viewFrame = self.view.frame;
     viewFrame.origin = CGPointMake(0, 0);
-    self.webView = [[DDGWebView alloc] initWithFrame:viewFrame];
+    self.webView = [[UIWebView alloc] initWithFrame:viewFrame];
     self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.webView.delegate = self;
     self.webView.scalesPageToFit = YES;
@@ -73,8 +73,12 @@
     [super viewDidLoad];
     self.tabBarTopBorderConstraint.constant = 0.5f;
     UIMenuItem *search = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Search", @"Search") action:@selector(search:)];
-    UIMenuItem *saveImage = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Save Image", @"Save the image to the photo library") action:@selector(saveImage:)];
-    [[UIMenuController sharedMenuController] setMenuItems:@[search, saveImage]];
+    [[UIMenuController sharedMenuController] setMenuItems:@[search]];
+    
+    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    tapGestureRecognizer.delegate = self;
+    tapGestureRecognizer.numberOfTapsRequired = 1;
+    [self.webView addGestureRecognizer:tapGestureRecognizer];
     
     //    UIView*
     self.webView.scrollView.delegate = self;
@@ -167,6 +171,52 @@
     [self.searchController willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 
+
+#pragma mark - Handle long-press on images
+
+- (void)handleTap:(UITapGestureRecognizer *)recognizer
+{
+    [self findImageForTap:[recognizer locationInView:self.webView]];
+}
+
+#pragma mark - UIGestureRecognizerDelegate
+
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    if ([otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
+        CGPoint point = [otherGestureRecognizer locationInView:self.webView];
+        NSLog(@"long press detected at point %@", NSStringFromCGPoint(point));
+        [self findImageForTap:point];
+    }
+    return YES;
+}
+
+#pragma mark - Private
+
+- (void)findImageForTap:(CGPoint)tapLocation
+{
+    NSString *javascript = @"var ddg_url = '';" \
+    "var node = document.elementFromPoint(%f, %f);" \
+    "while(node) {" \
+    "  if (node.tagName) {" \
+    "    if(node.tagName.toLowerCase() == 'img' && node.src && node.src.length > 0) {" \
+    "      ddg_url = node.src;" \
+    "      break;" \
+    "    }" \
+    "  }" \
+    "  node = node.parentNode;" \
+    "}";
+    NSString* url = [self.webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:javascript, tapLocation.x, tapLocation.y]];
+    //NSString *url = [self stringByEvaluatingJavaScriptFromString:@"ddg_url"];
+    if(url && url.length > 0 && [DDGUtility looksLikeURL:url]) {
+        NSLog(@" tapped on image: %@", url);
+        [self longPressOnImage:[NSURL URLWithString:url] atLocation:tapLocation];
+    }
+}
+
+
+
+
 #pragma mark - Readability Mode
 
 - (BOOL)currentURLIsNonReadabilityURL {
@@ -247,6 +297,22 @@
     if ( [avc respondsToSelector:@selector(popoverPresentationController)] ) {
         // iOS8
         avc.popoverPresentationController.sourceView = sender;
+    }
+    
+    [self presentViewController:avc animated:YES completion:NULL];
+}
+
+-(void)longPressOnImage:(NSURL*)imageURL atLocation:(CGPoint)tapPoint
+{
+    NSArray *applicationActivities = @[];
+    NSArray *items = @[ [[DDGImageActivityItemProvider alloc] initWithImageURL:imageURL ] ];
+                        
+    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items
+                                                                        applicationActivities:applicationActivities];
+    if ( [avc respondsToSelector:@selector(popoverPresentationController)] ) {
+        // iOS8
+        avc.popoverPresentationController.sourceView = self.view;
+        avc.popoverPresentationController.sourceRect = CGRectMake(tapPoint.x, tapPoint.y, 1, 1);
     }
     
     [self presentViewController:avc animated:YES completion:NULL];
@@ -482,33 +548,9 @@
 - (BOOL)canPerformAction:(SEL)action withSender:(id)sender
 {
     if (action == @selector(search:)) {
-        return ![self.searchController.searchBar.searchField isFirstResponder] && ![self.webView tappedImageURL];
-    }
-    if (action == @selector(saveImage:)) {
-        return ([self hasAccessToPhotos] && [self.webView tappedImageURL]);
+        return ![self.searchController.searchBar.searchField isFirstResponder];
     }
     return [super canPerformAction:action withSender:sender];
-}
-
-- (void)saveImage:(UIMenuItem *)menuItem
-{
-    if ([self hasAccessToPhotos]) {
-        NSURLRequest *request = [DDGUtility requestWithURL:[NSURL URLWithString:[self.webView tappedImageURL]]];
-        [[AFImageRequestOperation imageRequestOperationWithRequest:request success:^(UIImage *image) {
-            if (image) {
-                ALAssetsLibrary *library = [ALAssetsLibrary new];
-                [library writeImageToSavedPhotosAlbum:image.CGImage orientation:(ALAssetOrientation)image.imageOrientation completionBlock:^(NSURL *assetURL, NSError *error) {
-                    if (error) {
-                        [[[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Save Imaged Failed", @"Alert Title: Saving Image Failed")
-                                                    message:NSLocalizedString(@"The image couldn't be saved to your camera roll at this time. Please try again later.", @"Alert Message: The image could not be saved at this time. Please try again later.")
-                                                   delegate:nil
-                                          cancelButtonTitle:NSLocalizedString(@"OK", @"Dismiss Alert Button: OK")
-                                          otherButtonTitles:nil, nil] show];
-                    }
-                }];
-            }
-        }] start];
-    }
 }
 
 - (void)search:(UIMenuItem *)menuItem
