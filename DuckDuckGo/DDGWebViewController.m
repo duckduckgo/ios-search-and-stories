@@ -80,9 +80,7 @@
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [self.webView addGestureRecognizer:tapGestureRecognizer];
     
-    //    UIView*
     self.webView.scrollView.delegate = self;
-    //self.hidesBottomBarWhenPushed = TRUE;
     lastOffset = self.webView.scrollView.contentOffset;
 }
 
@@ -95,7 +93,7 @@
 
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    self.webView.scrollView.contentInset = UIEdgeInsetsZero;
+    [self.searchControllerDDG.homeController registerScrollableContent:self.webView.scrollView];
 }
 
 -(void)viewWillDisappear:(BOOL)animated {
@@ -113,6 +111,7 @@
 {
     [super viewDidLayoutSubviews];
     self.webView.scrollView.contentInset = UIEdgeInsetsZero;
+    self.webView.scrollView.scrollIndicatorInsets = UIEdgeInsetsZero;
     lastOffset = self.webView.scrollView.contentOffset;
 }
 

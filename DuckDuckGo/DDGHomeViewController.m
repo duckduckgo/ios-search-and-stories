@@ -19,7 +19,9 @@
 #include "DDGSearchHandler.h"
 #import "UIViewController+DDGSearchController.h"
 
-@interface DDGHomeViewController ()
+@interface DDGHomeViewController () {
+    UIEdgeInsets contentInsets;
+}
 @property (nonatomic, strong) IBOutlet UIView* tabContentView;
 @property (nonatomic, strong) UITabBarController* tabController;
 
@@ -81,8 +83,17 @@
         self.toolbarTop.constant = newConstant;
         [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutSubviews];
+            scrollView.contentInset = UIEdgeInsetsMake(0, 0, -newConstant, 0);
+            scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, -newConstant, 0);
         }];
     }
+}
+
+
+-(void)registerScrollableContent:(UIScrollView*)contentView
+{
+    contentView.contentInset = contentInsets;
+    contentView.scrollIndicatorInsets = contentInsets;
 }
 
 -(void)setAlternateButtonBar:(UIView *)alternateButtonBar {
@@ -213,7 +224,7 @@
     [self.tabContentView addSubview:self.tabController.view];
     [self.tabController didMoveToParentViewController:self];
     self.tabController.tabBar.hidden = TRUE;
-    
+    contentInsets = UIEdgeInsetsMake(0, 0, 50, 0);
     self.view.backgroundColor = [UIColor duckSearchBarBackground];
     
     NSMutableArray* controllers = [NSMutableArray new];

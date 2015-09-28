@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A282b" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
@@ -34,7 +34,7 @@
             </userGuides>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nOn-A2-4XZ" userLabel="tab content">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="551"/>
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="601"/>
                     <animations/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
@@ -171,10 +171,10 @@
                 <constraint firstItem="kyo-JD-Ybe" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="Fyi-04-bna"/>
                 <constraint firstItem="kyo-JD-Ybe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" priority="800" id="Lci-5l-ZsQ"/>
                 <constraint firstItem="HQm-a7-mxw" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="NcP-Tt-9xB"/>
-                <constraint firstItem="nOn-A2-4XZ" firstAttribute="bottom" secondItem="HQm-a7-mxw" secondAttribute="top" id="NpH-tL-gD5"/>
                 <constraint firstItem="HQm-a7-mxw" firstAttribute="top" secondItem="NwH-at-kPi" secondAttribute="bottom" id="OZ5-Sb-okf"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Okf-nx-ZKD"/>
                 <constraint firstItem="kyo-JD-Ybe" firstAttribute="top" secondItem="NwH-at-kPi" secondAttribute="bottom" id="TAL-yo-lqJ"/>
+                <constraint firstAttribute="bottom" secondItem="nOn-A2-4XZ" secondAttribute="bottom" constant="-1" id="bpk-5B-KkL"/>
                 <constraint firstItem="HQm-a7-mxw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" priority="900" id="m9c-VI-hov" userLabel="tab bar left"/>
                 <constraint firstItem="kyo-JD-Ybe" firstAttribute="leading" secondItem="HQm-a7-mxw" secondAttribute="trailing" id="qOA-xR-CpL"/>
                 <constraint firstItem="NwH-at-kPi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="sMg-RR-87x"/>

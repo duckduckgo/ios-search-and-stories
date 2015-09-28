@@ -21,5 +21,6 @@
 
 -(void)setHideToolbar:(BOOL)hideToolbar withScrollview:(UIScrollView*)scrollView;
 -(void)setAlternateButtonBar:(UIView *)alternateButtonBar animated:(BOOL)animated;
+-(void)registerScrollableContent:(UIScrollView*)contentView;
 
 @end

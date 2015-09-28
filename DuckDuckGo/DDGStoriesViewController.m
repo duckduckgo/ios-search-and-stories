@@ -486,7 +486,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     self.enqueuedDownloadOperations = [NSMutableSet new];
     self.enqueuedDecompressionOperations = [NSMutableSet set];    
-    self.storyView.contentInset = UIEdgeInsetsZero;
 }
 
 - (void)viewDidUnload {
@@ -528,11 +527,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     }
 
     self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
-}
-
--(void)viewDidLayoutSubviews
-{
-    self.storyView.contentInset = UIEdgeInsetsZero;
+    
+    [self.searchControllerDDG.homeController registerScrollableContent:self.storyView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
