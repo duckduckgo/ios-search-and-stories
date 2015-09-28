@@ -176,17 +176,26 @@
 
 - (void)handleTap:(UITapGestureRecognizer *)recognizer
 {
-    [self findImageForTap:[recognizer locationInView:self.webView]];
+    DLog(@"empty tap handler");
 }
 
 #pragma mark - UIGestureRecognizerDelegate
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if ([otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) {
-        [self findImageForTap:[otherGestureRecognizer locationInView:self.webView]];
-        return NO;
-    } else {
+    if ([otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] && otherGestureRecognizer.state==UIGestureRecognizerStateBegan) {
+        UILongPressGestureRecognizer* longPressRecognizer = (UILongPressGestureRecognizer*)otherGestureRecognizer;
+        if(longPressRecognizer.state==UIGestureRecognizerStateBegan) {
+            CGPoint touchLoc = [otherGestureRecognizer locationInView:self.webView];
+            NSURL* imageURL = [self findImageForTap:touchLoc];
+            NSLog(@" long-touched URL: %@", imageURL);
+            if(imageURL!=nil) {
+                [self longPressOnImage:imageURL atLocation:touchLoc];
+                return NO;
+            }
+        }
+    } else if([otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
+        NSLog(@"shouldRecSimWitRec:\n  REC1: %@ \n  REC2: %@", gestureRecognizer, otherGestureRecognizer);
         CGPoint tapPoint = [otherGestureRecognizer locationInView:self.webView];
         if(tapPoint.y + 50 > self.webView.frame.size.height) {
             // this tap point is where the auto-hidden toolbar should be. Let's un-auto-hide it
@@ -197,9 +206,21 @@
     return YES;
 }
 
+
 #pragma mark - Private
 
-- (void)findImageForTap:(CGPoint)tapLocation
+
+-(void)handleLongPress:(UIGestureRecognizer*)sender
+{
+    NSLog(@"handleLongPress:%@", sender);
+    CGPoint touchLocation = [sender locationInView:self.webView];
+    NSURL* imageURL = [self findImageForTap:touchLocation];
+    if(imageURL) {
+        [self longPressOnImage:imageURL atLocation:touchLocation];
+    }
+}
+
+- (NSURL*)findImageForTap:(CGPoint)tapLocation
 {
     NSString *javascript = @"var ddg_url = '';" \
     "var node = document.elementFromPoint(%f, %f);" \
@@ -216,8 +237,9 @@
     //NSString *url = [self stringByEvaluatingJavaScriptFromString:@"ddg_url"];
     if(url && url.length > 0 && [DDGUtility looksLikeURL:url]) {
         NSLog(@" tapped on image: %@", url);
-        [self longPressOnImage:[NSURL URLWithString:url] atLocation:tapLocation];
+        return [NSURL URLWithString:url];
     }
+    return nil;
 }
 
 
