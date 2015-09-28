@@ -12,6 +12,7 @@
 extern NSString *const DDGStoryCellIdentifier;
 
 #define DDGTitleBarHeight 57.0f
+#define DDGTitleBarHeightMosaicLarge 118.0f;
 
 @protocol DDGStoryCellDelegate <NSObject>
 
@@ -30,6 +31,7 @@ extern NSString *const DDGStoryCellIdentifier;
 
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) DDGStory* story;
+@property (nonatomic) BOOL mosaicMode;
 @property (nonatomic, strong) DDGHistoryItem* historyItem;
 @property (nonatomic, weak) id<DDGStoryCellDelegate> storyDelegate;
 @property (nonatomic, strong) UIView* touchPassthroughView;

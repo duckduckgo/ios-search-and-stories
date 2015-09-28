@@ -12,6 +12,7 @@
 
 
 +(UIFont*)duckStoryTitle;
++(UIFont*)duckStoryTitleLarge;
 +(UIFont*)duckStoryTitleSmall;
 +(UIFont*)duckStoryCategory;
 +(UIFont*)duckStoryCategorySmall;

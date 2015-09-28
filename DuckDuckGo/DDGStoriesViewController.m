@@ -24,11 +24,6 @@
 #import "DDGTableView.h"
 
 NSString *const DDGLastViewedStoryKey = @"last_story";
-CGFloat const DDGStoriesInterRowSpacing = 10;
-CGFloat const DDGStoriesBetweenItemsSpacing = 10;
-CGFloat const DDGStoriesMulticolumnWidthThreshold = 500;
-CGFloat const DDGStoryImageRatio = 1/0.48f; // 2.083333f;  //1.597f = measured from iPhone screenshot; 1.36f = measured from iPad screenshot
-CGFloat const DDGStoryImageRatioMosaic = 1.356f;
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
@@ -133,7 +128,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
     CGFloat rowHeight;
     if(mosaicMode) { // set to the height of the larger story
-        rowHeight = ((size.width - DDGStoriesBetweenItemsSpacing)*2/3) / DDGStoryImageRatio  + DDGTitleBarHeight;
+        rowHeight = ((size.width - DDGStoriesBetweenItemsSpacing)*2/3) / DDGStoryImageWithoutTitleRatio + DDGTitleBarHeightMosaicLarge;
     } else { // set to the height
         rowHeight = size.width / DDGStoryImageRatio + DDGTitleBarHeight;
     }
@@ -724,8 +719,34 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         cell = [DDGStoryCell new];
     }
     cell.touchPassthroughView = collectionView;
-    [self configureCell:cell atIndexPath:indexPath];
-	return cell;
+    cell.mosaicMode = ((DDGStoriesLayout*)self.storyView.collectionViewLayout).mosaicMode;
+    cell.storyDelegate = self;
+    
+    DDGStory* story = nil;
+    DDGHistoryItem* historyItem = nil;
+    if(self.storiesMode==DDGStoriesListModeRecents) {
+        historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        story = historyItem.story;
+    } else {
+        story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    }
+    cell.story = story;
+    cell.historyItem = historyItem;
+    UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
+    if (image) {
+        cell.image = image;
+    } else {
+        if (story.isImageDownloaded) {
+            [self decompressAndDisplayImageForStoryAtIndexPath:indexPath];
+        } else {
+            __weak typeof(self) weakSelf = self;
+            [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {
+                [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
+            }];
+        }
+    }
+    [cell setNeedsLayout];
+    return cell;
 }
 
 #pragma  mark - collection view delegate
@@ -1122,36 +1143,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         return ((DDGHistoryItem*)fetchedObject).story;
     }
     return (DDGStory*)fetchedObject;
-}
-
-- (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    cell.storyDelegate = self;
-    
-    DDGStory* story = nil;
-    DDGHistoryItem* historyItem = nil;
-    if(self.storiesMode==DDGStoriesListModeRecents) {
-        historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        story = historyItem.story;
-    } else {
-        story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    }
-    cell.story = story;
-    cell.historyItem = historyItem;
-    UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
-    if (image) {
-        cell.image = image;
-    } else {
-        if (story.isImageDownloaded) {
-            [self decompressAndDisplayImageForStoryAtIndexPath:indexPath];
-        } else {
-            __weak typeof(self) weakSelf = self;
-            [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {
-                [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
-            }];
-        }
-    }
-    [cell setNeedsLayout];
 }
 
 

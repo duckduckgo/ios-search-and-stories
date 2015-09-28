@@ -165,6 +165,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 @property (nonatomic, strong) UIView *titleBackgroundView;
 @property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) UIView *innerShadowView;
+@property (nonatomic, strong) UIView *imageBottomView;
 @property (nonatomic, strong) UILabel* textLabel;
 @property (nonatomic, weak) DDGStoryMenu* menu;
 @property (nonatomic, assign, getter = isRead) BOOL read;
@@ -353,6 +354,12 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     [self.contentView addSubview:innerShadowView];
     self.innerShadowView = innerShadowView;
     
+    UIView *imageBottomView = [UIView new];
+    imageBottomView.backgroundColor = [UIColor colorWithWhite:1.0f alpha:0.35f];
+    imageBottomView.opaque = NO;
+    [self.contentView addSubview:imageBottomView];
+    self.imageBottomView = imageBottomView;
+    
     self.textLabel = [UILabel new];
     self.textLabel.backgroundColor = [UIColor clearColor];
     self.textLabel.numberOfLines = 2;
@@ -375,32 +382,36 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 - (void)layoutSubviews;
 {
-    //Always call your parents.
+    // Always call your parents.
     [super layoutSubviews];
     
     CGRect bounds = self.contentView.bounds;
-    
     BOOL compactMode = bounds.size.width < 300; // a bit arbitrary
+    BOOL largeMode = bounds.size.width > 460;
     
     // adjust the font sizes according to the space available
     self.categoryButton.titleLabel.font = compactMode ? [UIFont duckStoryCategorySmall] : [UIFont duckStoryCategory];
-    self.textLabel.font = compactMode ? [UIFont duckStoryTitleSmall] : [UIFont duckStoryTitle];
-    
-    self.innerShadowView.frame = CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width, 0.5f);
-    self.dropShadowView.frame = CGRectMake(bounds.origin.x, bounds.size.height-0.5, bounds.size.width, 0.5);
+    self.textLabel.font = compactMode ? [UIFont duckStoryTitleSmall] : (largeMode ?  [UIFont duckStoryTitleLarge] : [UIFont duckStoryTitle]);
     
     CGRect faviconFrame = self.faviconButton.frame;
     CGFloat textWidth = bounds.size.width - faviconFrame.origin.x  -  faviconFrame.size.width - 30;
     NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
     paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-    CGRect titleBackgroundFrame = [self.titleBackgroundView frame];
-    
-    titleBackgroundFrame.size.height = DDGTitleBarHeight; //MAX(lineHeight, DDGTitleBarHeight);
     
     CGRect backgroundImageViewBounds = bounds;
-    backgroundImageViewBounds.size.height -= titleBackgroundFrame.size.height;
+    if(self.mosaicMode) {
+        backgroundImageViewBounds.size.height = MIN(backgroundImageViewBounds.size.width/DDGStoryImageWithoutTitleRatio, bounds.size.height - 10.0f);
+    } else {
+        backgroundImageViewBounds.size.height -= DDGTitleBarHeight;
+    }
     self.backgroundImageView.frame = backgroundImageViewBounds;
+
+    self.innerShadowView.frame = CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width, 0.5f);
+    self.imageBottomView.frame = CGRectMake(bounds.origin.x, bounds.origin.y + backgroundImageViewBounds.size.height-0.5, bounds.size.width, 0.5f);
+    self.dropShadowView.frame = CGRectMake(bounds.origin.x, bounds.size.height-0.5, bounds.size.width, 0.5);
     
+    CGRect titleBackgroundFrame = [self.titleBackgroundView frame];
+    titleBackgroundFrame.size.height = bounds.size.height - backgroundImageViewBounds.size.height;
     titleBackgroundFrame.origin.x = 0;
     titleBackgroundFrame.origin.y = bounds.size.height - titleBackgroundFrame.size.height;
     titleBackgroundFrame.size.width = bounds.size.width;
