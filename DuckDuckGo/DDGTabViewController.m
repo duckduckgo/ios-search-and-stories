@@ -53,11 +53,12 @@
 
 -(void)viewDidLayoutSubviews
 {
-  if(self.segmentAlignmentView) {
-    self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 18;
-  } else {
-    self.segmentWidthConstraint.constant = self.controlView.frame.size.width-16;
-  }
+    [super viewDidLayoutSubviews];
+    if(self.segmentAlignmentView) {
+        self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 18;
+    } else {
+        self.segmentWidthConstraint.constant = self.controlView.frame.size.width-16;
+    }
 }
 
 - (IBAction)segmentWasSelected:(id)sender {
@@ -83,6 +84,7 @@
     if (nextViewController != self.currentViewController) {
         [self addChildViewController:nextViewController];
         [nextViewController.view setFrame:contentRect];
+        nextViewController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
         if (self.currentViewController.view) {
             [self.contentView insertSubview:nextViewController.view belowSubview:self.currentViewController.view];
         } else {
@@ -105,12 +107,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-        return YES;
-    }
-        
-    // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return YES;
 }
 
 #pragma mark - UIViewController
