@@ -11,6 +11,7 @@
 #import "UIImageView+AFNetworking.h"
 #import "DDGSettingsViewController.h"
 #import "DDGSourceSettingCellTableViewCell.h"
+#import "DDGStoryFetcher.h"
 
 @interface DDGChooseSourcesViewController ()
 @property (nonatomic, strong) NSFetchedResultsController *fetchedResultsController;
@@ -18,12 +19,6 @@
 
 @implementation DDGChooseSourcesViewController
 
-
--(void)resetSourcesToDefault
-{
-#warning Need implementation for resetting to default sources
-    DLog(@"NEED TO RESET TO DEFAULT");
-}
 
 #pragma mark - View controller methods
 
@@ -181,7 +176,7 @@
     if(indexPath.section==0) {
         [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
         if(indexPath.row==0) {
-                [self resetSourcesToDefault];
+            [DDGStoryFetcher resetSourceFeedsToDefaultInContext:self.fetchedResultsController.managedObjectContext];
         } else {
             // send an email to make a suggestion for a new source
             if ([MFMailComposeViewController canSendMail]) {
