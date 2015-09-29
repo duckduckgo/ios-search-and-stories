@@ -349,9 +349,7 @@ NSString * const emailRegEx =
         }
     }
     
-    [self revealAutocomplete:NO animated:NO];
-    
-
+    //[self dismissAutocomplete];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -359,16 +357,9 @@ NSString * const emailRegEx =
     [super viewDidAppear:animated];
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
-    
-    if(self.autocompletePopover.isBeingPresented) {
-        CGRect autocompleteRect = self.autocompleteController.view.frame;
-        autocompleteRect.origin.x = 0;
-        autocompleteRect.origin.y = 0;
-        autocompleteRect.size.width = self.searchBar.frame.size.width + 0;
-        autocompleteRect.size.height = 490;
-        self.autocompleteController.preferredContentSize = autocompleteRect.size;
-        //self.autocompletePopover.preferredContentSize = autocompleteRect.size;
-    }
+ 
+    UIViewController* currentVC = [self.contentControllers lastObject];
+    [currentVC viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
