@@ -61,33 +61,32 @@
 
 + (UIColor*)duckTabBarForeground
 {
-    return UIColorFromRGB(0xADADAD);
+    return [UIColor colorWithRed:0.678 green:0.678 blue:0.678 alpha:1]; // #ADADAD
 }
 
 + (UIColor*)duckTabBarForegroundSelected
 {
-    return UIColorFromRGB(0xDF5833);
+    return [UIColor colorWithRed:0.874 green:0.345 blue:0.2 alpha:1]; // #DF5833
 }
-
 
 + (UIColor*)duckProgressBarForeground
 {
-    return UIColorFromRGB(0x4495d4);
+    return [UIColor colorWithRed:0.266 green:0.584 blue:0.831 alpha:1]; // #4495d4
 }
 
 + (UIColor*)duckProgressBarBackground
 {
-    return UIColorFromRGB(0x98c5e7);
+    return [UIColor colorWithRed:0.596 green:0.772 blue:0.905 alpha:1]; // #98c5e7
 }
 
 +(UIColor*)duckStoriesBackground
 {
-    return UIColorFromRGB(0xEEEEEE);
+    return [UIColor colorWithRed:0.933 green:0.933 blue:0.933 alpha:1]; // #EEEEEE
 }
 
 +(UIColor*)duckRefreshColor
 {
-    return UIColorFromRGB(0xAAAAAA);
+    return [UIColor colorWithRed:0.666 green:0.666 blue:0.666 alpha:1]; // #AAAAAA
 }
 
 //+(UIColor*)duckSettingsLabel
@@ -112,12 +111,12 @@
 
 + (UIColor *)duckNoContentColor
 {
-    return UIColorFromRGB(0xEEEEEE);
+    return [UIColor colorWithRed:0.933 green:0.933 blue:0.933 alpha:1]; // #EEEEEE
 }
 
 + (UIColor *)duckRed
 {
-    return UIColorFromRGB(0xDE5833);
+    return [UIColor colorWithRed:0.87 green:0.345 blue:0.2 alpha:1]; // #DE5833
 }
 
 + (UIColor *)duckStoryReadColor
@@ -132,23 +131,23 @@
 
 + (UIColor *)duckStoryDropShadowColor
 {
-    return UIColorFromRGB(0xDADADA);
+    return [UIColor colorWithRed:0.854 green:0.854 blue:0.854 alpha:1]; // #DADADA
 }
 
 + (UIColor *)duckTableSeparator
 {
-    return UIColorFromRGB(0xdddddd);
+    return [UIColor colorWithRed:0.866 green:0.866 blue:0.866 alpha:1]; // #dddddd
 }
 
 
 + (UIColor *)duckSearchFieldBackground
 {
-    return UIColorFromRGB(0xBD4A2B);
+    return [UIColor colorWithRed:0.741 green:0.29 blue:0.168 alpha:1]; // #BD4A2B
 }
 
 + (UIColor *)duckSearchBarBackground
 {
-    return UIColorFromRGB(0xDE5833);
+    return [UIColor colorWithRed:0.87 green:0.345 blue:0.2 alpha:1]; // #DE5833
 }
 
 + (UIColor *)duckSearchFieldForeground
@@ -178,8 +177,9 @@
 
 + (UIColor *)duckListItemTextForeground
 {
-    return UIColorFromRGB(0x222222);
+    return [UIColor colorWithRed:0.133 green:0.133 blue:0.133 alpha:1]; // #222222
 }
+
 + (UIColor *)duckListItemDetailForeground
 {
     //return UIColorFromRGB(0x999999);

@@ -57,7 +57,7 @@
                                 <constraint firstAttribute="width" constant="48" id="dP2-cS-0qY"/>
                                 <constraint firstAttribute="height" constant="48" id="dwo-Sp-v9F"/>
                             </constraints>
-                            <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
                             <state key="normal" image="Tab-Search">
                                 <color key="titleColor" red="0.73333333333333328" green="0.73333333333333328" blue="0.73333333333333328" alpha="1" colorSpace="deviceRGB"/>
                             </state>
@@ -73,7 +73,7 @@
                                 <constraint firstAttribute="width" constant="48" id="5pA-6A-EYg"/>
                                 <constraint firstAttribute="height" constant="48" id="MtU-u9-KtW"/>
                             </constraints>
-                            <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
                             <state key="normal" image="Tab-Stories">
                                 <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                             </state>
@@ -89,7 +89,7 @@
                                 <constraint firstAttribute="height" constant="48" id="CsL-oc-22u"/>
                                 <constraint firstAttribute="width" constant="48" id="ue7-6q-aww"/>
                             </constraints>
-                            <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
                             <state key="normal" image="Tab-Favorites">
                                 <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                             </state>
@@ -105,7 +105,7 @@
                                 <constraint firstAttribute="width" constant="48" id="IRv-gq-M6N"/>
                                 <constraint firstAttribute="height" constant="48" id="Rjc-KQ-XJZ"/>
                             </constraints>
-                            <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
                             <state key="normal" image="Tab-Recents">
                                 <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                             </state>
@@ -121,7 +121,7 @@
                                 <constraint firstAttribute="height" constant="48" id="5Dn-sS-Hhq"/>
                                 <constraint firstAttribute="width" constant="48" id="WJF-NJ-cPT"/>
                             </constraints>
-                            <color key="tintColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
+                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
                             <state key="normal" image="Tab-Settings">
                                 <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                             </state>
@@ -131,7 +131,7 @@
                         </button>
                     </subviews>
                     <animations/>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="deviceRGB"/>
                     <constraints>
                         <constraint firstAttribute="centerY" secondItem="w9s-2z-UbG" secondAttribute="centerY" id="3Rv-UV-7Es"/>
                         <constraint firstAttribute="height" constant="50" id="Hyt-Se-5ZJ" userLabel="tab bar height"/>

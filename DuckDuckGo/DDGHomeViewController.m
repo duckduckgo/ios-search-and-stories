@@ -238,7 +238,7 @@
         [self.searchTopController pushContentViewController:self.searchController animated:NO];
         self.searchTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                                             image:[[UIImage imageNamed:@"Tab-Search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                                    selectedImage:[[UIImage imageNamed:@"Tab-Search-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                                    selectedImage:[[UIImage imageNamed:@"Tab-Search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         [controllers addObject:self.searchTopController];
     }
     
@@ -253,7 +253,7 @@
         self.storiesTopController.state = DDGSearchControllerStateHome;
         self.storiesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                                              image:[[UIImage imageNamed:@"Tab-Stories"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                                     selectedImage:[[UIImage imageNamed:@"Tab-Stories-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                                     selectedImage:[[UIImage imageNamed:@"Tab-Stories"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
 
         [controllers addObject:self.storiesTopController];
     }
@@ -284,7 +284,7 @@
         [self.favoritesTopController pushContentViewController:self.favoritesTabViewController animated:NO];
         self.favoritesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                           image:[[UIImage imageNamed:@"Tab-Favorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                  selectedImage:[[UIImage imageNamed:@"Tab-Favorites-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                  selectedImage:[[UIImage imageNamed:@"Tab-Favorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         [controllers addObject:self.favoritesTopController];
         
         self.favoritesTabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
@@ -313,7 +313,7 @@
         [self.recentsTopController pushContentViewController:self.recentsController animated:NO];
         self.recentsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                                              image:[[UIImage imageNamed:@"Tab-Recents"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                                     selectedImage:[[UIImage imageNamed:@"Tab-Recents-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                                     selectedImage:[[UIImage imageNamed:@"Tab-Recents"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         [controllers addObject:self.recentsTopController];
         
         self.recentsController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
@@ -329,7 +329,7 @@
         [self.settingsTopController pushContentViewController:self.settingsController animated:NO];
         self.settingsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                                               image:[[UIImage imageNamed:@"Tab-Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                                      selectedImage:[[UIImage imageNamed:@"Tab-Settings-Selected"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                                      selectedImage:[[UIImage imageNamed:@"Tab-Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
         [controllers addObject:self.settingsTopController];
     }
     
