@@ -10,8 +10,6 @@
 #import <QuartzCore/QuartzCore.h>
 
 @interface DDGAddressBarTextField ()
-@property NSAttributedString* actualPlaceholderText;
-@property NSAttributedString* inactivePlaceholderText;
 
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *placeholderTextLeft;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *placeholderTextCenter;
@@ -38,13 +36,51 @@
 }
 
 
+-(void)updatePlaceholder {
+    [self updatePlaceholderAnimated:TRUE];
+}
+
+-(void)updatePlaceholderAnimated:(BOOL)animated {
+    NSString* text = self.text;
+    BOOL fieldIsActive = self.isFirstResponder;
+    BOOL emptyText = text.length <= 0;
+    
+    // if the text is non-empty then hide the placeholder immediately
+    if(!emptyText) {
+        self.placeholderView.alpha = 0.0f;
+    }
+    
+    void(^animator)() = ^() {
+        // position the placeholder
+        self.placeholderTextLeft.active = fieldIsActive;
+        self.placeholderTextCenter.active = !fieldIsActive;
+        
+        // fade the loupe icon in or out
+        self.placeholderIconView.alpha = fieldIsActive ? 0 : 1.0f;
+        
+        // if the text is empty, then let's fade in the placeholder
+        if(emptyText) {
+            self.placeholderView.alpha = 1.0f;
+        }
+        
+        [self.placeholderView layoutIfNeeded];
+    };
+    
+    if(animated) {
+        [UIView animateWithDuration:0.2f animations:animator];
+    } else {
+        animator();
+    }
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
     if ([keyPath isEqualToString:@"text"]) {
-        id newText = [change valueForKey:@"new"];
-        if(newText!=nil && [newText length]>0) {
-            [self hidePlaceholder];
-        }
+        [self updatePlaceholderAnimated:TRUE];
+        //        id newText = [change valueForKey:@"new"];
+//        if(newText!=nil && [newText length]>0) {
+//            [self hidePlaceholder];
+//        }
         [self textWasUpdated:nil];
     }
 }
@@ -75,17 +111,14 @@
     
     [self addTarget:self action:@selector(textWasUpdated:) forControlEvents:UIControlEventEditingChanged];
     
-    self.actualPlaceholderText = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"Search DuckDuckGo", @"The placeholder text when the search field is receiving input")
-                                                                 attributes:@{NSForegroundColorAttributeName: [UIColor duckSearchFieldPlaceholderForeground]}];
-    self.inactivePlaceholderText = [[NSAttributedString alloc] initWithString:@" " attributes:@{}];
-    self.attributedPlaceholder = self.inactivePlaceholderText; // need to set to a non-empty string in order to prevent it sliding in from {0,0} when made visible
     [self addObserver:self
            forKeyPath:@"text"
               options:NSKeyValueObservingOptionNew
               context:NULL];
     
-    [self addTarget:self action:@selector(hidePlaceholder) forControlEvents:UIControlEventEditingDidBegin];
-    [self addTarget:self action:@selector(showPlaceholder) forControlEvents:UIControlEventEditingDidEnd];
+    [self addTarget:self action:@selector(updatePlaceholder) forControlEvents:UIControlEventEditingDidBegin];
+    [self addTarget:self action:@selector(updatePlaceholder) forControlEvents:UIControlEventEditingDidEnd];
+    [self addTarget:self action:@selector(updatePlaceholder) forControlEvents:UIControlEventEditingChanged];
     
     self.backgroundColor = [UIColor duckSearchFieldBackground];
     self.textColor = [UIColor duckSearchFieldForeground];
@@ -123,41 +156,13 @@
 -(void)resetField
 {
     [self clear:nil];
-    [self showPlaceholder];
+    [self updatePlaceholder];
 }
 
 
 -(IBAction)clear:(id)sender {
     self.text = @"";
 }
-
--(void)hidePlaceholder {
-    [UIView animateWithDuration:0.2 animations:^{
-        self.placeholderTextLeft.active = TRUE;
-        self.placeholderTextCenter.active = FALSE;
-        self.placeholderIconView.alpha = 0;
-        [self.placeholderView layoutIfNeeded];
-    } completion:^(BOOL finished) {
-        self.attributedPlaceholder = self.actualPlaceholderText;
-        self.placeholderView.hidden = TRUE;
-    }];
-}
-
--(void)showPlaceholder {
-    [UIView animateWithDuration:0.2 animations:^{
-        self.placeholderTextLeft.active = FALSE;
-        self.placeholderTextCenter.active = TRUE;
-        self.placeholderIconView.alpha = 1;
-        [self.placeholderView layoutIfNeeded];
-    } completion:^(BOOL finished) {
-    }];
-    
-    NSString* text = self.text;
-    self.placeholderView.hidden = !(text==nil || text.length<=0);
-    self.attributedPlaceholder = self.inactivePlaceholderText;
-}
-
-
 
 // placeholder position
 - (CGRect)textRectForBounds:(CGRect)bounds {
