@@ -163,6 +163,15 @@ static NSString *historyCellID = @"HCell";
     [self reloadAll];
 }
 
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    if(self.underPopoverMode) {
+        [self.searchControllerDDG.searchBar.searchField becomeFirstResponder];
+    }
+}
+
+
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
     

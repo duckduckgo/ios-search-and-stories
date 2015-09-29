@@ -158,6 +158,21 @@ NSString * const emailRegEx =
     }
 }
 
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    if(self.autocompletePopover.isBeingPresented) {
+        CGRect autocompleteRect = self.autocompleteController.view.frame;
+        autocompleteRect.origin.x = 0;
+        autocompleteRect.origin.y = 0;
+        autocompleteRect.size.width = self.searchBar.frame.size.width + 0;
+        autocompleteRect.size.height = 490;
+        self.autocompleteController.preferredContentSize = autocompleteRect.size;
+        [self.autocompletePopover presentPopoverFromView:self.searchBar permittedArrowDirections:UIPopoverArrowDirectionAny animated:FALSE];
+    }
+}
+
 -(BOOL)shouldUsePopover {
     if([self respondsToSelector:@selector(traitCollection)]) {
         return self.traitCollection.horizontalSizeClass==UIUserInterfaceSizeClassRegular;
