@@ -20,6 +20,7 @@
 - (void)logSearchResultWithTitle:(NSString *)title;
 - (void)logStory:(DDGStory *)story;
 
+-(NSUInteger)countHistoryItems;
 -(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix;
 -(NSArray*)pastHistoryItemsForPrefix:(NSString *)prefix
                          onlyQueries:(BOOL)onlyQueries

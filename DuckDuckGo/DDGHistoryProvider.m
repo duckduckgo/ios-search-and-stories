@@ -27,6 +27,22 @@
     return self;
 }
 
+
+-(NSUInteger)countHistoryItems {
+    
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGHistoryItem entityName]];
+    [request setIncludesSubentities:NO]; //Omit subentities. Default is YES (i.e. include subentities)
+    
+    NSError *err;
+    NSUInteger count = [self.managedObjectContext countForFetchRequest:request error:&err];
+    if(count == NSNotFound) {
+        NSLog(@"error querying history item count: %@", err);
+        return 0;
+    }
+    return count;
+}
+
+
 -(void)clearHistory {
     NSManagedObjectContext *context = self.managedObjectContext;
     [self performBlockWithHistoryItems:^(NSArray *history) {

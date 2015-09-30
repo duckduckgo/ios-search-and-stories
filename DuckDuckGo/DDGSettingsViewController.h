@@ -32,6 +32,7 @@ typedef enum DDGReadabilityMode {
 
 
 @interface DDGSettingsViewController : DDGFormViewController <MFMailComposeViewControllerDelegate, UIActionSheetDelegate>
+
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 
 -(IBAction)save:(id)sender;

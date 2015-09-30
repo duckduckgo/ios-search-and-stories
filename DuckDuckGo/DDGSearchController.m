@@ -209,19 +209,13 @@ NSString * const emailRegEx =
     NSOperationQueue *queue = [NSOperationQueue mainQueue];
     __weak typeof(self) weakSelf = self;
     keyboardWillShowObserver = [center addObserverForName:UIKeyboardWillShowNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
-        if (weakSelf) {
-            [weakSelf keyboardWillShow:note];
-        }
+        [weakSelf keyboardWillShow:note];
     }];
     keyboardWillHideObserver = [center addObserverForName:UIKeyboardWillHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
-        if (weakSelf) {
-            [weakSelf keyboardWillHide:note];
-        }
+        [weakSelf keyboardWillHide:note];
     }];
     keyboardDidHideObserver = [center addObserverForName:UIKeyboardDidHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
-        if (weakSelf) {
-            [weakSelf keyboardDidHide:note];
-        }
+        [weakSelf keyboardDidHide:note];
     }];
     UINavigationController* navController = [[UINavigationController alloc] init];
     navController.navigationBarHidden = TRUE;
@@ -249,7 +243,9 @@ NSString * const emailRegEx =
     dispatch_async(dispatch_get_main_queue(), ^{
         self.searchBar.searchField.text = @"";
     });
+    
     [self setNeedsStatusBarAppearanceUpdate];
+    [self revealAutocomplete:FALSE animated:FALSE];
 }
 
 
@@ -349,9 +345,10 @@ NSString * const emailRegEx =
             [self.background addSubview:self.autocompleteNavigationController.view];
             [self.autocompleteNavigationController didMoveToParentViewController:self];
         }
+        
+        [self revealAutocomplete:NO animated:NO];
     }
     
-    //[self dismissAutocomplete];
 }
 
 - (void)viewDidAppear:(BOOL)animated
