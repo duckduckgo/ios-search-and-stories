@@ -291,7 +291,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
             self.faviconButton.layer.cornerRadius = 0.0f;
         } else {
             [self.faviconButton setImage:img forState:UIControlStateNormal];
-            self.faviconButton.backgroundColor = UIColorFromRGB(0xDEDEDE);
+            self.faviconButton.backgroundColor = UIColorFromRGB(0xDDDDDD);
             self.faviconButton.layer.cornerRadius = 2.0f;
         }
         
