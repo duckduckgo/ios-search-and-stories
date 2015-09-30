@@ -106,6 +106,9 @@ static NSString *historyCellID = @"HCell";
 -(void)reloadAll
 {
     NSString* searchStr = self.searchController.searchBar.searchField.text;
+    if([DDGUtility looksLikeURL:searchStr]) {
+        searchStr = @"";
+    }
     self.filterString = searchStr==nil ? @"" : searchStr;
     [self reloadHistory];
     [self reloadFavorites];
