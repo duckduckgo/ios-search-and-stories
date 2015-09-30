@@ -31,6 +31,13 @@ NSString * const DDGSettingHomeViewTypeSaved = @"Saved View";
 NSString * const DDGSettingHomeViewTypeRecents = @"Recents";
 NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
+@interface DDGSettingsViewController ()
+@property (nonatomic, weak) IGFormButton* clearRecentsButton;
+@property (nonatomic) NSUInteger numberOfRecents;
+
+@end
+
+
 @implementation DDGSettingsViewController
 
 +(void)loadDefaultSettings {
@@ -81,8 +88,18 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
             [(IGFormButton *)element setDetailTitle:homeTitle];
         }
     }
+
+    [self updateClearRecentsItem];
     
     [self.tableView reloadData];
+}
+
+
+-(void)updateClearRecentsItem
+{
+    DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    self.numberOfRecents = [historyProvider countHistoryItems];
+    NSLog(@"numberOfRecents: %lu", (unsigned long)self.numberOfRecents);
 }
 
 -(void)duckGoToTopLevel
@@ -161,7 +178,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     [self addSectionWithTitle:NSLocalizedString(@"Privacy", @"Header for Privacy settings section") footer:nil];
     IGFormSwitch *recentSwitch = [self addSwitch:NSLocalizedString(@"Save Recents", @"Switch: Save recent searches") forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
+    self.clearRecentsButton =
     [self addButton:NSLocalizedString(@"Clear Recents", @"Clear recent search results") forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+        if(weakSelf.numberOfRecents<=0) return;
+        
         UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Are you sure you want to clear history? This cannot be undone.", @"Ask for confirmation of clearing the history and state that this cannot be undone")
                                                                  delegate:weakSelf
                                                         cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
@@ -223,9 +243,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 #pragma mark - Helper methods
 
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    // currently the only action sheet is to clear the history
     if(buttonIndex == 0) {
         DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
         [historyProvider clearHistory];
+        self.numberOfRecents = 0;
+        [self.tableView reloadData];
     }
 }
 
@@ -404,7 +427,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
     [DDGSettingsViewController configureSettingsCell:cell];
-    //[DDGSettingsViewController configureSettingsCellDetail:cell];
+    IGFormElement* thisElement = [self elementAtIndexPath:indexPath];
+    if(thisElement==self.clearRecentsButton && self.numberOfRecents<=0) {
+        cell.textLabel.textColor = [UIColor lightGrayColor];
+    }
     
     return cell;
 }
