@@ -125,36 +125,6 @@
     NSString* title = historyItem.title;
     self.textLabel.text = title;
     self.imageView.image = [UIImage imageNamed:@"recent-small"];
-    
-//    if (title.length > 0 && [title hasPrefix:@"!"]) {
-//        self.faviconImage = [[UIImage imageNamed:@"TinyBang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-//    } else {
-//        self.imageView.image = [UIImage imageNamed:@"recent-small"];
-//    }
-
 }
-
-//- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
-//{
-//    [super setHighlighted:highlighted animated:animated];
-//    self.tintColor = highlighted ? [UIColor whiteColor] : [UIColor duckRed];
-//    [self.contentLabel setTextColor:highlighted ? [UIColor whiteColor] : [UIColor duckBlack]];
-//}
-//
-//- (void)setNotification:(BOOL)notification
-//{
-//    _notification = notification;
-////    UIImage *image = nil;
-////    if (notification) {
-////        image = [[UIImage imageNamed:@"Notification"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-////    } else {
-////        image = [UIImage imageNamed:@"favorite-small"];// imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-////    }
-//}
-//
-//- (BOOL)shouldCauseMenuPanGestureToFail
-//{
-//    return YES;
-//}
 
 @end

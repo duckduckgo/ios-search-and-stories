@@ -41,7 +41,8 @@
                                         <constraint firstAttribute="width" constant="30" id="Hse-88-xjo"/>
                                         <constraint firstAttribute="height" constant="40" id="Px0-vi-5wZ"/>
                                     </constraints>
-                                    <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="deviceRGB"/>
+                                    <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <state key="normal" image="Home"/>
                                     <connections>
                                         <action selector="orangeButtonPressed:" destination="-1" eventType="touchUpInside" id="88"/>
                                     </connections>
@@ -237,6 +238,7 @@
         </view>
     </objects>
     <resources>
+        <image name="Home" width="22" height="22"/>
         <image name="SearchBar-Bang" width="19" height="19"/>
         <image name="SearchBar-Search" width="13" height="13"/>
     </resources>

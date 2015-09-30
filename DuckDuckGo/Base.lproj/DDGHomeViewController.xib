@@ -49,7 +49,7 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HQm-a7-mxw" userLabel="tab bar">
                     <rect key="frame" x="0.0" y="551" width="600" height="50"/>
                     <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iqm-n3-jod" userLabel="search">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iqm-n3-jod" userLabel="search">
                             <rect key="frame" x="36" y="1" width="48" height="48"/>
                             <animations/>
                             <accessibility key="accessibilityConfiguration" label="Search"/>
@@ -61,11 +61,12 @@
                             <state key="normal" image="Tab-Search">
                                 <color key="titleColor" red="0.73333333333333328" green="0.73333333333333328" blue="0.73333333333333328" alpha="1" colorSpace="deviceRGB"/>
                             </state>
+                            <state key="selected" image="Tab-Search-Active"/>
                             <connections>
                                 <action selector="showDuck" destination="-1" eventType="touchUpInside" id="1Xx-yk-EgG"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zhq-iC-hVf" userLabel="stories">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zhq-iC-hVf" userLabel="stories">
                             <rect key="frame" x="156" y="1" width="48" height="48"/>
                             <animations/>
                             <accessibility key="accessibilityConfiguration" label="Stories"/>
@@ -77,11 +78,12 @@
                             <state key="normal" image="Tab-Stories">
                                 <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                             </state>
+                            <state key="selected" image="Tab-Stories-Active"/>
                             <connections>
                                 <action selector="showStories" destination="-1" eventType="touchUpInside" id="RQz-mh-NI8"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmX-HN-8WI" userLabel="favorites">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmX-HN-8WI" userLabel="favorites">
                             <rect key="frame" x="276" y="1" width="48" height="48"/>
                             <animations/>
                             <accessibility key="accessibilityConfiguration" label="Favorites"/>
@@ -93,11 +95,12 @@
                             <state key="normal" image="Tab-Favorites">
                                 <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                             </state>
+                            <state key="selected" image="Tab-Favorites-Active"/>
                             <connections>
                                 <action selector="showFavorites" destination="-1" eventType="touchUpInside" id="uUo-Gr-1Lv"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5xv-00-irE" userLabel="recents">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5xv-00-irE" userLabel="recents">
                             <rect key="frame" x="396" y="1" width="48" height="48"/>
                             <animations/>
                             <accessibility key="accessibilityConfiguration" label="Recents"/>
@@ -109,11 +112,12 @@
                             <state key="normal" image="Tab-Recents">
                                 <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                             </state>
+                            <state key="selected" image="Tab-Recents-Active"/>
                             <connections>
                                 <action selector="showRecents" destination="-1" eventType="touchUpInside" id="OXL-qu-ujl"/>
                             </connections>
                         </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w9s-2z-UbG" userLabel="settings">
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w9s-2z-UbG" userLabel="settings">
                             <rect key="frame" x="516" y="1" width="48" height="48"/>
                             <animations/>
                             <accessibility key="accessibilityConfiguration" label="Settings"/>
@@ -125,6 +129,7 @@
                             <state key="normal" image="Tab-Settings">
                                 <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
                             </state>
+                            <state key="selected" image="Tab-Settings-Active"/>
                             <connections>
                                 <action selector="showSettings" destination="-1" eventType="touchUpInside" id="HB7-DM-Nv1"/>
                             </connections>
@@ -186,9 +191,14 @@
     </objects>
     <resources>
         <image name="Tab-Favorites" width="24" height="24"/>
+        <image name="Tab-Favorites-Active" width="22" height="19"/>
         <image name="Tab-Recents" width="24" height="24"/>
+        <image name="Tab-Recents-Active" width="22" height="22"/>
         <image name="Tab-Search" width="24" height="24"/>
+        <image name="Tab-Search-Active" width="21" height="21"/>
         <image name="Tab-Settings" width="24" height="24"/>
+        <image name="Tab-Settings-Active" width="22" height="22"/>
         <image name="Tab-Stories" width="24" height="24"/>
+        <image name="Tab-Stories-Active" width="24" height="24"/>
     </resources>
 </document>

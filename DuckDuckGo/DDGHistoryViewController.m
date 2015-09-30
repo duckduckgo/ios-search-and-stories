@@ -145,7 +145,7 @@
 }
 
 - (UIImage *)searchControllerBackButtonIconDDG {
-    return [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    return nil;
 }
 
 -(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem

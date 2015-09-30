@@ -99,8 +99,7 @@
 -(UIButton*)setupToolbarButton:(NSString*)imageName
 {
     UIButton* button = [UIButton buttonWithType:UIButtonTypeSystem];
-    [button setImage:[[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-            forState:UIControlStateNormal];
+    [button setImage:[UIImage imageNamed:imageName] forState:UIControlStateNormal];
     button.tintColor = [UIColor duckTabBarForeground];
     return button;
 }

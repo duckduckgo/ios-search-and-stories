@@ -237,8 +237,8 @@
                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         [self.searchTopController pushContentViewController:self.searchController animated:NO];
         self.searchTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                                            image:[[UIImage imageNamed:@"Tab-Search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                                    selectedImage:[[UIImage imageNamed:@"Tab-Search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                                            image:[UIImage imageNamed:@"Tab-Search"]
+                                                                    selectedImage:[UIImage imageNamed:@"Tab-Search-Active"]];
         [controllers addObject:self.searchTopController];
     }
     
@@ -247,13 +247,13 @@
                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         self.storiesController = [[DDGStoriesViewController alloc] initWithSearchHandler:self.storiesTopController
                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        //self.storiesController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        //self.storiesController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"];
         
         [self.storiesTopController pushContentViewController:self.storiesController animated:NO];
         self.storiesTopController.state = DDGSearchControllerStateHome;
         self.storiesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                                             image:[[UIImage imageNamed:@"Tab-Stories"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                                     selectedImage:[[UIImage imageNamed:@"Tab-Stories"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                                             image:[UIImage imageNamed:@"Tab-Stories"]
+                                                                     selectedImage:[UIImage imageNamed:@"Tab-Stories-Active"]];
 
         [controllers addObject:self.storiesTopController];
     }
@@ -283,8 +283,8 @@
         
         [self.favoritesTopController pushContentViewController:self.favoritesTabViewController animated:NO];
         self.favoritesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                          image:[[UIImage imageNamed:@"Tab-Favorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                  selectedImage:[[UIImage imageNamed:@"Tab-Favorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                          image:[UIImage imageNamed:@"Tab-Favorites"]
+                                                  selectedImage:[UIImage imageNamed:@"Tab-Favorites-Active"]];
         [controllers addObject:self.favoritesTopController];
         
         self.favoritesTabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
@@ -312,8 +312,8 @@
         
         [self.recentsTopController pushContentViewController:self.recentsController animated:NO];
         self.recentsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                                             image:[[UIImage imageNamed:@"Tab-Recents"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                                     selectedImage:[[UIImage imageNamed:@"Tab-Recents"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                                             image:[UIImage imageNamed:@"Tab-Recents"]
+                                                                     selectedImage:[UIImage imageNamed:@"Tab-Recents-Active"]];
         [controllers addObject:self.recentsTopController];
         
         self.recentsController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
@@ -328,8 +328,8 @@
         self.settingsController.managedObjectContext = [DDGAppDelegate sharedManagedObjectContext];
         [self.settingsTopController pushContentViewController:self.settingsController animated:NO];
         self.settingsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                                              image:[[UIImage imageNamed:@"Tab-Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                                                      selectedImage:[[UIImage imageNamed:@"Tab-Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
+                                                                              image:[UIImage imageNamed:@"Tab-Settings"]
+                                                                      selectedImage:[UIImage imageNamed:@"Tab-Settings-Active"]];
         [controllers addObject:self.settingsTopController];
     }
     
@@ -346,7 +346,6 @@
     } else { //if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
         [self showDuck];
     }
-    
 }
 
 
@@ -369,13 +368,11 @@
 
 -(void)setSelectedButton:(UIButton*)newlySelectedTabButton
 {
-    UIColor* selColor = [UIColor duckTabBarForegroundSelected];
-    UIColor* unselColor = [UIColor duckTabBarForeground];
-    self.searchTabButton.tintColor = newlySelectedTabButton==self.searchTabButton ? selColor : unselColor;
-    self.storiesTabButton.tintColor = newlySelectedTabButton==self.storiesTabButton ? selColor : unselColor;
-    self.favoritesTabButton.tintColor = newlySelectedTabButton==self.favoritesTabButton ? selColor : unselColor;
-    self.recentsTabButton.tintColor = newlySelectedTabButton==self.recentsTabButton ? selColor : unselColor;
-    self.settingsTabButton.tintColor = newlySelectedTabButton==self.settingsTabButton ? selColor : unselColor;
+    self.searchTabButton.selected = newlySelectedTabButton==self.searchTabButton;
+    self.storiesTabButton.selected = newlySelectedTabButton==self.storiesTabButton;
+    self.favoritesTabButton.selected = newlySelectedTabButton==self.favoritesTabButton;
+    self.recentsTabButton.selected = newlySelectedTabButton==self.recentsTabButton;
+    self.settingsTabButton.selected = newlySelectedTabButton==self.settingsTabButton;
 }
 
 #pragma mark - DDGTabViewControllerDelegate
