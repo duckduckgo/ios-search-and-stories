@@ -343,7 +343,10 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
                                                                         applicationActivities:@[  ]];
     if ( [avc respondsToSelector:@selector(popoverPresentationController)] ) {
         // iOS8
+        CGRect sourceRect = storySource.frame;
+        sourceRect.origin = CGPointMake(0, 0);
         avc.popoverPresentationController.sourceView = storySource;
+        avc.popoverPresentationController.sourceRect = sourceRect;
     }
     
     [self presentViewController:avc animated:YES completion:NULL];
