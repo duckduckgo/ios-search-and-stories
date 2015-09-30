@@ -284,7 +284,17 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     [self.categoryButton setTitle:story.category forState:UIControlStateNormal];
     self.read = story.readValue;
     if (story.feed) {
-        [self.faviconButton setImage:[story.feed image] forState:UIControlStateNormal];
+        UIImage* img = story.feed.image;
+        if(img) {
+            [self.faviconButton setImage:img forState:UIControlStateNormal];
+            self.faviconButton.backgroundColor = [UIColor clearColor];
+            self.faviconButton.layer.cornerRadius = 0.0f;
+        } else {
+            [self.faviconButton setImage:img forState:UIControlStateNormal];
+            self.faviconButton.backgroundColor = UIColorFromRGB(0xDEDEDE);
+            self.faviconButton.layer.cornerRadius = 2.0f;
+        }
+        
     }
 }
 
