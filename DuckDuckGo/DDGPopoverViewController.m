@@ -89,12 +89,32 @@
     // If the hitView is THIS view, return the view that you want to receive the touch instead:
     if (hitView == self) {
         if(self.popoverViewController.shouldDismissUponOutsideTap) {
+            // dismiss, but stil allow the hit to be passed through
             [self performSelector:@selector(goAwayNow) withObject:nil afterDelay:0.001];
         }
+
+        BOOL isWithinContent = CGRectContainsPoint(self.popoverViewController.contentViewController.view.frame, point);
+        if(isWithinContent) {
+            return hitView;
+        }
+        
+        // if we get here, we've gotten a tap outside of our own content area. Check to see
+        // if it's within the dimmed view and if we're supposed to absorb those taps and dismiss
+        UIView* dimView = self.popoverViewController.dimmedBackgroundView;
+        if(dimView && self.popoverViewController.shouldAbsorbAndDismissUponDimmedViewTap) {
+            if(CGRectContainsPoint(dimView.frame, [dimView convertPoint:point fromView:self])) {
+                // the tap was within the dimmed view.  dismiss and absorb the touch ourselves
+                [self performSelector:@selector(goAwayNow) withObject:nil afterDelay:0.001];
+                return self;
+            }
+        }
+        
+        // this will pass any touches through to the passthroughview
         return [self.touchPassthroughView hitTest:[self.touchPassthroughView convertPoint:point
                                                                                  fromView:self]
                                         withEvent:event];
     }
+    
     // Else return the hitView (as it could be one of this view's buttons):
     return hitView;
 }
@@ -200,7 +220,7 @@
     if (self) {
         self.contentViewController = viewController;
         self.touchPassthroughView = touchPassthroughView;
-        self.intrusion = 3;
+        self.intrusion = 6;
         self.shouldDismissUponOutsideTap = TRUE;
     }
     return self;
@@ -258,7 +278,6 @@
     [super didRotateFromInterfaceOrientation:fromOrientation];
     
     if(self.shouldDismissUponOutsideTap) {
-        [self.delegate popoverControllerDidDismissPopover:self];
         [self dismissPopoverAnimated:FALSE];
     } else {
         [self presentPopoverAnimated:FALSE];
@@ -321,23 +340,7 @@
 }
 
 - (void)dismissPopoverAnimated:(BOOL)animated {
-    NSTimeInterval duration = animated ? 0.2 : 0.0;
-    
-    self.view.layer.shouldRasterize = YES;
-    self.view.layer.rasterizationScale = [[UIScreen mainScreen] scale];
-    
-    [UIView animateWithDuration:duration
-                     animations:^{
-          self.view.alpha = 0.0;
-      } completion:^(BOOL finished) {
-          [self willMoveToParentViewController:nil];
-          [self.view removeFromSuperview];
-          [self removeFromParentViewController];
-          
-          [self.contentViewController willMoveToParentViewController:nil];
-          [self.contentViewController.view removeFromSuperview];
-          [self.contentViewController removeFromParentViewController]; // calls [childViewController didMoveToParentViewController:nil]
-      }];
+    [self dismissViewControllerAnimated:animated completion:NULL];
 }
 
 -(BOOL)isBeingPresented {
@@ -348,7 +351,7 @@
 -(void)dismissViewControllerAnimated:(BOOL)animated completion:(void (^)(void))completion
 {
     NSTimeInterval duration = animated ? 0.2 : 0.0;
-    
+
     self.view.layer.shouldRasterize = YES;
     self.view.layer.rasterizationScale = [[UIScreen mainScreen] scale];
     
@@ -363,6 +366,8 @@
                          [self.contentViewController willMoveToParentViewController:nil];
                          [self.contentViewController.view removeFromSuperview];
                          [self.contentViewController removeFromParentViewController]; // calls [childViewController didMoveToParentViewController:nil]
+                         
+                         [self.delegate popoverControllerDidDismissPopover:self];
                          
                          if(completion!=NULL) completion();
                      }];

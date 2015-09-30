@@ -324,6 +324,8 @@ NSString * const emailRegEx =
         if(self.autocompletePopover==nil) {
             self.autocompletePopover = [[DDGPopoverViewController alloc] initWithContentViewController:self.autocompleteController
                                                                                andTouchPassthroughView:self.view];
+            self.autocompletePopover.delegate = self;
+            self.autocompletePopover.shouldAbsorbAndDismissUponDimmedViewTap = TRUE;
             self.autocompletePopover.largeMode = TRUE;
             self.autocompletePopover.popoverParentController = self;
             self.autocompletePopover.shouldDismissUponOutsideTap = FALSE;
@@ -764,7 +766,7 @@ NSString * const emailRegEx =
 - (void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
     if(self.autocompletePopover) {
         if(reveal) {
-            self.autocompletePopover.intrusion = 4;
+            self.autocompletePopover.intrusion = 6;
             CGRect autocompleteRect = self.autocompleteController.view.frame;
             autocompleteRect.origin.x = 0;
             autocompleteRect.origin.y = 0;
@@ -826,7 +828,11 @@ NSString * const emailRegEx =
 #pragma mark - DDGPopoverViewControllerDelegate
 
 - (void)popoverControllerDidDismissPopover:(DDGPopoverViewController *)popoverController {
-    self.bangInfoPopover = nil;    
+    if(self.autocompletePopover==popoverController) {
+        [self dismissAutocomplete];
+    } else if(self.bangInfoPopover==popoverController) {
+        self.bangInfoPopover = nil;
+    }
 }
 
 #pragma mark - Input accessory (the bang button/bar)
@@ -940,7 +946,7 @@ NSString * const emailRegEx =
     }
     
     NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-
+    
     if(newString.length == 0) {
         currentWordRange = NSMakeRange(NSNotFound, 0);
         return YES; // there's nothing we can do with an empty string
