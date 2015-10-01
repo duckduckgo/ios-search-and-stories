@@ -36,6 +36,7 @@
 @property IBOutlet UIButton* shareButton;
 @property IBOutlet UIButton* tabsButton;
 @property IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
+@property NSDate* ignoreTapsUntil;
 
 @property BOOL isFavorited;
 
@@ -196,17 +197,16 @@
         if(longPressRecognizer.state==UIGestureRecognizerStateBegan) {
             CGPoint touchLoc = [otherGestureRecognizer locationInView:self.webView];
             NSURL* imageURL = [self findImageForTap:touchLoc];
-            NSLog(@" long-touched URL: %@", imageURL);
             if(imageURL!=nil) {
                 [self longPressOnImage:imageURL atLocation:touchLoc];
                 return NO;
             }
         }
     } else if([otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
-        NSLog(@"shouldRecSimWitRec:\n  REC1: %@ \n  REC2: %@", gestureRecognizer, otherGestureRecognizer);
         CGPoint tapPoint = [otherGestureRecognizer locationInView:self.webView];
         if(tapPoint.y + 50 > self.webView.frame.size.height) {
-            // this tap point is where the auto-hidden toolbar should be. Let's un-auto-hide it
+            // this tap point is where the auto-hidden toolbar should be. Let's un-auto-hide it and try to block taps
+            self.ignoreTapsUntil = [NSDate dateWithTimeIntervalSinceNow:1]; // hack to ignore any clicked links within the next second
             [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
             return NO;
         }
@@ -217,10 +217,8 @@
 
 #pragma mark - Private
 
-
 -(void)handleLongPress:(UIGestureRecognizer*)sender
 {
-    NSLog(@"handleLongPress:%@", sender);
     CGPoint touchLocation = [sender locationInView:self.webView];
     NSURL* imageURL = [self findImageForTap:touchLocation];
     if(imageURL) {
@@ -666,10 +664,11 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-	if (navigationType == UIWebViewNavigationTypeLinkClicked)
-	{
-		if ([[[request.URL scheme] lowercaseString] isEqualToString:@"mailto"])
-		{
+    if (navigationType == UIWebViewNavigationTypeLinkClicked) {
+        NSDate* ignoreUntil = self.ignoreTapsUntil;
+        if(ignoreUntil && [ignoreUntil compare:[NSDate new]]==NSOrderedDescending) return NO; // ignore clicks within a certain range
+        
+		if ([[[request.URL scheme] lowercaseString] isEqualToString:@"mailto"]) {
 			// user is interested in mailing so use the internal mail API
 			[self performSelector:@selector(internalMailAction:) withObject:request.URL afterDelay:0.005];
 			return NO;
