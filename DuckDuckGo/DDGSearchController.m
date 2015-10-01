@@ -53,7 +53,7 @@ NSString * const emailRegEx =
 
 @implementation DDGSearchController {
     id keyboardDidHideObserver;
-    id keyboardWillShowObserver;
+    id keyboardDidShowObserver;
     id keyboardWillHideObserver;
 }
 
@@ -76,7 +76,7 @@ NSString * const emailRegEx =
         self.keyboardDidHideBlock(NO);
     self.keyboardDidHideBlock = nil;
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    [center removeObserver:keyboardWillShowObserver];
+    [center removeObserver:keyboardDidShowObserver];
     [center removeObserver:keyboardWillHideObserver];
     [center removeObserver:keyboardDidHideObserver];
     [self.view removeFromSuperview];
@@ -208,8 +208,8 @@ NSString * const emailRegEx =
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     NSOperationQueue *queue = [NSOperationQueue mainQueue];
     __weak typeof(self) weakSelf = self;
-    keyboardWillShowObserver = [center addObserverForName:UIKeyboardWillShowNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
-        [weakSelf keyboardWillShow:note];
+    keyboardDidShowObserver = [center addObserverForName:UIKeyboardWillShowNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
+        [weakSelf keyboardDidShow:note];
     }];
     keyboardWillHideObserver = [center addObserverForName:UIKeyboardWillHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
         [weakSelf keyboardWillHide:note];
@@ -379,12 +379,12 @@ NSString * const emailRegEx =
     [self.searchBar.searchField resignFirstResponder];
 }
 
--(void)keyboardWillShow:(NSNotification *)notification {
-    [self keyboardWillShow:YES notification:notification];
+-(void)keyboardDidShow:(NSNotification *)notification {
+    [self keyboardIsShowing:YES notification:notification];
 }
 
 -(void)keyboardWillHide:(NSNotification *)notification {
-    [self keyboardWillShow:NO notification:notification];
+    [self keyboardIsShowing:NO notification:notification];
 }
 
 -(void)keyboardDidHide:(NSNotification *)notification {
@@ -393,23 +393,24 @@ NSString * const emailRegEx =
     self.keyboardDidHideBlock = nil;
 }
 
--(void)keyboardWillShow:(BOOL)show notification:(NSNotification*)notification {
+-(void)keyboardIsShowing:(BOOL)show notification:(NSNotification*)notification {
     NSDictionary *info = [notification userInfo];
     CGRect keyboardBegin = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     keyboardBegin = [self.view.superview convertRect:keyboardBegin fromView:nil];
     CGRect keyboardEnd = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     keyboardEnd = [self.view.superview convertRect:keyboardEnd fromView:nil];
     double dy = keyboardEnd.origin.y - keyboardBegin.origin.y;
-    if(ABS(dy) < 1) {
-        
+    if(ABS(dy) > 0) {
         // this isn't a standard up/down animation so don't try animating
         double delayInSeconds = (show ? [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] : 0.0);
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
             if(show) {
-                self.contentBottomConstraint.constant = -keyboardEnd.size.height;
+                self.contentBottomConstraint.constant = -keyboardEnd.size.height + 50; // 50 to accomodate for the bottom toolbar
+                [self.view layoutIfNeeded];
             } else {
                 self.contentBottomConstraint.constant = 0;
+                [self.view layoutIfNeeded];
             }
         });
         
