@@ -990,7 +990,7 @@ NSString * const emailRegEx =
     if(!autocompleteOpen && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete]) {
         [self revealAutocomplete];
     }
-    [textField selectAll:self];
+    [textField selectAll:nil];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
