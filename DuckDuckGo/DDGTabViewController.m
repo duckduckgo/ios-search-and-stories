@@ -110,6 +110,16 @@
     return YES;
 }
 
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    if(self.segmentAlignmentView) {
+        self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 18;
+    } else {
+        self.segmentWidthConstraint.constant = self.controlView.frame.size.width-16;
+    }
+    [self.view setNeedsUpdateConstraints];
+}
+
 #pragma mark - UIViewController
 
 - (void)viewDidUnload
