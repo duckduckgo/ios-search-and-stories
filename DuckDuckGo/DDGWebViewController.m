@@ -42,6 +42,44 @@
 
 @end
 
+
+@interface DDGWebView : UIWebView {
+    UIView* _blackHoleView;
+}
+@property (nonatomic, weak) DDGWebViewController* webController;
+@property (readonly) UIView* blackHoleView;
+
+@end
+
+
+
+@implementation DDGWebView
+
+
+-(UIView*)blackHoleView {
+    if(_blackHoleView==nil) {
+        _blackHoleView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 1, 1)];
+    }
+    return _blackHoleView;
+}
+
+-(UIView*)hitTest:(CGPoint)tapPoint withEvent:(UIEvent *)event
+{
+    
+    if(tapPoint.y + 50 > self.frame.size.height) {
+        NSLog(@"tapped dead space!");
+        // this tap point is where the auto-hidden toolbar should be. Let's un-auto-hide it and try to block taps
+        [self.webController.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.scrollView];
+        return self.blackHoleView;
+    }
+    return [super hitTest:tapPoint withEvent:event];
+}
+
+@end
+
+
+
+
 @implementation DDGWebViewController
 
 #pragma mark - View lifecycle
@@ -50,7 +88,9 @@
     [super loadView];
     CGRect viewFrame = self.view.frame;
     viewFrame.origin = CGPointMake(0, 0);
-    self.webView = [[UIWebView alloc] initWithFrame:viewFrame];
+    DDGWebView* webView = [[DDGWebView alloc] initWithFrame:viewFrame];
+    webView.webController = self;
+    self.webView = webView;
     self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.webView.delegate = self;
     self.webView.scalesPageToFit = YES;
@@ -199,16 +239,8 @@
             NSURL* imageURL = [self findImageForTap:touchLoc];
             if(imageURL!=nil) {
                 [self longPressOnImage:imageURL atLocation:touchLoc];
-                return NO;
+                return YES;
             }
-        }
-    } else if([otherGestureRecognizer isKindOfClass:[UITapGestureRecognizer class]]){
-        CGPoint tapPoint = [otherGestureRecognizer locationInView:self.webView];
-        if(tapPoint.y + 50 > self.webView.frame.size.height) {
-            // this tap point is where the auto-hidden toolbar should be. Let's un-auto-hide it and try to block taps
-            self.ignoreTapsUntil = [NSDate dateWithTimeIntervalSinceNow:1]; // hack to ignore any clicked links within the next second
-            [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
-            return NO;
         }
     }
     return YES;

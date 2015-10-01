@@ -11,7 +11,6 @@
 #import "DDGSearchController.h"
 
 @class DDGStory;
-@class DDGWebView;
 
 @interface DDGWebViewController : UIViewController<UIWebViewDelegate, DDGSearchHandler, UIActionSheetDelegate, UIScrollViewDelegate, MFMailComposeViewControllerDelegate>
 {
