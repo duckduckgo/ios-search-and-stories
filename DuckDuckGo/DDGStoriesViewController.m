@@ -23,8 +23,6 @@
 #import <CoreImage/CoreImage.h>
 #import "DDGTableView.h"
 
-NSString *const DDGLastViewedStoryKey = @"last_story";
-
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 NSInteger const DDGLargeImageViewTag = 1;
@@ -506,7 +504,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     [super viewWillAppear:animated];
     
-    NSNumber *lastStoryID = [[NSUserDefaults standardUserDefaults] objectForKey:DDGLastViewedStoryKey];
+    NSNumber *lastStoryID = [[NSUserDefaults standardUserDefaults] objectForKey:[self lastViewedDefaultsKey]];
     if (nil != lastStoryID) {
         NSArray *stories = [self fetchedStories];
         NSArray *storyIDs = [stories valueForKey:@"id"];
@@ -765,7 +763,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
     story.readValue = YES;
     
-    [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:DDGLastViewedStoryKey];
+    [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:[self lastViewedDefaultsKey]];
     
     NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
     [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
@@ -857,8 +855,24 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         default:
             return @"lastRefreshMisc";
     }
-
 }
+
+-(NSString*)lastViewedDefaultsKey
+{
+    switch(self.storiesMode) {
+        case DDGStoriesListModeNormal:
+            return @"last_story.main";
+        case DDGStoriesListModeFavorites:
+            return @"last_story.fav";
+        case DDGStoriesListModeRecents:
+            return @"last_story.recent";
+        default:
+            return @"last_story.other";
+    }
+}
+
+
+
 -(NSDate*)lastRefreshAttempt
 {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
