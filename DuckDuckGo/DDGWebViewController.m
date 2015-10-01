@@ -25,6 +25,7 @@
 @interface DDGWebViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
     BOOL _isFavorited;
     CGPoint lastOffset;
+    CGFloat lastUpwardsScrollDistance;
 }
 @property (nonatomic, readwrite) BOOL inReadabilityMode;
 
@@ -82,6 +83,7 @@
     
     self.webView.scrollView.delegate = self;
     lastOffset = self.webView.scrollView.contentOffset;
+    lastUpwardsScrollDistance = 0;
 }
 
 - (void)setSearchController:(DDGSearchController *)searchController {
@@ -113,6 +115,7 @@
     self.webView.scrollView.contentInset = UIEdgeInsetsZero;
     self.webView.scrollView.scrollIndicatorInsets = UIEdgeInsetsZero;
     lastOffset = self.webView.scrollView.contentOffset;
+    lastUpwardsScrollDistance = 0;
 }
 
 -(void)viewDidDisappear:(BOOL)animated {
@@ -141,14 +144,20 @@
     CGPoint offset = self.webView.scrollView.contentOffset;
     if(offset.y==0) {
         // we're at the top... show the toolbar
+        lastUpwardsScrollDistance = 0;
         [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
     } else if(offset.y  > lastOffset.y) {
         // we're scrolling down... hide the toolbar, unless we're already very close to the bottom
         BOOL atBottom =  offset.y+50 >= (self.webView.scrollView.contentSize.height - self.webView.scrollView.frame.size.height);
+        lastUpwardsScrollDistance = 0;
         [self.searchControllerDDG.homeController setHideToolbar:!atBottom withScrollview:self.webView.scrollView];
     } else {
-        // we're scrolling up... show the toolbar
-        [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
+        // we're scrolling up... show the toolbar if we've gone past a certain threshold
+        lastUpwardsScrollDistance += (lastOffset.y - offset.y);
+        if(lastUpwardsScrollDistance > 50) {
+            lastUpwardsScrollDistance = 0;
+            [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
+        }
     }
     lastOffset = offset;
 }
