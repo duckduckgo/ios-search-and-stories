@@ -301,8 +301,8 @@ NSString * const emailRegEx =
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [self.searchBar layoutIfNeeded];
     [super viewWillAppear:animated];
-    
     [self updateiPadSearchBarToLandscape:UIInterfaceOrientationIsLandscape(self.interfaceOrientation)];
     
     if([self shouldUsePopover]) {
