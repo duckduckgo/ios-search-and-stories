@@ -51,14 +51,20 @@
     [self.currentViewController duckGoToTopLevel];
 }
 
--(void)viewDidLayoutSubviews
+-(void)alignSegmentBarConstraints
 {
-    [super viewDidLayoutSubviews];
     if(self.segmentAlignmentView) {
-        self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 18;
+        self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 20;
     } else {
         self.segmentWidthConstraint.constant = self.controlView.frame.size.width-16;
     }
+    [self.view setNeedsUpdateConstraints];
+}
+
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    [self alignSegmentBarConstraints];
 }
 
 - (IBAction)segmentWasSelected:(id)sender {
@@ -112,12 +118,7 @@
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    if(self.segmentAlignmentView) {
-        self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 18;
-    } else {
-        self.segmentWidthConstraint.constant = self.controlView.frame.size.width-16;
-    }
-    [self.view setNeedsUpdateConstraints];
+    [self alignSegmentBarConstraints];
 }
 
 #pragma mark - UIViewController
