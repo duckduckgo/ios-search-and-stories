@@ -708,7 +708,9 @@ NSString * const emailRegEx =
 // set up and reveal the autocomplete view
 -(void)revealAutocomplete {    
     // save search text in case user cancels input without navigating somewhere
-    if(!oldSearchText) oldSearchText = self.searchBar.searchField.text;
+    if(!oldSearchText) {
+        oldSearchText = self.searchBar.searchField.text;
+    }
     barUpdated = NO;
     
     self.searchBar.searchField.additionalLeftSideInset = 39; // set this inset before the animation begins
@@ -814,6 +816,7 @@ NSString * const emailRegEx =
     barUpdated = YES;
     NSString *query = [self queryFromDDGURL:url];
     self.searchBar.searchField.text = (query ? query : url.absoluteString);
+    oldSearchText = self.searchBar.searchField.text;
 }
 
 -(void)clearAddressBar {
@@ -904,10 +907,11 @@ NSString * const emailRegEx =
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
     if(currentWordRange.location == NSNotFound) {
-        if(searchField.text.length == 0)
+        if(searchField.text.length == 0) {
             searchField.text = sender.titleLabel.text;
-        else
+        } else {
             [searchField setText:[searchField.text stringByAppendingFormat:@" %@",sender.titleLabel.text]];
+        }
     } else {
         [searchField setText:[searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
     }
@@ -953,15 +957,17 @@ NSString * const emailRegEx =
     // find word beginning
     unsigned long wordBeginning;
     for(wordBeginning = range.location + string.length; wordBeginning; wordBeginning--) {
-        if(wordBeginning == 0 || [newString characterAtIndex:wordBeginning - 1] == ' ')
+        if(wordBeginning == 0 || [newString characterAtIndex:wordBeginning - 1] == ' ') {
             break;
+        }
     }
 
     // find word end
     unsigned long wordEnd;
     for(wordEnd = wordBeginning; wordEnd < newString.length; wordEnd++) {
-        if(wordEnd == newString.length || [newString characterAtIndex:wordEnd] == ' ')
+        if(wordEnd == newString.length || [newString characterAtIndex:wordEnd] == ' ') {
             break;
+        }
     }
     
     currentWordRange = NSMakeRange(wordBeginning, wordEnd-wordBeginning);
@@ -971,15 +977,17 @@ NSString * const emailRegEx =
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
 	// save search text in case user cancels input without navigating somewhere
-    if(!oldSearchText)
+    if(!oldSearchText) {
         oldSearchText = textField.text;
+    }
     
     return YES;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
+    if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)]) {
         [_searchHandler searchControllerAddressBarWillOpen];
+    }
     
 	return YES;
 }
@@ -1025,7 +1033,7 @@ NSString * const emailRegEx =
         [weakSelf dismissAutocomplete];
     }];
     
-    oldSearchText = nil;
+    oldSearchText = query;
 }
 
 -(void)dismissKeyboard:(void (^)(BOOL completed))completion {
