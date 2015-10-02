@@ -182,11 +182,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self addButton:NSLocalizedString(@"Clear Recents", @"Clear recent search results") forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         if(weakSelf.numberOfRecents<=0) return;
         
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Are you sure you want to clear history? This cannot be undone.", @"Ask for confirmation of clearing the history and state that this cannot be undone")
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Are you sure you want to clear your recents? This can not be undone.", @"Ask for confirmation of clearing the recent history and state that this cannot be undone")
                                                                  delegate:weakSelf
                                                         cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                    destructiveButtonTitle:nil
-                                                        otherButtonTitles:NSLocalizedString(@"Clear Recent", @"Clear Recent"), nil];
+                                                        otherButtonTitles:NSLocalizedString(@"Clear Recents", @"Clear Recents"), nil];
         [actionSheet showInView:weakSelf.view];
     }];
     
