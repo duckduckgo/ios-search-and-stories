@@ -80,7 +80,7 @@
             self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 12);
             self.cancelButton.alpha = 1;
         } else {
-            self.cancelButtonXConstraint.constant = 2;
+            self.cancelButtonXConstraint.constant = 4;
             self.cancelButton.alpha = 0;
         }
         if(animated) {

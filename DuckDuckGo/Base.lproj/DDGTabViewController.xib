@@ -20,7 +20,7 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7G6-zK-ECN" userLabel="controlbar">
-                    <rect key="frame" x="0.0" y="0.0" width="600" height="40"/>
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="37"/>
                     <subviews>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e2I-K3-DZz" userLabel="segmented" customClass="DDGSegmentedControl">
                             <rect key="frame" x="20" y="0.0" width="560" height="29"/>
@@ -34,19 +34,19 @@
                     <animations/>
                     <color key="backgroundColor" red="0.87058823529999996" green="0.34509803919999998" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="40" id="03f-Z7-ulf"/>
-                        <constraint firstAttribute="bottom" secondItem="e2I-K3-DZz" secondAttribute="bottom" constant="11" id="N6V-Sd-WKD"/>
+                        <constraint firstAttribute="height" constant="37" id="03f-Z7-ulf"/>
+                        <constraint firstAttribute="bottom" secondItem="e2I-K3-DZz" secondAttribute="bottom" constant="8" id="N6V-Sd-WKD"/>
                         <constraint firstItem="e2I-K3-DZz" firstAttribute="top" secondItem="7G6-zK-ECN" secondAttribute="top" id="h02-Me-zNO"/>
                         <constraint firstAttribute="centerX" secondItem="e2I-K3-DZz" secondAttribute="centerX" id="iWq-a1-vbR"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="5rg-Zc-zHX" userLabel="content">
-                    <rect key="frame" x="0.0" y="40" width="600" height="560"/>
+                    <rect key="frame" x="0.0" y="37" width="600" height="563"/>
                     <animations/>
                     <color key="backgroundColor" red="0.0" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
                 <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WYn-1f-P3h" userLabel="shadow">
-                    <rect key="frame" x="0.0" y="40" width="600" height="1"/>
+                    <rect key="frame" x="0.0" y="37" width="600" height="1"/>
                     <animations/>
                     <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
                     <constraints>
