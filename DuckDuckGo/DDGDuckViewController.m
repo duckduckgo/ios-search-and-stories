@@ -339,13 +339,13 @@ static NSString *historyCellID = @"HCell";
         // if we're in popover mode, we only show a section header if there is a non-empty section above us
         switch(section) {
             case RECENTS_SECTION:
-                headerHeight = historyCount<=0 ? 0.01 : 8.0; // the history section never has another section above it
+                headerHeight = 0.01;  // the history section never has another section above it
                 break;
             case FAVORITES_SECTION:
-                headerHeight = favCount<=0 ? 0.01 : (historyCount>0 ? 25.0 : 8.0f);
+                headerHeight = favCount<=0 ? 0.01 : (historyCount>0 ? 25.0 : 0.01f);
                 break;
             case SUGGESTION_SECTION:
-                headerHeight = suggestionCount<=0 ? 0.01 : (historyCount+favCount>0 ? 25.0 : 8.0f);
+                headerHeight = suggestionCount<=0 ? 0.01 : (historyCount+favCount>0 ? 25.0 : 0.01f);
                 break;
         }
     } else {

@@ -322,7 +322,7 @@ NSString * const emailRegEx =
                                                                                andTouchPassthroughView:self.view];
             self.autocompletePopover.delegate = self;
             self.autocompletePopover.shouldAbsorbAndDismissUponDimmedViewTap = TRUE;
-            self.autocompletePopover.largeMode = TRUE;
+            self.autocompletePopover.hideArrow = TRUE;
             self.autocompletePopover.popoverParentController = self;
             self.autocompletePopover.shouldDismissUponOutsideTap = FALSE;
         }

@@ -53,7 +53,7 @@
     if(dimView) {
         CGContextRef context = UIGraphicsGetCurrentContext();
         CGContextSetFillColorWithColor(context, [UIColor duckDimmedPopoverBackground].CGColor);
-        CGContextFillRect(context, [self convertRect:dimView.frame fromView:dimView]);
+        CGContextFillRect(context, [self convertRect:dimView.frame fromView:dimView.superview]);
     }
     
     [super drawRect:rect];
@@ -198,6 +198,7 @@
             break;
     }
     
+    self.arrowView.hidden = self.popoverViewController.hideArrow;
     self.popoverRect = CGRectMake(popoverX, popoverY, popoverWidth, popoverHeight); // the popover frame image should be placed around the content
     self.popoverViewController.contentViewController.view.frame = UIEdgeInsetsInsetRect(self.popoverRect, self.borderInsets);
     

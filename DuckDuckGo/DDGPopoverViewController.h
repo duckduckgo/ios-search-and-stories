@@ -22,6 +22,7 @@
 @property (nonatomic, assign) CGFloat intrusion;
 @property (nonatomic) BOOL shouldDismissUponOutsideTap;
 @property (nonatomic) BOOL shouldAbsorbAndDismissUponDimmedViewTap;
+@property (nonatomic) BOOL hideArrow;
 @property (nonatomic) BOOL largeMode;
 @property (nonatomic, weak) UIView* dimmedBackgroundView;
 @property (nonatomic) CGRect anchorRect;
