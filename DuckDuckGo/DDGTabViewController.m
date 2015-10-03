@@ -64,7 +64,7 @@
 -(void)alignSegmentBarConstraints
 {
     if(self.segmentAlignmentView) {
-        self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 20;
+        self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 16;
     } else {
         self.segmentWidthConstraint.constant = self.controlView.frame.size.width-16;
     }
