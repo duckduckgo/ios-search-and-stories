@@ -9,13 +9,15 @@
 #import "DDGTabViewController.h"
 #import "UIViewController+DDGSearchController.h"
 
-@interface DDGTabViewController ()
+@interface DDGTabViewController () <UITabBarControllerDelegate>
 @property (nonatomic, strong) IBOutlet DDGSegmentedControl *segmentedControl;
 @property (nonatomic, strong) IBOutlet UIView *controlView;
 @property (nonatomic, strong) IBOutlet UIView *contentView;
 @property (nonatomic, weak, readwrite) UIViewController *currentViewController;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* segmentWidthConstraint;
+@property (nonatomic, strong) UITabBarController* tabController;
 @end
+
 
 @implementation DDGTabViewController
 
@@ -35,10 +37,18 @@
                                                                            style:UIBarButtonItemStylePlain
                                                                           target:nil action:nil]];
     }
-    self.view.backgroundColor = [UIColor blueColor];
+
+    self.tabController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
+    self.tabController.delegate = self;
+    [self addChildViewController:self.tabController];
+    self.tabController.view.frame = CGRectMake(0, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
+    self.contentView.backgroundColor = [UIColor duckSearchBarBackground]; // hack to workaround app switcher flickering issue
+    [self.contentView addSubview:self.tabController.view];
+    [self.tabController didMoveToParentViewController:self];
+    self.tabController.tabBar.hidden = TRUE;
+    self.tabController.viewControllers = self.viewControllers;
     
     [self.segmentedControl addTarget:self action:@selector(segmentWasSelected:) forControlEvents:UIControlEventValueChanged];
-    
 }
 
 - (UIView*)dimmableContentView
@@ -61,6 +71,7 @@
     [self.view setNeedsUpdateConstraints];
 }
 
+
 -(void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
@@ -74,40 +85,12 @@
 }
 
 - (NSInteger)currentViewControllerIndex {
-    return [self.viewControllers indexOfObject:self.currentViewController];
+    return self.tabController.selectedIndex;
 }
 
 - (void)setCurrentViewControllerIndex:(NSInteger)newViewControllerIndex {
     NSAssert1(newViewControllerIndex < [self.viewControllers count], @"Attempt to select a view controller beyond range of tabViewControllers %ld", (long)newViewControllerIndex);
-    
-    UIViewController *nextViewController = [self.viewControllers objectAtIndex:newViewControllerIndex];
-
-    [self willChangeValueForKey:@"currentViewController"];
-    [self willChangeValueForKey:@"currentViewControllerIndex"];    
-    CGRect contentRect = self.contentView.frame;
-    contentRect.origin.x = 0;
-    contentRect.origin.y = 0;
-    if (nextViewController != self.currentViewController) {
-        [self addChildViewController:nextViewController];
-        [nextViewController.view setFrame:contentRect];
-        nextViewController.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-        if (self.currentViewController.view) {
-            [self.contentView insertSubview:nextViewController.view belowSubview:self.currentViewController.view];
-        } else {
-            [self.contentView insertSubview:nextViewController.view belowSubview:self.controlView];
-        }
-        [nextViewController didMoveToParentViewController:self];
-        
-        [self.currentViewController willMoveToParentViewController:nil];
-        [self.currentViewController.view removeFromSuperview];
-        [self.currentViewController removeFromParentViewController];
-        self.currentViewController = nil;
-        self.currentViewController = nextViewController;
-    }
-        
-    [self didChangeValueForKey:@"currentViewController"];    
-    [self didChangeValueForKey:@"currentViewControllerIndex"];        
-    
+    self.tabController.selectedIndex = newViewControllerIndex;
     [self.segmentedControl setSelectedSegmentIndex:newViewControllerIndex];
 }
 
@@ -119,7 +102,14 @@
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
     [self alignSegmentBarConstraints];
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
 }
+
+#pragma mark - UITabBarControllerDelegate
+
+
+
+
 
 #pragma mark - UIViewController
 

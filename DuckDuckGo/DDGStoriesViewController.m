@@ -761,8 +761,17 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
 
-    story.readValue = YES;
-    
+    NSManagedObjectContext *context = story.managedObjectContext;
+    [context performBlock:^{
+        if(story) {
+            story.readValue = YES;
+        }
+        
+        NSError *error = nil;
+        if (![context save:&error])
+            NSLog(@"error: %@", error);
+    }];
+
     [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:[self lastViewedDefaultsKey]];
     
     NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
