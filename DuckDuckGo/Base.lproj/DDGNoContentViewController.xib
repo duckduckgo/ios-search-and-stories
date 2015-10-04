@@ -34,7 +34,7 @@
                             <animations/>
                         </imageView>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="No Recents" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eSA-2j-bFK">
-                            <rect key="frame" x="20" y="86" width="280" height="18"/>
+                            <rect key="frame" x="20" y="81" width="280" height="18"/>
                             <animations/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="280" id="FjP-Xn-V6c"/>
@@ -44,7 +44,7 @@
                             <nil key="highlightedColor"/>
                         </label>
                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Browse stories and search the web, and your recents will be shown here." textAlignment="center" lineBreakMode="wordWrap" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="207" translatesAutoresizingMaskIntoConstraints="NO" id="Jb0-ff-AUx">
-                            <rect key="frame" x="56" y="117" width="207" height="70"/>
+                            <rect key="frame" x="56" y="107" width="207" height="70"/>
                             <animations/>
                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                             <constraints>
@@ -61,10 +61,10 @@
                     <constraints>
                         <constraint firstAttribute="width" constant="320" id="4Jb-pL-YLY"/>
                         <constraint firstAttribute="height" constant="207" id="9jM-3m-cRc"/>
-                        <constraint firstItem="eSA-2j-bFK" firstAttribute="top" secondItem="3b1-sM-snO" secondAttribute="bottom" constant="22" id="Ivt-cI-tdb"/>
+                        <constraint firstItem="eSA-2j-bFK" firstAttribute="top" secondItem="3b1-sM-snO" secondAttribute="bottom" constant="17" id="Ivt-cI-tdb"/>
                         <constraint firstItem="eSA-2j-bFK" firstAttribute="centerX" secondItem="J0w-Mv-Lrf" secondAttribute="centerX" id="Qm2-gR-IS7"/>
                         <constraint firstItem="Jb0-ff-AUx" firstAttribute="centerX" secondItem="J0w-Mv-Lrf" secondAttribute="centerX" id="Svm-7m-SMV"/>
-                        <constraint firstItem="Jb0-ff-AUx" firstAttribute="top" secondItem="eSA-2j-bFK" secondAttribute="bottom" constant="13" id="Ued-DR-7uS"/>
+                        <constraint firstItem="Jb0-ff-AUx" firstAttribute="top" secondItem="eSA-2j-bFK" secondAttribute="bottom" constant="8" id="Ued-DR-7uS"/>
                         <constraint firstItem="3b1-sM-snO" firstAttribute="centerX" secondItem="J0w-Mv-Lrf" secondAttribute="centerX" id="iib-zu-sDV"/>
                         <constraint firstItem="3b1-sM-snO" firstAttribute="top" secondItem="J0w-Mv-Lrf" secondAttribute="top" constant="20" id="lLy-zC-Fdx"/>
                     </constraints>
@@ -76,7 +76,7 @@
                 <constraint firstItem="J0w-Mv-Lrf" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" constant="-25" id="1wq-3G-WOe"/>
                 <constraint firstItem="J0w-Mv-Lrf" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="8cF-gF-dJG"/>
             </constraints>
-            <point key="canvasLocation" x="334" y="542"/>
+            <point key="canvasLocation" x="355" y="563"/>
         </view>
     </objects>
     <resources>

@@ -166,7 +166,7 @@ NSString * const emailRegEx =
         CGRect autocompleteRect = self.autocompleteController.view.frame;
         autocompleteRect.origin.x = 0;
         autocompleteRect.origin.y = 0;
-        autocompleteRect.size.width = self.searchBar.frame.size.width + 0;
+        autocompleteRect.size.width = self.searchBar.frame.size.width + 4;
         autocompleteRect.size.height = 490;
         self.autocompleteController.preferredContentSize = autocompleteRect.size;
         [self.autocompletePopover presentPopoverFromView:self.searchBar permittedArrowDirections:UIPopoverArrowDirectionAny animated:FALSE];
@@ -287,7 +287,7 @@ NSString * const emailRegEx =
         CGRect autocompleteRect = self.autocompleteController.view.frame;
         autocompleteRect.origin.x = 0;
         autocompleteRect.origin.y = 0;
-        autocompleteRect.size.width = self.searchBar.frame.size.width + 0;
+        autocompleteRect.size.width = self.searchBar.frame.size.width + 4;
         autocompleteRect.size.height = 490;
         self.autocompleteController.preferredContentSize = autocompleteRect.size;
         //self.autocompletePopover.view.alpha = 1.0;
@@ -766,11 +766,11 @@ NSString * const emailRegEx =
 - (void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
     if(self.autocompletePopover) {
         if(reveal) {
-            self.autocompletePopover.intrusion = 6;
+            self.autocompletePopover.intrusion = 0;
             CGRect autocompleteRect = self.autocompleteController.view.frame;
             autocompleteRect.origin.x = 0;
             autocompleteRect.origin.y = 0;
-            autocompleteRect.size.width = self.searchBar.frame.size.width + 0;
+            autocompleteRect.size.width = self.searchBar.frame.size.width + 4;
             autocompleteRect.size.height = 490;
             self.autocompleteController.view.frame = autocompleteRect;
             self.autocompletePopover.preferredContentSize = autocompleteRect.size;

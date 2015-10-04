@@ -96,11 +96,11 @@ static NSString *historyCellID = @"HCell";
             }
         }
     }
-    if(fetchedBookmarks.count >= MAX_FAVORITE_SUGGESTIONS) {
-        self.favorites = [fetchedBookmarks objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, MAX_FAVORITE_SUGGESTIONS)]];
-    } else {
+//    if(fetchedBookmarks.count >= MAX_FAVORITE_SUGGESTIONS) {
+//        self.favorites = [fetchedBookmarks objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, MAX_FAVORITE_SUGGESTIONS)]];
+//    } else {
         self.favorites = fetchedBookmarks;
-    }
+//    }
 }
 
 -(void)reloadAll
