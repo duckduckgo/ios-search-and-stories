@@ -61,6 +61,10 @@
     [self.currentViewController duckGoToTopLevel];
 }
 
+- (CGFloat)duckPopoverIntrusionAdjustment {
+    return 8.0f;
+}
+
 -(void)alignSegmentBarConstraints
 {
     if(self.segmentAlignmentView) {

@@ -40,4 +40,8 @@
     DLog(@"duckToToTopLevel");
 }
 
+-(CGFloat)duckPopoverIntrusionAdjustment
+{
+    return 0.0f;
+}
 @end

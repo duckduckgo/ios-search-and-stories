@@ -163,6 +163,7 @@ NSString * const emailRegEx =
     [super viewDidLayoutSubviews];
     
     if(self.autocompletePopover.isBeingPresented) {
+        self.autocompletePopover.intrusion = 0 + [((UIViewController*)[self.contentControllers lastObject]) duckPopoverIntrusionAdjustment];
         CGRect autocompleteRect = self.autocompleteController.view.frame;
         autocompleteRect.origin.x = 0;
         autocompleteRect.origin.y = 0;
@@ -284,6 +285,7 @@ NSString * const emailRegEx =
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
     if(self.autocompletePopover.isBeingPresented) {
+        self.autocompletePopover.intrusion = 0 + [((UIViewController*)[self.contentControllers lastObject]) duckPopoverIntrusionAdjustment];
         CGRect autocompleteRect = self.autocompleteController.view.frame;
         autocompleteRect.origin.x = 0;
         autocompleteRect.origin.y = 0;
@@ -766,7 +768,7 @@ NSString * const emailRegEx =
 - (void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
     if(self.autocompletePopover) {
         if(reveal) {
-            self.autocompletePopover.intrusion = 0;
+            self.autocompletePopover.intrusion = 0 + [((UIViewController*)[self.contentControllers lastObject]) duckPopoverIntrusionAdjustment];
             CGRect autocompleteRect = self.autocompleteController.view.frame;
             autocompleteRect.origin.x = 0;
             autocompleteRect.origin.y = 0;
