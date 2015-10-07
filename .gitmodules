@@ -13,3 +13,6 @@
 [submodule "Submodules/TUSafariActivity"]
 	path = Submodules/TUSafariActivity
 	url = git://github.com/davbeck/TUSafariActivity.git
+[submodule "Submodules/MGSplitViewController"]
+	path = Submodules/MGSplitViewController
+	url = https://github.com/TheInfiniteKind/MGSplitViewController.git

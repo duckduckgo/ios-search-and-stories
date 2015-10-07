@@ -17,6 +17,8 @@
 #import "DDGSearchController.h"
 #import "DDGReadabilitySettingViewController.h"
 #import "DDGUtility.h"
+#import "MGSplitViewController.h"
+
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
@@ -34,6 +36,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 @interface DDGSettingsViewController ()
 @property (nonatomic, weak) IGFormButton* clearRecentsButton;
 @property (nonatomic) NSUInteger numberOfRecents;
+@property (nonatomic) MGSplitViewController* splitViewController;
 
 @end
 
@@ -54,17 +57,38 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
+
+-(UIViewController*)duckContainerController
+{
+    if(self.splitViewController) return self.splitViewController;
+    if(self.navigationController) return self.navigationController;
+    
+    if(IPAD) {
+        MGSplitViewController* splitController = [[MGSplitViewController alloc] init];
+        splitController.allowsDraggingDivider = FALSE;
+        splitController.masterViewController = self;
+        splitController.view.backgroundColor = [UIColor duckNoContentColor];
+        splitController.dividerView = nil;
+        self.splitViewController = splitController;
+        [self showChooseHomeController];
+        return self.splitViewController;
+    } else {
+        return [[UINavigationController alloc] initWithRootViewController:self];
+    }
+}
+
+
 #pragma mark - View lifecycle
 
 -(void)viewDidLoad {
     [super viewDidLoad];
     
 	self.navigationItem.rightBarButtonItem = nil;
-    
     self.tableView.backgroundView = nil;
 	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
     self.tableView.sectionHeaderHeight = 64;
     self.tableView.separatorColor = [UIColor duckTableSeparator];
+    
     // force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
 }
@@ -133,6 +157,20 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     return [UIImage imageNamed:@"Settings"];
 }
 
+-(void)pushSecondaryViewController:(UIViewController*)secondaryViewController
+{
+    if(self.splitViewController) {
+        self.splitViewController.detailViewController = secondaryViewController;
+    } else {
+        [self.searchControllerDDG pushContentViewController:secondaryViewController animated:TRUE];
+    }
+}
+
+-(void)showChooseHomeController {
+    DDGChooseHomeViewController *hvc = [[DDGChooseHomeViewController alloc] initWithDefaults];
+    [self pushSecondaryViewController:hvc];
+}
+
 #pragma mark - Rotation
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
@@ -151,20 +189,19 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     [self addSectionWithTitle:NSLocalizedString(@"General", @"Header for general settings section") footer:nil];
     [self addButton:NSLocalizedString(@"Home", @"Button: What screen should be presented when launching the app") forKey:DDGSettingHomeView detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
-        DDGChooseHomeViewController *hvc = [[DDGChooseHomeViewController alloc] initWithDefaults];
-        [weakSelf.searchControllerDDG pushContentViewController:hvc animated:YES];
+        [weakSelf showChooseHomeController];
     }];
     
     [self addSectionWithTitle:NSLocalizedString(@"Stories", @"Header for Stories settings section") footer:nil];
     [self addButton:NSLocalizedString(@"Sources", @"Button: Sources") forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
-        [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
+        [weakSelf pushSecondaryViewController:sourcesVC];
     }];
     
     [self addButton:NSLocalizedString(@"Readability", @"Button: Readability") forKey:@"readability" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGReadabilitySettingViewController *rvc = [[DDGReadabilitySettingViewController alloc] initWithDefaults];
-        [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
+        [weakSelf pushSecondaryViewController:rvc];
     }];
 //    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
     IGFormSwitch *quackSwitch = [self addSwitch:NSLocalizedString(@"Quack on Refresh", @"Switch: Quack on Refresh") forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
@@ -173,7 +210,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     IGFormSwitch *suggestionsSwitch = [self addSwitch:NSLocalizedString(@"Autocomplete", @"Switch: Autocomplete") forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
     [self addButton:NSLocalizedString(@"Region", @"Button: Region") forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
-        [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
+        [weakSelf pushSecondaryViewController:rvc];
     }];
     
     [self addSectionWithTitle:NSLocalizedString(@"Privacy", @"Header for Privacy settings section") footer:nil];
@@ -187,7 +224,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
                                                         cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                    destructiveButtonTitle:nil
                                                         otherButtonTitles:NSLocalizedString(@"Clear Recents", @"Clear Recents"), nil];
-        [actionSheet showInView:weakSelf.view];
+        [actionSheet showInView:[weakSelf duckContainerController].view];
     }];
     
     for (IGFormSwitch *s in @[quackSwitch, suggestionsSwitch, recentSwitch])
@@ -207,6 +244,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         NSString *shareTitle = NSLocalizedString(@"Check out the DuckDuckGo iOS app!", @"Share title: Check out the DuckDuckGo iOS app!");
         NSURL *shareURL = [NSURL URLWithString:@"https://itunes.apple.com/app/id663592361"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
+        if ( [avc respondsToSelector:@selector(popoverPresentationController)] ) {
+            // iOS8
+            avc.popoverPresentationController.sourceView = weakSelf.view;
+            avc.popoverPresentationController.sourceRect = weakSelf.view.frame;
+        }
+
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
     [self addButton:NSLocalizedString(@"Leave a Rating", @"Button: Leave a Rating") forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
@@ -421,7 +464,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     [self save:nil];
+    [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];

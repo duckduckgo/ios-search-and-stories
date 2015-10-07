@@ -326,7 +326,7 @@
         self.settingsTopController.state = DDGSearchControllerStateHome;
         self.settingsController = [[DDGSettingsViewController alloc] initWithDefaults];
         self.settingsController.managedObjectContext = [DDGAppDelegate sharedManagedObjectContext];
-        [self.settingsTopController pushContentViewController:self.settingsController animated:NO];
+        [self.settingsTopController pushContentViewController:[self.settingsController duckContainerController] animated:NO];
         self.settingsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                                               image:[UIImage imageNamed:@"Tab-Settings"]
                                                                       selectedImage:[UIImage imageNamed:@"Tab-Settings-Active"]];

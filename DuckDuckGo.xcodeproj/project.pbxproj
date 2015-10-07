@@ -307,6 +307,10 @@
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */; };
+		8472B1581BC3314200059BE4 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B14F1BC3314200059BE4 /* DetailViewController.m */; settings = {ASSET_TAGS = (); }; };
+		8472B15A1BC3314200059BE4 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1531BC3314200059BE4 /* MGSplitDividerView.m */; settings = {ASSET_TAGS = (); }; };
+		8472B15B1BC3314200059BE4 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1551BC3314200059BE4 /* MGSplitViewController.m */; settings = {ASSET_TAGS = (); }; };
+		8472B15C1BC3314200059BE4 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1571BC3314200059BE4 /* RootViewController.m */; settings = {ASSET_TAGS = (); }; };
 		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
 		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
 		84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */; };
@@ -959,6 +963,14 @@
 		8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGHomeViewController.m; sourceTree = "<group>"; };
 		846D6B981BA4BE7A00EB16BC /* DDGChooseHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGChooseHomeViewController.h; sourceTree = "<group>"; };
 		846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGChooseHomeViewController.m; sourceTree = "<group>"; };
+		8472B14E1BC3314200059BE4 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DetailViewController.h; path = Submodules/MGSplitViewController/Classes/DetailViewController.h; sourceTree = SOURCE_ROOT; };
+		8472B14F1BC3314200059BE4 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DetailViewController.m; path = Submodules/MGSplitViewController/Classes/DetailViewController.m; sourceTree = SOURCE_ROOT; };
+		8472B1521BC3314200059BE4 /* MGSplitDividerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSplitDividerView.h; path = Submodules/MGSplitViewController/Classes/MGSplitDividerView.h; sourceTree = SOURCE_ROOT; };
+		8472B1531BC3314200059BE4 /* MGSplitDividerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSplitDividerView.m; path = Submodules/MGSplitViewController/Classes/MGSplitDividerView.m; sourceTree = SOURCE_ROOT; };
+		8472B1541BC3314200059BE4 /* MGSplitViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MGSplitViewController.h; path = Submodules/MGSplitViewController/Classes/MGSplitViewController.h; sourceTree = SOURCE_ROOT; };
+		8472B1551BC3314200059BE4 /* MGSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSplitViewController.m; path = Submodules/MGSplitViewController/Classes/MGSplitViewController.m; sourceTree = SOURCE_ROOT; };
+		8472B1561BC3314200059BE4 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootViewController.h; path = Submodules/MGSplitViewController/Classes/RootViewController.h; sourceTree = SOURCE_ROOT; };
+		8472B1571BC3314200059BE4 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootViewController.m; path = Submodules/MGSplitViewController/Classes/RootViewController.m; sourceTree = SOURCE_ROOT; };
 		84A640A01B6FBCB300643A39 /* DDGUnderViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewControllerCell.h; sourceTree = "<group>"; };
 		84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewControllerCell.m; sourceTree = "<group>"; };
 		84A640A31B72DC6C00643A39 /* Stories v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Stories v3.xcdatamodel"; sourceTree = "<group>"; };
@@ -1251,6 +1263,7 @@
 		4C6AC43514DDA95500A1ACA1 /* 3rd Party */ = {
 			isa = PBXGroup;
 			children = (
+				8472B13B1BC32DC900059BE4 /* MGSplitViewController */,
 				5B2FCAC016F32BE10045A5FE /* TUSafariActivity */,
 				5BA321EA16C9054A0066BCB0 /* SDURLCache */,
 				5BA321A816C904BA0066BCB0 /* AFNetworking */,
@@ -1714,6 +1727,22 @@
 			name = Fonts;
 			sourceTree = "<group>";
 		};
+		8472B13B1BC32DC900059BE4 /* MGSplitViewController */ = {
+			isa = PBXGroup;
+			children = (
+				8472B14E1BC3314200059BE4 /* DetailViewController.h */,
+				8472B14F1BC3314200059BE4 /* DetailViewController.m */,
+				8472B1521BC3314200059BE4 /* MGSplitDividerView.h */,
+				8472B1531BC3314200059BE4 /* MGSplitDividerView.m */,
+				8472B1541BC3314200059BE4 /* MGSplitViewController.h */,
+				8472B1551BC3314200059BE4 /* MGSplitViewController.m */,
+				8472B1561BC3314200059BE4 /* RootViewController.h */,
+				8472B1571BC3314200059BE4 /* RootViewController.m */,
+			);
+			name = MGSplitViewController;
+			path = Classes;
+			sourceTree = "<group>";
+		};
 		84E722F21B908CFC00CA0198 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -2008,6 +2037,7 @@
 				84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */,
 				4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */,
 				4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */,
+				8472B15C1BC3314200059BE4 /* RootViewController.m in Sources */,
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
@@ -2038,6 +2068,7 @@
 				8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */,
 				5BA321BF16C904BA0066BCB0 /* AFJSONRequestOperation.m in Sources */,
 				5BA321C016C904BA0066BCB0 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				8472B15B1BC3314200059BE4 /* MGSplitViewController.m in Sources */,
 				5BA321C116C904BA0066BCB0 /* AFPropertyListRequestOperation.m in Sources */,
 				5BA321C216C904BA0066BCB0 /* AFURLConnectionOperation.m in Sources */,
 				5BA321C316C904BA0066BCB0 /* AFXMLRequestOperation.m in Sources */,
@@ -2058,6 +2089,7 @@
 				7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */,
 				5B7A1C9C16F0836400354310 /* IGFormSwitch.m in Sources */,
 				5B7A1C9D16F0836400354310 /* IGFormTextField.m in Sources */,
+				8472B15A1BC3314200059BE4 /* MGSplitDividerView.m in Sources */,
 				5B7A1C9E16F0836400354310 /* IGFormTextView.m in Sources */,
 				5B7A1C9F16F0836400354310 /* IGFormViewController.m in Sources */,
 				5B2FCABC16F231150045A5FE /* NSString+URLEncodingDDG.m in Sources */,
@@ -2092,6 +2124,7 @@
 				84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */,
 				5BDC6A55174CF5790065BB8D /* DDGAutocompleteCell.m in Sources */,
 				5BDC6AF5174E2F520065BB8D /* DDGGroupedTableViewCell.m in Sources */,
+				8472B1581BC3314200059BE4 /* DetailViewController.m in Sources */,
 				5BDC6B1B174E36E90065BB8D /* DDGFormViewController.m in Sources */,
 				5BDC6B23174E697E0065BB8D /* DDGSearchBarButton.m in Sources */,
 				5BDC6B35174F6A2E0065BB8D /* DDGAutocompleteHeaderView.m in Sources */,
