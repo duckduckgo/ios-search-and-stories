@@ -37,6 +37,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 @property (nonatomic, weak) IGFormButton* clearRecentsButton;
 @property (nonatomic) NSUInteger numberOfRecents;
 @property (nonatomic) MGSplitViewController* splitViewController;
+@property (nonatomic) UIViewController* containerController;
 
 @end
 
@@ -60,8 +61,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 -(UIViewController*)duckContainerController
 {
-    if(self.splitViewController) return self.splitViewController;
-    if(self.navigationController) return self.navigationController;
+    if(self.containerController) return self.containerController;
     
     if(IPAD) {
         MGSplitViewController* splitController = [[MGSplitViewController alloc] init];
@@ -70,11 +70,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         splitController.view.backgroundColor = [UIColor duckNoContentColor];
         splitController.dividerView = nil;
         self.splitViewController = splitController;
+        self.containerController = splitController;
         [self showChooseHomeController];
-        return self.splitViewController;
     } else {
-        return [[UINavigationController alloc] initWithRootViewController:self];
+        self.containerController = self;
     }
+    return self.containerController;
 }
 
 
