@@ -85,10 +85,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [super viewDidLoad];
     
 	self.navigationItem.rightBarButtonItem = nil;
-    self.tableView.backgroundView = nil;
-	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
-    self.tableView.sectionHeaderHeight = 64;
-    self.tableView.separatorColor = [UIColor duckTableSeparator];
+    [DDGSettingsViewController configureTable:self.tableView];
     
     // force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
@@ -427,6 +424,13 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     return 0.01f;
 }
 
++(void)configureTable:(UITableView*)tableView
+{
+    tableView.backgroundView = nil;
+    tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
+    tableView.sectionHeaderHeight = 64;
+    tableView.separatorColor = [UIColor duckTableSeparator];
+}
 
 +(void)configureSettingsCell:(UITableViewCell*)cell
 {

@@ -18,8 +18,7 @@ NSString * const DDGReadabilityModeKey = @"readability";
 {
     [super viewDidLoad];
     
-    self.tableView.backgroundView = nil;
-	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
+    [DDGSettingsViewController configureTable:self.tableView];
 }
 
 - (void)configure
@@ -62,4 +61,13 @@ NSString * const DDGReadabilityModeKey = @"readability";
     NSString *title = [self tableView:tableView titleForFooterInSection:section];
     return title.length > 0 ? [DDGSettingsViewController createSectionFooterView:title] : nil;
 }
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 64.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.01f;
+}
+
 @end

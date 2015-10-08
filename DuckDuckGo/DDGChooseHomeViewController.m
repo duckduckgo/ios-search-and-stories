@@ -24,9 +24,7 @@
 {
     [super viewDidLoad];
     self.navigationItem.rightBarButtonItem = nil;
-    
-    self.tableView.backgroundView = nil;
-    self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
+    [DDGSettingsViewController configureTable:self.tableView];
 }
 
 - (void)configure
@@ -90,6 +88,16 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[self searchControllerDDG] popContentViewControllerAnimated:YES];
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 64.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01f;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

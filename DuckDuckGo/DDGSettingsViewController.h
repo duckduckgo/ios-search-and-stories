@@ -44,5 +44,6 @@ typedef enum DDGReadabilityMode {
 +(UIView*)createSectionHeaderView:(NSString*)title;
 +(UIView*)createSectionFooterView:(NSString*)title;
 +(void)configureSettingsCell:(UITableViewCell*)cell;
++(void)configureTable:(UITableView*)tableView;
 
 @end

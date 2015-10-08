@@ -26,22 +26,11 @@
 {
     [super viewDidLoad];
     
-	self.tableView.backgroundView = nil;
-	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
-	self.tableView.allowsSelectionDuringEditing = YES;
-    self.tableView.rowHeight = 50;
-    self.tableView.sectionHeaderHeight = 64;
     self.title = NSLocalizedString(@"Sources", "View Controller Title: Sources");
     
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"back_button.png"] forState:UIControlStateNormal];
-    
-    // we need to offset the triforce image by 1px down to compensate for the shadow in the image
-    float topInset = 1.0f;
-    button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
-    [button addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
-	self.navigationItem.rightBarButtonItem = nil;	
+    [DDGSettingsViewController configureTable:self.tableView];
+    self.tableView.allowsSelectionDuringEditing = YES;
+    self.tableView.rowHeight = 50;
     
 	// force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
@@ -107,6 +96,16 @@
         id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
         return [sectionInfo name];
     }
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 64.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01f;
 }
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {

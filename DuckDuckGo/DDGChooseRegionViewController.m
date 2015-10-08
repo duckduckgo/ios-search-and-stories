@@ -24,8 +24,7 @@
     [super viewDidLoad];
 	self.navigationItem.rightBarButtonItem = nil;
     
-    self.tableView.backgroundView = nil;
-	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
+    [DDGSettingsViewController configureTable:self.tableView];
 }
 
 - (void)configure
@@ -75,6 +74,16 @@
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
     NSString *title = [self tableView:tableView titleForFooterInSection:section];
     return title.length > 0 ? [DDGSettingsViewController createSectionFooterView:title] : nil;
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 64.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01f;
 }
 
 @end
