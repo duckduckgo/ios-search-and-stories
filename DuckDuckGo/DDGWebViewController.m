@@ -470,14 +470,13 @@
 
 -(void)searchControllerStopOrReloadButtonPressed {
     if(self.webView.isLoading) {
-        DLog(@"stopping loading");
         [self.webView stopLoading];
     } else {
-        DLog(@"refreshing");
-        if (self.inReadabilityMode)
+        if (self.inReadabilityMode) {
             [self loadStory:self.story readabilityMode:YES];
-        else
+        } else {
             [self.webView reload];
+        }
     }
 }
 
@@ -603,10 +602,11 @@
     
     self.story = story;
     
-    if (readabilityMode && !story.isHTMLDownloaded)
+    if (readabilityMode && !story.isHTMLDownloaded) {
         [self loadJSONForStory:story completion:completion];
-    else
-        completion(nil);    
+    } else {
+        completion(nil);
+    }
 }
 
 #pragma mark - Searching for selected text
