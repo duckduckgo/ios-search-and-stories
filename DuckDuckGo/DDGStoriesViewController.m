@@ -760,18 +760,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
-
-    NSManagedObjectContext *context = story.managedObjectContext;
-    [context performBlock:^{
-        if(story) {
-            story.readValue = YES;
-        }
-        
-        NSError *error = nil;
-        if (![context save:&error])
-            NSLog(@"error: %@", error);
-    }];
-
+    
     [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:[self lastViewedDefaultsKey]];
     
     NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
