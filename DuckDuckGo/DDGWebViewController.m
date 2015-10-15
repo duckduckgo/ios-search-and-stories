@@ -561,14 +561,10 @@
     [self view];
     
     if (nil != self.webView.request) {
-        [self.webView removeFromSuperview];
-        
-        if (self.webView.isLoading)
+        if (self.webView.isLoading) {
             [self.webView stopLoading];
+        }
         [self resetLoadingDepth];
-        
-        self.webView.delegate = nil;
-        self.webView = nil;        
     }
     
     void (^htmlDownloaded)(BOOL success) = ^(BOOL success){
