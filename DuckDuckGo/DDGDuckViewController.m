@@ -123,10 +123,11 @@ static NSString *historyCellID = @"HCell";
     __weak DDGDuckViewController *weakSelf = self;
     
     [provider downloadSuggestionsForSearchText:searchText success:^{
-        if ([self.filterString isEqual:searchText]) {
-            weakSelf.suggestions = [provider suggestionsForSearchText:self.filterString];
-            [self.tableView reloadData];
-        }
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if ([self.filterString isEqual:searchText]) {
+                weakSelf.suggestions = [provider suggestionsForSearchText:self.filterString];
+            }
+        });
     }];
 }
 
@@ -151,7 +152,7 @@ static NSString *historyCellID = @"HCell";
     
     self.imageCache = [NSCache new];
     
-    [self searchFieldDidChange:@""];
+    //[self searchFieldDidChange:@""];
 }
 
 -(void)viewWillAppear:(BOOL)animated {
@@ -216,11 +217,13 @@ static NSString *historyCellID = @"HCell";
 - (void)setSuggestions:(NSArray *)suggestions {
     if (suggestions == _suggestions)
         return;
+    if(suggestions.count==0 && _suggestions.count==0)
+        return;
     
     [self.imageRequestQueue cancelAllOperations];
     
     _suggestions = suggestions;//[suggestions copy];
-    [self.tableView reloadData];
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:SUGGESTION_SECTION] withRowAnimation:UITableViewRowAnimationNone];
     
     for (NSDictionary *suggestionItem in suggestions) {
         if([[suggestionItem objectForKey:@"image"] length]) {
@@ -247,11 +250,15 @@ static NSString *historyCellID = @"HCell";
                     image = newImage;
                     
                     [weakSelf.imageCache setObject:image forKey:URL];
-                    NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
-                    if (row != NSNotFound) {
-                        [weakSelf.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:SUGGESTION_SECTION]]
-                                                  withRowAnimation:UITableViewRowAnimationFade];
-                    }
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
+                        if (row != NSNotFound) {
+                            UITableViewCell* cell = [weakSelf tableView:weakSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:SUGGESTION_SECTION]];
+                            [((DDGMenuHistoryItemCell*)cell) setIcon:image];
+//                            [weakSelf.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:SUGGESTION_SECTION]]
+//                                                      withRowAnimation:UITableViewRowAnimationNone];
+                        }
+                    });
                 };
                 
                 AFImageRequestOperation *imageOperation = [AFImageRequestOperation imageRequestOperationWithRequest:[DDGUtility requestWithURL:URL]
