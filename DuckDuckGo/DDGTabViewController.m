@@ -88,6 +88,10 @@
     [self setCurrentViewControllerIndex:self.segmentedControl.selectedSegmentIndex];
 }
 
+-(UIViewController*)currentViewController {
+    return self.tabController.selectedViewController;
+}
+
 - (NSInteger)currentViewControllerIndex {
     return self.tabController.selectedIndex;
 }
