@@ -45,6 +45,11 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 @implementation DDGSettingsViewController
 
 +(void)loadDefaultSettings {
+    // Get Default UserAgent.
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    NSString *defaultAgent = [NSString stringWithFormat:@"%@; %@", [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"],
+                              [DDGUtility agentDDG]];
+    
     NSDictionary *defaults = @{
         DDGSettingRecordHistory: @(YES),
         DDGSettingQuackOnRefresh: @(NO),
@@ -52,7 +57,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 		DDGSettingAutocomplete: @(YES),
 		DDGSettingStoriesReadabilityMode: @(DDGReadabilityModeOnIfAvailable),
         DDGSettingHomeView: DDGSettingHomeViewTypeStories,
-        @"UserAgent": [DDGUtility agentDDG],
+        @"UserAgent": defaultAgent,
     };
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
