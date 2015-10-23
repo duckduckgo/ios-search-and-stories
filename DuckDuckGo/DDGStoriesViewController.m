@@ -27,6 +27,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 NSInteger const DDGLargeImageViewTag = 1;
 
+@class DDGStoriesLayout;
+
 @interface DDGStoriesViewController () {
     CIContext *_blurContext;
     NSMutableArray* _sectionChanges;
@@ -52,6 +54,8 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property (nonatomic, strong) UIRefreshControl* refreshControl;
 @property (nonatomic, strong) DDGNoContentViewController* noContentView;
+@property (nonatomic, strong) DDGStoriesLayout* storiesLayout;
+
 @end
 
 
@@ -418,9 +422,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    DDGStoriesLayout* storyLayout = [[DDGStoriesLayout alloc] init];
-    storyLayout.storiesController = self;
-    UICollectionView* storyView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:storyLayout];
+    self.storiesLayout = [[DDGStoriesLayout alloc] init];
+    self.storiesLayout.storiesController = self;
+    UICollectionView* storyView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.storiesLayout];
     storyView.canCancelContentTouches = TRUE;
     storyView.backgroundColor = [UIColor duckStoriesBackground];
     storyView.dataSource = self;
@@ -552,6 +556,13 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
+}
+
+-(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    self.storiesLayout.mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    [self.storyView setNeedsLayout];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
