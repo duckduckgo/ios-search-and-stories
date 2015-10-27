@@ -225,48 +225,6 @@ static NSString *historyCellID = @"HCell";
     _suggestions = suggestions;//[suggestions copy];
     [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:SUGGESTION_SECTION] withRowAnimation:UITableViewRowAnimationNone];
     
-    for (NSDictionary *suggestionItem in suggestions) {
-        if([[suggestionItem objectForKey:@"image"] length]) {
-            NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
-            if (nil != URL && nil == [self.imageCache objectForKey:URL]) {
-                __weak DDGDuckViewController *weakSelf = self;
-                void (^success)(UIImage *image) = ^(UIImage *image) {
-                    if(image==nil || URL==nil) return; // avoid crash if image is nil (it happened!)
-                    
-                    // resize the image appropriately
-                    CGSize newSize = CGSizeMake(16, 16);
-                    float widthRatio = newSize.width/image.size.width;
-                    float heightRatio = newSize.height/image.size.height;
-                    
-                    if(widthRatio > heightRatio) {
-                        newSize = CGSizeMake(image.size.width*heightRatio, image.size.height*heightRatio);
-                    } else {
-                        newSize = CGSizeMake(image.size.width*widthRatio, image.size.height*widthRatio);
-                    }
-                    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
-                    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
-                    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
-                    UIGraphicsEndImageContext();
-                    image = newImage;
-                    
-                    [weakSelf.imageCache setObject:image forKey:URL];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
-                        if (row != NSNotFound) {
-                            UITableViewCell* cell = [weakSelf tableView:weakSelf.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:row inSection:SUGGESTION_SECTION]];
-                            [((DDGMenuHistoryItemCell*)cell) setIcon:image];
-//                            [weakSelf.tableView reloadRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:row inSection:SUGGESTION_SECTION]]
-//                                                      withRowAnimation:UITableViewRowAnimationNone];
-                        }
-                    });
-                };
-                
-                AFImageRequestOperation *imageOperation = [AFImageRequestOperation imageRequestOperationWithRequest:[DDGUtility requestWithURL:URL]
-                                                                                                            success:success];
-                [self.imageRequestQueue addOperation:imageOperation];
-            }
-        }
-    }
 }
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
@@ -424,13 +382,49 @@ static NSString *historyCellID = @"HCell";
             
             cell.suggestionItem = suggestionItem;
             cell.historyDelegate = self;
+            cell.isLastItem = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
             
-            if([[suggestionItem objectForKey:@"image"] length]) {
-                NSURL *URL = [NSURL URLWithString:[suggestionItem objectForKey:@"image"]];
-                [cell setIcon:[self.imageCache objectForKey:URL]];
+            NSString* imgURLString = [suggestionItem objectForKey:@"image"];
+            NSURL* URL = [imgURLString length] ? [NSURL URLWithString:imgURLString] : nil;
+            UIImage* icon = URL ? [self.imageCache objectForKey:URL] : nil;
+            if(icon) {
+                [cell setIcon:icon];
+            } else if(URL) {
+                // the autocomplete icon wasn't found, so let's load it and push it into the cell
+                __weak DDGDuckViewController *weakSelf = self;
+                void (^success)(UIImage *image) = ^(UIImage *image) {
+                    if(image==nil || URL==nil) return; // avoid crash if image is nil (it happened!)
+                    
+                    // resize the image appropriately
+                    CGSize newSize = CGSizeMake(16, 16);
+                    float widthRatio = newSize.width/image.size.width;
+                    float heightRatio = newSize.height/image.size.height;
+                    
+                    if(widthRatio > heightRatio) {
+                        newSize = CGSizeMake(image.size.width*heightRatio, image.size.height*heightRatio);
+                    } else {
+                        newSize = CGSizeMake(image.size.width*widthRatio, image.size.height*widthRatio);
+                    }
+                    UIGraphicsBeginImageContextWithOptions(newSize, NO, 0.0);
+                    [image drawInRect:CGRectMake(0, 0, newSize.width, newSize.height)];
+                    UIImage* newImage = UIGraphicsGetImageFromCurrentImageContext();
+                    UIGraphicsEndImageContext();
+                    
+                    image = newImage;
+                    
+                    [weakSelf.imageCache setObject:image forKey:URL];
+                    dispatch_async(dispatch_get_main_queue(), ^{ // update the cell with the image icon on the main thread
+                        NSUInteger row = [weakSelf.suggestions indexOfObject:suggestionItem];
+                        if (row == indexPath.row) { // make sure the cell is still at the same location and hasn't been replaced
+                            [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                        }
+                    });
+                };
+                AFImageRequestOperation *imageOperation = [AFImageRequestOperation imageRequestOperationWithRequest:[DDGUtility requestWithURL:URL]
+                                                                                                            success:success];
+                [self.imageRequestQueue addOperation:imageOperation];
             }
             
-            cell.isLastItem = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
             return cell;
         }
     }

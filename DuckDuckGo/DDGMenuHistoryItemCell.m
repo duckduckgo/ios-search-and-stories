@@ -111,6 +111,7 @@
 -(void)setIcon:(UIImage *)image
 {
     self.imageView.image = image;
+    [self.imageView setNeedsDisplay];
 }
 
 
