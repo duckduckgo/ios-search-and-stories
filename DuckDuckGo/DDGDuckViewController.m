@@ -223,7 +223,7 @@ static NSString *historyCellID = @"HCell";
     [self.imageRequestQueue cancelAllOperations];
     
     _suggestions = suggestions;//[suggestions copy];
-    [self.tableView reloadSections:[NSIndexSet indexSetWithIndex:SUGGESTION_SECTION] withRowAnimation:UITableViewRowAnimationNone];
+    [self.tableView reloadData];
     
 }
 
