@@ -55,6 +55,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) UIRefreshControl* refreshControl;
 @property (nonatomic, strong) DDGNoContentViewController* noContentView;
 @property (nonatomic, strong) DDGStoriesLayout* storiesLayout;
+@property (nonatomic, strong) NSNumber* lastStoryIDViewed;
 
 @end
 
@@ -231,8 +232,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     } else { // not a mosaic
         // the defaults are good enough
     }
-    //NSLog(@"item %lu:  frame: %@", indexPath.item, NSStringFromCGRect(storyRect));
-
+    
     return storyRect;
 }
 
@@ -412,6 +412,55 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     [self replaceStories:oldStories withStories:newStories focusOnStory:story];
 }
 
+-(void)restoreScrollPositionAnimated:(BOOL)animated {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    id firstStoryID = [defaults objectForKey:[self lastViewedDefaultsKeyPrefix]];
+    if(firstStoryID) {
+        CGFloat offset = [defaults doubleForKey:[[self lastViewedDefaultsKeyPrefix] stringByAppendingString:@".offset"]];
+        //if(offset<0) offset = 0.0;
+        
+        NSArray *stories = [self fetchedStories];
+        NSArray *storyIDs = [stories valueForKey:@"id"];
+        NSInteger index = [storyIDs indexOfObject:firstStoryID];
+        if(index!=NSNotFound) {
+            NSIndexPath* cellPath = [NSIndexPath indexPathForItem:index inSection:0];
+            CGPoint storyOffset = [self.storiesLayout frameForStoryAtIndexPath:cellPath].origin;
+            [self.storyView setContentOffset:CGPointMake(0, storyOffset.y - offset) animated:animated];
+        }
+        
+    }
+}
+
+-(void)saveScrollPosition {
+    NSArray* visibleStoryCells = [self.storyView visibleCells];
+    DDGStory* firstStory = nil;
+    NSIndexPath* firstStoryIndex = nil;
+    CGFloat firstStoryScreenPosition = 0.0f;
+    CGPoint scrollOffset = self.storyView.contentOffset;
+    
+    // get the first story (and its index + bounds) that is fully visible on the screen
+    for(DDGStoryCell* visibleCell in visibleStoryCells) {
+        NSIndexPath* cellPath = [self.storyView indexPathForCell:visibleCell];
+        if(!cellPath) continue;
+        CGRect cellRect = [self.storiesLayout frameForStoryAtIndexPath:cellPath];
+        CGFloat screenPosition = cellRect.origin.y-scrollOffset.y;
+        if(firstStory==nil || ( screenPosition >= 0 && screenPosition < firstStoryScreenPosition ) ) {
+            firstStory = visibleCell.story;
+            firstStoryIndex = cellPath;
+            firstStoryScreenPosition = screenPosition;
+        }
+    }
+    
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    if(firstStory && firstStoryIndex.row!=0) { // save the first visible story, unless we're at the top of the list
+        [defaults setObject:firstStory.id forKey:[self lastViewedDefaultsKeyPrefix]];
+        [defaults setObject:[NSNumber numberWithDouble:firstStoryScreenPosition] forKey:[[self lastViewedDefaultsKeyPrefix] stringByAppendingString:@".offset"]];
+    } else {
+        [defaults removeObjectForKey:[self lastViewedDefaultsKeyPrefix]];
+        [defaults removeObjectForKey:[[self lastViewedDefaultsKeyPrefix] stringByAppendingString:@".offset"]];
+    }
+}
+
 
 -(UIStatusBarStyle)preferredStatusBarStyle
 {
@@ -422,6 +471,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.lastStoryIDViewed = [[NSUserDefaults standardUserDefaults] objectForKey:[self lastViewedDefaultsKeyPrefix]];
+    
     self.storiesLayout = [[DDGStoriesLayout alloc] init];
     self.storiesLayout.storiesController = self;
     UICollectionView* storyView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.storiesLayout];
@@ -508,21 +560,11 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     [super viewWillAppear:animated];
     
-    NSNumber *lastStoryID = [[NSUserDefaults standardUserDefaults] objectForKey:[self lastViewedDefaultsKey]];
-    if (nil != lastStoryID) {
-        NSArray *stories = [self fetchedStories];
-        NSArray *storyIDs = [stories valueForKey:@"id"];
-        NSInteger index = [storyIDs indexOfObject:lastStoryID];
-        if (index != NSNotFound) {
-            [self focusOnStory:[stories objectAtIndex:index] animated:NO];
-        }
-    }
+    [self restoreScrollPositionAnimated:animated];
     
     if (self.storiesMode==DDGStoriesListModeNormal) {
         if ([self shouldRefresh]) {
             [self refreshStoriesTriggeredManually:NO includeSources:YES];
-        } else {
-            NSLog(@"NOT refreshing stories in normal mode");
         }
     }
 
@@ -543,11 +585,14 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             _storyView.transform = CGAffineTransformIdentity;
         }];
     }
+    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-	[super viewWillDisappear:animated];
+    [self saveScrollPosition];
+    
+    [super viewWillDisappear:animated];
     
     [self.imageDownloadQueue cancelAllOperations];
     [self.enqueuedDownloadOperations removeAllObjects];
@@ -772,7 +817,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
     
-    [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:[self lastViewedDefaultsKey]];
+    [self saveScrollPosition];
     
     NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
     [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
@@ -834,6 +879,15 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     }
 }
 
+-(NSString*)storiesModeLabel {
+    switch(self.storiesMode) {
+        case DDGStoriesListModeFavorites: return @"faves";
+        case DDGStoriesListModeNormal: return @"normal";
+        case DDGStoriesListModeRecents: return @"recents";
+        default: return @"UNKNOWN!";
+    }
+}
+
 - (void)focusOnStory:(DDGStory *)story animated:(BOOL)animated {
     if (nil != story) {
         NSUInteger itemIndex = [[self fetchedStories] indexOfObject:story];
@@ -880,13 +934,26 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     }
 }
 
+-(NSString*)lastViewedDefaultsKeyPrefix
+{
+    switch(self.storiesMode) {
+        case DDGStoriesListModeNormal:
+            return @"last_story_id.main";
+        case DDGStoriesListModeFavorites:
+            return @"last_story_id.fav";
+        case DDGStoriesListModeRecents:
+            return @"last_story_id.recent";
+        default:
+            return @"last_story_id.other";
+    }
+}
+
 
 
 -(NSDate*)lastRefreshAttempt
 {
     NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
-    NSString* refreshKey = self.lastRefreshDefaultsKey;
-    id value = [defaults objectForKey:refreshKey];
+    id value = [defaults objectForKey:self.lastRefreshDefaultsKey];
     if(value==nil) return [NSDate dateWithTimeIntervalSince1970:0];
     if([value isKindOfClass:NSDate.class]) return (NSDate*)value;
     return [NSDate dateWithTimeIntervalSince1970:0];
@@ -912,7 +979,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     if (!self.storyFetcher.isRefreshing) {
         __weak DDGStoriesViewController *weakSelf = self;
         [self.storyFetcher refreshSources:^(NSDate *feedDate){
-            NSLog(@"refreshing sources");
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
             NSPredicate *iconPredicate = [NSPredicate predicateWithFormat:@"imageDownloaded == %@", @(NO)];
             [request setPredicate:iconPredicate];
