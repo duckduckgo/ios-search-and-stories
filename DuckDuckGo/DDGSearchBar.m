@@ -119,6 +119,10 @@
     [self setNeedsUpdateConstraints];
 }
 
+-(void)updateConstraints {
+    [super updateConstraints];
+    [self.searchField updateConstraints];
+}
 
 
 #pragma mark - Showing and hiding progress

@@ -40,6 +40,13 @@
     [self updatePlaceholderAnimated:TRUE];
 }
 
+-(void)updateConstraints {
+    [super updateConstraints];
+    BOOL fieldIsActive = self.isFirstResponder;
+    self.placeholderTextLeft.active = fieldIsActive;
+    self.placeholderTextCenter.active = !fieldIsActive;
+}
+
 -(void)updatePlaceholderAnimated:(BOOL)animated {
     NSString* text = self.text;
     BOOL fieldIsActive = self.isFirstResponder;
