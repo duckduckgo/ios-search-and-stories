@@ -229,8 +229,8 @@ static NSString *historyCellID = @"HCell";
 
 -(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
 {
-    [self reloadHistory]; // reload the history because if we're on a shorter screen we'll show fewer items
-    [self.tableView reloadData];
+//    [self reloadHistory]; // reload the history because if we're on a shorter screen we'll show fewer items
+//    [self.tableView reloadData];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
