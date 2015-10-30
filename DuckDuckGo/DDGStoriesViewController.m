@@ -585,7 +585,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             _storyView.transform = CGAffineTransformIdentity;
         }];
     }
-    
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -605,19 +604,33 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
 {
-    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self saveScrollPosition];
     self.storiesLayout.mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
     [self.storyView setNeedsLayout];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+    [self saveScrollPosition];
     // Return YES for supported orientations
 	if (IPHONE)
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 	else
         return YES;
 }
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self restoreScrollPositionAnimated:FALSE];
+}
+
+-(void)viewDidLayoutSubviews {
+    self.storyView.contentSize = self.storiesLayout.collectionViewContentSize;
+}
+
+
 
 #pragma mark - Filtering
 
