@@ -628,6 +628,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(void)viewDidLayoutSubviews {
     self.storyView.contentSize = self.storiesLayout.collectionViewContentSize;
+    [self.storyView layoutSubviews];
 }
 
 
