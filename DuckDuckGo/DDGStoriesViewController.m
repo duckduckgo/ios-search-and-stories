@@ -56,6 +56,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) DDGNoContentViewController* noContentView;
 @property (nonatomic, strong) DDGStoriesLayout* storiesLayout;
 @property (nonatomic, strong) NSNumber* lastStoryIDViewed;
+@property (nonatomic, assign) BOOL ignoreCoreDataUpdates;
 
 @end
 
@@ -514,6 +515,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     [self.view addSubview:self.storyView];
     [self.view addSubview:self.noContentView.view];
     
+    self.ignoreCoreDataUpdates = TRUE;
     self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
     [self prepareUpcomingCellContent];
@@ -560,6 +562,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     [super viewWillAppear:animated];
     
+    self.ignoreCoreDataUpdates = FALSE;
+    [self.storyView reloadData];
+    
     [self restoreScrollPositionAnimated:animated];
     
     if (self.storiesMode==DDGStoriesListModeNormal) {
@@ -600,6 +605,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
+    self.ignoreCoreDataUpdates = true;
 }
 
 -(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -1054,7 +1060,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     NSArray* results = self.fetchedResultsController.fetchedObjects;
     if(self.storiesMode==DDGStoriesListModeRecents) {
-        results = [results valueForKey:@"story"];
+        results = [results valueForKey:@"story"]; // the controller returns a list of history items, so extract the stories from them
     }
     return results;
 }
@@ -1185,6 +1191,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
+    if(self.ignoreCoreDataUpdates) return;
+    
     if ([_sectionChanges count] > 0) {
         [self.storyView performBatchUpdates:^{
             
