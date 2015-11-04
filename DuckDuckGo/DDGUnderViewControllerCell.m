@@ -8,7 +8,6 @@
 
 #import "DDGUnderViewControllerCell.h"
 #import "DDGDeleteButton.h"
-#import "UIColor+DDG.h"
 
 @interface DDGUnderViewControllerCell ()
 @property (nonatomic, weak, readwrite) DDGFixedSizeImageView *fixedSizeImageView;

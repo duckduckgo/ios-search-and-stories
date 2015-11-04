@@ -9,12 +9,17 @@
 #import "DDGSearchBar.h"
 
 @interface DDGSearchBar ()
+
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *cancelButtonXConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *leftButtonXConstraint;
+
 @end
 
 @implementation DDGSearchBar
 
 - (void)commonInit {
     self.buttonSpacing = 5.0;
+    
     [self setNeedsLayout];
 }
 
@@ -36,121 +41,120 @@
     return self;
 }
 
-- (void)awakeFromNib
-{
-    [super awakeFromNib];
-    [self.rightButton setImage:[[UIImage imageNamed:@"Share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                      forState:UIControlStateNormal];
-    [self.rightButton setImage:[[UIImage imageNamed:@"Share"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                      forState:UIControlStateHighlighted];
-}
 
 - (void)setShowsCancelButton:(BOOL)show {
-    _showsCancelButton = show;
-    [self setNeedsLayout];
+    [self setShowsCancelButton:show animated:TRUE];
 }
 
-- (void)setShowsLeftButton:(BOOL)showsLeftButton {
-    _showsLeftButton = showsLeftButton;
-    [self setNeedsLayout];
+- (void)setShowsLeftButton:(BOOL)show {
+    [self setShowsLeftButton:show animated:TRUE];
 }
 
-- (void)setShowsRightButton:(BOOL)showsRightButton {
-    _showsRightButton = showsRightButton;
-    [self setNeedsLayout];    
+- (void)setShowsBangButton:(BOOL)show {
+    [self setShowsBangButton:show animated:FALSE];
 }
 
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated {
-    
-    UIButton *incomming;
-    UIButton *outgoing;
-    
-    if (show) {
-        incomming = self.bangButton;
-        outgoing = self.orangeButton;
-    } else {
-        outgoing = self.bangButton;
-        incomming = self.orangeButton;
-    }
-    
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [UIView animateWithDuration:duration
-                     animations:^{
-                         incomming.alpha = 1.0;
-                         outgoing.alpha = 0.0;
-                     }
-     
-     ];
-    
-    self.leftButton = incomming;
+    self.searchField.additionalLeftSideInset = show ? 39 : 0;
+    [self layoutIfNeeded];
+    _showsBangButton = show;
     [self setNeedsLayout];
+    [self layoutIfNeeded:(animated ? 0.2 : 0)];
 }
 
 - (void)layoutIfNeeded:(NSTimeInterval)animationDuration {
-    [UIView animateWithDuration:animationDuration animations:^{
+    if(animationDuration<=0) {
         [self layoutIfNeeded];
-    }];
+    } else {
+        [UIView animateWithDuration:animationDuration animations:^{
+            [self layoutIfNeeded];
+        }];
+    }
 }
 
 - (void)setShowsCancelButton:(BOOL)show animated:(BOOL)animated {
-    self.showsCancelButton = show;
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [self layoutIfNeeded:duration];
+    _showsCancelButton = show;
+    
+    void(^makeChanges)() = ^() {
+        if(show) {
+            self.cancelButtonXConstraint.constant = - (self.cancelButton.frame.size.width + 12);
+            self.cancelButton.alpha = 1;
+        } else {
+            self.cancelButtonXConstraint.constant = 4;
+            self.cancelButton.alpha = 0;
+        }
+        if(animated) {
+            [self layoutIfNeeded];
+        } else {
+            [self setNeedsLayout];
+        }
+    };
+    if(animated) {
+        [UIView animateWithDuration:0.2f animations:makeChanges];
+    } else {
+        makeChanges();
+    }
+
 }
 
 - (void)setShowsLeftButton:(BOOL)show animated:(BOOL)animated {
-    self.showsLeftButton = show;
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [self layoutIfNeeded:duration];
-}
-
-- (void)setShowsRightButton:(BOOL)show animated:(BOOL)animated {
-    self.showsRightButton = show;
-    NSTimeInterval duration = (animated) ? 0.2 : 0.0;
-    [self layoutIfNeeded:duration];
+    _showsLeftButton = show;
+    if(show) {
+        self.leftButtonXConstraint.constant = self.leftButton.frame.size.width + 10;
+        self.leftButton.alpha = 1;
+    } else {
+        self.leftButtonXConstraint.constant = 0;
+        self.leftButton.alpha = 0;
+    }
+    [self layoutIfNeeded:((animated) ? 0.2 : 0.0)];
 }
 
 - (void)layoutSubviews {
-    CGRect bounds = self.bounds;
-    
-    // left button
-    CGRect leftButtonFrame = self.leftButton.frame;
-    if (self.showsLeftButton)
-        leftButtonFrame.origin.x = self.buttonSpacing;
-    else
-        leftButtonFrame.origin.x = -leftButtonFrame.size.width;
-    
-    self.leftButton.alpha = (self.showsLeftButton) ? 1.0 : 0.0;
-    self.leftButton.frame = leftButtonFrame;
-    
-    // right button
-    CGRect rightButtonFrame = self.rightButton.frame;
-    if (self.showsRightButton)
-        rightButtonFrame.origin.x = (bounds.origin.x + bounds.size.width) - rightButtonFrame.size.width - self.buttonSpacing;
-    else
-        rightButtonFrame.origin.x = bounds.origin.x + bounds.size.width;
-    
-    self.rightButton.alpha = (self.showsRightButton) ? 1.0 : 0.0;    
-    self.rightButton.frame = rightButtonFrame;
+    self.leftButton.hidden = !self.showsLeftButton;
+    //self.bangButton.hidden = !self.showsBangButton;
+    self.bangButton.alpha = self.showsBangButton ? 1 : 0;
+    self.cancelButton.hidden = !self.showsCancelButton;
 
-    // cancel button
-    CGRect cancelButtonFrame = self.cancelButton.frame;
-    
-    
-    if (self.showsCancelButton)
-        cancelButtonFrame.origin.x = rightButtonFrame.origin.x - cancelButtonFrame.size.width - self.buttonSpacing;
-    else
-        cancelButtonFrame.origin.x = bounds.origin.x + bounds.size.width;
-
-    self.cancelButton.alpha = (self.showsCancelButton) ? 1.0 : 0.0;        
-    self.cancelButton.frame = cancelButtonFrame;
-
-    // search field
-    CGRect searchFieldFrame = self.searchField.frame;
-    searchFieldFrame.origin.x = leftButtonFrame.origin.x + leftButtonFrame.size.width + self.buttonSpacing;
-    searchFieldFrame.size.width = MIN(cancelButtonFrame.origin.x, rightButtonFrame.origin.x) - searchFieldFrame.origin.x - self.buttonSpacing;
-    
-    self.searchField.frame = searchFieldFrame;
+    [self setNeedsDisplay];
+    [self setNeedsUpdateConstraints];
 }
+
+-(void)updateConstraints {
+    [super updateConstraints];
+    [self.searchField updateConstraints];
+}
+
+
+#pragma mark - Showing and hiding progress
+
+-(void)cancel {
+    self.progressView.percentCompleted = 100;
+}
+
+-(void)finish {
+    self.progressView.percentCompleted = 100;
+}
+
+#pragma mark - Progress bar
+
+-(void)setProgress:(CGFloat)newProgress {
+    self.progressView.percentCompleted = ceill(newProgress*100);
+    
+}
+
+-(void)setProgress:(CGFloat)newProgress animationDuration:(CGFloat)duration {
+    [UIView animateWithDuration:duration
+                          delay:0.0
+                        options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut
+                     animations:^{
+                         [self setProgress:newProgress];
+                     }
+                     completion:^(BOOL finished) {
+                         if(finished)
+                             [self setProgress:newProgress+0.1
+                             animationDuration:duration*4];
+                     }];
+}
+
 
 @end

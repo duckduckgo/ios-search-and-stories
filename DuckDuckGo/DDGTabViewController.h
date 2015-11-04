@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "DDGSegmentedControl.h"
 
 typedef enum DDGTabViewControllerToolbarPosition {
-    DDGTabViewControllerControlViewPositionNone = 0,
     DDGTabViewControllerControlViewPositionTop,
     DDGTabViewControllerControlViewPositionBottom,    
 } DDGTabViewControllerControlViewPosition;
@@ -22,14 +22,11 @@ typedef enum DDGTabViewControllerToolbarPosition {
 
 @interface DDGTabViewController : UIViewController {}
 
-@property (nonatomic, strong, readonly) UISegmentedControl *segmentedControl;
-@property (nonatomic, copy, readonly) NSArray *viewControllers;
+@property (nonatomic, weak) UIView* segmentAlignmentView;
+@property (nonatomic, strong) NSArray *viewControllers;
 @property (nonatomic, weak, readonly) UIViewController *currentViewController;
 @property (nonatomic) NSInteger currentViewControllerIndex;
-@property (nonatomic, strong) UIView *controlView;
-@property (nonatomic) DDGTabViewControllerControlViewPosition controlViewPosition;
 @property (nonatomic, weak) id <DDGTabViewControllerDelegate> delegate;
 @property (nonatomic, strong) UIImage *searchControllerBackButtonIconDDG;
 
-- (id)initWithViewControllers:(NSArray *)viewControllers;
 @end

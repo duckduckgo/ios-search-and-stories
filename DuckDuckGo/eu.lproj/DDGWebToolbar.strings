@@ -1,0 +1,12 @@
+
+/* Class = "UIButton"; accessibilityLabel = "Forward"; ObjectID = "9s9-Ft-ueK"; */
+"9s9-Ft-ueK.accessibilityLabel" = "Forward";
+
+/* Class = "UIButton"; accessibilityLabel = "Back"; ObjectID = "D1U-79-qbz"; */
+"D1U-79-qbz.accessibilityLabel" = "Back";
+
+/* Class = "UIButton"; accessibilityLabel = "Share"; ObjectID = "bTS-Cl-kXM"; */
+"bTS-Cl-kXM.accessibilityLabel" = "Share";
+
+/* Class = "UIButton"; accessibilityLabel = "Favorite"; ObjectID = "rdb-X1-aus"; */
+"rdb-X1-aus.accessibilityLabel" = "Favorite";

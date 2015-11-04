@@ -9,13 +9,16 @@
 #import "DDGSettingsViewController.h"
 #import "DDGChooseSourcesViewController.h"
 #import "DDGChooseRegionViewController.h"
+#import "DDGChooseHomeViewController.h"
 #import "DDGActivityViewController.h"
-#import "SVProgressHUD.h"
 #import <sys/utsname.h>
 #import "DDGHistoryProvider.h"
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
 #import "DDGReadabilitySettingViewController.h"
+#import "DDGUtility.h"
+#import "MGSplitViewController.h"
+
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
@@ -30,54 +33,67 @@ NSString * const DDGSettingHomeViewTypeSaved = @"Saved View";
 NSString * const DDGSettingHomeViewTypeRecents = @"Recents";
 NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
+@interface DDGSettingsViewController ()
+@property (nonatomic, weak) IGFormButton* clearRecentsButton;
+@property (nonatomic) NSUInteger numberOfRecents;
+@property (nonatomic) MGSplitViewController* splitViewController;
+@property (nonatomic) UIViewController* containerController;
+
+@end
+
+
 @implementation DDGSettingsViewController
 
 +(void)loadDefaultSettings {
+    // Get Default UserAgent.
+    UIWebView *webView = [[UIWebView alloc] initWithFrame:CGRectZero];
+    NSString *defaultAgent = [NSString stringWithFormat:@"%@; %@", [webView stringByEvaluatingJavaScriptFromString:@"navigator.userAgent"],
+                              [DDGUtility agentDDG]];
+    
     NSDictionary *defaults = @{
         DDGSettingRecordHistory: @(YES),
         DDGSettingQuackOnRefresh: @(NO),
-		DDGSettingRegion: @"us-en",
+		DDGSettingRegion: @"wt-wt",
 		DDGSettingAutocomplete: @(YES),
 		DDGSettingStoriesReadabilityMode: @(DDGReadabilityModeOnIfAvailable),
         DDGSettingHomeView: DDGSettingHomeViewTypeStories,
+        @"UserAgent": defaultAgent,
     };
     
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
 }
 
-- (void)dealloc {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:DDGSlideOverMenuWillAppearNotification object:nil];
+
+-(UIViewController*)duckContainerController
+{
+    if(self.containerController) return self.containerController;
+    
+    if(IPAD) {
+        MGSplitViewController* splitController = [[MGSplitViewController alloc] init];
+        splitController.allowsDraggingDivider = FALSE;
+        splitController.masterViewController = self;
+        splitController.view.backgroundColor = [UIColor duckNoContentColor];
+        splitController.dividerView = nil;
+        self.splitViewController = splitController;
+        self.containerController = splitController;
+        [self showChooseHomeController];
+    } else {
+        self.containerController = self;
+    }
+    return self.containerController;
 }
+
 
 #pragma mark - View lifecycle
 
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-    [button setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
-    
-	button.imageView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-	button.autoresizesSubviews = YES;
-    
-    float topInset = 1.0f;
-    button.imageEdgeInsets = UIEdgeInsetsMake(topInset, 0.0f, -topInset, 0.0f);
-    
-    [button addTarget:self action:@selector(leftButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:button];
 	self.navigationItem.rightBarButtonItem = nil;
+    [DDGSettingsViewController configureTable:self.tableView];
     
-    self.tableView.backgroundView = nil;
-	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
-        
-	// force 1st time through for iOS < 6.0
+    // force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
-}
-
--(void)leftButtonPressed
-{
-    [self.slideOverMenuController showMenu];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -89,16 +105,37 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
             [(IGFormButton *)element setDetailTitle:regionTitle];
         }
     }
+
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
+    NSArray *homeItems = [self elementsForKey:DDGSettingHomeView];
+    NSString *homeTitle = [DDGChooseHomeViewController homeViewNameForID:homeViewMode];
+    for (IGFormElement *element in homeItems) {
+        if ([element isKindOfClass:[IGFormButton class]]) {
+            [(IGFormButton *)element setDetailTitle:homeTitle];
+        }
+    }
+
+    [self updateClearRecentsItem];
+    
     [self.tableView reloadData];
 }
 
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(slidingViewUnderLeftWillAppear:)
-                                                 name:DDGSlideOverMenuWillAppearNotification
-                                               object:nil];
+
+-(void)updateClearRecentsItem
+{
+    DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    self.numberOfRecents = [historyProvider countHistoryItems];
+    NSLog(@"numberOfRecents: %lu", (unsigned long)self.numberOfRecents);
+}
+
+-(void)duckGoToTopLevel
+{
+    if(self.navigationController.viewControllers.count>1) {
+        [self.navigationController popToRootViewControllerAnimated:TRUE];
+    }
+    [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0]
+                          atScrollPosition:UITableViewScrollPositionTop animated:TRUE];
 }
 
 - (void)reenableScrollsToTop {
@@ -107,14 +144,6 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 - (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
     [self save:nil];
-}
-
-- (void)viewWillDisappear:(BOOL)animated {
-    [super viewWillDisappear:animated];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
 }
 
 - (void)viewWillLayoutSubviews
@@ -128,7 +157,21 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 - (UIImage *)searchControllerBackButtonIconDDG {
-    return [[UIImage imageNamed:@"Settings"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];;
+    return [UIImage imageNamed:@"Settings"];
+}
+
+-(void)pushSecondaryViewController:(UIViewController*)secondaryViewController
+{
+    if(self.splitViewController) {
+        self.splitViewController.detailViewController = secondaryViewController;
+    } else {
+        [self.searchControllerDDG pushContentViewController:secondaryViewController animated:TRUE];
+    }
+}
+
+-(void)showChooseHomeController {
+    DDGChooseHomeViewController *hvc = [[DDGChooseHomeViewController alloc] initWithDefaults];
+    [self pushSecondaryViewController:hvc];
 }
 
 #pragma mark - Rotation
@@ -141,61 +184,58 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 #pragma mark - Form view controller
 
 -(void)configure {
-    self.title = @"Settings";
+    self.title = NSLocalizedString(@"Settings", @"View Controller Title: Settings");
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
     
-    [self addSectionWithTitle:@"Home" footer:nil];
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];    
+    [self addSectionWithTitle:NSLocalizedString(@"General", @"Header for general settings section") footer:nil];
+    [self addButton:NSLocalizedString(@"Home", @"Button: What screen should be presented when launching the app") forKey:DDGSettingHomeView detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+        [weakSelf showChooseHomeController];
+    }];
     
-    NSString *homeViewMode = [defaults objectForKey:DDGSettingHomeView];
-    [self addRadioOptionWithTitle:@"Stories" value:DDGSettingHomeViewTypeStories key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeStories]];
-    [self addRadioOptionWithTitle:@"Recent" value:DDGSettingHomeViewTypeRecents key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeRecents]];
-    [self addRadioOptionWithTitle:@"Favorites" value:DDGSettingHomeViewTypeSaved key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeSaved]];    
-    [self addRadioOptionWithTitle:@"Search Only" value:DDGSettingHomeViewTypeDuck key:DDGSettingHomeView selected:[homeViewMode isEqual:DDGSettingHomeViewTypeDuck]];
-    
-    [self addSectionWithTitle:@"Stories" footer:nil];
-    [self addButton:@"Change Sources" forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:NSLocalizedString(@"Stories", @"Header for Stories settings section") footer:nil];
+    [self addButton:NSLocalizedString(@"Sources", @"Button: Sources") forKey:@"sources" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseSourcesViewController *sourcesVC = [[DDGChooseSourcesViewController alloc] initWithStyle:UITableViewStyleGrouped];
         sourcesVC.managedObjectContext = weakSelf.managedObjectContext;
-        [weakSelf.searchControllerDDG pushContentViewController:sourcesVC animated:YES];
+        [weakSelf pushSecondaryViewController:sourcesVC];
     }];
     
-    [self addButton:@"Readability" forKey:@"readability" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addButton:NSLocalizedString(@"Readability", @"Button: Readability") forKey:@"readability" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGReadabilitySettingViewController *rvc = [[DDGReadabilitySettingViewController alloc] initWithDefaults];
-        [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
+        [weakSelf pushSecondaryViewController:rvc];
     }];
 //    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
-    IGFormSwitch *quackSwitch = [self addSwitch:@"Quack on Refresh" forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
+    IGFormSwitch *quackSwitch = [self addSwitch:NSLocalizedString(@"Quack on Refresh", @"Switch: Quack on Refresh") forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
-    [self addSectionWithTitle:@"Autosuggest" footer:nil];
-    IGFormSwitch *suggestionsSwitch = [self addSwitch:@"Suggestions" forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
-    
-    [self addSectionWithTitle:@"Search Results" footer:nil];
-    [self addButton:@"Region Boost" forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    [self addSectionWithTitle:NSLocalizedString(@"Search", @"Header for Search settings section") footer:nil];
+    IGFormSwitch *suggestionsSwitch = [self addSwitch:NSLocalizedString(@"Autocomplete", @"Switch: Autocomplete") forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
+    [self addButton:NSLocalizedString(@"Region", @"Button: Region") forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
-        [weakSelf.searchControllerDDG pushContentViewController:rvc animated:YES];
+        [weakSelf pushSecondaryViewController:rvc];
     }];
     
-    [self addSectionWithTitle:@"Privacy" footer:nil];
-    IGFormSwitch *recentSwitch = [self addSwitch:@"Save Recent" forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
-    [self addSectionWithTitle:nil footer:@"Only stored on your phone"];
-    [self addButton:@"Clear Recent" forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
-        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:@"Are you sure you want to clear history? This cannot be undone."
+    [self addSectionWithTitle:NSLocalizedString(@"Privacy", @"Header for Privacy settings section") footer:nil];
+    IGFormSwitch *recentSwitch = [self addSwitch:NSLocalizedString(@"Save Recents", @"Switch: Save recent searches") forKey:DDGSettingRecordHistory enabled:[[defaults objectForKey:DDGSettingRecordHistory] boolValue]];
+    self.clearRecentsButton =
+    [self addButton:NSLocalizedString(@"Clear Recents", @"Clear recent search results") forKey:@"clear_recent" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+        if(weakSelf.numberOfRecents<=0) return;
+        
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Are you sure you want to clear your recents? This can not be undone.", @"Ask for confirmation of clearing the recent history and state that this cannot be undone")
                                                                  delegate:weakSelf
-                                                        cancelButtonTitle:@"Cancel"
+                                                        cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                    destructiveButtonTitle:nil
-                                                        otherButtonTitles:@"Clear Recent", nil];
-        [actionSheet showInView:weakSelf.view.window];
+                                                        otherButtonTitles:NSLocalizedString(@"Clear Recents", @"Clear Recents"), nil];
+        [actionSheet showInView:[weakSelf duckContainerController].view];
     }];
     
     for (IGFormSwitch *s in @[quackSwitch, suggestionsSwitch, recentSwitch])
         [s.switchControl addTarget:self action:@selector(save:) forControlEvents:UIControlEventValueChanged];
     
-    [self addSectionWithTitle:nil footer:nil];
+    [self addSectionWithTitle:NSLocalizedString(@"Other", @"Heading for Other options section") footer:nil];
     
-    [self addButton:@"Send Feedback" forKey:@"feedback" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:NSLocalizedString(@"Send Feedback", @"Button: Send Feedback") forKey:@"feedback" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
         mailVC.mailComposeDelegate = weakSelf;
         [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
@@ -203,27 +243,32 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
         [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
-    [self addButton:@"Share App" forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
-        NSString *shareTitle = @"Check out the DuckDuckGo iOS app!";
+    [self addButton:NSLocalizedString(@"Share", @"Button: Share") forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+        NSString *shareTitle = NSLocalizedString(@"Check out the DuckDuckGo iOS app!", @"Share title: Check out the DuckDuckGo iOS app!");
         NSURL *shareURL = [NSURL URLWithString:@"https://itunes.apple.com/app/id663592361"];
         DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:@[shareTitle, shareURL] applicationActivities:@[]];
+        if ( [avc respondsToSelector:@selector(popoverPresentationController)] ) {
+            // iOS8
+            avc.popoverPresentationController.sourceView = weakSelf.view;
+            avc.popoverPresentationController.sourceRect = weakSelf.view.frame;
+        }
+
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
-    [self addButton:@"Rate App" forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+    [self addButton:NSLocalizedString(@"Leave a Rating", @"Button: Leave a Rating") forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=663592361&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
     }];
 
     NSString *bundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
     NSString *shortBundleVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
-    NSString *appName = [[[NSBundle mainBundle] localizedInfoDictionary] objectForKey:@"CFBundleDisplayName"];
-    if (appName == nil)
-        appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
     
-    NSString *versionInfo = [NSString stringWithFormat:@"%@ %@", appName, shortBundleVersion];
+    NSString *versionInfo = [NSString stringWithFormat:NSLocalizedString(@"Version %@", @"Version %@"), shortBundleVersion];
     if (![shortBundleVersion isEqualToString:bundleVersion])
         versionInfo = [versionInfo stringByAppendingFormat:@" (%@)", bundleVersion];
     
-    [self addSectionWithTitle:nil footer:versionInfo];
+    [self addSectionWithTitle:versionInfo footer:nil];
+    
+    self.tableView.sectionFooterHeight = 0.01;
 }
 
 -(IBAction)save:(id)sender {
@@ -232,7 +277,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 -(void)saveData:(NSDictionary *)formData {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-
+    
     if ([formData objectForKey:DDGSettingHomeView])
         [defaults setObject:[formData objectForKey:DDGSettingHomeView] forKey:DDGSettingHomeView];
     
@@ -244,19 +289,16 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 #pragma mark - Helper methods
 
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    // currently the only action sheet is to clear the history
     if(buttonIndex == 0) {
         DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
         [historyProvider clearHistory];
-        [SVProgressHUD showSuccessWithStatus:@"Recents cleared!"];
+        self.numberOfRecents = 0;
+        [self.tableView reloadData];
     }
 }
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
-    if(result == MFMailComposeResultSent) {
-        [SVProgressHUD showSuccessWithStatus:@"Feedback sent!"];
-    } else if(result == MFMailComposeResultFailed) {
-        [SVProgressHUD showErrorWithStatus:@"Feedback send failed!"];
-    }
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -278,13 +320,50 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         @"iPod2,1"   : @"iPod touch 2G",
         @"iPod3,1"   : @"iPod touch 3G",
         @"iPod4,1"   : @"iPod touch 4G",
+        @"iPod5,1"   : @"iPod touch 5G",
+        @"iPod7,1"   : @"iPod touch 6G",
         @"iPhone1,1" : @"iPhone",
         @"iPhone1,2" : @"iPhone 3G",
         @"iPhone2,1" : @"iPhone 3GS",
         @"iPad1,1"   : @"iPad",
         @"iPad2,1"   : @"iPad 2",
+        @"iPad2,2"   : @"iPad 2",
+        @"iPad2,3"   : @"iPad 2",
+        @"iPad2,4"   : @"iPad 2",
+        @"iPad3,1"   : @"iPad 3rd Gen",
+        @"iPad3,2"   : @"iPad 3rd Gen",
+        @"iPad3,3"   : @"iPad 3rd Gen",
+        @"iPad3,4"   : @"iPad 4th Gen",
+        @"iPad3,5"   : @"iPad 4th Gen",
+        @"iPad3,6"   : @"iPad 4th Gen",
+        @"iPad4,1"   : @"iPad Air",
+        @"iPad4,2"   : @"iPad Air",
+        @"iPad4,3"   : @"iPad Air",
+        @"iPad5,3"   : @"iPad Air 2",
+        @"iPad5,4"   : @"iPad Air 2",
+        
+        @"iPad2,5"   : @"iPad Mini",
+        @"iPad2,6"   : @"iPad Mini",
+        @"iPad2,7"   : @"iPad Mini",
+        @"iPad4,4"   : @"iPad Mini 2",
+        @"iPad4,5"   : @"iPad Mini 2",
+        @"iPad4,6"   : @"iPad Mini 2",
+        @"iPad4,7"   : @"iPad Mini 3",
+        @"iPad4,8"   : @"iPad Mini 3",
+        @"iPad4,9"   : @"iPad Mini 3",
+        
         @"iPhone3,1" : @"iPhone 4",
-        @"iPhone4,1" : @"iPhone 4S"
+        @"iPhone3,2" : @"iPhone 4",
+        @"iPhone3,3" : @"iPhone 4",
+        @"iPhone4,1" : @"iPhone 4S",
+        @"iPhone5,1" : @"iPhone 5",
+        @"iPhone5,2" : @"iPhone 5",
+        @"iPhone5,3" : @"iPhone 5c",
+        @"iPhone5,4" : @"iPhone 5c",
+        @"iPhone6,1" : @"iPhone 5s",
+        @"iPhone6,2" : @"iPhone 5s",
+        @"iPhone7,2" : @"iPhone 6",
+        @"iPhone7,1" : @"iPhone 6+"
     };
     if([deviceNames objectForKey:device])
         device = [deviceNames objectForKey:device];
@@ -295,31 +374,118 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     return [NSString stringWithFormat:@"DuckDuckGo v%@ on an %@ (iOS %@)",appVersion,device,osVersion];
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view;
-    DDG_SETTINGS_HEADER(view, [self tableView:tableView titleForHeaderInSection:section])
+
++(UIView*)createSectionHeaderView:(NSString*)title
+{
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    view.opaque = NO;
+    view.backgroundColor = [UIColor clearColor];
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectInset(view.bounds, 16.0, 0.0)];
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    titleLabel.opaque = NO;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont duckFontWithSize:15.0];
+    titleLabel.text = title;
+    titleLabel.textColor = [UIColor colorWithRed:56.0f/255.0f green:56.0f/255.0f blue:56.0f/255.0f alpha:1.0f];
+    [view addSubview:titleLabel];
+    
     return view;
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    UIView *view = nil;
-    NSString *title = [self tableView:tableView titleForFooterInSection:section];
-    if (nil != title) {
-        DDG_SETTINGS_FOOTER(view, title)
-    }
++(UIView*)createVersionView:(NSString*)title
+{
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 44)];
+    view.opaque = NO;
+    view.backgroundColor = [UIColor clearColor];
+    view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectInset(view.bounds, 16.0, 0.0)];
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
+    titleLabel.opaque = NO;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont duckFontWithSize:15.0];
+    titleLabel.text = title;
+    titleLabel.textColor = UIColorFromRGB(0x999999);
+    [view addSubview:titleLabel];
+    
     return view;
+}
+
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    if(section+1 == [self numberOfSectionsInTableView:tableView]) {
+        return [DDGSettingsViewController createVersionView:[self tableView:tableView titleForHeaderInSection:section]];
+    } else {
+        return [DDGSettingsViewController createSectionHeaderView:[self tableView:tableView titleForHeaderInSection:section]];
+    }
+}
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 64.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
+{
+    return 0.01f;
+}
+
++(void)configureTable:(UITableView*)tableView
+{
+    tableView.backgroundView = nil;
+    tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
+    tableView.sectionHeaderHeight = 64;
+    tableView.separatorColor = [UIColor duckTableSeparator];
+}
+
++(void)configureSettingsCell:(UITableViewCell*)cell
+{
+    cell.textLabel.font = [UIFont duckFontWithSize:17.0];
+    cell.textLabel.textColor = [UIColor duckListItemTextForeground];
+    cell.textLabel.textAlignment = NSTextAlignmentNatural;
+    cell.detailTextLabel.font = [UIFont duckFontWithSize:17.0];
+    cell.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
+    cell.tintColor = UIColor.duckRed;
+}
+
++(UIView*)createSectionFooterView:(NSString *)title
+{
+    UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
+    view.opaque = NO;
+    view.backgroundColor = [UIColor clearColor];
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectInset(view.bounds, 16.0, 0.0)];
+    titleLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    titleLabel.opaque = NO;
+    titleLabel.backgroundColor = [UIColor clearColor];
+    titleLabel.font = [UIFont duckFontWithSize:13];
+    titleLabel.textAlignment = NSTextAlignmentCenter;
+    titleLabel.text = title;
+    titleLabel.textColor = [UIColor colorWithRed:0.341 green:0.376 blue:0.424 alpha:1.000];
+    [view addSubview:titleLabel];
+    return view;
+}
+
+
+- (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
+    return nil;
+//    NSString* title = [self tableView:tableView titleForFooterInSection:section];
+//    return title.length > 0 ? [DDGSettingsViewController createSectionFooterView:title] : nil;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
     [self save:nil];
+    [tableView deselectRowAtIndexPath:indexPath animated:TRUE];
 }
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
-    DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
-    DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)    
+    [DDGSettingsViewController configureSettingsCell:cell];
+    IGFormElement* thisElement = [self elementAtIndexPath:indexPath];
+    if(thisElement==self.clearRecentsButton && self.numberOfRecents<=0) {
+        cell.textLabel.textColor = [UIColor lightGrayColor];
+    }
     
     return cell;
 }

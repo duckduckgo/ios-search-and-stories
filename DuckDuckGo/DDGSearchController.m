@@ -12,15 +12,16 @@
 #import "DDGBangsProvider.h"
 #import "DDGInputAccessoryView.h"
 #import "DDGBookmarksViewController.h"
-#import "DDGAutocompleteViewController.h"
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
-#import "DDGPanGestureRecognizer.h"
+#import "DDGAddressBarTextField.h"
 
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
 #import "DDGDuckViewController.h"
+#import "UIViewController+DDGSearchController.h"
+#import "DDGUtility.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -32,34 +33,40 @@ NSString * const emailRegEx =
 @"-\\x5a\\x53-\\x7f]|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
 
 @interface DDGSearchController () <DDGPopoverViewControllerDelegate>
-@property (nonatomic, weak, readwrite) id<DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
+@property (nonatomic, strong) DDGDuckViewController* autocompleteController;
 @property (nonatomic, strong) NSManagedObjectContext *managedObjectContext;
-@property (nonatomic, strong) NSMutableArray *controllers;
 @property (nonatomic, getter = isDraggingTopViewController) BOOL draggingTopViewController;
 @property (nonatomic, copy) void (^keyboardDidHideBlock)(BOOL completed);
 @property (nonatomic, strong) DDGPopoverViewController *bangInfoPopover;
+@property (nonatomic, strong) DDGPopoverViewController *autocompletePopover;
 @property (nonatomic, strong) NSPredicate *emailPredicate;
-@property (nonatomic, strong) UIPageViewController *pageViewController;
+@property (nonatomic, strong) UINavigationController *navController;
 @property (nonatomic) BOOL showBangTooltip;
 @property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
+@property (nonatomic, weak) UIView* customToolbar;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* contentBottomConstraint;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint* searchBarMaxWidthConstraint;
+@property UIView* shadowView;
 
 @end
 
 @implementation DDGSearchController {
     id keyboardDidHideObserver;
-    id keyboardWillShowObserver;
+    id keyboardDidShowObserver;
     id keyboardWillHideObserver;
 }
 
--(id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext; {
+-(id)initWithHomeController:(DDGHomeViewController*)homeController
+      managedObjectContext:(NSManagedObjectContext *)managedObjectContext
+{
 	self = [super initWithNibName:@"DDGSearchController" bundle:nil];
     
 	if (self) {
-        self.searchHandler = searchHandler;
+        self.homeController = homeController;
         self.managedObjectContext = managedObjectContext;
-        self.controllers = [NSMutableArray arrayWithCapacity:2];
         self.showBangTooltip = ![[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingSuppressBangTooltip];
+        self.shouldPushSearchHandlerEvents = YES;
 	}
 	return self;
 }
@@ -68,116 +75,65 @@ NSString * const emailRegEx =
     if (nil != self.keyboardDidHideBlock)
         self.keyboardDidHideBlock(NO);
     self.keyboardDidHideBlock = nil;
-//    [[NSNotificationCenter defaultCenter] removeObserver:self];
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
-    [center removeObserver:keyboardWillShowObserver];
+    [center removeObserver:keyboardDidShowObserver];
     [center removeObserver:keyboardWillHideObserver];
     [center removeObserver:keyboardDidHideObserver];
     [self.view removeFromSuperview];
-}
-
-- (CGRect)contentRect {
-    [self view];
-    
-    CGRect searchbarRect = self.searchBar.frame;
-    CGRect frame = self.view.bounds;
-    CGRect intersection = CGRectIntersection(frame, searchbarRect);
-    frame.origin.y = intersection.origin.y + intersection.size.height;
-    frame.size.height = frame.size.height - frame.origin.y;
-    
-    return frame;
 }
 
 - (void)setSearchBarOrangeButtonImage {
     
     UIImage *image = nil;
     
-    if ([self.controllers count] > 1) {
-        UIViewController *incommingViewController = [self.controllers objectAtIndex:self.controllers.count-2];
-        image = [incommingViewController searchControllerBackButtonIconDDG];
+    if(self.navController.viewControllers.count > 1) {
+        UIViewController *incomingViewController = self.rootViewInNavigator;
+        image = incomingViewController.searchControllerBackButtonIconDDG;
     }
     
-    if (image == nil)
-        image = [[UIImage imageNamed:@"Menu"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    if (image == nil) {
+        image = [[UIImage imageNamed:@"Home"] imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+    }
     
     [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
-    [self.searchBar.orangeButton setImage:nil forState:UIControlStateHighlighted];
 }
 
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
-    
     if (self.isTransitioningViewControllers)
         return;
-    
-    NSTimeInterval duration = (animated) ? 0.3 : 0.0;    
-    
-    [self.controllers addObject:contentController];
-    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
-    [self setSearchBarOrangeButtonImage];
-    
-    NSInteger count = self.controllers.count-1;
-    for (NSInteger i=0; i<count; i++)
-        [self clearScrollsToTop:[[self.controllers objectAtIndex:i] view]];
-    [contentController reenableScrollsToTop];
-    
-    self.transitioningViewControllers = YES;
-    __weak DDGSearchController *weakSelf = self;
-    [self.pageViewController setViewControllers:@[contentController]
-                                      direction:UIPageViewControllerNavigationDirectionForward
-                                       animated:animated
-                                     completion:^(BOOL finished) {
-                                         weakSelf.transitioningViewControllers = NO;
-                                     }];
-    
-    if (self.controllers.count == 1)
-        [self configurePanGestureForViewController:contentController];
-}
-
-- (void)configurePanGestureForViewController:(UIViewController *)viewController {
-    UIGestureRecognizer *panGesture = [self.slideOverMenuController panGesture];
-    if (nil == panGesture)
-        return;
-    
-    for (UIGestureRecognizer *g in viewController.view.gestureRecognizers) {
-        if ([g isKindOfClass:[UIPanGestureRecognizer class]])
-            [g requireGestureRecognizerToFail:panGesture];
+    if([contentController isKindOfClass:DDGDuckViewController.class]) {
+        ((DDGDuckViewController*)contentController).underPopoverMode = [self shouldUsePopover];
     }
-    [viewController.view addGestureRecognizer:panGesture];
+    [self view]; // force the view to be loaded
+    contentController.view.frame = self.background.frame;
+    [self.navController pushViewController:contentController animated:animated];
+    [self updateToolbars:FALSE];
 }
 
 - (BOOL)canPopContentViewController {
-    return ([self.controllers count] > 1 && !self.isTransitioningViewControllers);
+    return self.navController.viewControllers.count > 1 && !self.isTransitioningViewControllers;
 }
 
 - (void)popContentViewControllerAnimated:(BOOL)animated {
     if ([self canPopContentViewController]) {
         NSTimeInterval duration = (animated) ? 0.3 : 0.0;
         
-        UIViewController *popped = [self.controllers lastObject];
-        [self clearScrollsToTop:popped.view];
+        [self setState:DDGSearchControllerStateHome animationDuration:duration];
+        [self setSearchBarOrangeButtonImage];
+        [self.searchBar.searchField resetField];
+        [self setProgress:1.0f animated:FALSE];
         
-        [self.controllers removeLastObject];
-        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];        
-        [self setSearchBarOrangeButtonImage];        
-        
-        UIViewController *contentController = [self.controllers lastObject];
-        [contentController reenableScrollsToTop];
-        
-        self.transitioningViewControllers = YES;        
-        __weak DDGSearchController *weakSelf = self;
-        [self.pageViewController setViewControllers:@[contentController]
-                                          direction:UIPageViewControllerNavigationDirectionReverse
-                                           animated:animated
-                                         completion:^(BOOL finished) {
-                                             weakSelf.transitioningViewControllers = NO;
-                                         }];
-        
-        [contentController reenableScrollsToTop];
+        [self.navController popViewControllerAnimated:animated];
     }
 }
 
+-(UIViewController*)rootViewInNavigator {
+    NSArray* navigableViewControllers = self.navController.viewControllers;
+    return navigableViewControllers.count>0 ? navigableViewControllers[0] : nil;
+}
+
 - (NSArray *)contentControllers {
-    return [self.controllers copy];
+    return [self.navController.viewControllers copy];
 }
 
 - (DDGHistoryProvider *)historyProvider {
@@ -193,104 +149,151 @@ NSString * const emailRegEx =
 
 - (void)viewWillLayoutSubviews
 {
-	if (self.view.frame.origin.y < 0.0)
-	{
-//		// uncoment these lines to get/see a nicely formatted view hiearchy dump
-//		NSMutableString *s = [NSMutableString string];
-//		[s dumpView:self.view atIndent:0];
-//		NSLog (@"DDGSearchController:viewWILLLayoutSubviews \n%@", s);
-
-		// repair damage occuring deep in the bowels of this view hiearchy
-		CGRect r = self.view.frame;
-		r.origin.y = 0.0;
-		self.view.frame = r;
+	if (self.view.frame.origin.y < 0.0)	{
+        self.contentBottomConstraint.constant = 0;
 	}
+    UIViewController* contentController = [self.contentControllers lastObject];
+    if([contentController isKindOfClass:DDGDuckViewController.class]) {
+        ((DDGDuckViewController*)contentController).underPopoverMode = [self shouldUsePopover];
+    }
+}
+
+-(void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    if(self.autocompletePopover.isBeingPresented) {
+        self.autocompletePopover.intrusion = 0 + [((UIViewController*)[self.contentControllers lastObject]) duckPopoverIntrusionAdjustment];
+        CGRect autocompleteRect = self.autocompleteController.view.frame;
+        autocompleteRect.origin.x = 0;
+        autocompleteRect.origin.y = 0;
+        autocompleteRect.size.width = self.searchBar.frame.size.width + 4;
+        autocompleteRect.size.height = 490;
+        self.autocompleteController.preferredContentSize = autocompleteRect.size;
+        [self.autocompletePopover presentPopoverFromView:self.searchBar permittedArrowDirections:UIPopoverArrowDirectionAny animated:FALSE];
+    }
+}
+
+-(BOOL)shouldUsePopover {
+    if([self respondsToSelector:@selector(traitCollection)]) {
+        return self.traitCollection.horizontalSizeClass==UIUserInterfaceSizeClassRegular;
+    }
+    return IPAD;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.edgesForExtendedLayout = UIRectEdgeNone;
+    [self.searchBar setShowsBangButton:NO animated:NO];
     
-    [[self.searchBar bangButton] setImage:[[UIImage imageNamed:@"Bang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                 forState:UIControlStateNormal];
+    [self.searchBarWrapper setBackgroundColor:[UIColor duckSearchBarBackground]];
     
-    DDGAutocompleteViewController *autocompleteVC = [[DDGAutocompleteViewController alloc] initWithStyle:UITableViewStylePlain];
-    autocompleteVC.historyProvider = self.historyProvider;
-    self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:autocompleteVC];
-    _autocompleteNavigationController.delegate = self;
-    [self addChildViewController:_autocompleteNavigationController];
-    [_background addSubview:_autocompleteNavigationController.view];
-    _autocompleteNavigationController.view.frame = _background.bounds;
-    [_autocompleteNavigationController didMoveToParentViewController:self];
-    // [_autocompleteNavigationController pushViewController:autocompleteVC animated:NO];
-    
-    [self revealBackground:NO animated:NO];
+    if(self.autocompleteController==nil) {
+        self.autocompleteController = [[DDGDuckViewController alloc] initWithSearchController:self managedObjectContext:self.managedObjectContext];
+        self.autocompleteController.historyProvider = self.historyProvider;
+    }
     
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
-    searchField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:NSLocalizedString(@"SearchPlaceholder", nil)
-                                                                        attributes:@{NSForegroundColorAttributeName: RGBA(128.0f, 128.0f, 128.0f, 1.0f)}];
-    
     [searchField addTarget:self action:@selector(searchFieldDidChange:) forControlEvents:UIControlEventEditingChanged];
+    [searchField.stopButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [searchField.reloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
     
-    stopOrReloadButton = [[UIButton alloc] init];
-    stopOrReloadButton.frame = CGRectMake(0, 0, 31, 31);
-    [stopOrReloadButton addTarget:self action:@selector(stopOrReloadButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];
     
-    unusedBangButtons = [[NSMutableArray alloc] initWithCapacity:50];    
-    
-    [self createInputAccessory];
-    
-	searchField.rightViewMode = UITextFieldViewModeAlways;
-	searchField.leftViewMode = UITextFieldViewModeAlways;
-	searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
+    searchField.leftViewMode = UITextFieldViewModeAlways;
+    searchField.leftView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"spacer8x16.png"]];
 	searchField.delegate = self;    
-    
-    /*
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(keyboardDidHide:) name:UIKeyboardDidHideNotification object:nil];
-    */
     
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     NSOperationQueue *queue = [NSOperationQueue mainQueue];
     __weak typeof(self) weakSelf = self;
-    keyboardWillShowObserver = [center addObserverForName:UIKeyboardWillShowNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
-        if (weakSelf) {
-            [weakSelf keyboardWillShow:note];
-        }
+    keyboardDidShowObserver = [center addObserverForName:UIKeyboardWillShowNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
+        [weakSelf keyboardDidShow:note];
     }];
     keyboardWillHideObserver = [center addObserverForName:UIKeyboardWillHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
-        if (weakSelf) {
-            [weakSelf keyboardWillHide:note];
-        }
+        [weakSelf keyboardWillHide:note];
     }];
     keyboardDidHideObserver = [center addObserverForName:UIKeyboardDidHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
-        if (weakSelf) {
-            [weakSelf keyboardDidHide:note];
-        }
+        [weakSelf keyboardDidHide:note];
     }];
+    UINavigationController* navController = [[UINavigationController alloc] init];
+    navController.navigationBarHidden = TRUE;
+    navController.view.backgroundColor = [UIColor duckSearchBarBackground];
+    navController.interactivePopGestureRecognizer.enabled = TRUE;
+    navController.interactivePopGestureRecognizer.delegate = self;
+    navController.delegate = self;
+    navController.view.frame = self.background.frame;
+    [self addChildViewController:navController];
+    [self.view insertSubview:navController.view belowSubview:self.background];
+    [navController didMoveToParentViewController:self];
+    self.navController = navController;
     
-    UIPageViewController *pageViewController = [[UIPageViewController alloc] initWithTransitionStyle:UIPageViewControllerTransitionStyleScroll
-                                                                               navigationOrientation:UIPageViewControllerNavigationOrientationHorizontal
-                                                                                             options:@{
-                                                       UIPageViewControllerOptionInterPageSpacingKey: @10.f
-                                                }];
-    pageViewController.delegate = self;
-    pageViewController.dataSource = self;
+    CGRect searchBarFrame = self.searchBar.frame;
+    self.shadowView = [[UIView alloc] initWithFrame:CGRectMake(0, searchBarFrame.origin.y + searchBarFrame.size.height,
+                                                               self.view.frame.size.width, 0.5)];
+    self.shadowView.opaque = FALSE;
+    self.shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.15];
+    self.shadowView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    [self.view addSubview:self.shadowView];
     
-    pageViewController.view.backgroundColor = [UIColor duckNoContentColor];
-    pageViewController.view.frame = [self contentRect];
+    // this is a hack to workaround an iOS text field bug that causes the first setText: to
+    // animate the text in from {0,0} instead of just setting it.
+    self.searchBar.searchField.text = @" ";
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.searchBar.searchField.text = @"";
+    });
     
-    [self addChildViewController:pageViewController];
-    [self.view insertSubview:pageViewController.view belowSubview:self.background];
-    [pageViewController didMoveToParentViewController:self];
-    
-    self.pageViewController = pageViewController;
+    [self setNeedsStatusBarAppearanceUpdate];
+    [self revealAutocomplete:FALSE animated:FALSE];
 }
+
+
+- (UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
+}
+
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation {
     // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return YES;
+}
+
+-(void)updateiPadSearchBarToLandscape:(BOOL)isLandscape
+{
+    if(IPAD) {
+        self.searchBarMaxWidthConstraint.constant = isLandscape ? 514 : 414;
+    }
+}
+
+//-(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+//{
+//    if(IPAD) {
+//        [self updateiPadSearchBarToLandscape:(size.width > size.height)];
+//    }
+//}
+
+-(void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [self updateiPadSearchBarToLandscape:UIInterfaceOrientationIsLandscape(toInterfaceOrientation)];
+    if(self.autocompletePopover.isBeingPresented) {
+        //self.autocompletePopover.view.alpha = 0.0;
+    }
+}
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    if(self.autocompletePopover.isBeingPresented) {
+        self.autocompletePopover.intrusion = 0 + [((UIViewController*)[self.contentControllers lastObject]) duckPopoverIntrusionAdjustment];
+        CGRect autocompleteRect = self.autocompleteController.view.frame;
+        autocompleteRect.origin.x = 0;
+        autocompleteRect.origin.y = 0;
+        autocompleteRect.size.width = self.searchBar.frame.size.width + 4;
+        autocompleteRect.size.height = 490;
+        self.autocompleteController.preferredContentSize = autocompleteRect.size;
+        //self.autocompletePopover.view.alpha = 1.0;
+    }
 }
 
 - (void)viewDidUnload {
@@ -300,7 +303,54 @@ NSString * const emailRegEx =
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [self.searchBar layoutIfNeeded];
     [super viewWillAppear:animated];
+    [self updateiPadSearchBarToLandscape:UIInterfaceOrientationIsLandscape(self.interfaceOrientation)];
+    
+    if([self shouldUsePopover]) {
+        if(self.autocompleteNavigationController) {
+            [self.autocompleteNavigationController.view removeFromSuperview];
+            [self.autocompleteNavigationController removeFromParentViewController];
+            self.autocompleteNavigationController = nil;
+            
+            [self.autocompleteController removeFromParentViewController];
+            [self.autocompleteController.view removeFromSuperview];
+        }
+        
+        [self.background removeFromSuperview];
+        self.autocompleteController.popoverMode = TRUE;
+        if(self.autocompletePopover==nil) {
+            self.autocompletePopover = [[DDGPopoverViewController alloc] initWithContentViewController:self.autocompleteController
+                                                                               andTouchPassthroughView:self.view];
+            self.autocompletePopover.delegate = self;
+            self.autocompletePopover.shouldAbsorbAndDismissUponDimmedViewTap = TRUE;
+            self.autocompletePopover.hideArrow = TRUE;
+            self.autocompletePopover.popoverParentController = self;
+            self.autocompletePopover.shouldDismissUponOutsideTap = FALSE;
+        }
+    } else {
+        if(self.autocompletePopover) {
+            [self.autocompletePopover removeFromParentViewController];
+            [self.autocompletePopover.view removeFromSuperview];
+            self.autocompletePopover = nil;
+            
+            [self.autocompleteController removeFromParentViewController];
+            [self.autocompleteController.view removeFromSuperview];
+        }
+        
+        if(self.autocompleteNavigationController==nil) {
+            [self.autocompleteController removeFromParentViewController];
+            self.autocompleteNavigationController = [[UINavigationController alloc] initWithRootViewController:self.autocompleteController];
+            self.autocompleteNavigationController.delegate = self;
+            [self addChildViewController:self.autocompleteNavigationController];
+            self.autocompleteNavigationController.view.frame = _background.bounds;
+            [self.background addSubview:self.autocompleteNavigationController.view];
+            [self.autocompleteNavigationController didMoveToParentViewController:self];
+        }
+        
+        [self revealAutocomplete:NO animated:NO];
+    }
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -308,10 +358,9 @@ NSString * const emailRegEx =
     [super viewDidAppear:animated];
     
     NSAssert(self.state != DDGSearchControllerStateUnknown, nil);
-    
-    if ([self.controllers count] > 0) {
-        [self configurePanGestureForViewController:[self.controllers objectAtIndex:0]];
-    }
+ 
+    UIViewController* currentVC = [self.contentControllers lastObject];
+    [currentVC viewDidAppear:animated];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -324,64 +373,7 @@ NSString * const emailRegEx =
     [super viewDidDisappear:animated];
 }
 
-#pragma mark - UIPageViewControllerDelegate, UIPageViewControllerDataSource
 
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
-      viewControllerBeforeViewController:(UIViewController *)viewController {
-    
-    NSUInteger i = [self.controllers indexOfObject:viewController];
-    if (i == NSNotFound || i == 0) {
-        return nil;
-    }
-    return self.controllers[i - 1];
-}
-
-- (UIViewController *)pageViewController:(UIPageViewController *)pageViewController
-       viewControllerAfterViewController:(UIViewController *)viewController {
-    
-    NSUInteger i = [self.controllers indexOfObject:viewController];
-    if (i == NSNotFound || i == (self.controllers.count - 1)) {
-        return nil;
-    }
-    return self.controllers[i + 1];
-}
-
-- (void)pageViewController:(UIPageViewController *)pageViewController willTransitionToViewControllers:(NSArray *)pendingViewControllers {
-    self.transitioningViewControllers = YES;
-}
-
-- (void)pageViewController:(UIPageViewController *)pageViewController
-        didFinishAnimating:(BOOL)finished
-   previousViewControllers:(NSArray *)previousViewControllers
-       transitionCompleted:(BOOL)completed {
-    self.transitioningViewControllers = NO;
-    
-    /* Workaround for the fact didFinishAnimating and transitionCompleted always return YES */
-    /* [self.pageViewControllers viewControllers] only ever holds a single object; the current view controller */
-    UIViewController *currentViewController = [[self.pageViewController viewControllers] firstObject];
-    /* We only ever push or pop a single view controller at a time */
-    UIViewController *previousViewController = [previousViewControllers firstObject];
-    /* If the current view controller is the same as the previous one, we haven't changed page, despite what transitionCompleted states */
-    if (currentViewController == previousViewController) {
-        return;
-    }
-    
-    if (completed) {
-        UIViewController *viewController = [previousViewControllers lastObject];
-        NSUInteger index = [self.controllers indexOfObject:viewController];
-        if (index != NSNotFound) {
-            NSRange range = NSMakeRange(index, self.controllers.count - index);
-            NSArray *poppedControllers = [self.controllers subarrayWithRange:range];
-            for (UIViewController *v in poppedControllers) {
-                [self clearScrollsToTop:v.view];
-            }
-            [self.controllers removeObjectsInRange:range];
-        }        
-        [[self.controllers lastObject] reenableScrollsToTop];
-        [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:0.2];
-        [self setSearchBarOrangeButtonImage];
-    }
-}
 
 #pragma mark - Keyboard notifications
 
@@ -389,19 +381,12 @@ NSString * const emailRegEx =
     [self.searchBar.searchField resignFirstResponder];
 }
 
--(void)keyboardWillShow:(NSNotification *)notification {
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(slidingViewTopDidAnchorRight:)
-                                                 name:DDGSlideOverMenuDidAppearNotification
-                                               object:nil];
-    [self keyboardWillShow:YES notification:notification];
+-(void)keyboardDidShow:(NSNotification *)notification {
+    [self keyboardIsShowing:YES notification:notification];
 }
 
 -(void)keyboardWillHide:(NSNotification *)notification {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuDidAppearNotification
-                                                  object:nil];
-    [self keyboardWillShow:NO notification:notification];
+    [self keyboardIsShowing:NO notification:notification];
 }
 
 -(void)keyboardDidHide:(NSNotification *)notification {
@@ -410,59 +395,39 @@ NSString * const emailRegEx =
     self.keyboardDidHideBlock = nil;
 }
 
--(void)keyboardWillShow:(BOOL)show notification:(NSNotification*)notification {
+-(void)keyboardIsShowing:(BOOL)show notification:(NSNotification*)notification {
     NSDictionary *info = [notification userInfo];
     CGRect keyboardBegin = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
     keyboardBegin = [self.view.superview convertRect:keyboardBegin fromView:nil];
     CGRect keyboardEnd = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
     keyboardEnd = [self.view.superview convertRect:keyboardEnd fromView:nil];
     double dy = keyboardEnd.origin.y - keyboardBegin.origin.y;
-    if(ABS(dy) < 1) {
-        
+    if(ABS(dy) > 0) {
         // this isn't a standard up/down animation so don't try animating
-        
-        [self revealInputAccessory:show animationDuration:0.0];
-        
         double delayInSeconds = (show ? [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] : 0.0);
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-            CGRect f = self.view.frame;
-            
-            if(show)
-                f.size.height = self.view.superview.bounds.size.height - f.origin.y - keyboardEnd.size.height;
-            else
-                f.size.height = self.view.superview.bounds.size.height - f.origin.y;
-            
-            self.view.frame = f;
+            if(show) {
+                self.contentBottomConstraint.constant = -keyboardEnd.size.height + 50; // 50 to accomodate for the bottom toolbar
+                [self.view layoutIfNeeded];
+            } else {
+                self.contentBottomConstraint.constant = 0;
+                [self.view layoutIfNeeded];
+            }
         });
-                
-    } else {
-        double duration = [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue];
-        [self revealInputAccessory:show animationDuration:duration];
         
-        UIViewController *controller = [self.controllers lastObject];
+    } else {
+        UIViewController *controller = self.navController.visibleViewController;
         if ([controller isKindOfClass:[DDGDuckViewController class]]) {
             [controller.view layoutIfNeeded];
         }
-        [UIView animateWithDuration:duration
-                              delay:0
-                            options:[[info objectForKey:UIKeyboardAnimationCurveUserInfoKey] intValue]
-                         animations:^{
-                             if ([controller isKindOfClass:[DDGDuckViewController class]]) {
-                                 [(DDGDuckViewController *)controller updateContainerHeightConstraint:show];
-                                 [controller.view layoutIfNeeded];
-                             }
-                             CGRect f = self.view.frame;
-                             f.size.height = keyboardEnd.origin.y - f.origin.y;
-                             self.view.frame = f;
-                         } completion:nil];
     }
 }
 
 #pragma mark - DDGSearchHandler
 
 -(void)searchControllerStopOrReloadButtonPressed {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         UIViewController <DDGSearchHandler> *searchHandler = (UIViewController <DDGSearchHandler> *)contentViewController;
         if([searchHandler respondsToSelector:@selector(searchControllerStopOrReloadButtonPressed)])
@@ -473,41 +438,45 @@ NSString * const emailRegEx =
     }
 }
 
--(void)searchControllerActionButtonPressed {
-    UIViewController *contentViewController = [self.controllers lastObject];
+-(void)searchControllerActionButtonPressed:(id)sender {
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         UIViewController <DDGSearchHandler> *searchHandler = (UIViewController <DDGSearchHandler> *)contentViewController;
-        if([searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
-            [searchHandler searchControllerActionButtonPressed];
+        if([searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed:)]) {
+            [searchHandler searchControllerActionButtonPressed:sender];
+        }
     } else {
-        if([_searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed)])
-            [_searchHandler searchControllerActionButtonPressed];
+        if([_searchHandler respondsToSelector:@selector(searchControllerActionButtonPressed:)]) {
+            [_searchHandler searchControllerActionButtonPressed:sender];
+        }
     }
 }
 
 -(void)searchControllerLeftButtonPressed {
     [self.searchBar.searchField resignFirstResponder];
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController searchControllerLeftButtonPressed];
     } else {
-        if ([self.controllers count] > 1)
+        if (self.navController.viewControllers.count > 1) {
             [self popContentViewControllerAnimated:YES];
-        else
+        } else {
             [_searchHandler searchControllerLeftButtonPressed];
+        }
     }
+    [self.searchBar.searchField resignFirstResponder];
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController loadQueryOrURL:queryOrURLString];
     } else {
         if (self.shouldPushSearchHandlerEvents) {
             DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
             webViewController.searchController = self;
-            [self pushContentViewController:webViewController animated:YES];
             [webViewController loadQueryOrURL:queryOrURLString];
+            [self pushContentViewController:webViewController animated:YES];
         } else {
             [_searchHandler loadQueryOrURL:queryOrURLString];
         }
@@ -515,7 +484,7 @@ NSString * const emailRegEx =
 }
 
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController loadStory:story readabilityMode:readabilityMode];
     } else {
@@ -524,6 +493,7 @@ NSString * const emailRegEx =
             webViewController.searchController = self;
             [self pushContentViewController:webViewController animated:YES];
             [webViewController loadStory:story readabilityMode:readabilityMode];
+            [self updateToolbars:TRUE];
         } else {
             [_searchHandler loadStory:story readabilityMode:readabilityMode];
         }
@@ -531,7 +501,7 @@ NSString * const emailRegEx =
 }
 
 -(void)prepareForUserInput {
-    UIViewController *contentViewController = [self.controllers lastObject];
+    UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController prepareForUserInput];
     } else {
@@ -542,11 +512,11 @@ NSString * const emailRegEx =
 #pragma mark - Interactions with search handler
 
 - (IBAction)actionButtonPressed:(id)sender {
-    [self searchControllerActionButtonPressed];
+    [self searchControllerActionButtonPressed:sender];
 }
 
 -(IBAction)bangButtonPressed:(UIButton*)sender {
-    [_autocompleteNavigationController popViewControllerAnimated:YES];
+    [self.autocompleteNavigationController popViewControllerAnimated:YES];
     [self bangButtonPressed];
 }
 
@@ -563,67 +533,78 @@ NSString * const emailRegEx =
         return;
     
 	_state = searchControllerState;
-    
     [self view];
     
     if(_state == DDGSearchControllerStateHome) {
-//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-default"] forState:UIControlStateNormal];
-//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"button_menu-onclick"] forState:UIControlStateHighlighted];
-        
         self.searchBar.showsCancelButton = NO;
-        self.searchBar.showsRightButton = NO;
-        self.searchBar.showsLeftButton = YES;
-
-        if (duration > 0)
-            [self.searchBar layoutIfNeeded:duration];
+        self.searchBar.showsLeftButton = NO;
+        self.homeController.alternateButtonBar = nil;
+        self.searchBar.progressView.percentCompleted = 100;
+        self.searchBar.showsBangButton = NO;
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+        if (duration > 0) [self.searchBar layoutIfNeeded:duration];
         
         [self clearAddressBar];
         
     } else if (_state == DDGSearchControllerStateWeb) {
-//        [self.searchBar.leftButton setImage:[UIImage imageNamed:@"home_button.png"] forState:UIControlStateNormal];
-//        [self.searchBar.leftButton setImage:nil forState:UIControlStateHighlighted];
-        
-        UIViewController *topViewController = [self.controllers lastObject];
-        BOOL showsRightButton = [topViewController respondsToSelector:@selector(searchControllerActionButtonPressed)];
-        
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = YES;
-        self.searchBar.showsRightButton = showsRightButton;        
-        self.searchBar.searchField.rightView = stopOrReloadButton;
+        self.searchBar.showsBangButton = NO;
+        self.homeController.alternateButtonBar = self.customToolbar;
         
-        if (duration > 0)
-            [self.searchBar layoutIfNeeded:duration];        
+        if (duration > 0) [self.searchBar layoutIfNeeded:duration];
     }
 }
+
+-(void)updateToolbars:(BOOL)animated
+{
+    NSTimeInterval duration = (animated) ? 0.3 : 0.0;
+    
+    [self.homeController setAlternateButtonBar:self.navController.topViewController.alternateToolbar animated:animated];
+    [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
+    [self setSearchBarOrangeButtonImage];
+}
+
 
 -(void)stopOrReloadButtonPressed {
     [self searchControllerStopOrReloadButtonPressed];
 }
 
 -(void)webViewStartedLoading {
-    [stopOrReloadButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+    if([self canPopContentViewController]) {
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeStop];
+    }
 }
 
 -(void)webViewCancelledLoading {
-    [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];
-    [self.searchBar.searchField cancel];
+    if([self canPopContentViewController]) {
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
+        [self.searchBar cancel];
+    }
 }
 
 -(void)webViewFinishedLoading {
-    [stopOrReloadButton setImage:[UIImage imageNamed:@"reload.png"] forState:UIControlStateNormal];
-    [self.searchBar.searchField finish];
+    if([self canPopContentViewController]) {
+        [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
+        [self.searchBar finish];
+    }
 }
 
 -(void)webViewCanGoBack:(BOOL)canGoBack {
-    if(canGoBack)
+    if(canGoBack) {
         [self.searchBar.orangeButton setImage:[[UIImage imageNamed:@"Back"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
                                      forState:UIControlStateNormal];
-    else
+    } else {
         [self setSearchBarOrangeButtonImage];
+    }
 }
 
 -(void)setProgress:(CGFloat)progress {
-    [self.searchBar.searchField setProgress:progress];
+    [self setProgress:progress animated:TRUE];
+}
+
+-(void)setProgress:(CGFloat)progress animated:(BOOL)animated {
+    [self.searchBar.progressView setPercentCompleted:((NSUInteger)(progress * 100)) animated:animated];
 }
 
 #pragma mark - Helper methods
@@ -703,11 +684,25 @@ NSString * const emailRegEx =
 #pragma mark - Nav controller delegate
 
 -(void)navigationController:(UINavigationController *)navigationController willShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
-    if(!autocompleteOpen)
-        return;
-    
-    BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
-    [self.searchBar setShowsLeftButton:showBackButton animated:YES];
+    if(self.autocompleteNavigationController==navigationController) {
+        if(!autocompleteOpen)
+            return;
+        BOOL showBackButton = (viewController != [navigationController.viewControllers objectAtIndex:0]);
+        [self.searchBar setShowsLeftButton:showBackButton animated:YES];
+    } else if(self.navController==navigationController) {
+        self.autocompletePopover.dimmedBackgroundView = viewController.dimmableContentView;
+        self.shadowView.hidden = [viewController isKindOfClass:DDGTabViewController.class];
+    }
+}
+
+-(void)navigationController:(UINavigationController *)navigationController didShowViewController:(UIViewController *)viewController animated:(BOOL)animated {
+    if(self.navController==navigationController) {
+        [self updateToolbars:animated];
+        if(viewController==self.rootViewInNavigator) {
+            [self.searchBar.searchField resetField];
+            [self setProgress:1.0f animated:FALSE];
+        }
+    }
 }
 
 #pragma mark - View management
@@ -715,25 +710,23 @@ NSString * const emailRegEx =
 // set up and reveal the autocomplete view
 -(void)revealAutocomplete {    
     // save search text in case user cancels input without navigating somewhere
-    if(!oldSearchText)
+    if(!oldSearchText) {
         oldSearchText = self.searchBar.searchField.text;
+    }
     barUpdated = NO;
     
-    if(![self isQuery:self.searchBar.searchField.text]) {
-        [self clearAddressBar];
-    }
+    self.searchBar.searchField.additionalLeftSideInset = 39; // set this inset before the animation begins
+    [self.searchBar.searchField layoutSubviews];
     
-    self.searchBar.searchField.rightView = nil;
-    [self revealBackground:YES animated:YES];
+    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+    [self revealAutocomplete:YES animated:YES];
     
-    [self.searchBar setShowsBangButton:YES animated:YES];
-            
-    self.searchBar.showsLeftButton = YES;    
-    self.searchBar.showsRightButton = NO;
-    self.searchBar.showsCancelButton = YES;
-    [self.searchBar layoutIfNeeded:0.25];
-    
-    [[self.slideOverMenuController panGesture] setEnabled:NO];
+    [UIView animateWithDuration:0.2f animations:^{
+        [self.searchBar setShowsBangButton:YES animated:FALSE];
+        [self.searchBar setShowsLeftButton:NO animated:FALSE];
+        [self.searchBar setShowsCancelButton:YES animated:FALSE];
+        [self.searchBar layoutIfNeeded];
+    }];
     
     autocompleteOpen = YES;
 }
@@ -745,72 +738,76 @@ NSString * const emailRegEx =
     
     autocompleteOpen = NO;
 
-    [[self.slideOverMenuController panGesture] setEnabled:YES];
-    
-    [self.searchBar.searchField resignFirstResponder];
     if(!barUpdated) {
         self.searchBar.searchField.text = oldSearchText;
         oldSearchText = nil;
     }
+    [self.searchBar.searchField resignFirstResponder];
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillCancel)])
         [_searchHandler searchControllerAddressBarWillCancel];
     
-    [self revealBackground:NO animated:YES];
-    if(self.state == DDGSearchControllerStateWeb)
-        self.searchBar.searchField.rightView = stopOrReloadButton;
-        
-    [self.searchBar setShowsBangButton:NO animated:YES];
+    [self revealAutocomplete:NO animated:YES];
     
     [self.bangInfoPopover dismissPopoverAnimated:YES];
     self.bangInfoPopover = nil;
     
-    self.searchBar.showsLeftButton = YES;
-    self.searchBar.showsRightButton = (self.state == DDGSearchControllerStateWeb);
-    self.searchBar.showsCancelButton = NO;
-    [self.searchBar layoutIfNeeded:0.25];
+    [UIView animateWithDuration:0.2f animations:^{
+        if(self.state == DDGSearchControllerStateWeb) {
+            [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+        }
+        
+        [self.searchBar setShowsLeftButton:(self.navController.viewControllers.count > 1) animated:NO];
+        [self.searchBar setShowsBangButton:NO animated:NO];
+        [self.searchBar setShowsCancelButton:NO animated:NO];
+        [self.searchBar layoutIfNeeded];
+    }];
+
 }
 
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
-- (void)revealBackground:(BOOL)reveal animated:(BOOL)animated {
-    
-    if(reveal)
-        [_autocompleteNavigationController viewWillAppear:animated];
-    else
-        [_autocompleteNavigationController viewWillDisappear:animated];
-    
-    if(animated)
-        [UIView animateWithDuration:0.25 animations:^{
+- (void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
+    if(self.autocompletePopover) {
+        if(reveal) {
+            self.autocompletePopover.intrusion = 0 + [((UIViewController*)[self.contentControllers lastObject]) duckPopoverIntrusionAdjustment];
+            CGRect autocompleteRect = self.autocompleteController.view.frame;
+            autocompleteRect.origin.x = 0;
+            autocompleteRect.origin.y = 0;
+            autocompleteRect.size.width = self.searchBar.frame.size.width + 4;
+            autocompleteRect.size.height = 490;
+            self.autocompleteController.view.frame = autocompleteRect;
+            self.autocompletePopover.preferredContentSize = autocompleteRect.size;
+            [self.autocompletePopover presentPopoverFromView:self.searchBar permittedArrowDirections:UIPopoverArrowDirectionAny animated:animated];
+        } else {
+            [self.autocompletePopover dismissPopoverAnimated:animated];
+        }
+    } else if(self.autocompleteNavigationController) {
+        if(self.autocompleteController==[self.contentControllers lastObject]) return;
+        if(reveal) {
+            [self.autocompleteNavigationController viewWillAppear:animated];
+        } else {
+            [self.autocompleteNavigationController viewWillDisappear:animated];
+        }
+        
+        if(animated) {
+            [UIView animateWithDuration:0.25 animations:^{
+                _background.alpha = (reveal ? 1.0 : 0.0);
+            } completion:^(BOOL finished) {
+                if(reveal) {
+                    [self.autocompleteNavigationController viewDidAppear:animated];
+                } else {
+                    [self.autocompleteNavigationController viewDidDisappear:animated];
+                }
+            }];
+        } else {
             _background.alpha = (reveal ? 1.0 : 0.0);
-        } completion:^(BOOL finished) {
-            if(reveal)
-                [_autocompleteNavigationController viewDidAppear:animated];
-            else
-                [_autocompleteNavigationController viewDidDisappear:animated];
-        }];
-    else {
-        _background.alpha = (reveal ? 1.0 : 0.0);
-        if(reveal)
-            [_autocompleteNavigationController viewDidAppear:animated];
-        else
-            [_autocompleteNavigationController viewDidDisappear:animated];
+            if(reveal) {
+                [self.autocompleteNavigationController viewDidAppear:animated];
+            } else {
+                [self.autocompleteNavigationController viewDidDisappear:animated];
+            }
+        }
     }
     
-}
-
-// fade in or out the input accessory– to be used on keyboard show/hide
--(void)revealInputAccessory:(BOOL)reveal animationDuration:(CGFloat)animationDuration {
-//    if(reveal) {
-//        [UIView animateWithDuration:animationDuration animations:^{
-//            inputAccessory.alpha = 1.0;
-//        } completion:^(BOOL finished) {
-//            [self positionNavControllerForInputAccessoryForceHidden:NO];
-//        }];
-//    } else {
-//        [self positionNavControllerForInputAccessoryForceHidden:YES];
-//        [UIView animateWithDuration:animationDuration animations:^{
-//            inputAccessory.alpha = 0.0;
-//        }];
-//    }
 }
 
 -(IBAction)cancelButtonPressed:(id)sender {
@@ -821,57 +818,27 @@ NSString * const emailRegEx =
     barUpdated = YES;
     NSString *query = [self queryFromDDGURL:url];
     self.searchBar.searchField.text = (query ? query : url.absoluteString);
+    oldSearchText = self.searchBar.searchField.text;
 }
 
 -(void)clearAddressBar {
     self.searchBar.searchField.text = @"";
-    self.searchBar.searchField.rightView = nil;
+    [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+    [self dismissAutocomplete];
 }
+
 
 #pragma mark - DDGPopoverViewControllerDelegate
 
 - (void)popoverControllerDidDismissPopover:(DDGPopoverViewController *)popoverController {
-    self.bangInfoPopover = nil;    
+    if(self.autocompletePopover==popoverController) {
+        [self dismissAutocomplete];
+    } else if(self.bangInfoPopover==popoverController) {
+        self.bangInfoPopover = nil;
+    }
 }
 
 #pragma mark - Input accessory (the bang button/bar)
-
--(void)createInputAccessory {
-    inputAccessory = [[DDGInputAccessoryView alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 46, self.view.bounds.size.width, 46)];
-    inputAccessory.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    inputAccessory.alpha = 0.0;
-    [self.view addSubview:inputAccessory];
-    
-    // add bang button
-    UIButton *bangButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
-    bangButton.frame = CGRectMake(0, 0, 46, 46);
-    bangButton.tag = 103;
-    [bangButton addTarget:self action:@selector(bangButtonPressed) forControlEvents:UIControlEventTouchUpInside];
-    [inputAccessory addSubview:bangButton];
-    
-    // add scroll view
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, inputAccessory.bounds.size.width, 46)];
-    scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    scrollView.showsHorizontalScrollIndicator = YES;
-    scrollView.contentSize = CGSizeMake(0, 46);
-    scrollView.tag = 102;
-    scrollView.hidden = YES;
-    [inputAccessory addSubview:scrollView];
-}
-
-// if the input accessory isn't hidden, but is about to hide, you can set forceHidden to position nav controller as though input accessory is hidden. Use this e.g. when animating inputAccessory, so the nav controller shows up behind it.
--(void)positionNavControllerForInputAccessoryForceHidden:(BOOL)forceHidden {
-    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
-    
-    CGRect f = _autocompleteNavigationController.view.frame;
-    if(scrollView.hidden || inputAccessory.hidden || inputAccessory.alpha < 0.1 || forceHidden) {
-        f.size.height = _autocompleteNavigationController.view.superview.bounds.size.height;
-    } else {
-        f.size.height = _autocompleteNavigationController.view.superview.bounds.size.height - 44.0;
-    }
-    _autocompleteNavigationController.view.frame = f;
-}
 
 - (IBAction)hideBangTooltipForever:(id)sender {
     self.showBangTooltip = NO;
@@ -893,132 +860,81 @@ NSString * const emailRegEx =
 -(void)bangButtonPressed {
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
     
-    if (self.showBangTooltip && nil == self.bangInfoPopover) {
-        if (!self.bangInfo)
-            [[NSBundle mainBundle] loadNibNamed:@"DDGBangInfo" owner:self options:nil];
-        
-        UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
-        viewController.view = self.bangInfo;
-        CGRect frame = self.bangInfo.frame;
-        frame.size.width = self.view.bounds.size.width - 20.0;
-        
-        CGRect textRect = CGRectInset(frame, 12.0, 0.0);
-        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
-        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
-        CGSize textSize = CGRectIntegral([self.bangTextView.text boundingRectWithSize:CGSizeMake(textRect.size.width, MAXFLOAT)
-                                                               options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
-                                                            attributes:@{NSFontAttributeName: self.bangTextView.font,
-                                                                         NSParagraphStyleAttributeName: paragraphStyle}
-                                                               context:nil]).size;
-        
-        frame.size.height = textSize.height + 28.0;
-        if(frame.size.height < self.bangInfo.frame.size.height)
-            frame.size.height = self.bangInfo.frame.size.height;
-        
-        viewController.preferredContentSize = frame.size;
-        
-        DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController];
-        popover.delegate = self;
-        CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
-        [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
-        self.bangInfoPopover = popover;
-    }
+//    if (self.showBangTooltip && nil == self.bangInfoPopover) {
+//        if (!self.bangInfo)
+//            [[NSBundle mainBundle] loadNibNamed:@"DDGBangInfo" owner:self options:nil];
+//        
+//        UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
+//        viewController.view = self.bangInfo;
+//        CGRect frame = self.bangInfo.frame;
+//        frame.size.width = self.view.bounds.size.width - 20.0;
+//        
+//        CGRect textRect = CGRectInset(frame, 12.0, 0.0);
+//        NSMutableParagraphStyle *paragraphStyle = [NSMutableParagraphStyle new];
+//        paragraphStyle.lineBreakMode = NSLineBreakByWordWrapping;
+//        CGSize textSize = CGRectIntegral([self.bangTextView.text boundingRectWithSize:CGSizeMake(textRect.size.width, MAXFLOAT)
+//                                                               options:NSStringDrawingUsesFontLeading | NSStringDrawingUsesLineFragmentOrigin
+//                                                            attributes:@{NSFontAttributeName: self.bangTextView.font,
+//                                                                         NSParagraphStyleAttributeName: paragraphStyle}
+//                                                               context:nil]).size;
+//        
+//        frame.size.height = textSize.height + 28.0;
+//        if(frame.size.height < self.bangInfo.frame.size.height) {
+//            frame.size.height = self.bangInfo.frame.size.height;
+//        }
+//        
+//        viewController.preferredContentSize = frame.size;
+//        
+//        DDGPopoverViewController *popover = [[DDGPopoverViewController alloc] initWithContentViewController:viewController
+//                                                                                    andTouchPassthroughView:self.view];
+//        popover.delegate = self;
+//        CGRect rect = [self.view convertRect:self.searchBar.bangButton.frame fromView:self.searchBar.bangButton.superview];
+//        [popover presentPopoverFromRect:rect inView:self.view permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+//        self.bangInfoPopover = popover;
+//    }
     
     NSString *text = searchField.text;
     NSString *textToAdd;
-    if(text.length==0 || [text characterAtIndex:text.length-1]==' ')
+    if(text.length==0 || [text characterAtIndex:text.length-1]==' ') {
         textToAdd = @"!";
-    else
+    } else {
         textToAdd = @" !";
+    }
     
     [self textField:searchField shouldChangeCharactersInRange:NSMakeRange(text.length, 0) replacementString:textToAdd];
     searchField.text = [searchField.text stringByAppendingString:textToAdd];
-    [(DDGAutocompleteViewController *)searchField.delegate searchFieldDidChange:nil];
+    [self.autocompleteController searchFieldDidChange:nil];
 }
 
 -(void)bangAutocompleteButtonPressed:(UIButton *)sender {
     DDGAddressBarTextField *searchField = self.searchBar.searchField;
     if(currentWordRange.location == NSNotFound) {
-        if(searchField.text.length == 0)
+        if(searchField.text.length == 0) {
             searchField.text = sender.titleLabel.text;
-        else
+        } else {
             [searchField setText:[searchField.text stringByAppendingFormat:@" %@",sender.titleLabel.text]];
+        }
     } else {
         [searchField setText:[searchField.text stringByReplacingCharactersInRange:currentWordRange withString:sender.titleLabel.text]];
     }
-}
-
--(void)loadSuggestionsForBang:(NSString *)bang {
-    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
-    
-    NSArray *suggestions = [DDGBangsProvider bangsWithPrefix:bang];
-    if(suggestions.count > 0) {
-        scrollView.hidden = NO;
-        [self positionNavControllerForInputAccessoryForceHidden:NO];
-        UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
-        [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button_open.png"] forState:UIControlStateNormal];
-        bangButton.hidden = YES;
-    }
-    UIImage *backgroundImg = [[UIImage imageNamed:@"empty_bang_button.png"] stretchableImageWithLeftCapWidth:7.0 topCapHeight:0];
-
-    for(NSDictionary *suggestionDict in suggestions) {
-        NSString *suggestion = [suggestionDict objectForKey:@"name"];
-
-        UIButton *button;
-        if([unusedBangButtons count] > 0) {
-            button = [unusedBangButtons lastObject];
-            [unusedBangButtons removeLastObject];
-        } else {
-            button = [UIButton buttonWithType:UIButtonTypeCustom];   
-            [button.titleLabel setFont:[UIFont boldSystemFontOfSize:17]];
-            [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [button setTitleShadowColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [button.titleLabel setShadowOffset:CGSizeMake(0, 1)];
-        }
-
-        [button setTitle:suggestion forState:UIControlStateNormal];
-        [button addTarget:self action:@selector(bangAutocompleteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        CGSize titleSize = [suggestion sizeWithAttributes:@{NSFontAttributeName: button.titleLabel.font}];
-        
-        [button setFrame:CGRectMake(scrollView.contentSize.width, 0, (titleSize.width > 30 ? titleSize.width + 20 : 50), 46)];
-        [button setBackgroundImage:backgroundImg forState:UIControlStateNormal];
-        scrollView.contentSize = CGSizeMake(scrollView.contentSize.width + button.frame.size.width, 46);
-        [scrollView addSubview:button];
-    }
-}
-
--(void)clearBangSuggestions {
-    UIScrollView *scrollView = (UIScrollView *)[inputAccessory viewWithTag:102];
-    
-    scrollView.contentSize = CGSizeMake(0, 46);
-    for(UIView *subview in scrollView.subviews) {
-        if([subview isKindOfClass:[UIButton class]]) {
-            [subview removeFromSuperview];
-            [unusedBangButtons addObject:subview];
-        }
-    }
-    
-    scrollView.hidden = YES;
-    [self positionNavControllerForInputAccessoryForceHidden:NO];
-    
-    UIButton *bangButton = (UIButton *)[inputAccessory viewWithTag:103];
-    [bangButton setBackgroundImage:[UIImage imageNamed:@"bang_button.png"] forState:UIControlStateNormal];
-    bangButton.hidden = NO;
 }
 
 #pragma mark - Text field delegate
 
 -(void)searchFieldDidChange:(id)sender
 {
-	if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete])
-	{
-		// autocomplete only when enabled
-		DDGAutocompleteViewController *autocompleteViewController = [_autocompleteNavigationController.viewControllers objectAtIndex:0];
-		if(_autocompleteNavigationController.topViewController != autocompleteViewController)
-			[_autocompleteNavigationController popToRootViewControllerAnimated:NO];
-		
-		[autocompleteViewController searchFieldDidChange:self.searchBar.searchField];
-	}
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete]) {
+        // autocomplete only when enabled
+        DDGDuckViewController *autocompleteViewController = [self.autocompleteNavigationController.viewControllers objectAtIndex:0];
+        if(self.autocompleteController!=nil) {
+            [self.autocompleteController searchFieldDidChange:self.searchBar.searchField];
+        } else {
+            if(self.autocompleteNavigationController.topViewController != autocompleteViewController) {
+                [self.autocompleteNavigationController popToRootViewControllerAnimated:NO];
+            }
+            [autocompleteViewController searchFieldDidChange:self.searchBar.searchField];
+        }
+    }
 }
 
 -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
@@ -1034,69 +950,57 @@ NSString * const emailRegEx =
     }
     
     NSString *newString = [textField.text stringByReplacingCharactersInRange:range withString:string];
-
+    
     if(newString.length == 0) {
         currentWordRange = NSMakeRange(NSNotFound, 0);
-        [self clearBangSuggestions];
         return YES; // there's nothing we can do with an empty string
     }
     
     // find word beginning
     unsigned long wordBeginning;
     for(wordBeginning = range.location + string.length; wordBeginning; wordBeginning--) {
-        if(wordBeginning == 0 || [newString characterAtIndex:wordBeginning - 1] == ' ')
+        if(wordBeginning == 0 || [newString characterAtIndex:wordBeginning - 1] == ' ') {
             break;
+        }
     }
 
     // find word end
     unsigned long wordEnd;
     for(wordEnd = wordBeginning; wordEnd < newString.length; wordEnd++) {
-        if(wordEnd == newString.length || [newString characterAtIndex:wordEnd] == ' ')
+        if(wordEnd == newString.length || [newString characterAtIndex:wordEnd] == ' ') {
             break;
+        }
     }
     
     currentWordRange = NSMakeRange(wordBeginning, wordEnd-wordBeginning);
-    
-    NSString *currentWord;
-    if(currentWordRange.length == 0)
-        currentWord = @"";
-    else
-        currentWord = [newString substringWithRange:currentWordRange];
-    
-    [self clearBangSuggestions];
-    if(currentWord.length > 0 && [currentWord characterAtIndex:0]=='!') {
-        [self loadSuggestionsForBang:currentWord];
-    }
     
     return YES;
 }
 
 - (BOOL)textFieldShouldClear:(UITextField *)textField {
 	// save search text in case user cancels input without navigating somewhere
-    if(!oldSearchText)
+    if(!oldSearchText) {
         oldSearchText = textField.text;
-    
-    [self clearBangSuggestions];
+    }
     
     return YES;
 }
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)])
+    if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)]) {
         [_searchHandler searchControllerAddressBarWillOpen];
+    }
     
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(dismissAutocomplete)
-                                                 name:DDGSlideOverMenuWillAppearNotification
-                                               object:nil];
 	return YES;
 }
 
-- (void)textFieldDidBeginEditing:(UITextField *)textField {
+-(void)textFieldDidBeginEditing:(UITextField *)textField {
     currentWordRange = NSMakeRange(NSNotFound, 0);
-	// only open autocomplete if not already open and it is enabled for use
-    if(!autocompleteOpen && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete])
+    // only open autocomplete if not already open and it is enabled for use
+    if(!autocompleteOpen && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingAutocomplete]) {
         [self revealAutocomplete];
+    }
+    [textField selectAll:nil];
 }
 
 - (BOOL)textFieldShouldEndEditing:(UITextField *)textField {
@@ -1104,9 +1008,6 @@ NSString * const emailRegEx =
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -1124,8 +1025,9 @@ NSString * const emailRegEx =
 
 - (void)performSearch:(NSString *)query;
 {
-    if (query.length > 0)
+    if (query.length > 0) {
         [self.historyProvider logSearchResultWithTitle:query];
+    }
     
     __weak DDGSearchController *weakSelf = self;
     [self dismissKeyboard:^(BOOL completed) {
@@ -1133,7 +1035,7 @@ NSString * const emailRegEx =
         [weakSelf dismissAutocomplete];
     }];
     
-    oldSearchText = nil;
+    oldSearchText = query;
 }
 
 -(void)dismissKeyboard:(void (^)(BOOL completed))completion {

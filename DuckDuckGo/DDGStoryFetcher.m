@@ -98,10 +98,10 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                     feed.feedDate = feedDate;
                     
                     if (!feed.isImageDownloaded) {
-                        NSLog(@"feed image is NOT downloaded, queueing download %@", feed.title);
+                        //NSLog(@"feed image is NOT downloaded, queueing download %@", feed.title);
                         [self downloadIconForFeed:feed];
                     } else {
-                        NSLog(@"feed image IS downloaded %@", feed.title);
+                        //NSLog(@"feed image IS downloaded %@", feed.title);
                     }
 
                 }
@@ -145,6 +145,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
     });
 }
 
+
 - (void)purgeSourcesOlderThanDate:(NSDate *)date inContext:(NSManagedObjectContext *)context
 {
     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
@@ -179,7 +180,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
             
             if ([JSON isKindOfClass:[NSArray class]]) {
                 NSArray *items = (NSArray *)JSON;
-                                
+                
                 NSDictionary *feedsByID = [self feedsByIDInContext:context enabledFeedsOnly:NO];
                 
                 feedDate = [NSDate date];
@@ -216,6 +217,7 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                     [story setValue:[feedsByID objectForKey:feedID] forKey:@"feed"];
                     
                     story.descriptionString = [storyDict valueForKey:@"description"];
+                    story.category = [storyDict valueForKey:@"category"];
                     story.imageURLString = [storyDict valueForKey:@"image"];
                     story.urlString = [storyDict valueForKey:@"url"];
                     story.title = [storyDict valueForKey:@"title"];
@@ -412,5 +414,34 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
         }
     }
 }
+
+
++(void)resetSourceFeedsToDefaultInContext:(NSManagedObjectContext*)context
+{
+    [context performBlockAndWait:^{
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
+        NSPredicate *notDefaultPredicate = [NSPredicate predicateWithFormat:@"enabled != %i", DDGStoryFeedStateDefault];
+        [request setPredicate:notDefaultPredicate];
+        
+        NSError *error = nil;
+        NSArray *feeds = [context executeFetchRequest:request error:&error];
+        if (nil == feeds) {
+            NSLog(@"error: %@", error);
+            return;
+        }
+        
+        for (DDGStoryFeed *feed in feeds) {
+            feed.enabled = feed.enabledByDefault;
+        }
+        
+        BOOL success = [context save:&error];
+        if (!success) {
+            NSLog(@"error: %@", error);
+        }
+    }];
+    
+}
+
+
 
 @end

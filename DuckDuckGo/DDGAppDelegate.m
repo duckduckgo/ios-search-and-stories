@@ -15,16 +15,14 @@
 #import "SDURLCache.h"
 #import "DDGSettingsViewController.h"
 #import "AFNetworking.h"
-#import "DDGUnderViewController.h"
 #import "DDGSearchController.h"
 #import "DDGSearchHandler.h"
 #import "NSString+URLEncodingDDG.h"
-#import "DDGFirstRunViewController.h"
-#import "DDGSlideOverMenuController.h"
 #import "DDGURLProtocol.h"
+#import "DDGHomeViewController.h"
 
 @interface DDGAppDelegate ()
-@property (nonatomic, weak) id <DDGSearchHandler> searchHandler;
+@property (nonatomic, strong) DDGHomeViewController* homeController;
 @property (readwrite, strong, nonatomic) NSManagedObjectContext *masterManagedObjectContext;
 @property (readwrite, strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (readwrite, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
@@ -41,12 +39,17 @@ static void uncaughtExceptionHandler(NSException *exception) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    [application setStatusBarStyle:UIStatusBarStyleLightContent];
+
     [NSURLProtocol registerClass:[DDGURLProtocol class]];
     
     NSSetUncaughtExceptionHandler(&uncaughtExceptionHandler);
     
-    NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
-    [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:DDGLastRefreshAttemptKey];
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    [defaults removeObjectForKey:@"lastRefreshAttempt"];
+    [defaults removeObjectForKey:@"lastRefreshFavorites"];
+    [defaults removeObjectForKey:@"lastRefreshRecents"];
+    [defaults removeObjectForKey:@"lastRefreshMisc"];
     
     //Set the global URL cache to SDURLCache, which caches to disk
     SDURLCache *urlCache = [[SDURLCache alloc] initWithMemoryCapacity:1024*1024*2 // 2MB mem cache
@@ -72,45 +75,23 @@ static void uncaughtExceptionHandler(NSException *exception) {
         
     //Active your audio session.
     ok = [audioSession setActive:YES error:&error];
-    if(!ok)
-        NSLog(@"%s audioSession setActive:YES error=%@", __PRETTY_FUNCTION__, error);
+    if(!ok) NSLog(@"%s audioSession setActive:YES error=%@", __PRETTY_FUNCTION__, error);
     
     
-    //Load default settings.
+    // Load default settings.
     [DDGSettingsViewController loadDefaultSettings];
-      
-    [[UINavigationBar appearance] setBackgroundColor:[UIColor duckLightGray]];
-    [[UINavigationBar appearance] setBackgroundImage:[UIImage new] forBarMetrics:UIBarMetricsDefault];
+//    [[UINavigationBar appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor duckRed],
+//                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }];
+//    [[UIBarButtonItem appearance] setTitleTextAttributes:@{ NSForegroundColorAttributeName: [UIColor duckRed],
+//                                                            NSFontAttributeName: [UIFont duckFontWithSize:21.0] }
+//                                                forState:UIControlStateNormal];
     
-    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window setBackgroundColor:[UIColor duckNoContentColor]];
+    //self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    [self.window setBackgroundColor:[UIColor duckSearchBarBackground]];
     
-    //Configure the sliding view controller
-    DDGUnderViewController *under = [[DDGUnderViewController alloc] initWithManagedObjectContext:self.managedObjectContext];
-    self.searchHandler = under;
-        
-    DDGSlideOverMenuController *menuController = [[DDGSlideOverMenuController alloc] initWithMode:DDGSlideOverMenuModeHorizontal];
-    menuController.menuViewController = under;
-    menuController.viewDidAppearCompletion = ^(DDGSlideOverMenuController *slideOverMenuController) {
-        if (![[NSUserDefaults standardUserDefaults] boolForKey:DDGUserDefaultHasShownFirstRunKey]) {
-            DDGFirstRunViewController *firstRunViewController = [DDGFirstRunViewController new];
-            [slideOverMenuController presentViewController:firstRunViewController animated:YES completion:nil];
-        }
-    };
-    [self.window setRootViewController:menuController];
-  
-    int type = DDGViewControllerTypeHome;
-    NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
-    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents]) {
-        type = DDGViewControllerTypeHistory;
-    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
-        type = DDGViewControllerTypeSaved;
-    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
-        type = DDGViewControllerTypeDuck;
-    }
-        
-    UIViewController *homeController = [under viewControllerForType:type];
-    menuController.contentViewController = homeController;
+    // main view controller
+    self.homeController = [DDGHomeViewController newHomeController];
+    self.window.rootViewController = self.homeController;
     
     [self.window makeKeyAndVisible];
     return YES;
@@ -125,7 +106,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
     if(![[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"])
         return NO;
     
-    //Let's see what the query is.
+    // Let's see what the query is.
     NSString *query = nil;
     NSArray *params = [[url query] componentsSeparatedByString:@"&"];
     for (NSString *param in params) {
@@ -136,9 +117,9 @@ static void uncaughtExceptionHandler(NSException *exception) {
     }
     
     if (query) {
-        [self.searchHandler loadQueryOrURL:query];
+        [self.homeController.currentSearchHandler loadQueryOrURL:query];
     } else {
-        [self.searchHandler prepareForUserInput];
+        [self.homeController.currentSearchHandler prepareForUserInput];
     }
 
     return YES;
@@ -261,6 +242,11 @@ static void uncaughtExceptionHandler(NSException *exception) {
     return _managedObjectContext;
 }
 
++(NSManagedObjectContext*)sharedManagedObjectContext {
+    return ((DDGAppDelegate*)[UIApplication sharedApplication].delegate).managedObjectContext;
+}
+
+
 // Returns the managed object model for the application.
 // If the model doesn't already exist, it is created from the application's model.
 - (NSManagedObjectModel *)managedObjectModel
@@ -289,13 +275,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     NSURL *storeURL = [docsDir URLByAppendingPathComponent:storeName];
     NSURL *storeWriteAheadLogURL = [docsDir URLByAppendingPathComponent:[storeName stringByAppendingString:@"-wal"]];
     NSURL *storeSharedMemoryURL = [docsDir URLByAppendingPathComponent:[storeName stringByAppendingString:@"-shm"]];
-    
-    if(![[NSFileManager defaultManager] fileExistsAtPath:[storeURL path]]) {
-        // this can happen if we were restored from an icloud backup, which can exclude the sqlite DB file.
-        // in those cases, we should require a refresh
-        NSDate *referenceDate = [NSDate dateWithTimeIntervalSince1970:0];
-        [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:DDGLastRefreshAttemptKey];
-    }
     
     NSError *error = nil;
     NSDictionary *options = @{NSMigratePersistentStoresAutomaticallyOption: @YES,

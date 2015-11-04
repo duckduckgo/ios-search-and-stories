@@ -8,13 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGSearchHandler.h"
-#import "DDGCustomDeleteViewController.h"
+#import "DDGMenuHistoryItemCell.h"
 
 @class DDGSearchController;
 
-@interface DDGBookmarksViewController : DDGCustomDeleteViewController <UITableViewDataSource, UITableViewDelegate>
-@property (nonatomic, strong) IBOutlet UITableView *tableView;
-@property (nonatomic, strong) IBOutlet UIView *noBookmarksView;
+@interface DDGBookmarksViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, DDGHistoryItemCellDelegate>
 @property (nonatomic, weak) DDGSearchController *searchController;
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 

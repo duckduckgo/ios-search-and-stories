@@ -10,6 +10,12 @@
 #import "DDGSearchController.h"
 
 @implementation UIViewController (DDGSearchController)
+
+
+-(UIView*)alternateToolbar {
+    return nil;
+}
+
 - (DDGSearchController *)searchControllerDDG
 {
     UIViewController *viewController = self.parentViewController;
@@ -24,16 +30,18 @@
     return nil;
 }
 
-- (void)reenableScrollsToTop {
-    for (UIViewController *v in self.childViewControllers)
-        [v reenableScrollsToTop];
+- (UIView*)dimmableContentView
+{
+    return self.view;
 }
 
-- (void)clearScrollsToTop:(UIView *)view {
-    if([view isKindOfClass:[UIScrollView class]])
-        ((UIScrollView *)view).scrollsToTop = NO;
-    
-    for(UIView *subview in view.subviews)
-        [self clearScrollsToTop:subview];
+- (void)duckGoToTopLevel
+{
+    DLog(@"duckToToTopLevel");
+}
+
+-(CGFloat)duckPopoverIntrusionAdjustment
+{
+    return 0.0f;
 }
 @end
