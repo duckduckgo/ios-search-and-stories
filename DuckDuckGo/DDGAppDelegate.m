@@ -11,6 +11,7 @@
 #endif
 
 #import "DDGAppDelegate.h"
+#import "DDGBookmarksProvider.h"
 #import "DDGHistoryProvider.h"
 #import "SDURLCache.h"
 #import "DDGSettingsViewController.h"
@@ -59,12 +60,25 @@ static void uncaughtExceptionHandler(NSException *exception) {
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     UIApplicationShortcutIcon * searchIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"SearchBar-Search"];
-    UIApplicationShortcutItem * recentSearch0 = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: @"border collie" localizedSubtitle: nil icon: searchIcon userInfo: nil];
-    UIApplicationShortcutItem * recentSearch1 = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: @"paoli" localizedSubtitle: nil icon: searchIcon userInfo: nil];
+    NSMutableArray *savedShortcuts = [[NSMutableArray alloc] init];
+
+    DDGBookmarksProvider *bookmarksProvider = [DDGBookmarksProvider sharedProvider];
+    for (NSDictionary *bookmark in bookmarksProvider.bookmarks) {
+        NSString *savedSearch = [bookmark valueForKey:@"title"];
+        UIApplicationShortcutItem *bookmarkShortcut = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: savedSearch localizedSubtitle: nil icon: searchIcon userInfo: nil];
+        [savedShortcuts addObject:bookmarkShortcut];
+    }
     
-    
-    
-    [UIApplication sharedApplication].shortcutItems = @[recentSearch0, recentSearch1];
+    DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    for (DDGHistoryItem *recent in historyProvider.allHistoryItems) {
+        if (!recent.story) {
+            UIApplicationShortcutItem *recentShortcut = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: recent.title localizedSubtitle: nil icon: searchIcon userInfo: nil];
+            [savedShortcuts addObject:recentShortcut];
+        }
+    }
+
+    //NSLog(@"Saved Shortcuts: %@", savedShortcuts);
+    [[UIApplication sharedApplication] setShortcutItems: savedShortcuts];
     
     
     UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKey:UIApplicationLaunchOptionsShortcutItemKey];
