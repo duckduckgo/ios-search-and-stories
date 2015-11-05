@@ -19,6 +19,8 @@
 +(DDGHomeViewController*)newHomeController;
 -(id<DDGSearchHandler>)currentSearchHandler;
 
+-(void)showSearchAndPrepareInput;
+-(void)showSaved;
 -(void)setHideToolbar:(BOOL)hideToolbar withScrollview:(UIScrollView*)scrollView;
 -(void)setAlternateButtonBar:(UIView *)alternateButtonBar animated:(BOOL)animated;
 -(void)registerScrollableContent:(UIScrollView*)contentView;

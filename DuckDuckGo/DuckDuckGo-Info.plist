@@ -6,11 +6,19 @@
 	<array>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
+			<string>SearchBar-Search</string>
+			<key>UIApplicationShortcutItemTitle</key>
+			<string>Search</string>
+			<key>UIApplicationShortcutItemType</key>
+			<string>com.duckduckgo.mobile.ios.newSearch</string>
+		</dict>
+		<dict>
+			<key>UIApplicationShortcutItemIconFile</key>
 			<string>webbar-fav</string>
 			<key>UIApplicationShortcutItemTitle</key>
-			<string>Saved Searches</string>
+			<string>Saved</string>
 			<key>UIApplicationShortcutItemType</key>
-			<string>com.duckduckgo.mobile.ios.bookmarks</string>
+			<string>com.duckduckgo.mobile.ios.saved</string>
 		</dict>
 	</array>
 	<key>CFBundleDevelopmentRegion</key>

@@ -39,15 +39,38 @@ static void uncaughtExceptionHandler(NSException *exception) {
     NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
 }
 
+- (void)handleShortCutItem:(UIApplicationShortcutItem *)shortcutItem  {
+    NSLog(@"handleShortCutItem: %@", shortcutItem.type);
+    if([shortcutItem.type isEqualToString:@"com.duckduckgo.mobile.ios.search"]){
+        [self.homeController.currentSearchHandler loadQueryOrURL:shortcutItem.localizedTitle];
+    } else if ([shortcutItem.type isEqualToString:@"com.duckduckgo.mobile.ios.newSearch"]) {
+        [self.homeController showSearchAndPrepareInput];
+    } else if ([shortcutItem.type isEqualToString:@"com.duckduckgo.mobile.ios.saved"]) {
+        [self.homeController showSaved];
+    }
+}
+
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
+    if (shortcutItem) {
+        [self handleShortCutItem:shortcutItem];
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     UIApplicationShortcutIcon * searchIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"SearchBar-Search"];
-    UIApplicationShortcutItem * borderCollieItem = [[UIApplicationShortcutItem alloc]initWithType: @"border collie" localizedTitle: @"border collie" localizedSubtitle: nil icon: searchIcon userInfo: nil];
-    UIApplicationShortcutItem * paoliItem = [[UIApplicationShortcutItem alloc]initWithType: @"paoli" localizedTitle: @"paoli" localizedSubtitle: nil icon: searchIcon userInfo: nil];
-    UIApplicationShortcutItem * happyItem = [[UIApplicationShortcutItem alloc]initWithType: @"happy" localizedTitle: @"happy" localizedSubtitle: nil icon: searchIcon userInfo: nil];
+    UIApplicationShortcutItem * recentSearch0 = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: @"border collie" localizedSubtitle: nil icon: searchIcon userInfo: nil];
+    UIApplicationShortcutItem * recentSearch1 = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: @"paoli" localizedSubtitle: nil icon: searchIcon userInfo: nil];
     
-    [UIApplication sharedApplication].shortcutItems = @[borderCollieItem, paoliItem, happyItem];
     
+    
+    [UIApplication sharedApplication].shortcutItems = @[recentSearch0, recentSearch1];
+    
+    
+    UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKey:UIApplicationLaunchOptionsShortcutItemKey];
+    if (shortcutItem) {
+        [self handleShortCutItem:shortcutItem];
+    }
     
     [application setStatusBarStyle:UIStatusBarStyleLightContent];
 
@@ -134,13 +157,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
     }
 
     return YES;
-}
-
-- (void)application:(UIApplication *)application
-performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem
-  completionHandler:(void (^)(BOOL succeeded))completionHandler
-{
-    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application;
