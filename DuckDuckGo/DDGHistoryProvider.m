@@ -60,13 +60,6 @@
     
     if([DDGUtility looksLikeURL:title]) return; // don't log raw URLs
     
-    NSLog(@"Search: %@", title);
-    
-    NSArray *shortcutItems = [UIApplication sharedApplication].shortcutItems;
-    if ([shortcutItems count]) {
-        NSLog(@"0th search: %@", shortcutItems[0]);
-    }
-    
     NSArray *existingItems = [self itemsWithTitle:title];
     if ([existingItems count] > 0) {
         [self relogHistoryItem:[existingItems objectAtIndex:0]];
