@@ -21,6 +21,8 @@
 #import "DDGURLProtocol.h"
 #import "DDGHomeViewController.h"
 
+@import UIKit;
+
 @interface DDGAppDelegate ()
 @property (nonatomic, strong) DDGHomeViewController* homeController;
 @property (readwrite, strong, nonatomic) NSManagedObjectContext *masterManagedObjectContext;
@@ -39,6 +41,14 @@ static void uncaughtExceptionHandler(NSException *exception) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    UIApplicationShortcutIcon * searchIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"SearchBar-Search"];
+    UIApplicationShortcutItem * borderCollieItem = [[UIApplicationShortcutItem alloc]initWithType: @"border collie" localizedTitle: @"border collie" localizedSubtitle: nil icon: searchIcon userInfo: nil];
+    UIApplicationShortcutItem * paoliItem = [[UIApplicationShortcutItem alloc]initWithType: @"paoli" localizedTitle: @"paoli" localizedSubtitle: nil icon: searchIcon userInfo: nil];
+    UIApplicationShortcutItem * happyItem = [[UIApplicationShortcutItem alloc]initWithType: @"happy" localizedTitle: @"happy" localizedSubtitle: nil icon: searchIcon userInfo: nil];
+    
+    [UIApplication sharedApplication].shortcutItems = @[borderCollieItem, paoliItem, happyItem];
+    
+    
     [application setStatusBarStyle:UIStatusBarStyleLightContent];
 
     [NSURLProtocol registerClass:[DDGURLProtocol class]];
@@ -102,6 +112,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation;
 {
+
     //We can only open URLs from DDG.
     if(![[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"])
         return NO;
@@ -123,6 +134,13 @@ static void uncaughtExceptionHandler(NSException *exception) {
     }
 
     return YES;
+}
+
+- (void)application:(UIApplication *)application
+performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem
+  completionHandler:(void (^)(BOOL succeeded))completionHandler
+{
+    
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application;
