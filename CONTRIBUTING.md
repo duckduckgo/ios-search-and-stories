@@ -6,6 +6,9 @@ We are excited that you want to help make DuckDuckGo Search & Stories better. So
   * If you're submitting a **bug**, please describe a way we can reproduce the problem and the affected versions.
   * If you're submitting a **feature** (cool!), make sure you contact us beforehand so that you aren't duplicating effort.
 
+## Set Up
+Before building the app you must have mogenerator installed. You can check if it is installed by typing "mogenerator" in the terminal. If the output is "0 machine files and 0 human files generated.
+" you are set. If it says invalid command you can find out how to install mogenerator from [this website] (https://rentzsch.github.io/mogenerator/).
 
 ## Changes
 * **Bugs** fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
