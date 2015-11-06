@@ -75,7 +75,7 @@
 		4CD9247E15C9ED0900EB062F /* Constants.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD9247D15C9ED0900EB062F /* Constants.m */; };
 		4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CF9543B158A6FB30076465E /* DDGInputAccessoryView.m */; };
 		4CF9ED59154DFCD80075C23E /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CF9ED56154DFC460075C23E /* MessageUI.framework */; };
-		4E1386811BB5A4850066F731 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E13867F1BB5A4850066F731 /* DDGHomeViewController.xib */; settings = {ASSET_TAGS = (); }; };
+		4E1386811BB5A4850066F731 /* DDGHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4E13867F1BB5A4850066F731 /* DDGHomeViewController.xib */; };
 		4EC8D8341BB4A8D000BE8903 /* DuckDuckGo.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EC8D8361BB4A8D000BE8903 /* DuckDuckGo.storyboard */; };
 		4EC8D8371BB4A8D900BE8903 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4EC8D8391BB4A8D900BE8903 /* LaunchScreen.storyboard */; };
 		4EC8D83A1BB4A8F000BE8903 /* DDGMenuItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4EC8D83C1BB4A8F000BE8903 /* DDGMenuItemCell.xib */; };
@@ -303,14 +303,14 @@
 		8409F5EF1B5E917E001F897F /* proximanova-light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EB1B5E917E001F897F /* proximanova-light.otf */; };
 		8409F5F01B5E917E001F897F /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EC1B5E917E001F897F /* proximanova-regular.otf */; };
 		8409F5F11B5E917E001F897F /* proximanova-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */; };
-		8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */; settings = {ASSET_TAGS = (); }; };
+		8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */; };
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */; };
-		8472B1581BC3314200059BE4 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B14F1BC3314200059BE4 /* DetailViewController.m */; settings = {ASSET_TAGS = (); }; };
-		8472B15A1BC3314200059BE4 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1531BC3314200059BE4 /* MGSplitDividerView.m */; settings = {ASSET_TAGS = (); }; };
-		8472B15B1BC3314200059BE4 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1551BC3314200059BE4 /* MGSplitViewController.m */; settings = {ASSET_TAGS = (); }; };
-		8472B15C1BC3314200059BE4 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1571BC3314200059BE4 /* RootViewController.m */; settings = {ASSET_TAGS = (); }; };
+		8472B1581BC3314200059BE4 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B14F1BC3314200059BE4 /* DetailViewController.m */; };
+		8472B15A1BC3314200059BE4 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1531BC3314200059BE4 /* MGSplitDividerView.m */; };
+		8472B15B1BC3314200059BE4 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1551BC3314200059BE4 /* MGSplitViewController.m */; };
+		8472B15C1BC3314200059BE4 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1571BC3314200059BE4 /* RootViewController.m */; };
 		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
 		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
 		84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */; };
