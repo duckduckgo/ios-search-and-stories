@@ -11,6 +11,7 @@
 #endif
 
 #import "DDGAppDelegate.h"
+#import "DDGBookmarksProvider.h"
 #import "DDGHistoryProvider.h"
 #import "SDURLCache.h"
 #import "DDGSettingsViewController.h"
@@ -20,6 +21,8 @@
 #import "NSString+URLEncodingDDG.h"
 #import "DDGURLProtocol.h"
 #import "DDGHomeViewController.h"
+
+@import UIKit;
 
 @interface DDGAppDelegate ()
 @property (nonatomic, strong) DDGHomeViewController* homeController;
@@ -37,8 +40,52 @@ static void uncaughtExceptionHandler(NSException *exception) {
     NSLog(@"Stack Trace: %@", [exception callStackSymbols]);
 }
 
+- (void)handleShortCutItem:(UIApplicationShortcutItem *)shortcutItem  {
+    NSLog(@"handleShortCutItem: %@", shortcutItem.type);
+    if([shortcutItem.type isEqualToString:@"com.duckduckgo.mobile.ios.search"]){
+        [self.homeController.currentSearchHandler loadQueryOrURL:shortcutItem.localizedTitle];
+    } else if ([shortcutItem.type isEqualToString:@"com.duckduckgo.mobile.ios.newSearch"]) {
+        [self.homeController showSearchAndPrepareInput];
+    } else if ([shortcutItem.type isEqualToString:@"com.duckduckgo.mobile.ios.saved"]) {
+        [self.homeController showSaved];
+    }
+}
+
+- (void)application:(UIApplication *)application performActionForShortcutItem:(UIApplicationShortcutItem *)shortcutItem completionHandler:(void (^)(BOOL))completionHandler {
+    if (shortcutItem) {
+        [self handleShortCutItem:shortcutItem];
+    }
+}
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    UIApplicationShortcutIcon * searchIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"SearchBar-Search"];
+    NSMutableArray *savedShortcuts = [[NSMutableArray alloc] init];
+
+    DDGBookmarksProvider *bookmarksProvider = [DDGBookmarksProvider sharedProvider];
+    for (NSDictionary *bookmark in bookmarksProvider.bookmarks) {
+        NSString *savedSearch = [bookmark valueForKey:@"title"];
+        UIApplicationShortcutItem *bookmarkShortcut = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: savedSearch localizedSubtitle: nil icon: searchIcon userInfo: nil];
+        [savedShortcuts addObject:bookmarkShortcut];
+    }
+    
+    DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    for (DDGHistoryItem *recent in historyProvider.allHistoryItems) {
+        if (!recent.story) {
+            UIApplicationShortcutItem *recentShortcut = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: recent.title localizedSubtitle: nil icon: searchIcon userInfo: nil];
+            [savedShortcuts addObject:recentShortcut];
+        }
+    }
+
+    //NSLog(@"Saved Shortcuts: %@", savedShortcuts);
+    [[UIApplication sharedApplication] setShortcutItems: savedShortcuts];
+    
+    
+    UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKey:UIApplicationLaunchOptionsShortcutItemKey];
+    if (shortcutItem) {
+        [self handleShortCutItem:shortcutItem];
+    }
+    
     [application setStatusBarStyle:UIStatusBarStyleLightContent];
 
     [NSURLProtocol registerClass:[DDGURLProtocol class]];
@@ -102,6 +149,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
   sourceApplication:(NSString *)sourceApplication
          annotation:(id)annotation;
 {
+
     //We can only open URLs from DDG.
     if(![[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"])
         return NO;

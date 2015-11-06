@@ -176,12 +176,7 @@
 }
 
 -(IBAction)showFavorites {
-    if(self.tabController.selectedViewController!=self.favoritesTopController) {
-        self.tabController.selectedViewController = self.favoritesTopController;
-    } else {
-        [self.favoritesTabViewController duckGoToTopLevel];
-    }
-    [self setSelectedButton:self.favoritesTabButton];
+    [self showSaved];
 }
 
 -(IBAction)showStories {
@@ -194,11 +189,7 @@
 }
 
 -(IBAction)showDuck {
-    if(self.tabController.selectedViewController!=self.searchTopController) {
-        self.tabController.selectedViewController = self.searchTopController;
-    }
-    [self.searchController duckGoToTopLevel];
-    [self setSelectedButton:self.searchTabButton];
+    [self showSearchAndPrepareInput];
 }
 
 -(IBAction)showSettings {
@@ -210,6 +201,22 @@
     [self setSelectedButton:self.settingsTabButton];
 }
 
+-(void)showSearchAndPrepareInput {
+    if(self.tabController.selectedViewController!=self.searchTopController) {
+        self.tabController.selectedViewController = self.searchTopController;
+    }
+    [self.searchController duckGoToTopLevel];
+    [self setSelectedButton:self.searchTabButton];
+}
+
+-(void)showSaved {
+    if(self.tabController.selectedViewController!=self.favoritesTopController) {
+        self.tabController.selectedViewController = self.favoritesTopController;
+    } else {
+        [self.favoritesTabViewController duckGoToTopLevel];
+    }
+    [self setSelectedButton:self.favoritesTabButton];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
