@@ -43,12 +43,19 @@
 -(void)updateConstraints {
     [super updateConstraints];
     BOOL fieldIsActive = self.isFirstResponder;
-    if(fieldIsActive) {
-        [self.superview removeConstraint:self.placeholderTextCenter];
-        [self.superview addConstraint:self.placeholderTextLeft];
+    if([self.placeholderTextCenter respondsToSelector:@selector(setActive:)]) {
+        // iOS8+ - the right way
+        self.placeholderTextLeft.active = fieldIsActive;
+        self.placeholderTextCenter.active = !fieldIsActive;
     } else {
-        [self.superview removeConstraint:self.placeholderTextLeft];
-        [self.superview addConstraint:self.placeholderTextCenter];
+        // iOS7 - the workaround way
+        if(fieldIsActive) {
+            [self.superview removeConstraint:self.placeholderTextCenter];
+            [self.superview addConstraint:self.placeholderTextLeft];
+        } else {
+            [self.superview removeConstraint:self.placeholderTextLeft];
+            [self.superview addConstraint:self.placeholderTextCenter];
+        }
     }
 }
 
@@ -64,12 +71,19 @@
     
     void(^animator)() = ^() {
         // position the placeholder
-        if(fieldIsActive) {
-            [self.superview removeConstraint:self.placeholderTextCenter];
-            [self.superview addConstraint:self.placeholderTextLeft];
+        if([self.placeholderTextCenter respondsToSelector:@selector(setActive:)]) {
+            // iOS8+ - the right way
+            self.placeholderTextLeft.active = fieldIsActive;
+            self.placeholderTextCenter.active = !fieldIsActive;
         } else {
-            [self.superview removeConstraint:self.placeholderTextLeft];
-            [self.superview addConstraint:self.placeholderTextCenter];
+            // iOS7 - the workaround way
+            if(fieldIsActive) {
+                [self.superview removeConstraint:self.placeholderTextCenter];
+                [self.superview addConstraint:self.placeholderTextLeft];
+            } else {
+                [self.superview removeConstraint:self.placeholderTextLeft];
+                [self.superview addConstraint:self.placeholderTextCenter];
+            }
         }
         
         // fade the loupe icon in or out
@@ -146,8 +160,8 @@
     
     CALayer *layer = self.layer;
     layer.cornerRadius = 4.0f;
-    //layer.masksToBounds = NO;
 }
+
 
 -(void)setRightButtonMode:(DDGAddressBarRightButtonMode)newMode {
     switch (newMode) {

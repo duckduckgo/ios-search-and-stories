@@ -243,6 +243,7 @@ NSString * const emailRegEx =
     self.searchBar.searchField.text = @" ";
     dispatch_async(dispatch_get_main_queue(), ^{
         self.searchBar.searchField.text = @"";
+        [self.searchBar.searchField updateConstraints];
     });
     
     [self setNeedsStatusBarAppearanceUpdate];
