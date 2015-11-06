@@ -52,6 +52,9 @@
             [context deleteObject:item];
         }
     } save:YES];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [((DDGAppDelegate*)[[UIApplication sharedApplication] delegate]) updateShortcuts];
+    });
 }
 
 - (void)logSearchResultWithTitle:(NSString *)title {
@@ -73,6 +76,10 @@
             [self save];
         }];        
     }
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [((DDGAppDelegate*)[[UIApplication sharedApplication] delegate]) updateShortcuts];
+    });
 }
 
 - (void)logStory:(DDGStory *)story {

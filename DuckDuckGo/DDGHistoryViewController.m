@@ -6,6 +6,7 @@
 //
 //
 
+#import "DDGAppDelegate.h"
 #import "DDGHistoryViewController.h"
 #import "DDGHistoryItem.h"
 #import "DDGPlusButton.h"
@@ -218,6 +219,9 @@
         }
         [historyItem.managedObjectContext deleteObject:historyItem];
         [self.managedObjectContext save:nil];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [((DDGAppDelegate*)[[UIApplication sharedApplication] delegate]) updateShortcuts];
+        });
     }
 }
 

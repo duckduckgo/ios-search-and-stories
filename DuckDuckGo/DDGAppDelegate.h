@@ -18,4 +18,7 @@
 
 +(NSManagedObjectContext*)sharedManagedObjectContext;
 
+// update the 3d-touch shortcut menu
+-(void)updateShortcuts;
+
 @end

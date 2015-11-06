@@ -59,33 +59,6 @@ static void uncaughtExceptionHandler(NSException *exception) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    UIApplicationShortcutIcon * searchIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"SearchBar-Search"];
-    NSMutableArray *savedShortcuts = [[NSMutableArray alloc] init];
-
-    DDGBookmarksProvider *bookmarksProvider = [DDGBookmarksProvider sharedProvider];
-    for (NSDictionary *bookmark in bookmarksProvider.bookmarks) {
-        NSString *savedSearch = [bookmark valueForKey:@"title"];
-        UIApplicationShortcutItem *bookmarkShortcut = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: savedSearch localizedSubtitle: nil icon: searchIcon userInfo: nil];
-        [savedShortcuts addObject:bookmarkShortcut];
-    }
-    
-    DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
-    for (DDGHistoryItem *recent in historyProvider.allHistoryItems) {
-        if (!recent.story) {
-            UIApplicationShortcutItem *recentShortcut = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search" localizedTitle: recent.title localizedSubtitle: nil icon: searchIcon userInfo: nil];
-            [savedShortcuts addObject:recentShortcut];
-        }
-    }
-
-    //NSLog(@"Saved Shortcuts: %@", savedShortcuts);
-    [[UIApplication sharedApplication] setShortcutItems: savedShortcuts];
-    
-    
-    UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKey:UIApplicationLaunchOptionsShortcutItemKey];
-    if (shortcutItem) {
-        [self handleShortCutItem:shortcutItem];
-    }
-    
     [application setStatusBarStyle:UIStatusBarStyleLightContent];
 
     [NSURLProtocol registerClass:[DDGURLProtocol class]];
@@ -141,6 +114,18 @@ static void uncaughtExceptionHandler(NSException *exception) {
     self.window.rootViewController = self.homeController;
     
     [self.window makeKeyAndVisible];
+    
+    
+    //NSLog(@"Saved Shortcuts: %@", savedShortcuts);
+    [self updateShortcuts];
+    
+    UIApplication* app = [UIApplication sharedApplication];
+    if([app respondsToSelector:@selector(setShortcutItems:)]) { // only set shortcuts if there's support for it
+        UIApplicationShortcutItem *shortcutItem = [launchOptions objectForKey:UIApplicationLaunchOptionsShortcutItemKey];
+        if (shortcutItem) {
+            [self handleShortCutItem:shortcutItem];
+        }
+    }
     return YES;
 }
 
@@ -189,6 +174,63 @@ static void uncaughtExceptionHandler(NSException *exception) {
 {
     [self save];
 }
+
+
+#pragma mark - 3DTouch Shortcuts
+-(void)updateShortcuts {
+    UIApplication* app = [UIApplication sharedApplication];
+    if([app respondsToSelector:@selector(setShortcutItems:)]) { // only set shortcuts if there's support for it
+        UIApplicationShortcutIcon *searchIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"Tab-Search"];
+        UIApplicationShortcutIcon *faveIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"Tab-Favorites"];
+        
+        DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+        NSMutableArray* recentQueries = [NSMutableArray new];
+        for(DDGHistoryItem* recent in historyProvider.allHistoryItems) {
+            if(!recent.story && recent.title && ![recentQueries containsObject:recent.title]) {
+                [recentQueries addObject:recent.title];
+            }
+            if(recentQueries.count > 4) break;
+        }
+        
+        // add some saved items.. well, the 6s only has room for one, so we'll add one saved/faved item
+        NSArray* fetchedBookmarks = [[[DDGBookmarksProvider sharedProvider].bookmarks reverseObjectEnumerator] allObjects];
+        NSMutableArray* bookmarkQueries = [NSMutableArray new];
+        for (NSDictionary *bookmark in fetchedBookmarks) {
+            NSString *savedSearch = [bookmark valueForKey:@"title"];
+            if(![bookmarkQueries containsObject:savedSearch]) {
+                [bookmarkQueries addObject:savedSearch];
+            }
+            if(bookmarkQueries.count > 4) break;
+        }
+        
+        NSMutableArray *shortcuts = [NSMutableArray new];
+        NSMutableArray *shortcutQueries = [NSMutableArray new];
+        for(int i=0; i<bookmarkQueries.count; i++) {
+            NSString* query = [bookmarkQueries objectAtIndex:i];
+            UIApplicationShortcutItem *bookmarkShortcut = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search"
+                                                                                          localizedTitle: query
+                                                                                       localizedSubtitle: nil
+                                                                                                    icon: faveIcon
+                                                                                                userInfo: nil];
+            [shortcuts addObject:bookmarkShortcut];
+            [shortcutQueries addObject:query];
+            if(shortcuts.count + recentQueries.count > 3) break; // no more than one bookmark shortcut, if there are any recent queries
+        }
+        
+        for(NSString* query in recentQueries) {
+            if([shortcutQueries containsObject:query]) continue; // don't re-add items that we already have
+            UIApplicationShortcutItem *recentShortcut = [[UIApplicationShortcutItem alloc]initWithType: @"com.duckduckgo.mobile.ios.search"
+                                                                                        localizedTitle: query
+                                                                                     localizedSubtitle: nil
+                                                                                                  icon: searchIcon
+                                                                                              userInfo: nil];
+            [shortcuts addObject:recentShortcut];
+        }
+        
+        [[UIApplication sharedApplication] setShortcutItems: shortcuts];
+    }
+}
+
 
 #pragma mark - Clean up
 
