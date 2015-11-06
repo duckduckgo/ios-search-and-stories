@@ -62,8 +62,6 @@
 
 
 -(void)layoutSubviews {
-    [super layoutSubviews];
-    
     CGRect frame = self.frame;
     CGRect imgRect = self.imageView.frame;
     imgRect.origin.x = 15;
@@ -78,6 +76,8 @@
     tmpFrame.origin.x = 49;
     tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
     self.detailTextLabel.frame = tmpFrame;
+    
+    [super layoutSubviews];
 }
 
 

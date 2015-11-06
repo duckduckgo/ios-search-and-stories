@@ -139,8 +139,6 @@
 }
 
 - (void)layoutSubviews {
-    [super layoutSubviews];
-
     // get the popover content size, either from preferredContentSize or from the actual size
     CGSize contentSize = self.popoverViewController.contentViewController.preferredContentSize;
     if(contentSize.width<=0 || contentSize.height<=0) {
@@ -201,6 +199,8 @@
     self.arrowView.hidden = self.popoverViewController.hideArrow;
     self.popoverRect = CGRectMake(popoverX, popoverY, popoverWidth, popoverHeight); // the popover frame image should be placed around the content
     self.popoverViewController.contentViewController.view.frame = UIEdgeInsetsInsetRect(self.popoverRect, self.borderInsets);
+    
+    [super layoutSubviews];
     
     [self setNeedsDisplay];
     //[self setNeedsUpdateConstraints];

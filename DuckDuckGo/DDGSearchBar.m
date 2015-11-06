@@ -117,6 +117,7 @@
 
     [self setNeedsDisplay];
     [self setNeedsUpdateConstraints];
+    [super layoutSubviews];
 }
 
 -(void)updateConstraints {

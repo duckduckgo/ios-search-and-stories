@@ -92,6 +92,7 @@
     if(idx >= 0 && idx < self.buttons.count) {
         self.selectedView.frame = ((UIButton*)self.buttons[idx]).frame;
     }
+    [super layoutSubviews];
 }
 
 -(NSInteger)selectedSegmentIndex {

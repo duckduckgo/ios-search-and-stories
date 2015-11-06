@@ -356,6 +356,7 @@
 -(void)viewDidLayoutSubviews
 {
     self.topAlignmentConstraint.constant = self.topLayoutGuide.length;
+    [self.view layoutIfNeeded]; // this seems wrong, but if we don't have it then we crash on iOS7
 }
 
 

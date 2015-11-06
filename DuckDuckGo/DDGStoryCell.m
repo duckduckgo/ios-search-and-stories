@@ -392,9 +392,6 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 - (void)layoutSubviews;
 {
-    // Always call your parents.
-    [super layoutSubviews];
-    
     CGRect bounds = self.contentView.bounds;
 
     // adjust the font sizes according to the space available
@@ -438,6 +435,9 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     textFrame.size.width = textWidth;
         
     self.textLabel.frame = textFrame;
+    
+    // Always call your parents.
+    [super layoutSubviews];
 }
 
 - (void)prepareForReuse

@@ -43,8 +43,13 @@
 -(void)updateConstraints {
     [super updateConstraints];
     BOOL fieldIsActive = self.isFirstResponder;
-    self.placeholderTextLeft.active = fieldIsActive;
-    self.placeholderTextCenter.active = !fieldIsActive;
+    if(fieldIsActive) {
+        [self.superview removeConstraint:self.placeholderTextCenter];
+        [self.superview addConstraint:self.placeholderTextLeft];
+    } else {
+        [self.superview removeConstraint:self.placeholderTextLeft];
+        [self.superview addConstraint:self.placeholderTextCenter];
+    }
 }
 
 -(void)updatePlaceholderAnimated:(BOOL)animated {
@@ -59,8 +64,13 @@
     
     void(^animator)() = ^() {
         // position the placeholder
-        self.placeholderTextLeft.active = fieldIsActive;
-        self.placeholderTextCenter.active = !fieldIsActive;
+        if(fieldIsActive) {
+            [self.superview removeConstraint:self.placeholderTextCenter];
+            [self.superview addConstraint:self.placeholderTextLeft];
+        } else {
+            [self.superview removeConstraint:self.placeholderTextLeft];
+            [self.superview addConstraint:self.placeholderTextCenter];
+        }
         
         // fade the loupe icon in or out
         self.placeholderIconView.alpha = fieldIsActive ? 0 : 1.0f;

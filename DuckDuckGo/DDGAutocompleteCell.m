@@ -96,8 +96,6 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
 
 - (void)layoutSubviews
 {
-    [super layoutSubviews];
-    
     CGRect imageViewBounds = CGRectMake(6.0f, 6.0f, 54.0f, 54.0f);
     [self.imageView setFrame:imageViewBounds];
 
@@ -124,6 +122,7 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
                                             detailRect.origin.y,
                                             contentRect.size.width - detailRect.origin.x,
                                             detailRect.size.height);
+    [super layoutSubviews];
 }
 
 - (void)prepareForReuse
