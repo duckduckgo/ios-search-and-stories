@@ -59,7 +59,7 @@ static void uncaughtExceptionHandler(NSException *exception) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    UIApplicationShortcutIcon * searchIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"SearchBar-Search"];
+    UIApplicationShortcutIcon *searchIcon = [UIApplicationShortcutIcon iconWithTemplateImageName: @"Tab-Recents"];
     NSMutableArray *savedShortcuts = [[NSMutableArray alloc] init];
 
     DDGBookmarksProvider *bookmarksProvider = [DDGBookmarksProvider sharedProvider];

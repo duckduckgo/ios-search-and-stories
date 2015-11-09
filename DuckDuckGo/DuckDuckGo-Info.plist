@@ -6,7 +6,7 @@
 	<array>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
-			<string>SearchBar-Search</string>
+			<string>Tab-Search</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Search</string>
 			<key>UIApplicationShortcutItemType</key>
@@ -14,7 +14,7 @@
 		</dict>
 		<dict>
 			<key>UIApplicationShortcutItemIconFile</key>
-			<string>webbar-fav</string>
+			<string>Tab-Favorites</string>
 			<key>UIApplicationShortcutItemTitle</key>
 			<string>Saved</string>
 			<key>UIApplicationShortcutItemType</key>
