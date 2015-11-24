@@ -6,136 +6,126 @@
 //
 //
 
+
 #import "DDGMenuHistoryItemCell.h"
 
-@interface DDGMenuHistoryItemCell ()
+@interface DDGMenuHistoryItemCell () {
+    BOOL _isLastItem;
+}
 
-@property (nonatomic, weak) IBOutlet UIImageView *auxiliaryImageView;
-@property (nonatomic, weak) IBOutlet UIView *buttonContainerView;
-@property (nonatomic, weak) IBOutlet UILabel *contentLabel;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contentContainerWidthConstraint;
-@property (nonatomic, weak) IBOutlet NSLayoutConstraint *contentLabelRightConstraint;
-@property (nonatomic, weak) IBOutlet UIImageView *faviconImageView;
+@property BOOL autocompleteMode;
+@property UIButton* plusButton;
+//@property (nonatomic, strong) UIView* separatorView;
 
 @end
 
 @implementation DDGMenuHistoryItemCell
 
-- (void)awakeFromNib
+-(id)initWithReuseIdentifier:(NSString *)reuseIdentifier
 {
-    [super awakeFromNib];
-    self.backgroundColor = [UIColor clearColor];
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleDeleteButtonTap:)];
-    [self.buttonContainerView addGestureRecognizer:tapGestureRecognizer];
-    [self.buttonContainerView setHidden:YES];
-    self.opaque = NO;
-    UIView *selectedBackgroundView = [[UIView alloc] init];
-    selectedBackgroundView.backgroundColor = [UIColor duckRed];
-    self.selectedBackgroundView = selectedBackgroundView;
-    self.tintColor = [UIColor duckRed];
-    [self reset];
-}
-
-- (void)handleDeleteButtonTap:(UITapGestureRecognizer *)recognizer
-{
-    if (self.deleteBlock) {
-        self.deleteBlock(self);
+    self = [super initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:reuseIdentifier];
+    if(self) {
+        self.tintColor = [UIColor duckRed];
+        self.imageView.contentMode = UIViewContentModeLeft;
+        self.autocompleteMode = FALSE;
+        _isLastItem = FALSE;
+        
+        CGRect plusRect = self.frame;
+        plusRect.origin.x = plusRect.size.width-44;
+        plusRect.size.width = 44;
+        self.plusButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [self.plusButton setImage:[UIImage imageNamed:@"Plus"] forState:UIControlStateNormal];
+        self.plusButton.frame = plusRect;
+        self.plusButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
+        [self addSubview:self.plusButton];
+        
+        self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
+        
+        self.textLabel.font = [UIFont duckFontWithSize:17.0f];
+        self.detailTextLabel.font = [UIFont duckFontWithSize:15.0f];
+        
+        self.textLabel.textColor = [UIColor duckListItemTextForeground];
+        self.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
+        
+        self.imageView.contentMode = UIViewContentModeScaleAspectFill;
+        self.imageView.autoresizingMask = UIViewAutoresizingNone;
+        
+        [self.plusButton addTarget:self action:@selector(plusButtonWasPushed:) forControlEvents:UIControlEventTouchUpInside];
     }
+    return self;
 }
 
-- (void)prepareForReuse
+-(void)configureForAutocompletion
 {
-    [super prepareForReuse];
-    [self reset];
+    self.autocompleteMode = TRUE;
 }
 
-- (void)reset
-{
-    [self.auxiliaryImageView setImage:[UIImage imageNamed:@"Plus"]];
-    self.auxiliaryViewHidden = YES;
-    [self.faviconImageView setContentMode:UIViewContentModeCenter];
-    self.notification = NO;
-    [self setDeletable:NO animated:NO];
+
+-(void)layoutSubviews {
+    CGRect frame = self.frame;
+    CGRect imgRect = self.imageView.frame;
+    imgRect.origin.x = 15;
+    self.imageView.frame = imgRect;
+    
+    CGRect tmpFrame = self.textLabel.frame;
+    tmpFrame.origin.x = 49;
+    tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
+    self.textLabel.frame = tmpFrame;
+    
+    tmpFrame = self.detailTextLabel.frame;
+    tmpFrame.origin.x = 49;
+    tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
+    self.detailTextLabel.frame = tmpFrame;
+    
+    [super layoutSubviews];
 }
 
-- (void)setAuxiliaryViewHidden:(BOOL)hidden
+
+-(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem;
 {
-    _auxiliaryViewHidden = hidden;
-    [self.auxiliaryImageView setHidden:hidden];
-    [self.contentLabelRightConstraint setConstant:hidden ? 15.0f : 39.0f];
-    [self layoutIfNeeded];
+    [self.historyDelegate plusButtonWasPushed:self];
 }
 
-- (void)setContent:(NSString *)content
+-(void)setBookmarkItem:(NSDictionary*)bookmark
 {
-    _content = [content copy];
-    [self.contentLabel setText:content];
-    if (content && content.length > 0) {
-        BOOL isBang = [[content substringToIndex:1] isEqualToString:@"!"];
-        if (isBang) {
-            self.faviconImage = [[UIImage imageNamed:@"TinyBang"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        }
-    }
+    _bookmarkItem = bookmark;
+    NSString* title = bookmark[@"title"];
+    self.textLabel.text = title;
+    self.imageView.image = [UIImage imageNamed:@"favorite-small"];
 }
 
-- (void)setDeletable:(BOOL)deletable animated:(BOOL)animated
+-(void)setSuggestionItem:(NSDictionary *)suggestion
 {
-    [self.contentView layoutIfNeeded];    
-    if (animated) {
-        if (deletable) {
-            [self.buttonContainerView setHidden:NO];
-        }
-        [UIView animateWithDuration:0.25
-                              delay:0
-                            options:UIViewAnimationOptionCurveEaseInOut
-                         animations:^{
-                             if (!self.auxiliaryViewHidden) {
-                                 [self.auxiliaryImageView setAlpha:deletable ? 0.0f : 1.0f];
-                             }
-                             CGFloat width = CGRectGetWidth(self.bounds);
-                             [self.contentContainerWidthConstraint setConstant:deletable ? (width - 74.0f) : width];
-                             [self layoutIfNeeded];
-                         } completion:^(BOOL finished) {
-                             if (!deletable) {
-                                 [self.buttonContainerView setHidden:YES];
-                             }
-                         }];
+    _suggestionItem = suggestion;
+    self.textLabel.text = [suggestion objectForKey:@"phrase"];
+    self.detailTextLabel.text = [suggestion objectForKey:@"snippet"];
+    self.imageView.image = nil; // the image should be set in the view controller, which can maintain a shared image cache
+    
+    if([suggestion objectForKey:@"calls"] && [[suggestion objectForKey:@"calls"] count]) {
+        self.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
     } else {
-        [self.buttonContainerView setHidden:!deletable];
-        [self.contentContainerWidthConstraint setConstant:deletable ? 246.0f : CGRectGetWidth(self.bounds)];
-        [self layoutIfNeeded];
+        self.accessoryType = UITableViewCellAccessoryNone;
     }
 }
 
-- (void)setFaviconImage:(UIImage *)faviconImage
+-(void)setIcon:(UIImage *)image
 {
-    _faviconImage = faviconImage;
-    [self.faviconImageView setContentMode:UIViewContentModeScaleAspectFit];
-    [self.faviconImageView setImage:faviconImage];
+    self.imageView.image = image;
+    [self.imageView setNeedsDisplay];
 }
 
-- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+
+-(void)setIsLastItem:(BOOL)isLastItem
 {
-    [super setHighlighted:highlighted animated:animated];
-    self.tintColor = highlighted ? [UIColor whiteColor] : [UIColor duckRed];
-    [self.contentLabel setTextColor:highlighted ? [UIColor whiteColor] : [UIColor duckBlack]];
+    _isLastItem = isLastItem;
 }
 
-- (void)setNotification:(BOOL)notification
+-(void)setHistoryItem:(DDGHistoryItem*)historyItem
 {
-    _notification = notification;
-    UIImage *image = nil;
-    if (notification) {
-        image = [[UIImage imageNamed:@"Notification"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    } else {
-        image = [[UIImage imageNamed:@"Search"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-    }
-    [self.faviconImageView setImage:image];
-}
-
-- (BOOL)shouldCauseMenuPanGestureToFail
-{
-    return YES;
+    _historyItem = historyItem;
+    NSString* title = historyItem.title;
+    self.textLabel.text = title;
+    self.imageView.image = [UIImage imageNamed:@"recent-small"];
 }
 
 @end

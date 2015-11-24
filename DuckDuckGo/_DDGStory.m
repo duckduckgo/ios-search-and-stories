@@ -5,6 +5,7 @@
 
 const struct DDGStoryAttributes DDGStoryAttributes = {
 	.articleURLString = @"articleURLString",
+	.category = @"category",
 	.descriptionString = @"descriptionString",
 	.feedDate = @"feedDate",
 	.htmlDownloaded = @"htmlDownloaded",
@@ -74,6 +75,8 @@ const struct DDGStoryRelationships DDGStoryRelationships = {
 }
 
 @dynamic articleURLString;
+
+@dynamic category;
 
 @dynamic descriptionString;
 

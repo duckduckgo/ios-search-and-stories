@@ -8,13 +8,28 @@
 
 #import <UIKit/UIKit.h>
 
+typedef enum {
+    DDGAddressBarRightButtonModeNone    = -1,
+    DDGAddressBarRightButtonModeDefault = 0,
+    DDGAddressBarRightButtonModeRefresh = 1,
+    DDGAddressBarRightButtonModeStop    = 2,
+} DDGAddressBarRightButtonMode;
+
 @interface DDGAddressBarTextField : UITextField <UITextFieldDelegate> {
-    UIImageView *progressView;
     CGFloat progress;
 }
 
--(void)setProgress:(CGFloat)newProgress;
--(void)cancel;;
--(void)finish;
+@property CGFloat additionalLeftSideInset;
+@property CGFloat additionalRightSideInset;
+@property UIButton* clearButton;
+@property UIButton* stopButton;
+@property UIButton* reloadButton;
+
+@property (nonatomic, strong) IBOutlet UIView* placeholderView;
+
+-(void)setRightButtonMode:(DDGAddressBarRightButtonMode)newMode;
+
+-(void)resetField;
+
 
 @end

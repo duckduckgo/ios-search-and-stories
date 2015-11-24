@@ -5,6 +5,7 @@
 
 extern const struct DDGStoryAttributes {
 	__unsafe_unretained NSString *articleURLString;
+	__unsafe_unretained NSString *category;
 	__unsafe_unretained NSString *descriptionString;
 	__unsafe_unretained NSString *feedDate;
 	__unsafe_unretained NSString *htmlDownloaded;
@@ -38,6 +39,10 @@ extern const struct DDGStoryRelationships {
 @property (nonatomic, strong) NSString* articleURLString;
 
 //- (BOOL)validateArticleURLString:(id*)value_ error:(NSError**)error_;
+
+@property (nonatomic, strong) NSString* category;
+
+//- (BOOL)validateCategory:(id*)value_ error:(NSError**)error_;
 
 @property (nonatomic, strong) NSString* descriptionString;
 
@@ -121,6 +126,9 @@ extern const struct DDGStoryRelationships {
 
 - (NSString*)primitiveArticleURLString;
 - (void)setPrimitiveArticleURLString:(NSString*)value;
+
+- (NSString*)primitiveCategory;
+- (void)setPrimitiveCategory:(NSString*)value;
 
 - (NSString*)primitiveDescriptionString;
 - (void)setPrimitiveDescriptionString:(NSString*)value;

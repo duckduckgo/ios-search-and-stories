@@ -29,4 +29,7 @@ extern NSString * const DDGStoryFetcherSourcesLastUpdatedKey;
 
 - (void)downloadIconForFeed:(DDGStoryFeed *)feed;
 
+
++ (void)resetSourceFeedsToDefaultInContext:(NSManagedObjectContext*)context;
+
 @end

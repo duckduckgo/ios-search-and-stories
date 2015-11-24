@@ -18,9 +18,9 @@
 @optional
 -(void)beginSearchInputWithString:(NSString *)string;
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode;
--(void)searchControllerActionButtonPressed;
 -(void)searchControllerStopOrReloadButtonPressed;
 -(void)searchControllerAddressBarWillOpen;
 -(void)searchControllerAddressBarWillCancel;
+-(void)searchControllerActionButtonPressed:(id)sender;
 
 @end

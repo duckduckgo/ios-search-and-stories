@@ -7,55 +7,244 @@
 //
 
 #import "DDGStoriesViewController.h"
-#import "DDGUnderViewController.h"
 #import "DDGSettingsViewController.h"
-#import "DDGPanGestureRecognizer.h"
 #import "DDGStory.h"
 #import "DDGStoryFeed.h"
 #import "DDGStoryCell.h"
 #import "NSArray+ConcurrentIteration.h"
 #import "DDGHistoryProvider.h"
 #import "DDGBookmarksProvider.h"
-#import "SVProgressHUD.h"
 #import "AFNetworking.h"
 #import "DDGActivityViewController.h"
 #import "DDGStoryFetcher.h"
 #import "DDGSafariActivity.h"
 #import "DDGActivityItemProvider.h"
+#import "DDGNoContentViewController.h"
 #import <CoreImage/CoreImage.h>
 #import "DDGTableView.h"
-
-NSString *const DDGLastViewedStoryKey = @"last_story";
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 NSInteger const DDGLargeImageViewTag = 1;
-NSInteger const DDGSmallImageViewTag = 2;
+
+@class DDGStoriesLayout;
 
 @interface DDGStoriesViewController () {
-    BOOL isRefreshing;
-    EGORefreshTableHeaderView *refreshHeaderView;
     CIContext *_blurContext;
+    NSMutableArray* _sectionChanges;
+    NSMutableArray* _objectChanges;
+    
 }
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
 @property (nonatomic, strong) NSOperationQueue *imageDecompressionQueue;
 @property (nonatomic, strong) NSMutableSet *enqueuedDownloadOperations;
-@property (nonatomic, strong) NSIndexPath *swipeViewIndexPath;
-@property (nonatomic, strong) DDGPanGestureRecognizer *panLeftGestureRecognizer;
-@property (nonatomic, strong) IBOutlet DDGTableView *tableView;
-@property (strong, nonatomic) IBOutlet UIView *swipeView;
-@property (nonatomic, weak) IBOutlet UIButton *swipeViewSaveButton;
-@property (nonatomic, weak) IBOutlet UIButton *swipeViewSafariButton;
-@property (nonatomic, weak) IBOutlet UIButton *swipeViewShareButton;
+@property (nonatomic, strong) IBOutlet UICollectionView *storyView;
+@property (readonly) NSString* lastRefreshDefaultsKey;
+@property (nonatomic, strong) NSDate* lastRefreshAttempt;
+
+
 @property (nonatomic, readwrite, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, strong) DDGStoryFeed *sourceFilter;
+@property (nonatomic, strong) NSString* categoryFilter;
 @property (nonatomic, strong) NSMutableDictionary *decompressedImages;
 @property (nonatomic, strong) NSMutableSet *enqueuedDecompressionOperations;
 @property (nonatomic, strong) DDGStoryFetcher *storyFetcher;
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
+@property (nonatomic, strong) UIRefreshControl* refreshControl;
+@property (nonatomic, strong) DDGNoContentViewController* noContentView;
+@property (nonatomic, strong) DDGStoriesLayout* storiesLayout;
+@property (nonatomic, strong) NSNumber* lastStoryIDViewed;
+@property (nonatomic, assign) BOOL ignoreCoreDataUpdates;
+
 @end
+
+
+
+#pragma mark DDGStoriesLayout
+
+static NSString * const DDGStoriesLayoutKind = @"PhotoCell";
+
+
+@interface DDGStoriesLayout : UICollectionViewLayout
+@property (nonatomic, weak) DDGStoriesViewController* storiesController;
+@property BOOL mosaicMode;
+@property (nonatomic, strong) NSDictionary *layoutInfo;
+
+@end
+
+
+@implementation DDGStoriesLayout
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        [self setup];
+    }
+    
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    self = [super init];
+    if (self) {
+        [self setup];
+    }
+    
+    return self;
+}
+
+- (void)setup
+{
+    self.mosaicMode = TRUE;
+}
+
+- (void)prepareLayout
+{
+    NSMutableDictionary *newLayoutInfo = [NSMutableDictionary dictionary];
+    NSMutableDictionary *cellLayoutInfo = [NSMutableDictionary dictionary];
+    
+    NSInteger sectionCount = [self.collectionView numberOfSections];
+    
+    for (NSInteger section = 0; section < sectionCount; section++) {
+        NSInteger itemCount = [self.collectionView numberOfItemsInSection:section];
+        
+        for (NSInteger item = 0; item < itemCount; item++) {
+            NSIndexPath* indexPath = [NSIndexPath indexPathForItem:item inSection:0];
+            UICollectionViewLayoutAttributes* itemAttributes =
+            [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+            itemAttributes.frame = [self frameForStoryAtIndexPath:indexPath];
+            
+            cellLayoutInfo[indexPath] = itemAttributes;
+        }
+    }
+    
+    newLayoutInfo[DDGStoriesLayoutKind] = cellLayoutInfo;
+    
+    self.layoutInfo = newLayoutInfo;
+}
+
+
+CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
+    BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    CGFloat rowHeight;
+    if(mosaicMode) { // set to the height of the larger story
+        rowHeight = ((size.width - DDGStoriesBetweenItemsSpacing)*2/3) / DDGStoryImageWithoutTitleRatio + DDGTitleBarHeightMosaicLarge;
+    } else { // set to the height
+        rowHeight = size.width / DDGStoryImageRatio + DDGTitleBarHeight;
+    }
+    return MAX(10.0f, rowHeight); // a little safety
+}
+
+- (CGSize)collectionViewContentSize
+{
+    NSUInteger numStories = [self.collectionView numberOfItemsInSection:0];
+    CGSize size = self.collectionView.frame.size;
+    self.mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    NSUInteger cellsPerRow = self.mosaicMode ? 3 : 1;
+    CGFloat rowHeight = DDG_rowHeightWithContainerSize(size) + DDGStoriesBetweenItemsSpacing;
+    NSUInteger numRows = numStories/cellsPerRow;
+    if(numStories%cellsPerRow!=0) numRows++;
+    size.height = rowHeight * numRows;
+    return size;
+}
+
+
+
+- (NSArray *)layoutAttributesForElementsInRect:(CGRect)rect
+{
+    NSMutableArray* elementAttributes = [NSMutableArray new];
+    CGSize size = self.collectionView.frame.size;
+    BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    CGFloat rowHeight = DDG_rowHeightWithContainerSize(size) + DDGStoriesBetweenItemsSpacing;
+    
+    NSUInteger cellsPerRow = mosaicMode ? 3 : 1;
+    NSUInteger rowsBeforeRect = floor(rect.origin.y / rowHeight);
+    NSUInteger rowsWithinRect = ceil((rect.origin.y+rect.size.height) / rowHeight) - rowsBeforeRect + 1;
+    
+    for(NSUInteger row = rowsBeforeRect; row < rowsBeforeRect + rowsWithinRect; row++) {
+        for(NSUInteger column = 0 ; column < cellsPerRow; column++) {
+            NSUInteger storyIndex = row * cellsPerRow + column;
+            if(storyIndex >= [self.collectionView numberOfItemsInSection:0]) break;
+            UICollectionViewLayoutAttributes* attributes = [self layoutAttributesForItemAtIndexPath:[NSIndexPath indexPathForItem:storyIndex inSection:0]];
+            [elementAttributes addObject:attributes];
+        }
+    }
+    return elementAttributes;
+}
+
+
+- (UICollectionViewLayoutAttributes *)layoutAttributesForItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    UICollectionViewLayoutAttributes *itemAttributes = [UICollectionViewLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
+    itemAttributes.frame = [self frameForStoryAtIndexPath:indexPath];
+    return itemAttributes;
+}
+
+- (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
+{
+    return TRUE; // re-layout for all bounds changes
+}
+
+- (CGRect)frameForStoryAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSUInteger row = indexPath.item;
+    if(row==NSNotFound) return CGRectZero;
+    row = row / (self.mosaicMode ? 3 : 1);
+    NSInteger column = indexPath.item % (self.mosaicMode ? 3 : 1);
+    CGSize frameSize = self.collectionView.frame.size;
+    CGFloat rowHeight = DDG_rowHeightWithContainerSize(frameSize);
+    CGFloat rowWidth = frameSize.width;
+    BOOL oddRow = (row % 2) == 1;
+    
+    CGRect storyRect = CGRectMake(0, row * (rowHeight + DDGStoriesBetweenItemsSpacing),
+                                  rowWidth, rowHeight);
+    if(self.mosaicMode) {
+        if(oddRow) {
+            if(column==0) { // top left of three
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing)/2;
+            } else if(column==1) { // bottom left of three
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing)/2;
+                storyRect.origin.y += rowHeight - storyRect.size.height;
+            } else { // if(column==2) // the large right-side story
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)*2/3;
+                storyRect.origin.x += rowWidth - storyRect.size.width;
+            }
+        } else { // even row
+            if(column==1) { // top right of three
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing)/2;
+                storyRect.origin.x += rowWidth - storyRect.size.width;
+            } else if(column==2) { // bottom right of three
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)/3;
+                storyRect.size.height = (rowHeight - DDGStoriesBetweenItemsSpacing)/2;
+                storyRect.origin.y += rowHeight - storyRect.size.height;
+                storyRect.origin.x += rowWidth - storyRect.size.width;
+            } else { // if(column==0) // the large left-side story
+                storyRect.size.width = (rowWidth - DDGStoriesBetweenItemsSpacing)*2/3;
+            }
+        }
+        storyRect.origin.y += DDGStoriesBetweenItemsSpacing;
+    } else { // not a mosaic
+        // the defaults are good enough
+    }
+    
+    return storyRect;
+}
+
+
+@end
+
+
+
+
+#pragma mark DDGStoriesViewController
+
 
 @implementation DDGStoriesViewController
 
@@ -68,6 +257,9 @@ NSInteger const DDGSmallImageViewTag = 2;
         self.title = NSLocalizedString(@"Stories", @"View controller title: Stories");
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
+        
+        _sectionChanges = [NSMutableArray new];
+        _objectChanges = [NSMutableArray new];
         
         //Create the context where the blur is going on.
         EAGLContext *eaglContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
@@ -82,9 +274,6 @@ NSInteger const DDGSmallImageViewTag = 2;
 {
     [self.imageDownloadQueue cancelAllOperations];
     self.imageDownloadQueue = nil;
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
 }
 
 - (DDGHistoryProvider *)historyProvider {
@@ -99,10 +288,11 @@ NSInteger const DDGSmallImageViewTag = 2;
 {
     [super didReceiveMemoryWarning];
     
+    // clear the cache, except for the currently visible items
     NSMutableDictionary *cachedImages = [NSMutableDictionary new];
-    NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
+    NSArray *indexPaths = [self.storyView indexPathsForVisibleItems];
     for (NSIndexPath *indexPath in indexPaths) {
-        DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
         if (story) {
             UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
             if (image) {
@@ -122,38 +312,160 @@ NSInteger const DDGSmallImageViewTag = 2;
 }
 
 - (void)reenableScrollsToTop {
-    self.tableView.scrollsToTop = YES;
+    self.storyView.scrollsToTop = YES;
 }
 
 #pragma mark - No Stories
 
-- (void)showNoStoriesView {
-    if (nil == self.noStoriesView) {
-        [[NSBundle mainBundle] loadNibNamed:@"NoStoriesView" owner:self options:nil];
-        UIImageView *largeImageView = (UIImageView *)[self.noStoriesView viewWithTag:DDGLargeImageViewTag];
-        largeImageView.tintColor = [UIColor whiteColor];
-        largeImageView.image = [[UIImage imageNamed:@"NoFavorites"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        UIImageView *smallImageView = (UIImageView *)[self.noStoriesView viewWithTag:DDGSmallImageViewTag];
-        smallImageView.tintColor = RGBA(245.0f, 203.0f, 196.0f, 1.0f);
-        smallImageView.image = [[UIImage imageNamed:@"inline_actions-icon"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+- (void)setShowNoContent:(BOOL)showNoContent {
+    if(showNoContent==self.noContentView.view.hidden) {
+        [UIView animateWithDuration:0 animations:^{
+            self.storyView.hidden = showNoContent;
+            self.noContentView.view.hidden = !showNoContent;
+        }];
+    }
+}
+
+
+
+#pragma mark - DDGStoryDelegate
+
+-(NSUInteger)storiesListMode {
+    return self.storiesMode;
+}
+
+-(void)shareStory:(DDGStory*)story fromView:(UIView*)storySource;
+{
+    NSURL *shareURL = story.URL;
+    
+    NSString* shareString = [NSString stringWithFormat:NSLocalizedString(@"%@\n\nvia DuckDuckGo for iOS\n\n", @"Story title followed by message saying this was shared from DuckDuckGo for iOS: %@\n\nvia DuckDuckGo for iOS\n\n"), story.title];
+    
+    NSArray *items = @[shareString, shareURL];
+    
+    DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items
+                                                                        applicationActivities:@[  ]];
+    if ( [avc respondsToSelector:@selector(popoverPresentationController)] ) {
+        // iOS8
+        CGRect sourceRect = storySource.frame;
+        sourceRect.origin = CGPointMake(0, 0);
+        avc.popoverPresentationController.sourceView = storySource;
+        avc.popoverPresentationController.sourceRect = sourceRect;
     }
     
-    [UIView animateWithDuration:0 animations:^{
-        [self.tableView removeFromSuperview];
-        self.noStoriesView.frame = self.view.bounds;
-        [self.view addSubview:self.noStoriesView];
+    [self presentViewController:avc animated:YES completion:NULL];
+}
+
+
+-(void)toggleStorySaved:(DDGStory*)story
+{
+    story.savedValue = !story.savedValue;
+    NSManagedObjectContext *context = story.managedObjectContext;
+    [context performBlock:^{
+        NSError *error = nil;
+        if (![context save:&error])
+            NSLog(@"error: %@", error);
     }];
 }
 
-- (void)hideNoStoriesView {
-    if (nil == self.tableView.superview) {
-        [UIView animateWithDuration:0 animations:^{
-            [self.noStoriesView removeFromSuperview];
-            self.noStoriesView = nil;
-            self.tableView.frame = self.view.bounds;
-            [self.view addSubview:self.tableView];
-        }];        
+
+-(void)openStoryInBrowser:(DDGStory*)story
+{
+    NSURL *storyURL = story.URL;
+    if (nil == storyURL)
+        return;
+    
+    [[UIApplication sharedApplication] openURL:storyURL];
+}
+
+-(void)removeHistoryItem:(DDGHistoryItem*)historyItem
+{
+    NSManagedObjectContext *context = historyItem.managedObjectContext;
+    [context performBlock:^{
+        DDGStory* story = historyItem.story;
+        if(story) {
+            story.readValue = NO;
+        }
+        [context deleteObject:historyItem];
+        
+        NSError *error = nil;
+        if (![context save:&error])
+            NSLog(@"error: %@", error);
+    }];
+}
+
+-(void)toggleCategoryPressed:(NSString*)categoryName onStory:(DDGStory*)story
+{
+    if (self.categoryFilter==nil) {
+        self.categoryFilter = categoryName;
+    } else {
+        self.categoryFilter = nil;
     }
+    
+    NSArray *oldStories = [self fetchedStories];
+    [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
+    self.fetchedResultsController.delegate = nil;
+    self.fetchedResultsController = nil;
+    
+    NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
+    self.fetchedResultsController = [self fetchedResultsController:feedDate];
+    
+    NSArray *newStories = [self fetchedStories];
+    [self replaceStories:oldStories withStories:newStories focusOnStory:story];
+}
+
+-(void)restoreScrollPositionAnimated:(BOOL)animated {
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    id firstStoryID = [defaults objectForKey:[self lastViewedDefaultsKeyPrefix]];
+    if(firstStoryID) {
+        CGFloat offset = [defaults doubleForKey:[[self lastViewedDefaultsKeyPrefix] stringByAppendingString:@".offset"]];
+        //if(offset<0) offset = 0.0;
+        
+        NSArray *stories = [self fetchedStories];
+        NSArray *storyIDs = [stories valueForKey:@"id"];
+        NSInteger index = [storyIDs indexOfObject:firstStoryID];
+        if(index!=NSNotFound) {
+            NSIndexPath* cellPath = [NSIndexPath indexPathForItem:index inSection:0];
+            CGPoint storyOffset = [self.storiesLayout frameForStoryAtIndexPath:cellPath].origin;
+            [self.storyView setContentOffset:CGPointMake(0, storyOffset.y - offset) animated:animated];
+        }
+        
+    }
+}
+
+-(void)saveScrollPosition {
+    NSArray* visibleStoryCells = [self.storyView visibleCells];
+    DDGStory* firstStory = nil;
+    NSIndexPath* firstStoryIndex = nil;
+    CGFloat firstStoryScreenPosition = 0.0f;
+    CGPoint scrollOffset = self.storyView.contentOffset;
+    
+    // get the first story (and its index + bounds) that is fully visible on the screen
+    for(DDGStoryCell* visibleCell in visibleStoryCells) {
+        NSIndexPath* cellPath = [self.storyView indexPathForCell:visibleCell];
+        if(!cellPath) continue;
+        CGRect cellRect = [self.storiesLayout frameForStoryAtIndexPath:cellPath];
+        CGFloat screenPosition = cellRect.origin.y-scrollOffset.y;
+        if(firstStory==nil || ( screenPosition >= 0 && screenPosition < firstStoryScreenPosition ) ) {
+            firstStory = visibleCell.story;
+            firstStoryIndex = cellPath;
+            firstStoryScreenPosition = screenPosition;
+        }
+    }
+    
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    if(firstStory && firstStoryIndex.row!=0) { // save the first visible story, unless we're at the top of the list
+        [defaults setObject:firstStory.id forKey:[self lastViewedDefaultsKeyPrefix]];
+        [defaults setObject:[NSNumber numberWithDouble:firstStoryScreenPosition] forKey:[[self lastViewedDefaultsKeyPrefix] stringByAppendingString:@".offset"]];
+    } else {
+        [defaults removeObjectForKey:[self lastViewedDefaultsKeyPrefix]];
+        [defaults removeObjectForKey:[[self lastViewedDefaultsKeyPrefix] stringByAppendingString:@".offset"]];
+    }
+}
+
+
+-(UIStatusBarStyle)preferredStatusBarStyle
+{
+    return UIStatusBarStyleLightContent;
 }
 
 #pragma mark - UIViewController
@@ -161,30 +473,53 @@ NSInteger const DDGSmallImageViewTag = 2;
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    DDGTableView *tableView = [[DDGTableView alloc] initWithFrame:self.view.bounds style:UITableViewStylePlain];
-    tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    tableView.backgroundColor = [UIColor duckNoContentColor];
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.rowHeight = 220.0f;
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:tableView];
-    self.tableView = tableView;
+    self.lastStoryIDViewed = [[NSUserDefaults standardUserDefaults] objectForKey:[self lastViewedDefaultsKeyPrefix]];
     
+    self.storiesLayout = [[DDGStoriesLayout alloc] init];
+    self.storiesLayout.storiesController = self;
+    UICollectionView* storyView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.storiesLayout];
+    storyView.canCancelContentTouches = TRUE;
+    storyView.backgroundColor = [UIColor duckStoriesBackground];
+    storyView.dataSource = self;
+    storyView.delegate = self;
+    storyView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [storyView registerClass:DDGStoryCell.class forCellWithReuseIdentifier:DDGStoryCellIdentifier];
+    
+    self.storyView = storyView;
+    
+    if(self.storiesMode==DDGStoriesListModeNormal) {
+        self.refreshControl = [[UIRefreshControl alloc] init];
+        self.refreshControl.tintColor = [UIColor duckRefreshColor];
+        [storyView addSubview:self.refreshControl];
+        [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
+    }
+    
+    self.noContentView = [[DDGNoContentViewController alloc] init];
+    [self.noContentView view]; // force the xib to load
+    if(self.storiesMode==DDGStoriesListModeFavorites) {
+        self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-favorites"];
+        self.noContentView.contentTitle = NSLocalizedString(@"No Favorites",
+                                                            @"title for the view shown when no favorite searches/urls are found");
+        self.noContentView.contentSubtitle = NSLocalizedString(@"Add stories to your favorites, and they will be shown here.",
+                                                               @"details text for the view shown when no favorite stories are found");
+    } else {
+        self.noContentView.noContentImageview.image = [UIImage imageNamed:@"empty-recents"];
+        self.noContentView.contentTitle = NSLocalizedString(@"No Recents",
+                                                            @"title for the view shown when no favorite searches/urls are found");
+        self.noContentView.contentSubtitle = NSLocalizedString(@"Browse stories and search the web, and your recents will be shown here.",
+                                                               @"details text for the view shown when no recent stories are found");
+    }
+    self.noContentView.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.noContentView.view.frame = self.view.bounds;
+    
+    [self.view addSubview:self.storyView];
+    [self.view addSubview:self.noContentView.view];
+    
+    self.ignoreCoreDataUpdates = TRUE;
     self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
     [self prepareUpcomingCellContent];
     
-    if (!self.savedStoriesOnly && refreshHeaderView == nil) {
-		refreshHeaderView = [[EGORefreshTableHeaderView alloc] initWithFrame:CGRectMake(0.0f, 0.0f - self.tableView.bounds.size.height, self.view.frame.size.width, self.tableView.bounds.size.height)];
-		refreshHeaderView.backgroundColor = [UIColor duckRed];
-        refreshHeaderView.delegate = self;
-		[self.tableView addSubview:refreshHeaderView];
-        [refreshHeaderView refreshLastUpdatedDate];
-	}
-	
-    [refreshHeaderView refreshLastUpdatedDate];
-        
     //    // force-decompress the first 10 images
     //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
     //        NSArray *stories = self.stories;
@@ -192,12 +527,6 @@ NSInteger const DDGSmallImageViewTag = 2;
     //            [[stories objectAtIndex:i] prefetchAndDecompressImage];
     //    });
         
-    DDGPanGestureRecognizer* panLeftGestureRecognizer = [[DDGPanGestureRecognizer alloc] initWithTarget:self action:@selector(panLeft:)];
-    panLeftGestureRecognizer.maximumNumberOfTouches = 1;
-    
-    self.panLeftGestureRecognizer = panLeftGestureRecognizer;
-    [[self.slideOverMenuController panGesture] requireGestureRecognizerToFail:panLeftGestureRecognizer];
-    
     NSOperationQueue *queue = [NSOperationQueue new];
     queue.maxConcurrentOperationCount = 2;
     queue.name = @"DDG Watercooler Image Download Queue";
@@ -214,7 +543,6 @@ NSInteger const DDGSmallImageViewTag = 2;
 }
 
 - (void)viewDidUnload {
-    [self setSwipeView:nil];
     [super viewDidUnload];
     
     self.decompressedImages = nil;
@@ -226,9 +554,6 @@ NSInteger const DDGSmallImageViewTag = 2;
     self.enqueuedDownloadOperations = nil;
     self.enqueuedDecompressionOperations = nil;
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
 }
@@ -237,23 +562,20 @@ NSInteger const DDGSmallImageViewTag = 2;
 {
     [super viewWillAppear:animated];
     
-    NSNumber *lastStoryID = [[NSUserDefaults standardUserDefaults] objectForKey:DDGLastViewedStoryKey];
-    if (nil != lastStoryID) {
-        NSArray *stories = self.fetchedResultsController.fetchedObjects;
-        NSArray *storyIDs = [stories valueForKey:@"id"];
-        NSInteger index = [storyIDs indexOfObject:lastStoryID];
-        if (index != NSNotFound) {
-            [self focusOnStory:[stories objectAtIndex:index] animated:NO];
-        }
-    }
+    self.ignoreCoreDataUpdates = FALSE;
+    [self.storyView reloadData];
     
-    if (!self.savedStoriesOnly) {
+    [self restoreScrollPositionAnimated:animated];
+    
+    if (self.storiesMode==DDGStoriesListModeNormal) {
         if ([self shouldRefresh]) {
             [self refreshStoriesTriggeredManually:NO includeSources:YES];
         }
-    } else if ([self.fetchedResultsController.fetchedObjects count] == 0) {
-        [self showNoStoriesView];
     }
+
+    self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
+    
+    [self.searchControllerDDG.homeController registerScrollableContent:self.storyView];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -261,33 +583,20 @@ NSInteger const DDGSmallImageViewTag = 2;
     [super viewDidAppear:animated];
     
     // if we animated out, animate back in
-    if(_tableView.alpha == 0) {
-        _tableView.transform = CGAffineTransformMakeScale(2, 2);
+    if(_storyView.alpha == 0) {
+        _storyView.transform = CGAffineTransformMakeScale(2, 2);
         [UIView animateWithDuration:0.3 animations:^{
-            _tableView.alpha = 1;
-            _tableView.transform = CGAffineTransformIdentity;
+            _storyView.alpha = 1;
+            _storyView.transform = CGAffineTransformIdentity;
         }];
     }
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(slidingViewUnderLeftWillAppear:)
-                                                 name:DDGSlideOverMenuWillAppearNotification
-                                               object:nil];
-    
-    [self.tableView addGestureRecognizer:self.panLeftGestureRecognizer];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
+    [self saveScrollPosition];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                    name:DDGSlideOverMenuWillAppearNotification
-                                                  object:nil];
-    
-    [self.tableView removeGestureRecognizer:self.panLeftGestureRecognizer];
-	[super viewWillDisappear:animated];
+    [super viewWillDisappear:animated];
     
     [self.imageDownloadQueue cancelAllOperations];
     [self.enqueuedDownloadOperations removeAllObjects];
@@ -296,10 +605,20 @@ NSInteger const DDGSmallImageViewTag = 2;
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
+    self.ignoreCoreDataUpdates = true;
+}
+
+-(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
+{
+    [self saveScrollPosition];
+    self.storiesLayout.mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    [super viewWillTransitionToSize:size withTransitionCoordinator:coordinator];
+    [self.storyView setNeedsLayout];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
+    [self saveScrollPosition];
     // Return YES for supported orientations
 	if (IPHONE)
 	    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
@@ -307,56 +626,60 @@ NSInteger const DDGSmallImageViewTag = 2;
         return YES;
 }
 
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+    [self restoreScrollPositionAnimated:FALSE];
+}
+
+-(void)viewDidLayoutSubviews {
+    self.storyView.contentSize = self.storiesLayout.collectionViewContentSize;
+    [self.storyView layoutSubviews];
+}
+
+
+
 #pragma mark - Filtering
 
 #ifndef __clang_analyzer__
 - (IBAction)filter:(id)sender {
+    DDGStory *story = nil;
     
-    void (^completion)() = ^() {
-        DDGStory *story = nil;
-        
-        if ([sender isKindOfClass:[UIButton class]]) {
-            UIButton *button = (UIButton *)sender;
-            CGPoint point = [button convertPoint:button.bounds.origin toView:self.tableView];
-            NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:point];
-            story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        }
-        
-        if (nil != self.sourceFilter) {
-            self.sourceFilter = nil;
-        } else if ([sender isKindOfClass:[UIButton class]]) {
-            self.sourceFilter = story.feed;
-        }
-
-        NSPredicate *predicate = nil;
-        if (nil != self.sourceFilter)
-            predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
-
-        NSArray *oldStories = [self.fetchedResultsController fetchedObjects];
-        
-        [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
-        self.fetchedResultsController.delegate = nil;
-        self.fetchedResultsController = nil;
-        
-        NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
-        self.fetchedResultsController = [self fetchedResultsController:feedDate];
-        
-        NSArray *newStories = [self.fetchedResultsController fetchedObjects];
-        
-        [self replaceStories:oldStories withStories:newStories focusOnStory:story];
-    };
+    if ([sender isKindOfClass:[UIButton class]]) {
+        UIButton *button = (UIButton *)sender;
+        CGPoint point = [button convertPoint:button.bounds.origin toView:self.storyView];
+        NSIndexPath *indexPath = [self.storyView indexPathForItemAtPoint:point];
+        story = [self fetchedStoryAtIndexPath:indexPath];
+    }
     
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:completion];
-    else
-        completion();
+    if (nil != self.sourceFilter) {
+        self.sourceFilter = nil;
+    } else if ([sender isKindOfClass:[UIButton class]]) {
+        self.sourceFilter = story.feed;
+    }
+    
+    NSPredicate *predicate = nil;
+    if (nil != self.sourceFilter)
+        predicate = [NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter];
+    
+    NSArray *oldStories = [self fetchedStories];
+    [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
+    self.fetchedResultsController.delegate = nil;
+    self.fetchedResultsController = nil;
+    
+    NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
+    self.fetchedResultsController = [self fetchedResultsController:feedDate];
+    
+    NSArray *newStories = [self fetchedStories];
+    
+    [self replaceStories:oldStories withStories:newStories focusOnStory:story];
 }
 #endif
 
 -(NSArray *)indexPathsofStoriesInArray:(NSArray *)newStories andNotArray:(NSArray *)oldStories {
     NSMutableArray *indexPaths = [NSMutableArray arrayWithCapacity:[newStories count]];
     
-    for(int i=0;i<newStories.count;i++) {
+    for(int i=0; i<newStories.count; i++) {
         DDGStory *story = [newStories objectAtIndex:i];
         NSString *storyID = story.id;
         
@@ -368,31 +691,24 @@ NSInteger const DDGSmallImageViewTag = 2;
             }
         }
         
-        if(!matchFound)
-            [indexPaths addObject:[NSIndexPath indexPathForRow:i inSection:0]];
+        if(!matchFound) {
+            [indexPaths addObject:[NSIndexPath indexPathForItem:i inSection:0]];
+        }
     }
     return [indexPaths copy];
 }
 
 - (NSInteger)replaceStories:(NSArray *)oldStories withStories:(NSArray *)newStories focusOnStory:(DDGStory *)story {
-    
     NSArray *addedStories = [self indexPathsofStoriesInArray:newStories andNotArray:oldStories];
     NSArray *removedStories = [self indexPathsofStoriesInArray:oldStories andNotArray:newStories];
     NSInteger changes = [addedStories count] + [removedStories count];
     
     // update the table view with added and removed stories
-    [self.tableView beginUpdates];
-    [self.tableView insertRowsAtIndexPaths:addedStories
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView deleteRowsAtIndexPaths:removedStories
-                          withRowAnimation:UITableViewRowAnimationAutomatic];
-    [self.tableView endUpdates];
-    
-    if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0) {
-        [self showNoStoriesView];
-    } else {
-        [self hideNoStoriesView];
+    if(removedStories.count!=0 || addedStories.count!=0) {
+        [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:0]];
     }
+    
+    self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
     
     [self focusOnStory:story animated:YES];
     
@@ -400,241 +716,38 @@ NSInteger const DDGSmallImageViewTag = 2;
 }
 
 
-#pragma mark - Search handler
-
--(void)searchControllerLeftButtonPressed
+-(void)duckGoToTopLevel
 {
-    [self.slideOverMenuController showMenu];
+    if([self collectionView:self.storyView numberOfItemsInSection:0] > 0) {
+        [self.storyView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:0 inSection:0] atScrollPosition:UICollectionViewScrollPositionTop animated:TRUE];
+        if(self.navigationController.viewControllers.count>1) {
+            [self.navigationController popToRootViewControllerAnimated:TRUE];
+        }
+    }
 }
+
+#pragma mark - Search handler
 
 -(void)loadQueryOrURL:(NSString *)queryOrURL
 {
-    [(DDGUnderViewController *)[self.slideOverMenuController menuViewController] loadQueryOrURL:queryOrURL];
+    [self.searchControllerDDG loadQueryOrURL:queryOrURL];
 }
 
 #pragma mark - Swipe View
 
-- (IBAction)openInSafari:(id)sender {
-    if (nil == self.swipeViewIndexPath)
-        return;
-    
-    NSArray *stories = self.fetchedResultsController.fetchedObjects;
-    DDGStory *story = [stories objectAtIndex:self.swipeViewIndexPath.row];
-    
-    
-    double delayInSeconds = 0.2;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-        
-        NSURL *storyURL = story.URL;
-        
-        if (nil == storyURL)
-            return;
-        
-        [[UIApplication sharedApplication] openURL:storyURL];
-    });
-}
-
-- (void)save:(id)sender {
-    if (nil == self.swipeViewIndexPath)
-        return;
-    
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
-    
-    double delayInSeconds = 0.2;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-            story.savedValue = !story.savedValue;
-            NSManagedObjectContext *context = story.managedObjectContext;
-            [context performBlock:^{
-                NSError *error = nil;
-                if (![context save:&error])
-                    NSLog(@"error: %@", error);
-            }];
-            NSString *status = story.savedValue ? NSLocalizedString(@"Added", @"Bookmark Activity Confirmation: Saved") : NSLocalizedString(@"Removed", @"Bookmark Activity Confirmation: Unsaved");
-            UIImage *image = story.savedValue ? [[UIImage imageNamed:@"FavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate] : [[UIImage imageNamed:@"UnfavoriteSolid"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-            [SVProgressHUD showImage:image status:status];
-        }];
-    });    
-}
-
-- (void)share:(id)sender {
-    if (nil == self.swipeViewIndexPath)
-        return;
-    
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:self.swipeViewIndexPath];
-    
-    double delayInSeconds = 0.2;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:^{
-            NSString *shareTitle = story.title;
-            NSURL *shareURL = story.URL;
-            
-            DDGActivityItemProvider *titleProvider = [[DDGActivityItemProvider alloc] initWithPlaceholderItem:[shareURL absoluteString]];
-            [titleProvider setItem:[NSString stringWithFormat:@"%@: %@\n\nvia DuckDuckGo for iOS\n", shareTitle, shareURL] forActivityType:UIActivityTypeMail];
-            
-            DDGSafariActivityItem *urlItem = [DDGSafariActivityItem safariActivityItemWithURL:shareURL];            
-            NSArray *items = @[titleProvider, urlItem];
-            
-            DDGActivityViewController *avc = [[DDGActivityViewController alloc] initWithActivityItems:items applicationActivities:@[]];
-            [self presentViewController:avc animated:YES completion:NULL];
-        }];
-    });
-}
-
-- (void)slidingViewUnderLeftWillAppear:(NSNotification *)notification {
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-    
-    [[NSUserDefaults standardUserDefaults] removeObjectForKey:DDGLastViewedStoryKey];
-}
-
-- (void)hideSwipeViewForIndexPath:(NSIndexPath *)indexPath completion:(void (^)())completion {
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    self.swipeViewIndexPath = nil;
-    
-    UIView *swipeView = self.swipeView;
-    self.swipeView = nil;
-    
-    [UIView animateWithDuration:0.1
-                     animations:^{
-                         cell.contentView.frame = swipeView.frame;
-                     } completion:^(BOOL finished) {
-                         [swipeView removeFromSuperview];
-                         if (NULL != completion)
-                             completion();
-                     }];
-    
-    [[self.slideOverMenuController panGesture] setEnabled:YES];
-}
-
-- (void)insertSwipeViewForIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    if (cell) {
-        UIView *behindView = cell.contentView;
-        CGRect swipeFrame = behindView.frame;
-        if (!self.swipeView) {
-            [[NSBundle mainBundle] loadNibNamed:@"HomeSwipeView" owner:self options:nil];
-        }
-        [self.swipeView setTintColor:[UIColor whiteColor]];
-        DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-        BOOL saved = story.savedValue;
-        NSString *imageName = (saved) ? @"Unfavorite" : @"Favorite";
-        [self.swipeViewSafariButton setImage:[[UIImage imageNamed:@"Safari"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                    forState:UIControlStateNormal];
-        [self.swipeViewSaveButton setImage:[[UIImage imageNamed:imageName] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                  forState:UIControlStateNormal];
-        [self.swipeViewShareButton setImage:[[UIImage imageNamed:@"ShareSwipe"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]
-                                   forState:UIControlStateNormal];
-        self.swipeView.frame = swipeFrame;
-        [behindView.superview insertSubview:self.swipeView belowSubview:behindView];
-        self.swipeViewIndexPath = indexPath;
-    }
-}
-
-- (void)showSwipeViewForIndexPath:(NSIndexPath *)indexPath {
-    
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    
-    void(^completion)() = ^() {
-        if (nil != cell) {
-            UIView *behindView = cell.contentView;
-            CGRect swipeFrame = behindView.frame;
-            [self insertSwipeViewForIndexPath:indexPath];
-            [UIView animateWithDuration:0.2
-                             animations:^{
-                                 behindView.frame = CGRectMake(swipeFrame.origin.x - swipeFrame.size.width,
-                                                               swipeFrame.origin.y,
-                                                               swipeFrame.size.width,
-                                                               swipeFrame.size.height);
-                             }];
-        }
-    };
-    
-    if (nil != self.swipeViewIndexPath) {
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:completion];
-    } else {
-        completion();
-    }
-}
-
-// Called when a left swipe occurred
-
-- (void)panLeft:(DDGPanGestureRecognizer *)recognizer {
-    
-    if (recognizer.state == UIGestureRecognizerStateFailed) {
-        
-    } else if (recognizer.state == UIGestureRecognizerStateEnded
-               || recognizer.state == UIGestureRecognizerStateCancelled) {
-        
-        if (nil != self.swipeViewIndexPath) {
-            UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];
-            CGPoint origin = self.swipeView.frame.origin;
-            CGRect contentFrame = cell.contentView.frame;
-            CGFloat offset = origin.x - contentFrame.origin.x;
-            CGFloat percent = offset / contentFrame.size.width;
-            
-            CGPoint velocity = [recognizer velocityInView:recognizer.view];
-            
-            [[self.slideOverMenuController panGesture] setEnabled:NO];
-            
-            if (velocity.x < 0 && percent > 0.25) {
-                CGFloat distanceRemaining = contentFrame.size.width - offset;
-                CGFloat duration = MIN(distanceRemaining / abs(velocity.x), 0.4);
-                [UIView animateWithDuration:duration
-                                 animations:^{
-                                     cell.contentView.frame = CGRectMake(origin.x - contentFrame.size.width,
-                                                                         contentFrame.origin.y,
-                                                                         contentFrame.size.width,
-                                                                         contentFrame.size.height);
-                                 }];
-                
-            } else {
-                [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-            }
-        }
-        
-    } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        CGPoint location = [recognizer locationInView:self.tableView];
-        NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
-        
-        if (nil != self.swipeViewIndexPath
-            && ![self.swipeViewIndexPath isEqual:indexPath]) {
-            [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-        }
-        
-        if (nil == self.swipeViewIndexPath) {
-            [self insertSwipeViewForIndexPath:indexPath];
-        }
-        
-        DDGStoryCell *cell = (DDGStoryCell *)[self.tableView cellForRowAtIndexPath:self.swipeViewIndexPath];
-        CGPoint translation = [recognizer translationInView:recognizer.view];
-        
-        CGPoint center = cell.contentView.center;
-        cell.contentView.center = CGPointMake(center.x + translation.x,
-                                              center.y);
-        
-        [recognizer setTranslation:CGPointZero inView:recognizer.view];
-    }
-    
-}
 
 #pragma mark - Scroll view delegate
 
 - (void)prepareUpcomingCellContent {
-    NSArray *stories = [self.fetchedResultsController fetchedObjects];
+    NSArray *stories = [self fetchedStories];
     NSInteger count = [stories count];
     
     NSInteger lowestIndex = count;
     NSInteger highestIndex = 0;
     
-    for (NSIndexPath *indexPath in [self.tableView indexPathsForVisibleRows]) {
-        lowestIndex = MIN(lowestIndex, indexPath.row);
-        highestIndex = MAX(highestIndex, indexPath.row);
+    for (NSIndexPath *indexPath in [self.storyView indexPathsForVisibleItems]) {
+        lowestIndex = MIN(lowestIndex, indexPath.item);
+        highestIndex = MAX(highestIndex, indexPath.item);
     }
     
     lowestIndex = MAX(0, lowestIndex-2);
@@ -642,138 +755,131 @@ NSInteger const DDGSmallImageViewTag = 2;
     
     for (NSInteger i = lowestIndex; i<highestIndex; i++) {
         DDGStory *story = [stories objectAtIndex:i];
+        if([story isEqual:[NSNull null]]) continue;
         UIImage *decompressedImage = [self.decompressedImages objectForKey:story.cacheKey];
         
         if (nil == decompressedImage) {
+            NSIndexPath* indexPath = [NSIndexPath indexPathForItem:i inSection:0];
             if (story.isImageDownloaded) {
-                [self decompressAndDisplayImageForStory:story];
+                [self decompressAndDisplayImageForStoryAtIndexPath:indexPath];
             } else  {
-                [self.storyFetcher downloadImageForStory:story];
+                __weak DDGStoriesViewController *weakSelf = self;
+                [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {
+                    [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
+                }];
             }
         }
     }
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-    
-    if(scrollView.contentOffset.y <= 0) {
-        [refreshHeaderView egoRefreshScrollViewDidScroll:scrollView];
-    }
-    
     [self prepareUpcomingCellContent];
 }
 
--(void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    [refreshHeaderView egoRefreshScrollViewDidEndDragging:scrollView];
-}
+#pragma mark - collection view data source
 
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    if (nil != self.swipeViewIndexPath)
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-}
-
-#pragma mark - EGORefreshTableHeaderDelegate Methods
-
-- (void)egoRefreshTableHeaderDidTriggerRefresh:(EGORefreshTableHeaderView*)view {
-    [self refreshStoriesTriggeredManually:YES includeSources:NO];
-}
-
-- (BOOL)egoRefreshTableHeaderDataSourceIsLoading:(EGORefreshTableHeaderView*)view {
-    return isRefreshing;
-}
-
-- (NSDate*)egoRefreshTableHeaderDataSourceLastUpdated:(EGORefreshTableHeaderView*)view {
-    return [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];;
-}
-
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+- (NSInteger)numberOfSectionsInCollectionView:(UICollectionView*)collectionView
 {
-    return [[self.fetchedResultsController sections] count];
+    return 1; //[[self.fetchedResultsController sections] count];
 }
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (NSInteger)collectionView:(UICollectionView*)collectionView numberOfItemsInSection:(NSInteger)section
 {
     id <NSFetchedResultsSectionInfo> sectionInfo = [self.fetchedResultsController sections][section];
     return [sectionInfo numberOfObjects];
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tv cellForRowAtIndexPath:(NSIndexPath *)indexPath
+- (UICollectionViewCell*)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    DDGStoryCell *cell = [tv dequeueReusableCellWithIdentifier:DDGStoryCellIdentifier];
+    DDGStoryCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:DDGStoryCellIdentifier forIndexPath:indexPath];
     if (!cell) {
         cell = [DDGStoryCell new];
     }
-    [self configureCell:cell atIndexPath:indexPath];
-	return cell;
-}
-
-#pragma  mark - Table view delegate
-
-- (NSIndexPath *)tableView:(UITableView *)tableView willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (nil != self.swipeViewIndexPath) {
-        [self hideSwipeViewForIndexPath:self.swipeViewIndexPath completion:NULL];
-        return nil;
+    cell.touchPassthroughView = collectionView;
+    cell.mosaicMode = ((DDGStoriesLayout*)self.storyView.collectionViewLayout).mosaicMode;
+    cell.storyDelegate = self;
+    
+    DDGStory* story = nil;
+    DDGHistoryItem* historyItem = nil;
+    if(self.storiesMode==DDGStoriesListModeRecents) {
+        historyItem = [self.fetchedResultsController objectAtIndexPath:indexPath];
+        story = historyItem.story;
+    } else {
+        story = [self.fetchedResultsController objectAtIndexPath:indexPath];
     }
-    
-    return indexPath;
+    cell.story = story;
+    cell.historyItem = historyItem;
+    UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
+    if (image) {
+        cell.image = image;
+    } else {
+        if (story.isImageDownloaded) {
+            [self decompressAndDisplayImageForStoryAtIndexPath:indexPath];
+        } else {
+            __weak typeof(self) weakSelf = self;
+            [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {
+                [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
+            }];
+        }
+    }
+    [cell setNeedsLayout];
+    return cell;
 }
 
-- (void)tableView:(UITableView *)theTableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
+#pragma  mark - collection view delegate
 
-    story.readValue = YES;
+-(BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    return TRUE;
+}
+
+-(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
+    DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
     
-    [[NSUserDefaults standardUserDefaults] setObject:story.id forKey:DDGLastViewedStoryKey];
+    [self saveScrollPosition];
     
     NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
     [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
     
     [self.historyProvider logStory:story];
     
-    [theTableView deselectRowAtIndexPath:indexPath animated:NO];
+    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
 }
 
 #pragma mark - Loading popular stories
 
 - (BOOL)shouldRefresh
 {
-    NSDate *lastAttempt = (NSDate *)[[NSUserDefaults standardUserDefaults] objectForKey:DDGLastRefreshAttemptKey];
-    if (lastAttempt) {
-        NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:lastAttempt];
-        return (timeInterval > DDGMinimumRefreshInterval);
-    }
-    return YES;
+    return [[NSDate date] timeIntervalSinceDate:self.lastRefreshAttempt] > DDGMinimumRefreshInterval;
 }
 
-- (void)decompressAndDisplayImageForStory:(DDGStory *)story;
+- (void)decompressAndDisplayImageForStoryAtIndexPath:(NSIndexPath*)indexPath;
 {
-    if (nil == story.image || nil == story.cacheKey)
+    DDGStory* story = [self fetchedStoryAtIndexPath:indexPath];
+    if (nil == story || nil == story.image || nil == story.cacheKey)
         return;
     
     NSString *cacheKey = story.cacheKey;
     
-    if ([self.enqueuedDecompressionOperations containsObject:cacheKey])
+    if ([self.enqueuedDecompressionOperations containsObject:cacheKey]) {
+        // this image is already in the queue for decompression
         return;
+    }
     
     __weak DDGStoriesViewController *weakSelf = self;
     
     void (^completionBlock)() = ^() {
-        NSIndexPath *indexPath = [weakSelf.fetchedResultsController indexPathForObject:story];
         if (nil != indexPath) {
-            [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            [weakSelf.storyView reloadItemsAtIndexPaths:@[indexPath]];
         }
     };
     
     UIImage *image = story.image;
     
-    if (nil == image)
+    if (nil == image) {
         completionBlock();
-    else {
+    } else {
         [self.enqueuedDecompressionOperations addObject:cacheKey];
         [self.imageDecompressionQueue addOperationWithBlock:^{
             //Draw the received image in a graphics context.
@@ -781,27 +887,6 @@ NSInteger const DDGSmallImageViewTag = 2;
             [image drawAtPoint:CGPointZero blendMode:kCGBlendModeCopy alpha:1.0];
             UIImage *decompressed = UIGraphicsGetImageFromCurrentImageContext();
             UIGraphicsEndImageContext();
-            
-            //We're drawing the blurred image here too, but this is a shared OpenGLES graphics context.
-            /*
-            if (!story.blurredImage) {
-                CIImage *imageToBlur = [CIImage imageWithCGImage:decompressed.CGImage];
-                
-                CGAffineTransform transform = CGAffineTransformIdentity;
-                CIFilter *clampFilter = [CIFilter filterWithName:@"CIAffineClamp"];
-                [clampFilter setValue:imageToBlur forKey:@"inputImage"];
-                [clampFilter setValue:[NSValue valueWithBytes:&transform objCType:@encode(CGAffineTransform)] forKey:@"inputTransform"];
-                
-                CIFilter *blurFilter = [CIFilter filterWithName:@"CIGaussianBlur"];
-                [blurFilter setValue:clampFilter.outputImage forKey:@"inputImage"];
-                [blurFilter setValue:@10 forKey:@"inputRadius"];
-                
-                CGImageRef filteredImage = [_blurContext createCGImage:blurFilter.outputImage fromRect:[imageToBlur extent]];
-                story.blurredImage = [UIImage imageWithCGImage:filteredImage];
-                CGImageRelease(filteredImage);
-            }
-             */
-            
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
                 [weakSelf.decompressedImages setObject:decompressed forKey:cacheKey];
             }];
@@ -814,11 +899,22 @@ NSInteger const DDGSmallImageViewTag = 2;
     }
 }
 
+-(NSString*)storiesModeLabel {
+    switch(self.storiesMode) {
+        case DDGStoriesListModeFavorites: return @"faves";
+        case DDGStoriesListModeNormal: return @"normal";
+        case DDGStoriesListModeRecents: return @"recents";
+        default: return @"UNKNOWN!";
+    }
+}
+
 - (void)focusOnStory:(DDGStory *)story animated:(BOOL)animated {
     if (nil != story) {
-        NSIndexPath *indexPath = [self.fetchedResultsController indexPathForObject:story];
-        if (nil != indexPath)
-            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionNone animated:animated];
+        NSUInteger itemIndex = [[self fetchedStories] indexOfObject:story];
+        if (itemIndex != NSNotFound) {
+            [self.storyView scrollToItemAtIndexPath:[NSIndexPath indexPathForItem:itemIndex inSection:0]
+                                   atScrollPosition:UICollectionViewScrollPositionNone animated:animated];
+        }
     }
 }
 
@@ -829,9 +925,69 @@ NSInteger const DDGSmallImageViewTag = 2;
     return _storyFetcher;
 }
 
+
+-(NSString*)lastRefreshDefaultsKey
+{
+    switch(self.storiesMode) {
+        case DDGStoriesListModeNormal:
+            return @"lastRefreshAttempt";
+        case DDGStoriesListModeFavorites:
+            return @"lastRefreshFavorites";
+        case DDGStoriesListModeRecents:
+            return @"lastRefreshRecents";
+        default:
+            return @"lastRefreshMisc";
+    }
+}
+
+-(NSString*)lastViewedDefaultsKey
+{
+    switch(self.storiesMode) {
+        case DDGStoriesListModeNormal:
+            return @"last_story.main";
+        case DDGStoriesListModeFavorites:
+            return @"last_story.fav";
+        case DDGStoriesListModeRecents:
+            return @"last_story.recent";
+        default:
+            return @"last_story.other";
+    }
+}
+
+-(NSString*)lastViewedDefaultsKeyPrefix
+{
+    switch(self.storiesMode) {
+        case DDGStoriesListModeNormal:
+            return @"last_story_id.main";
+        case DDGStoriesListModeFavorites:
+            return @"last_story_id.fav";
+        case DDGStoriesListModeRecents:
+            return @"last_story_id.recent";
+        default:
+            return @"last_story_id.other";
+    }
+}
+
+
+
+-(NSDate*)lastRefreshAttempt
+{
+    NSUserDefaults* defaults = [NSUserDefaults standardUserDefaults];
+    id value = [defaults objectForKey:self.lastRefreshDefaultsKey];
+    if(value==nil) return [NSDate dateWithTimeIntervalSince1970:0];
+    if([value isKindOfClass:NSDate.class]) return (NSDate*)value;
+    return [NSDate dateWithTimeIntervalSince1970:0];
+}
+
+
+-(void)setLastRefreshAttempt:(NSDate*)referenceDate
+{
+    [[NSUserDefaults standardUserDefaults] setObject:referenceDate forKey:self.lastRefreshDefaultsKey];
+}
+
 - (void)refreshStoriesTriggeredManually:(BOOL)manual includeSources:(BOOL)includeSources
 {
-    [[NSUserDefaults standardUserDefaults] setObject:[NSDate date] forKey:DDGLastRefreshAttemptKey];
+    self.lastRefreshAttempt = [NSDate date];
     if (includeSources) {
         [self refreshSources:manual];
     } else {
@@ -843,7 +999,6 @@ NSInteger const DDGSmallImageViewTag = 2;
     if (!self.storyFetcher.isRefreshing) {
         __weak DDGStoriesViewController *weakSelf = self;
         [self.storyFetcher refreshSources:^(NSDate *feedDate){
-            NSLog(@"refreshing sources");
             NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:[DDGStoryFeed entityName]];
             NSPredicate *iconPredicate = [NSPredicate predicateWithFormat:@"imageDownloaded == %@", @(NO)];
             [request setPredicate:iconPredicate];
@@ -858,34 +1013,33 @@ NSInteger const DDGSmallImageViewTag = 2;
     }
 }
 
+- (void)refreshManually {
+    [self.refreshControl endRefreshing];
+    [self refreshStories:TRUE];
+}
+
 - (void)refreshStories:(BOOL)manual {
     if (!self.storyFetcher.isRefreshing) {
         
         __block NSArray *oldStories = nil;        
-        __weak DDGStoriesViewController *weakSelf = self;
+        DDGStoriesViewController *weakSelf = self;
         
         void (^willSave)() = ^() {
-            oldStories = [self.fetchedResultsController fetchedObjects];
+            oldStories = [self fetchedStories];
             
             [NSFetchedResultsController deleteCacheWithName:weakSelf.fetchedResultsController.cacheName];
             weakSelf.fetchedResultsController.delegate = nil;
         };
         
         void (^completion)(NSDate *lastFetchDate) = ^(NSDate *feedDate) {
-            NSArray *oldStories = [weakSelf.fetchedResultsController fetchedObjects];
+            NSArray *oldStories = [weakSelf fetchedStories];
 
             weakSelf.fetchedResultsController = nil;
             weakSelf.fetchedResultsController = [self fetchedResultsController:feedDate];
             
-            NSArray *newStories = [self.fetchedResultsController fetchedObjects];
+            NSArray *newStories = [self fetchedStories];
             NSInteger changes = [weakSelf replaceStories:oldStories withStories:newStories focusOnStory:nil];
             [weakSelf prepareUpcomingCellContent];
-            
-            isRefreshing = NO;
-            /* Should only call this method if the refresh was triggered by a PTR */
-            if (manual) {
-                [refreshHeaderView egoRefreshScrollViewDataSourceDidFinishedLoading:weakSelf.tableView];
-            }
             
             if(changes > 0 && [[NSUserDefaults standardUserDefaults] boolForKey:DDGSettingQuackOnRefresh]) {
                 SystemSoundID quack;
@@ -893,6 +1047,7 @@ NSInteger const DDGSmallImageViewTag = 2;
                 AudioServicesCreateSystemSoundID((__bridge CFURLRef)url, &quack);
                 AudioServicesPlaySystemSound(quack);
             }
+            self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
         };
         
         [self.storyFetcher refreshStories:willSave completion:completion];
@@ -901,6 +1056,15 @@ NSInteger const DDGSmallImageViewTag = 2;
 
 #pragma mark - NSFetchedResultsController
 
+-(NSArray*)fetchedStories
+{
+    NSArray* results = self.fetchedResultsController.fetchedObjects;
+    if(self.storiesMode==DDGStoriesListModeRecents) {
+        results = [results valueForKey:@"story"]; // the controller returns a list of history items, so extract the stories from them
+    }
+    return results;
+}
+
 - (NSFetchedResultsController *)fetchedResultsController:(NSDate *)feedDate
 {
     if (_fetchedResultsController != nil) {
@@ -908,9 +1072,25 @@ NSInteger const DDGSmallImageViewTag = 2;
     }
     
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
-    // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [DDGStory entityInManagedObjectContext:self.managedObjectContext];
-    [fetchRequest setEntity:entity];
+    NSMutableArray *predicates = [NSMutableArray array];
+    if(self.storiesMode==DDGStoriesListModeRecents) { // we query the history items list
+        [fetchRequest setEntity:[DDGHistoryItem entityInManagedObjectContext:self.managedObjectContext]];
+        [predicates addObject:[NSPredicate predicateWithFormat:@"section == %@", DDGHistoryItemSectionNameStories]];
+    } else {
+        [fetchRequest setEntity:[DDGStory entityInManagedObjectContext:self.managedObjectContext]];
+        switch(self.storiesMode) {
+            case DDGStoriesListModeFavorites:
+                [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
+                break;
+            case DDGStoriesListModeNormal:
+                if (feedDate) {
+                    [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];
+                }
+                break;
+            default:
+                break;
+        }
+    }
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
@@ -921,124 +1101,162 @@ NSInteger const DDGSmallImageViewTag = 2;
     
     [fetchRequest setSortDescriptors:sortDescriptors];
     
-    NSMutableArray *predicates = [NSMutableArray array];
+    if(self.storiesMode!=DDGStoriesListModeRecents) {
+        NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+        if (readabilityMode == DDGReadabilityModeOnExclusive && self.storiesMode!=DDGStoriesListModeFavorites) {
+            [predicates addObject:[NSPredicate predicateWithFormat:@"articleURLString.length > 0"]];
+        }
+    }
     
-    NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
-    if (readabilityMode == DDGReadabilityModeOnExclusive && !self.savedStoriesOnly)
-        [predicates addObject:[NSPredicate predicateWithFormat:@"articleURLString.length > 0"]];
+    if (nil != self.sourceFilter) {
+        NSString* predicateKey = self.storiesMode==DDGStoriesListModeRecents ? @"feed" : @"feed";
+        [predicates addObject:[NSPredicate predicateWithFormat:@"%K == %@", predicateKey, self.sourceFilter]];
+    }
     
-    if (nil != self.sourceFilter)
-        [predicates addObject:[NSPredicate predicateWithFormat:@"feed == %@", self.sourceFilter]];
-    if (self.savedStoriesOnly)
-        [predicates addObject:[NSPredicate predicateWithFormat:@"saved == %@", @(YES)]];
-    if (nil != feedDate && !self.savedStoriesOnly)
-        [predicates addObject:[NSPredicate predicateWithFormat:@"feedDate == %@", feedDate]];    
-    if ([predicates count] > 0)
+    if (nil != self.categoryFilter) {
+        NSString* predicateKey = self.storiesMode==DDGStoriesListModeRecents ? @"story.category" : @"category";
+        [predicates addObject:[NSPredicate predicateWithFormat:@"%K == %@", predicateKey, self.categoryFilter]];
+    }
+    
+    if ([predicates count] > 0) {
         [fetchRequest setPredicate:[NSCompoundPredicate andPredicateWithSubpredicates:predicates]];
+    }
     
     // Edit the section name key path and cache name if appropriate.
     // nil for section name key path means "no sections".
-    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest managedObjectContext:self.managedObjectContext sectionNameKeyPath:nil cacheName:nil];
+    NSFetchedResultsController *aFetchedResultsController = [[NSFetchedResultsController alloc] initWithFetchRequest:fetchRequest
+                                                                                                managedObjectContext:self.managedObjectContext
+                                                                                                  sectionNameKeyPath:nil
+                                                                                                           cacheName:nil];
     aFetchedResultsController.delegate = self;
     self.fetchedResultsController = aFetchedResultsController;
     
-	NSError *error = nil;
-	if (![self.fetchedResultsController performFetch:&error]) {
+    NSError *error = nil;
+    if (![self.fetchedResultsController performFetch:&error]) {
         // Replace this implementation with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
+        // abort() causes the application to generate a crash log and terminate. You should not
+        // use this function in a shipping application, although it may be useful during development.
 	    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-	}
-    
-//    NSLog(@"feedDate: %@", feedDate);
-//    for (DDGStory *story in [_fetchedResultsController fetchedObjects]) {
-//        NSLog(@"story.feedDate: %@ (isEqual: %i)", story.feedDate, [feedDate isEqual:story.feedDate]);
-//    }
+    }
     
     return _fetchedResultsController;
 }
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView beginUpdates];
+//    [self.storyView beginUpdates];
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    NSMutableDictionary *change = [NSMutableDictionary new];
+    
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            change[@(type)] = @[@(sectionIndex)];
             break;
-            
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            change[@(type)] = @[@(sectionIndex)];
             break;
-      
         case NSFetchedResultsChangeMove:
         case NSFetchedResultsChangeUpdate:
             break;
     }
+    [_sectionChanges addObject:change];
 }
+
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeObject:(id)anObject
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    UITableView *tableView = self.tableView;
-    
+    NSMutableDictionary *change = [NSMutableDictionary new];
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            change[@(type)] = newIndexPath;
             break;
-            
         case NSFetchedResultsChangeDelete:
-        {
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            if (self.savedStoriesOnly && [self.fetchedResultsController.fetchedObjects count] == 0)
-                [self performSelector:@selector(showNoStoriesView) withObject:nil afterDelay:0.2];
-            
-        }
+            change[@(type)] = indexPath;
             break;
-            
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:(DDGStoryCell *)[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            change[@(type)] = indexPath;
             break;
-            
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:@[newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            change[@(type)] = @[indexPath, newIndexPath];
             break;
     }
+    [_objectChanges addObject:change];
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView endUpdates];
+    if(self.ignoreCoreDataUpdates) return;
+    
+    if ([_sectionChanges count] > 0) {
+        [self.storyView performBatchUpdates:^{
+            
+            for (NSDictionary *change in _sectionChanges) {
+                [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
+                    
+                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                    switch (type) {
+                        case NSFetchedResultsChangeInsert:
+                            [self.storyView insertSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                            break;
+                        case NSFetchedResultsChangeDelete:
+                            [self.storyView deleteSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                            break;
+                        case NSFetchedResultsChangeUpdate:
+                            [self.storyView reloadSections:[NSIndexSet indexSetWithIndex:[obj unsignedIntegerValue]]];
+                            break;
+                        case NSFetchedResultsChangeMove:
+                            break;
+                    }
+                }];
+            }
+        } completion:nil];
+    }
+    
+    
+    if ([_objectChanges count] > 0 && [_sectionChanges count] == 0) {
+        [self.storyView performBatchUpdates:^{
+            for (NSDictionary *change in _objectChanges) {
+                [change enumerateKeysAndObjectsUsingBlock:^(NSNumber *key, id obj, BOOL *stop) {
+                    
+                    NSFetchedResultsChangeType type = [key unsignedIntegerValue];
+                    switch (type) {
+                        case NSFetchedResultsChangeInsert:
+                            [self.storyView insertItemsAtIndexPaths:@[obj]];
+                            break;
+                        case NSFetchedResultsChangeDelete:
+                            [self.storyView deleteItemsAtIndexPaths:@[obj]];
+                            break;
+                        case NSFetchedResultsChangeUpdate:
+                            [self.storyView reloadItemsAtIndexPaths:@[obj]];
+                            break;
+                        case NSFetchedResultsChangeMove:
+                            [self.storyView moveItemAtIndexPath:obj[0] toIndexPath:obj[1]];
+                            break;
+                    }
+                }];
+            }
+        } completion:nil];
+    }
+    
+    [_sectionChanges removeAllObjects];
+    [_objectChanges removeAllObjects];
+    
+    self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
 }
 
-- (void)configureCell:(DDGStoryCell *)cell atIndexPath:(NSIndexPath *)indexPath
+-(DDGStory*)fetchedStoryAtIndexPath:(NSIndexPath*)indexPath
 {
-    DDGStory *story = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.displaysDropShadow = (indexPath.row == ([self.tableView numberOfRowsInSection:indexPath.section] - 1));
-    cell.displaysInnerShadow = (indexPath.row != 0);
-    cell.title = story.title;
-    cell.read = story.readValue;
-    if (story.feed) {
-        cell.favicon = [story.feed image];
+    id fetchedObject = [self.fetchedResultsController objectAtIndexPath:indexPath];
+    if(self.storiesMode==DDGStoriesListModeRecents) {
+        return ((DDGHistoryItem*)fetchedObject).story;
     }
-    UIImage *image = [self.decompressedImages objectForKey:story.cacheKey];
-    if (image) {
-        cell.image = image;
-    } else {
-        if (story.isImageDownloaded) {
-            [self decompressAndDisplayImageForStory:story];
-        } else {
-            __weak typeof(self) weakSelf = self;
-            [self.storyFetcher downloadImageForStory:story completion:^(BOOL success) {
-                [weakSelf configureCell:cell atIndexPath:indexPath];
-            }];
-        }
-    }
+    return (DDGStory*)fetchedObject;
 }
 
 

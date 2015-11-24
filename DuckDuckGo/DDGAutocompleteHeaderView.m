@@ -20,13 +20,14 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        self.backgroundColor = [UIColor autocompleteHeaderColor];
+        self.backgroundColor = [UIColor duckStoriesBackground];
+        self.opaque = TRUE;
 
         UILabel *label = [[UILabel alloc] initWithFrame:UIEdgeInsetsInsetRect(self.bounds, UIEdgeInsetsMake(0, 8.0, 0, 0))];
         label.backgroundColor = [UIColor clearColor];
         label.opaque = NO;
-        label.textColor = [UIColor autocompleteTextColor];
-        label.font = [UIFont systemFontOfSize:13.0f];
+        label.textColor = [UIColor autocompleteTitleColor];
+        label.font = [UIFont duckFontWithSize:13.0f];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         
         [self addSubview:label];

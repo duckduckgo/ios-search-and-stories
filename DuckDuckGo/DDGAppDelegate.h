@@ -16,4 +16,9 @@
 @property (readonly, strong, nonatomic) NSManagedObjectModel *managedObjectModel;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
 
++(NSManagedObjectContext*)sharedManagedObjectContext;
+
+// update the 3d-touch shortcut menu
+-(void)updateShortcuts;
+
 @end

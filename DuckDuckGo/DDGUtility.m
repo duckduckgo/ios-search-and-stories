@@ -24,4 +24,10 @@
     return [request copy];
 }
 
++(BOOL)looksLikeURL:(NSString*)text
+{
+    return [text hasPrefix:@"http://"] || [text hasPrefix:@"https://"];
+}
+
+
 @end

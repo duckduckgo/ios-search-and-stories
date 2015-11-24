@@ -7,187 +7,117 @@
 //
 
 #import "DDGTabViewController.h"
+#import "UIViewController+DDGSearchController.h"
 
-@interface DDGTabViewController ()
-@property (nonatomic, strong, readwrite) UISegmentedControl *segmentedControl;
-@property (nonatomic, copy, readwrite) NSArray *viewControllers;
+@interface DDGTabViewController () <UITabBarControllerDelegate>
+@property (nonatomic, strong) IBOutlet DDGSegmentedControl *segmentedControl;
+@property (nonatomic, strong) IBOutlet UIView *controlView;
+@property (nonatomic, strong) IBOutlet UIView *contentView;
 @property (nonatomic, weak, readwrite) UIViewController *currentViewController;
-@property (nonatomic, strong) UIView *toolbarDropShadowView;
-- (CGRect)_viewControllerFrameForControlViewPosition:(DDGTabViewControllerControlViewPosition)toolbarPosition;
+@property (nonatomic, strong) IBOutlet NSLayoutConstraint* segmentWidthConstraint;
+@property (nonatomic, strong) UITabBarController* tabController;
 @end
+
 
 @implementation DDGTabViewController
 
-- (id)initWithViewControllers:(NSArray *)viewControllers
+
+-(id)init
 {
-    self = [super initWithNibName:nil bundle:nil];
-    if (self) {
-        self.viewControllers = viewControllers;
-    }
+    self = [super initWithNibName:@"DDGTabViewController" bundle:nil];
     return self;
 }
 
-#pragma mark - View lifecycle
+-(void)viewDidLoad
+{
+  [super viewDidLoad];
+    self.controlView.backgroundColor = [UIColor duckSearchBarBackground];
+    for (UIViewController *viewController in self.viewControllers) {
+        [self.segmentedControl addSegment:[[UIBarButtonItem alloc] initWithTitle:viewController.title
+                                                                           style:UIBarButtonItemStylePlain
+                                                                          target:nil action:nil]];
+    }
 
-- (CGRect)_viewControllerFrameForControlViewPosition:(DDGTabViewControllerControlViewPosition)controlViewPosition {
-    CGRect controlViewFrame = [self.controlView frame];
-    CGRect viewControllerFrame;
-    CGRect viewBounds = [self.view bounds]; 
+    self.tabController = [[UITabBarController alloc] initWithNibName:nil bundle:nil];
+    self.tabController.delegate = self;
+    [self addChildViewController:self.tabController];
+    self.tabController.view.frame = CGRectMake(0, 0, self.contentView.frame.size.width, self.contentView.frame.size.height);
+    self.contentView.backgroundColor = [UIColor duckSearchBarBackground]; // hack to workaround app switcher flickering issue
+    [self.contentView addSubview:self.tabController.view];
+    [self.tabController didMoveToParentViewController:self];
+    self.tabController.tabBar.hidden = TRUE;
+    self.tabController.viewControllers = self.viewControllers;
     
-    switch (controlViewPosition) {
-        case DDGTabViewControllerControlViewPositionBottom:
-            viewControllerFrame = CGRectMake(viewBounds.origin.x, 
-                                             viewBounds.origin.y, 
-                                             viewBounds.size.width, 
-                                             viewBounds.size.height - controlViewFrame.size.height);
-            [self.view addSubview:self.controlView];
-            break;
-        case DDGTabViewControllerControlViewPositionTop:
-            viewControllerFrame = CGRectMake(viewBounds.origin.x, 
-                                             viewBounds.origin.y + controlViewFrame.size.height, 
-                                             viewBounds.size.width, 
-                                             viewBounds.size.height - controlViewFrame.size.height);            
-            [self.view addSubview:self.controlView];
-            break;
-            
-        case DDGTabViewControllerControlViewPositionNone:
-        default:
-            viewControllerFrame = viewBounds;
-            [self.controlView removeFromSuperview];            
-            break;
-    }    
-    
-    return viewControllerFrame;
+    [self.segmentedControl addTarget:self action:@selector(segmentWasSelected:) forControlEvents:UIControlEventValueChanged];
 }
 
-- (void)viewDidLayoutSubviews {
+- (UIView*)dimmableContentView
+{
+    return self.contentView;
+}
+
+-(void)duckGoToTopLevel
+{
+    [self.currentViewController duckGoToTopLevel];
+}
+
+- (CGFloat)duckPopoverIntrusionAdjustment {
+    return 8.0f;
+}
+
+-(void)alignSegmentBarConstraints
+{
+    if(self.segmentAlignmentView) {
+        self.segmentWidthConstraint.constant = self.segmentAlignmentView.frame.size.width - 16;
+    } else {
+        self.segmentWidthConstraint.constant = self.controlView.frame.size.width-16;
+    }
+    [self.view setNeedsUpdateConstraints];
+}
+
+
+-(void)viewDidLayoutSubviews
+{
     [super viewDidLayoutSubviews];
-    
-    DDGTabViewControllerControlViewPosition position = self.controlViewPosition;
-    
-    CGRect toolbarFrame = [self.controlView frame];
-    CGRect viewControllerFrame = [self _viewControllerFrameForControlViewPosition:position];
-    CGRect viewBounds = [self.view bounds];
-    
-    switch (position) {
-        case DDGTabViewControllerControlViewPositionBottom:
-            toolbarFrame = CGRectMake(viewBounds.origin.x,
-                                      viewBounds.origin.y + viewBounds.size.height - toolbarFrame.size.height,
-                                      viewBounds.size.width,
-                                      toolbarFrame.size.height);
-            [self.view addSubview:self.controlView];
-            break;
-        case DDGTabViewControllerControlViewPositionTop:
-            toolbarFrame = CGRectMake(viewBounds.origin.x,
-                                      viewBounds.origin.y,
-                                      viewBounds.size.width,
-                                      toolbarFrame.size.height);
-            [self.view addSubview:self.controlView];
-            break;
-            
-        case DDGTabViewControllerControlViewPositionNone:
-        default:
-            [self.controlView removeFromSuperview];
-            break;
-    }
-    
-    if (!self.toolbarDropShadowView) {
-        UIView *dropShadowView = [UIView new];
-        dropShadowView.backgroundColor = [UIColor colorWithWhite:0.0f alpha:0.3f];
-        dropShadowView.opaque = NO;
-        [self.controlView setClipsToBounds:NO];
-        [self.controlView addSubview:dropShadowView];
-        self.toolbarDropShadowView = dropShadowView;
-    }
-    CGRect bounds = CGRectMake(0.0f, -0.5f, CGRectGetWidth(viewBounds), 0.5f);
-    [self.toolbarDropShadowView setFrame:bounds];
-    
-    [UIView animateWithDuration:0
-                     animations:^{
-                         [self.controlView setFrame:toolbarFrame];
-                         [self.currentViewController.view setFrame:viewControllerFrame];
-                     }
-     ];
+    [self alignSegmentBarConstraints];
 }
 
-- (UISegmentedControl *)segmentedControl {
-    if (nil == _segmentedControl) {        
-        NSMutableArray *items = [NSMutableArray arrayWithCapacity:[[self childViewControllers] count]];
-        for (UIViewController *viewController in _viewControllers) {
-            NSString *title = [viewController title];
-            if (nil == title)
-                title = NSLocalizedString(@"untitled", @"SSPTabViewController segmented control title for untitled view controller");
-            [items addObject:title];
-        }        
-        
-//        if (self.displaysDropShadow) {
-//            CGRect dropShadowBounds = bounds;
-//            dropShadowBounds.origin.y = CGRectGetHeight(bounds);
-//            dropShadowBounds.size.height = 0.5f;
-//            [self.dropShadowView setFrame:dropShadowBounds];
-//        }
-        
-        UISegmentedControl *segmentedControl = [[UISegmentedControl alloc] initWithItems:items];
-        [segmentedControl addTarget:self action:@selector(_switchViewController:) forControlEvents:UIControlEventValueChanged];
-        self.segmentedControl = segmentedControl;
-    }
-    
-    return _segmentedControl;
-}
-
-- (IBAction)_switchViewController:(id)sender {
+- (IBAction)segmentWasSelected:(id)sender {
     if (sender != self.segmentedControl)
         return;
-    [self setCurrentViewControllerIndex:[self.segmentedControl selectedSegmentIndex]];
+    [self setCurrentViewControllerIndex:self.segmentedControl.selectedSegmentIndex];
+}
+
+-(UIViewController*)currentViewController {
+    return self.tabController.selectedViewController;
 }
 
 - (NSInteger)currentViewControllerIndex {
-    return [self.viewControllers indexOfObject:self.currentViewController];
+    return self.tabController.selectedIndex;
 }
 
 - (void)setCurrentViewControllerIndex:(NSInteger)newViewControllerIndex {
     NSAssert1(newViewControllerIndex < [self.viewControllers count], @"Attempt to select a view controller beyond range of tabViewControllers %ld", (long)newViewControllerIndex);
-    
-    UIViewController *nextViewController = [self.viewControllers objectAtIndex:newViewControllerIndex];
-
-    [self willChangeValueForKey:@"currentViewController"];
-    [self willChangeValueForKey:@"currentViewControllerIndex"];    
-
-    if (nextViewController != self.currentViewController) {
-        [self addChildViewController:nextViewController];    
-        [nextViewController.view setFrame:[self _viewControllerFrameForControlViewPosition:self.controlViewPosition]];
-        if (self.currentViewController.view) 
-            [self.view insertSubview:nextViewController.view belowSubview:self.currentViewController.view]; 
-        else
-            [self.view insertSubview:nextViewController.view belowSubview:self.controlView];
-        [nextViewController didMoveToParentViewController:self];    
-        
-        [self.currentViewController willMoveToParentViewController:nil];
-        [self.currentViewController.view removeFromSuperview];
-        [self.currentViewController removeFromParentViewController];
-        self.currentViewController = nil;    
-        
-        self.currentViewController = nextViewController;        
-    }
-        
-    [self didChangeValueForKey:@"currentViewController"];    
-    [self didChangeValueForKey:@"currentViewControllerIndex"];        
-    
+    self.tabController.selectedIndex = newViewControllerIndex;
     [self.segmentedControl setSelectedSegmentIndex:newViewControllerIndex];
-    
-    if ([[self delegate] respondsToSelector:@selector(tabViewController:didSwitchToViewController:atIndex:)])
-        [[self delegate] tabViewController:self didSwitchToViewController:_currentViewController atIndex:newViewControllerIndex];        
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    if ([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPad) {
-        return YES;
-    }
-        
-    // Return YES for supported orientations
-    return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
+    return YES;
 }
+
+-(void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [self alignSegmentBarConstraints];
+    [super didRotateFromInterfaceOrientation:fromInterfaceOrientation];
+}
+
+#pragma mark - UITabBarControllerDelegate
+
+
+
+
 
 #pragma mark - UIViewController
 
@@ -201,20 +131,12 @@
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    if (nil != self.controlView && nil == self.controlView.superview)
-        [self setControlViewPosition:_controlViewPosition];        
-
     if (nil != self.currentViewController && nil == self.currentViewController.view.superview) {
         NSInteger index = self.currentViewControllerIndex;
         self.currentViewController = nil;
         [self setCurrentViewControllerIndex:index];        
     }
         
-}
-
-- (void)loadView {
-    self.view = [[UIView alloc] initWithFrame:[[UIScreen mainScreen] applicationFrame]];
-    self.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 }
 
 @end

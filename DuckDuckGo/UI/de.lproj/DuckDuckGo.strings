@@ -1,0 +1,9 @@
+
+/* Class = "UIViewController"; title = "Launch"; ObjectID = "PBe-8s-sYF"; */
+"PBe-8s-sYF.title" = "Launch";
+
+/* Class = "UIButton"; accessibilityLabel = "Get Started"; ObjectID = "cON-Fy-1kg"; */
+"cON-Fy-1kg.accessibilityLabel" = "Get Started";
+
+/* Class = "UILabel"; text = "Search Anonymously.\nFind Instantly.XX\nStay Informed."; ObjectID = "d8w-fe-5Yx"; */
+"d8w-fe-5Yx.text" = "Search Anonymously.\nFind Instantly.XX\nStay Informed.";

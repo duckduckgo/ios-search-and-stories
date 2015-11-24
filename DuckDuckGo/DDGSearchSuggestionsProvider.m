@@ -73,21 +73,24 @@ static DDGSearchSuggestionsProvider *sharedProvider;
     // check the cache before querying the server
     if ([suggestionsCache objectForKey:searchText]) {
 		// we have this suggestion already
-        if (success)
+        if (success) {
             success();
+        }
         return;
     } else if(!searchText || [searchText isEqualToString:@""]) {
-        if (success)
+        if (success) {
             success();
+        }
     } else {
 		NSString *urlString = [kDDGSuggestionsURLString stringByAppendingString:[searchText stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
-		serverRequest.URL = [NSURL URLWithString:urlString];
-		
-		AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-				[suggestionsCache setObject:JSON forKey:searchText];
-                if (success)
-                    success();
-		} failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
+        serverRequest.URL = [NSURL URLWithString:urlString];
+        
+        AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:serverRequest success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+            [suggestionsCache setObject:JSON forKey:searchText];
+            if (success) {
+                success();
+            }
+        } failure:^(NSURLRequest *request, NSURLResponse *response, NSError *error, id JSON) {
 			NSLog(@"error: %@",[error userInfo]);
 		}];
 		[operation start];

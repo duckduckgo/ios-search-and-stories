@@ -66,7 +66,7 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
         [self.imageView setBackgroundColor:[UIColor whiteColor]];
         CALayer *layer = [self.imageView layer];
         layer.cornerRadius = 4.0f;
-        layer.masksToBounds = YES;
+        //layer.masksToBounds = YES;
         
         // self contained separator lines
         CGRect frame = self.contentView.bounds;
@@ -96,8 +96,6 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
 
 - (void)layoutSubviews
 {
-    [super layoutSubviews];
-    
     CGRect imageViewBounds = CGRectMake(6.0f, 6.0f, 54.0f, 54.0f);
     [self.imageView setFrame:imageViewBounds];
 
@@ -124,6 +122,7 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
                                             detailRect.origin.y,
                                             contentRect.size.width - detailRect.origin.x,
                                             detailRect.size.height);
+    [super layoutSubviews];
 }
 
 - (void)prepareForReuse
@@ -138,9 +137,9 @@ CGSize AspectFitSizeInSize(CGSize containedSize, CGSize container, BOOL canUpsca
 - (void)setAdorned:(BOOL)adorned
 {
     [self.textLabel setFont:adorned ? [UIFont boldSystemFontOfSize:17.0f] : [UIFont systemFontOfSize:17.0f]];
-    [self.textLabel setTextColor:adorned ? [UIColor autocompleteTitleColor] : [UIColor autocompleteTextColor]];
+    [self.textLabel setTextColor:adorned ? [UIColor autocompleteTitleColor] : [UIColor duckListItemTextForeground]];
     [self.detailTextLabel setFont:adorned ? [UIFont systemFontOfSize:15.0f] : [UIFont systemFontOfSize:15.0f]];
-    [self.detailTextLabel setTextColor:adorned ? [UIColor autocompleteDetailColor] : [UIColor autocompleteTextColor]];
+    [self.detailTextLabel setTextColor:adorned ? [UIColor duckListItemDetailForeground] : [UIColor duckListItemTextForeground]];
 }
 
 - (void)addTarget:(id)target action:(SEL)action forControlEvents:(UIControlEvents)controlEvents

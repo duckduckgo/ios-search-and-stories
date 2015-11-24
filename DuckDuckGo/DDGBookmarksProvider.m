@@ -7,6 +7,7 @@
 //
 
 #import "DDGBookmarksProvider.h"
+#import "DDGAppDelegate.h"
 
 NSString * const DDGBookmarksKey = @"bookmarks";
 
@@ -46,6 +47,10 @@ static DDGBookmarksProvider *sharedProvider;
 				 @"feed": feed ? feed : @""
                  }];
     [[NSUserDefaults standardUserDefaults] setObject:bookmarks forKey:DDGBookmarksKey];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [((DDGAppDelegate*)[[UIApplication sharedApplication] delegate]) updateShortcuts];
+    });
 }
 
 -(void)unbookmarkPageWithURL:(NSURL *)url {
@@ -54,6 +59,11 @@ static DDGBookmarksProvider *sharedProvider;
     for(int i=0; i < bookmarks.count; i++) {
         if([[[bookmarks objectAtIndex:i] objectForKey:@"url"] isEqual:urlString]) {
             [self deleteBookmarkAtIndex:i];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [((DDGAppDelegate*)[[UIApplication sharedApplication] delegate]) updateShortcuts];
+            });
+            
             return;
         }
     }
@@ -63,6 +73,10 @@ static DDGBookmarksProvider *sharedProvider;
     NSMutableArray *bookmarks = self.bookmarks.mutableCopy;
     [bookmarks removeObjectAtIndex:index];
     [[NSUserDefaults standardUserDefaults] setObject:bookmarks.copy forKey:DDGBookmarksKey];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [((DDGAppDelegate*)[[UIApplication sharedApplication] delegate]) updateShortcuts];
+    });
 }
 
 -(void)moveBookmarkAtIndex:(NSInteger)from toIndex:(NSInteger)to {

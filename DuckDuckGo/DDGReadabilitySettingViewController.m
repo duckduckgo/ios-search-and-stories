@@ -18,8 +18,7 @@ NSString * const DDGReadabilityModeKey = @"readability";
 {
     [super viewDidLoad];
     
-    self.tableView.backgroundView = nil;
-	self.tableView.backgroundColor =  DDG_SETTINGS_BACKGROUND_COLOR;
+    [DDGSettingsViewController configureTable:self.tableView];
 }
 
 - (void)configure
@@ -28,12 +27,11 @@ NSString * const DDGReadabilityModeKey = @"readability";
     
     NSInteger readabilitySetting = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
     
-    [self addSectionWithTitle:@"Readability" footer:nil];
+    [self addSectionWithTitle:NSLocalizedString(@"Readability", @"Title for settings that improve readability") footer:nil];
     
-    [self addRadioOptionWithTitle:@"Off" value:@(DDGReadabilityModeOff) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOff)];
-    [self addRadioOptionWithTitle:@"On when available" value:@(DDGReadabilityModeOnIfAvailable) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnIfAvailable)];
-    [self addRadioOptionWithTitle:@"Only show articles with Readability" value:@(DDGReadabilityModeOnExclusive) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnExclusive)];
-    
+    [self addRadioOptionWithTitle:NSLocalizedString(@"Off", @"Readability is turned off") value:@(DDGReadabilityModeOff) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOff)];
+    [self addRadioOptionWithTitle:NSLocalizedString(@"On when available", @"Setting to use readability if it's available") value:@(DDGReadabilityModeOnIfAvailable) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnIfAvailable)];
+    [self addRadioOptionWithTitle:NSLocalizedString(@"Only show articles with Readability", @"Show only articles that can be viewed with Readability") value:@(DDGReadabilityModeOnExclusive) key:DDGReadabilityModeKey selected:(readabilitySetting == DDGReadabilityModeOnExclusive)];
 }
 
 -(void)saveData:(NSDictionary *)formData {
@@ -50,26 +48,26 @@ NSString * const DDGReadabilityModeKey = @"readability";
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    UIView *view;
-    DDG_SETTINGS_HEADER(view, [self tableView:tableView titleForHeaderInSection:section])
-    return view;
+    return [DDGSettingsViewController createSectionHeaderView:[self tableView:tableView titleForHeaderInSection:section]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
-    
-    DDG_SETTINGS_TITLE_LABEL(cell.textLabel)
-    DDG_SETTINGS_DETAIL_LABEL(cell.detailTextLabel)
-    
+    [DDGSettingsViewController configureSettingsCell:cell];
     return cell;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section {
-    UIView *view = nil;
     NSString *title = [self tableView:tableView titleForFooterInSection:section];
-    if (nil != title) {
-        DDG_SETTINGS_FOOTER(view, title)
-    }
-    return view;
+    return title.length > 0 ? [DDGSettingsViewController createSectionFooterView:title] : nil;
 }
+
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
+    return 64.0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section {
+    return 0.01f;
+}
+
 @end

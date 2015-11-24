@@ -9,6 +9,14 @@
 #import "DDGAddressBarTextField.h"
 #import <QuartzCore/QuartzCore.h>
 
+@interface DDGAddressBarTextField ()
+
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *placeholderTextLeft;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *placeholderTextCenter;
+@property (strong, nonatomic) IBOutlet UIImageView *placeholderIconView;
+
+@end
+
 @implementation DDGAddressBarTextField
 
 -(id)initWithFrame:(CGRect)frame {
@@ -27,78 +35,187 @@
     return self;
 }
 
+
+-(void)updatePlaceholder {
+    [self updatePlaceholderAnimated:TRUE];
+}
+
+-(void)updateConstraints {
+    [super updateConstraints];
+    BOOL fieldIsActive = self.isFirstResponder;
+    if([self.placeholderTextCenter respondsToSelector:@selector(setActive:)]) {
+        // iOS8+ - the right way
+        self.placeholderTextLeft.active = fieldIsActive;
+        self.placeholderTextCenter.active = !fieldIsActive;
+    } else {
+        // iOS7 - the workaround way
+        if(fieldIsActive) {
+            [self.superview removeConstraint:self.placeholderTextCenter];
+            [self.superview addConstraint:self.placeholderTextLeft];
+        } else {
+            [self.superview removeConstraint:self.placeholderTextLeft];
+            [self.superview addConstraint:self.placeholderTextCenter];
+        }
+    }
+}
+
+-(void)updatePlaceholderAnimated:(BOOL)animated {
+    NSString* text = self.text;
+    BOOL fieldIsActive = self.isFirstResponder;
+    BOOL emptyText = text.length <= 0;
+    
+    // if the text is non-empty then hide the placeholder immediately
+    if(!emptyText) {
+        self.placeholderView.alpha = 0.0f;
+    }
+    
+    void(^animator)() = ^() {
+        // position the placeholder
+        if([self.placeholderTextCenter respondsToSelector:@selector(setActive:)]) {
+            // iOS8+ - the right way
+            self.placeholderTextLeft.active = fieldIsActive;
+            self.placeholderTextCenter.active = !fieldIsActive;
+        } else {
+            // iOS7 - the workaround way
+            if(fieldIsActive) {
+                [self.superview removeConstraint:self.placeholderTextCenter];
+                [self.superview addConstraint:self.placeholderTextLeft];
+            } else {
+                [self.superview removeConstraint:self.placeholderTextLeft];
+                [self.superview addConstraint:self.placeholderTextCenter];
+            }
+        }
+        
+        // fade the loupe icon in or out
+        self.placeholderIconView.alpha = fieldIsActive ? 0 : 1.0f;
+        
+        // if the text is empty, then let's fade in the placeholder
+        if(emptyText) {
+            self.placeholderView.alpha = 1.0f;
+        }
+        
+        [self.placeholderView layoutIfNeeded];
+    };
+    
+    if(animated) {
+        [UIView animateWithDuration:0.2f animations:animator];
+    } else {
+        animator();
+    }
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+    if ([keyPath isEqualToString:@"text"]) {
+        [self updatePlaceholderAnimated:TRUE];
+        //        id newText = [change valueForKey:@"new"];
+//        if(newText!=nil && [newText length]>0) {
+//            [self hidePlaceholder];
+//        }
+        [self textWasUpdated:nil];
+    }
+}
+
+
+-(void)textWasUpdated:(id)source {
+    NSString* newText = self.text;
+    if(newText!=nil && [newText length]>0) {
+        self.clearButton.hidden = FALSE;
+    } else {
+        self.clearButton.hidden = TRUE;
+    }
+}
+
 -(void)setup
 {
-    [self addTarget:self action:@selector(hideProgress) forControlEvents:UIControlEventEditingDidBegin];
-    [self addTarget:self action:@selector(showProgress) forControlEvents:UIControlEventEditingDidEnd];
+    self.stopButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.stopButton setImage:[UIImage imageNamed:@"stop.png"] forState:UIControlStateNormal];
+    self.stopButton.frame = CGRectMake(0,0,27,23);
     
-    self.backgroundColor = [UIColor whiteColor];
+    self.reloadButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.reloadButton setImage:[UIImage imageNamed:@"refresh.png"] forState:UIControlStateNormal];
+    self.reloadButton.frame = CGRectMake(0,0,27,23);
+    
+    self.clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [self.clearButton setImage:[UIImage imageNamed:@"clear.png"] forState:UIControlStateNormal];
+    self.clearButton.frame = CGRectMake(0,0,27,23);
+    
+    [self addTarget:self action:@selector(textWasUpdated:) forControlEvents:UIControlEventEditingChanged];
+    
+    [self addObserver:self
+           forKeyPath:@"text"
+              options:NSKeyValueObservingOptionNew
+              context:NULL];
+    
+    [self addTarget:self action:@selector(updatePlaceholder) forControlEvents:UIControlEventEditingDidBegin];
+    [self addTarget:self action:@selector(updatePlaceholder) forControlEvents:UIControlEventEditingDidEnd];
+    [self addTarget:self action:@selector(updatePlaceholder) forControlEvents:UIControlEventEditingChanged];
+    
+    self.backgroundColor = [UIColor duckSearchFieldBackground];
+    self.textColor = [UIColor duckSearchFieldForeground];
+    self.tintColor = [UIColor duckSearchFieldForeground];
+    self.contentHorizontalAlignment = UIControlContentHorizontalAlignmentCenter;
+    
+    [self.clearButton addTarget:self action:@selector(clear:) forControlEvents:UIControlEventTouchUpInside];
+    
     CALayer *layer = self.layer;
-    layer.cornerRadius = 2.0f;
-    layer.masksToBounds = YES;
-    
-    progressView = [[UIImageView alloc] initWithImage:[[UIImage imageNamed:@"Loading"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate]];
-    progressView.tintColor = [UIColor duckLightBlue];
-    progressView.frame = CGRectMake(2, 2, 100, 27);
-    [self insertSubview:progressView atIndex:1];
-    
-    [self setProgress:0];
+    layer.cornerRadius = 4.0f;
 }
 
-#pragma mark - Showing and hiding progress
 
--(void)hideProgress {
-    progressView.hidden = YES;
-}
-
--(void)showProgress {
-    progressView.hidden = NO;
-}
-
--(void)cancel {
-    [self setProgress:0.0 animationDuration:0.0];
-    [progressView.layer removeAllAnimations];    
-}
-
--(void)finish {
-    [self setProgress:1.0 animationDuration:0.5];
-    // the fade-out needs to happen before the width animation happens, otherwise the width animation will try to continue itself and render the setProgress:0 below useless
-    [UIView animateWithDuration:0.45 animations:^{
-        progressView.alpha = 0;
-    } completion:^(BOOL finished) {
-        [self setProgress:0];
-        progressView.alpha = 1;
-    }];
-}
-
-#pragma mark - Progress bar
-
--(void)setProgress:(CGFloat)newProgress {
-    [self setProgress:newProgress animationDuration:2.0];
-}
-
--(void)setProgress:(CGFloat)newProgress animationDuration:(CGFloat)duration {
-    if(newProgress > 1)
-        newProgress = 1;
-    CGRect f = progressView.frame;
-    f.size.width = (self.bounds.size.width-4)*newProgress;
-    if(newProgress > progress) {
-        [UIView animateWithDuration:duration
-                              delay:0.0
-                            options:UIViewAnimationOptionBeginFromCurrentState|UIViewAnimationOptionCurveEaseOut
-                         animations:^{
-                             progressView.frame = f;                     
-                         }
-                         completion:^(BOOL finished) {
-                             if(finished)
-                                 [self setProgress:newProgress+0.1 
-                                 animationDuration:duration*4];
-                         }];
-    } else {
-        [progressView.layer removeAllAnimations];
-        progressView.frame = f;
+-(void)setRightButtonMode:(DDGAddressBarRightButtonMode)newMode {
+    switch (newMode) {
+        case DDGAddressBarRightButtonModeDefault:
+            self.rightView = self.clearButton;
+            self.rightViewMode = UITextFieldViewModeWhileEditing;
+            break;
+        case DDGAddressBarRightButtonModeRefresh:
+            self.rightView = self.reloadButton;
+            self.rightViewMode = UITextFieldViewModeAlways;
+            break;
+        case DDGAddressBarRightButtonModeStop:
+            self.rightView = self.stopButton;
+            self.rightViewMode = UITextFieldViewModeAlways;
+            break;
+        case DDGAddressBarRightButtonModeNone:
+            self.rightView = self.reloadButton;
+            self.rightViewMode = UITextFieldViewModeNever;
+            break;
     }
-        progress = newProgress;
+}
+
+-(void)resetField
+{
+    [self clear:nil];
+    [self updatePlaceholder];
+}
+
+
+-(IBAction)clear:(id)sender {
+    self.text = @"";
+}
+
+// placeholder position
+- (CGRect)textRectForBounds:(CGRect)bounds {
+    CGRect rect = [super textRectForBounds:bounds];
+    if(self.additionalLeftSideInset!=0) rect.origin.x = self.additionalLeftSideInset;
+    rect.size.width -= self.additionalLeftSideInset;
+    rect.size.width -= self.additionalRightSideInset;
+    return rect;
+}
+
+// text position
+- (CGRect)editingRectForBounds:(CGRect)bounds {
+    CGRect rect = [super editingRectForBounds:bounds];
+    if(self.additionalLeftSideInset!=0) rect.origin.x = self.additionalLeftSideInset;
+    rect.size.width -= self.additionalLeftSideInset;
+    rect.size.width -= self.additionalRightSideInset;
+    return rect;
+}
+
+-(void)dealloc
+{
+    [self removeObserver:self forKeyPath:@"text"];
 }
 
 @end
