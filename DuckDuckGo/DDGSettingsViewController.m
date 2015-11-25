@@ -442,7 +442,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     cell.textLabel.font = [UIFont duckFontWithSize:17.0];
     cell.textLabel.textColor = [UIColor duckListItemTextForeground];
     cell.textLabel.textAlignment = NSTextAlignmentNatural;
-    cell.detailTextLabel.font = [UIFont duckFontWithSize:17.0];
+    cell.detailTextLabel.font = [UIFont duckFontWithSize:13.0];
     cell.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
     cell.tintColor = UIColor.duckRed;
 }
