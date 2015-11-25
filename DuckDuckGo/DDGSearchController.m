@@ -117,9 +117,10 @@ NSString * const emailRegEx =
 - (void)popContentViewControllerAnimated:(BOOL)animated {
     if ([self canPopContentViewController]) {
         NSTimeInterval duration = (animated) ? 0.3 : 0.0;
-        
         [self setState:DDGSearchControllerStateHome animationDuration:duration];
         [self setSearchBarOrangeButtonImage];
+        barUpdated = false;
+        oldSearchText = @"";
         [self.searchBar.searchField resetField];
         [self setProgress:1.0f animated:FALSE];
         

@@ -443,8 +443,9 @@
         NSManagedObjectContext *context = bookmarkItem.story.managedObjectContext;
         [context performBlock:^{
             NSError *error = nil;
-            if (![context save:&error])
+            if (![context save:&error]) {
                 NSLog(@"error: %@", error);
+            }
         }];
     }
     
@@ -591,8 +592,9 @@
         [context performBlock:^{
             NSError *error = nil;
             BOOL success = [context save:&error];
-            if (!success)
+            if (!success) {
                 NSLog(@"error: %@", error);
+            }
         }];
     };
     
