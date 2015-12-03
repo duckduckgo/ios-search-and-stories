@@ -447,6 +447,16 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     cell.tintColor = UIColor.duckRed;
 }
 
++(void)configureOptionCell:(UITableViewCell*)cell
+{
+    cell.textLabel.font = [UIFont duckFontWithSize:17.0];
+    cell.textLabel.textColor = [UIColor duckListItemTextForeground];
+    cell.textLabel.textAlignment = NSTextAlignmentNatural;
+    cell.detailTextLabel.font = [UIFont duckFontWithSize:15.0];
+    cell.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
+    cell.tintColor = UIColor.duckRed;
+}
+
 +(UIView*)createSectionFooterView:(NSString *)title
 {
     UIView* view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 20)];
@@ -481,8 +491,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
-    [DDGSettingsViewController configureSettingsCell:cell];
     IGFormElement* thisElement = [self elementAtIndexPath:indexPath];
+    if(thisElement && [thisElement isKindOfClass:IGFormButton.class]) {
+        [DDGSettingsViewController configureOptionCell:cell];
+    } else {
+        [DDGSettingsViewController configureSettingsCell:cell];
+    }
     if(thisElement==self.clearRecentsButton && self.numberOfRecents<=0) {
         cell.textLabel.textColor = [UIColor lightGrayColor];
     }
