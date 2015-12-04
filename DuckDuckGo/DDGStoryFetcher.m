@@ -85,6 +85,11 @@ NSString * const DDGStoryFetcherSourcesLastUpdatedKey = @"sourcesUpdated";
                         feed = [results objectAtIndex:0];
                     } else {
                         feed = [DDGStoryFeed insertInManagedObjectContext:context];
+                        NSError *error = nil;
+                        BOOL success = [context obtainPermanentIDsForObjects:@[feed] error:&error];
+                        if (!success) {
+                            NSLog(@"error: %@", error);
+                        }
                         feed.feedState = DDGStoryFeedStateDefault;
                     }
                     
