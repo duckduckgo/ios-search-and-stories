@@ -21,8 +21,9 @@
 #import "DDGActivityItemProvider.h"
 #import "DDGSafariActivity.h"
 #import "DDGImageActivityItemProvider.h"
+#import "DDGToolbarAutohider.h"
 
-@interface DDGWebViewController () <UIScrollViewDelegate, UIGestureRecognizerDelegate> {
+@interface DDGWebViewController () <UIGestureRecognizerDelegate, DDGToolbarAutohiderDelegate> {
     BOOL _isFavorited;
     CGPoint lastOffset;
     CGFloat lastUpwardsScrollDistance;
@@ -37,6 +38,8 @@
 @property IBOutlet UIButton* tabsButton;
 @property IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
 @property NSDate* ignoreTapsUntil;
+@property DDGToolbarAutohider* toolbarHider;
+@property NSLayoutConstraint* bottomToolbarTopConstraint;
 
 @property BOOL isFavorited;
 
@@ -99,7 +102,28 @@
     
     [self.view addSubview:self.webView];
     
-    self.toolbar = [[UINib nibWithNibName:@"DDGWebToolbar" bundle:nil] instantiateWithOwner:self options:nil][0];
+    [[UINib nibWithNibName:@"DDGWebToolbar" bundle:nil] instantiateWithOwner:self options:nil];
+    [self.view addSubview:self.webToolbar];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.webToolbar
+                                                          attribute:NSLayoutAttributeLeading
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeLeading
+                                                         multiplier:1 constant:0]];
+    [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.webToolbar
+                                                          attribute:NSLayoutAttributeTrailing
+                                                          relatedBy:NSLayoutRelationEqual
+                                                             toItem:self.view
+                                                          attribute:NSLayoutAttributeTrailing
+                                                         multiplier:1 constant:0]];
+    self.bottomToolbarTopConstraint = [NSLayoutConstraint constraintWithItem:self.webToolbar
+                                                                   attribute:NSLayoutAttributeBottom
+                                                                   relatedBy:NSLayoutRelationEqual
+                                                                      toItem:self.view
+                                                                   attribute:NSLayoutAttributeBottom
+                                                                  multiplier:1 constant:0];
+    [self.view addConstraint:self.bottomToolbarTopConstraint];
+    
     [self updateButtons];
 }
 
@@ -122,9 +146,9 @@
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [self.webView addGestureRecognizer:tapGestureRecognizer];
     
-    self.webView.scrollView.delegate = self;
-    lastOffset = self.webView.scrollView.contentOffset;
-    lastUpwardsScrollDistance = 0;
+    self.toolbarHider = [[DDGToolbarAutohider alloc] initWithContainerView:self.view
+                                                                scrollView:self.webView.scrollView
+                                                                  delegate:self];
 }
 
 - (void)setSearchController:(DDGSearchController *)searchController {
@@ -181,32 +205,6 @@
     [super viewDidUnload];
 }
 
--(void)autoHideOrShowToolbarBasedOnScrolling {
-    CGPoint offset = self.webView.scrollView.contentOffset;
-    if(offset.y==0) {
-        // we're at the top... show the toolbar
-        lastUpwardsScrollDistance = 0;
-        [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
-    } else if(offset.y  > lastOffset.y) {
-        // we're scrolling down... hide the toolbar, unless we're already very close to the bottom
-        BOOL atBottom =  offset.y+50 >= (self.webView.scrollView.contentSize.height - self.webView.scrollView.frame.size.height);
-        lastUpwardsScrollDistance = 0;
-        [self.searchControllerDDG.homeController setHideToolbar:!atBottom withScrollview:self.webView.scrollView];
-    } else {
-        // we're scrolling up... show the toolbar if we've gone past a certain threshold
-        lastUpwardsScrollDistance += (lastOffset.y - offset.y);
-        if(lastUpwardsScrollDistance > 50) {
-            lastUpwardsScrollDistance = 0;
-            [self.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.webView.scrollView];
-        }
-    }
-    lastOffset = offset;
-}
-
--(void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self autoHideOrShowToolbarBasedOnScrolling];
-}
-
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     // Return YES for supported orientations
@@ -238,6 +236,7 @@
             CGPoint touchLoc = [otherGestureRecognizer locationInView:self.webView];
             NSURL* imageURL = [self findImageForTap:touchLoc];
             if(imageURL!=nil) {
+                
                 [self longPressOnImage:imageURL atLocation:touchLoc];
                 return YES;
             }
@@ -313,6 +312,23 @@
 }
 
 #pragma mark - Actions
+
+-(void)setHideToolbar:(BOOL)hideToolbar forScrollview:(UIScrollView*)scrollView
+{
+    CGFloat newConstant = hideToolbar ? 50 : 0;
+    if(self.bottomToolbarTopConstraint.constant!=newConstant) {
+        self.bottomToolbarTopConstraint.constant = newConstant;
+        [UIView animateWithDuration:0.25 animations:^{
+            [self.view layoutSubviews];
+            scrollView.contentInset = UIEdgeInsetsMake(0, 0, -newConstant, 0);
+            scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, -newConstant, 0);
+        }];
+    }
+}
+
+
+
+
 
 -(BOOL)isFavorited
 {
@@ -705,7 +721,7 @@
 		}
 	}
     
-    // NSLog(@"shouldStartLoadWithRequest: %@ navigationType: %i", request, navigationType);
+    //NSLog(@"shouldStartLoadWithRequest: %@ navigationType: %i", request, navigationType);
     
     [self updateBarWithRequest:request];
     
