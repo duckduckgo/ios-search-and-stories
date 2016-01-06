@@ -10,6 +10,10 @@ We are excited that you want to help make DuckDuckGo Search & Stories better. So
 Before building the app you must have mogenerator installed. You can check if it is installed by typing "mogenerator" in the terminal. If the output is "0 machine files and 0 human files generated.
 " you are set. If it says invalid command you can find out how to install mogenerator from [this website] (https://rentzsch.github.io/mogenerator/).
 
+The App Store version of the app uses a font, *ProximaNova*, whose license prohibits its inclusion in this repository. Because of this, the Xcode build will fail, unless you replace it with something else. [*Open Sans*](http://opensans.com) is a nice open-source option.
+
+After copying the font to the Xcode project, you'll need to change any references to it, including source code and xibs (use the Find navigator to help here!), and remove the 4 *ProximaNova* references in the "Copy Bundle Resources" section of the project's Build Phases (there are a lot of resouces&mdash;filter on `ProximaNova` to make this faster).
+
 ## Changes
 * **Bugs** fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/segfault-stories-swipe origin/master`
