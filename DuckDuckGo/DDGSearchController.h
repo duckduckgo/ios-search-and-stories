@@ -42,6 +42,7 @@ typedef enum {
 @property (nonatomic, weak, readonly) id<DDGSearchHandler> searchHandler;
 @property (nonatomic) BOOL shouldPushSearchHandlerEvents;
 
+- (void)setContentViewController:(UIViewController *)contentController tabPosition:(NSUInteger)tabPosition animated:(BOOL)animated;
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated;
 - (void)popContentViewControllerAnimated:(BOOL)animated;
 - (BOOL)canPopContentViewController;

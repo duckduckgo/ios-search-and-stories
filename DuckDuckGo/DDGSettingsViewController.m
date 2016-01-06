@@ -89,7 +89,17 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-	self.navigationItem.rightBarButtonItem = nil;
+    // put the tableview under a container UIView to enable the toolbar installed by the search controller
+    UITableView* tableView = self.tableView;
+    CGRect frame = self.view.frame;
+    self.view = [[UIView alloc] initWithFrame:frame];
+    frame.origin = CGPointMake(0, 0);
+    tableView.frame = frame;
+    [self.view addSubview:tableView];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+
+    self.navigationItem.rightBarButtonItem = nil;
     [DDGSettingsViewController configureTable:self.tableView];
     
     // force 1st time through for iOS < 6.0
@@ -442,7 +452,17 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     cell.textLabel.font = [UIFont duckFontWithSize:17.0];
     cell.textLabel.textColor = [UIColor duckListItemTextForeground];
     cell.textLabel.textAlignment = NSTextAlignmentNatural;
-    cell.detailTextLabel.font = [UIFont duckFontWithSize:17.0];
+    cell.detailTextLabel.font = [UIFont duckFontWithSize:13.0];
+    cell.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
+    cell.tintColor = UIColor.duckRed;
+}
+
++(void)configureOptionCell:(UITableViewCell*)cell
+{
+    cell.textLabel.font = [UIFont duckFontWithSize:17.0];
+    cell.textLabel.textColor = [UIColor duckListItemTextForeground];
+    cell.textLabel.textAlignment = NSTextAlignmentNatural;
+    cell.detailTextLabel.font = [UIFont duckFontWithSize:15.0];
     cell.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
     cell.tintColor = UIColor.duckRed;
 }
@@ -481,8 +501,12 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [super tableView:tableView cellForRowAtIndexPath:indexPath];
     
-    [DDGSettingsViewController configureSettingsCell:cell];
     IGFormElement* thisElement = [self elementAtIndexPath:indexPath];
+    if(thisElement && [thisElement isKindOfClass:IGFormButton.class]) {
+        [DDGSettingsViewController configureOptionCell:cell];
+    } else {
+        [DDGSettingsViewController configureSettingsCell:cell];
+    }
     if(thisElement==self.clearRecentsButton && self.numberOfRecents<=0) {
         cell.textLabel.textColor = [UIColor lightGrayColor];
     }

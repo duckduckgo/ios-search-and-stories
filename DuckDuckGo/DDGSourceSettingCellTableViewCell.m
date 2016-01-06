@@ -44,16 +44,17 @@
 }
 
 -(void)layoutSubviews {
+    [super layoutSubviews];
+
     self.imageView.frame = CGRectMake(15, 5, 40, 40);
     
     CGRect tmpFrame = self.textLabel.frame;
     tmpFrame.origin.x = 70;
     self.textLabel.frame = tmpFrame;
-
-    tmpFrame.origin.y += tmpFrame.size.height + 4;
+    
+    tmpFrame.origin.y += tmpFrame.size.height + 0;
     tmpFrame.size.width = self.frame.size.width - self.frame.size.height - tmpFrame.origin.x;
     self.detailTextLabel.frame = tmpFrame;
-    [super layoutSubviews];
 }
 
 @end
