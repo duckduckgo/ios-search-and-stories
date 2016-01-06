@@ -22,6 +22,7 @@
 #import "DDGDuckViewController.h"
 #import "UIViewController+DDGSearchController.h"
 #import "DDGUtility.h"
+#import "DDGToolbar.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -47,6 +48,7 @@ NSString * const emailRegEx =
 @property (nonatomic, weak) UIView* customToolbar;
 @property (nonatomic, strong) IBOutlet NSLayoutConstraint* contentBottomConstraint;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint* searchBarMaxWidthConstraint;
+@property IBOutlet UIView* duckTabBar;
 @property UIView* shadowView;
 
 @end
@@ -98,7 +100,43 @@ NSString * const emailRegEx =
     [self.searchBar.orangeButton setImage:image forState:UIControlStateNormal];
 }
 
+- (void)setContentViewController:(UIViewController *)contentController tabPosition:(NSUInteger)tabPosition animated:(BOOL)animated {
+    
+    // add the tab bar to the bottom of the view, because it is part of the content view when a (web) view is pushed in
+    UIView* containerView = contentController.view;
+    
+    NSMutableArray<DDGToolbarItem*>* toolbarItems = [NSMutableArray<DDGToolbarItem*> new];
+    [toolbarItems addObject:[DDGToolbarItem toolbarItemWithTarget:self.homeController
+                                                           action:@selector(showDuck)
+                                                        imageName:@"Tab-Search"
+                                                selectedImageName:@"Tab-Search-Active"
+                                                initiallySelected:tabPosition==0]];
+    [toolbarItems addObject:[DDGToolbarItem toolbarItemWithTarget:self.homeController
+                                                           action:@selector(showStories)
+                                                        imageName:@"Tab-Stories"
+                                                selectedImageName:@"Tab-Stories-Active"
+                                                initiallySelected:tabPosition==1]];
+    [toolbarItems addObject:[DDGToolbarItem toolbarItemWithTarget:self.homeController
+                                                           action:@selector(showFavorites)
+                                                        imageName:@"Tab-Favorites"
+                                                selectedImageName:@"Tab-Favorites-Active"
+                                                initiallySelected:tabPosition==2]];
+    [toolbarItems addObject:[DDGToolbarItem toolbarItemWithTarget:self.homeController
+                                                           action:@selector(showRecents)
+                                                        imageName:@"Tab-Recents"
+                                                selectedImageName:@"Tab-Recents-Active"
+                                                initiallySelected:tabPosition==3]];
+    [toolbarItems addObject:[DDGToolbarItem toolbarItemWithTarget:self.homeController
+                                                           action:@selector(showSettings)
+                                                        imageName:@"Tab-Settings"
+                                                selectedImageName:@"Tab-Settings-Active"
+                                                initiallySelected:tabPosition==4]];
+    DDGToolbar* toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom];
+    [self pushContentViewController:contentController animated:animated];
+}
+
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated {
+    BOOL topController = self.navController.viewControllers.count==0;
     if (self.isTransitioningViewControllers)
         return;
     if([contentController isKindOfClass:DDGDuckViewController.class]) {
@@ -106,6 +144,11 @@ NSString * const emailRegEx =
     }
     [self view]; // force the view to be loaded
     contentController.view.frame = self.background.frame;
+    if(topController) {
+        [self.duckTabBar removeFromSuperview];
+        [contentController.view addSubview:self.duckTabBar];
+        self.duckTabBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    }
     [self.navController pushViewController:contentController animated:animated];
     [self updateToolbars:FALSE];
 }
@@ -226,9 +269,11 @@ NSString * const emailRegEx =
     navController.interactivePopGestureRecognizer.delegate = self;
     navController.delegate = self;
     navController.view.frame = self.background.frame;
+    
     [self addChildViewController:navController];
     [self.view insertSubview:navController.view belowSubview:self.background];
     [navController didMoveToParentViewController:self];
+    //navController.hidesBottomBarWhenPushed = TRUE;
     self.navController = navController;
     
     CGRect searchBarFrame = self.searchBar.frame;
@@ -540,7 +585,7 @@ NSString * const emailRegEx =
     if(_state == DDGSearchControllerStateHome) {
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = NO;
-        self.homeController.alternateButtonBar = nil;
+        //self.homeController.alternateButtonBar = nil;
         self.searchBar.progressView.percentCompleted = 100;
         self.searchBar.showsBangButton = NO;
         [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
@@ -552,7 +597,7 @@ NSString * const emailRegEx =
         self.searchBar.showsCancelButton = NO;
         self.searchBar.showsLeftButton = YES;
         self.searchBar.showsBangButton = NO;
-        self.homeController.alternateButtonBar = self.customToolbar;
+        //self.homeController.alternateButtonBar = self.customToolbar;
         
         if (duration > 0) [self.searchBar layoutIfNeeded:duration];
     }
@@ -562,7 +607,7 @@ NSString * const emailRegEx =
 {
     NSTimeInterval duration = (animated) ? 0.3 : 0.0;
     
-    [self.homeController setAlternateButtonBar:self.navController.topViewController.alternateToolbar animated:animated];
+    //[self.homeController setAlternateButtonBar:self.navController.topViewController.alternateToolbar animated:animated];
     [self setState:([self canPopContentViewController]) ? DDGSearchControllerStateWeb : DDGSearchControllerStateHome animationDuration:duration];
     [self setSearchBarOrangeButtonImage];
 }

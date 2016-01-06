@@ -14,15 +14,20 @@
 
 @interface DDGHomeViewController : UIViewController <DDGTabViewControllerDelegate, UITabBarControllerDelegate>
 
-@property (nonatomic, strong) UIView* alternateButtonBar;
+//@property (nonatomic, strong) UIView* alternateButtonBar;
 
 +(DDGHomeViewController*)newHomeController;
 -(id<DDGSearchHandler>)currentSearchHandler;
 
 -(void)showSearchAndPrepareInput;
 -(void)showSaved;
--(void)setHideToolbar:(BOOL)hideToolbar withScrollview:(UIScrollView*)scrollView;
--(void)setAlternateButtonBar:(UIView *)alternateButtonBar animated:(BOOL)animated;
 -(void)registerScrollableContent:(UIScrollView*)contentView;
+
+
+-(IBAction)showRecents;
+-(IBAction)showFavorites;
+-(IBAction)showStories;
+-(IBAction)showDuck;
+-(IBAction)showSettings;
 
 @end

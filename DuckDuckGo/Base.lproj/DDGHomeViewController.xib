@@ -1,26 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
-        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
-        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9531"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DDGHomeViewController">
             <connections>
-                <outlet property="altToolbarLeft" destination="Lci-5l-ZsQ" id="hTT-pt-DY5"/>
-                <outlet property="alternateToolbarContainer" destination="kyo-JD-Ybe" id="fxf-PG-oaf"/>
-                <outlet property="favoritesTabButton" destination="FmX-HN-8WI" id="mEJ-3X-bw0"/>
-                <outlet property="homeToolbarLeft" destination="m9c-VI-hov" id="GNa-uU-rLc"/>
-                <outlet property="recentsTabButton" destination="5xv-00-irE" id="0UH-0J-2ed"/>
-                <outlet property="searchButtonBar" destination="HQm-a7-mxw" id="j8l-zf-631"/>
-                <outlet property="searchTabButton" destination="Iqm-n3-jod" id="F3S-04-wtt"/>
-                <outlet property="settingsTabButton" destination="w9s-2z-UbG" id="Auf-4g-A1Q"/>
-                <outlet property="storiesTabButton" destination="zhq-iC-hVf" id="08H-GD-xtX"/>
-                <outlet property="tabBarTopBorderConstraint" destination="qY5-lM-5G3" id="F1x-qr-mCM"/>
                 <outlet property="tabContentView" destination="nOn-A2-4XZ" id="YsK-tH-YCA"/>
-                <outlet property="toolbarTop" destination="CdO-vI-mzy" id="nfI-rB-Zva"/>
                 <outlet property="topAlignmentConstraint" destination="Okf-nx-ZKD" id="h1Y-EG-3bR"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -35,170 +22,19 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nOn-A2-4XZ" userLabel="tab content">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="601"/>
-                    <animations/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                 </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="NwH-at-kPi" userLabel="border">
-                    <rect key="frame" x="0.0" y="550" width="600" height="1"/>
-                    <animations/>
-                    <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="1" id="qY5-lM-5G3"/>
-                    </constraints>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HQm-a7-mxw" userLabel="tab bar">
-                    <rect key="frame" x="0.0" y="551" width="600" height="50"/>
-                    <subviews>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Iqm-n3-jod" userLabel="search">
-                            <rect key="frame" x="36" y="1" width="48" height="48"/>
-                            <animations/>
-                            <accessibility key="accessibilityConfiguration" label="Search"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="48" id="dP2-cS-0qY"/>
-                                <constraint firstAttribute="height" constant="48" id="dwo-Sp-v9F"/>
-                            </constraints>
-                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
-                            <state key="normal" image="Tab-Search">
-                                <color key="titleColor" red="0.73333333333333328" green="0.73333333333333328" blue="0.73333333333333328" alpha="1" colorSpace="deviceRGB"/>
-                            </state>
-                            <state key="selected" image="Tab-Search-Active"/>
-                            <connections>
-                                <action selector="showDuck" destination="-1" eventType="touchUpInside" id="1Xx-yk-EgG"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zhq-iC-hVf" userLabel="stories">
-                            <rect key="frame" x="156" y="1" width="48" height="48"/>
-                            <animations/>
-                            <accessibility key="accessibilityConfiguration" label="Stories"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="48" id="5pA-6A-EYg"/>
-                                <constraint firstAttribute="height" constant="48" id="MtU-u9-KtW"/>
-                            </constraints>
-                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
-                            <state key="normal" image="Tab-Stories">
-                                <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
-                            </state>
-                            <state key="selected" image="Tab-Stories-Active"/>
-                            <connections>
-                                <action selector="showStories" destination="-1" eventType="touchUpInside" id="RQz-mh-NI8"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FmX-HN-8WI" userLabel="favorites">
-                            <rect key="frame" x="276" y="1" width="48" height="48"/>
-                            <animations/>
-                            <accessibility key="accessibilityConfiguration" label="Favorites"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="48" id="CsL-oc-22u"/>
-                                <constraint firstAttribute="width" constant="48" id="ue7-6q-aww"/>
-                            </constraints>
-                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
-                            <state key="normal" image="Tab-Favorites">
-                                <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
-                            </state>
-                            <state key="selected" image="Tab-Favorites-Active"/>
-                            <connections>
-                                <action selector="showFavorites" destination="-1" eventType="touchUpInside" id="uUo-Gr-1Lv"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5xv-00-irE" userLabel="recents">
-                            <rect key="frame" x="396" y="1" width="48" height="48"/>
-                            <animations/>
-                            <accessibility key="accessibilityConfiguration" label="Recents"/>
-                            <constraints>
-                                <constraint firstAttribute="width" constant="48" id="IRv-gq-M6N"/>
-                                <constraint firstAttribute="height" constant="48" id="Rjc-KQ-XJZ"/>
-                            </constraints>
-                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
-                            <state key="normal" image="Tab-Recents">
-                                <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
-                            </state>
-                            <state key="selected" image="Tab-Recents-Active"/>
-                            <connections>
-                                <action selector="showRecents" destination="-1" eventType="touchUpInside" id="OXL-qu-ujl"/>
-                            </connections>
-                        </button>
-                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w9s-2z-UbG" userLabel="settings">
-                            <rect key="frame" x="516" y="1" width="48" height="48"/>
-                            <animations/>
-                            <accessibility key="accessibilityConfiguration" label="Settings"/>
-                            <constraints>
-                                <constraint firstAttribute="height" constant="48" id="5Dn-sS-Hhq"/>
-                                <constraint firstAttribute="width" constant="48" id="WJF-NJ-cPT"/>
-                            </constraints>
-                            <color key="tintColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="deviceRGB"/>
-                            <state key="normal" image="Tab-Settings">
-                                <color key="titleColor" red="0.73333333329999995" green="0.73333333329999995" blue="0.73333333329999995" alpha="1" colorSpace="deviceRGB"/>
-                            </state>
-                            <state key="selected" image="Tab-Settings-Active"/>
-                            <connections>
-                                <action selector="showSettings" destination="-1" eventType="touchUpInside" id="HB7-DM-Nv1"/>
-                            </connections>
-                        </button>
-                    </subviews>
-                    <animations/>
-                    <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="deviceRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="centerY" secondItem="w9s-2z-UbG" secondAttribute="centerY" id="3Rv-UV-7Es"/>
-                        <constraint firstAttribute="height" constant="50" id="Hyt-Se-5ZJ" userLabel="tab bar height"/>
-                        <constraint firstAttribute="centerY" secondItem="FmX-HN-8WI" secondAttribute="centerY" id="Ovc-bO-MAg"/>
-                        <constraint firstItem="w9s-2z-UbG" firstAttribute="centerY" secondItem="HQm-a7-mxw" secondAttribute="centerY" id="UxL-9y-vFg" userLabel="settings vertical center"/>
-                        <constraint firstItem="Iqm-n3-jod" firstAttribute="centerY" secondItem="HQm-a7-mxw" secondAttribute="centerY" id="WAl-1B-MNE" userLabel="search vertical center"/>
-                        <constraint firstItem="zhq-iC-hVf" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.3" id="YPu-mC-tlb"/>
-                        <constraint firstItem="Iqm-n3-jod" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.1" id="ZzH-qR-EMK" userLabel="search left align"/>
-                        <constraint firstItem="w9s-2z-UbG" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.9" id="dy6-FT-QXb"/>
-                        <constraint firstItem="FmX-HN-8WI" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.5" id="eQT-W3-2hq"/>
-                        <constraint firstAttribute="centerY" secondItem="zhq-iC-hVf" secondAttribute="centerY" id="gPM-BQ-a5w"/>
-                        <constraint firstItem="w9s-2z-UbG" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" constant="-42" id="pHL-4B-ddb" userLabel="settings right align"/>
-                        <constraint firstAttribute="centerY" secondItem="5xv-00-irE" secondAttribute="centerY" id="s9E-x5-jdH"/>
-                        <constraint firstItem="5xv-00-irE" firstAttribute="centerX" secondItem="HQm-a7-mxw" secondAttribute="trailing" multiplier="0.7" id="u5A-1c-AAo"/>
-                    </constraints>
-                    <variation key="default">
-                        <mask key="constraints">
-                            <exclude reference="UxL-9y-vFg"/>
-                            <exclude reference="pHL-4B-ddb"/>
-                        </mask>
-                    </variation>
-                </view>
-                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kyo-JD-Ybe" userLabel="alternate bar">
-                    <rect key="frame" x="600" y="551" width="600" height="50"/>
-                    <animations/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="50" id="Jmc-ri-m98" userLabel="tab bar height"/>
-                    </constraints>
-                </view>
             </subviews>
-            <animations/>
             <color key="backgroundColor" red="0.87058823529411766" green="0.34509803921568627" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="07T-AZ-Z0Z"/>
                 <constraint firstAttribute="trailing" secondItem="nOn-A2-4XZ" secondAttribute="trailing" id="8IO-Gj-RIU"/>
-                <constraint firstItem="NwH-at-kPi" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="bottom" priority="1" constant="-50" id="CdO-vI-mzy"/>
-                <constraint firstItem="kyo-JD-Ybe" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="Fyi-04-bna"/>
-                <constraint firstItem="kyo-JD-Ybe" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" priority="800" id="Lci-5l-ZsQ"/>
-                <constraint firstItem="HQm-a7-mxw" firstAttribute="width" secondItem="i5M-Pr-FkT" secondAttribute="width" id="NcP-Tt-9xB"/>
-                <constraint firstItem="HQm-a7-mxw" firstAttribute="top" secondItem="NwH-at-kPi" secondAttribute="bottom" id="OZ5-Sb-okf"/>
                 <constraint firstItem="nOn-A2-4XZ" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Okf-nx-ZKD"/>
-                <constraint firstItem="kyo-JD-Ybe" firstAttribute="top" secondItem="NwH-at-kPi" secondAttribute="bottom" id="TAL-yo-lqJ"/>
                 <constraint firstAttribute="bottom" secondItem="nOn-A2-4XZ" secondAttribute="bottom" constant="-1" id="bpk-5B-KkL"/>
-                <constraint firstItem="HQm-a7-mxw" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" priority="900" id="m9c-VI-hov" userLabel="tab bar left"/>
-                <constraint firstItem="kyo-JD-Ybe" firstAttribute="leading" secondItem="HQm-a7-mxw" secondAttribute="trailing" id="qOA-xR-CpL"/>
-                <constraint firstItem="NwH-at-kPi" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="sMg-RR-87x"/>
-                <constraint firstAttribute="trailing" secondItem="NwH-at-kPi" secondAttribute="trailing" id="wue-NG-Gi3"/>
             </constraints>
             <simulatedStatusBarMetrics key="simulatedStatusBarMetrics" statusBarStyle="lightContent"/>
-            <point key="canvasLocation" x="360" y="469"/>
+            <nil key="simulatedTopBarMetrics"/>
+            <point key="canvasLocation" x="259" y="428"/>
         </view>
     </objects>
-    <resources>
-        <image name="Tab-Favorites" width="24" height="24"/>
-        <image name="Tab-Favorites-Active" width="22" height="19"/>
-        <image name="Tab-Recents" width="24" height="24"/>
-        <image name="Tab-Recents-Active" width="22" height="22"/>
-        <image name="Tab-Search" width="24" height="24"/>
-        <image name="Tab-Search-Active" width="21" height="21"/>
-        <image name="Tab-Settings" width="24" height="24"/>
-        <image name="Tab-Settings-Active" width="22" height="22"/>
-        <image name="Tab-Stories" width="24" height="24"/>
-        <image name="Tab-Stories-Active" width="24" height="24"/>
-    </resources>
 </document>

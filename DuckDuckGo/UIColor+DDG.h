@@ -48,6 +48,7 @@
 + (UIColor*)duckTabBarBackground;
 + (UIColor*)duckTabBarForeground;
 + (UIColor*)duckTabBarForegroundSelected;
++ (UIColor*)duckTabBarBorder;
 
 + (UIColor*)duckSegmentBarBackground;
 + (UIColor*)duckSegmentBarForeground;

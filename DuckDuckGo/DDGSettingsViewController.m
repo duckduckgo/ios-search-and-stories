@@ -89,7 +89,17 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 -(void)viewDidLoad {
     [super viewDidLoad];
     
-	self.navigationItem.rightBarButtonItem = nil;
+    // put the tableview under a container UIView to enable the toolbar installed by the search controller
+    UITableView* tableView = self.tableView;
+    CGRect frame = self.view.frame;
+    self.view = [[UIView alloc] initWithFrame:frame];
+    frame.origin = CGPointMake(0, 0);
+    tableView.frame = frame;
+    [self.view addSubview:tableView];
+    self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    self.view.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+
+    self.navigationItem.rightBarButtonItem = nil;
     [DDGSettingsViewController configureTable:self.tableView];
     
     // force 1st time through for iOS < 6.0

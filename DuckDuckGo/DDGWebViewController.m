@@ -68,11 +68,9 @@
 
 -(UIView*)hitTest:(CGPoint)tapPoint withEvent:(UIEvent *)event
 {
-    
+    // if someone taps the bottom toolbar area, swallow the tap and show the toolbar
     if(tapPoint.y + 50 > self.frame.size.height) {
-        NSLog(@"tapped dead space!");
-        // this tap point is where the auto-hidden toolbar should be. Let's un-auto-hide it and try to block taps
-        [self.webController.searchControllerDDG.homeController setHideToolbar:FALSE withScrollview:self.scrollView];
+        [self.webController setHideToolbar:FALSE forScrollview:self.scrollView];
         return self.blackHoleView;
     }
     return [super hitTest:tapPoint withEvent:event];
