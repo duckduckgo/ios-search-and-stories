@@ -69,6 +69,11 @@
     return [UIColor colorWithRed:0.874 green:0.345 blue:0.2 alpha:1]; // #DF5833
 }
 
++ (UIColor*)duckTabBarBorder
+{
+    return [UIColor colorWithRed:0 green:0 blue:0 alpha:0.15];
+}
+
 + (UIColor*)duckProgressBarForeground
 {
     return [UIColor colorWithRed:0.266 green:0.584 blue:0.831 alpha:1]; // #4495d4

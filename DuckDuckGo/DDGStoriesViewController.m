@@ -22,6 +22,7 @@
 #import "DDGNoContentViewController.h"
 #import <CoreImage/CoreImage.h>
 #import "DDGTableView.h"
+#import "DDGCollectionView.h"
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
@@ -477,7 +478,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     
     self.storiesLayout = [[DDGStoriesLayout alloc] init];
     self.storiesLayout.storiesController = self;
-    UICollectionView* storyView = [[UICollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.storiesLayout];
+    UICollectionView* storyView = [[DDGCollectionView alloc] initWithFrame:self.view.bounds collectionViewLayout:self.storiesLayout];
     storyView.canCancelContentTouches = TRUE;
     storyView.backgroundColor = [UIColor duckStoriesBackground];
     storyView.dataSource = self;

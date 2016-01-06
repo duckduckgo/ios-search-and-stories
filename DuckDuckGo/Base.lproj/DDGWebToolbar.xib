@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <objects>
@@ -20,9 +20,16 @@
         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YM8-Zt-olG" userLabel="web toolbar">
             <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
             <subviews>
+                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zwS-Vk-Io3" userLabel="border">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.14999999999999999" colorSpace="calibratedWhite"/>
+                </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="71n-NZ-5pv" userLabel="background">
+                    <rect key="frame" x="0.0" y="1" width="600" height="49"/>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                </view>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="D1U-79-qbz" userLabel="back">
                     <rect key="frame" x="51" y="1" width="48" height="48"/>
-                    <animations/>
                     <accessibility key="accessibilityConfiguration" label="Back"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="jhN-q4-xcJ"/>
@@ -38,7 +45,6 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9s9-Ft-ueK" userLabel="forward">
                     <rect key="frame" x="201" y="1" width="48" height="48"/>
-                    <animations/>
                     <accessibility key="accessibilityConfiguration" label="Forward"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="04R-3d-8w5"/>
@@ -54,7 +60,6 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rdb-X1-aus" userLabel="fav">
                     <rect key="frame" x="351" y="1" width="48" height="48"/>
-                    <animations/>
                     <accessibility key="accessibilityConfiguration" label="Favorite"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="48" id="MuV-wr-TwW"/>
@@ -70,7 +75,6 @@
                 </button>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bTS-Cl-kXM" userLabel="share">
                     <rect key="frame" x="501" y="1" width="48" height="48"/>
-                    <animations/>
                     <accessibility key="accessibilityConfiguration" label="Share"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="48" id="APA-Yi-MzD"/>
@@ -86,7 +90,6 @@
                 </button>
                 <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZIq-Fa-jkb" userLabel="tabs">
                     <rect key="frame" x="516" y="1" width="48" height="48"/>
-                    <animations/>
                     <constraints>
                         <constraint firstAttribute="width" constant="48" id="Eop-WJ-KLX"/>
                         <constraint firstAttribute="height" constant="48" id="gac-3Y-xWd"/>
@@ -100,16 +103,19 @@
                     </connections>
                 </button>
             </subviews>
-            <animations/>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="71n-NZ-5pv" secondAttribute="trailing" id="06G-nQ-m6o"/>
                 <constraint firstItem="D1U-79-qbz" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.125" id="2jt-Ou-7Wi" userLabel="back left align"/>
                 <constraint firstItem="bTS-Cl-kXM" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.875" id="BDe-t8-qAU" userLabel="share left align"/>
                 <constraint firstAttribute="centerY" secondItem="bTS-Cl-kXM" secondAttribute="centerY" id="FGP-9C-4Vv" userLabel="share vertical center"/>
                 <constraint firstItem="ZIq-Fa-jkb" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.9" id="H0r-C1-kJ5" userLabel="tabs left align"/>
                 <constraint firstItem="D1U-79-qbz" firstAttribute="centerY" secondItem="YM8-Zt-olG" secondAttribute="centerY" id="Jvf-WO-QAE" userLabel="back vertical center"/>
                 <constraint firstItem="9s9-Ft-ueK" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.375" id="S35-Ut-ILi" userLabel="forward left align"/>
+                <constraint firstItem="71n-NZ-5pv" firstAttribute="top" secondItem="YM8-Zt-olG" secondAttribute="top" constant="1" id="WWr-K4-an6"/>
                 <constraint firstItem="rdb-X1-aus" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.625" id="XII-bx-aDK" userLabel="fav left align"/>
+                <constraint firstAttribute="bottom" secondItem="71n-NZ-5pv" secondAttribute="bottom" id="Y8l-7k-HrS"/>
+                <constraint firstItem="71n-NZ-5pv" firstAttribute="leading" secondItem="YM8-Zt-olG" secondAttribute="leading" id="YVj-Nf-Bcq"/>
                 <constraint firstAttribute="height" constant="50" id="dLj-kG-hTS" userLabel="tab bar height"/>
                 <constraint firstAttribute="centerY" secondItem="rdb-X1-aus" secondAttribute="centerY" id="fqC-tD-d3f" userLabel="fav vertical center"/>
                 <constraint firstItem="ZIq-Fa-jkb" firstAttribute="centerY" secondItem="YM8-Zt-olG" secondAttribute="centerY" id="mBV-3Z-s4y" userLabel="tabs vertical center"/>

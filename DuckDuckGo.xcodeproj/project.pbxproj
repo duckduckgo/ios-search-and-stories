@@ -304,6 +304,7 @@
 		8409F5F01B5E917E001F897F /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EC1B5E917E001F897F /* proximanova-regular.otf */; };
 		8409F5F11B5E917E001F897F /* proximanova-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */; };
 		8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */; };
+		84341F131C26B7E2008A7E2A /* DDGToolbarAutohider.m in Sources */ = {isa = PBXBuildFile; fileRef = 84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */; };
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */; };
@@ -311,6 +312,8 @@
 		8472B15A1BC3314200059BE4 /* MGSplitDividerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1531BC3314200059BE4 /* MGSplitDividerView.m */; };
 		8472B15B1BC3314200059BE4 /* MGSplitViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1551BC3314200059BE4 /* MGSplitViewController.m */; };
 		8472B15C1BC3314200059BE4 /* RootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8472B1571BC3314200059BE4 /* RootViewController.m */; };
+		847CEACD1C3C02B60086BABB /* DDGToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 847CEACC1C3C02B50086BABB /* DDGToolbar.m */; };
+		847DA68F1C1060940091F55F /* DDGCollectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 847DA68E1C1060940091F55F /* DDGCollectionView.m */; };
 		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
 		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
 		84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */; };
@@ -957,6 +960,8 @@
 		8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "fonts/licensed/proximanova-semibold.otf"; sourceTree = "<group>"; };
 		8410AD531BB7353500CC83DB /* DDGImageActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGImageActivityItemProvider.h; sourceTree = "<group>"; };
 		8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGImageActivityItemProvider.m; sourceTree = "<group>"; };
+		84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDGToolbarAutohider.h; path = DuckDuckGo/DDGToolbarAutohider.h; sourceTree = "<group>"; };
+		84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDGToolbarAutohider.m; path = DuckDuckGo/DDGToolbarAutohider.m; sourceTree = "<group>"; };
 		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBar.h; sourceTree = "<group>"; };
 		845993311B4BD41B006F2CE7 /* DDGProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBar.m; sourceTree = "<group>"; };
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
@@ -971,6 +976,10 @@
 		8472B1551BC3314200059BE4 /* MGSplitViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MGSplitViewController.m; path = Submodules/MGSplitViewController/Classes/MGSplitViewController.m; sourceTree = SOURCE_ROOT; };
 		8472B1561BC3314200059BE4 /* RootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RootViewController.h; path = Submodules/MGSplitViewController/Classes/RootViewController.h; sourceTree = SOURCE_ROOT; };
 		8472B1571BC3314200059BE4 /* RootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RootViewController.m; path = Submodules/MGSplitViewController/Classes/RootViewController.m; sourceTree = SOURCE_ROOT; };
+		847CEACB1C3C02B50086BABB /* DDGToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGToolbar.h; sourceTree = "<group>"; };
+		847CEACC1C3C02B50086BABB /* DDGToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGToolbar.m; sourceTree = "<group>"; };
+		847DA68D1C1060940091F55F /* DDGCollectionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGCollectionView.h; sourceTree = "<group>"; };
+		847DA68E1C1060940091F55F /* DDGCollectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGCollectionView.m; sourceTree = "<group>"; };
 		84A640A01B6FBCB300643A39 /* DDGUnderViewControllerCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGUnderViewControllerCell.h; sourceTree = "<group>"; };
 		84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGUnderViewControllerCell.m; sourceTree = "<group>"; };
 		84A640A31B72DC6C00643A39 /* Stories v3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "Stories v3.xcdatamodel"; sourceTree = "<group>"; };
@@ -1410,6 +1419,8 @@
 				5B66097716D7A3600006B5DE /* DDGFaviconButton.m */,
 				7BFE72151A0B83C00024C53F /* DDGTableView.h */,
 				7BFE72161A0B83C00024C53F /* DDGTableView.m */,
+				847DA68D1C1060940091F55F /* DDGCollectionView.h */,
+				847DA68E1C1060940091F55F /* DDGCollectionView.m */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -1448,6 +1459,8 @@
 				845993301B4BD41B006F2CE7 /* DDGProgressBar.h */,
 				845993311B4BD41B006F2CE7 /* DDGProgressBar.m */,
 				4EC8D8361BB4A8D000BE8903 /* DuckDuckGo.storyboard */,
+				847CEACB1C3C02B50086BABB /* DDGToolbar.h */,
+				847CEACC1C3C02B50086BABB /* DDGToolbar.m */,
 			);
 			name = "Main Menu";
 			sourceTree = "<group>";
@@ -1664,6 +1677,8 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
+				84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */,
+				84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
@@ -2074,10 +2089,12 @@
 				5BA321C316C904BA0066BCB0 /* AFXMLRequestOperation.m in Sources */,
 				5BA321C416C904BA0066BCB0 /* UIImageView+AFNetworking.m in Sources */,
 				5BA321EB16C9056B0066BCB0 /* SDURLCache.m in Sources */,
+				84341F131C26B7E2008A7E2A /* DDGToolbarAutohider.m in Sources */,
 				5BA321EC16C9056D0066BCB0 /* SDCachedURLResponse.m in Sources */,
 				5BA321F116C907650066BCB0 /* NSOperationStack.m in Sources */,
 				84E723001B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m in Sources */,
 				5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */,
+				847DA68F1C1060940091F55F /* DDGCollectionView.m in Sources */,
 				5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */,
 				5B7A1BC916E74C3500354310 /* DDGStoriesViewController.m in Sources */,
 				5B7A1BCE16E78E4A00354310 /* DDGDuckViewController.m in Sources */,
@@ -2119,6 +2136,7 @@
 				5B7C3CAA171C4B1800B9E009 /* DDGFixedSizeImageView.m in Sources */,
 				5B7C3CAD171C4D1E00B9E009 /* DDGHistoryItemCell.m in Sources */,
 				5B15F3D017394CC100912482 /* DDGPopoverViewController.m in Sources */,
+				847CEACD1C3C02B60086BABB /* DDGToolbar.m in Sources */,
 				7BFC64DF18BCEEC800C48753 /* DDGStoryBackgroundView.m in Sources */,
 				5B3896F41740F368009582C8 /* DDGReadabilitySettingViewController.m in Sources */,
 				84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */,
