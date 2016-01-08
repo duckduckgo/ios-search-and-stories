@@ -83,7 +83,9 @@
 
 -(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem;
 {
-    [self.historyDelegate plusButtonWasPushed:self];
+    if ([self.historyDelegate respondsToSelector:@selector(plusButtonWasPushed:)]) {
+        [self.historyDelegate plusButtonWasPushed:self];
+    }
 }
 
 -(void)setBookmarkItem:(NSDictionary*)bookmark
