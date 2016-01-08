@@ -30,9 +30,9 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 -(id)init {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DDGStoryMenuCell"];
     if(self) {
-        CGRect sepRect = self.contentView.frame;
-        sepRect.origin.x = -2;
-        sepRect.origin.y = sepRect.size.height-0.5f;
+        CGRect sepRect      = self.contentView.frame;
+        sepRect.origin.x    = -2;
+        sepRect.origin.y    = sepRect.size.height-0.5f;
         sepRect.size.height = 0.5f;
         sepRect.size.width += 4;
         self.backgroundColor = [UIColor clearColor];
@@ -161,7 +161,9 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIButton *menuButton;
+@property (nonatomic, strong) UIButton *backupMenuButton;
 @property (nonatomic, strong) UIButton* categoryButton;
+@property (nonatomic, strong) UIButton *backupCategoryButton;
 @property (nonatomic, strong) UIView *titleBackgroundView;
 @property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) UIView *innerShadowView;
@@ -332,12 +334,22 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.backgroundImageView.clipsToBounds = YES;
     [self.contentView addSubview:self.backgroundImageView];
     
+    // Set the Menu Backup button for a larger trigger area
+    self.backupMenuButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.backupMenuButton addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:self.backupMenuButton];
+    
     self.menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.menuButton.backgroundColor = [UIColor duckStoryMenuButtonBackground];
     [self.menuButton setImage:[UIImage imageNamed:@"menu-white"] forState:UIControlStateNormal];
     self.menuButton.layer.cornerRadius = 4.0f;
     [self.menuButton addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.menuButton];
+    
+    // Set up the backup button first...
+    self.backupCategoryButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.backupCategoryButton addTarget:self action:@selector(categoryButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:self.backupCategoryButton];
     
     self.categoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.categoryButton.backgroundColor = [UIColor duckStoryMenuButtonBackground];
@@ -347,6 +359,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.categoryButton.layer.cornerRadius = 4.0f;
     [self.categoryButton addTarget:self action:@selector(categoryButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.categoryButton];
+    
     
     self.titleBackgroundView = [UIView new];
     self.titleBackgroundView.backgroundColor = [UIColor duckStoryTitleBackground];
@@ -422,11 +435,14 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     
     [self.titleBackgroundView setFrame:titleBackgroundFrame];
     
-    CGSize categorySize = [self.categoryButton sizeThatFits:CGSizeMake(MAXFLOAT, 25)];
-    categorySize.width += 20; // add some space on either side of the text
-    self.categoryButton.frame = CGRectMake(bounds.size.width - 40 - 8 - 8 - categorySize.width, 8, categorySize.width, 25);
-    self.menuButton.frame = CGRectMake(bounds.size.width - 40 - 8, 8, 40, 25);
-    self.categoryButton.hidden = self.story.category==nil;
+    CGSize categorySize              = [self.categoryButton sizeThatFits:CGSizeMake(MAXFLOAT, 25)];
+    categorySize.width              += 20; // add some space on either side of the text
+    self.categoryButton.frame       = CGRectMake(bounds.size.width - 40 - 8 - 8 - categorySize.width, 8, categorySize.width, 25);
+    self.backupCategoryButton.frame = CGRectMake(self.categoryButton.frame.origin.x, 0, categorySize.width, 33);
+    self.menuButton.frame           = CGRectMake(bounds.size.width - 40 - 8, 8, 40, 25);
+    CGFloat categoryButtonEndPoint  =  self.categoryButton.frame.size.width+self.categoryButton.frame.origin.x;
+    self.backupMenuButton.frame     = CGRectMake(categoryButtonEndPoint, 0, bounds.size.width-categoryButtonEndPoint, 33);
+    self.categoryButton.hidden      = self.story.category==nil;
     
     CGPoint center = [self.faviconButton center];
     center.y = CGRectGetMidY(titleBackgroundFrame);
