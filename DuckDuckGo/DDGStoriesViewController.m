@@ -836,8 +836,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    // Check if a menu has been presented first......
     DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
-    
     [self saveScrollPosition];
     
     NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];

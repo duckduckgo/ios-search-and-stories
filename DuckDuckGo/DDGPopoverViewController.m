@@ -91,6 +91,7 @@
         if(self.popoverViewController.shouldDismissUponOutsideTap) {
             // dismiss, but stil allow the hit to be passed through
             [self performSelector:@selector(goAwayNow) withObject:nil afterDelay:0.001];
+            return hitView;
         }
 
         BOOL isWithinContent = CGRectContainsPoint(self.popoverViewController.contentViewController.view.frame, point);
@@ -341,7 +342,11 @@
 }
 
 - (void)dismissPopoverAnimated:(BOOL)animated {
-    [self dismissViewControllerAnimated:animated completion:NULL];
+    [self dismissViewControllerAnimated:animated completion:^(void){
+//        if ([self.delegate respondsToSelector:@selector(popoverControllerDidDismissPopover:)]) {
+//            [self.delegate popoverControllerDidDismissPopover:self];
+//        }
+    }];
 }
 
 -(BOOL)isBeingPresented {
@@ -368,7 +373,9 @@
                          [self.contentViewController.view removeFromSuperview];
                          [self.contentViewController removeFromParentViewController]; // calls [childViewController didMoveToParentViewController:nil]
                          
-                         [self.delegate popoverControllerDidDismissPopover:self];
+                         if (finished) {
+                             [self.delegate popoverControllerDidDismissPopover:self];
+                         }
                          
                          if(completion!=NULL) completion();
                      }];

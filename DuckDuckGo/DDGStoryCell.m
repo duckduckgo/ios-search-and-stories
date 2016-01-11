@@ -308,15 +308,17 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     _historyItem = historyItem;
 }
 
--(void)menuButtonSelected:(id)sender
+- (void)menuButtonSelected:(id)sender
 {
     DDGStoryMenu* menu = [[DDGStoryMenu alloc] initWithStoryCell:self];
     self.menu = menu;
     self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu
                                                                andTouchPassthroughView:self.touchPassthroughView];
+    self.menuPopover.delegate = self;
     [self.menuPopover presentPopoverFromView:self.menuButton
                     permittedArrowDirections:UIPopoverArrowDirectionAny
                                     animated:TRUE];
+    self.isShowingMenu = YES;
 }
 
 -(void)categoryButtonSelected:(id)sender
@@ -329,6 +331,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 - (void)configure
 {
+    self.isShowingMenu = NO;
     self.backgroundImageView = [UIImageView new];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.backgroundImageView.clipsToBounds = YES;
@@ -462,4 +465,8 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     [self.backgroundImageView setImage:nil];
 }
 
+#pragma mark - DDGPopoverViewController delegate method
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    self.isShowingMenu = NO;
+}
 @end
