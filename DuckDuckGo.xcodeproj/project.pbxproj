@@ -960,8 +960,8 @@
 		8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "fonts/licensed/proximanova-semibold.otf"; sourceTree = "<group>"; };
 		8410AD531BB7353500CC83DB /* DDGImageActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGImageActivityItemProvider.h; sourceTree = "<group>"; };
 		8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGImageActivityItemProvider.m; sourceTree = "<group>"; };
-		84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDGToolbarAutohider.h; path = DuckDuckGo/DDGToolbarAutohider.h; sourceTree = "<group>"; };
-		84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDGToolbarAutohider.m; path = DuckDuckGo/DDGToolbarAutohider.m; sourceTree = "<group>"; };
+		84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGToolbarAutohider.h; sourceTree = "<group>"; };
+		84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGToolbarAutohider.m; sourceTree = "<group>"; };
 		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBar.h; sourceTree = "<group>"; };
 		845993311B4BD41B006F2CE7 /* DDGProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBar.m; sourceTree = "<group>"; };
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
@@ -1446,6 +1446,8 @@
 		5B7C3BDA170B093300B9E009 /* Main Menu */ = {
 			isa = PBXGroup;
 			children = (
+				84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */,
+				84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */,
 				7BCE31DA18E4498B00C87EF4 /* Visual Refresh */,
 				5B7C3CA8171C4B1800B9E009 /* DDGFixedSizeImageView.h */,
 				5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */,
@@ -1677,8 +1679,6 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
-				84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */,
-				84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,

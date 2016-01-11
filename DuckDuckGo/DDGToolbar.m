@@ -67,6 +67,25 @@
                                                           multiplier:1 constant:48]];
         
         CGFloat xMultiplier = halfButtonSpace + (buttonIndex * buttonSpace);
+        
+        if (IPAD) {
+            if (xMultiplier != 0.5) {
+                if (xMultiplier < 0.5) {
+                    if (buttonIndex == 0) {
+                        xMultiplier += buttonSpace/2;
+                    } else {
+                        xMultiplier += buttonSpace/4;
+                    }
+                } else {
+                    if (buttonIndex == toolbarItems.count-1) {
+                        xMultiplier -= buttonSpace/2;
+                    } else {
+                        xMultiplier -= buttonSpace/4;
+                    }
+                }
+            }
+        }
+        
         [toolbar addConstraints:@[
                                   [NSLayoutConstraint constraintWithItem:button
                                                                attribute:NSLayoutAttributeCenterY
