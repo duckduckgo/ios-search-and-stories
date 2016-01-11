@@ -5,6 +5,7 @@
 //  Created by Sean Reilly on 2016.01.05.
 //
 //
+//  Toolbar Implementation
 
 #import "DDGToolbar.h"
 
@@ -68,6 +69,7 @@
         
         CGFloat xMultiplier = halfButtonSpace + (buttonIndex * buttonSpace);
         
+        // Initial fix for the Tab Bar icons for iPad
         if (IPAD) {
             if (xMultiplier != 0.5) {
                 if (xMultiplier < 0.5) {
