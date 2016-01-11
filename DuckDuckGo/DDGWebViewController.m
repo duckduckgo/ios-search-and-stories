@@ -68,6 +68,7 @@
 
 -(UIView*)hitTest:(CGPoint)tapPoint withEvent:(UIEvent *)event
 {
+
     // if someone taps the bottom toolbar area, swallow the tap and show the toolbar
     if(tapPoint.y + 50 > self.frame.size.height) {
         [self.webController setHideToolbar:FALSE forScrollview:self.scrollView];
@@ -95,6 +96,7 @@
     self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
     self.webView.delegate = self;
     self.webView.scalesPageToFit = YES;
+
     _webViewLoadingDepth = 0;
     self.webView.backgroundColor = [UIColor duckNoContentColor];
     

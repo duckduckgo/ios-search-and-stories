@@ -253,6 +253,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
         [weakSelf presentViewController:mailVC animated:YES completion:NULL];
     }];
+    
     [self addButton:NSLocalizedString(@"Share", @"Button: Share") forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         NSString *shareTitle = NSLocalizedString(@"Check out the DuckDuckGo iOS app!", @"Share title: Check out the DuckDuckGo iOS app!");
         NSURL *shareURL = [NSURL URLWithString:@"https://itunes.apple.com/app/id663592361"];
@@ -265,6 +266,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
         [weakSelf presentViewController:avc animated:YES completion:NULL];
     }];
+    
     [self addButton:NSLocalizedString(@"Leave a Rating", @"Button: Leave a Rating") forKey:@"rate" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?id=663592361&onlyLatestVersion=true&pageNumber=0&sortOrdering=1&type=Purple+Software"]];
     }];
@@ -279,6 +281,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [self addSectionWithTitle:versionInfo footer:nil];
     
     self.tableView.sectionFooterHeight = 0.01;
+    [self.tableView setBackgroundColor:DDG_SETTINGS_BACKGROUND_COLOR];
 }
 
 -(IBAction)save:(id)sender {
@@ -513,4 +516,5 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     return cell;
 }
+
 @end
