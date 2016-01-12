@@ -29,6 +29,7 @@
 
 - (void)configure
 {
+    [self clearElements];
     self.title = NSLocalizedString(@"Region", @"Title or label for the region setting");
     
     for(NSDictionary *regionSet in [DDGRegionProvider shared].regions) {
@@ -58,6 +59,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[self searchControllerDDG] popContentViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:DDG_SETTINGS_REFRESH_DATA object:nil];    
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

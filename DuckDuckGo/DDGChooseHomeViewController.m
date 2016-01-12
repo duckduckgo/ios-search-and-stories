@@ -90,7 +90,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[self searchControllerDDG] popContentViewControllerAnimated:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"Refresh_DDG_DATA" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:DDG_SETTINGS_REFRESH_DATA object:nil];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
