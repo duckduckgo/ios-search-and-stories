@@ -70,9 +70,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     if(IPAD) {
         MGSplitViewController* splitController = [[MGSplitViewController alloc] init];
-        splitController.allowsDraggingDivider = FALSE;
-        splitController.masterViewController = self;
-        splitController.view.backgroundColor = [UIColor duckNoContentColor];
+        splitController.allowsDraggingDivider  = FALSE;
+        splitController.masterViewController   = self;
+        splitController.view.backgroundColor   = [UIColor duckNoContentColor];
         splitController.dividerView = nil;
         self.splitViewController = splitController;
         self.containerController = splitController;
@@ -104,6 +104,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     // force 1st time through for iOS < 6.0
 	[self viewWillLayoutSubviews];
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -194,6 +195,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 #pragma mark - Form view controller
 
 -(void)configure {
+    [self clearElements];
     self.title = NSLocalizedString(@"Settings", @"View Controller Title: Settings");
     // referencing self directly in the blocks below leads to retain cycles, so use weakSelf instead
     __weak DDGSettingsViewController *weakSelf = self;
@@ -201,7 +203,9 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     
     [self addSectionWithTitle:NSLocalizedString(@"General", @"Header for general settings section") footer:nil];
-    [self addButton:NSLocalizedString(@"Home", @"Button: What screen should be presented when launching the app") forKey:DDGSettingHomeView detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    
+    NSString *settingHomeViewOption = [DDGChooseHomeViewController homeViewNameForID:[defaults objectForKey:DDGSettingHomeView]];
+    [self addButton:NSLocalizedString(@"Home", @"Button: What screen should be presented when launching the app") forKey:DDGSettingHomeView detailTitle:settingHomeViewOption type:IGFormButtonTypeDisclosure action:^{
         [weakSelf showChooseHomeController];
     }];
     
@@ -216,12 +220,16 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         DDGReadabilitySettingViewController *rvc = [[DDGReadabilitySettingViewController alloc] initWithDefaults];
         [weakSelf pushSecondaryViewController:rvc];
     }];
+    
 //    IGFormSwitch *readabilitySwitch = [self addSwitch:@"Readability" forKey:DDGSettingStoriesReadView enabled:[[defaults objectForKey:DDGSettingStoriesReadView] boolValue]];
     IGFormSwitch *quackSwitch = [self addSwitch:NSLocalizedString(@"Quack on Refresh", @"Switch: Quack on Refresh") forKey:DDGSettingQuackOnRefresh enabled:[[defaults objectForKey:DDGSettingQuackOnRefresh] boolValue]];
     
     [self addSectionWithTitle:NSLocalizedString(@"Search", @"Header for Search settings section") footer:nil];
     IGFormSwitch *suggestionsSwitch = [self addSwitch:NSLocalizedString(@"Autocomplete", @"Switch: Autocomplete") forKey:DDGSettingAutocomplete enabled:[[defaults objectForKey:DDGSettingAutocomplete] boolValue]];
-    [self addButton:NSLocalizedString(@"Region", @"Button: Region") forKey:@"region" detailTitle:nil type:IGFormButtonTypeDisclosure action:^{
+    
+    NSString *regionTitleString = [[DDGRegionProvider shared] titleForRegion:[defaults objectForKey:DDGSettingRegion]];
+    
+    [self addButton:NSLocalizedString(@"Region", @"Button: Region") forKey:@"region" detailTitle:regionTitleString type:IGFormButtonTypeDisclosure action:^{
         DDGChooseRegionViewController *rvc = [[DDGChooseRegionViewController alloc] initWithDefaults];
         [weakSelf pushSecondaryViewController:rvc];
     }];
@@ -282,6 +290,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     self.tableView.sectionFooterHeight = 0.01;
     [self.tableView setBackgroundColor:DDG_SETTINGS_BACKGROUND_COLOR];
+
+    [self.tableView reloadData];
 }
 
 -(IBAction)save:(id)sender {
@@ -452,22 +462,22 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 
 +(void)configureSettingsCell:(UITableViewCell*)cell
 {
-    cell.textLabel.font = [UIFont duckFontWithSize:17.0];
-    cell.textLabel.textColor = [UIColor duckListItemTextForeground];
-    cell.textLabel.textAlignment = NSTextAlignmentNatural;
-    cell.detailTextLabel.font = [UIFont duckFontWithSize:13.0];
+    cell.textLabel.font            = [UIFont duckFontWithSize:17.0];
+    cell.textLabel.textColor       = [UIColor duckListItemTextForeground];
+    cell.textLabel.textAlignment   = NSTextAlignmentNatural;
+    cell.detailTextLabel.font      = [UIFont duckFontWithSize:13.0];
     cell.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
     cell.tintColor = UIColor.duckRed;
 }
 
 +(void)configureOptionCell:(UITableViewCell*)cell
 {
-    cell.textLabel.font = [UIFont duckFontWithSize:17.0];
-    cell.textLabel.textColor = [UIColor duckListItemTextForeground];
-    cell.textLabel.textAlignment = NSTextAlignmentNatural;
-    cell.detailTextLabel.font = [UIFont duckFontWithSize:15.0];
+    cell.textLabel.font            = [UIFont duckFontWithSize:17.0];
+    cell.textLabel.textColor       = [UIColor duckListItemTextForeground];
+    cell.textLabel.textAlignment   = NSTextAlignmentNatural;
+    cell.detailTextLabel.font      = [UIFont duckFontWithSize:17.0];
     cell.detailTextLabel.textColor = [UIColor duckListItemDetailForeground];
-    cell.tintColor = UIColor.duckRed;
+    cell.tintColor                 = UIColor.duckRed;
 }
 
 +(UIView*)createSectionFooterView:(NSString *)title
@@ -513,6 +523,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     if(thisElement==self.clearRecentsButton && self.numberOfRecents<=0) {
         cell.textLabel.textColor = [UIColor lightGrayColor];
     }
+
     
     return cell;
 }

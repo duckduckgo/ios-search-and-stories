@@ -29,6 +29,7 @@
 
 - (void)configure
 {
+    [self clearElements];
     self.title = NSLocalizedString(@"Home", @"Title or label for the default home view setting");
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -73,6 +74,7 @@
     if ([formData objectForKey:DDGSettingHomeView]) {
         [defaults setObject:[formData objectForKey:DDGSettingHomeView] forKey:DDGSettingHomeView];
     }
+    [defaults synchronize];
 }
 
 #pragma mark - Rotation
@@ -88,6 +90,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[self searchControllerDDG] popContentViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"Refresh_DDG_DATA" object:nil];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
