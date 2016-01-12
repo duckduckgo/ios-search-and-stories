@@ -131,7 +131,9 @@ NSString * const emailRegEx =
                                                         imageName:@"Tab-Settings"
                                                 selectedImageName:@"Tab-Settings-Active"
                                                 initiallySelected:tabPosition==4]];
-    DDGToolbar* toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom];
+    
+    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom];
+    
     [self pushContentViewController:contentController animated:animated];
 }
 

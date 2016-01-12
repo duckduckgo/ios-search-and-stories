@@ -137,7 +137,6 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 {
     DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
     self.numberOfRecents = [historyProvider countHistoryItems];
-    NSLog(@"numberOfRecents: %lu", (unsigned long)self.numberOfRecents);
 }
 
 -(void)duckGoToTopLevel
@@ -174,7 +173,10 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 -(void)pushSecondaryViewController:(UIViewController*)secondaryViewController
 {
     if(self.splitViewController) {
-        self.splitViewController.detailViewController = secondaryViewController;
+        [self.splitViewController setDetailViewController:secondaryViewController];
+        
+        // Ensure that the tab bar is actually on the top level, especially after changing detail controllers
+        [self.splitViewController.view bringSubviewToFront:self.searchControllerDDG.toolbarView];
     } else {
         [self.searchControllerDDG pushContentViewController:secondaryViewController animated:TRUE];
     }
@@ -290,7 +292,6 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     self.tableView.sectionFooterHeight = 0.01;
     [self.tableView setBackgroundColor:DDG_SETTINGS_BACKGROUND_COLOR];
-
     [self.tableView reloadData];
 }
 
