@@ -114,6 +114,11 @@
     toolbarView.backgroundColor = [UIColor clearColor];
     toolbarView.opaque = FALSE;
     
+    UIView *innerToolbarContainer = [UIView new];
+    innerToolbarContainer.translatesAutoresizingMaskIntoConstraints = FALSE;
+    innerToolbarContainer.backgroundColor = [UIColor clearColor];
+    innerToolbarContainer.opaque = FALSE;
+    
     // setup the top border
     UIView* borderView = [UIView new];
     borderView.translatesAutoresizingMaskIntoConstraints = FALSE;
@@ -197,11 +202,44 @@
                                                              multiplier:1 constant:0 ]];
     NSInteger tabPosition = 0;
     for(DDGToolbarItem* item in toolbarItems) {
-        makeToolbarButton(toolbarView, item, tabPosition);
+        makeToolbarButton(innerToolbarContainer, item, tabPosition);
         tabPosition++;
     }
+    
+    [toolbarView addSubview:innerToolbarContainer];
+    
+    // Provide the constraints
+    CGFloat tabBarWidthConstrant = 0;
+    if ([containerView respondsToSelector:@selector(traitCollection)]) {
+        NSLog(@"Trait collection %@", containerView.traitCollection);
+        if (containerView.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
+            NSLog(@"Its a regular horizontal");
+        }
+        if (containerView.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && containerView.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
+            tabBarWidthConstrant = -200;
+        }
+    }
+
+    NSLog(@"Tab bar width constrant %f", tabBarWidthConstrant);
+    [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer attribute:NSLayoutAttributeWidth
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:toolbarView attribute:NSLayoutAttributeWidth
+                                                             multiplier:1 constant:tabBarWidthConstrant ]];
+    [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer
+                                                              attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+                                                                 toItem:toolbarView attribute:NSLayoutAttributeBottom
+                                                             multiplier:1 constant:0 ]];
+    [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer
+                                                            attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+                                                               toItem:toolbarView attribute:NSLayoutAttributeTop
+                                                           multiplier:1 constant:0 ]];
+    [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer attribute:NSLayoutAttributeCenterX
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:toolbarView attribute:NSLayoutAttributeCenterX
+                                                             multiplier:1 constant:0 ]];
     [containerView setNeedsLayout];
     return toolbarView;
 }
+
 
 @end

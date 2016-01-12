@@ -60,6 +60,10 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self.tableView reloadData];
+}
+
 - (void)editAction:(UIButton*)button
 {
 	BOOL edit = !button.selected;
