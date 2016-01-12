@@ -14,4 +14,7 @@
 
 @implementation DDGFormViewController
 
+- (void)clearElements {
+    [super clearElements];
+}
 @end

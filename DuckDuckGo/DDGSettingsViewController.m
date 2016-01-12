@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 DuckDuckGo, Inc. All rights reserved.
 //
 
-#import "DDGFormViewController.h"
+
 #import "DDGSettingsViewController.h"
 #import "DDGChooseSourcesViewController.h"
 #import "DDGChooseRegionViewController.h"

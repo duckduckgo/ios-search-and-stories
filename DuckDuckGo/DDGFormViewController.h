@@ -10,4 +10,5 @@
 
 @interface DDGFormViewController : IGFormViewController
 
+- (void)clearElements;
 @end
