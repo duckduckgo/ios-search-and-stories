@@ -8,6 +8,8 @@
 
 #import "IGFormViewController.h"
 
+#define DDG_SETTINGS_REFRESH_DATA @"Refresh_DDG_DATA"
+
 @interface DDGFormViewController : IGFormViewController
 
 - (void)clearElements;
