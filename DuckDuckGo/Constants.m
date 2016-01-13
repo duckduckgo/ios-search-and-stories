@@ -22,3 +22,5 @@ NSString * const kDDGTypeInfoURLString = @"https://watrcoolr.duckduckgo.com/watr
 NSString * const kDDGStoriesURLString = @"https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&s=";
 
 NSString * const kDDGSuggestionsURLString = @"https://duckduckgo.com/ac/?q=";
+NSString * const kDDGSettingsRefreshData = @"Refresh_DDG_DATA";
+

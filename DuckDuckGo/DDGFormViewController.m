@@ -7,6 +7,7 @@
 //
 
 #import "DDGFormViewController.h"
+#import "Constants.h"
 
 @interface DDGFormViewController ()
 
@@ -18,7 +19,7 @@
     [super viewDidLoad];
     
     self.settingsTableView = self.tableView;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSettingsData) name:DDG_SETTINGS_REFRESH_DATA object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(refreshSettingsData) name:kDDGSettingsRefreshData object:nil];
 }
 
 - (void)clearElements {

@@ -10,6 +10,7 @@
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
 #import "DDGSettingsViewController.h"
+#import "Constants.h"
 
 @interface IGFormViewController (ExposePrivateMethod)
 
@@ -59,7 +60,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[self searchControllerDDG] popContentViewControllerAnimated:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:DDG_SETTINGS_REFRESH_DATA object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDDGSettingsRefreshData object:nil];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
