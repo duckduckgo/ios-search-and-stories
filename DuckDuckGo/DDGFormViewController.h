@@ -12,5 +12,9 @@
 
 @interface DDGFormViewController : IGFormViewController
 
+@property (nonatomic, strong) UITableView *settingsTableView;
+
 - (void)clearElements;
+
+
 @end
