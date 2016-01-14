@@ -224,8 +224,7 @@
                                                                                                mode:DDGHistoryViewControllerModeNormal];
         history.title = NSLocalizedString(@"Recent Searches", @"segmented button option and table header: Recent Searches");
         
-        self.recentsTopController.state = DDGSearchControllerStateHome;
-        
+        self.recentsTopController.state   = DDGSearchControllerStateHome;        
         DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.recentsTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         stories.storiesMode = DDGStoriesListModeRecents;

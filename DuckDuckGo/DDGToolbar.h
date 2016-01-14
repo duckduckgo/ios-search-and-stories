@@ -24,6 +24,7 @@ typedef enum : NSUInteger {
 @property BOOL initiallySelected;
 
 
+
 +(DDGToolbarItem*)toolbarItemWithTarget:(id)target
                                action:(SEL)action
                               imageName:(NSString*)imageName
@@ -35,9 +36,10 @@ typedef enum : NSUInteger {
 
 @interface DDGToolbar : UIView
 
+@property (nonatomic, strong) NSLayoutConstraint *toolbarWidthConstraint;
+
 +(DDGToolbar*)toolbarInContainer:(UIView*)containerView
                        withItems:(NSArray<DDGToolbarItem*>*)toolbarItems
-                      atLocation:(DDGToolbarLocation)location
-             withTraitCollection:(UITraitCollection*)traitCollection;
+                      atLocation:(DDGToolbarLocation)location;
 
 @end

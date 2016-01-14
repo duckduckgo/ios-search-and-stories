@@ -45,7 +45,6 @@
 +(DDGToolbar*)toolbarInContainer:(UIView*)containerView
                        withItems:(NSArray<DDGToolbarItem*>*)toolbarItems
                       atLocation:(DDGToolbarLocation)location
-             withTraitCollection:(UITraitCollection*)traitCollection
 {
     CGFloat buttonSpace = 1.0/toolbarItems.count;
     CGFloat halfButtonSpace = buttonSpace * 0.5;
@@ -183,6 +182,7 @@
 
     // add the toolbar to the container
     [containerView addSubview:toolbarView];
+
     [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:toolbarView
                                                             attribute:NSLayoutAttributeHeight
                                                             relatedBy:NSLayoutRelationEqual
@@ -210,22 +210,24 @@
     
     [toolbarView addSubview:innerToolbarContainer];
     
-    // Provide the constraints
-    CGFloat tabBarWidthConstrant = 0;
+//    // Provide the constraints
+//    CGFloat tabBarWidthConstrant = 0;
+//    
+//    
+//    if (traitCollection) {
+//        NSLog(@"Trait collection %@", traitCollection);
+//        if (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
+//            tabBarWidthConstrant = -200;
+//        }
+//    }
+//
+//    NSLog(@"Tab bar width constrant %f", tabBarWidthConstrant);
     
-    
-    if (traitCollection) {
-        NSLog(@"Trait collection %@", traitCollection);
-        if (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
-            tabBarWidthConstrant = -200;
-        }
-    }
-
-    NSLog(@"Tab bar width constrant %f", tabBarWidthConstrant);
-    [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer attribute:NSLayoutAttributeWidth
-                                                              relatedBy:NSLayoutRelationEqual
-                                                                 toItem:toolbarView attribute:NSLayoutAttributeWidth
-                                                             multiplier:1 constant:tabBarWidthConstrant ]];
+    toolbarView.toolbarWidthConstraint = [NSLayoutConstraint constraintWithItem:innerToolbarContainer attribute:NSLayoutAttributeWidth
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:toolbarView attribute:NSLayoutAttributeWidth
+                                                                     multiplier:1 constant:0];
+    [toolbarView addConstraint:toolbarView.toolbarWidthConstraint];
     [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer
                                                               attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
                                                                  toItem:toolbarView attribute:NSLayoutAttributeBottom
@@ -242,5 +244,17 @@
     return toolbarView;
 }
 
-
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    CGFloat tabBarWidthConstrant = 0;
+    
+    
+    if (self.traitCollection) {
+        if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
+            tabBarWidthConstrant = -200;
+        }
+    }
+    
+    self.toolbarWidthConstraint.constant = tabBarWidthConstrant;
+    [self needsUpdateConstraints];
+}
 @end

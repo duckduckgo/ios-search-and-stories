@@ -134,9 +134,10 @@ NSString * const emailRegEx =
                                                 initiallySelected:tabPosition==4]];
     
     // Get the app delegates window
-    DDGAppDelegate *appDelegate = (DDGAppDelegate*)[[UIApplication sharedApplication] delegate];
-    id traitCollectionObj = [self respondsToSelector:@selector(traitCollection)] ? appDelegate.window.traitCollection:nil;
-    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom withTraitCollection:traitCollectionObj];
+//    DDGAppDelegate *appDelegate = (DDGAppDelegate*)[[UIApplication sharedApplication] delegate];
+//    id traitCollectionObj = [self respondsToSelector:@selector(traitCollection)] ? appDelegate.window.traitCollection:nil;
+//    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom withTraitCollection:traitCollectionObj];
+    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom];
     
     [self pushContentViewController:contentController animated:animated];
 }
