@@ -359,12 +359,19 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(void)toggleStorySaved:(DDGStory*)story
 {
-    story.savedValue = !story.savedValue;
+ 
     NSManagedObjectContext *context = story.managedObjectContext;
     [context performBlock:^{
+        story.savedValue = !story.savedValue;
         NSError *error = nil;
-        if (![context save:&error])
+        if (![context save:&error]) {
             NSLog(@"error: %@", error);
+        } else {
+            if (self.storiesMode == DDGStoriesListModeFavorites) {
+                [self.storyView reloadData];
+            }
+        }
+        
     }];
 }
 
@@ -473,7 +480,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.lastStoryIDViewed = [[NSUserDefaults standardUserDefaults] objectForKey:[self lastViewedDefaultsKeyPrefix]];
     
     self.storiesLayout = [[DDGStoriesLayout alloc] init];

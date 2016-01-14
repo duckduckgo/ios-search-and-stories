@@ -74,6 +74,8 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    NSLog(@"bookmarks view...");
+    
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     

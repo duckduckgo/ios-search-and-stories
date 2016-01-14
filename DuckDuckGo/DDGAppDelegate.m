@@ -119,6 +119,8 @@ static void uncaughtExceptionHandler(NSException *exception) {
             [self handleShortCutItem:shortcutItem];
         }
     }
+    
+    
     return YES;
 }
 

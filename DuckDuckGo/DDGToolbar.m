@@ -45,6 +45,7 @@
 +(DDGToolbar*)toolbarInContainer:(UIView*)containerView
                        withItems:(NSArray<DDGToolbarItem*>*)toolbarItems
                       atLocation:(DDGToolbarLocation)location
+             withTraitCollection:(UITraitCollection*)traitCollection
 {
     CGFloat buttonSpace = 1.0/toolbarItems.count;
     CGFloat halfButtonSpace = buttonSpace * 0.5;
@@ -70,6 +71,7 @@
         CGFloat xMultiplier = halfButtonSpace + (buttonIndex * buttonSpace);
         
         // Initial fix for the Tab Bar icons for iPad
+        /*
         if (IPAD) {
             if (xMultiplier != 0.5) {
                 if (xMultiplier < 0.5) {
@@ -86,7 +88,7 @@
                     }
                 }
             }
-        }
+        }*/
         
         [toolbar addConstraints:@[
                                   [NSLayoutConstraint constraintWithItem:button
@@ -210,12 +212,11 @@
     
     // Provide the constraints
     CGFloat tabBarWidthConstrant = 0;
-    if ([containerView respondsToSelector:@selector(traitCollection)]) {
-        NSLog(@"Trait collection %@", containerView.traitCollection);
-        if (containerView.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular) {
-            NSLog(@"Its a regular horizontal");
-        }
-        if (containerView.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && containerView.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
+    
+    
+    if (traitCollection) {
+        NSLog(@"Trait collection %@", traitCollection);
+        if (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
             tabBarWidthConstrant = -200;
         }
     }

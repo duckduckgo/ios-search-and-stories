@@ -16,6 +16,7 @@
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
+#import "DDGAppDelegate.h"
 
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
@@ -132,7 +133,10 @@ NSString * const emailRegEx =
                                                 selectedImageName:@"Tab-Settings-Active"
                                                 initiallySelected:tabPosition==4]];
     
-    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom];
+    // Get the app delegates window
+    DDGAppDelegate *appDelegate = (DDGAppDelegate*)[[UIApplication sharedApplication] delegate];
+    id traitCollectionObj = [self respondsToSelector:@selector(traitCollection)] ? appDelegate.window.traitCollection:nil;
+    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom withTraitCollection:traitCollectionObj];
     
     [self pushContentViewController:contentController animated:animated];
 }

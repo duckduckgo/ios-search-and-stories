@@ -37,6 +37,7 @@ typedef enum : NSUInteger {
 
 +(DDGToolbar*)toolbarInContainer:(UIView*)containerView
                        withItems:(NSArray<DDGToolbarItem*>*)toolbarItems
-                      atLocation:(DDGToolbarLocation)location;
+                      atLocation:(DDGToolbarLocation)location
+             withTraitCollection:(UITraitCollection*)traitCollection;
 
 @end
