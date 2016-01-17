@@ -170,6 +170,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
     [self save];
 }
 
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [self.homeController checkAndRefreshSettings];
+}
+
 
 #pragma mark - 3DTouch Shortcuts
 -(void)updateShortcuts {

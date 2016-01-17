@@ -18,7 +18,9 @@
 #import "DDGSearchController.h"
 #import "DDGReadabilitySettingViewController.h"
 #import "DDGUtility.h"
+#import "DDGTraitHelper.h"
 #import "MGSplitViewController.h"
+#import "DDGTraitHelper.h"
 
 
 NSString * const DDGSettingRecordHistory = @"history";
@@ -65,19 +67,22 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 }
 
 
--(UIViewController*)duckContainerController
+- (UIViewController*)duckContainerController
 {
     if(self.containerController) return self.containerController;
     
-    if(IPAD) {
-        MGSplitViewController* splitController = [[MGSplitViewController alloc] init];
-        splitController.allowsDraggingDivider  = FALSE;
-        splitController.masterViewController   = self;
-        splitController.view.backgroundColor   = [UIColor duckNoContentColor];
-        splitController.dividerView = nil;
-        self.splitViewController = splitController;
-        self.containerController = splitController;
-        [self showChooseHomeController];
+//    if([DDGTraitHelper isFullScreeniPad:self.traitCollection]) {
+    if (IPAD) {
+        if (self.splitViewController == nil) {
+            MGSplitViewController* splitController = [[MGSplitViewController alloc] init];
+            splitController.allowsDraggingDivider  = FALSE;
+            splitController.masterViewController   = self;
+            splitController.view.backgroundColor   = [UIColor duckNoContentColor];
+            splitController.dividerView            = nil;
+            self.splitViewController               = splitController;
+            self.containerController               = splitController;
+            [self performSelector:@selector(showChooseHomeController) withObject:nil afterDelay:1.0];
+        }
     } else {
         self.containerController = self;
     }
@@ -129,7 +134,6 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     }
 
     [self updateClearRecentsItem];
-    
     [self.tableView reloadData];
 }
 
@@ -174,10 +178,16 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 -(void)pushSecondaryViewController:(UIViewController*)secondaryViewController
 {
     if(self.splitViewController) {
-        [self.splitViewController setDetailViewController:secondaryViewController];
-        
-        // Ensure that the tab bar is actually on the top level, especially after changing detail controllers
-        [self.splitViewController.view bringSubviewToFront:self.searchControllerDDG.toolbarView];
+        if(![DDGTraitHelper isFullScreeniPad:self.traitCollection]) {
+            NSLog(@"Is not a full screen iPad but has a split view controller..");
+            [self.searchControllerDDG pushContentViewController:secondaryViewController animated:TRUE];
+        } else {
+            NSLog(@"is a full screen iPad so lets load the detail view...");
+            [self.splitViewController setDetailViewController:secondaryViewController];
+            
+            // Ensure that the tab bar is actually on the top level, especially after changing detail controllers
+            [self.splitViewController.view bringSubviewToFront:self.searchControllerDDG.toolbarView];
+        }
     } else {
         [self.searchControllerDDG pushContentViewController:secondaryViewController animated:TRUE];
     }
@@ -248,7 +258,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
                                                         cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                    destructiveButtonTitle:nil
                                                         otherButtonTitles:NSLocalizedString(@"Clear Recents", @"Clear Recents"), nil];
-        [actionSheet showInView:[weakSelf duckContainerController].view];
+        [actionSheet showInView:[weakSelf containerController].view];
     }];
     
     for (IGFormSwitch *s in @[quackSwitch, suggestionsSwitch, recentSwitch])
@@ -333,7 +343,7 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     return formSwitch;
 }
 
--(NSString *)deviceInfo {
+- (NSString *)deviceInfo {
     struct utsname systemInfo;
     uname(&systemInfo);
     NSString *device = [NSString stringWithCString:systemInfo.machine
@@ -529,5 +539,17 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     
     return cell;
 }
+
+/*
+#pragma mark == UITraitCollection Updates
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    // Did change
+    if ([DDGTraitHelper isFullScreeniPad:previousTraitCollection]) {
+        // Check if it's changed
+        if (previousTraitCollection.horizontalSizeClass != self.traitCollection.horizontalSizeClass || previousTraitCollection.verticalSizeClass != self.traitCollection.verticalSizeClass) {
+        }
+    }
+}
+ */
 
 @end

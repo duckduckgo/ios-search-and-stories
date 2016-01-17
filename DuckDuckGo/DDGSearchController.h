@@ -77,5 +77,5 @@ typedef enum {
 
 -(void)searchFieldDidChange:(id)sender;
 -(void)dismissKeyboard:(void (^)(BOOL completed))completion;
-
+- (BOOL)doesViewControllerExistInTheNavStack:(UIViewController*)viewController;
 @end

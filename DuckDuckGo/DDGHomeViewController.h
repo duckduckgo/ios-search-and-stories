@@ -29,5 +29,6 @@
 -(IBAction)showStories;
 -(IBAction)showDuck;
 -(IBAction)showSettings;
+- (void)checkAndRefreshSettings;
 
 @end

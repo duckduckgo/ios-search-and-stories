@@ -139,6 +139,7 @@ NSString * const emailRegEx =
 //    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom withTraitCollection:traitCollectionObj];
     self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom];
     
+    
     [self pushContentViewController:contentController animated:animated];
 }
 
@@ -149,6 +150,7 @@ NSString * const emailRegEx =
     if([contentController isKindOfClass:DDGDuckViewController.class]) {
         ((DDGDuckViewController*)contentController).underPopoverMode = [self shouldUsePopover];
     }
+    
     [self view]; // force the view to be loaded
     contentController.view.frame = self.background.frame;
     if(topController) {
@@ -156,6 +158,7 @@ NSString * const emailRegEx =
         [contentController.view addSubview:self.duckTabBar];
         self.duckTabBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
+
     [self.navController pushViewController:contentController animated:animated];
     [self updateToolbars:FALSE];
 }
@@ -1098,6 +1101,15 @@ NSString * const emailRegEx =
         [self.searchBar.searchField resignFirstResponder];
     } else {
         completion(YES);
+    }
+}
+
+#pragma mark == View Controller Helper Methods ==
+- (BOOL)doesViewControllerExistInTheNavStack:(UIViewController*)viewController {
+    if ([self.navController.viewControllers containsObject:viewController]) {
+        return true;
+    } else {
+        return false;
     }
 }
 

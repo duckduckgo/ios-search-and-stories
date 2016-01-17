@@ -210,18 +210,6 @@
     
     [toolbarView addSubview:innerToolbarContainer];
     
-//    // Provide the constraints
-//    CGFloat tabBarWidthConstrant = 0;
-//    
-//    
-//    if (traitCollection) {
-//        NSLog(@"Trait collection %@", traitCollection);
-//        if (traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
-//            tabBarWidthConstrant = -200;
-//        }
-//    }
-//
-//    NSLog(@"Tab bar width constrant %f", tabBarWidthConstrant);
     
     toolbarView.toolbarWidthConstraint = [NSLayoutConstraint constraintWithItem:innerToolbarContainer attribute:NSLayoutAttributeWidth
                                                                       relatedBy:NSLayoutRelationEqual

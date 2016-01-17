@@ -18,10 +18,12 @@
 #import "DDGBookmarksViewController.h"
 #include "DDGSearchHandler.h"
 #import "UIViewController+DDGSearchController.h"
+#import "DDGTraitHelper.h"
 
 @interface DDGHomeViewController () {
     UIEdgeInsets contentInsets;
 }
+
 @property (nonatomic, strong) IBOutlet UIView* tabContentView;
 @property (nonatomic, strong) UITabBarController* tabController;
 
@@ -152,6 +154,40 @@
     self.tabController.tabBar.hidden = TRUE;
     contentInsets = UIEdgeInsetsMake(0, 0, 50, 0);
     self.view.backgroundColor = [UIColor duckSearchBarBackground];
+    [self setUpTabBar];
+    
+    //int type = DDGViewControllerTypeHome;
+    NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
+    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents]) {
+        [self showRecents];
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
+        [self showFavorites];
+    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeStories]) {
+        [self showStories];
+    } else { //if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
+        [self showDuck];
+    }
+}
+
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+}
+
+-(void)viewDidLayoutSubviews
+{
+    self.topAlignmentConstraint.constant = self.topLayoutGuide.length;
+    [self.view layoutIfNeeded]; // this seems wrong, but if we don't have it then we crash on iOS7
+}
+
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+- (void)setUpTabBar {
     
     NSMutableArray* controllers = [NSMutableArray new];
     
@@ -180,7 +216,7 @@
         self.storiesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
                                                                              image:[UIImage imageNamed:@"Tab-Stories"]
                                                                      selectedImage:[UIImage imageNamed:@"Tab-Stories-Active"]];
-
+        
         [controllers addObject:self.storiesTopController];
     }
     
@@ -209,8 +245,8 @@
         
         [self.favoritesTopController setContentViewController:self.favoritesTabViewController tabPosition:2 animated:NO];
         self.favoritesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                          image:[UIImage imageNamed:@"Tab-Favorites"]
-                                                  selectedImage:[UIImage imageNamed:@"Tab-Favorites-Active"]];
+                                                                               image:[UIImage imageNamed:@"Tab-Favorites"]
+                                                                       selectedImage:[UIImage imageNamed:@"Tab-Favorites-Active"]];
         [controllers addObject:self.favoritesTopController];
         
         self.favoritesTabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
@@ -224,7 +260,7 @@
                                                                                                mode:DDGHistoryViewControllerModeNormal];
         history.title = NSLocalizedString(@"Recent Searches", @"segmented button option and table header: Recent Searches");
         
-        self.recentsTopController.state   = DDGSearchControllerStateHome;        
+        self.recentsTopController.state   = DDGSearchControllerStateHome;
         DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.recentsTopController
                                                                                managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
         stories.storiesMode = DDGStoriesListModeRecents;
@@ -259,46 +295,13 @@
     }
     
     self.tabController.viewControllers = controllers;
-    
-    //int type = DDGViewControllerTypeHome;
-    NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
-    if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeRecents]) {
-        [self showRecents];
-    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeSaved]) {
-        [self showFavorites];
-    } else if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeStories]) {
-        [self showStories];
-    } else { //if ([homeViewMode isEqualToString:DDGSettingHomeViewTypeDuck]) {
-        [self showDuck];
-    }
 }
-
-
-- (void)viewDidAppear:(BOOL)animated {
-    [super viewDidAppear:animated];
-}
-
--(void)viewDidLayoutSubviews
-{
-    self.topAlignmentConstraint.constant = self.topLayoutGuide.length;
-    [self.view layoutIfNeeded]; // this seems wrong, but if we don't have it then we crash on iOS7
-}
-
-
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 
 #pragma mark - DDGTabViewControllerDelegate
 
 - (void)tabViewController:(DDGTabViewController *)tabViewController didSwitchToViewController:(UIViewController *)viewController atIndex:(NSInteger)tabIndex {
-    NSLog(@"tabViewController:didSwitchToViewController:atIndex:%ld", (long)tabIndex);
     [[NSUserDefaults standardUserDefaults] setInteger:tabIndex forKey:DDGSavedViewLastSelectedTabIndex];
 }
-
 
 
 /*
@@ -310,5 +313,17 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark == Check and Load Settings 
+- (void)checkAndRefreshSettings {
+    // On The iPad, because of the custom split view controller & the split view for iPad we need to ensure that the settings get's reload upon refresh
+    if(self.tabController.selectedViewController == self.settingsTopController ) {
+        if (IPAD) {
+            if (self.settingsController.searchControllerDDG.contentControllers.count > 1) {
+                [self.settingsController.searchControllerDDG popContentViewControllerAnimated:NO];
+            }
+        }
+    }
+}
 
 @end

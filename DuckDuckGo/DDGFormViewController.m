@@ -26,7 +26,6 @@
     [elements removeAllObjects];
 }
 
-
 #pragma mark - Selection & Update Methods
 // Using the split view, after a user selects their home or region, it would actually update
 - (void)refreshSettingsData {

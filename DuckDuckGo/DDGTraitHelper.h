@@ -10,4 +10,5 @@
 
 @interface DDGTraitHelper : NSObject
 
++ (BOOL)isFullScreeniPad:(UITraitCollection*)traitCollection;
 @end
