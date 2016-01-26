@@ -10,6 +10,7 @@
 #import "DDGRegionProvider.h"
 #import "DDGSearchController.h"
 #import "DDGSettingsViewController.h"
+#import "Constants.h"
 
 @interface IGFormViewController (ExposePrivateMethod)
 
@@ -29,6 +30,7 @@
 
 - (void)configure
 {
+    [self clearElements];
     self.title = NSLocalizedString(@"Region", @"Title or label for the region setting");
     
     for(NSDictionary *regionSet in [DDGRegionProvider shared].regions) {
@@ -58,6 +60,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[self searchControllerDDG] popContentViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDDGSettingsRefreshData object:nil];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {

@@ -16,6 +16,7 @@
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
 #import "DDGAddressBarTextField.h"
+#import "DDGAppDelegate.h"
 
 #import "NSMutableString+DDGDumpView.h"
 #import "DDGPopoverViewController.h"
@@ -131,7 +132,14 @@ NSString * const emailRegEx =
                                                         imageName:@"Tab-Settings"
                                                 selectedImageName:@"Tab-Settings-Active"
                                                 initiallySelected:tabPosition==4]];
-    DDGToolbar* toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom];
+    
+    // Get the app delegates window
+//    DDGAppDelegate *appDelegate = (DDGAppDelegate*)[[UIApplication sharedApplication] delegate];
+//    id traitCollectionObj = [self respondsToSelector:@selector(traitCollection)] ? appDelegate.window.traitCollection:nil;
+//    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom withTraitCollection:traitCollectionObj];
+    self.toolbarView = [DDGToolbar toolbarInContainer:containerView withItems:toolbarItems atLocation:DDGToolbarLocationBottom];
+    
+    
     [self pushContentViewController:contentController animated:animated];
 }
 
@@ -142,6 +150,7 @@ NSString * const emailRegEx =
     if([contentController isKindOfClass:DDGDuckViewController.class]) {
         ((DDGDuckViewController*)contentController).underPopoverMode = [self shouldUsePopover];
     }
+    
     [self view]; // force the view to be loaded
     contentController.view.frame = self.background.frame;
     if(topController) {
@@ -149,6 +158,7 @@ NSString * const emailRegEx =
         [contentController.view addSubview:self.duckTabBar];
         self.duckTabBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     }
+
     [self.navController pushViewController:contentController animated:animated];
     [self updateToolbars:FALSE];
 }
@@ -1091,6 +1101,15 @@ NSString * const emailRegEx =
         [self.searchBar.searchField resignFirstResponder];
     } else {
         completion(YES);
+    }
+}
+
+#pragma mark == View Controller Helper Methods ==
+- (BOOL)doesViewControllerExistInTheNavStack:(UIViewController*)viewController {
+    if ([self.navController.viewControllers containsObject:viewController]) {
+        return true;
+    } else {
+        return false;
     }
 }
 

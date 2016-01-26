@@ -21,6 +21,8 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		484A10C21C4C47AD00948ED4 /* DDGStoryMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */; };
+		48690A001C489CB900083D49 /* DDGTraitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 486909FF1C489CB900083D49 /* DDGTraitHelper.m */; };
 		4C02E2E11623C9F70010F06C /* bg_divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C02E2DF1623C9F40010F06C /* bg_divider.png */; };
 		4C02E2E21623C9F70010F06C /* bg_divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C02E2E01623C9F50010F06C /* bg_divider@2x.png */; };
 		4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BC93515B8C2BE008C6FC4 /* quack.wav */; };
@@ -328,6 +330,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		484A10C01C4C47AD00948ED4 /* DDGStoryMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryMenu.h; sourceTree = "<group>"; };
+		484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryMenu.m; sourceTree = "<group>"; };
+		486909FE1C489CB900083D49 /* DDGTraitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTraitHelper.h; sourceTree = "<group>"; };
+		486909FF1C489CB900083D49 /* DDGTraitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTraitHelper.m; sourceTree = "<group>"; };
 		4C02E2DF1623C9F40010F06C /* bg_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_divider.png; sourceTree = "<group>"; };
 		4C02E2E01623C9F50010F06C /* bg_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_divider@2x.png"; sourceTree = "<group>"; };
 		4C0BC93515B8C2BE008C6FC4 /* quack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = quack.wav; sourceTree = "<group>"; };
@@ -960,8 +966,8 @@
 		8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "fonts/licensed/proximanova-semibold.otf"; sourceTree = "<group>"; };
 		8410AD531BB7353500CC83DB /* DDGImageActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGImageActivityItemProvider.h; sourceTree = "<group>"; };
 		8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGImageActivityItemProvider.m; sourceTree = "<group>"; };
-		84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DDGToolbarAutohider.h; path = DuckDuckGo/DDGToolbarAutohider.h; sourceTree = "<group>"; };
-		84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DDGToolbarAutohider.m; path = DuckDuckGo/DDGToolbarAutohider.m; sourceTree = "<group>"; };
+		84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGToolbarAutohider.h; sourceTree = "<group>"; };
+		84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGToolbarAutohider.m; sourceTree = "<group>"; };
 		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBar.h; sourceTree = "<group>"; };
 		845993311B4BD41B006F2CE7 /* DDGProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBar.m; sourceTree = "<group>"; };
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
@@ -1421,6 +1427,8 @@
 				7BFE72161A0B83C00024C53F /* DDGTableView.m */,
 				847DA68D1C1060940091F55F /* DDGCollectionView.h */,
 				847DA68E1C1060940091F55F /* DDGCollectionView.m */,
+				484A10C01C4C47AD00948ED4 /* DDGStoryMenu.h */,
+				484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -1446,6 +1454,8 @@
 		5B7C3BDA170B093300B9E009 /* Main Menu */ = {
 			isa = PBXGroup;
 			children = (
+				84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */,
+				84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */,
 				7BCE31DA18E4498B00C87EF4 /* Visual Refresh */,
 				5B7C3CA8171C4B1800B9E009 /* DDGFixedSizeImageView.h */,
 				5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */,
@@ -1670,6 +1680,8 @@
 				C1894FD6178F56830076C179 /* UIColor+DDG.m */,
 				84A640A71B7368D800643A39 /* UIFont+DDG.h */,
 				84A640A81B7368D800643A39 /* UIFont+DDG.m */,
+				486909FE1C489CB900083D49 /* DDGTraitHelper.h */,
+				486909FF1C489CB900083D49 /* DDGTraitHelper.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -1677,8 +1689,6 @@
 		83F3224D149290EF00A61BC5 = {
 			isa = PBXGroup;
 			children = (
-				84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */,
-				84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */,
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
@@ -2053,6 +2063,7 @@
 				4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */,
 				4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */,
 				8472B15C1BC3314200059BE4 /* RootViewController.m in Sources */,
+				484A10C21C4C47AD00948ED4 /* DDGStoryMenu.m in Sources */,
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
@@ -2128,6 +2139,7 @@
 				5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */,
 				84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */,
 				845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */,
+				48690A001C489CB900083D49 /* DDGTraitHelper.m in Sources */,
 				5B7C3BEF170DA03E00B9E009 /* DDGSearchBar.m in Sources */,
 				7BA49624197678440001B88C /* NSString+MD5.m in Sources */,
 				5B7C3BF5170EECFF00B9E009 /* UIViewController+DDGSearchController.m in Sources */,

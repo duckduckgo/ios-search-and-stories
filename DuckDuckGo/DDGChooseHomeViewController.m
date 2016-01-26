@@ -10,6 +10,7 @@
 
 #import "DDGSearchController.h"
 #import "DDGSettingsViewController.h"
+#import "Constants.h"
 
 @interface IGFormViewController (ExposePrivateMethod)
 
@@ -29,6 +30,7 @@
 
 - (void)configure
 {
+    [self clearElements];
     self.title = NSLocalizedString(@"Home", @"Title or label for the default home view setting");
     
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -73,6 +75,7 @@
     if ([formData objectForKey:DDGSettingHomeView]) {
         [defaults setObject:[formData objectForKey:DDGSettingHomeView] forKey:DDGSettingHomeView];
     }
+    [defaults synchronize];
 }
 
 #pragma mark - Rotation
@@ -88,6 +91,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [[self searchControllerDDG] popContentViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDDGSettingsRefreshData object:nil];
 }
 
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section

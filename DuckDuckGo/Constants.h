@@ -12,3 +12,5 @@ extern NSString * const kDDGTypeInfoURLString;
 extern NSString * const kDDGStoriesURLString;
 extern NSString * const kDDGCustomStoriesURLString;
 extern NSString * const kDDGSuggestionsURLString;
+extern NSString * const kDDGSettingsRefreshData;
+

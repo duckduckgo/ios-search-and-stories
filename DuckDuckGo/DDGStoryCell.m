@@ -15,153 +15,18 @@
 #import "DDGSafariActivity.h"
 #import "DDGStoriesViewController.h"
 #import "DDGHistoryItem.h"
+#import "DDGStoryMenu.h"
 
 NSString *const DDGStoryCellIdentifier = @"StoryCell";
-
-
-@interface DDGStoryMenuCell : UITableViewCell
-
-@property (nonatomic, strong) UIView* separatorView;
-@end
-
-
-@implementation DDGStoryMenuCell
-
--(id)init {
-    self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"DDGStoryMenuCell"];
-    if(self) {
-        CGRect sepRect = self.contentView.frame;
-        sepRect.origin.x = -2;
-        sepRect.origin.y = sepRect.size.height-0.5f;
-        sepRect.size.height = 0.5f;
-        sepRect.size.width += 4;
-        self.backgroundColor = [UIColor clearColor];
-        self.separatorView = [[UIView alloc] initWithFrame:sepRect];
-        self.separatorView.backgroundColor = [UIColor duckTableSeparator];
-        self.separatorView.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-        [self.contentView addSubview:self.separatorView];
-        self.selectedBackgroundView.backgroundColor = [UIColor duckTableSeparator];
-        
-        self.textLabel.font = [UIFont duckFontWithSize:self.textLabel.font.pointSize];
-    }
-    return self;
-}
-
-@end
-
-
-@interface DDGStoryMenu : UITableViewController <UITableViewDataSource, UITableViewDelegate>
-
-@property (nonatomic, strong) DDGStoryCell* storyCell;
-@property (nonatomic, assign) BOOL showRemoveAction;
-
-@end
-
-
-
-@implementation DDGStoryMenu
-
-
--(id)initWithStoryCell:(DDGStoryCell*)cell
-{
-    self = [super initWithStyle:UITableViewStylePlain];
-    if(self) {
-        self.storyCell = cell;
-        self.preferredContentSize = CGSizeMake(180, 44 * [self tableView:self.tableView numberOfRowsInSection:0]);
-    }
-    return self;
-}
-
--(void)viewDidLoad
-{
-    [super viewDidLoad];
-    self.tableView.backgroundColor = [UIColor whiteColor];
-    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-    self.tableView.scrollEnabled = FALSE;
-}
-
--(NSInteger)tableView:(UITableView*)tableView numberOfRowsInSection:(NSInteger)section
-{
-    NSUInteger rows = 3; // add/remove-fave, share, view-in-browser[, remove]
-    if(self.storyCell.historyItem!=nil) rows++;
-    return rows;
-}
-
--(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44.0;
-}
-
--(UITableViewCell*)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    DDGStoryMenuCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DDGStoryMenuCell"];
-    cell.indentationWidth = 0;
-    if(cell==nil) {
-        cell = [[DDGStoryMenuCell alloc] init];
-    }
-    cell.separatorInset = UIEdgeInsetsMake(0, 10, 0, 10);
-    if(indexPath.section==0) {
-        switch(indexPath.row) {
-            case 0:
-                if(self.storyCell.story.savedValue) {
-                    cell.textLabel.text = NSLocalizedString(@"Unfavorite", @"story menu item to remove the current story from the favorites");
-
-                } else {
-                    cell.textLabel.text = NSLocalizedString(@"Add to Favorites", @"story menu item to add the current story to the favorites");
-                }
-                break;
-            case 1:
-                cell.textLabel.text = NSLocalizedString(@"Share", @"story menu item to share the current story");
-                break;
-            case 2:
-                cell.textLabel.text = NSLocalizedString(@"View in Browser", @"story menu item to open the current story in an external browser");
-                break;
-            case 3:
-                cell.textLabel.text = NSLocalizedString(@"Remove", @"story menu item to remove the current story from the history");
-                break;
-            default:
-                cell.textLabel.text = @"?";
-        }
-    } else {
-        cell.textLabel.text = @"?";
-    }
-
-    cell.separatorView.hidden = indexPath.row + 1 >= [self tableView:tableView numberOfRowsInSection:indexPath.section];
-    return cell;
-}
-
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    switch(indexPath.row) {
-        case 0: // fave/un-fave
-            [self.storyCell toggleSavedState];
-            break;
-        case 1: // share
-            [self.storyCell share];
-            break;
-        case 2: // open in browser
-            [self.storyCell openInBrowser];
-            break;
-        case 3:
-            [self.storyCell removeHistoryItem];
-            break;
-        default:
-            NSLog(@"Warning: unexpected row selected in DDGStoryCellMenu: %@", indexPath);
-            break;
-    }
-
-}
-
-@end // DDGStoryMenu implementation
-
-
-
 
 
 @interface DDGStoryCell ()
 
 @property (nonatomic, strong) UIImageView *backgroundImageView;
 @property (nonatomic, strong) UIButton *menuButton;
+@property (nonatomic, strong) UIButton *backupMenuButton;
 @property (nonatomic, strong) UIButton* categoryButton;
+@property (nonatomic, strong) UIButton *backupCategoryButton;
 @property (nonatomic, strong) UIView *titleBackgroundView;
 @property (nonatomic, strong) UIView *dropShadowView;
 @property (nonatomic, strong) UIView *innerShadowView;
@@ -306,15 +171,17 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     _historyItem = historyItem;
 }
 
--(void)menuButtonSelected:(id)sender
+- (void)menuButtonSelected:(id)sender
 {
     DDGStoryMenu* menu = [[DDGStoryMenu alloc] initWithStoryCell:self];
-    self.menu = menu;
-    self.menuPopover = [[DDGPopoverViewController alloc] initWithContentViewController:menu
-                                                               andTouchPassthroughView:self.touchPassthroughView];
+    self.menu          = menu;
+    self.menuPopover   = [[DDGPopoverViewController alloc] initWithContentViewController:menu
+                                                                 andTouchPassthroughView:self.touchPassthroughView];
+    self.menuPopover.delegate = self;
     [self.menuPopover presentPopoverFromView:self.menuButton
                     permittedArrowDirections:UIPopoverArrowDirectionAny
                                     animated:TRUE];
+    self.isShowingMenu = YES;
 }
 
 -(void)categoryButtonSelected:(id)sender
@@ -327,10 +194,16 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 - (void)configure
 {
+    self.isShowingMenu = NO;
     self.backgroundImageView = [UIImageView new];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.backgroundImageView.clipsToBounds = YES;
     [self.contentView addSubview:self.backgroundImageView];
+    
+    // Set the Menu Backup button for a larger trigger area
+    self.backupMenuButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.backupMenuButton addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:self.backupMenuButton];
     
     self.menuButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.menuButton.backgroundColor = [UIColor duckStoryMenuButtonBackground];
@@ -338,6 +211,11 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.menuButton.layer.cornerRadius = 4.0f;
     [self.menuButton addTarget:self action:@selector(menuButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.menuButton];
+    
+    // Set up the backup button first...
+    self.backupCategoryButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [self.backupCategoryButton addTarget:self action:@selector(categoryButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:self.backupCategoryButton];
     
     self.categoryButton = [UIButton buttonWithType:UIButtonTypeCustom];
     self.categoryButton.backgroundColor = [UIColor duckStoryMenuButtonBackground];
@@ -347,6 +225,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     self.categoryButton.layer.cornerRadius = 4.0f;
     [self.categoryButton addTarget:self action:@selector(categoryButtonSelected:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:self.categoryButton];
+    
     
     self.titleBackgroundView = [UIView new];
     self.titleBackgroundView.backgroundColor = [UIColor duckStoryTitleBackground];
@@ -422,11 +301,14 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     
     [self.titleBackgroundView setFrame:titleBackgroundFrame];
     
-    CGSize categorySize = [self.categoryButton sizeThatFits:CGSizeMake(MAXFLOAT, 25)];
-    categorySize.width += 20; // add some space on either side of the text
-    self.categoryButton.frame = CGRectMake(bounds.size.width - 40 - 8 - 8 - categorySize.width, 8, categorySize.width, 25);
-    self.menuButton.frame = CGRectMake(bounds.size.width - 40 - 8, 8, 40, 25);
-    self.categoryButton.hidden = self.story.category==nil;
+    CGSize categorySize              = [self.categoryButton sizeThatFits:CGSizeMake(MAXFLOAT, 25)];
+    categorySize.width              += 20; // add some space on either side of the text
+    self.categoryButton.frame       = CGRectMake(bounds.size.width - 40 - 8 - 8 - categorySize.width, 8, categorySize.width, 25);
+    self.backupCategoryButton.frame = CGRectMake(self.categoryButton.frame.origin.x, 0, categorySize.width, 33);
+    self.menuButton.frame           = CGRectMake(bounds.size.width - 40 - 8, 8, 40, 25);
+    CGFloat categoryButtonEndPoint  =  self.categoryButton.frame.size.width+self.categoryButton.frame.origin.x;
+    self.backupMenuButton.frame     = CGRectMake(categoryButtonEndPoint, 0, bounds.size.width-categoryButtonEndPoint, 33);
+    self.categoryButton.hidden      = self.story.category==nil;
     
     CGPoint center = [self.faviconButton center];
     center.y = CGRectGetMidY(titleBackgroundFrame);
@@ -446,4 +328,8 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
     [self.backgroundImageView setImage:nil];
 }
 
+#pragma mark - DDGPopoverViewController delegate method
+- (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
+    self.isShowingMenu = NO;
+}
 @end

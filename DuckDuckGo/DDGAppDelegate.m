@@ -119,6 +119,8 @@ static void uncaughtExceptionHandler(NSException *exception) {
             [self handleShortCutItem:shortcutItem];
         }
     }
+    
+    
     return YES;
 }
 
@@ -166,6 +168,10 @@ static void uncaughtExceptionHandler(NSException *exception) {
 - (void)applicationDidEnterBackground:(UIApplication *)application;
 {
     [self save];
+}
+
+- (void)applicationDidBecomeActive:(UIApplication *)application {
+    [self.homeController checkAndRefreshSettings];
 }
 
 

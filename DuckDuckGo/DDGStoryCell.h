@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGStory.h"
+#import "DDGPopoverViewController.h"
 
 extern NSString *const DDGStoryCellIdentifier;
 
@@ -27,8 +28,9 @@ extern NSString *const DDGStoryCellIdentifier;
 @end
 
 
-@interface DDGStoryCell : UICollectionViewCell
+@interface DDGStoryCell : UICollectionViewCell <DDGPopoverViewControllerDelegate>
 
+@property (nonatomic) BOOL isShowingMenu;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) DDGStory* story;
 @property (nonatomic) BOOL mosaicMode;

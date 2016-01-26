@@ -11,6 +11,7 @@
 #import "DDGSearchHandler.h"
 #import "DDGSearchBar.h"
 #import "DDGHomeViewController.h"
+#import "DDGToolbar.h"
 
 typedef enum {
 	DDGSearchControllerStateUnknown = 0,
@@ -29,6 +30,7 @@ typedef enum {
     NSMutableArray *unusedBangButtons;
 }
 
+@property (nonatomic, strong) DDGToolbar *toolbarView;
 @property (nonatomic, weak) IBOutlet DDGSearchBar *searchBar;
 @property (nonatomic, weak) IBOutlet UIView *searchBarWrapper;
 @property (nonatomic, weak) IBOutlet UIView *background;
@@ -75,5 +77,5 @@ typedef enum {
 
 -(void)searchFieldDidChange:(id)sender;
 -(void)dismissKeyboard:(void (^)(BOOL completed))completion;
-
+- (BOOL)doesViewControllerExistInTheNavStack:(UIViewController*)viewController;
 @end
