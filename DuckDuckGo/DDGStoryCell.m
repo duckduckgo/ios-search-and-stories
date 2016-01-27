@@ -195,7 +195,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 - (void)configure
 {
     self.isShowingMenu    = NO;
-    self.shouldGoToDetail = NO;
+    self.shouldGoToDetail = YES;
     self.backgroundImageView = [UIImageView new];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.backgroundImageView.clipsToBounds = YES;
