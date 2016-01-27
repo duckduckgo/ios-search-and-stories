@@ -84,6 +84,7 @@
     _backgroundImage = [backgroundImage resizableImageWithCapInsets:UIEdgeInsetsMake(12,12,12,12)];
 }
 
+
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event
 {
     UIView *hitView = [super hitTest:point withEvent:event];
@@ -96,11 +97,12 @@
             // Check the popoverViewController if the content view is of type DDGStoryMenu
             if ([self.popoverViewController.contentViewController isKindOfClass:[DDGStoryMenu class]]) {
                 // Check the cell and see if the hit point falls in the cell, then dont pass the hit view
-                DDGStoryMenu *menu = (DDGStoryMenu*)self.popoverViewController.contentViewController;
+                DDGStoryMenu *menu     = (DDGStoryMenu*)self.popoverViewController.contentViewController;
                 CGPoint locationInView = [menu.storyCell convertPoint:point fromView:menu.storyCell.window];
                 
                 if (CGRectContainsPoint(menu.storyCell.bounds, locationInView)) {
-                    return hitView;
+                    menu.storyCell.shouldGoToDetail = NO;
+                    
                 }
             }
         }
@@ -130,6 +132,7 @@
     // Else return the hitView (as it could be one of this view's buttons):
     return hitView;
 }
+
 
 -(void)goAwayNow {
     [self.popoverViewController dismissPopoverAnimated:TRUE];

@@ -499,6 +499,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         self.refreshControl.tintColor = [UIColor duckRefreshColor];
         [storyView addSubview:self.refreshControl];
         [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
+        storyView.backgroundView = self.refreshControl;
     }
     
     self.noContentView = [[DDGNoContentViewController alloc] init];
@@ -843,15 +844,20 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     // Check if a menu has been presented first......
-    DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
-    [self saveScrollPosition];
-    
-    NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
-    [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
-    
-    [self.historyProvider logStory:story];
-    
-    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    DDGStoryCell *currentCell = (DDGStoryCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    if (currentCell.shouldGoToDetail) {
+        DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
+        [self saveScrollPosition];
+        
+        NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+        [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
+        
+        [self.historyProvider logStory:story];
+        [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    } else {
+        // One hit so do it again.
+        currentCell.shouldGoToDetail = YES;
+    }
 }
 
 #pragma mark - Loading popular stories

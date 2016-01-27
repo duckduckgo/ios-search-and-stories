@@ -31,6 +31,7 @@ extern NSString *const DDGStoryCellIdentifier;
 @interface DDGStoryCell : UICollectionViewCell <DDGPopoverViewControllerDelegate>
 
 @property (nonatomic) BOOL isShowingMenu;
+@property (nonatomic) BOOL shouldGoToDetail;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) DDGStory* story;
 @property (nonatomic) BOOL mosaicMode;

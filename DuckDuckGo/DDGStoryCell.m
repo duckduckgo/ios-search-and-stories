@@ -194,7 +194,8 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 - (void)configure
 {
-    self.isShowingMenu = NO;
+    self.isShowingMenu    = NO;
+    self.shouldGoToDetail = NO;
     self.backgroundImageView = [UIImageView new];
     self.backgroundImageView.contentMode = UIViewContentModeScaleAspectFill;
     self.backgroundImageView.clipsToBounds = YES;
@@ -332,4 +333,5 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
     self.isShowingMenu = NO;
 }
+
 @end
