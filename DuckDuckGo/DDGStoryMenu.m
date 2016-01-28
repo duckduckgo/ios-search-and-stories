@@ -118,7 +118,7 @@
         case 0: // fave/un-fave
             self.storyCell.story.savedValue = !self.storyCell.story.savedValue;
             [self.tableView reloadData];
-            [self.storyCell performSelector:@selector(toggleSavedState) withObject:nil afterDelay:0.5];
+            [self.storyCell performSelector:@selector(saveStoryAndClose) withObject:nil afterDelay:0.5];
             break;
         case 1: // share
             [self.storyCell share];

@@ -58,7 +58,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 }
 
 
--(void)toggleSavedState
+-(void)saveStoryAndClose
 {
     DDGPopoverViewController* popover = self.menuPopover;
     

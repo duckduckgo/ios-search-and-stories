@@ -39,7 +39,7 @@ extern NSString *const DDGStoryCellIdentifier;
 @property (nonatomic, weak) id<DDGStoryCellDelegate> storyDelegate;
 @property (nonatomic, strong) UIView* touchPassthroughView;
 
--(void)toggleSavedState;
+-(void)saveStoryAndClose;
 -(void)share;
 -(void)openInBrowser;
 -(void)removeHistoryItem;
