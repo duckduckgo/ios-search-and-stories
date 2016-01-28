@@ -357,6 +357,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 }
 
 
+// Removed....
 -(void)toggleStorySaved:(DDGStory*)story
 {
  
@@ -570,8 +571,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     [super viewWillAppear:animated];
     
-    self.ignoreCoreDataUpdates = FALSE;
-    [self.storyView reloadData];
     
     [self restoreScrollPositionAnimated:animated];
     
@@ -598,6 +597,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             _storyView.transform = CGAffineTransformIdentity;
         }];
     }
+    self.ignoreCoreDataUpdates = FALSE;
+    [self.storyView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -1204,9 +1205,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    if(self.ignoreCoreDataUpdates) return;
-    
+    // if(self.ignoreCoreDataUpdates) return;
     if ([_sectionChanges count] > 0) {
+
         [self.storyView performBatchUpdates:^{
             
             for (NSDictionary *change in _sectionChanges) {

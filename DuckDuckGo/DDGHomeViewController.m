@@ -284,8 +284,8 @@
     { // configure the settings view controller
         self.settingsTopController = [[DDGSearchController alloc] initWithHomeController:self
                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        self.settingsTopController.state = DDGSearchControllerStateHome;
-        self.settingsController = [[DDGSettingsViewController alloc] initWithDefaults];
+        self.settingsTopController.state             = DDGSearchControllerStateHome;
+        self.settingsController                      = [[DDGSettingsViewController alloc] initWithDefaults];
         self.settingsController.managedObjectContext = [DDGAppDelegate sharedManagedObjectContext];
         [self.settingsTopController setContentViewController:[self.settingsController duckContainerController] tabPosition:4 animated:NO];
         self.settingsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil

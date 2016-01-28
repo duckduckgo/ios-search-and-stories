@@ -61,16 +61,11 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 -(void)toggleSavedState
 {
     DDGPopoverViewController* popover = self.menuPopover;
-    void(^toggleState)() = ^() {
-        [self.storyDelegate toggleStorySaved:self.story];
-        [self.menu.tableView reloadData];
-    };
     
-    if(popover && self.storyDelegate.storiesListMode==DDGStoriesListModeFavorites) {
+    [self saveStory];
+    if(popover) {
         // we should remove the popover if the story has disappeared
-        [popover dismissViewControllerAnimated:TRUE completion:toggleState];
-    } else {
-        toggleState();
+        [popover dismissViewControllerAnimated:TRUE completion:nil];
     }
 }
 
@@ -332,6 +327,12 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 #pragma mark - DDGPopoverViewController delegate method
 - (void)popoverControllerDidDismissPopover:(UIPopoverController *)popoverController {
     self.isShowingMenu = NO;
+}
+
+#pragma mark == Save Story ==
+- (void)saveStory {
+    NSError *saveError;
+    [self.story.managedObjectContext save:&saveError];
 }
 
 @end
