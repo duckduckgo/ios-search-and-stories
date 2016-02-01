@@ -169,6 +169,9 @@
 
     [self resetLoadingDepth];
     
+    // Bring back the expanded state
+    [self.searchController expandNavigationBar];
+    
     [super viewWillDisappear:animated];
     
     [UIMenuController sharedMenuController].menuItems = nil;
