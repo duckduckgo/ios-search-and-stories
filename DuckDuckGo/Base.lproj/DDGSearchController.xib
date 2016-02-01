@@ -8,12 +8,15 @@
         <mutableArray key="proximanova-regular.otf">
             <string>ProximaNova-Regular</string>
             <string>ProximaNova-Regular</string>
+            <string>ProximaNova-Regular</string>
         </mutableArray>
     </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="DDGSearchController">
             <connections>
                 <outlet property="background" destination="21" id="23"/>
+                <outlet property="backgroundTopWrapperConstraint" destination="m7j-Nc-Vga" id="AQi-ae-5iX"/>
+                <outlet property="barWrapperHeightConstraint" destination="zDm-26-nXY" id="CXA-0j-yVb"/>
                 <outlet property="contentBottomConstraint" destination="DsX-Il-jIf" id="Str-dT-kEd"/>
                 <outlet property="searchBar" destination="67" id="68"/>
                 <outlet property="searchBarMaxWidthConstraint" destination="WQk-4I-V9H" id="YXt-LN-zdh"/>
@@ -32,6 +35,18 @@
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="67" customClass="DDGSearchBar">
                             <rect key="frame" x="93" y="0.0" width="414" height="44"/>
                             <subviews>
+                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WHATS UP PEOPLE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Tp-gk-XkD">
+                                    <rect key="frame" x="20" y="0.0" width="374" height="44"/>
+                                    <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="13"/>
+                                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                                <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6AA-to-t96" userLabel="Compacted Button">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="44"/>
+                                    <connections>
+                                        <action selector="goBackToExpandedState:" destination="67" eventType="touchUpInside" id="XGi-Xw-JXE"/>
+                                    </connections>
+                                </button>
                                 <button opaque="NO" alpha="0.0" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="69" userLabel="Left Button" customClass="DDGSearchBarButton">
                                     <rect key="frame" x="-30" y="1" width="30" height="40"/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -137,24 +152,45 @@
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <constraints>
                                 <constraint firstItem="69" firstAttribute="trailing" secondItem="67" secondAttribute="leading" id="1Rg-Zp-ybP" userLabel="left button left alignment"/>
+                                <constraint firstItem="6AA-to-t96" firstAttribute="leading" secondItem="67" secondAttribute="leading" id="6Y2-OC-8wN"/>
                                 <constraint firstItem="83" firstAttribute="leading" secondItem="70" secondAttribute="leading" id="Dct-Gh-JLG" userLabel="bang button left alignment"/>
                                 <constraint firstItem="70" firstAttribute="bottom" secondItem="67" secondAttribute="bottom" constant="-8" id="GQ1-Ic-Qcx" userLabel="address field bottom alignment"/>
                                 <constraint firstItem="IlG-e8-l4A" firstAttribute="trailing" secondItem="67" secondAttribute="trailing" constant="-10" id="Hdy-3v-FII" userLabel="placeholder right alignment"/>
+                                <constraint firstItem="72" firstAttribute="leading" secondItem="4Tp-gk-XkD" secondAttribute="trailing" id="J0a-uu-JZN"/>
+                                <constraint firstAttribute="bottom" secondItem="6AA-to-t96" secondAttribute="bottom" id="Kdc-OJ-3zB"/>
+                                <constraint firstItem="4Tp-gk-XkD" firstAttribute="top" secondItem="67" secondAttribute="top" id="NBP-0W-8ES"/>
+                                <constraint firstAttribute="bottom" secondItem="4Tp-gk-XkD" secondAttribute="bottom" id="Nll-cn-1fE"/>
                                 <constraint firstItem="IlG-e8-l4A" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="QgQ-JD-KGf" userLabel="placeholder vertical center"/>
+                                <constraint firstItem="6AA-to-t96" firstAttribute="top" secondItem="67" secondAttribute="top" id="VoT-9t-M0R"/>
+                                <constraint firstItem="4Tp-gk-XkD" firstAttribute="leading" secondItem="69" secondAttribute="trailing" id="Vx6-oT-pzk"/>
                                 <constraint firstAttribute="height" constant="44" id="WGv-23-cEv" userLabel="search bar height"/>
                                 <constraint firstAttribute="width" relation="lessThanOrEqual" constant="414" id="WQk-4I-V9H"/>
                                 <constraint firstItem="83" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="aGc-Ts-A3A" userLabel="bang button vertical center"/>
+                                <constraint firstAttribute="trailing" secondItem="6AA-to-t96" secondAttribute="trailing" id="aWZ-xo-gRG"/>
                                 <constraint firstItem="IlG-e8-l4A" firstAttribute="leading" secondItem="67" secondAttribute="leading" constant="10" id="ceA-DN-h4L"/>
+                                <constraint firstAttribute="trailing" secondItem="4Tp-gk-XkD" secondAttribute="trailing" constant="20" id="d4F-LX-oeG"/>
                                 <constraint firstItem="72" firstAttribute="leading" secondItem="70" secondAttribute="trailing" constant="12" id="do7-vC-DfC" userLabel="address X to cancel button"/>
                                 <constraint firstItem="69" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="h2C-Sq-7w2" userLabel="left button vertical center"/>
+                                <constraint firstItem="4Tp-gk-XkD" firstAttribute="leading" secondItem="83" secondAttribute="trailing" id="h7c-Xj-ftJ"/>
                                 <constraint firstItem="70" firstAttribute="leading" secondItem="69" secondAttribute="trailing" constant="8" id="hru-Nf-Ie2" userLabel="address X to left button"/>
                                 <constraint firstItem="72" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="ouo-Tj-78m" userLabel="cancel button vertical center"/>
+                                <constraint firstItem="4Tp-gk-XkD" firstAttribute="leading" secondItem="67" secondAttribute="leading" constant="20" id="pba-qj-Sm1"/>
                                 <constraint firstItem="72" firstAttribute="leading" secondItem="67" secondAttribute="trailing" constant="4" id="uUF-hP-mDv" userLabel="cancel button right alignment"/>
                             </constraints>
+                            <variation key="default">
+                                <mask key="constraints">
+                                    <exclude reference="WGv-23-cEv"/>
+                                    <exclude reference="Vx6-oT-pzk"/>
+                                    <exclude reference="h7c-Xj-ftJ"/>
+                                    <exclude reference="J0a-uu-JZN"/>
+                                </mask>
+                            </variation>
                             <connections>
                                 <outlet property="bangButton" destination="83" id="85"/>
                                 <outlet property="cancelButton" destination="72" id="80"/>
                                 <outlet property="cancelButtonXConstraint" destination="uUF-hP-mDv" id="UIp-eC-Pbo"/>
+                                <outlet property="compactedLabel" destination="4Tp-gk-XkD" id="D0t-MO-NuC"/>
+                                <outlet property="goBackToExpandedStateButton" destination="6AA-to-t96" id="EwL-jZ-AD0"/>
                                 <outlet property="leftButton" destination="69" id="77"/>
                                 <outlet property="leftButtonXConstraint" destination="1Rg-Zp-ybP" id="DX1-BI-50c"/>
                                 <outlet property="orangeButton" destination="69" id="I68-VD-QvQ"/>
@@ -176,6 +212,8 @@
                         <constraint firstAttribute="width" secondItem="67" secondAttribute="width" priority="900" id="4Qq-jo-Sx2"/>
                         <constraint firstAttribute="trailing" secondItem="67" secondAttribute="trailing" constant="10" id="6Zt-Pr-xzR"/>
                         <constraint firstAttribute="trailing" secondItem="8B2-xM-tuN" secondAttribute="trailing" id="8YN-eE-QQc"/>
+                        <constraint firstItem="67" firstAttribute="top" secondItem="VVG-ik-zzG" secondAttribute="top" id="JOt-fq-1aI"/>
+                        <constraint firstAttribute="bottom" secondItem="67" secondAttribute="bottom" id="ZQD-Q5-lll"/>
                         <constraint firstAttribute="centerX" secondItem="67" secondAttribute="centerX" id="aeC-fq-LgS"/>
                         <constraint firstItem="67" firstAttribute="top" secondItem="VVG-ik-zzG" secondAttribute="top" id="eEr-vZ-cL8"/>
                         <constraint firstItem="8B2-xM-tuN" firstAttribute="leading" secondItem="VVG-ik-zzG" secondAttribute="leading" id="oDh-vP-VDs"/>
@@ -204,6 +242,7 @@
                 <constraint firstAttribute="trailing" secondItem="VVG-ik-zzG" secondAttribute="trailing" id="DVA-P0-34P"/>
                 <constraint firstItem="21" firstAttribute="bottom" secondItem="8" secondAttribute="bottom" id="DsX-Il-jIf"/>
                 <constraint firstItem="VVG-ik-zzG" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="QNW-hn-PkA"/>
+                <constraint firstItem="21" firstAttribute="top" secondItem="VVG-ik-zzG" secondAttribute="bottom" id="RD6-Jb-pP2"/>
                 <constraint firstAttribute="centerX" secondItem="VVG-ik-zzG" secondAttribute="centerX" id="REi-M6-nqR"/>
                 <constraint firstItem="21" firstAttribute="trailing" secondItem="8" secondAttribute="trailing" id="TH5-OW-Ojl"/>
                 <constraint firstItem="21" firstAttribute="leading" secondItem="8" secondAttribute="leading" id="erU-2B-h6t"/>
@@ -219,6 +258,7 @@
                     <exclude reference="B4g-Oq-Lij"/>
                     <exclude reference="DVA-P0-34P"/>
                     <exclude reference="REi-M6-nqR"/>
+                    <exclude reference="k2D-3Y-7P3"/>
                     <exclude reference="zXt-8P-ZY1"/>
                 </mask>
             </variation>

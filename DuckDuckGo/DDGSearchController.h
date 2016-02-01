@@ -43,6 +43,9 @@ typedef enum {
 @property (nonatomic, assign) DDGSearchControllerState state;
 @property (nonatomic, weak, readonly) id<DDGSearchHandler> searchHandler;
 @property (nonatomic) BOOL shouldPushSearchHandlerEvents;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *barWrapperHeightConstraint;
+@property (nonatomic) BOOL navBarIsCompact;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *backgroundTopWrapperConstraint;
 
 - (void)setContentViewController:(UIViewController *)contentController tabPosition:(NSUInteger)tabPosition animated:(BOOL)animated;
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated;
@@ -78,4 +81,10 @@ typedef enum {
 -(void)searchFieldDidChange:(id)sender;
 -(void)dismissKeyboard:(void (^)(BOOL completed))completion;
 - (BOOL)doesViewControllerExistInTheNavStack:(UIViewController*)viewController;
+
+
+// Navbar Methods
+- (void)compactNavigationBar;
+- (void)expandNavigationBar;
+
 @end

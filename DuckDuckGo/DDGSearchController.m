@@ -24,6 +24,7 @@
 #import "UIViewController+DDGSearchController.h"
 #import "DDGUtility.h"
 #import "DDGToolbar.h"
+#import "DDGConstraintHelper.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -272,6 +273,7 @@ NSString * const emailRegEx =
     keyboardDidHideObserver = [center addObserverForName:UIKeyboardDidHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
         [weakSelf keyboardDidHide:note];
     }];
+    
     UINavigationController* navController = [[UINavigationController alloc] init];
     navController.navigationBarHidden = TRUE;
     navController.view.backgroundColor = [UIColor duckSearchBarBackground];
@@ -282,17 +284,26 @@ NSString * const emailRegEx =
     
     [self addChildViewController:navController];
     [self.view insertSubview:navController.view belowSubview:self.background];
+    
+    [navController.view setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [DDGConstraintHelper pinView:navController.view toView:self.background inViewContainer:self.view];
+    
     [navController didMoveToParentViewController:self];
     //navController.hidesBottomBarWhenPushed = TRUE;
     self.navController = navController;
     
-    CGRect searchBarFrame = self.searchBar.frame;
-    self.shadowView = [[UIView alloc] initWithFrame:CGRectMake(0, searchBarFrame.origin.y + searchBarFrame.size.height,
-                                                               self.view.frame.size.width, 0.5)];
+    
+    self.shadowView = [UIView new];
     self.shadowView.opaque = FALSE;
     self.shadowView.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.15];
-    self.shadowView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleBottomMargin;
+    [self.shadowView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    
     [self.view addSubview:self.shadowView];
+    
+    [DDGConstraintHelper pinView:self.shadowView underView:self.searchBar inViewContainer:self.view];
+    [DDGConstraintHelper pinView:self.shadowView toEdgeOfView:self.view inViewContainer:self.view];
+    [DDGConstraintHelper setHeight:0.5 ofView:self.shadowView inViewContainer:self.view];
+    
     
     // this is a hack to workaround an iOS text field bug that causes the first setText: to
     // animate the text in from {0,0} instead of just setting it.
@@ -304,6 +315,8 @@ NSString * const emailRegEx =
     
     [self setNeedsStatusBarAppearanceUpdate];
     [self revealAutocomplete:FALSE animated:FALSE];
+    
+    self.navBarIsCompact = NO;
 }
 
 
@@ -1113,4 +1126,27 @@ NSString * const emailRegEx =
     }
 }
 
+#pragma mark == Nav Bar Size Methods ==
+- (void)updateNavBarState {
+    if (self.navBarIsCompact) {
+        self.barWrapperHeightConstraint.constant = 20;
+    } else {
+        self.barWrapperHeightConstraint.constant = 44;
+    }
+    [UIView animateWithDuration:0.3 animations:^(void){
+        [self.view layoutIfNeeded];
+    }];
+}
+
+- (void)compactNavigationBar {
+    self.navBarIsCompact = true;
+    [self.searchBar enableCompactState];
+    [self updateNavBarState];
+}
+
+- (void)expandNavigationBar {
+    self.navBarIsCompact = false;
+    [self.searchBar enableExpandedState];
+    [self updateNavBarState];
+}
 @end

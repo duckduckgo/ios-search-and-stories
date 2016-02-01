@@ -21,9 +21,9 @@
 #import "DDGActivityItemProvider.h"
 #import "DDGSafariActivity.h"
 #import "DDGImageActivityItemProvider.h"
-#import "DDGToolbarAutohider.h"
+#import "DDGToolbarAndNavigationBarAutohider.h"
 
-@interface DDGWebViewController () <UIGestureRecognizerDelegate, DDGToolbarAutohiderDelegate> {
+@interface DDGWebViewController () <UIGestureRecognizerDelegate, DDGToolbarAndNavigationBarAutohiderDelegate> {
     BOOL _isFavorited;
     CGPoint lastOffset;
     CGFloat lastUpwardsScrollDistance;
@@ -38,7 +38,7 @@
 @property IBOutlet UIButton* tabsButton;
 @property IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
 @property NSDate* ignoreTapsUntil;
-@property DDGToolbarAutohider* toolbarHider;
+@property DDGToolbarAndNavigationBarAutohider* toolbarHider;
 @property NSLayoutConstraint* bottomToolbarTopConstraint;
 
 @property BOOL isFavorited;
@@ -71,7 +71,7 @@
 
     // if someone taps the bottom toolbar area, swallow the tap and show the toolbar
     if(tapPoint.y + 50 > self.frame.size.height) {
-        [self.webController setHideToolbar:FALSE forScrollview:self.scrollView];
+        [self.webController setHideToolbarAndNavigationBar:FALSE forScrollview:self.scrollView];
         return self.blackHoleView;
     }
     return [super hitTest:tapPoint withEvent:event];
@@ -146,7 +146,7 @@
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [self.webView addGestureRecognizer:tapGestureRecognizer];
     
-    self.toolbarHider = [[DDGToolbarAutohider alloc] initWithContainerView:self.view
+    self.toolbarHider = [[DDGToolbarAndNavigationBarAutohider alloc] initWithContainerView:self.view
                                                                 scrollView:self.webView.scrollView
                                                                   delegate:self];
 }
@@ -313,9 +313,14 @@
 
 #pragma mark - Actions
 
--(void)setHideToolbar:(BOOL)hideToolbar forScrollview:(UIScrollView*)scrollView
+-(void)setHideToolbarAndNavigationBar:(BOOL)shouldHide forScrollview:(UIScrollView*)scrollView
 {
-    CGFloat newConstant = hideToolbar ? 50 : 0;
+    CGFloat newConstant = shouldHide ? 50 : 0;
+    if (shouldHide) {
+        [self.searchController compactNavigationBar];
+    } else {
+        [self.searchController expandNavigationBar];
+    }
     if(self.bottomToolbarTopConstraint.constant!=newConstant) {
         self.bottomToolbarTopConstraint.constant = newConstant;
         [UIView animateWithDuration:0.25 animations:^{

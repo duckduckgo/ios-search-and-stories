@@ -158,4 +158,30 @@
 }
 
 
+#pragma mark == Handle States ==
+- (void)enableCompactState {
+    [self.compactedLabel setText:[self getDomainFromString:self.searchField.text]];
+    [self.leftButton setAlpha:0];
+    [self.searchField setAlpha:0];
+    [self.compactedLabel setAlpha:1];
+    [self.goBackToExpandedStateButton setHidden:false];
+}
+
+- (void)enableExpandedState {
+    [self.leftButton setAlpha:1];
+    [self.searchField setAlpha:1];
+    [self.compactedLabel setAlpha:0];
+    [self.goBackToExpandedStateButton setHidden:true];
+}
+
+- (IBAction)goBackToExpandedState:(id)sender {
+    [[NSNotificationCenter defaultCenter] postNotificationName:kDDGNotificationExpandToolNavBar object:nil];
+}
+
+// Get the domain
+- (NSString*)getDomainFromString:(NSString*)orignalString {
+    NSURL *url = [NSURL URLWithString:orignalString];
+    return [url host];
+}
+
 @end

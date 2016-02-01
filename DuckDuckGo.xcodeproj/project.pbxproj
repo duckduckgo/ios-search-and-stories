@@ -23,6 +23,8 @@
 /* Begin PBXBuildFile section */
 		484A10C21C4C47AD00948ED4 /* DDGStoryMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */; };
 		48690A001C489CB900083D49 /* DDGTraitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 486909FF1C489CB900083D49 /* DDGTraitHelper.m */; };
+		486E7C7F1C5E887A00287A35 /* DDGConstraintHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 486E7C7E1C5E887A00287A35 /* DDGConstraintHelper.m */; };
+		486E7C871C5F051F00287A35 /* DuckDuckGoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 486E7C861C5F051F00287A35 /* DuckDuckGoTests.m */; };
 		4C02E2E11623C9F70010F06C /* bg_divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C02E2DF1623C9F40010F06C /* bg_divider.png */; };
 		4C02E2E21623C9F70010F06C /* bg_divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C02E2E01623C9F50010F06C /* bg_divider@2x.png */; };
 		4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BC93515B8C2BE008C6FC4 /* quack.wav */; };
@@ -306,7 +308,7 @@
 		8409F5F01B5E917E001F897F /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EC1B5E917E001F897F /* proximanova-regular.otf */; };
 		8409F5F11B5E917E001F897F /* proximanova-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */; };
 		8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */; };
-		84341F131C26B7E2008A7E2A /* DDGToolbarAutohider.m in Sources */ = {isa = PBXBuildFile; fileRef = 84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */; };
+		84341F131C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m in Sources */ = {isa = PBXBuildFile; fileRef = 84341F121C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m */; };
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
 		846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 846D6B991BA4BE7A00EB16BC /* DDGChooseHomeViewController.m */; };
@@ -329,11 +331,26 @@
 		C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		486E7C891C5F051F00287A35 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 83F3224F149290EF00A61BC5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 83F32257149290EF00A61BC5;
+			remoteInfo = DuckDuckGo;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		484A10C01C4C47AD00948ED4 /* DDGStoryMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryMenu.h; sourceTree = "<group>"; };
 		484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryMenu.m; sourceTree = "<group>"; };
 		486909FE1C489CB900083D49 /* DDGTraitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTraitHelper.h; sourceTree = "<group>"; };
 		486909FF1C489CB900083D49 /* DDGTraitHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGTraitHelper.m; sourceTree = "<group>"; };
+		486E7C7D1C5E887A00287A35 /* DDGConstraintHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGConstraintHelper.h; sourceTree = "<group>"; };
+		486E7C7E1C5E887A00287A35 /* DDGConstraintHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGConstraintHelper.m; sourceTree = "<group>"; };
+		486E7C841C5F051F00287A35 /* DuckDuckGoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DuckDuckGoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		486E7C861C5F051F00287A35 /* DuckDuckGoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DuckDuckGoTests.m; sourceTree = "<group>"; };
+		486E7C881C5F051F00287A35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C02E2DF1623C9F40010F06C /* bg_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_divider.png; sourceTree = "<group>"; };
 		4C02E2E01623C9F50010F06C /* bg_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_divider@2x.png"; sourceTree = "<group>"; };
 		4C0BC93515B8C2BE008C6FC4 /* quack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = quack.wav; sourceTree = "<group>"; };
@@ -966,8 +983,8 @@
 		8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "fonts/licensed/proximanova-semibold.otf"; sourceTree = "<group>"; };
 		8410AD531BB7353500CC83DB /* DDGImageActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGImageActivityItemProvider.h; sourceTree = "<group>"; };
 		8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGImageActivityItemProvider.m; sourceTree = "<group>"; };
-		84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGToolbarAutohider.h; sourceTree = "<group>"; };
-		84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGToolbarAutohider.m; sourceTree = "<group>"; };
+		84341F111C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGToolbarAndNavigationBarAutohider.h; sourceTree = "<group>"; };
+		84341F121C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGToolbarAndNavigationBarAutohider.m; sourceTree = "<group>"; };
 		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBar.h; sourceTree = "<group>"; };
 		845993311B4BD41B006F2CE7 /* DDGProgressBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGProgressBar.m; sourceTree = "<group>"; };
 		846497691B3D3FE600BAF256 /* DDGHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGHomeViewController.h; sourceTree = "<group>"; };
@@ -1009,6 +1026,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		486E7C811C5F051F00287A35 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		83F32255149290EF00A61BC5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -1043,6 +1067,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		486E7C851C5F051F00287A35 /* DuckDuckGoTests */ = {
+			isa = PBXGroup;
+			children = (
+				486E7C861C5F051F00287A35 /* DuckDuckGoTests.m */,
+				486E7C881C5F051F00287A35 /* Info.plist */,
+			);
+			path = DuckDuckGoTests;
+			sourceTree = "<group>";
+		};
 		4C1FD7D31548FF5B006B2511 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -1454,8 +1487,8 @@
 		5B7C3BDA170B093300B9E009 /* Main Menu */ = {
 			isa = PBXGroup;
 			children = (
-				84341F111C26B7E2008A7E2A /* DDGToolbarAutohider.h */,
-				84341F121C26B7E2008A7E2A /* DDGToolbarAutohider.m */,
+				84341F111C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.h */,
+				84341F121C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m */,
 				7BCE31DA18E4498B00C87EF4 /* Visual Refresh */,
 				5B7C3CA8171C4B1800B9E009 /* DDGFixedSizeImageView.h */,
 				5B7C3CA9171C4B1800B9E009 /* DDGFixedSizeImageView.m */,
@@ -1682,6 +1715,8 @@
 				84A640A81B7368D800643A39 /* UIFont+DDG.m */,
 				486909FE1C489CB900083D49 /* DDGTraitHelper.h */,
 				486909FF1C489CB900083D49 /* DDGTraitHelper.m */,
+				486E7C7D1C5E887A00287A35 /* DDGConstraintHelper.h */,
+				486E7C7E1C5E887A00287A35 /* DDGConstraintHelper.m */,
 			);
 			name = Utility;
 			sourceTree = "<group>";
@@ -1690,6 +1725,7 @@
 			isa = PBXGroup;
 			children = (
 				83F32262149290EF00A61BC5 /* DuckDuckGo */,
+				486E7C851C5F051F00287A35 /* DuckDuckGoTests */,
 				833DB53C1494164F00509F2E /* Frameworks */,
 				83F32259149290EF00A61BC5 /* Products */,
 			);
@@ -1701,6 +1737,7 @@
 			isa = PBXGroup;
 			children = (
 				83F32258149290EF00A61BC5 /* DuckDuckGo.app */,
+				486E7C841C5F051F00287A35 /* DuckDuckGoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1780,6 +1817,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		486E7C831C5F051F00287A35 /* DuckDuckGoTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 486E7C8B1C5F051F00287A35 /* Build configuration list for PBXNativeTarget "DuckDuckGoTests" */;
+			buildPhases = (
+				486E7C801C5F051F00287A35 /* Sources */,
+				486E7C811C5F051F00287A35 /* Frameworks */,
+				486E7C821C5F051F00287A35 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				486E7C8A1C5F051F00287A35 /* PBXTargetDependency */,
+			);
+			name = DuckDuckGoTests;
+			productName = DuckDuckGoTests;
+			productReference = 486E7C841C5F051F00287A35 /* DuckDuckGoTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		83F32257149290EF00A61BC5 /* DuckDuckGo */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 83F32279149290EF00A61BC5 /* Build configuration list for PBXNativeTarget "DuckDuckGo" */;
@@ -1805,6 +1860,10 @@
 			attributes = {
 				LastUpgradeCheck = 0630;
 				TargetAttributes = {
+					486E7C831C5F051F00287A35 = {
+						CreatedOnToolsVersion = 7.2;
+						TestTargetID = 83F32257149290EF00A61BC5;
+					};
 					83F32257149290EF00A61BC5 = {
 						DevelopmentTeam = HKE973VLUW;
 					};
@@ -1842,11 +1901,19 @@
 			targets = (
 				83F32257149290EF00A61BC5 /* DuckDuckGo */,
 				5BFF24BA16F77EF900844D3B /* Mogenerator */,
+				486E7C831C5F051F00287A35 /* DuckDuckGoTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		486E7C821C5F051F00287A35 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		83F32256149290EF00A61BC5 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2048,6 +2115,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		486E7C801C5F051F00287A35 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				486E7C871C5F051F00287A35 /* DuckDuckGoTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		83F32254149290EF00A61BC5 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2076,6 +2151,7 @@
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
+				486E7C7F1C5E887A00287A35 /* DDGConstraintHelper.m in Sources */,
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
 				4C4A0EC115D9826900B44342 /* DDGJSONViewController.m in Sources */,
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
@@ -2100,7 +2176,7 @@
 				5BA321C316C904BA0066BCB0 /* AFXMLRequestOperation.m in Sources */,
 				5BA321C416C904BA0066BCB0 /* UIImageView+AFNetworking.m in Sources */,
 				5BA321EB16C9056B0066BCB0 /* SDURLCache.m in Sources */,
-				84341F131C26B7E2008A7E2A /* DDGToolbarAutohider.m in Sources */,
+				84341F131C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m in Sources */,
 				5BA321EC16C9056D0066BCB0 /* SDCachedURLResponse.m in Sources */,
 				5BA321F116C907650066BCB0 /* NSOperationStack.m in Sources */,
 				84E723001B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m in Sources */,
@@ -2163,6 +2239,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		486E7C8A1C5F051F00287A35 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 83F32257149290EF00A61BC5 /* DuckDuckGo */;
+			targetProxy = 486E7C891C5F051F00287A35 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		4E13867F1BB5A4850066F731 /* DDGHomeViewController.xib */ = {
@@ -2560,6 +2644,160 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		486E7C8C1C5F051F00287A35 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_TESTABILITY = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				INFOPLIST_FILE = DuckDuckGoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.infinitekind.DuckDuckGoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuckDuckGo.app/DuckDuckGo";
+			};
+			name = Debug;
+		};
+		486E7C8D1C5F051F00287A35 /* Release-adhoc */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = DuckDuckGoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.infinitekind.DuckDuckGoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuckDuckGo.app/DuckDuckGo";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-adhoc";
+		};
+		486E7C8E1C5F051F00287A35 /* Release-testflight */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = DuckDuckGoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.infinitekind.DuckDuckGoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuckDuckGo.app/DuckDuckGo";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-testflight";
+		};
+		486E7C8F1C5F051F00287A35 /* Release-appstore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = DuckDuckGoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.infinitekind.DuckDuckGoTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuckDuckGo.app/DuckDuckGo";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = "Release-appstore";
+		};
 		5B66097416D783620006B5DE /* Release-testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -2877,6 +3115,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		486E7C8B1C5F051F00287A35 /* Build configuration list for PBXNativeTarget "DuckDuckGoTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				486E7C8C1C5F051F00287A35 /* Debug */,
+				486E7C8D1C5F051F00287A35 /* Release-adhoc */,
+				486E7C8E1C5F051F00287A35 /* Release-testflight */,
+				486E7C8F1C5F051F00287A35 /* Release-appstore */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		5BFF24BB16F77EF900844D3B /* Build configuration list for PBXAggregateTarget "Mogenerator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

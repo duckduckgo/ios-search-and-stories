@@ -24,3 +24,4 @@ NSString * const kDDGStoriesURLString = @"https://watrcoolr.duckduckgo.com/watrc
 NSString * const kDDGSuggestionsURLString = @"https://duckduckgo.com/ac/?q=";
 NSString * const kDDGSettingsRefreshData = @"Refresh_DDG_DATA";
 
+NSString * const kDDGNotificationExpandToolNavBar = @"ExpandToolNavBar";
