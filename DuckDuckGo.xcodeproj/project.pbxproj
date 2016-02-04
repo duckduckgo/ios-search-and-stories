@@ -21,10 +21,13 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		48449FEF1C603D160042CFBD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48449FEE1C603D160042CFBD /* WebKit.framework */; };
 		484A10C21C4C47AD00948ED4 /* DDGStoryMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */; };
 		48690A001C489CB900083D49 /* DDGTraitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 486909FF1C489CB900083D49 /* DDGTraitHelper.m */; };
 		486E7C7F1C5E887A00287A35 /* DDGConstraintHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 486E7C7E1C5E887A00287A35 /* DDGConstraintHelper.m */; };
 		486E7C871C5F051F00287A35 /* DuckDuckGoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 486E7C861C5F051F00287A35 /* DuckDuckGoTests.m */; };
+		48E59E571C6020E700D97A61 /* DDGWebKitWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 48E59E561C6020E700D97A61 /* DDGWebKitWebViewController.m */; };
+		48E59E591C60260700D97A61 /* DDGWebKitViewTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 48E59E581C60260700D97A61 /* DDGWebKitViewTests.m */; };
 		4C02E2E11623C9F70010F06C /* bg_divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C02E2DF1623C9F40010F06C /* bg_divider.png */; };
 		4C02E2E21623C9F70010F06C /* bg_divider@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C02E2E01623C9F50010F06C /* bg_divider@2x.png */; };
 		4C0BC93615B8C2BE008C6FC4 /* quack.wav in Resources */ = {isa = PBXBuildFile; fileRef = 4C0BC93515B8C2BE008C6FC4 /* quack.wav */; };
@@ -342,6 +345,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		48449FEE1C603D160042CFBD /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		484A10C01C4C47AD00948ED4 /* DDGStoryMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryMenu.h; sourceTree = "<group>"; };
 		484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryMenu.m; sourceTree = "<group>"; };
 		486909FE1C489CB900083D49 /* DDGTraitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTraitHelper.h; sourceTree = "<group>"; };
@@ -351,6 +355,9 @@
 		486E7C841C5F051F00287A35 /* DuckDuckGoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DuckDuckGoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		486E7C861C5F051F00287A35 /* DuckDuckGoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DuckDuckGoTests.m; sourceTree = "<group>"; };
 		486E7C881C5F051F00287A35 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		48E59E551C6020E700D97A61 /* DDGWebKitWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebKitWebViewController.h; sourceTree = "<group>"; };
+		48E59E561C6020E700D97A61 /* DDGWebKitWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebKitWebViewController.m; sourceTree = "<group>"; };
+		48E59E581C60260700D97A61 /* DDGWebKitViewTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebKitViewTests.m; sourceTree = "<group>"; };
 		4C02E2DF1623C9F40010F06C /* bg_divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg_divider.png; sourceTree = "<group>"; };
 		4C02E2E01623C9F50010F06C /* bg_divider@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_divider@2x.png"; sourceTree = "<group>"; };
 		4C0BC93515B8C2BE008C6FC4 /* quack.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = quack.wav; sourceTree = "<group>"; };
@@ -1037,6 +1044,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48449FEF1C603D160042CFBD /* WebKit.framework in Frameworks */,
 				7B3BB7F9192E350900E94055 /* AssetsLibrary.framework in Frameworks */,
 				7B2BDFA018E997C8003B8078 /* CoreText.framework in Frameworks */,
 				C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */,
@@ -1072,8 +1080,18 @@
 			children = (
 				486E7C861C5F051F00287A35 /* DuckDuckGoTests.m */,
 				486E7C881C5F051F00287A35 /* Info.plist */,
+				48E59E581C60260700D97A61 /* DDGWebKitViewTests.m */,
 			);
 			path = DuckDuckGoTests;
+			sourceTree = "<group>";
+		};
+		48E59E541C6020B300D97A61 /* Web Kit Version */ = {
+			isa = PBXGroup;
+			children = (
+				48E59E551C6020E700D97A61 /* DDGWebKitWebViewController.h */,
+				48E59E561C6020E700D97A61 /* DDGWebKitWebViewController.m */,
+			);
+			name = "Web Kit Version";
 			sourceTree = "<group>";
 		};
 		4C1FD7D31548FF5B006B2511 /* Images */ = {
@@ -1401,6 +1419,7 @@
 		5B2FCB5B16F3786D0045A5FE /* Web View */ = {
 			isa = PBXGroup;
 			children = (
+				48E59E541C6020B300D97A61 /* Web Kit Version */,
 				839819411493C1DB0017A892 /* DDGWebViewController.h */,
 				839819421493C1DB0017A892 /* DDGWebViewController.m */,
 				5B2FCB5C16F3789F0045A5FE /* DDGReadabilityToggleActivity.h */,
@@ -1648,6 +1667,7 @@
 		833DB53C1494164F00509F2E /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				48449FEE1C603D160042CFBD /* WebKit.framework */,
 				7B3BB7F8192E350900E94055 /* AssetsLibrary.framework */,
 				7B2BDF9F18E997C8003B8078 /* CoreText.framework */,
 				C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */,
@@ -2119,6 +2139,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				48E59E591C60260700D97A61 /* DDGWebKitViewTests.m in Sources */,
 				486E7C871C5F051F00287A35 /* DuckDuckGoTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2142,6 +2163,7 @@
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
 				4C184D0E15A3742A003AAD5E /* NSArray+ConcurrentIteration.m in Sources */,
 				4C573D1515B75A2900790F60 /* DDGSettingsViewController.m in Sources */,
+				48E59E571C6020E700D97A61 /* DDGWebKitWebViewController.m in Sources */,
 				84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */,
 				4C2E001215B87C700096C994 /* DDGChooseSourcesViewController.m in Sources */,
 				4C4B7E8F15C4EC9E00340B59 /* SVProgressHUD.m in Sources */,
@@ -3124,6 +3146,7 @@
 				486E7C8F1C5F051F00287A35 /* Release-appstore */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = "Release-adhoc";
 		};
 		5BFF24BB16F77EF900844D3B /* Build configuration list for PBXAggregateTarget "Mogenerator" */ = {
 			isa = XCConfigurationList;

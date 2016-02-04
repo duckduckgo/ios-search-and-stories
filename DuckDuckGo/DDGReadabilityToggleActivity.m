@@ -9,6 +9,8 @@
 #import "DDGReadabilityToggleActivity.h"
 #import "DDGWebViewController.h"
 #import "DDGStory.h"
+#import "DDGWebKitWebViewController.h"
+#import "Constants.h"
 
 @interface DDGReadabilityToggleActivity ()
 @property (nonatomic, strong) NSArray *webViewControllers;
@@ -51,7 +53,7 @@
 
 - (BOOL)canPerformWithActivityItems:(NSArray *)activityItems {
     for (id object in activityItems) {
-        if ([object isKindOfClass:[DDGWebViewController class]]) {
+        if ([self objectIsKindOfWebView:object]) {
             return YES;
         }
     }
@@ -62,7 +64,7 @@
 - (void)prepareWithActivityItems:(NSArray *)activityItems {
     NSMutableArray *items = [NSMutableArray arrayWithCapacity:[activityItems count]];
     for (id object in activityItems) {
-        if ([object isKindOfClass:[DDGWebViewController class]]) {
+        if ([self objectIsKindOfWebView:object]) {
             [items addObject:object];
         }
     }
@@ -70,8 +72,8 @@
 }
 
 - (void)performActivity {
-    
-    for (DDGWebViewController *webViewController in self.webViewControllers) {
+    for (id webViewController in self.webViewControllers) {
+        // There's no type checking here....
         switch (self.toggleMode) {
             case DDGReadabilityToggleModeOn:
                 if ([webViewController canSwitchToReadabilityMode])
@@ -85,6 +87,13 @@
     }
     
     [self activityDidFinish:YES];
+}
+
+- (BOOL)objectIsKindOfWebView:(id)object {
+    if ([object isKindOfClass:[DDGWebViewController class]] || [object isKindOfClass:[DDGWebKitWebViewController class]]) {
+        return YES;
+    }
+    return NO;
 }
 
 

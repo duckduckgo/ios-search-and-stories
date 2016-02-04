@@ -22,14 +22,15 @@
 #import "DDGSafariActivity.h"
 #import "DDGImageActivityItemProvider.h"
 #import "DDGToolbarAndNavigationBarAutohider.h"
+#import "Constants.h"
 
 @interface DDGWebViewController () <UIGestureRecognizerDelegate, DDGToolbarAndNavigationBarAutohiderDelegate> {
     BOOL _isFavorited;
     CGPoint lastOffset;
     CGFloat lastUpwardsScrollDistance;
 }
-@property (nonatomic, readwrite) BOOL inReadabilityMode;
 
+@property (nonatomic, readwrite) BOOL inReadabilityMode;
 @property UIView* toolbar;
 @property IBOutlet UIButton* backButton;
 @property IBOutlet UIButton* forwardButton;
@@ -37,7 +38,6 @@
 @property IBOutlet UIButton* shareButton;
 @property IBOutlet UIButton* tabsButton;
 @property IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
-@property NSDate* ignoreTapsUntil;
 @property DDGToolbarAndNavigationBarAutohider* toolbarHider;
 @property NSLayoutConstraint* bottomToolbarTopConstraint;
 
@@ -49,6 +49,7 @@
 @interface DDGWebView : UIWebView {
     UIView* _blackHoleView;
 }
+
 @property (nonatomic, weak) DDGWebViewController* webController;
 @property (readonly) UIView* blackHoleView;
 
@@ -88,20 +89,34 @@
 
 - (void)loadView {
     [super loadView];
-    CGRect viewFrame = self.view.frame;
-    viewFrame.origin = CGPointMake(0, 0);
-    DDGWebView* webView = [[DDGWebView alloc] initWithFrame:viewFrame];
-    webView.webController = self;
-    self.webView = webView;
-    self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-    self.webView.delegate = self;
-    self.webView.scalesPageToFit = YES;
+    
+    if (SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"7")) {
+        CGRect viewFrame = self.view.frame;
+        viewFrame.origin = CGPointMake(0, 0);
+        DDGWebView* webView = [[DDGWebView alloc] initWithFrame:viewFrame];
+        webView.webController = self;
+        self.webView = webView;
+        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
+        self.webView.delegate = self;
+        self.webView.scalesPageToFit = YES;
+        
+        _webViewLoadingDepth = 0;
+        self.webView.backgroundColor = [UIColor duckNoContentColor];
+        
+        [self.view addSubview:self.webView];
+        
+        [self setUpWebToolBar];
+        
+        [self updateButtons];
+    }
+}
 
-    _webViewLoadingDepth = 0;
-    self.webView.backgroundColor = [UIColor duckNoContentColor];
-    
-    [self.view addSubview:self.webView];
-    
+-(UIView*)alternateToolbar {
+    if([self view]) return self.toolbar;
+    return nil;
+}
+
+- (void)setUpWebToolBar {
     [[UINib nibWithNibName:@"DDGWebToolbar" bundle:nil] instantiateWithOwner:self options:nil];
     [self.view addSubview:self.webToolbar];
     [self.view addConstraint:[NSLayoutConstraint constraintWithItem:self.webToolbar
@@ -123,15 +138,7 @@
                                                                    attribute:NSLayoutAttributeBottom
                                                                   multiplier:1 constant:0];
     [self.view addConstraint:self.bottomToolbarTopConstraint];
-    
-    [self updateButtons];
 }
-
--(UIView*)alternateToolbar {
-    if([self view]) return self.toolbar;
-    return nil;
-}
-
 
 // Implement viewDidLoad to do additional setup after loading the view, typically from a nib.
 - (void)viewDidLoad
@@ -146,9 +153,7 @@
     tapGestureRecognizer.numberOfTapsRequired = 1;
     [self.webView addGestureRecognizer:tapGestureRecognizer];
     
-    self.toolbarHider = [[DDGToolbarAndNavigationBarAutohider alloc] initWithContainerView:self.view
-                                                                scrollView:self.webView.scrollView
-                                                                  delegate:self];
+    self.toolbarHider = [[DDGToolbarAndNavigationBarAutohider alloc] initWithContainerView:self.view scrollView:self.webView.scrollView delegate:self];
 }
 
 - (void)setSearchController:(DDGSearchController *)searchController {
@@ -173,7 +178,6 @@
     [self.searchController expandNavigationBar];
     
     [super viewWillDisappear:animated];
-    
     [UIMenuController sharedMenuController].menuItems = nil;
 }
 
@@ -193,14 +197,17 @@
 
 - (void)dealloc
 {
-    if (self.webView.isLoading)
-        [self.webView stopLoading];
-    
+ 
+    self.webView.scrollView.delegate = nil;
     [self resetLoadingDepth];    
     
-	self.webView.delegate = nil;
+    
+    if ([self.webView respondsToSelector:@selector(delegate)]) {
+        self.webView.delegate = nil;        
+    }
     self.webView = nil;
 	self.webViewURL = nil;
+     
 }
 
 - (void)viewDidUnload
@@ -319,7 +326,8 @@
 -(void)setHideToolbarAndNavigationBar:(BOOL)shouldHide forScrollview:(UIScrollView*)scrollView
 {
     CGFloat newConstant = shouldHide ? 50 : 0;
-    if (shouldHide) {
+    if (shouldHide && self.isAStory) {
+        
         [self.searchController compactNavigationBar];
     } else {
         [self.searchController expandNavigationBar];
@@ -333,9 +341,6 @@
         }];
     }
 }
-
-
-
 
 
 -(BOOL)isFavorited
@@ -508,10 +513,11 @@
 -(void)loadQueryOrURL:(NSString *)queryOrURLString
 {
     [self view];
-    
     NSString *urlString;
     if([self.searchController isQuery:queryOrURLString])
     {
+        self.isAStory = false;
+        NSLog(@"Is not a story for querystring %@", queryOrURLString);
         // direct query
         urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
                      [queryOrURLString URLEncodedStringDDG], 
@@ -519,6 +525,7 @@
     }
     else
     {
+        self.isAStory = true;
         // a URL entered by user
         urlString = [self.searchController validURLStringFromString:queryOrURLString];
     }
@@ -531,7 +538,7 @@
 }
 
 - (void)loadJSONForStory:(DDGStory *)story completion:(void (^)(id JSON))completion {
-    
+    self.isAStory = true;
     NSString *urlString = story.articleURLString;
     
     if (nil == urlString) {
@@ -565,22 +572,6 @@
     });
 }
 
-- (NSString *)htmlFromJSON:(id)JSON {
-    if ([JSON isKindOfClass:[NSArray class]]) {
-        
-        NSArray *stories = JSON;
-        if ([stories count] > 0) {
-            NSDictionary *dictionary = [stories objectAtIndex:0];
-            if ([dictionary isKindOfClass:[NSDictionary class]]) {
-                NSString *html = [dictionary objectForKey:@"html"];
-                if ([html isKindOfClass:[NSString class]])
-                    return html;
-            }
-        }
-    }
-    
-    return nil;
-}
 
 -(void)loadStory:(DDGStory *)story readabilityMode:(BOOL)readabilityMode {
     [self view];
@@ -822,5 +813,21 @@
     return (status == ALAuthorizationStatusNotDetermined || status == ALAuthorizationStatusAuthorized);
 }
 
-
+#pragma mark == Web Helper Methods ==
+- (NSString *)htmlFromJSON:(id)JSON {
+    if ([JSON isKindOfClass:[NSArray class]]) {
+        
+        NSArray *stories = JSON;
+        if ([stories count] > 0) {
+            NSDictionary *dictionary = [stories objectAtIndex:0];
+            if ([dictionary isKindOfClass:[NSDictionary class]]) {
+                NSString *html = [dictionary objectForKey:@"html"];
+                if ([html isKindOfClass:[NSString class]])
+                    return html;
+            }
+        }
+    }
+    
+    return nil;
+}
 @end

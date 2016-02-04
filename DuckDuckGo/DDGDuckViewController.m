@@ -513,6 +513,10 @@ static NSString *historyCellID = @"HCell";
     [self.containerViewHeightConstraint setConstant:keyboardShowing ? 170.0f : 230.0f];
 }
 
+#pragma mark == Support For Keyboard ==
+- (void)setBottomPaddingBy:(CGFloat)paddingHeight {
+    [self.tableView setContentInset:UIEdgeInsetsMake(0, 0, paddingHeight, 0)];
+}
 
 @end
 

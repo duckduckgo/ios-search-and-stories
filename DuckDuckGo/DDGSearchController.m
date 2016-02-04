@@ -15,6 +15,7 @@
 #import "DDGSettingsViewController.h"
 #import "DDGHistoryProvider.h"
 #import "DDGWebViewController.h"
+#import "DDGWebKitWebViewController.h"
 #import "DDGAddressBarTextField.h"
 #import "DDGAppDelegate.h"
 
@@ -25,6 +26,7 @@
 #import "DDGUtility.h"
 #import "DDGToolbar.h"
 #import "DDGConstraintHelper.h"
+#import "Constants.h"
 
 NSString * const emailRegEx =
 @"(?:[a-z0-9!#$%\\&'*+/=?\\^_`{|}~-]+(?:\\.[a-z0-9!#$%\\&'*+/=?\\^_`{|}"
@@ -153,7 +155,8 @@ NSString * const emailRegEx =
     }
     
     [self view]; // force the view to be loaded
-    contentController.view.frame = self.background.frame;
+    // contentController.view.frame = self.background.frame;
+    contentController.view.frame = self.navController.view.frame;
     if(topController) {
         [self.duckTabBar removeFromSuperview];
         [contentController.view addSubview:self.duckTabBar];
@@ -264,7 +267,7 @@ NSString * const emailRegEx =
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
     NSOperationQueue *queue = [NSOperationQueue mainQueue];
     __weak typeof(self) weakSelf = self;
-    keyboardDidShowObserver = [center addObserverForName:UIKeyboardWillShowNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
+    keyboardDidShowObserver = [center addObserverForName:UIKeyboardDidShowNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
         [weakSelf keyboardDidShow:note];
     }];
     keyboardWillHideObserver = [center addObserverForName:UIKeyboardWillHideNotification object:nil queue:queue usingBlock:^(NSNotification *note) {
@@ -280,17 +283,23 @@ NSString * const emailRegEx =
     navController.interactivePopGestureRecognizer.enabled = TRUE;
     navController.interactivePopGestureRecognizer.delegate = self;
     navController.delegate = self;
-    navController.view.frame = self.background.frame;
+    // navController.view.frame = self.background.frame;
     
     [self addChildViewController:navController];
     [self.view insertSubview:navController.view belowSubview:self.background];
+    // [self.view addSubview:navController.view];
     
     [navController.view setTranslatesAutoresizingMaskIntoConstraints:NO];
-    [DDGConstraintHelper pinView:navController.view toView:self.background inViewContainer:self.view];
+    [DDGConstraintHelper pinView:navController.view underView:self.searchBarWrapper inViewContainer:self.view];
+    [DDGConstraintHelper pinView:navController.view toEdgeOfView:self.searchBarWrapper inViewContainer:self.view];
+    [DDGConstraintHelper pinView:navController.view toBottomOfView:self.view inViewController:self.view];
     
     [navController didMoveToParentViewController:self];
     //navController.hidesBottomBarWhenPushed = TRUE;
+    self.background.accessibilityIdentifier = @"Background view";
+
     self.navController = navController;
+    self.navController.view.accessibilityIdentifier = @"Nav Contrller";
     
     
     self.shadowView = [UIView new];
@@ -386,7 +395,6 @@ NSString * const emailRegEx =
             [self.autocompleteController removeFromParentViewController];
             [self.autocompleteController.view removeFromSuperview];
         }
-        
         [self.background removeFromSuperview];
         self.autocompleteController.popoverMode = TRUE;
         if(self.autocompletePopover==nil) {
@@ -436,6 +444,7 @@ NSString * const emailRegEx =
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -466,14 +475,26 @@ NSString * const emailRegEx =
 }
 
 -(void)keyboardIsShowing:(BOOL)show notification:(NSNotification*)notification {
-    NSDictionary *info = [notification userInfo];
+    // Updated calculation which will just update the content inset of the table view and take the FINAL height of the keyboard
+    
+    NSDictionary *info   = [notification userInfo];
+    CGFloat keyboardHeight = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    [self.autocompleteController setBottomPaddingBy:keyboardHeight];
+    if (!show) {
+        [self dismissAutocomplete];
+    }
+    
+    /*
     CGRect keyboardBegin = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
-    keyboardBegin = [self.view.superview convertRect:keyboardBegin fromView:nil];
-    CGRect keyboardEnd = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
-    keyboardEnd = [self.view.superview convertRect:keyboardEnd fromView:nil];
-    double dy = keyboardEnd.origin.y - keyboardBegin.origin.y;
+    keyboardBegin        = [self.view.superview convertRect:keyboardBegin fromView:nil];
+    CGRect keyboardEnd   = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    keyboardEnd          = [self.view.superview convertRect:keyboardEnd fromView:nil];
+    double dy            = keyboardEnd.origin.y - keyboardBegin.origin.y;
+    
+    [self.autocompleteController setBottomPaddingBy:keyboardEnd.size.height];
     if(ABS(dy) > 0) {
         // this isn't a standard up/down animation so don't try animating
+
         double delayInSeconds = (show ? [[info objectForKey:UIKeyboardAnimationDurationUserInfoKey] doubleValue] : 0.0);
         dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
         dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
@@ -485,6 +506,7 @@ NSString * const emailRegEx =
                 [self.view layoutIfNeeded];
             }
         });
+
         
     } else {
         UIViewController *controller = self.navController.visibleViewController;
@@ -492,6 +514,7 @@ NSString * const emailRegEx =
             [controller.view layoutIfNeeded];
         }
     }
+     */
 }
 
 #pragma mark - DDGSearchHandler
@@ -543,7 +566,7 @@ NSString * const emailRegEx =
         [(UIViewController <DDGSearchHandler> *)contentViewController loadQueryOrURL:queryOrURLString];
     } else {
         if (self.shouldPushSearchHandlerEvents) {
-            DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+            DDGWebViewController *webViewController = [self newWebViewController];
             webViewController.searchController = self;
             [webViewController loadQueryOrURL:queryOrURLString];
             [self pushContentViewController:webViewController animated:YES];
@@ -559,7 +582,7 @@ NSString * const emailRegEx =
         [(UIViewController <DDGSearchHandler> *)contentViewController loadStory:story readabilityMode:readabilityMode];
     } else {
         if (self.shouldPushSearchHandlerEvents) {
-            DDGWebViewController *webViewController = [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+            DDGWebViewController *webViewController = [self newWebViewController];
             webViewController.searchController = self;
             [self pushContentViewController:webViewController animated:YES];
             [webViewController loadStory:story readabilityMode:readabilityMode];
@@ -821,6 +844,8 @@ NSString * const emailRegEx =
     [self.bangInfoPopover dismissPopoverAnimated:YES];
     self.bangInfoPopover = nil;
     
+    // Ensure that the keyboard has been dismissed if it needs to be....
+    
     [UIView animateWithDuration:0.2f animations:^{
         if(self.state == DDGSearchControllerStateWeb) {
             [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
@@ -1078,6 +1103,7 @@ NSString * const emailRegEx =
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
+    
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
@@ -1148,5 +1174,14 @@ NSString * const emailRegEx =
     self.navBarIsCompact = false;
     [self.searchBar enableExpandedState];
     [self updateNavBarState];
+}
+
+#pragma mark == Get Web Controller For Version ==
+- (DDGWebViewController*)newWebViewController {
+    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8")) {
+        return [DDGWebKitWebViewController new];
+    } else {
+        return [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
+    }
 }
 @end

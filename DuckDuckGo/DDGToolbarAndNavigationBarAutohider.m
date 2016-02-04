@@ -50,6 +50,7 @@
 
 -(void)autoHideOrShowToolbarBasedOnScrolling:(UIScrollView*)scrollView {
     CGPoint offset = scrollView.contentOffset;
+    BOOL shouldStoreLastOffset = true;
     if(offset.y==0) {
         // we're at the top... show the toolbar
         lastUpwardsScrollDistance = 0;
@@ -59,15 +60,21 @@
         BOOL atBottom =  offset.y+50 >= (scrollView.contentSize.height - scrollView.frame.size.height);
         lastUpwardsScrollDistance = 0;
         [self.toolbarAndNavigationBarHiderDelegate setHideToolbarAndNavigationBar:!atBottom forScrollview:scrollView];
-    } else {
+    } else if (offset.y > 0 && offset.y <= scrollView.contentSize.height+scrollView.frame.size.height+50) {
         // we're scrolling up... show the toolbar if we've gone past a certain threshold
         lastUpwardsScrollDistance += (lastOffset.y - offset.y);
         if(lastUpwardsScrollDistance > 50) {
             lastUpwardsScrollDistance = 0;
             [self.toolbarAndNavigationBarHiderDelegate setHideToolbarAndNavigationBar:FALSE forScrollview:scrollView];
         }
+    } else {
+        shouldStoreLastOffset = false;
     }
-    lastOffset = offset;
+    
+    // This fixes the issue of pulling up (think pull to refresh) causing an issue with the bar coming in an out... Make's it a whole lot more polished
+    if (shouldStoreLastOffset) {
+        lastOffset = offset;
+    }
 }
 
 -(void)scrollViewDidScroll:(UIScrollView *)scrollView {

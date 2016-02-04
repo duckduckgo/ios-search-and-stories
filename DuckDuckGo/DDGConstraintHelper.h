@@ -14,4 +14,6 @@
 + (void)setHeight:(CGFloat)height ofView:(UIView*)viewToAddHeight inViewContainer:(UIView*)viewContainer;
 + (void)pinView:(UIView*)viewToPin toEdgeOfView:(UIView*)viewToPinEdgesTo inViewContainer:(UIView*)viewContainer;
 + (void)pinView:(UIView*)viewToPin underView:(UIView*)viewToPinUnder inViewContainer:(UIView*)viewContainer;
++ (void)pinView:(UIView*)viewToPin intoView:(UIView*)viewToPinInto;
++ (void)pinView:(UIView*)viewToPin toBottomOfView:(UIView*)viewToPinBottomTo inViewController:(UIView*)viewContainer;
 @end

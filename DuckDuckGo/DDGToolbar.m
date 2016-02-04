@@ -239,10 +239,12 @@
     if (self.traitCollection) {
         if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
             tabBarWidthConstrant = -200;
+
         }
     }
     
     self.toolbarWidthConstraint.constant = tabBarWidthConstrant;
     [self needsUpdateConstraints];
 }
+
 @end
