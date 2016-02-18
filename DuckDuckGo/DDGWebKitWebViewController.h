@@ -10,7 +10,7 @@
 #import "DDGWebViewController.h"
 #import <WebKit/WebKit.h>
 
-@interface DDGWebKitWebViewController : DDGWebViewController <WKUIDelegate, WKNavigationDelegate>
+@interface DDGWebKitWebViewController : DDGWebViewController <WKUIDelegate, WKNavigationDelegate, UIGestureRecognizerDelegate>
 
 
 @property (nonatomic, strong) WKWebView *webView;

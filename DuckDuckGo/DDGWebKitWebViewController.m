@@ -18,7 +18,6 @@
 #import "DDGActivityViewController.h"
 #import "DDGImageActivityItemProvider.h"
 
-#warning TODO: The Interface for DDGWebView is stupid because we need to extend it to support inheriting from a WebKit
 
 @interface DDGWebKitView : WKWebView {
     UIView *_blackHoleView;
@@ -93,6 +92,11 @@
 - (void)dealloc {
     self.webView.UIDelegate = nil;
     self.webView.navigationDelegate = nil;
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self shouldEnableNavControllerSwipe:true];
 }
 
 - (void)loadView {
@@ -231,6 +235,7 @@
     [self updateBarWithRequest:[NSURLRequest requestWithURL:webView.URL]];
     [self updateButtons];
     [self decrementLoadingDepthCancelled:NO];
+    [self shouldEnableNavControllerSwipe:!webView.canGoBack];
 }
 
 - (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
@@ -257,6 +262,26 @@
     [self updateBarWithRequest:[NSURLRequest requestWithURL:webView.URL]];
     decisionHandler(WKNavigationActionPolicyAllow);
 }
+
+
+#pragma mark == Navigation Swiping Methods
+- (void)shouldEnableNavControllerSwipe:(BOOL)enable {
+    if ([self.searchController.navController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+        self.searchController.navController.interactivePopGestureRecognizer.enabled  = enable;
+        self.searchController.navController.interactivePopGestureRecognizer.delegate = enable ? nil:self;
+        self.webView.allowsBackForwardNavigationGestures = !enable;
+    }
+}
+
+- (BOOL)gestureRecognizerShouldBegin:(UIGestureRecognizer *)gestureRecognizer
+{
+    if (gestureRecognizer == self.searchController.navController.interactivePopGestureRecognizer) {
+        return NO;
+    }
+    
+    return YES;
+}
+
 
 @end
 

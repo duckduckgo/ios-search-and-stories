@@ -46,6 +46,7 @@ typedef enum {
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *barWrapperHeightConstraint;
 @property (nonatomic) BOOL navBarIsCompact;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *backgroundTopWrapperConstraint;
+@property (nonatomic, strong) UINavigationController *navController;
 
 - (void)setContentViewController:(UIViewController *)contentController tabPosition:(NSUInteger)tabPosition animated:(BOOL)animated;
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated;

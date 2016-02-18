@@ -46,7 +46,6 @@ NSString * const emailRegEx =
 @property (nonatomic, strong) DDGPopoverViewController *bangInfoPopover;
 @property (nonatomic, strong) DDGPopoverViewController *autocompletePopover;
 @property (nonatomic, strong) NSPredicate *emailPredicate;
-@property (nonatomic, strong) UINavigationController *navController;
 @property (nonatomic) BOOL showBangTooltip;
 @property (nonatomic, getter = isTransitioningViewControllers) BOOL transitioningViewControllers;
 @property (nonatomic, weak) UIView* customToolbar;
