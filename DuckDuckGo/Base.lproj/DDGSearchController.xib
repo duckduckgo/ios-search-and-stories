@@ -36,7 +36,7 @@
                             <rect key="frame" x="93" y="0.0" width="414" height="44"/>
                             <subviews>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="WHATS UP PEOPLE" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4Tp-gk-XkD">
-                                    <rect key="frame" x="20" y="0.0" width="374" height="44"/>
+                                    <rect key="frame" x="20" y="0.0" width="374" height="38"/>
                                     <fontDescription key="fontDescription" name="ProximaNova-Regular" family="Proxima Nova" pointSize="13"/>
                                     <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                     <nil key="highlightedColor"/>
@@ -159,7 +159,7 @@
                                 <constraint firstItem="72" firstAttribute="leading" secondItem="4Tp-gk-XkD" secondAttribute="trailing" id="J0a-uu-JZN"/>
                                 <constraint firstAttribute="bottom" secondItem="6AA-to-t96" secondAttribute="bottom" id="Kdc-OJ-3zB"/>
                                 <constraint firstItem="4Tp-gk-XkD" firstAttribute="top" secondItem="67" secondAttribute="top" id="NBP-0W-8ES"/>
-                                <constraint firstAttribute="bottom" secondItem="4Tp-gk-XkD" secondAttribute="bottom" id="Nll-cn-1fE"/>
+                                <constraint firstAttribute="bottom" secondItem="4Tp-gk-XkD" secondAttribute="bottom" constant="6" id="Nll-cn-1fE"/>
                                 <constraint firstItem="IlG-e8-l4A" firstAttribute="centerY" secondItem="70" secondAttribute="centerY" id="QgQ-JD-KGf" userLabel="placeholder vertical center"/>
                                 <constraint firstItem="6AA-to-t96" firstAttribute="top" secondItem="67" secondAttribute="top" id="VoT-9t-M0R"/>
                                 <constraint firstItem="4Tp-gk-XkD" firstAttribute="leading" secondItem="69" secondAttribute="trailing" id="Vx6-oT-pzk"/>
