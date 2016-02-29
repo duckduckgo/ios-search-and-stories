@@ -160,7 +160,7 @@
 
 #pragma mark == Handle States ==
 - (void)enableCompactState {
-    [self.compactedLabel setText:[self getDomainFromString:self.searchField.text]];
+    [self.compactedLabel setText:[DDGSearchBar getTextFromSearchBarText:self.searchField.text]];
     [self.leftButton setAlpha:0];
     [self.searchField setAlpha:0];
     [self.compactedLabel setAlpha:1];
@@ -179,7 +179,16 @@
 }
 
 // Get the domain
-- (NSString*)getDomainFromString:(NSString*)orignalString {
++ (NSString*)getTextFromSearchBarText:(NSString*)searchText {
+    // Determin if the search text has a http
+    if ([searchText hasPrefix:@"http"]) {
+        return [self getDomainFromString:searchText];
+    } else {
+        return searchText;
+    }
+}
+
++ (NSString*)getDomainFromString:(NSString*)orignalString {
     NSURL *url = [NSURL URLWithString:orignalString];
     return [url host];
 }

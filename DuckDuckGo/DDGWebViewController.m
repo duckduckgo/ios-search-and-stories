@@ -326,8 +326,8 @@
 -(void)setHideToolbarAndNavigationBar:(BOOL)shouldHide forScrollview:(UIScrollView*)scrollView
 {
     CGFloat newConstant = shouldHide ? 50 : 0;
-    if (shouldHide && self.isAStory) {
-        
+    // if (shouldHide && self.isAStory) {
+    if (shouldHide) {
         [self.searchController compactNavigationBar];
     } else {
         [self.searchController expandNavigationBar];

@@ -7,6 +7,7 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "DDGSearchBar.h"
 
 @interface DuckDuckGoTests : XCTestCase
 
@@ -36,6 +37,23 @@
     }];
 }
 
+// Search bar texts
+- (void)testTheAbilityToDeterminIfAStringIsAUrl {
+    // https:// - Domain
+    // http://  - Domain
+    // Snow     - Query
+    NSString *aUrlString = @"http://google.co.nz";
+    NSString *expectedString = @"google.co.nz";
+    NSString *actualString   = [DDGSearchBar getTextFromSearchBarText:aUrlString];
+    XCTAssertEqualObjects(expectedString, actualString, @"Since it's a http url we should just show the url");
+}
+
+- (void)testTheAbilityToDeterminIfAStringIsAQuery {
+    NSString *aQueryString   = @"Snow";
+    NSString *expectedString = @"Snow";
+    NSString *actualString   = [DDGSearchBar getTextFromSearchBarText:aQueryString];
+    XCTAssertEqualObjects(expectedString, actualString, @"Since it's a query we should just show the query");
+}
 
 
 @end

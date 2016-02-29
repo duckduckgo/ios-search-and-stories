@@ -35,5 +35,5 @@
 - (void)enableExpandedState;
 
 - (IBAction)goBackToExpandedState:(id)sender;
-
++ (NSString*)getTextFromSearchBarText:(NSString*)searchText;
 @end
