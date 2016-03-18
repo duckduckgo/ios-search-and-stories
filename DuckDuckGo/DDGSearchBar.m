@@ -174,7 +174,7 @@
     [self.goBackToExpandedStateButton setHidden:true];
 }
 
-- (IBAction)goBackToExpandedState:(id)sender {
+- (IBAction)goBackToExpandedState:(id)sender {    
     [[NSNotificationCenter defaultCenter] postNotificationName:kDDGNotificationExpandToolNavBar object:nil];
 }
 

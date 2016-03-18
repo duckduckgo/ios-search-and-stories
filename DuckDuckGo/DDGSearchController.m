@@ -465,6 +465,9 @@ NSString * const emailRegEx =
 
 -(void)keyboardWillHide:(NSNotification *)notification {
     [self keyboardIsShowing:NO notification:notification];
+    if (autocompleteOpen) {
+        [self dismissAutocomplete];
+    }
 }
 
 -(void)keyboardDidHide:(NSNotification *)notification {
@@ -479,9 +482,6 @@ NSString * const emailRegEx =
     NSDictionary *info   = [notification userInfo];
     CGFloat keyboardHeight = [[info objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
     [self.autocompleteController setBottomPaddingBy:keyboardHeight];
-    if (!show) {
-        [self dismissAutocomplete];
-    }
     
     /*
     CGRect keyboardBegin = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue];
@@ -581,11 +581,11 @@ NSString * const emailRegEx =
         [(UIViewController <DDGSearchHandler> *)contentViewController loadStory:story readabilityMode:readabilityMode];
     } else {
         if (self.shouldPushSearchHandlerEvents) {
+            [self updateToolbars:TRUE];
             DDGWebViewController *webViewController = [self newWebViewController];
             webViewController.searchController = self;
             [self pushContentViewController:webViewController animated:YES];
             [webViewController loadStory:story readabilityMode:readabilityMode];
-            [self updateToolbars:TRUE];
         } else {
             [_searchHandler loadStory:story readabilityMode:readabilityMode];
         }
@@ -800,27 +800,35 @@ NSString * const emailRegEx =
 #pragma mark - View management
 
 // set up and reveal the autocomplete view
--(void)revealAutocomplete {    
+-(void)revealAutocomplete {
     // save search text in case user cancels input without navigating somewhere
     if(!oldSearchText) {
         oldSearchText = self.searchBar.searchField.text;
     }
+    
     barUpdated = NO;
     
     self.searchBar.searchField.additionalLeftSideInset = 39; // set this inset before the animation begins
+    
     [self.searchBar.searchField layoutSubviews];
     
     [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+    
+    
+    
+    [self.searchBar setShowsBangButton:YES animated:FALSE];
+    [self.searchBar setShowsLeftButton:NO animated:FALSE];
+
+    [self.searchBar setShowsCancelButton:YES animated:FALSE];
     [self revealAutocomplete:YES animated:YES];
+    autocompleteOpen = YES;
+    /*
     
     [UIView animateWithDuration:0.2f animations:^{
-        [self.searchBar setShowsBangButton:YES animated:FALSE];
-        [self.searchBar setShowsLeftButton:NO animated:FALSE];
-        [self.searchBar setShowsCancelButton:YES animated:FALSE];
         [self.searchBar layoutIfNeeded];
     }];
     
-    autocompleteOpen = YES;
+     */
 }
 
 // cleans up the search field and dismisses
@@ -886,10 +894,12 @@ NSString * const emailRegEx =
             [UIView animateWithDuration:0.25 animations:^{
                 _background.alpha = (reveal ? 1.0 : 0.0);
             } completion:^(BOOL finished) {
-                if(reveal) {
-                    [self.autocompleteNavigationController viewDidAppear:animated];
-                } else {
-                    [self.autocompleteNavigationController viewDidDisappear:animated];
+                if (finished) {
+                    if(reveal) {
+                        [self.autocompleteNavigationController viewDidAppear:animated];
+                    } else {
+                        [self.autocompleteNavigationController viewDidDisappear:animated];
+                    }
                 }
             }];
         } else {
@@ -911,8 +921,9 @@ NSString * const emailRegEx =
 -(void)updateBarWithURL:(NSURL *)url {
     barUpdated = YES;
     NSString *query = [self queryFromDDGURL:url];
-    self.searchBar.searchField.text = (query ? query : url.absoluteString);
-    oldSearchText = self.searchBar.searchField.text;
+    NSString *headerText = (query ? query : url.absoluteString);
+    [self.searchBar.searchField safeUpdateText:headerText];
+    oldSearchText = headerText;
 }
 
 -(void)clearAddressBar {
@@ -1084,7 +1095,6 @@ NSString * const emailRegEx =
     if([_searchHandler respondsToSelector:@selector(searchControllerAddressBarWillOpen)]) {
         [_searchHandler searchControllerAddressBarWillOpen];
     }
-    
 	return YES;
 }
 

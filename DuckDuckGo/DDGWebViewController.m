@@ -190,11 +190,6 @@
     lastUpwardsScrollDistance = 0;
 }
 
--(void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-    [self.searchController clearAddressBar];
-}
-
 - (void)dealloc
 {
  
@@ -721,9 +716,6 @@
 	}
     
     //NSLog(@"shouldStartLoadWithRequest: %@ navigationType: %i", request, navigationType);
-    
-    [self updateBarWithRequest:request];
-    
 	return YES;
 }
 

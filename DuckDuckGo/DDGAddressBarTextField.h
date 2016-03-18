@@ -30,6 +30,6 @@ typedef enum {
 -(void)setRightButtonMode:(DDGAddressBarRightButtonMode)newMode;
 
 -(void)resetField;
-
+- (void)safeUpdateText:(NSString*)textToUpdate;
 
 @end
