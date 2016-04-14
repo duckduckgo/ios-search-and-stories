@@ -20,4 +20,4 @@ Please check out the [issue tracker](https://github.com/duckduckgo/ios/issues) a
 DuckDuckGo Search & Stories is distributed under the Apache 2.0 [license](https://github.com/duckduckgo/ios/blob/master/LICENSE).
 
 ## Notes
-DuckDuckGo Search & Stories represents a ton of hard work from people all around the world. We've spent a long time thinking about exactly what makes a great mobile experience. While we'd love to accept each an every pull request, that probably wouldn't lead to a coherent experience. If you would like to get more involved, mail us at ios@duckduckgo.com.
+DuckDuckGo Search & Stories represents a ton of hard work from people all around the world. We've spent a long time thinking about exactly what makes a great mobile experience. While we'd love to accept each and every pull request, that probably wouldn't lead to a coherent experience. If you would like to get more involved, mail us at ios@duckduckgo.com.
