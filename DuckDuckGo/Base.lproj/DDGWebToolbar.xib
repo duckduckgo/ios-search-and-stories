@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
@@ -20,9 +20,12 @@
         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="YM8-Zt-olG" userLabel="web toolbar">
             <rect key="frame" x="0.0" y="0.0" width="600" height="50"/>
             <subviews>
-                <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zwS-Vk-Io3" userLabel="border">
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zwS-Vk-Io3" userLabel="border">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="1"/>
                     <color key="backgroundColor" white="0.0" alpha="0.14999999999999999" colorSpace="calibratedWhite"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="1" id="VEt-Pp-yiv"/>
+                    </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="71n-NZ-5pv" userLabel="background">
                     <rect key="frame" x="0.0" y="1" width="600" height="49"/>
@@ -112,12 +115,15 @@
                 <constraint firstItem="ZIq-Fa-jkb" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.9" id="H0r-C1-kJ5" userLabel="tabs left align"/>
                 <constraint firstItem="D1U-79-qbz" firstAttribute="centerY" secondItem="YM8-Zt-olG" secondAttribute="centerY" id="Jvf-WO-QAE" userLabel="back vertical center"/>
                 <constraint firstItem="9s9-Ft-ueK" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.375" id="S35-Ut-ILi" userLabel="forward left align"/>
+                <constraint firstItem="zwS-Vk-Io3" firstAttribute="leading" secondItem="YM8-Zt-olG" secondAttribute="leading" id="WPN-cW-jTl"/>
                 <constraint firstItem="71n-NZ-5pv" firstAttribute="top" secondItem="YM8-Zt-olG" secondAttribute="top" constant="1" id="WWr-K4-an6"/>
                 <constraint firstItem="rdb-X1-aus" firstAttribute="centerX" secondItem="YM8-Zt-olG" secondAttribute="trailing" multiplier="0.625" id="XII-bx-aDK" userLabel="fav left align"/>
                 <constraint firstAttribute="bottom" secondItem="71n-NZ-5pv" secondAttribute="bottom" id="Y8l-7k-HrS"/>
                 <constraint firstItem="71n-NZ-5pv" firstAttribute="leading" secondItem="YM8-Zt-olG" secondAttribute="leading" id="YVj-Nf-Bcq"/>
                 <constraint firstAttribute="height" constant="50" id="dLj-kG-hTS" userLabel="tab bar height"/>
+                <constraint firstAttribute="trailing" secondItem="zwS-Vk-Io3" secondAttribute="trailing" id="fkt-8J-HNk"/>
                 <constraint firstAttribute="centerY" secondItem="rdb-X1-aus" secondAttribute="centerY" id="fqC-tD-d3f" userLabel="fav vertical center"/>
+                <constraint firstItem="zwS-Vk-Io3" firstAttribute="top" secondItem="YM8-Zt-olG" secondAttribute="top" id="jrR-0q-xNy"/>
                 <constraint firstItem="ZIq-Fa-jkb" firstAttribute="centerY" secondItem="YM8-Zt-olG" secondAttribute="centerY" id="mBV-3Z-s4y" userLabel="tabs vertical center"/>
                 <constraint firstAttribute="centerY" secondItem="9s9-Ft-ueK" secondAttribute="centerY" id="xiW-hY-JW9" userLabel="forward vertical center"/>
             </constraints>

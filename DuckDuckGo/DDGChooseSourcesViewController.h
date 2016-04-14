@@ -11,4 +11,5 @@
 
 @interface DDGChooseSourcesViewController : UITableViewController <UIAlertViewDelegate, MFMailComposeViewControllerDelegate, NSFetchedResultsControllerDelegate>
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
+
 @end

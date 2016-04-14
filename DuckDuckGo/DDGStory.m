@@ -171,8 +171,8 @@
         [self.managedObjectContext performBlockAndWait:^{
           self.htmlDownloadedValue = YES;
         }];
-        if (completion) completion(result);
       });
+    if (completion) completion(result);        
     });
 }
 

@@ -24,5 +24,6 @@
 - (void)updateContainerHeightConstraint:(BOOL)keyboardShowing;
 
 - (void)searchFieldDidChange:(id)sender;
+- (void)setBottomPaddingBy:(CGFloat)paddingHeight;
 
 @end

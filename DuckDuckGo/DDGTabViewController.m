@@ -136,7 +136,13 @@
         self.currentViewController = nil;
         [self setCurrentViewControllerIndex:index];        
     }
+    [self.currentViewController viewWillAppear:animated];
         
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    [self.currentViewController viewDidAppear:animated];
 }
 
 @end

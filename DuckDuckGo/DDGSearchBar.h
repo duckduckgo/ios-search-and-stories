@@ -22,6 +22,8 @@
 @property(nonatomic, weak) IBOutlet UIButton *cancelButton;
 @property(nonatomic, weak) IBOutlet DDGAddressBarTextField *searchField;
 @property(strong, nonatomic) IBOutlet DDGProgressBar *progressView;
+@property (nonatomic, weak) IBOutlet UILabel *compactedLabel;
+@property (nonatomic, weak) IBOutlet UIButton *goBackToExpandedStateButton;
 
 - (void)setShowsCancelButton:(BOOL)show animated:(BOOL)animated;
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated;
@@ -29,5 +31,9 @@
 - (void)layoutIfNeeded:(NSTimeInterval)animationDuration;
 - (void)cancel;
 - (void)finish;
+- (void)enableCompactState;
+- (void)enableExpandedState;
 
+- (IBAction)goBackToExpandedState:(id)sender;
++ (NSString*)getTextFromSearchBarText:(NSString*)searchText;
 @end

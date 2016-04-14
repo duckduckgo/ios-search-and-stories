@@ -18,10 +18,12 @@
 #import "DDGBookmarksViewController.h"
 #include "DDGSearchHandler.h"
 #import "UIViewController+DDGSearchController.h"
+#import "DDGTraitHelper.h"
 
 @interface DDGHomeViewController () {
     UIEdgeInsets contentInsets;
 }
+
 @property (nonatomic, strong) IBOutlet UIView* tabContentView;
 @property (nonatomic, strong) UITabBarController* tabController;
 
@@ -152,114 +154,7 @@
     self.tabController.tabBar.hidden = TRUE;
     contentInsets = UIEdgeInsetsMake(0, 0, 50, 0);
     self.view.backgroundColor = [UIColor duckSearchBarBackground];
-    
-    NSMutableArray* controllers = [NSMutableArray new];
-    
-    { // configure the search view controller
-        self.searchTopController = [[DDGSearchController alloc] initWithHomeController:self
-                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        self.searchTopController.state = DDGSearchControllerStateHome;
-        self.searchController = [[DDGDuckViewController alloc] initWithSearchController:self.searchTopController
-                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        [self.searchTopController setContentViewController:self.searchController tabPosition:0 animated:NO];
-        self.searchTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                                            image:[UIImage imageNamed:@"Tab-Search"]
-                                                                    selectedImage:[UIImage imageNamed:@"Tab-Search-Active"]];
-        [controllers addObject:self.searchTopController];
-    }
-    
-    { // configure the stories view controller
-        self.storiesTopController = [[DDGSearchController alloc] initWithHomeController:self
-                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        self.storiesController = [[DDGStoriesViewController alloc] initWithSearchHandler:self.storiesTopController
-                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        //self.storiesController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"];
-        
-        [self.storiesTopController setContentViewController:self.storiesController tabPosition:1 animated:NO];
-        self.storiesTopController.state = DDGSearchControllerStateHome;
-        self.storiesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                                             image:[UIImage imageNamed:@"Tab-Stories"]
-                                                                     selectedImage:[UIImage imageNamed:@"Tab-Stories-Active"]];
-
-        [controllers addObject:self.storiesTopController];
-    }
-    
-    
-    
-    { // configure the favorites view controller
-        self.favoritesTopController = [[DDGSearchController alloc] initWithHomeController:self
-                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        
-        DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
-        bookmarks.title = NSLocalizedString(@"Favorite Searches", @"View controller title: Saved Searches");
-        bookmarks.searchController = self.favoritesTopController;
-        bookmarks.searchHandler = self.favoritesTopController;
-        
-        self.favoritesTopController.state = DDGSearchControllerStateHome;
-        
-        DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.favoritesTopController
-                                                                               managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        stories.storiesMode = DDGStoriesListModeFavorites;
-        stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
-        
-        self.favoritesTabViewController = [[DDGTabViewController alloc] init];
-        self.favoritesTabViewController.viewControllers = @[stories, bookmarks];
-        self.favoritesTabViewController.segmentAlignmentView = self.favoritesTopController.searchBar;
-        self.favoritesTabViewController.delegate = self;
-        
-        [self.favoritesTopController setContentViewController:self.favoritesTabViewController tabPosition:2 animated:NO];
-        self.favoritesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                          image:[UIImage imageNamed:@"Tab-Favorites"]
-                                                  selectedImage:[UIImage imageNamed:@"Tab-Favorites-Active"]];
-        [controllers addObject:self.favoritesTopController];
-        
-        self.favoritesTabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
-    }
-    
-    { // configure the recents/history view controller
-        self.recentsTopController = [[DDGSearchController alloc] initWithHomeController:self
-                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        DDGHistoryViewController* history = [[DDGHistoryViewController alloc] initWithSearchHandler:self.recentsTopController
-                                                                               managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]
-                                                                                               mode:DDGHistoryViewControllerModeNormal];
-        history.title = NSLocalizedString(@"Recent Searches", @"segmented button option and table header: Recent Searches");
-        
-        self.recentsTopController.state = DDGSearchControllerStateHome;
-        
-        DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.recentsTopController
-                                                                               managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        stories.storiesMode = DDGStoriesListModeRecents;
-        stories.title = NSLocalizedString(@"Recent Stories", @"Table section header title");
-        
-        self.recentsController = [[DDGTabViewController alloc] init];
-        self.recentsController.viewControllers = @[ stories, history];
-        self.recentsController.segmentAlignmentView = self.recentsTopController.searchBar;
-        self.recentsController.delegate = self;
-        
-        [self.recentsTopController setContentViewController:self.recentsController tabPosition:3 animated:NO];
-        self.recentsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                                             image:[UIImage imageNamed:@"Tab-Recents"]
-                                                                     selectedImage:[UIImage imageNamed:@"Tab-Recents-Active"]];
-        [controllers addObject:self.recentsTopController];
-        
-        self.recentsController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
-    }
-    
-    
-    { // configure the settings view controller
-        self.settingsTopController = [[DDGSearchController alloc] initWithHomeController:self
-                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
-        self.settingsTopController.state = DDGSearchControllerStateHome;
-        self.settingsController = [[DDGSettingsViewController alloc] initWithDefaults];
-        self.settingsController.managedObjectContext = [DDGAppDelegate sharedManagedObjectContext];
-        [self.settingsTopController setContentViewController:[self.settingsController duckContainerController] tabPosition:4 animated:NO];
-        self.settingsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
-                                                                              image:[UIImage imageNamed:@"Tab-Settings"]
-                                                                      selectedImage:[UIImage imageNamed:@"Tab-Settings-Active"]];
-        [controllers addObject:self.settingsTopController];
-    }
-    
-    self.tabController.viewControllers = controllers;
+    [self setUpTabBar];
     
     //int type = DDGViewControllerTypeHome;
     NSString *homeViewMode = [[NSUserDefaults standardUserDefaults] objectForKey:DDGSettingHomeView];
@@ -292,14 +187,121 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)setUpTabBar {
+    
+    NSMutableArray* controllers = [NSMutableArray new];
+    
+    { // configure the search view controller
+        self.searchTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                  managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        self.searchTopController.state = DDGSearchControllerStateHome;
+        self.searchController = [[DDGDuckViewController alloc] initWithSearchController:self.searchTopController
+                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        [self.searchTopController setContentViewController:self.searchController tabPosition:0 animated:NO];
+        self.searchTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
+                                                                            image:[UIImage imageNamed:@"Tab-Search"]
+                                                                    selectedImage:[UIImage imageNamed:@"Tab-Search-Active"]];
+        [controllers addObject:self.searchTopController];
+    }
+    
+    { // configure the stories view controller
+        self.storiesTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        self.storiesController = [[DDGStoriesViewController alloc] initWithSearchHandler:self.storiesTopController
+                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        //self.storiesController.searchControllerBackButtonIconDDG = [[UIImage imageNamed:@"Home"];
+        
+        [self.storiesTopController setContentViewController:self.storiesController tabPosition:1 animated:NO];
+        self.storiesTopController.state = DDGSearchControllerStateHome;
+        self.storiesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
+                                                                             image:[UIImage imageNamed:@"Tab-Stories"]
+                                                                     selectedImage:[UIImage imageNamed:@"Tab-Stories-Active"]];
+        
+        [controllers addObject:self.storiesTopController];
+    }
+    
+    
+    
+    { // configure the favorites view controller
+        self.favoritesTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                     managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        
+        DDGBookmarksViewController *bookmarks = [[DDGBookmarksViewController alloc] initWithNibName:@"DDGBookmarksViewController" bundle:nil];
+        bookmarks.title = NSLocalizedString(@"Favorite Searches", @"View controller title: Saved Searches");
+        bookmarks.searchController = self.favoritesTopController;
+        bookmarks.searchHandler = self.favoritesTopController;
+        
+        self.favoritesTopController.state = DDGSearchControllerStateHome;
+        
+        DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.favoritesTopController
+                                                                               managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        stories.storiesMode = DDGStoriesListModeFavorites;
+        stories.title = NSLocalizedString(@"Favorite Stories", @"View controller title: Saved Stories");
+        
+        self.favoritesTabViewController = [[DDGTabViewController alloc] init];
+        self.favoritesTabViewController.viewControllers = @[stories, bookmarks];
+        self.favoritesTabViewController.segmentAlignmentView = self.favoritesTopController.searchBar;
+        self.favoritesTabViewController.delegate = self;
+        
+        [self.favoritesTopController setContentViewController:self.favoritesTabViewController tabPosition:2 animated:NO];
+        self.favoritesTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
+                                                                               image:[UIImage imageNamed:@"Tab-Favorites"]
+                                                                       selectedImage:[UIImage imageNamed:@"Tab-Favorites-Active"]];
+        [controllers addObject:self.favoritesTopController];
+        
+        self.favoritesTabViewController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
+    }
+    
+    { // configure the recents/history view controller
+        self.recentsTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                   managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        DDGHistoryViewController* history = [[DDGHistoryViewController alloc] initWithSearchHandler:self.recentsTopController
+                                                                               managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]
+                                                                                               mode:DDGHistoryViewControllerModeNormal];
+        history.title = NSLocalizedString(@"Recent Searches", @"segmented button option and table header: Recent Searches");
+        
+        self.recentsTopController.state   = DDGSearchControllerStateHome;
+        DDGStoriesViewController *stories = [[DDGStoriesViewController alloc] initWithSearchHandler:self.recentsTopController
+                                                                               managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        stories.storiesMode = DDGStoriesListModeRecents;
+        stories.title = NSLocalizedString(@"Recent Stories", @"Table section header title");
+        
+        self.recentsController = [[DDGTabViewController alloc] init];
+        self.recentsController.viewControllers = @[ stories, history];
+        self.recentsController.segmentAlignmentView = self.recentsTopController.searchBar;
+        self.recentsController.delegate = self;
+        
+        [self.recentsTopController setContentViewController:self.recentsController tabPosition:3 animated:NO];
+        self.recentsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
+                                                                             image:[UIImage imageNamed:@"Tab-Recents"]
+                                                                     selectedImage:[UIImage imageNamed:@"Tab-Recents-Active"]];
+        [controllers addObject:self.recentsTopController];
+        
+        self.recentsController.currentViewControllerIndex = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSavedViewLastSelectedTabIndex];
+    }
+    
+    
+    { // configure the settings view controller
+        self.settingsTopController = [[DDGSearchController alloc] initWithHomeController:self
+                                                                    managedObjectContext:[DDGAppDelegate sharedManagedObjectContext]];
+        self.settingsTopController.state             = DDGSearchControllerStateHome;
+        self.settingsController                      = [[DDGSettingsViewController alloc] initWithDefaults];
+        self.settingsController.managedObjectContext = [DDGAppDelegate sharedManagedObjectContext];
+        [self.settingsTopController setContentViewController:[self.settingsController duckContainerController] tabPosition:4 animated:NO];
+        self.settingsTopController.tabBarItem = [[UITabBarItem alloc] initWithTitle:nil
+                                                                              image:[UIImage imageNamed:@"Tab-Settings"]
+                                                                      selectedImage:[UIImage imageNamed:@"Tab-Settings-Active"]];
+        [controllers addObject:self.settingsTopController];
+    }
+    
+    self.tabController.viewControllers = controllers;
+}
 
 #pragma mark - DDGTabViewControllerDelegate
 
 - (void)tabViewController:(DDGTabViewController *)tabViewController didSwitchToViewController:(UIViewController *)viewController atIndex:(NSInteger)tabIndex {
-    NSLog(@"tabViewController:didSwitchToViewController:atIndex:%ld", (long)tabIndex);
     [[NSUserDefaults standardUserDefaults] setInteger:tabIndex forKey:DDGSavedViewLastSelectedTabIndex];
 }
-
 
 
 /*
@@ -311,5 +313,17 @@
     // Pass the selected object to the new view controller.
 }
 */
+
+#pragma mark == Check and Load Settings 
+- (void)checkAndRefreshSettings {
+    // On The iPad, because of the custom split view controller & the split view for iPad we need to ensure that the settings get's reload upon refresh
+    if(self.tabController.selectedViewController == self.settingsTopController ) {
+        if (IPAD) {
+            if (self.settingsController.searchControllerDDG.contentControllers.count > 1) {
+                [self.settingsController.searchControllerDDG popContentViewControllerAnimated:NO];
+            }
+        }
+    }
+}
 
 @end

@@ -35,10 +35,12 @@ typedef enum : NSUInteger {
 
 @interface DDGStoriesViewController : UIViewController <DDGStoryCellDelegate, UICollectionViewDataSource, UICollectionViewDelegate, UIScrollViewDelegate, NSFetchedResultsControllerDelegate>
 {}
+
 @property (nonatomic, readonly, weak) id <DDGSearchHandler> searchHandler;
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic) DDGStoriesListMode storiesMode;
 @property (nonatomic, strong) UIImage *searchControllerBackButtonIconDDG;
 
 - (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
+
 @end

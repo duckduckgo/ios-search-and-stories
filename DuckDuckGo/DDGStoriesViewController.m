@@ -357,14 +357,22 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 }
 
 
+// Removed....
 -(void)toggleStorySaved:(DDGStory*)story
 {
-    story.savedValue = !story.savedValue;
+ 
     NSManagedObjectContext *context = story.managedObjectContext;
     [context performBlock:^{
+        story.savedValue = !story.savedValue;
         NSError *error = nil;
-        if (![context save:&error])
+        if (![context save:&error]) {
             NSLog(@"error: %@", error);
+        } else {
+            if (self.storiesMode == DDGStoriesListModeFavorites) {
+                [self.storyView reloadData];
+            }
+        }
+        
     }];
 }
 
@@ -473,7 +481,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     self.lastStoryIDViewed = [[NSUserDefaults standardUserDefaults] objectForKey:[self lastViewedDefaultsKeyPrefix]];
     
     self.storiesLayout = [[DDGStoriesLayout alloc] init];
@@ -493,6 +500,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
         self.refreshControl.tintColor = [UIColor duckRefreshColor];
         [storyView addSubview:self.refreshControl];
         [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
+        storyView.backgroundView = self.refreshControl;
     }
     
     self.noContentView = [[DDGNoContentViewController alloc] init];
@@ -563,8 +571,6 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 {
     [super viewWillAppear:animated];
     
-    self.ignoreCoreDataUpdates = FALSE;
-    [self.storyView reloadData];
     
     [self restoreScrollPositionAnimated:animated];
     
@@ -591,6 +597,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
             _storyView.transform = CGAffineTransformIdentity;
         }];
     }
+    self.ignoreCoreDataUpdates = FALSE;
+    [self.storyView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -836,16 +844,21 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 -(void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
-    DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
-    
-    [self saveScrollPosition];
-    
-    NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
-    [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
-    
-    [self.historyProvider logStory:story];
-    
-    [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    // Check if a menu has been presented first......
+    DDGStoryCell *currentCell = (DDGStoryCell*)[collectionView cellForItemAtIndexPath:indexPath];
+    if (currentCell.shouldGoToDetail) {
+        DDGStory *story = [self fetchedStoryAtIndexPath:indexPath];
+        [self saveScrollPosition];
+        
+        NSInteger readabilityMode = [[NSUserDefaults standardUserDefaults] integerForKey:DDGSettingStoriesReadabilityMode];
+        [self.searchHandler loadStory:story readabilityMode:(readabilityMode == DDGReadabilityModeOnExclusive || readabilityMode == DDGReadabilityModeOnIfAvailable)];
+        
+        [self.historyProvider logStory:story];
+        [collectionView deselectItemAtIndexPath:indexPath animated:NO];
+    } else {
+        // One hit so do it again.
+        currentCell.shouldGoToDetail = YES;
+    }
 }
 
 #pragma mark - Loading popular stories
@@ -1192,9 +1205,9 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    if(self.ignoreCoreDataUpdates) return;
-    
+    // if(self.ignoreCoreDataUpdates) return;
     if ([_sectionChanges count] > 0) {
+
         [self.storyView performBatchUpdates:^{
             
             for (NSDictionary *change in _sectionChanges) {

@@ -37,10 +37,9 @@ typedef enum DDGReadabilityMode {
 
 -(IBAction)save:(id)sender;
 
--(UIViewController*)duckContainerController;
+- (UIViewController*)duckContainerController;
 
 +(void)loadDefaultSettings;
-
 +(UIView*)createSectionHeaderView:(NSString*)title;
 +(UIView*)createSectionFooterView:(NSString*)title;
 +(void)configureSettingsCell:(UITableViewCell*)cell;

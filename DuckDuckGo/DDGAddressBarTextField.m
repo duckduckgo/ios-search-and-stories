@@ -218,4 +218,11 @@
     [self removeObserver:self forKeyPath:@"text"];
 }
 
+#pragma mark - Safe Update Text 
+- (void)safeUpdateText:(NSString*)textToUpdate {
+    self.text = @"";
+    [self updatePlaceholderAnimated:false];
+    self.text = textToUpdate;
+}
+
 @end

@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "DDGStory.h"
+#import "DDGPopoverViewController.h"
 
 extern NSString *const DDGStoryCellIdentifier;
 
@@ -27,8 +28,10 @@ extern NSString *const DDGStoryCellIdentifier;
 @end
 
 
-@interface DDGStoryCell : UICollectionViewCell
+@interface DDGStoryCell : UICollectionViewCell <DDGPopoverViewControllerDelegate>
 
+@property (nonatomic) BOOL isShowingMenu;
+@property (nonatomic) BOOL shouldGoToDetail;
 @property (nonatomic, strong) UIImage *image;
 @property (nonatomic, strong) DDGStory* story;
 @property (nonatomic) BOOL mosaicMode;
@@ -36,7 +39,7 @@ extern NSString *const DDGStoryCellIdentifier;
 @property (nonatomic, weak) id<DDGStoryCellDelegate> storyDelegate;
 @property (nonatomic, strong) UIView* touchPassthroughView;
 
--(void)toggleSavedState;
+-(void)saveStoryAndClose;
 -(void)share;
 -(void)openInBrowser;
 -(void)removeHistoryItem;

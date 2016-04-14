@@ -11,6 +11,7 @@
 #import "DDGSearchHandler.h"
 #import "DDGSearchBar.h"
 #import "DDGHomeViewController.h"
+#import "DDGToolbar.h"
 
 typedef enum {
 	DDGSearchControllerStateUnknown = 0,
@@ -29,6 +30,7 @@ typedef enum {
     NSMutableArray *unusedBangButtons;
 }
 
+@property (nonatomic, strong) DDGToolbar *toolbarView;
 @property (nonatomic, weak) IBOutlet DDGSearchBar *searchBar;
 @property (nonatomic, weak) IBOutlet UIView *searchBarWrapper;
 @property (nonatomic, weak) IBOutlet UIView *background;
@@ -41,6 +43,10 @@ typedef enum {
 @property (nonatomic, assign) DDGSearchControllerState state;
 @property (nonatomic, weak, readonly) id<DDGSearchHandler> searchHandler;
 @property (nonatomic) BOOL shouldPushSearchHandlerEvents;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *barWrapperHeightConstraint;
+@property (nonatomic) BOOL navBarIsCompact;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *backgroundTopWrapperConstraint;
+@property (nonatomic, strong) UINavigationController *navController;
 
 - (void)setContentViewController:(UIViewController *)contentController tabPosition:(NSUInteger)tabPosition animated:(BOOL)animated;
 - (void)pushContentViewController:(UIViewController *)contentController animated:(BOOL)animated;
@@ -75,5 +81,11 @@ typedef enum {
 
 -(void)searchFieldDidChange:(id)sender;
 -(void)dismissKeyboard:(void (^)(BOOL completed))completion;
+- (BOOL)doesViewControllerExistInTheNavStack:(UIViewController*)viewController;
+
+
+// Navbar Methods
+- (void)compactNavigationBar;
+- (void)expandNavigationBar;
 
 @end

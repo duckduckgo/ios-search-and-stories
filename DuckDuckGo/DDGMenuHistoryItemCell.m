@@ -62,28 +62,31 @@
 
 
 -(void)layoutSubviews {
-    CGRect frame = self.frame;
-    CGRect imgRect = self.imageView.frame;
-    imgRect.origin.x = 15;
+   [super layoutSubviews];
+    
+    CGRect frame         = self.frame;
+    CGRect imgRect       = self.imageView.frame;
+    imgRect.origin.x     = 15;
     self.imageView.frame = imgRect;
     
-    CGRect tmpFrame = self.textLabel.frame;
-    tmpFrame.origin.x = 49;
-    tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
+    CGRect tmpFrame      = self.textLabel.frame;
+    tmpFrame.origin.x    = 49;
+    tmpFrame.size.width  = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
     self.textLabel.frame = tmpFrame;
     
-    tmpFrame = self.detailTextLabel.frame;
-    tmpFrame.origin.x = 49;
-    tmpFrame.size.width = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
+    tmpFrame                   = self.detailTextLabel.frame;
+    tmpFrame.origin.x          = 49;
+    tmpFrame.size.width        = frame.size.width - tmpFrame.origin.x - self.plusButton.frame.size.width;
     self.detailTextLabel.frame = tmpFrame;
     
-    [super layoutSubviews];
 }
 
 
 -(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem;
 {
-    [self.historyDelegate plusButtonWasPushed:self];
+    if ([self.historyDelegate respondsToSelector:@selector(plusButtonWasPushed:)]) {
+        [self.historyDelegate plusButtonWasPushed:self];
+    }
 }
 
 -(void)setBookmarkItem:(NSDictionary*)bookmark

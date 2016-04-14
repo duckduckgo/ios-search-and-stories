@@ -60,6 +60,10 @@
     return (interfaceOrientation != UIInterfaceOrientationPortraitUpsideDown);
 }
 
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation {
+    [self.tableView reloadData];
+}
+
 - (void)editAction:(UIButton*)button
 {
 	BOOL edit = !button.selected;
@@ -160,6 +164,7 @@
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     return [DDGSettingsViewController createSectionHeaderView:[self tableView:tableView titleForHeaderInSection:section]];
 }
+
 
 #pragma mark - Mail sender deleagte
 

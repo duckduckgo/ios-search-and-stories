@@ -149,8 +149,9 @@
     return nil;
 }
 
--(void)plusButtonWasPushed:(DDGHistoryItem*)historyItem
-{
+-(void)plusButtonWasPushed:(DDGMenuHistoryItemCell*)menuCell
+{    
+    DDGHistoryItem *historyItem = menuCell.historyItem;
     DDGSearchController *searchController = [self searchControllerDDG];
     if (searchController) {
         DDGAddressBarTextField *searchField = searchController.searchBar.searchField;

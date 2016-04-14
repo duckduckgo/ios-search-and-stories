@@ -5,6 +5,7 @@
 //  Created by Sean Reilly on 2016.01.05.
 //
 //
+//  Toolbar Implementation
 
 #import "DDGToolbar.h"
 
@@ -67,6 +68,27 @@
                                                           multiplier:1 constant:48]];
         
         CGFloat xMultiplier = halfButtonSpace + (buttonIndex * buttonSpace);
+        
+        // Initial fix for the Tab Bar icons for iPad
+        /*
+        if (IPAD) {
+            if (xMultiplier != 0.5) {
+                if (xMultiplier < 0.5) {
+                    if (buttonIndex == 0) {
+                        xMultiplier += buttonSpace/2;
+                    } else {
+                        xMultiplier += buttonSpace/4;
+                    }
+                } else {
+                    if (buttonIndex == toolbarItems.count-1) {
+                        xMultiplier -= buttonSpace/2;
+                    } else {
+                        xMultiplier -= buttonSpace/4;
+                    }
+                }
+            }
+        }*/
+        
         [toolbar addConstraints:@[
                                   [NSLayoutConstraint constraintWithItem:button
                                                                attribute:NSLayoutAttributeCenterY
@@ -92,6 +114,11 @@
     toolbarView.translatesAutoresizingMaskIntoConstraints = FALSE;
     toolbarView.backgroundColor = [UIColor clearColor];
     toolbarView.opaque = FALSE;
+    
+    UIView *innerToolbarContainer = [UIView new];
+    innerToolbarContainer.translatesAutoresizingMaskIntoConstraints = FALSE;
+    innerToolbarContainer.backgroundColor = [UIColor clearColor];
+    innerToolbarContainer.opaque = FALSE;
     
     // setup the top border
     UIView* borderView = [UIView new];
@@ -155,6 +182,7 @@
 
     // add the toolbar to the container
     [containerView addSubview:toolbarView];
+
     [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:toolbarView
                                                             attribute:NSLayoutAttributeHeight
                                                             relatedBy:NSLayoutRelationEqual
@@ -176,11 +204,47 @@
                                                              multiplier:1 constant:0 ]];
     NSInteger tabPosition = 0;
     for(DDGToolbarItem* item in toolbarItems) {
-        makeToolbarButton(toolbarView, item, tabPosition);
+        makeToolbarButton(innerToolbarContainer, item, tabPosition);
         tabPosition++;
     }
+    
+    [toolbarView addSubview:innerToolbarContainer];
+    
+    
+    toolbarView.toolbarWidthConstraint = [NSLayoutConstraint constraintWithItem:innerToolbarContainer attribute:NSLayoutAttributeWidth
+                                                                      relatedBy:NSLayoutRelationEqual
+                                                                         toItem:toolbarView attribute:NSLayoutAttributeWidth
+                                                                     multiplier:1 constant:0];
+    [toolbarView addConstraint:toolbarView.toolbarWidthConstraint];
+    [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer
+                                                              attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual
+                                                                 toItem:toolbarView attribute:NSLayoutAttributeBottom
+                                                             multiplier:1 constant:0 ]];
+    [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer
+                                                            attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual
+                                                               toItem:toolbarView attribute:NSLayoutAttributeTop
+                                                           multiplier:1 constant:0 ]];
+    [toolbarView addConstraint:[NSLayoutConstraint constraintWithItem:innerToolbarContainer attribute:NSLayoutAttributeCenterX
+                                                              relatedBy:NSLayoutRelationEqual
+                                                                 toItem:toolbarView attribute:NSLayoutAttributeCenterX
+                                                             multiplier:1 constant:0 ]];
     [containerView setNeedsLayout];
     return toolbarView;
+}
+
+- (void)traitCollectionDidChange:(UITraitCollection *)previousTraitCollection {
+    CGFloat tabBarWidthConstrant = 0;
+    
+    
+    if (self.traitCollection) {
+        if (self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassRegular && self.traitCollection.verticalSizeClass == UIUserInterfaceSizeClassRegular) {
+            tabBarWidthConstrant = -200;
+
+        }
+    }
+    
+    self.toolbarWidthConstraint.constant = tabBarWidthConstrant;
+    [self needsUpdateConstraints];
 }
 
 @end

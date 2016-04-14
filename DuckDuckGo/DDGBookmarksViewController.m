@@ -74,6 +74,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated {
+    
     [super viewWillAppear:animated];
     [self.tableView reloadData];
     
@@ -195,11 +196,9 @@
 
 
 #pragma mark - Table view delegate
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     NSDictionary *bookmark = [[DDGBookmarksProvider sharedProvider].bookmarks objectAtIndex:indexPath.row];
     [self.searchHandler loadQueryOrURL:[bookmark objectForKey:@"url"]];
-    
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
