@@ -102,6 +102,7 @@
         
         _webViewLoadingDepth = 0;
         self.webView.backgroundColor = [UIColor duckNoContentColor];
+        self.webView.scrollView.bounces = false;
         
         [self.view addSubview:self.webView];
         
