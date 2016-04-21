@@ -330,10 +330,11 @@
     }
     if(self.bottomToolbarTopConstraint.constant!=newConstant) {
         self.bottomToolbarTopConstraint.constant = newConstant;
+        CGFloat toolbarBottomInset = shouldHide ? 0 : 50;
+        scrollView.contentInset = UIEdgeInsetsMake(0, 0, toolbarBottomInset, 0);
+        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, toolbarBottomInset, 0);
         [UIView animateWithDuration:0.25 animations:^{
             [self.view layoutSubviews];
-            scrollView.contentInset = UIEdgeInsetsMake(0, 0, -newConstant, 0);
-            scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, -newConstant, 0);
         }];
     }
 }
