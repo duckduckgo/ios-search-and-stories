@@ -110,7 +110,6 @@
     self.webView                = webKitView;
     self.webView.UIDelegate     = self;
     self.webView.navigationDelegate = self;
-    self.webView.scrollView.bounces = false;
     [self.webView setBackgroundColor:[UIColor duckNoContentColor]];
     
     _webViewLoadingDepth = 0;

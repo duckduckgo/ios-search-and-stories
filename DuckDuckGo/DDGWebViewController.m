@@ -102,7 +102,6 @@
         
         _webViewLoadingDepth = 0;
         self.webView.backgroundColor = [UIColor duckNoContentColor];
-        self.webView.scrollView.bounces = false;
         
         [self.view addSubview:self.webView];
         
@@ -331,9 +330,9 @@
     if(self.bottomToolbarTopConstraint.constant!=newConstant) {
         self.bottomToolbarTopConstraint.constant = newConstant;
         CGFloat toolbarBottomInset = shouldHide ? 0 : 50;
-        scrollView.contentInset = UIEdgeInsetsMake(0, 0, toolbarBottomInset, 0);
-        scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, toolbarBottomInset, 0);
         [UIView animateWithDuration:0.25 animations:^{
+            scrollView.contentInset = UIEdgeInsetsMake(0, 0, toolbarBottomInset, 0);
+            scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, toolbarBottomInset, 0);
             [self.view layoutSubviews];
         }];
     }
