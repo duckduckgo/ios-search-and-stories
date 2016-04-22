@@ -59,7 +59,12 @@
     } else if(offset.y  > lastOffset.y) {
         // we're scrolling down... hide the toolbar, unless we're already very close to the bottom
         CGFloat contentHeight = scrollView.contentSize.height - scrollView.frame.size.height;
-        BOOL atBottom =  offset.y+100 >= contentHeight;        
+        BOOL atBottom =  false;
+        CGFloat distanceToTheBottom = contentHeight - offset.y;
+        if (distanceToTheBottom < 100) {
+            atBottom = true;
+        }
+        
         lastUpwardsScrollDistance = 0;
         [self.toolbarAndNavigationBarHiderDelegate setHideToolbarAndNavigationBar:!atBottom forScrollview:scrollView];
     } else if (offset.y > 0 && offset.y <= scrollView.contentSize.height+scrollView.frame.size.height+50) {
