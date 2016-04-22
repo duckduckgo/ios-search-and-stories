@@ -433,6 +433,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     [self.imageDownloadQueue cancelAllOperations];
     [self.enqueuedDownloadOperations removeAllObjects];
     self.fetchedResultsController.delegate = nil;
+    self.fetchedResultsController = nil;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
