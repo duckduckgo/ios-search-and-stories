@@ -101,8 +101,7 @@
         self.webView.scalesPageToFit = YES;
         
         _webViewLoadingDepth = 0;
-        self.webView.backgroundColor = [UIColor duckNoContentColor];
-        self.webView.scrollView.bounces = false;
+        self.webView.backgroundColor = [UIColor duckNoContentColor];        
         
         [self.view addSubview:self.webView];
         
@@ -433,7 +432,7 @@
 -(IBAction)favButtonPressed:(id)sender {
     NSURL *shareURL = self.webViewURL;
     NSString *query = [self.searchController queryFromDDGURL:shareURL];
-    NSString *feed = [self.webViewURL absoluteString];
+    NSString *feed  = [self.webViewURL absoluteString];
     DDGBookmarkActivityItem* bookmarkItem = nil;
     if (nil != self.story && !self.webView.canGoBack) { // bookmark the story, since we're at the top level
         bookmarkItem = [DDGBookmarkActivityItem itemWithStory:self.story];
@@ -513,7 +512,6 @@
     if([self.searchController isQuery:queryOrURLString])
     {
         self.isAStory = false;
-        NSLog(@"Is not a story for querystring %@", queryOrURLString);
         // direct query
         urlString = [NSString stringWithFormat:@"https://duckduckgo.com/?q=%@&ko=-1&kl=%@",
                      [queryOrURLString URLEncodedStringDDG], 
@@ -527,6 +525,10 @@
     }
     
     NSURL *url = [NSURL URLWithString:urlString];
+    [self loadWebViewWithUrl:url];
+}
+
+- (void)loadWebViewWithUrl:(NSURL*)url {
     NSURLRequest *request = [DDGUtility requestWithURL:url];
     [self.webView loadRequest:request];
     [self.searchController updateBarWithURL:url];

@@ -56,7 +56,7 @@
 
 - (void)setShowsBangButton:(BOOL)show animated:(BOOL)animated {
     self.searchField.additionalLeftSideInset = show ? 39 : 0;
-    [self layoutIfNeeded];
+    // [self layoutIfNeeded];
     _showsBangButton = show;
     [self setNeedsLayout];
     [self layoutIfNeeded:(animated ? 0.2 : 0)];

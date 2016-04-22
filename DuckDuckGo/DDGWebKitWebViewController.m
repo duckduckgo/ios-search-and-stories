@@ -109,8 +109,7 @@
     webKitView.webKitController = self;
     self.webView                = webKitView;
     self.webView.UIDelegate     = self;
-    self.webView.navigationDelegate = self;
-    self.webView.scrollView.bounces = false;
+    self.webView.navigationDelegate = self;    
     [self.webView setBackgroundColor:[UIColor duckNoContentColor]];
     
     _webViewLoadingDepth = 0;
@@ -215,6 +214,13 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         [operation start];
     });
+}
+
+- (void)loadWebViewWithUrl:(NSURL*)url {
+    NSURLRequest *request = [DDGUtility requestWithURL:url];
+    [self.webView loadRequest:request];
+    [self.searchController updateBarWithURL:url];
+    self.webViewURL = url;
 }
 
 #pragma mark == WKUIDelegate ==

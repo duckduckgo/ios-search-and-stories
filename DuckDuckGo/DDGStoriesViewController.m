@@ -350,9 +350,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     [self.view addSubview:self.noContentView.view];
     
     self.ignoreCoreDataUpdates = TRUE;
-    self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     
-    [self prepareUpcomingCellContent];
     
     //    // force-decompress the first 10 images
     //    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
@@ -395,8 +393,8 @@ NSInteger const DDGLargeImageViewTag = 1;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    
+    self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
+    [self prepareUpcomingCellContent];
     [self restoreScrollPositionAnimated:animated];
     
     if (self.storiesMode==DDGStoriesListModeNormal) {
@@ -408,6 +406,9 @@ NSInteger const DDGLargeImageViewTag = 1;
     self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
     
     [self.searchControllerDDG.homeController registerScrollableContent:self.storyView];
+
+    [self.storyView reloadData];
+    
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -434,6 +435,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     
     [self.imageDownloadQueue cancelAllOperations];
     [self.enqueuedDownloadOperations removeAllObjects];
+    self.fetchedResultsController.delegate = nil;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -607,7 +609,8 @@ NSInteger const DDGLargeImageViewTag = 1;
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    [self prepareUpcomingCellContent];
+    // Scroll view did scroll is redundant as the collection view cell prepares the cells anyway
+    // [self prepareUpcomingCellContent];
 }
 
 #pragma mark - collection view data source
@@ -1058,6 +1061,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     }
     
     
+    NSMutableArray *indexPathsToReload = [NSMutableArray new];
     if ([_objectChanges count] > 0 && [_sectionChanges count] == 0) {
         [self.storyView performBatchUpdates:^{
             for (NSDictionary *change in _objectChanges) {
@@ -1067,12 +1071,15 @@ NSInteger const DDGLargeImageViewTag = 1;
                     switch (type) {
                         case NSFetchedResultsChangeInsert:
                             [self.storyView insertItemsAtIndexPaths:@[obj]];
+                            // [toInsert addObject:obj];
                             break;
                         case NSFetchedResultsChangeDelete:
                             [self.storyView deleteItemsAtIndexPaths:@[obj]];
+                            // [toDelete addObject:obj];
                             break;
                         case NSFetchedResultsChangeUpdate:
-                            [self.storyView reloadItemsAtIndexPaths:@[obj]];
+                            // We can't actually run updates from here, only inserts, deletes and moves...
+                            [indexPathsToReload addObject:obj];
                             break;
                         case NSFetchedResultsChangeMove:
                             [self.storyView moveItemAtIndexPath:obj[0] toIndexPath:obj[1]];
@@ -1080,7 +1087,15 @@ NSInteger const DDGLargeImageViewTag = 1;
                     }
                 }];
             }
-        } completion:nil];
+            
+        } completion:^(BOOL finished){
+            if (finished) {
+                if (indexPathsToReload.count > 0) {
+                    [self.storyView reloadItemsAtIndexPaths:indexPathsToReload];
+                    [indexPathsToReload removeAllObjects];
+                }
+            }
+        }];
     }
     
     [_sectionChanges removeAllObjects];

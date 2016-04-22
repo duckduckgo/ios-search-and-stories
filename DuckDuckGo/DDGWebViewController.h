@@ -51,5 +51,5 @@
 - (NSString *)htmlFromJSON:(id)JSON;
 - (void)internalMailAction:(NSURL*)url;
 - (void)updateBarWithRequest:(NSURLRequest *)request;
-
+- (void)loadWebViewWithUrl:(NSURL*)url;
 @end
