@@ -101,7 +101,7 @@
         self.webView.scalesPageToFit = YES;
         
         _webViewLoadingDepth = 0;
-        self.webView.backgroundColor = [UIColor duckNoContentColor];
+        self.webView.backgroundColor = [UIColor duckNoContentColor];        
         
         [self.view addSubview:self.webView];
         
@@ -527,6 +527,10 @@
     }
     
     NSURL *url = [NSURL URLWithString:urlString];
+    [self loadWebViewWithUrl:url];
+}
+
+- (void)loadWebViewWithUrl:(NSURL*)url {
     NSURLRequest *request = [DDGUtility requestWithURL:url];
     [self.webView loadRequest:request];
     [self.searchController updateBarWithURL:url];

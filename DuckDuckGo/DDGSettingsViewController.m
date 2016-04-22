@@ -179,10 +179,8 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
 {
     if(self.splitViewController) {
         if(![DDGTraitHelper isFullScreeniPad:self.traitCollection]) {
-            NSLog(@"Is not a full screen iPad but has a split view controller..");
             [self.searchControllerDDG pushContentViewController:secondaryViewController animated:TRUE];
-        } else {
-            NSLog(@"is a full screen iPad so lets load the detail view...");
+        } else {            
             [self.splitViewController setDetailViewController:secondaryViewController];
             
             // Ensure that the tab bar is actually on the top level, especially after changing detail controllers
