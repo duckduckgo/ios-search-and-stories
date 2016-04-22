@@ -36,6 +36,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     CIContext *_blurContext;
     NSMutableArray* _sectionChanges;
     NSMutableArray* _objectChanges;
+    BOOL _processCoreDataUpdates;
     
 }
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
@@ -80,6 +81,7 @@ NSInteger const DDGLargeImageViewTag = 1;
         self.searchHandler = searchHandler;
         self.managedObjectContext = managedObjectContext;
         
+        _processCoreDataUpdates = FALSE;
         _sectionChanges = [NSMutableArray new];
         _objectChanges = [NSMutableArray new];
         
@@ -349,7 +351,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     [DDGConstraintHelper pinView:storyView intoView:self.view];
     [self.view addSubview:self.noContentView.view];
     
-    self.ignoreCoreDataUpdates = TRUE;
+    _processCoreDataUpdates = FALSE;
     
     
     //    // force-decompress the first 10 images
@@ -419,7 +421,7 @@ NSInteger const DDGLargeImageViewTag = 1;
             _storyView.transform = CGAffineTransformIdentity;
         }];
     }
-    self.ignoreCoreDataUpdates = FALSE;
+    _processCoreDataUpdates = TRUE;
     [self.storyView reloadData];
     self.showNoContent = [self fetchedStories].count == 0 && self.storiesMode!=DDGStoriesListModeNormal;
 }
@@ -430,6 +432,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     
     [super viewWillDisappear:animated];
     
+    _processCoreDataUpdates = FALSE;
     [self.imageDownloadQueue cancelAllOperations];
     [self.enqueuedDownloadOperations removeAllObjects];
     self.fetchedResultsController.delegate = nil;
@@ -439,7 +442,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 - (void)viewDidDisappear:(BOOL)animated
 {
 	[super viewDidDisappear:animated];
-    self.ignoreCoreDataUpdates = true;
+    _processCoreDataUpdates = FALSE;
 }
 
 -(void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -990,6 +993,8 @@ NSInteger const DDGLargeImageViewTag = 1;
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    if(!_processCoreDataUpdates) return;
+    
     NSMutableDictionary *change = [NSMutableDictionary new];
     
     switch(type) {
@@ -1011,6 +1016,8 @@ NSInteger const DDGLargeImageViewTag = 1;
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
+    if(!_processCoreDataUpdates) return;
+    
     NSMutableDictionary *change = [NSMutableDictionary new];
     switch(type) {
         case NSFetchedResultsChangeInsert:
@@ -1031,7 +1038,8 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    // if(self.ignoreCoreDataUpdates) return;
+    if(!_processCoreDataUpdates) return;
+    
     if ([_sectionChanges count] > 0) {
 
         [self.storyView performBatchUpdates:^{

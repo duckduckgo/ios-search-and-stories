@@ -99,7 +99,6 @@
 - (void)setCurrentViewControllerIndex:(NSInteger)newViewControllerIndex {
     NSAssert1(newViewControllerIndex < [self.viewControllers count], @"Attempt to select a view controller beyond range of tabViewControllers %ld", (long)newViewControllerIndex);    
     self.tabController.selectedIndex = newViewControllerIndex;
-    [self.tabController.selectedViewController viewDidAppear:false];
     [self.segmentedControl setSelectedSegmentIndex:newViewControllerIndex];
 }
 
