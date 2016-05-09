@@ -14,6 +14,13 @@ The App Store version of the app uses a font, *ProximaNova*, whose license prohi
 
 After copying the font to the Xcode project, you'll need to change any references to it, including source code and xibs (use the Find navigator to help here!), and remove the 4 *ProximaNova* references in the "Copy Bundle Resources" section of the project's Build Phases (there are a lot of resouces&mdash;filter on `ProximaNova` to make this faster).
 
+### Submodules
+This repository has submodules, please init them before building by running this command on terminal:
+
+```console
+git submodule update --init --recursive
+```
+
 ## Changes
 * **Bugs** fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/segfault-stories-swipe origin/master`
