@@ -153,6 +153,39 @@ static void uncaughtExceptionHandler(NSException *exception) {
     return YES;
 }
 
+
+- (BOOL)application:(UIApplication *)application
+continueUserActivity:(NSUserActivity *)userActivity
+ restorationHandler:(void (^)(NSArray *restorableObjects))restorationHandler
+{
+    NSURL* url = userActivity.webpageURL;
+    NSLog(@"deep-linking invoked with URL: %@", url);
+    
+    //We can only open URLs from DDG.
+    BOOL isDDGURL = [[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"];
+    
+    // Let's see what the query is.
+    NSString *query = nil;
+    if(isDDGURL) {
+        NSArray *params = [[url query] componentsSeparatedByString:@"&"];
+        for (NSString *param in params) {
+            NSArray *pair = [param componentsSeparatedByString:@"="];
+            if ([pair count] > 1 && [[[pair objectAtIndex:0] lowercaseString] isEqualToString:@"q"]) {
+                query = [[pair objectAtIndex:1] URLDecodedStringDDG];
+            }
+        }
+    }
+    
+    if (query) {
+        [self.homeController.currentSearchHandler loadQueryOrURL:query];
+    } else {
+        [self.homeController.currentSearchHandler loadQueryOrURL:[url absoluteString]];
+    }
+    
+    return YES;
+}
+
+
 - (void)applicationWillTerminate:(UIApplication *)application;
 {
     [self save];
