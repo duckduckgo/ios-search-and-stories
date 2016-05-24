@@ -160,6 +160,7 @@ continueUserActivity:(NSUserActivity *)userActivity
 {
     NSURL* url = userActivity.webpageURL;
     NSLog(@"deep-linking invoked with URL: %@", url);
+    if(url==nil) return NO;
     
     //We can only open URLs from DDG.
     BOOL isDDGURL = [[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"];
