@@ -736,7 +736,7 @@ NSString * const emailRegEx =
     return ![self validURLStringFromString:queryOrURL];
 }
 
--(NSString *)queryFromDDGURL:(NSURL *)url {
++(NSString *)queryFromDDGURL:(NSURL *)url {
     // parse URL query components
     NSArray *queryComponentsArray = [[url query] componentsSeparatedByString:@"&"];
     NSMutableDictionary *queryComponents = [[NSMutableDictionary alloc] init];
@@ -748,20 +748,12 @@ NSString * const emailRegEx =
     
     // check whether we have a DDG search URL
     if([[url host] isEqualToString:@"duckduckgo.com"]) {
-        if([[url path] isEqualToString:@"/"] && [queryComponents objectForKey:@"q"]) {
+        if(([[url path] isEqualToString:@"/"] || [[url path] isEqualToString:@"/ioslinks"]) && [queryComponents objectForKey:@"q"]) {
             // yep! extract the search query...
             NSString *query = [queryComponents objectForKey:@"q"];
             query = [query stringByReplacingOccurrencesOfString:@"+" withString:@"%20"];
             query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
             
-            return query;
-        } else if(![[url pathExtension] isEqualToString:@"html"]) {
-            // article page
-            NSString *query = [url path];
-            if ([query length] > 1)
-                query = [query substringFromIndex:1]; // strip the leading '/' in the URL
-            query = [query stringByReplacingOccurrencesOfString:@"_" withString:@"%20"];
-            query = [query stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];            
             return query;
         } else {
             // a URL on DDG.com, but not a search query
@@ -920,7 +912,7 @@ NSString * const emailRegEx =
 
 -(void)updateBarWithURL:(NSURL *)url {
     barUpdated = YES;
-    NSString *query = [self queryFromDDGURL:url];
+    NSString *query = [DDGSearchController queryFromDDGURL:url];
     NSString *headerText = (query ? query : url.absoluteString);
     [self.searchBar.searchField safeUpdateText:headerText];
     oldSearchText = headerText;

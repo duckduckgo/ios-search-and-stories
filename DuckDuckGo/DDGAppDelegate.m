@@ -164,7 +164,6 @@ continueUserActivity:(NSUserActivity *)userActivity
     
     //We can only open URLs from DDG.
     BOOL isDDGURL = [[[url scheme] lowercaseString] isEqualToString:@"duckduckgo"];
-    
     // Let's see what the query is.
     NSString *query = nil;
     if(isDDGURL) {
@@ -175,6 +174,8 @@ continueUserActivity:(NSUserActivity *)userActivity
                 query = [[pair objectAtIndex:1] URLDecodedStringDDG];
             }
         }
+    } else {
+        query = [DDGSearchController queryFromDDGURL:url];
     }
     
     if (query) {
