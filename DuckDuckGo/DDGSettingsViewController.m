@@ -263,15 +263,17 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
         [s.switchControl addTarget:self action:@selector(save:) forControlEvents:UIControlEventValueChanged];
     
     [self addSectionWithTitle:NSLocalizedString(@"Other", @"Heading for Other options section") footer:nil];
-    
-    [self addButton:NSLocalizedString(@"Send Feedback", @"Button: Send Feedback") forKey:@"feedback" detailTitle:nil type:IGFormButtonTypeNormal action:^{
-        MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
-        mailVC.mailComposeDelegate = weakSelf;
-        [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
-        [mailVC setSubject:@"DuckDuckGo for iOS feedback"];
-        [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:",[weakSelf deviceInfo]] isHTML:NO];
-        [weakSelf presentViewController:mailVC animated:YES completion:NULL];
-    }];
+
+    if ([MFMailComposeViewController canSendMail]) {
+        [self addButton:NSLocalizedString(@"Send Feedback", @"Button: Send Feedback") forKey:@"feedback" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+            MFMailComposeViewController *mailVC = [[MFMailComposeViewController alloc] init];
+            mailVC.mailComposeDelegate = weakSelf;
+            [mailVC setToRecipients:@[@"help@duckduckgo.com"]];
+            [mailVC setSubject:@"DuckDuckGo for iOS feedback"];
+            [mailVC setMessageBody:[NSString stringWithFormat:@"I'm running %@. Here's my feedback:", [weakSelf deviceInfo]] isHTML:NO];
+            [weakSelf presentViewController:mailVC animated:YES completion:NULL];
+        }];
+    }
     
     [self addButton:NSLocalizedString(@"Share", @"Button: Share") forKey:@"share" detailTitle:nil type:IGFormButtonTypeNormal action:^{
         NSString *shareTitle = NSLocalizedString(@"Check out the DuckDuckGo iOS app!", @"Share title: Check out the DuckDuckGo iOS app!");
