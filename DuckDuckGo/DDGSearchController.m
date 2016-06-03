@@ -465,9 +465,6 @@ NSString * const emailRegEx =
 
 -(void)keyboardWillHide:(NSNotification *)notification {
     [self keyboardIsShowing:NO notification:notification];
-    if (autocompleteOpen) {
-        [self dismissAutocomplete];
-    }
 }
 
 -(void)keyboardDidHide:(NSNotification *)notification {
@@ -560,6 +557,8 @@ NSString * const emailRegEx =
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString {
+    [self.searchBar.searchField resignFirstResponder];
+    
     UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
         [(UIViewController <DDGSearchHandler> *)contentViewController loadQueryOrURL:queryOrURLString];
@@ -1104,7 +1103,9 @@ NSString * const emailRegEx =
 }
 
 - (void)textFieldDidEndEditing:(UITextField *)textField {
-    
+    if (autocompleteOpen) {
+        [self dismissAutocomplete];
+    }
 }
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField {
