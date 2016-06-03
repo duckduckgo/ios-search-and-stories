@@ -2,7 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>DataProtectionClass</key>
-	<string>NSFileProtectionComplete</string>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>activitycontinuation:duckduckgo.com</string>
+		<string>applinks:duckduckgo.com</string>
+		<string>applinks:infinitekind.com</string>
+		<string>activitycontinuation:infinitekind.com</string>
+	</array>
 </dict>
 </plist>

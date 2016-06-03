@@ -77,7 +77,7 @@ typedef enum {
 // helper methods
 -(NSString *)validURLStringFromString:(NSString *)urlString;
 -(BOOL)isQuery:(NSString *)queryOrURL;
--(NSString *)queryFromDDGURL:(NSURL *)url;
++(NSString *)queryFromDDGURL:(NSURL *)url;
 
 -(void)searchFieldDidChange:(id)sender;
 -(void)dismissKeyboard:(void (^)(BOOL completed))completion;

@@ -22,6 +22,7 @@
 
 /* Begin PBXBuildFile section */
 		48449FEF1C603D160042CFBD /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48449FEE1C603D160042CFBD /* WebKit.framework */; };
+		4849B95F1CC8774500E27C5C /* DDGStoriesLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = 4849B95E1CC8774500E27C5C /* DDGStoriesLayout.m */; };
 		484A10C21C4C47AD00948ED4 /* DDGStoryMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */; };
 		48690A001C489CB900083D49 /* DDGTraitHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 486909FF1C489CB900083D49 /* DDGTraitHelper.m */; };
 		486E7C7F1C5E887A00287A35 /* DDGConstraintHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 486E7C7E1C5E887A00287A35 /* DDGConstraintHelper.m */; };
@@ -346,6 +347,8 @@
 
 /* Begin PBXFileReference section */
 		48449FEE1C603D160042CFBD /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		4849B95D1CC8774500E27C5C /* DDGStoriesLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoriesLayout.h; sourceTree = "<group>"; };
+		4849B95E1CC8774500E27C5C /* DDGStoriesLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoriesLayout.m; sourceTree = "<group>"; };
 		484A10C01C4C47AD00948ED4 /* DDGStoryMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGStoryMenu.h; sourceTree = "<group>"; };
 		484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGStoryMenu.m; sourceTree = "<group>"; };
 		486909FE1C489CB900083D49 /* DDGTraitHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGTraitHelper.h; sourceTree = "<group>"; };
@@ -1481,6 +1484,8 @@
 				847DA68E1C1060940091F55F /* DDGCollectionView.m */,
 				484A10C01C4C47AD00948ED4 /* DDGStoryMenu.h */,
 				484A10C11C4C47AD00948ED4 /* DDGStoryMenu.m */,
+				4849B95D1CC8774500E27C5C /* DDGStoriesLayout.h */,
+				4849B95E1CC8774500E27C5C /* DDGStoriesLayout.m */,
 			);
 			name = Stories;
 			sourceTree = "<group>";
@@ -1886,6 +1891,14 @@
 					};
 					83F32257149290EF00A61BC5 = {
 						DevelopmentTeam = HKE973VLUW;
+						SystemCapabilities = {
+							com.apple.Keychain = {
+								enabled = 0;
+							};
+							com.apple.SafariKeychain = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -2151,6 +2164,7 @@
 				83F32269149290EF00A61BC5 /* main.m in Sources */,
 				7BB873FD19374F04000C4DC4 /* DDGHTTPRequestManager.m in Sources */,
 				83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */,
+				4849B95F1CC8774500E27C5C /* DDGStoriesLayout.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
@@ -2847,7 +2861,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2862,8 +2875,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = DuckDuckGo/DuckDuckGo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG = 1;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -2879,7 +2892,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
@@ -2944,7 +2956,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2979,7 +2990,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2994,8 +3004,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = DuckDuckGo/DuckDuckGo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG = 1;
 				"DEBUG[arch=*]" = 1;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
@@ -3012,7 +3022,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
@@ -3031,8 +3040,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = DuckDuckGo/DuckDuckGo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG = 0;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3048,7 +3057,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
@@ -3085,7 +3093,6 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
-				PROVISIONING_PROFILE = "$(PROFILE_UDID)";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -3100,8 +3107,8 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_ENTITLEMENTS = DuckDuckGo/DuckDuckGo.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG = 1;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -3117,7 +3124,6 @@
 					"-all_load",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";

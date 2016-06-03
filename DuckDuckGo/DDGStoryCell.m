@@ -265,7 +265,7 @@ NSString *const DDGStoryCellIdentifier = @"StoryCell";
 
 #pragma mark -
 
-- (void)layoutSubviews;
+- (void)layoutSubviews
 {
     // Always call your parents.
     [super layoutSubviews];

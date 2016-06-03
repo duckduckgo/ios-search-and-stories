@@ -101,7 +101,7 @@
         self.webView.scalesPageToFit = YES;
         
         _webViewLoadingDepth = 0;
-        self.webView.backgroundColor = [UIColor duckNoContentColor];
+        self.webView.backgroundColor = [UIColor duckNoContentColor];        
         
         [self.view addSubview:self.webView];
         
@@ -329,10 +329,11 @@
     }
     if(self.bottomToolbarTopConstraint.constant!=newConstant) {
         self.bottomToolbarTopConstraint.constant = newConstant;
+        CGFloat toolbarBottomInset = shouldHide ? 0 : 50;
         [UIView animateWithDuration:0.25 animations:^{
+            scrollView.contentInset = UIEdgeInsetsMake(0, 0, toolbarBottomInset, 0);
+            scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, toolbarBottomInset, 0);
             [self.view layoutSubviews];
-            scrollView.contentInset = UIEdgeInsetsMake(0, 0, -newConstant, 0);
-            scrollView.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, -newConstant, 0);
         }];
     }
 }
@@ -357,7 +358,7 @@
 {
     // strip extra params from DDG search URLs
     NSURL *shareURL = self.webViewURL;
-    NSString *query = [self.searchController queryFromDDGURL:shareURL];
+    NSString *query = [DDGSearchController queryFromDDGURL:shareURL];
     NSString *pageTitle = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
     if(query) {
         NSString *escapedQuery = [query stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -431,7 +432,7 @@
 
 -(IBAction)favButtonPressed:(id)sender {
     NSURL *shareURL = self.webViewURL;
-    NSString *query = [self.searchController queryFromDDGURL:shareURL];
+    NSString *query = [DDGSearchController queryFromDDGURL:shareURL];
     NSString *feed = [self.webViewURL absoluteString];
     DDGBookmarkActivityItem* bookmarkItem = nil;
     if (nil != self.story && !self.webView.canGoBack) { // bookmark the story, since we're at the top level
@@ -526,6 +527,10 @@
     }
     
     NSURL *url = [NSURL URLWithString:urlString];
+    [self loadWebViewWithUrl:url];
+}
+
+- (void)loadWebViewWithUrl:(NSURL*)url {
     NSURLRequest *request = [DDGUtility requestWithURL:url];
     [self.webView loadRequest:request];
     [self.searchController updateBarWithURL:url];
@@ -727,7 +732,7 @@
     if (nil != self.story && !self.webView.canGoBack) {
         // we're at the top level of a story, so we can fave/bookmark that story
         self.isFavorited = self.story.savedValue;
-    } else { //if ([self.searchController queryFromDDGURL:self.webViewURL]) {
+    } else { //if ([DDGSearchController queryFromDDGURL:self.webViewURL]) {
         // this is a query that has been favorited/bookmarked
         self.isFavorited = [[DDGBookmarksProvider sharedProvider] bookmarkExistsForPageWithURL:self.webViewURL];
     }

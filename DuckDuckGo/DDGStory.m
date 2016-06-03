@@ -166,13 +166,12 @@
           NSLog(@"Error excluding %@ from backup %@", url, error);
         }
       }
-      
       dispatch_async(dispatch_get_main_queue(), ^{
-        [self.managedObjectContext performBlockAndWait:^{
+        [self.managedObjectContext performBlockAndWait:^{            
           self.htmlDownloadedValue = YES;
         }];
+          if (completion) completion(result);
       });
-    if (completion) completion(result);        
     });
 }
 
