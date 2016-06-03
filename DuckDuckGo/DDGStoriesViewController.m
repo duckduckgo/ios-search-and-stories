@@ -233,13 +233,12 @@ NSInteger const DDGLargeImageViewTag = 1;
         self.categoryFilter = nil;
     }
     
+    NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
     NSArray *oldStories = [self fetchedStories];
     [NSFetchedResultsController deleteCacheWithName:self.fetchedResultsController.cacheName];
     self.fetchedResultsController.delegate = nil;
     self.fetchedResultsController = nil;
-    
-    NSDate *feedDate = [[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey];
-    self.fetchedResultsController = [self fetchedResultsController:feedDate];
+    [self fetchedResultsController:feedDate];
     
     NSArray *newStories = [self fetchedStories];
     [self replaceStories:oldStories withStories:newStories focusOnStory:story];
@@ -411,7 +410,8 @@ NSInteger const DDGLargeImageViewTag = 1;
 {
     [super viewDidAppear:animated];
     
-    self.fetchedResultsController = [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
+    self.fetchedResultsController = nil; // force a refresh of the fetchedResultsController
+    [self fetchedResultsController:[[NSUserDefaults standardUserDefaults] objectForKey:DDGStoryFetcherStoriesLastUpdatedKey]];
     [self prepareUpcomingCellContent];
     // if we animated out, animate back in
     if(_storyView.alpha == 0) {
@@ -436,7 +436,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     [self.imageDownloadQueue cancelAllOperations];
     [self.enqueuedDownloadOperations removeAllObjects];
     self.fetchedResultsController.delegate = nil;
-    self.fetchedResultsController = nil;
+    //self.fetchedResultsController = nil;
 }
 
 - (void)viewDidDisappear:(BOOL)animated
@@ -878,7 +878,7 @@ NSInteger const DDGLargeImageViewTag = 1;
             NSArray *oldStories = [weakSelf fetchedStories];
 
             weakSelf.fetchedResultsController = nil;
-            weakSelf.fetchedResultsController = [self fetchedResultsController:feedDate];
+            [self fetchedResultsController:feedDate];
             
             NSArray *newStories = [self fetchedStories];
             NSInteger changes = [weakSelf replaceStories:oldStories withStories:newStories focusOnStory:nil];
