@@ -557,7 +557,7 @@ NSString * const emailRegEx =
 }
 
 -(void)loadQueryOrURL:(NSString *)queryOrURLString {
-    [self.searchBar.searchField resignFirstResponder];
+    if(queryOrURLString.length>0) [self.searchBar.searchField resignFirstResponder];
     
     UIViewController *contentViewController = self.navController.visibleViewController;
     if ([contentViewController conformsToProtocol:@protocol(DDGSearchHandler)]) {
