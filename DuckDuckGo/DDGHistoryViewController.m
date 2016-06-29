@@ -150,7 +150,8 @@
 }
 
 -(void)plusButtonWasPushed:(DDGMenuHistoryItemCell*)menuCell
-{    
+{
+    if(self.tableView.editing) return; // avoid the case when the plus button was pushed while doing a delete-row swipe
     DDGHistoryItem *historyItem = menuCell.historyItem;
     DDGSearchController *searchController = [self searchControllerDDG];
     if (searchController) {
