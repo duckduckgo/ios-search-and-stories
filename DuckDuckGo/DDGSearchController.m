@@ -846,7 +846,7 @@ NSString * const emailRegEx =
     
     [UIView animateWithDuration:0.2f animations:^{
         if(self.state == DDGSearchControllerStateWeb) {
-            [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeDefault];
+            [self.searchBar.searchField setRightButtonMode:DDGAddressBarRightButtonModeRefresh];
         }
         
         [self.searchBar setShowsLeftButton:(self.navController.viewControllers.count > 1) animated:NO];

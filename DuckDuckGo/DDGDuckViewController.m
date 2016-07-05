@@ -192,7 +192,7 @@ static NSString *historyCellID = @"HCell";
     if (searchController) {
         DDGAddressBarTextField *searchField = searchController.searchBar.searchField;
         [searchField becomeFirstResponder];
-        if(menuCell.historyItem) {
+        if(menuCell.historyItem.title) {
             searchField.text = menuCell.historyItem.title;
         } else if(menuCell.bookmarkItem) {
             searchField.text = menuCell.bookmarkItem[@"title"];
