@@ -40,6 +40,7 @@
 @property IBOutlet NSLayoutConstraint* tabBarTopBorderConstraint; // this exists to force the border to be 0.5px
 @property DDGToolbarAndNavigationBarAutohider* toolbarHider;
 @property NSLayoutConstraint* bottomToolbarTopConstraint;
+@property UITapGestureRecognizer *tapGestureRecognizer;
 
 @property BOOL isFavorited;
 
@@ -148,10 +149,10 @@
     UIMenuItem *search = [[UIMenuItem alloc] initWithTitle:NSLocalizedString(@"Search", @"Search") action:@selector(search:)];
     [[UIMenuController sharedMenuController] setMenuItems:@[search]];
     
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
-    tapGestureRecognizer.delegate = self;
-    tapGestureRecognizer.numberOfTapsRequired = 1;
-    [self.webView addGestureRecognizer:tapGestureRecognizer];
+    self.tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleTap:)];
+    self.tapGestureRecognizer.delegate = self;
+    self.tapGestureRecognizer.numberOfTapsRequired = 1;
+    [self.webView addGestureRecognizer:self.tapGestureRecognizer];
     
     self.toolbarHider = [[DDGToolbarAndNavigationBarAutohider alloc] initWithContainerView:self.view scrollView:self.webView.scrollView delegate:self];
 }
@@ -192,13 +193,15 @@
 
 - (void)dealloc
 {
- 
     self.webView.scrollView.delegate = nil;
     [self resetLoadingDepth];    
     
+    self.tapGestureRecognizer.delegate = nil;
+    [self.view removeGestureRecognizer:self.tapGestureRecognizer];
+    self.tapGestureRecognizer = nil;
     
-    if ([self.webView respondsToSelector:@selector(delegate)]) {
-        self.webView.delegate = nil;        
+    if([self.webView respondsToSelector:@selector(setDelegate:)]) {
+        [self.webView setDelegate:nil];
     }
     self.webView = nil;
 	self.webViewURL = nil;
