@@ -238,16 +238,15 @@
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
-    if ([otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] && otherGestureRecognizer.state==UIGestureRecognizerStateBegan) {
-        UILongPressGestureRecognizer* longPressRecognizer = (UILongPressGestureRecognizer*)otherGestureRecognizer;
-        if(longPressRecognizer.state==UIGestureRecognizerStateBegan) {
-            CGPoint touchLoc = [otherGestureRecognizer locationInView:self.webView];
-            NSURL* imageURL = [self findImageForTap:touchLoc];
-            if(imageURL!=nil) {
-                
-                [self longPressOnImage:imageURL atLocation:touchLoc];
-                return YES;
-            }
+    if ([otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] &&
+            otherGestureRecognizer.state==UIGestureRecognizerStateBegan && 
+            gestureRecognizer.state==UIGestureRecognizerStateFailed) 
+    {
+        CGPoint touchLoc = [otherGestureRecognizer locationInView:self.webView];
+        NSURL* imageURL = [self findImageForTap:touchLoc];
+        if(imageURL!=nil) {
+            [self longPressOnImage:imageURL atLocation:touchLoc];
+            return YES;
         }
     }
     return YES;
