@@ -91,7 +91,7 @@
 - (void)loadView {
     [super loadView];
     
-    if (SYSTEM_VERSION_LESS_THAN_OR_EQUAL_TO(@"7")) {
+    if (SYSTEM_VERSION_MAJOR_AS_INT <= 7) {
         CGRect viewFrame = self.view.frame;
         viewFrame.origin = CGPointMake(0, 0);
         DDGWebView* webView = [[DDGWebView alloc] initWithFrame:viewFrame];

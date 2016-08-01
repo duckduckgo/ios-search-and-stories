@@ -1180,7 +1180,7 @@ NSString * const emailRegEx =
 
 #pragma mark == Get Web Controller For Version ==
 - (DDGWebViewController*)newWebViewController {
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8")) {
+    if (SYSTEM_VERSION_MAJOR_AS_INT >= 8) {
         return [DDGWebKitWebViewController new];
     } else {
         return [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];
