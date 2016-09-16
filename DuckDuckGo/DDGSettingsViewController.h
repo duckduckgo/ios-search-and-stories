@@ -8,6 +8,7 @@
 
 #import "DDGFormViewController.h"
 #import <MessageUI/MessageUI.h>
+#import "DDGLocalStorage.h"
 
 extern NSString * const DDGSettingRecordHistory;
 extern NSString * const DDGSettingQuackOnRefresh;

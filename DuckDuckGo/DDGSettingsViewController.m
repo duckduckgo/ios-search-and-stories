@@ -22,6 +22,9 @@
 #import "MGSplitViewController.h"
 #import "DDGTraitHelper.h"
 
+#define CLEAR_RECENTS_AS_ID 0
+#define CLEAR_TEMP_AS_ID 1
+
 
 NSString * const DDGSettingRecordHistory = @"history";
 NSString * const DDGSettingQuackOnRefresh = @"quack";
@@ -256,6 +259,18 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
                                                         cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
                                                    destructiveButtonTitle:nil
                                                         otherButtonTitles:NSLocalizedString(@"Clear Recents", @"Clear Recents"), nil];
+        actionSheet.tag = CLEAR_RECENTS_AS_ID;
+        [actionSheet showInView:[weakSelf containerController].view];
+    }];
+    
+    [self addButton:NSLocalizedString(@"Clear Temporary Data", @"Clear temporary browsing data") forKey:@"clear_tmp_data" detailTitle:nil type:IGFormButtonTypeNormal action:^{
+        
+        UIActionSheet *actionSheet = [[UIActionSheet alloc] initWithTitle:NSLocalizedString(@"Are you sure you want to clear temporary data like session cookes or temporary local storage data? This can not be undone.", @"Ask for confirmation of clearing the recent history and state that this cannot be undone")
+                                                                 delegate:weakSelf
+                                                        cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel")
+                                                   destructiveButtonTitle:nil
+                                                        otherButtonTitles:NSLocalizedString(@"Clear Temporary Data", @"Clear Temporary Data"), nil];
+        actionSheet.tag = CLEAR_TEMP_AS_ID;
         [actionSheet showInView:[weakSelf containerController].view];
     }];
     
@@ -321,16 +336,27 @@ NSString * const DDGSettingHomeViewTypeDuck = @"Duck Mode";
     [defaults setObject:[formData objectForKey:DDGSettingAutocomplete] forKey:DDGSettingAutocomplete];
 }
 
+
 #pragma mark - Helper methods
 
+
+
 -(void)actionSheet:(UIActionSheet *)actionSheet didDismissWithButtonIndex:(NSInteger)buttonIndex {
-    // currently the only action sheet is to clear the history
-    if(buttonIndex == 0) {
-        DDGHistoryProvider *historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
-        [historyProvider clearHistory];
+    if(buttonIndex == 0) {  //if the user did NOT hit the cancel btn on the actionsheet
+        switch (actionSheet.tag) {
+            case CLEAR_RECENTS_AS_ID:
+                [[[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext] clearHistory];     //clear the recents (history)
+                break;
+            case CLEAR_TEMP_AS_ID:
+                [[DDGLocalStorage sharedInstance] deleteTemporaryData];
+                break;
+            default:
+                break;
+        }
         self.numberOfRecents = 0;
         [self.tableView reloadData];
     }
+    
 }
 
 -(void)mailComposeController:(MFMailComposeViewController *)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError *)error {
