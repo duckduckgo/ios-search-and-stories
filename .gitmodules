@@ -9,7 +9,7 @@
 	url = git://github.com/rs/SDURLCache.git
 [submodule "Submodules/IGFormViewController"]
 	path = Submodules/IGFormViewController
-	url = git@github.com:TheInfiniteKind/IGFormViewController.git
+	url = https://github.com/TheInfiniteKind/IGFormViewController
 [submodule "Submodules/TUSafariActivity"]
 	path = Submodules/TUSafariActivity
 	url = git://github.com/davbeck/TUSafariActivity.git
