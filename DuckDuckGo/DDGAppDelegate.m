@@ -21,6 +21,7 @@
 #import "NSString+URLEncodingDDG.h"
 #import "DDGURLProtocol.h"
 #import "DDGHomeViewController.h"
+#import "DuckDuckGo-Swift.h"
 
 @import UIKit;
 
@@ -207,6 +208,22 @@ continueUserActivity:(NSUserActivity *)userActivity
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [self.homeController checkAndRefreshSettings];
+    [self startOnboardingFlowIfNotSeen];
+}
+ 
+
+#pragma mark - Onboarding Flow
+- (void)startOnboardingFlowIfNotSeen {
+    OnboardingSettings *settings = [OnboardingSettings new];
+    if (!settings.hasSeenOnboarding) {
+        settings.hasSeenOnboarding = YES;
+        [self startOnboardingFlow];
+    }
+}
+    
+- (void)startOnboardingFlow {
+    OnboardingViewController* controller = [OnboardingViewController loadFromStoryboard];
+    [self.homeController presentViewController:controller animated:YES completion:nil];
 }
 
 

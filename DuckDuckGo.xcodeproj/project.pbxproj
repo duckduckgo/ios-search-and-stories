@@ -333,6 +333,22 @@
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
 		C1A97EE8176BD7AB0099EDA1 /* btn-bg_bang-default.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE7176BD7AB0099EDA1 /* btn-bg_bang-default.png */; };
 		C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */; };
+		F140EA921E89579F0064094A /* RoundedRectangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F140EA911E89579F0064094A /* RoundedRectangleView.swift */; };
+		F140EA941E8957B90064094A /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F140EA931E8957B90064094A /* UIViewExtension.swift */; };
+		F16258CD1E891D8300EC79C6 /* ContentBlockingConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258C11E891D8300EC79C6 /* ContentBlockingConfiguration.swift */; };
+		F16258CE1E891D8300EC79C6 /* Onboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F16258C21E891D8300EC79C6 /* Onboarding.storyboard */; };
+		F16258CF1E891D8300EC79C6 /* OnboardingDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258C31E891D8300EC79C6 /* OnboardingDataSource.swift */; };
+		F16258D11E891D8300EC79C6 /* OnboardingPageConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258C51E891D8300EC79C6 /* OnboardingPageConfiguration.swift */; };
+		F16258D21E891D8300EC79C6 /* OnboardingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258C61E891D8300EC79C6 /* OnboardingPageViewController.swift */; };
+		F16258D31E891D8300EC79C6 /* OnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258C71E891D8300EC79C6 /* OnboardingViewController.swift */; };
+		F16258D51E891D8300EC79C6 /* PrivacyRightConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258C91E891D8300EC79C6 /* PrivacyRightConfiguration.swift */; };
+		F16258D61E891D8300EC79C6 /* RealPrivacyConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258CA1E891D8300EC79C6 /* RealPrivacyConfiguration.swift */; };
+		F16258D71E891D8300EC79C6 /* TrackingConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258CB1E891D8300EC79C6 /* TrackingConfiguration.swift */; };
+		F16258D81E891D8300EC79C6 /* UseDuckDuckGoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258CC1E891D8300EC79C6 /* UseDuckDuckGoViewController.swift */; };
+		F16258DA1E89218A00EC79C6 /* Onboarding.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F16258D91E89218A00EC79C6 /* Onboarding.xcassets */; };
+		F16258DD1E89302400EC79C6 /* UserText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258DC1E89302400EC79C6 /* UserText.swift */; };
+		F16258DF1E89307A00EC79C6 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258DE1E89307A00EC79C6 /* UIColorExtension.swift */; };
+		F16258E21E89341800EC79C6 /* OnboardingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258E11E89341800EC79C6 /* OnboardingSettings.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1033,6 +1049,22 @@
 		C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang_example_query@2x.png"; sourceTree = "<group>"; };
 		C1A97EE7176BD7AB0099EDA1 /* btn-bg_bang-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang-default.png"; sourceTree = "<group>"; };
 		C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		F140EA911E89579F0064094A /* RoundedRectangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedRectangleView.swift; sourceTree = "<group>"; };
+		F140EA931E8957B90064094A /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
+		F16258C11E891D8300EC79C6 /* ContentBlockingConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentBlockingConfiguration.swift; sourceTree = "<group>"; };
+		F16258C21E891D8300EC79C6 /* Onboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Onboarding.storyboard; sourceTree = "<group>"; };
+		F16258C31E891D8300EC79C6 /* OnboardingDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingDataSource.swift; sourceTree = "<group>"; };
+		F16258C51E891D8300EC79C6 /* OnboardingPageConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingPageConfiguration.swift; sourceTree = "<group>"; };
+		F16258C61E891D8300EC79C6 /* OnboardingPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingPageViewController.swift; sourceTree = "<group>"; };
+		F16258C71E891D8300EC79C6 /* OnboardingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingViewController.swift; sourceTree = "<group>"; };
+		F16258C91E891D8300EC79C6 /* PrivacyRightConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrivacyRightConfiguration.swift; sourceTree = "<group>"; };
+		F16258CA1E891D8300EC79C6 /* RealPrivacyConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RealPrivacyConfiguration.swift; sourceTree = "<group>"; };
+		F16258CB1E891D8300EC79C6 /* TrackingConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackingConfiguration.swift; sourceTree = "<group>"; };
+		F16258CC1E891D8300EC79C6 /* UseDuckDuckGoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UseDuckDuckGoViewController.swift; sourceTree = "<group>"; };
+		F16258D91E89218A00EC79C6 /* Onboarding.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Onboarding.xcassets; sourceTree = "<group>"; };
+		F16258DC1E89302400EC79C6 /* UserText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserText.swift; sourceTree = "<group>"; };
+		F16258DE1E89307A00EC79C6 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
+		F16258E11E89341800EC79C6 /* OnboardingSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingSettings.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1773,6 +1805,7 @@
 				4C6AC43514DDA95500A1ACA1 /* 3rd Party */,
 				5B7C3BD9170B092D00B9E009 /* App */,
 				5B7C3BDA170B093300B9E009 /* Main Menu */,
+				F16258C01E891D2400EC79C6 /* Onboarding */,
 				5B07086C17008ED30058718F /* History */,
 				5B7A1BCA16E78E2F00354310 /* Duck Mode */,
 				5B7A1BA516E74C0E00354310 /* Stories */,
@@ -1839,6 +1872,53 @@
 			name = "Custom Views";
 			sourceTree = "<group>";
 		};
+		F140EA951E8957C30064094A /* Support */ = {
+			isa = PBXGroup;
+			children = (
+				F140EA911E89579F0064094A /* RoundedRectangleView.swift */,
+				F140EA931E8957B90064094A /* UIViewExtension.swift */,
+				F16258DE1E89307A00EC79C6 /* UIColorExtension.swift */,
+				F16258DC1E89302400EC79C6 /* UserText.swift */,
+			);
+			name = Support;
+			sourceTree = "<group>";
+		};
+		F16258C01E891D2400EC79C6 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				F16258E51E89348D00EC79C6 /* StartupFlow */,
+				F16258E41E89347500EC79C6 /* SafariPopup */,
+				F140EA951E8957C30064094A /* Support */,
+				F16258E11E89341800EC79C6 /* OnboardingSettings.swift */,
+				F16258C21E891D8300EC79C6 /* Onboarding.storyboard */,
+				F16258D91E89218A00EC79C6 /* Onboarding.xcassets */,
+			);
+			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		F16258E41E89347500EC79C6 /* SafariPopup */ = {
+			isa = PBXGroup;
+			children = (
+				F16258CC1E891D8300EC79C6 /* UseDuckDuckGoViewController.swift */,
+			);
+			name = SafariPopup;
+			sourceTree = "<group>";
+		};
+		F16258E51E89348D00EC79C6 /* StartupFlow */ = {
+			isa = PBXGroup;
+			children = (
+				F16258C71E891D8300EC79C6 /* OnboardingViewController.swift */,
+				F16258C61E891D8300EC79C6 /* OnboardingPageViewController.swift */,
+				F16258C31E891D8300EC79C6 /* OnboardingDataSource.swift */,
+				F16258C51E891D8300EC79C6 /* OnboardingPageConfiguration.swift */,
+				F16258C11E891D8300EC79C6 /* ContentBlockingConfiguration.swift */,
+				F16258C91E891D8300EC79C6 /* PrivacyRightConfiguration.swift */,
+				F16258CA1E891D8300EC79C6 /* RealPrivacyConfiguration.swift */,
+				F16258CB1E891D8300EC79C6 /* TrackingConfiguration.swift */,
+			);
+			name = StartupFlow;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1883,14 +1963,16 @@
 		83F3224F149290EF00A61BC5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 0820;
 				TargetAttributes = {
 					486E7C831C5F051F00287A35 = {
 						CreatedOnToolsVersion = 7.2;
+						LastSwiftMigration = 0820;
 						TestTargetID = 83F32257149290EF00A61BC5;
 					};
 					83F32257149290EF00A61BC5 = {
 						DevelopmentTeam = HKE973VLUW;
+						LastSwiftMigration = 0820;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 0;
@@ -2094,6 +2176,7 @@
 				5B15F31C1727EC7500912482 /* btn-icon_plus_search-suggestions.png in Resources */,
 				5B15F31D1727EC7500912482 /* btn-icon_plus_search-suggestions@2x.png in Resources */,
 				5B15F3261728389F00912482 /* btn-bg_bang-active.png in Resources */,
+				F16258CE1E891D8300EC79C6 /* Onboarding.storyboard in Resources */,
 				5B15F3271728389F00912482 /* btn-bg_bang-active@2x.png in Resources */,
 				5B15F3291728389F00912482 /* btn-bg_bang-default@2x.png in Resources */,
 				5B15F32A1728389F00912482 /* menu_bang-active.png in Resources */,
@@ -2112,6 +2195,7 @@
 				5BDC6B0B174E2FAA0065BB8D /* SettingsFullCellBackground@2x.png in Resources */,
 				5BDC6B0C174E2FAA0065BB8D /* SettingsFullCellBackgroundHighlighted.png in Resources */,
 				5BDC6B0D174E2FAA0065BB8D /* SettingsFullCellBackgroundHighlighted@2x.png in Resources */,
+				F16258DA1E89218A00EC79C6 /* Onboarding.xcassets in Resources */,
 				5BDC6B0E174E2FAA0065BB8D /* SettingsMiddleCellBackground.png in Resources */,
 				5BDC6B0F174E2FAA0065BB8D /* SettingsMiddleCellBackground@2x.png in Resources */,
 				5BDC6B10174E2FAA0065BB8D /* SettingsMiddleCellBackgroundHighlighted.png in Resources */,
@@ -2164,6 +2248,8 @@
 				83F32269149290EF00A61BC5 /* main.m in Sources */,
 				7BB873FD19374F04000C4DC4 /* DDGHTTPRequestManager.m in Sources */,
 				83F3226D149290EF00A61BC5 /* DDGAppDelegate.m in Sources */,
+				F16258CF1E891D8300EC79C6 /* OnboardingDataSource.swift in Sources */,
+				F140EA921E89579F0064094A /* RoundedRectangleView.swift in Sources */,
 				4849B95F1CC8774500E27C5C /* DDGStoriesLayout.m in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
@@ -2172,6 +2258,7 @@
 				84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */,
 				4C2F2C6C15604657005AAA2E /* DDGAddressBarTextField.m in Sources */,
 				4C7DA6D815890A6900D95585 /* DDGBangsProvider.m in Sources */,
+				F16258D71E891D8300EC79C6 /* TrackingConfiguration.swift in Sources */,
 				8472B15C1BC3314200059BE4 /* RootViewController.m in Sources */,
 				484A10C21C4C47AD00948ED4 /* DDGStoryMenu.m in Sources */,
 				4CF9543C158A6FB30076465E /* DDGInputAccessoryView.m in Sources */,
@@ -2186,6 +2273,9 @@
 				4C4B7E9815C4F8E500340B59 /* DDGBookmarksProvider.m in Sources */,
 				4CD9247E15C9ED0900EB062F /* Constants.m in Sources */,
 				4C967F5215CDB3FB009A3A52 /* DDGAutocompleteTableView.m in Sources */,
+				F16258CD1E891D8300EC79C6 /* ContentBlockingConfiguration.swift in Sources */,
+				F16258D31E891D8300EC79C6 /* OnboardingViewController.swift in Sources */,
+				F16258DD1E89302400EC79C6 /* UserText.swift in Sources */,
 				4C487FCE15CF87C700618747 /* DDGTier2ViewController.m in Sources */,
 				486E7C7F1C5E887A00287A35 /* DDGConstraintHelper.m in Sources */,
 				4C41359F15D5DAC200A9326C /* DDGStory.m in Sources */,
@@ -2193,6 +2283,7 @@
 				4C4A0EE315DACE8B00B44342 /* ECSlidingViewController.m in Sources */,
 				4C4A0EE415DACE8B00B44342 /* UIImage+ImageWithUIView.m in Sources */,
 				84E722F51B90907B00CA0198 /* DDGSegmentedControl.m in Sources */,
+				F16258D81E891D8300EC79C6 /* UseDuckDuckGoViewController.swift in Sources */,
 				8398DAC816419FFD00A559C3 /* DDGChooseRegionViewController.m in Sources */,
 				8398DACC1641DA9F00A559C3 /* DDGRegionProvider.m in Sources */,
 				8392E2321668E148004263B6 /* NSMutableString+DDGDumpView.m in Sources */,
@@ -2201,11 +2292,13 @@
 				7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */,
 				5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */,
 				846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */,
+				F16258D61E891D8300EC79C6 /* RealPrivacyConfiguration.swift in Sources */,
 				5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */,
 				5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */,
 				8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */,
 				5BA321BF16C904BA0066BCB0 /* AFJSONRequestOperation.m in Sources */,
 				5BA321C016C904BA0066BCB0 /* AFNetworkActivityIndicatorManager.m in Sources */,
+				F16258DF1E89307A00EC79C6 /* UIColorExtension.swift in Sources */,
 				8472B15B1BC3314200059BE4 /* MGSplitViewController.m in Sources */,
 				5BA321C116C904BA0066BCB0 /* AFPropertyListRequestOperation.m in Sources */,
 				5BA321C216C904BA0066BCB0 /* AFURLConnectionOperation.m in Sources */,
@@ -2215,7 +2308,9 @@
 				84341F131C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m in Sources */,
 				5BA321EC16C9056D0066BCB0 /* SDCachedURLResponse.m in Sources */,
 				5BA321F116C907650066BCB0 /* NSOperationStack.m in Sources */,
+				F16258D11E891D8300EC79C6 /* OnboardingPageConfiguration.swift in Sources */,
 				84E723001B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m in Sources */,
+				F16258D21E891D8300EC79C6 /* OnboardingPageViewController.swift in Sources */,
 				5BB3F50516CAA49300281A2B /* DDGStoryCell.m in Sources */,
 				847DA68F1C1060940091F55F /* DDGCollectionView.m in Sources */,
 				5B66097816D7A3610006B5DE /* DDGFaviconButton.m in Sources */,
@@ -2224,7 +2319,10 @@
 				5BD23C3816EE235800C2FBDA /* DDGActivityViewController.m in Sources */,
 				5B7A1C9816F0836400354310 /* IGFormButton.m in Sources */,
 				5B7A1C9916F0836400354310 /* IGFormElement.m in Sources */,
+				F140EA941E8957B90064094A /* UIViewExtension.swift in Sources */,
 				5B7A1C9A16F0836400354310 /* IGFormRadioOption.m in Sources */,
+				F16258E21E89341800EC79C6 /* OnboardingSettings.swift in Sources */,
+				F16258D51E891D8300EC79C6 /* PrivacyRightConfiguration.swift in Sources */,
 				5B7A1C9B16F0836400354310 /* IGFormSection.m in Sources */,
 				7B6450FE18E5901C005ED543 /* DDGMenuHistoryItemCell.m in Sources */,
 				5B7A1C9C16F0836400354310 /* IGFormSwitch.m in Sources */,
@@ -2683,6 +2781,7 @@
 		486E7C8C1C5F051F00287A35 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -2701,6 +2800,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.infinitekind.DuckDuckGoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuckDuckGo.app/DuckDuckGo";
 			};
 			name = Debug;
@@ -2708,6 +2808,7 @@
 		486E7C8D1C5F051F00287A35 /* Release-adhoc */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -2743,6 +2844,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.infinitekind.DuckDuckGoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuckDuckGo.app/DuckDuckGo";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2751,6 +2853,7 @@
 		486E7C8E1C5F051F00287A35 /* Release-testflight */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -2786,6 +2889,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.infinitekind.DuckDuckGoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuckDuckGo.app/DuckDuckGo";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2794,6 +2898,7 @@
 		486E7C8F1C5F051F00287A35 /* Release-appstore */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
@@ -2829,6 +2934,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.infinitekind.DuckDuckGoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DuckDuckGo.app/DuckDuckGo";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2838,11 +2944,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -2859,10 +2968,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2884,17 +2994,19 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckduckgo.mobile.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
@@ -2926,17 +3038,21 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_RESOURCE_RULES_PATH = "";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -2954,7 +3070,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
@@ -2966,11 +3082,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -2988,10 +3107,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3014,18 +3134,20 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckduckgo.mobile.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				VALIDATE_PRODUCT = YES;
@@ -3049,17 +3171,19 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckduckgo.mobile.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
@@ -3070,11 +3194,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -3091,10 +3218,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
 				SDKROOT = iphoneos;
 				STRIP_INSTALLED_PRODUCT = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3116,17 +3244,19 @@
 				GENERATE_PROFILING_CODE = YES;
 				HEADER_SEARCH_PATHS = "Submodules/**";
 				INFOPLIST_FILE = "DuckDuckGo/DuckDuckGo-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"-all_load",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.duckduckgo.mobile.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				RUN_CLANG_STATIC_ANALYZER = YES;
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "DuckDuckGo/DuckDuckGo-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				USER_HEADER_SEARCH_PATHS = "Submodules/**";
 				WRAPPER_EXTENSION = app;
