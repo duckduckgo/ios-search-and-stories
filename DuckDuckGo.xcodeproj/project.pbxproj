@@ -1887,27 +1887,35 @@
 			isa = PBXGroup;
 			children = (
 				F16258E51E89348D00EC79C6 /* StartupFlow */,
-				F16258E41E89347500EC79C6 /* SafariPopup */,
+				F186420E1E94A35700B2A911 /* Pages */,
+				F16258E41E89347500EC79C6 /* SafariInstructions */,
 				F140EA951E8957C30064094A /* Support */,
-				F16258E11E89341800EC79C6 /* OnboardingSettings.swift */,
 				F16258C21E891D8300EC79C6 /* Onboarding.storyboard */,
 				F16258D91E89218A00EC79C6 /* Onboarding.xcassets */,
 			);
 			name = Onboarding;
 			sourceTree = "<group>";
 		};
-		F16258E41E89347500EC79C6 /* SafariPopup */ = {
+		F16258E41E89347500EC79C6 /* SafariInstructions */ = {
 			isa = PBXGroup;
 			children = (
 				F16258CC1E891D8300EC79C6 /* UseDuckDuckGoViewController.swift */,
 			);
-			name = SafariPopup;
+			name = SafariInstructions;
 			sourceTree = "<group>";
 		};
 		F16258E51E89348D00EC79C6 /* StartupFlow */ = {
 			isa = PBXGroup;
 			children = (
 				F16258C71E891D8300EC79C6 /* OnboardingViewController.swift */,
+				F16258E11E89341800EC79C6 /* OnboardingSettings.swift */,
+			);
+			name = StartupFlow;
+			sourceTree = "<group>";
+		};
+		F186420E1E94A35700B2A911 /* Pages */ = {
+			isa = PBXGroup;
+			children = (
 				F16258C61E891D8300EC79C6 /* OnboardingPageViewController.swift */,
 				F16258C31E891D8300EC79C6 /* OnboardingDataSource.swift */,
 				F16258C51E891D8300EC79C6 /* OnboardingPageConfiguration.swift */,
@@ -1916,7 +1924,7 @@
 				F16258CA1E891D8300EC79C6 /* RealPrivacyConfiguration.swift */,
 				F16258CB1E891D8300EC79C6 /* TrackingConfiguration.swift */,
 			);
-			name = StartupFlow;
+			name = Pages;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
