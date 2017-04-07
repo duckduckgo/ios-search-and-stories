@@ -312,6 +312,7 @@
 		8409F5F01B5E917E001F897F /* proximanova-regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5EC1B5E917E001F897F /* proximanova-regular.otf */; };
 		8409F5F11B5E917E001F897F /* proximanova-semibold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */; };
 		8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */; };
+		842A17C51E97C55C00008DF7 /* MiniOnboarding.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 842A17C41E97C55C00008DF7 /* MiniOnboarding.storyboard */; };
 		84341F131C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m in Sources */ = {isa = PBXBuildFile; fileRef = 84341F121C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m */; };
 		845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 845993311B4BD41B006F2CE7 /* DDGProgressBar.m */; };
 		8464976C1B3D3FE600BAF256 /* DDGHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8464976A1B3D3FE600BAF256 /* DDGHomeViewController.m */; };
@@ -326,6 +327,7 @@
 		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
 		84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */; };
 		84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */; };
+		84C5771C1E968CF10073ECBC /* MiniOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C5771B1E968CF10073ECBC /* MiniOnboardingViewController.swift */; };
 		84E722F51B90907B00CA0198 /* DDGSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */; };
 		84E723001B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E722FF1B95EB0D00CA0198 /* DDGSourceSettingCellTableViewCell.m */; };
 		C1894FD7178F56830076C179 /* UIColor+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = C1894FD6178F56830076C179 /* UIColor+DDG.m */; };
@@ -1009,6 +1011,7 @@
 		8409F5ED1B5E917E001F897F /* proximanova-semibold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "proximanova-semibold.otf"; path = "fonts/licensed/proximanova-semibold.otf"; sourceTree = "<group>"; };
 		8410AD531BB7353500CC83DB /* DDGImageActivityItemProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGImageActivityItemProvider.h; sourceTree = "<group>"; };
 		8410AD541BB7353500CC83DB /* DDGImageActivityItemProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGImageActivityItemProvider.m; sourceTree = "<group>"; };
+		842A17C41E97C55C00008DF7 /* MiniOnboarding.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MiniOnboarding.storyboard; sourceTree = "<group>"; };
 		84341F111C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGToolbarAndNavigationBarAutohider.h; sourceTree = "<group>"; };
 		84341F121C26B7E2008A7E2A /* DDGToolbarAndNavigationBarAutohider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGToolbarAndNavigationBarAutohider.m; sourceTree = "<group>"; };
 		845993301B4BD41B006F2CE7 /* DDGProgressBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGProgressBar.h; sourceTree = "<group>"; };
@@ -1038,6 +1041,7 @@
 		84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNoContentViewController.m; sourceTree = "<group>"; };
 		84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebToolbar.h; sourceTree = "<group>"; };
 		84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebToolbar.m; sourceTree = "<group>"; };
+		84C5771B1E968CF10073ECBC /* MiniOnboardingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniOnboardingViewController.swift; sourceTree = "<group>"; };
 		84D9A82C1B3CB74B00AF00CF /* DuckDuckGo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DuckDuckGo-Bridging-Header.h"; sourceTree = "<group>"; };
 		84E722F31B90907B00CA0198 /* DDGSegmentedControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGSegmentedControl.h; sourceTree = "<group>"; };
 		84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGSegmentedControl.m; sourceTree = "<group>"; };
@@ -1863,6 +1867,14 @@
 			path = Classes;
 			sourceTree = "<group>";
 		};
+		84C577161E967ABC0073ECBC /* Mini */ = {
+			isa = PBXGroup;
+			children = (
+				84C5771B1E968CF10073ECBC /* MiniOnboardingViewController.swift */,
+			);
+			name = Mini;
+			sourceTree = "<group>";
+		};
 		84E722F21B908CFC00CA0198 /* Custom Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -1886,11 +1898,13 @@
 		F16258C01E891D2400EC79C6 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
+				84C577161E967ABC0073ECBC /* Mini */,
 				F16258E51E89348D00EC79C6 /* StartupFlow */,
 				F186420E1E94A35700B2A911 /* Pages */,
 				F16258E41E89347500EC79C6 /* SafariInstructions */,
 				F140EA951E8957C30064094A /* Support */,
 				F16258C21E891D8300EC79C6 /* Onboarding.storyboard */,
+				842A17C41E97C55C00008DF7 /* MiniOnboarding.storyboard */,
 				F16258D91E89218A00EC79C6 /* Onboarding.xcassets */,
 			);
 			name = Onboarding;
@@ -2211,6 +2225,7 @@
 				5BDC6B12174E2FAA0065BB8D /* SettingsTopCellBackground.png in Resources */,
 				5BDC6B13174E2FAA0065BB8D /* SettingsTopCellBackground@2x.png in Resources */,
 				5BDC6B14174E2FAA0065BB8D /* SettingsTopCellBackgroundHighlighted.png in Resources */,
+				842A17C51E97C55C00008DF7 /* MiniOnboarding.storyboard in Resources */,
 				5BDC6B15174E2FAA0065BB8D /* SettingsTopCellBackgroundHighlighted@2x.png in Resources */,
 				4EC8D8581BB4A92500BE8903 /* DDGGroupedTableViewCellValue1.xib in Resources */,
 				5BDC6B26174E746E0065BB8D /* search_generic.png in Resources */,
@@ -2328,6 +2343,7 @@
 				5B7A1C9816F0836400354310 /* IGFormButton.m in Sources */,
 				5B7A1C9916F0836400354310 /* IGFormElement.m in Sources */,
 				F140EA941E8957B90064094A /* UIViewExtension.swift in Sources */,
+				84C5771C1E968CF10073ECBC /* MiniOnboardingViewController.swift in Sources */,
 				5B7A1C9A16F0836400354310 /* IGFormRadioOption.m in Sources */,
 				F16258E21E89341800EC79C6 /* OnboardingSettings.swift in Sources */,
 				F16258D51E891D8300EC79C6 /* PrivacyRightConfiguration.swift in Sources */,

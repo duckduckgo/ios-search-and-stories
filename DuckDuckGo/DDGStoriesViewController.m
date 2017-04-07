@@ -25,6 +25,7 @@
 #import "DDGCollectionView.h"
 #import "DDGStoriesLayout.h"
 #import "DDGConstraintHelper.h"
+#import "DuckDuckGo-Swift.h"
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
@@ -61,6 +62,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) DDGStoriesLayout* storiesLayout;
 @property (nonatomic, strong) NSNumber* lastStoryIDViewed;
 @property (nonatomic, assign) BOOL ignoreCoreDataUpdates;
+@property (nonatomic, strong) MiniOnboardingViewController* onboarding;
 
 @end
 
@@ -71,7 +73,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 @implementation DDGStoriesViewController
 
-#pragma mark - Memory Management
+
 
 - (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 {
@@ -94,18 +96,11 @@ NSInteger const DDGLargeImageViewTag = 1;
     return self;
 }
 
+
 - (void)dealloc
 {
     [self.imageDownloadQueue cancelAllOperations];
     self.imageDownloadQueue = nil;
-}
-
-- (DDGHistoryProvider *)historyProvider {
-    if (nil == _historyProvider) {
-        _historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
-    }
-    
-    return _historyProvider;
 }
 
 - (void)didReceiveMemoryWarning
@@ -135,8 +130,42 @@ NSInteger const DDGLargeImageViewTag = 1;
     }
 }
 
+- (DDGHistoryProvider *)historyProvider {
+    if (nil == _historyProvider) {
+        _historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    }
+    
+    return _historyProvider;
+}
+
 - (void)reenableScrollsToTop {
     self.storyView.scrollsToTop = YES;
+}
+
+
+-(BOOL)showsOnboarding {
+    return self.onboarding!=nil;
+}
+
+-(void)setShowsOnboarding:(BOOL)showOnboarding {
+    BOOL showingOnboarding = self.onboarding!=nil;
+    if(showOnboarding==showingOnboarding) return;
+    
+    if(showOnboarding) {
+        self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
+        DDGStoriesViewController* __weak weakself = self;
+        self.onboarding.dismissHandler = ^{
+            weakself.showsOnboarding = FALSE;
+        };
+        [self addChildViewController:self.onboarding];
+        [self.view addSubview:self.onboarding.view];
+    } else {
+        self.onboarding.dismissHandler = nil;
+        [self.onboarding.view removeFromSuperview];
+        [self.onboarding removeFromParentViewController];
+        self.onboarding = nil;
+    }
+    [self.view setNeedsLayout];
 }
 
 #pragma mark - No Stories
@@ -312,10 +341,8 @@ NSInteger const DDGLargeImageViewTag = 1;
     storyView.backgroundColor = [UIColor duckStoriesBackground];
     storyView.dataSource = self;
     storyView.delegate = self;
+    
     [storyView setTranslatesAutoresizingMaskIntoConstraints:NO];
-//    storyView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    
-    
     [storyView registerClass:DDGStoryCell.class forCellWithReuseIdentifier:DDGStoryCellIdentifier];
     
     self.storyView = storyView;
@@ -326,6 +353,8 @@ NSInteger const DDGLargeImageViewTag = 1;
         [storyView addSubview:self.refreshControl];
         [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
         storyView.backgroundView = self.refreshControl;
+        
+        self.showsOnboarding = TRUE; // FIXME: change to using a userdefaults value to prevent showing again after being dismissed
     }
     
     self.noContentView = [[DDGNoContentViewController alloc] init];
@@ -470,6 +499,17 @@ NSInteger const DDGLargeImageViewTag = 1;
 }
 
 -(void)viewDidLayoutSubviews {
+    UIView* onboardingView = self.onboarding.view;
+    
+    CGRect frame = self.view.frame;
+    frame.origin = CGPointMake(0,0);
+    if(onboardingView) {
+        onboardingView.frame = CGRectMake(0,0, frame.size.width, 165);
+        self.storyView.frame = CGRectMake(0, 165, frame.size.width, frame.size.height-165);
+    } else {
+        self.storyView.frame = frame;
+    }
+    
     self.storyView.contentSize = self.storiesLayout.collectionViewContentSize;
     [self.storyView layoutSubviews];
 }
@@ -663,6 +703,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     [cell setNeedsLayout];
     return cell;
 }
+
 
 #pragma  mark - collection view delegate
 
