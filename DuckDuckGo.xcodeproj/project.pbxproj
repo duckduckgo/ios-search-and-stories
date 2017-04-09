@@ -351,6 +351,7 @@
 		F16258DD1E89302400EC79C6 /* UserText.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258DC1E89302400EC79C6 /* UserText.swift */; };
 		F16258DF1E89307A00EC79C6 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258DE1E89307A00EC79C6 /* UIColorExtension.swift */; };
 		F16258E21E89341800EC79C6 /* OnboardingSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258E11E89341800EC79C6 /* OnboardingSettings.swift */; };
+		F1B29E2E1E9A7B4F007F5046 /* UILabelExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1B29E2D1E9A7B4F007F5046 /* UILabelExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1069,6 +1070,7 @@
 		F16258DC1E89302400EC79C6 /* UserText.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserText.swift; sourceTree = "<group>"; };
 		F16258DE1E89307A00EC79C6 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		F16258E11E89341800EC79C6 /* OnboardingSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingSettings.swift; sourceTree = "<group>"; };
+		F1B29E2D1E9A7B4F007F5046 /* UILabelExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UILabelExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1888,6 +1890,7 @@
 			isa = PBXGroup;
 			children = (
 				F140EA911E89579F0064094A /* RoundedRectangleView.swift */,
+				F1B29E2D1E9A7B4F007F5046 /* UILabelExtension.swift */,
 				F140EA931E8957B90064094A /* UIViewExtension.swift */,
 				F16258DE1E89307A00EC79C6 /* UIColorExtension.swift */,
 				F16258DC1E89302400EC79C6 /* UserText.swift */,
@@ -2356,6 +2359,7 @@
 				5B7A1C9F16F0836400354310 /* IGFormViewController.m in Sources */,
 				5B2FCABC16F231150045A5FE /* NSString+URLEncodingDDG.m in Sources */,
 				5B2FCABF16F3235E0045A5FE /* DDGBookmarkActivity.m in Sources */,
+				F1B29E2E1E9A7B4F007F5046 /* UILabelExtension.swift in Sources */,
 				5B2FCADD16F32BE10045A5FE /* TUSafariActivity.m in Sources */,
 				7B6E2D8C18E4782100C1EF75 /* UIImage+DDGSlideOverMenuController.m in Sources */,
 				5B2FCB5E16F3789F0045A5FE /* DDGReadabilityToggleActivity.m in Sources */,
