@@ -16,11 +16,12 @@ class OnboardingDataSource: NSObject, UIPageViewControllerDataSource {
         return pages.count
     }
     
-    init(storyboard: UIStoryboard) {
-        let first = OnboardingPageViewController.loadFromStoryboard(storyboard: storyboard, withConfiguartion: RealPrivacyConfiguration())
-        let second = OnboardingPageViewController.loadFromStoryboard(storyboard: storyboard, withConfiguartion: ContentBlockingConfiguration())
-        let third = OnboardingPageViewController.loadFromStoryboard(storyboard: storyboard, withConfiguartion: TrackingConfiguration())
-        let fourth =  OnboardingPageViewController.loadFromStoryboard(storyboard: storyboard, withConfiguartion: PrivacyRightConfiguration())
+    init(storyboard: UIStoryboard, mini:Bool = false) {
+        let first = OnboardingPageViewController.loadFromStoryboard(storyboard: storyboard,
+                                                                    withConfiguartion: RealPrivacyConfiguration(mini))
+        let second = OnboardingPageViewController.loadFromStoryboard(storyboard: storyboard, withConfiguartion: ContentBlockingConfiguration(mini))
+        let third = OnboardingPageViewController.loadFromStoryboard(storyboard: storyboard, withConfiguartion: TrackingConfiguration(mini))
+        let fourth =  OnboardingPageViewController.loadFromStoryboard(storyboard: storyboard, withConfiguartion: PrivacyRightConfiguration(mini))
         fourth.isLastPage = true
         self.pages = [first, second, third, fourth]
         super.init()

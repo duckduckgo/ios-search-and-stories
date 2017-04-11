@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12118" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jGy-gB-XA1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11762" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="jGy-gB-XA1">
     <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <customFonts key="customFonts">
@@ -136,8 +136,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="165"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Real Privacy" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hgM-zL-1yd">
-                                <rect key="frame" x="110" y="25" width="194" height="17"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Real Privacy" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumScaleFactor="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="hgM-zL-1yd">
+                                <rect key="frame" x="110" y="25" width="104" height="17"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="17" id="CkY-Z4-0rM"/>
                                 </constraints>
@@ -152,7 +152,7 @@
                                     <constraint firstAttribute="height" constant="70" id="wK5-J8-PP1"/>
                                 </constraints>
                             </imageView>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We never store or share your personal information. Ever." lineBreakMode="wordWrap" numberOfLines="5" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Xm8-7V-I4X">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We never store or share your personal information. Ever." lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumScaleFactor="0.40000000000000002" adjustsLetterSpacingToFitWidth="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xm8-7V-I4X">
                                 <rect key="frame" x="110" y="50" width="194" height="30"/>
                                 <fontDescription key="fontDescription" name="ProximaNova-Semibold" family="Proxima Nova" pointSize="15"/>
                                 <color key="textColor" red="0.40000000000000002" green="0.40000000000000002" blue="0.40000000000000002" alpha="1" colorSpace="calibratedRGB"/>
@@ -169,7 +169,7 @@
                             <constraint firstItem="Xm8-7V-I4X" firstAttribute="leading" secondItem="9WE-Tj-PRw" secondAttribute="trailing" constant="10" id="RPN-wz-uMb"/>
                             <constraint firstItem="9WE-Tj-PRw" firstAttribute="top" secondItem="BS5-tX-MBk" secondAttribute="bottom" constant="19" id="YID-8h-Ln6"/>
                             <constraint firstItem="Xm8-7V-I4X" firstAttribute="top" secondItem="hgM-zL-1yd" secondAttribute="bottom" constant="8" id="gSj-Lb-vsc"/>
-                            <constraint firstAttribute="trailing" secondItem="hgM-zL-1yd" secondAttribute="trailing" constant="16" id="x9l-hm-bTk"/>
+                            <constraint firstAttribute="trailing" secondItem="hgM-zL-1yd" secondAttribute="trailing" constant="106" id="x9l-hm-bTk"/>
                         </constraints>
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>

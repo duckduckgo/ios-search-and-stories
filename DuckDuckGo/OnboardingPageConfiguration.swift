@@ -8,13 +8,25 @@
 
 import UIKit
 
-protocol OnboardingPageConfiguration {
+class OnboardingPageConfiguration {
     
-    var title: String { get }
+    open let title:String
+    open let description:String
+    open let image:UIImage
+    open let background:UIColor
     
-    var description: String { get }
+    static func adjustDescription(title:String, minify:Bool) -> String {
+        if(minify) {
+            return title.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(of: "  ", with: " ")
+        } else {
+            return title;
+        }
+    }
     
-    var image: UIImage { get }
-    
-    var background: UIColor { get }
+    init(title:String, description:String, image:UIImage, background:UIColor) {
+        self.title = title
+        self.description = description
+        self.image = image
+        self.background = background
+    }
 }

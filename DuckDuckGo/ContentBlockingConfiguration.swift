@@ -8,21 +8,14 @@
 
 import UIKit
 
-struct ContentBlockingConfiguration: OnboardingPageConfiguration {
-    
-    var title: String {
-        return UserText.onboardingContentBlockingTitle
+class ContentBlockingConfiguration: OnboardingPageConfiguration {
+
+    init(_ miniVersion:Bool) {
+        super.init(title: UserText.onboardingContentBlockingTitle,
+                   description: OnboardingPageConfiguration.adjustDescription(title: UserText.onboardingContentBlockingDescription,
+                                                                              minify:miniVersion),
+                   image: #imageLiteral(resourceName: "OnboardingContentBlocking"),
+                   background: UIColor.onboardingContentBlockingBackground)
     }
     
-    var description: String {
-        return UserText.onboardingContentBlockingDescription
-    }
-       
-    var background: UIColor {
-        return UIColor.onboardingContentBlockingBackground
-    }
-    
-    var image: UIImage {
-        return #imageLiteral(resourceName: "OnboardingContentBlocking")
-    }
 }

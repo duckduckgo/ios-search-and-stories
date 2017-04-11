@@ -8,21 +8,14 @@
 
 import UIKit
 
-struct RealPrivacyConfiguration: OnboardingPageConfiguration {
+class RealPrivacyConfiguration: OnboardingPageConfiguration {
     
-    var title: String {
-        return UserText.onboardingRealPrivacyTitle
-    }
-
-    var description: String {
-        return UserText.onboardingRealPrivacyDescription
-    }
-        
-    var background: UIColor {
-        return UIColor.onboardingRealPrivacyBackground
+    init(_ miniVersion:Bool) {
+        super.init(title: UserText.onboardingRealPrivacyTitle,
+                   description: OnboardingPageConfiguration.adjustDescription(title: UserText.onboardingRealPrivacyDescription,
+                                                                              minify:miniVersion),
+                   image: #imageLiteral(resourceName: "OnboardingRealPrivacy"),
+                   background: UIColor.onboardingRealPrivacyBackground)
     }
     
-    var image: UIImage {
-        return #imageLiteral(resourceName: "OnboardingRealPrivacy")
-    }
 }

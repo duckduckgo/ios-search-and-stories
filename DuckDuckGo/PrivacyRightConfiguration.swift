@@ -8,21 +8,14 @@
 
 import UIKit
 
-struct PrivacyRightConfiguration: OnboardingPageConfiguration {
-    
-    var title: String {
-        return UserText.onboardingPrivacyRightTitle
+class PrivacyRightConfiguration: OnboardingPageConfiguration {
+
+    init(_ miniVersion:Bool) {
+        super.init(title: UserText.onboardingPrivacyRightTitle,
+                   description: OnboardingPageConfiguration.adjustDescription(title: UserText.onboardingPrivacyRightDescription,
+                                                                              minify: miniVersion),
+                   image: #imageLiteral(resourceName: "OnboardingPrivacyRight"),
+                   background: UIColor.onboardingPrivacyRightBackground)
     }
 
-    var description: String {
-        return UserText.onboardingPrivacyRightDescription
-    }
-    
-    var background: UIColor {
-        return UIColor.onboardingPrivacyRightBackground
-    }
-    
-    var image: UIImage {
-        return #imageLiteral(resourceName: "OnboardingPrivacyRight")
-    }
 }

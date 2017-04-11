@@ -21,7 +21,7 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     static func loadFromStoryboard() -> MiniOnboardingViewController {
         let storyboard = UIStoryboard.init(name: "MiniOnboarding", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "MiniOnboardingViewController") as! MiniOnboardingViewController
-        controller.dataSource = OnboardingDataSource(storyboard: storyboard)
+        controller.dataSource = OnboardingDataSource(storyboard: storyboard, mini:true)
         return controller
     }
     

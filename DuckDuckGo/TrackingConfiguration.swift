@@ -8,21 +8,13 @@
 
 import UIKit
 
-struct TrackingConfiguration: OnboardingPageConfiguration {
+class TrackingConfiguration: OnboardingPageConfiguration {
     
-    var title: String {
-        return UserText.onboardingTrackingTitle
-    }
-    
-    var description: String {
-        return UserText.onboardingTrackingDescription
-    }
-        
-    var background: UIColor {
-        return UIColor.onboardingTrackingBackground
-    }
-    
-    var image: UIImage {
-        return #imageLiteral(resourceName: "OnboardingNoTracking")
+    init(_ miniVersion:Bool) {
+        super.init(title: UserText.onboardingTrackingTitle,
+                   description: OnboardingPageConfiguration.adjustDescription(title:UserText.onboardingTrackingDescription,
+                                                                              minify:miniVersion),
+                   image: #imageLiteral(resourceName: "OnboardingNoTracking"),
+                   background: UIColor.onboardingTrackingBackground)
     }
 }
