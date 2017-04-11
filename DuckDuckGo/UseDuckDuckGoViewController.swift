@@ -32,6 +32,11 @@ class UseDuckDuckGoViewController: UIViewController {
         applyTopMargin()
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        scrollView.setContentOffset(CGPoint(x:0, y:max(0, scrollView.contentSize.height - self.view.frame.size.height)), animated: true)
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return UIApplication.shared.statusBarStyle
     }
