@@ -80,7 +80,6 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     private func configureDisplay(forPage index: Int) {
         pageControl.currentPage = index
         currentPageController().resetImage()
-        //view.backgroundColor = currentPageController().preferredBackgroundColor
     }
     
     fileprivate func transition(withRatio ratio: CGFloat) {

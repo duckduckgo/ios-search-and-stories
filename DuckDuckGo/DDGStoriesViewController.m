@@ -31,6 +31,8 @@ NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 NSInteger const DDGLargeImageViewTag = 1;
 
+NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
+
 @class DDGStoriesLayout;
 
 @interface DDGStoriesViewController () {
@@ -38,8 +40,8 @@ NSInteger const DDGLargeImageViewTag = 1;
     NSMutableArray* _sectionChanges;
     NSMutableArray* _objectChanges;
     BOOL _processCoreDataUpdates;
-    
 }
+
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
@@ -150,7 +152,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 -(void)setShowsOnboarding:(BOOL)showOnboarding {
     BOOL showingOnboarding = self.onboarding!=nil;
     if(showOnboarding==showingOnboarding) return;
-    
+
     if(showOnboarding) {
         self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
         DDGStoriesViewController* __weak weakself = self;
@@ -158,14 +160,21 @@ NSInteger const DDGLargeImageViewTag = 1;
             weakself.showsOnboarding = FALSE;
         };
         [self addChildViewController:self.onboarding];
-        [self.view addSubview:self.onboarding.view];
     } else {
         self.onboarding.dismissHandler = nil;
-        [self.onboarding.view removeFromSuperview];
         [self.onboarding removeFromParentViewController];
         self.onboarding = nil;
     }
+    [self.storyView reloadData];
     [self.view setNeedsLayout];
+}
+
+-(void)viewDidLayoutSubviews {
+    CGFloat onboardHeight = 0;
+    if(self.showsOnboarding) {
+        onboardHeight = self.view.frame.size.width <= 480 ? 209 : 165;
+    }
+    self.storiesLayout.bannerHeight = onboardHeight;
 }
 
 #pragma mark - No Stories
@@ -305,7 +314,7 @@ NSInteger const DDGLargeImageViewTag = 1;
         if(!cellPath) continue;
         CGRect cellRect = [self.storiesLayout frameForStoryAtIndexPath:cellPath];
         CGFloat screenPosition = cellRect.origin.y-scrollOffset.y;
-        if(firstStory==nil || ( screenPosition >= 0 && screenPosition < firstStoryScreenPosition ) ) {
+        if([visibleCell isKindOfClass:DDGStoryCell.class] && (firstStory==nil || ( screenPosition >= 0 && screenPosition < firstStoryScreenPosition ) )) {
             firstStory = visibleCell.story;
             firstStoryIndex = cellPath;
             firstStoryScreenPosition = screenPosition;
@@ -344,6 +353,10 @@ NSInteger const DDGLargeImageViewTag = 1;
     
     [storyView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [storyView registerClass:DDGStoryCell.class forCellWithReuseIdentifier:DDGStoryCellIdentifier];
+    [storyView registerClass:OnboardingMiniCollectionViewCell.class
+  forSupplementaryViewOfKind:DDGOnboardingBannerViewKindID
+         withReuseIdentifier:DDGOnboardingBannerStoryCellIdentifier];
+
     
     self.storyView = storyView;
     
@@ -499,17 +512,6 @@ NSInteger const DDGLargeImageViewTag = 1;
 }
 
 -(void)viewDidLayoutSubviews {
-    UIView* onboardingView = self.onboarding.view;
-    
-    CGRect frame = self.view.frame;
-    frame.origin = CGPointMake(0,0);
-    if(onboardingView) {
-        onboardingView.frame = CGRectMake(0,0, frame.size.width, 165);
-        self.storyView.frame = CGRectMake(0, 165, frame.size.width, frame.size.height-165);
-    } else {
-        self.storyView.frame = frame;
-    }
-    
     self.storyView.contentSize = self.storiesLayout.collectionViewContentSize;
     [self.storyView layoutSubviews];
 }
@@ -701,6 +703,18 @@ NSInteger const DDGLargeImageViewTag = 1;
         }
     }
     [cell setNeedsLayout];
+    return cell;
+}
+
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
+           viewForSupplementaryElementOfKind:(NSString *)kind
+           atIndexPath:(NSIndexPath *)indexPath
+{
+    OnboardingMiniCollectionViewCell* cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                                                withReuseIdentifier:DDGOnboardingBannerStoryCellIdentifier
+                                                                                       forIndexPath:indexPath];
+    cell.onboarder = self.onboarding;
     return cell;
 }
 

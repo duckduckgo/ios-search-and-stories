@@ -326,6 +326,7 @@
 		84A640A21B6FBCB300643A39 /* DDGUnderViewControllerCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A11B6FBCB300643A39 /* DDGUnderViewControllerCell.m */; };
 		84A640A91B7368D800643A39 /* UIFont+DDG.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640A81B7368D800643A39 /* UIFont+DDG.m */; };
 		84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */; };
+		84B623F91E9EBDEF00C0D222 /* OnboardingMiniCollectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84B623F81E9EBDEF00C0D222 /* OnboardingMiniCollectionCell.swift */; };
 		84C52AA11B60FD91002253C0 /* DDGWebToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */; };
 		84C5771C1E968CF10073ECBC /* MiniOnboardingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C5771B1E968CF10073ECBC /* MiniOnboardingViewController.swift */; };
 		84E722F51B90907B00CA0198 /* DDGSegmentedControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */; };
@@ -1040,6 +1041,7 @@
 		84A640A81B7368D800643A39 /* UIFont+DDG.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIFont+DDG.m"; sourceTree = "<group>"; };
 		84A640AC1B82130D00643A39 /* DDGNoContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGNoContentViewController.h; sourceTree = "<group>"; };
 		84A640AD1B82130D00643A39 /* DDGNoContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGNoContentViewController.m; sourceTree = "<group>"; };
+		84B623F81E9EBDEF00C0D222 /* OnboardingMiniCollectionCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnboardingMiniCollectionCell.swift; sourceTree = "<group>"; };
 		84C52A9F1B60FD91002253C0 /* DDGWebToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGWebToolbar.h; sourceTree = "<group>"; };
 		84C52AA01B60FD91002253C0 /* DDGWebToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGWebToolbar.m; sourceTree = "<group>"; };
 		84C5771B1E968CF10073ECBC /* MiniOnboardingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniOnboardingViewController.swift; sourceTree = "<group>"; };
@@ -1873,6 +1875,7 @@
 			isa = PBXGroup;
 			children = (
 				84C5771B1E968CF10073ECBC /* MiniOnboardingViewController.swift */,
+				84B623F81E9EBDEF00C0D222 /* OnboardingMiniCollectionCell.swift */,
 			);
 			name = Mini;
 			sourceTree = "<group>";
@@ -2376,6 +2379,7 @@
 				5B0708871704A3BE0058718F /* DDGSafariActivity.m in Sources */,
 				5B7C3BD8170AF1AA00B9E009 /* DDGPlusButton.m in Sources */,
 				84A640AF1B82130D00643A39 /* DDGNoContentViewController.m in Sources */,
+				84B623F91E9EBDEF00C0D222 /* OnboardingMiniCollectionCell.swift in Sources */,
 				845993321B4BD41B006F2CE7 /* DDGProgressBar.m in Sources */,
 				48690A001C489CB900083D49 /* DDGTraitHelper.m in Sources */,
 				5B7C3BEF170DA03E00B9E009 /* DDGSearchBar.m in Sources */,
