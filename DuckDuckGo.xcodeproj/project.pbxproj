@@ -336,6 +336,7 @@
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
 		C1A97EE8176BD7AB0099EDA1 /* btn-bg_bang-default.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE7176BD7AB0099EDA1 /* btn-bg_bang-default.png */; };
 		C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */; };
+		F1075CA11E9EFF49006BE8A8 /* UserDefaultsExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1075CA01E9EFF49006BE8A8 /* UserDefaultsExtension.swift */; };
 		F140EA921E89579F0064094A /* RoundedRectangleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F140EA911E89579F0064094A /* RoundedRectangleView.swift */; };
 		F140EA941E8957B90064094A /* UIViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = F140EA931E8957B90064094A /* UIViewExtension.swift */; };
 		F16258CD1E891D8300EC79C6 /* ContentBlockingConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = F16258C11E891D8300EC79C6 /* ContentBlockingConfiguration.swift */; };
@@ -1056,6 +1057,7 @@
 		C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang_example_query@2x.png"; sourceTree = "<group>"; };
 		C1A97EE7176BD7AB0099EDA1 /* btn-bg_bang-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang-default.png"; sourceTree = "<group>"; };
 		C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		F1075CA01E9EFF49006BE8A8 /* UserDefaultsExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserDefaultsExtension.swift; sourceTree = "<group>"; };
 		F140EA911E89579F0064094A /* RoundedRectangleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedRectangleView.swift; sourceTree = "<group>"; };
 		F140EA931E8957B90064094A /* UIViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIViewExtension.swift; sourceTree = "<group>"; };
 		F16258C11E891D8300EC79C6 /* ContentBlockingConfiguration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentBlockingConfiguration.swift; sourceTree = "<group>"; };
@@ -1896,6 +1898,7 @@
 				F1B29E2D1E9A7B4F007F5046 /* UILabelExtension.swift */,
 				F140EA931E8957B90064094A /* UIViewExtension.swift */,
 				F16258DE1E89307A00EC79C6 /* UIColorExtension.swift */,
+				F1075CA01E9EFF49006BE8A8 /* UserDefaultsExtension.swift */,
 				F16258DC1E89302400EC79C6 /* UserText.swift */,
 			);
 			name = Support;
@@ -2280,6 +2283,7 @@
 				F16258CF1E891D8300EC79C6 /* OnboardingDataSource.swift in Sources */,
 				F140EA921E89579F0064094A /* RoundedRectangleView.swift in Sources */,
 				4849B95F1CC8774500E27C5C /* DDGStoriesLayout.m in Sources */,
+				F1075CA11E9EFF49006BE8A8 /* UserDefaultsExtension.swift in Sources */,
 				83F3229E1492EE1B00A61BC5 /* DDGSearchController.m in Sources */,
 				839819431493C1DB0017A892 /* DDGWebViewController.m in Sources */,
 				4CCEA043150AAB1D00CCC480 /* DDGSearchSuggestionsProvider.m in Sources */,
