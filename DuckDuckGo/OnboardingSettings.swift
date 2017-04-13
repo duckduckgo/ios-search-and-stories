@@ -10,18 +10,30 @@ import Foundation
 
 public class OnboardingSettings: NSObject {
     
-    private let suit = "settingsSuit"
+    private let suit = "onboardingSettingsSuit"
     
     private struct Keys {
         static let hasSeenOnboarding = "hasSeenOnboarding"
+        static let instructionsFirstLaunch = "instructionsFirstLaunch"
     }
     
     public var hasSeenOnboarding: Bool {
         get {
-            return userDefaults()?.bool(forKey: Keys.hasSeenOnboarding) ?? false
+            guard let userDefaults = userDefaults() else { return false }
+            return userDefaults.bool(forKey: Keys.hasSeenOnboarding, defaultValue: false)
         }
         set(newValue) {
             userDefaults()?.set(newValue, forKey: Keys.hasSeenOnboarding)
+        }
+    }
+    
+    public var instructionsFirstLaunch: Bool {
+        get {
+            guard let userDefaults = userDefaults() else { return true }
+            return userDefaults.bool(forKey: Keys.instructionsFirstLaunch, defaultValue: true)
+        }
+        set(newValue) {
+            userDefaults()?.set(newValue, forKey: Keys.instructionsFirstLaunch)
         }
     }
     
