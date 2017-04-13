@@ -87,7 +87,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     CGFloat rowHeight = DDG_rowHeightWithContainerSize(size) + DDGStoriesBetweenItemsSpacing;
     NSUInteger numRows = numStories/cellsPerRow;
     if(numStories%cellsPerRow!=0) numRows++;
-    size.height = rowHeight * numRows;
+    size.height = rowHeight * numRows + self.bannerHeight;
     return size;
 }
 

@@ -169,14 +169,6 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
     [self.view setNeedsLayout];
 }
 
--(void)viewDidLayoutSubviews {
-    CGFloat onboardHeight = 0;
-    if(self.showsOnboarding) {
-        onboardHeight = self.view.frame.size.width <= 480 ? 209 : 165;
-    }
-    self.storiesLayout.bannerHeight = onboardHeight;
-}
-
 #pragma mark - No Stories
 
 - (void)setShowNoContent:(BOOL)showNoContent {
@@ -512,10 +504,15 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
 }
 
 -(void)viewDidLayoutSubviews {
+    CGFloat onboardHeight = 0;
+    if(self.showsOnboarding) {
+        onboardHeight = self.view.frame.size.width <= 480 ? 209 : 165;
+    }
+    self.storiesLayout.bannerHeight = onboardHeight;
+    
     self.storyView.contentSize = self.storiesLayout.collectionViewContentSize;
     [self.storyView layoutSubviews];
 }
-
 
 
 #pragma mark - Filtering
