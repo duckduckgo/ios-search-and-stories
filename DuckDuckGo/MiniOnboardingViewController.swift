@@ -12,6 +12,7 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint!
+    @IBOutlet weak var addToSafariButton: UIButton?
     
     private weak var pageController: UIPageViewController!
     private var transitioningToPage: OnboardingPageViewController?
@@ -28,6 +29,8 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         configurePageControl()
+        self.addToSafariButton?.layer.cornerRadius = 3.0
+        self.addToSafariButton?.layer.masksToBounds = true
     }
     
     private func configurePageControl() {

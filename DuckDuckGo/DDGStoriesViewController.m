@@ -506,7 +506,7 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
 -(void)viewDidLayoutSubviews {
     CGFloat onboardHeight = 0;
     if(self.showsOnboarding) {
-        onboardHeight = self.view.frame.size.width <= 480 ? 209 : 165;
+        onboardHeight = self.view.frame.size.width <= 480 ? 210 : 165;
     }
     self.storiesLayout.bannerHeight = onboardHeight;
     

@@ -11,7 +11,8 @@ import UIKit
 class PrivacyRightConfiguration: OnboardingPageConfiguration {
 
     init(_ miniVersion:Bool) {
-        super.init(title: UserText.onboardingPrivacyRightTitle,
+        super.init(title: OnboardingPageConfiguration.adjustDescription(title: UserText.onboardingPrivacyRightTitle,
+                                                                        minify:miniVersion),
                    description: OnboardingPageConfiguration.adjustDescription(title: UserText.onboardingPrivacyRightDescription,
                                                                               minify: miniVersion),
                    image: #imageLiteral(resourceName: "OnboardingPrivacyRight"),

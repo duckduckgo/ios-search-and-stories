@@ -13,6 +13,7 @@ class OnboardingPageViewController: UIViewController {
     @IBOutlet weak var pageTitle: UILabel!
     @IBOutlet weak var pageDescription: UILabel!
     @IBOutlet weak var image: UIImageView!
+    @IBOutlet weak var descriptionContainerHeightConstraint: NSLayoutConstraint?
     
     var descriptionLineHeight: CGFloat = 0
     
@@ -47,5 +48,25 @@ class OnboardingPageViewController: UIViewController {
     
     public func resetImage() {
         image.transform = CGAffineTransform(scaleX: 1, y: 1)
+    }
+    
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        print("transitioning to size: \(size)")
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        // if we have a height constraint for the description text's superview,
+        // calculate the natural height of the description text and use it to resize
+        // the container, assuming the description text is the bottom item in the container
+        if let descContainerHeightC = self.descriptionContainerHeightConstraint, let descLabel = self.pageDescription, let container = descLabel.superview {
+            let size = descLabel.sizeThatFits(container.frame.size)
+            descContainerHeightC.constant = descLabel.frame.origin.y + size.height
+            print("mini banner \(String(describing: self.pageTitle?.text)), preferred text size: \(size) based on frame \(container.frame.size), setting container height to \(descLabel.frame.origin.y + size.height)")
+            self.view.setNeedsUpdateConstraints()
+        }
     }
 }

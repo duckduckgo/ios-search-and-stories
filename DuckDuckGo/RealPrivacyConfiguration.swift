@@ -11,7 +11,8 @@ import UIKit
 class RealPrivacyConfiguration: OnboardingPageConfiguration {
     
     init(_ miniVersion:Bool) {
-        super.init(title: UserText.onboardingRealPrivacyTitle,
+        super.init(title: OnboardingPageConfiguration.adjustDescription(title: UserText.onboardingRealPrivacyTitle,
+                                                                        minify:miniVersion),
                    description: OnboardingPageConfiguration.adjustDescription(title: UserText.onboardingRealPrivacyDescription,
                                                                               minify:miniVersion),
                    image: #imageLiteral(resourceName: "OnboardingRealPrivacy"),
