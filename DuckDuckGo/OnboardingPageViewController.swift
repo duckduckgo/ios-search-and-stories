@@ -50,12 +50,6 @@ class OnboardingPageViewController: UIViewController {
         image.transform = CGAffineTransform(scaleX: 1, y: 1)
     }
     
-    
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransition(to: size, with: coordinator)
-        print("transitioning to size: \(size)")
-    }
-    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
@@ -65,7 +59,6 @@ class OnboardingPageViewController: UIViewController {
         if let descContainerHeightC = self.descriptionContainerHeightConstraint, let descLabel = self.pageDescription, let container = descLabel.superview {
             let size = descLabel.sizeThatFits(container.frame.size)
             descContainerHeightC.constant = descLabel.frame.origin.y + size.height
-            print("mini banner \(String(describing: self.pageTitle?.text)), preferred text size: \(size) based on frame \(container.frame.size), setting container height to \(descLabel.frame.origin.y + size.height)")
             self.view.setNeedsUpdateConstraints()
         }
     }

@@ -22,4 +22,17 @@ public class OnboardingMiniCollectionViewCell : UICollectionViewCell {
 }
 
 
+public class OnboardingMiniTableViewCell : UITableViewCell {
+    var onboarder: MiniOnboardingViewController? {
+        didSet {
+            if let onboarder = self.onboarder {
+                onboarder.view.frame = self.contentView.frame
+                self.contentView.addSubview(onboarder.view)
+            }
+        }
+    }
+    
+}
+
+
 

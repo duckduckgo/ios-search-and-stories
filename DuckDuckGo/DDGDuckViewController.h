@@ -17,6 +17,7 @@
 @property (nonatomic, strong) DDGHistoryProvider *historyProvider;
 @property BOOL popoverMode;
 @property BOOL underPopoverMode;
+@property BOOL showsOnboarding;
 
 - (instancetype)initWithSearchController:(DDGSearchController *)searchController
                     managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
