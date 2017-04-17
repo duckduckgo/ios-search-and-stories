@@ -857,6 +857,23 @@ NSString * const emailRegEx =
 
 }
 
+/** 
+  * If there is a duck controller at the top of the content navigation stack, return it so
+  * that it can be used for auto-completion.  Otherwise, the overlaid duck controller will be
+  * used instead.
+  */
+-(DDGDuckViewController*)topmostContentDuckController {
+    NSArray<UIViewController*>* controllers = self.navController.viewControllers;
+    if(controllers.count) {
+        UIViewController* topController = controllers.lastObject;
+        if([topController isKindOfClass:DDGDuckViewController.class]) {
+            return (DDGDuckViewController*)topController;
+        }
+    }
+    return nil;
+}
+
+
 // fade in or out the autocomplete view- to be used when revealing/hiding autocomplete
 - (void)revealAutocomplete:(BOOL)reveal animated:(BOOL)animated {
     if(self.autocompletePopover) {
@@ -875,6 +892,12 @@ NSString * const emailRegEx =
         }
     } else if(self.autocompleteNavigationController) {
         if(self.autocompleteController==[self.contentControllers lastObject]) return;
+        if(reveal) {
+            [self.autocompleteNavigationController viewWillAppear:animated];
+        } else {
+            [self.autocompleteNavigationController viewWillDisappear:animated];
+        }
+        
         if(reveal) {
             [self.autocompleteNavigationController viewWillAppear:animated];
         } else {

@@ -156,7 +156,12 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
-    self.showsOnboarding = TRUE; // FIXME: change to using a userdefaults value to prevent showing again after being dismissed
+    
+    // show the mini banner and register for updates to further show or hide it
+    [self updateOnboardingState];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateOnboardingState)
+                                                 name:kDDGMiniOnboardingName object:nil];
     
     //self.view = self.tableView;
     [self.view addSubview:self.tableView];
@@ -165,9 +170,14 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
     //[self searchFieldDidChange:@""];
 }
 
+-(void)updateOnboardingState {
+    BOOL showIt = [NSUserDefaults.standardUserDefaults boolForKey:kDDGMiniOnboardingName defaultValue:TRUE];
+    self.showsOnboarding = showIt;
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    [self.onboarding viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     
     NSOperationQueue *queue = [NSOperationQueue new];
@@ -233,9 +243,9 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
     
     if(showOnboarding) {
         self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
-        DDGDuckViewController* __weak weakself = self;
         self.onboarding.dismissHandler = ^{
-            weakself.showsOnboarding = FALSE;
+            [NSUserDefaults.standardUserDefaults setBool:FALSE forKey:kDDGMiniOnboardingName];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDDGMiniOnboardingName object:nil];
         };
         [self addChildViewController:self.onboarding];
         [self.tableView reloadData];

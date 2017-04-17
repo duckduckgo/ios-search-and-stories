@@ -8,13 +8,18 @@
 
 import UIKit
 
+let kDDGMiniOnboardingAnimateName = "animate_mini_onboarding"
+
 class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelegate {
+    static var performAnimations = true
     
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint!
     @IBOutlet weak var addToSafariButton: UIButton?
     
     private weak var pageController: UIPageViewController!
+    private var pageFlipFimer: Timer?
+    
     private var transitioningToPage: OnboardingPageViewController?
     fileprivate var dataSource: OnboardingDataSource!
     var dismissHandler: (() -> Void)?
@@ -31,6 +36,41 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
         configurePageControl()
         self.addToSafariButton?.layer.cornerRadius = 3.0
         self.addToSafariButton?.layer.masksToBounds = true
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(stopAnimating),
+                                               name: NSNotification.Name(rawValue: kDDGMiniOnboardingAnimateName),
+                                               object: nil)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if self.pageFlipFimer==nil && MiniOnboardingViewController.performAnimations {
+            self.pageFlipFimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.pageFlipFimer?.invalidate()
+        self.pageFlipFimer = nil
+    }
+    
+    func timerFired(timer:Timer) {
+        var nextPage = self.pageControl.currentPage + 1
+        if nextPage >= self.pageControl.numberOfPages {
+            nextPage = 0
+        }
+        
+        // skip to the next controller...
+        let controllers = [dataSource.controller(forIndex: nextPage)]
+        pageController.setViewControllers(controllers, direction: .forward, animated: true, completion: nil)
+        configureDisplay(forPage: nextPage)
+    }
+    
+    @objc func stopAnimating(timer:Timer) {
+        MiniOnboardingViewController.performAnimations = false
+        self.pageFlipFimer?.invalidate()
     }
     
     private func configurePageControl() {
@@ -62,8 +102,15 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
+        // the user swiped to a different page, so let's cancel the rotation timer, and fire a notification so that any others do the same
+        self.pageFlipFimer?.invalidate()
+        self.pageFlipFimer = nil
+        MiniOnboardingViewController.performAnimations = false
+        
         guard let next = pendingViewControllers.first as? OnboardingPageViewController else { return }
         transitioningToPage = next
+        
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: kDDGMiniOnboardingAnimateName), object: nil)
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool,

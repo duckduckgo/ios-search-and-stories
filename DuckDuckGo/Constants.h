@@ -14,6 +14,7 @@ extern NSString * const kDDGCustomStoriesURLString;
 extern NSString * const kDDGSuggestionsURLString;
 extern NSString * const kDDGSettingsRefreshData;
 extern NSString * const kDDGNotificationExpandToolNavBar;
+extern NSString * const kDDGMiniOnboardingName;
 
 // System version macros
 #define SYSTEM_VERSION_EQUAL_TO(v)                  ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedSame)

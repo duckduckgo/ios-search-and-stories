@@ -155,9 +155,9 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
 
     if(showOnboarding) {
         self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
-        DDGStoriesViewController* __weak weakself = self;
         self.onboarding.dismissHandler = ^{
-            weakself.showsOnboarding = FALSE;
+            [NSUserDefaults.standardUserDefaults setBool:FALSE forKey:kDDGMiniOnboardingName];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDDGMiniOnboardingName object:nil];
         };
         [self addChildViewController:self.onboarding];
     } else {
@@ -358,8 +358,12 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
         [storyView addSubview:self.refreshControl];
         [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
         storyView.backgroundView = self.refreshControl;
-        
-        self.showsOnboarding = TRUE; // FIXME: change to using a userdefaults value to prevent showing again after being dismissed
+
+        // show the mini banner and register for updates to further show or hide it
+        [self updateOnboardingState];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateOnboardingState)
+                                                     name:kDDGMiniOnboardingName object:nil];
     }
     
     self.noContentView = [[DDGNoContentViewController alloc] init];
@@ -512,6 +516,12 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
     
     self.storyView.contentSize = self.storiesLayout.collectionViewContentSize;
     [self.storyView layoutSubviews];
+}
+
+
+-(void)updateOnboardingState {
+    BOOL showIt = [NSUserDefaults.standardUserDefaults boolForKey:kDDGMiniOnboardingName defaultValue:TRUE];
+    self.showsOnboarding = showIt;
 }
 
 
