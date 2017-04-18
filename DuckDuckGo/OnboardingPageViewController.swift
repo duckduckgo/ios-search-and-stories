@@ -14,6 +14,7 @@ class OnboardingPageViewController: UIViewController {
     @IBOutlet weak var pageDescription: UILabel!
     @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var descriptionContainerHeightConstraint: NSLayoutConstraint?
+    @IBOutlet weak var titleHeightConstraint: NSLayoutConstraint?
     
     var descriptionLineHeight: CGFloat = 0
     
@@ -56,9 +57,12 @@ class OnboardingPageViewController: UIViewController {
         // if we have a height constraint for the description text's superview,
         // calculate the natural height of the description text and use it to resize
         // the container, assuming the description text is the bottom item in the container
-        if let descContainerHeightC = self.descriptionContainerHeightConstraint, let descLabel = self.pageDescription, let container = descLabel.superview {
-            let size = descLabel.sizeThatFits(container.frame.size)
-            descContainerHeightC.constant = descLabel.frame.origin.y + size.height
+        if let titleHeightC = self.titleHeightConstraint, let descContainerHeightC = self.descriptionContainerHeightConstraint, let container = self.pageDescription.superview {
+            let containerSize = container.frame.size
+            let titleSize = self.pageTitle.sizeThatFits(containerSize)
+            titleHeightC.constant = titleSize.height // set the title size, in case it requires multiple lines
+            let descSize = self.pageDescription.sizeThatFits(containerSize)
+            descContainerHeightC.constant = titleSize.height + 3 + descSize.height // set the overall container size so that the description size will fit the text
             self.view.setNeedsUpdateConstraints()
         }
     }
