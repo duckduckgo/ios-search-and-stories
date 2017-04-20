@@ -58,10 +58,11 @@ class OnboardingPageViewController: UIViewController {
         // calculate the natural height of the description text and use it to resize
         // the container, assuming the description text is the bottom item in the container
         if let titleHeightC = self.titleHeightConstraint, let descContainerHeightC = self.descriptionContainerHeightConstraint, let container = self.pageDescription.superview {
-            let containerSize = container.frame.size
-            let titleSize = self.pageTitle.sizeThatFits(containerSize)
+            var titleContainerSize = container.frame.size
+            titleContainerSize.width -= 72
+            let titleSize = self.pageTitle.sizeThatFits(titleContainerSize)
             titleHeightC.constant = titleSize.height // set the title size, in case it requires multiple lines
-            let descSize = self.pageDescription.sizeThatFits(containerSize)
+            let descSize = self.pageDescription.sizeThatFits(container.frame.size)
             descContainerHeightC.constant = titleSize.height + 3 + descSize.height // set the overall container size so that the description size will fit the text
             self.view.setNeedsUpdateConstraints()
         }
