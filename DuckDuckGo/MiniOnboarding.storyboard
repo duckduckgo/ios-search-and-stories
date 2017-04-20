@@ -41,9 +41,10 @@
                                         <variation key="heightClass=regular-widthClass=regular" constant="50"/>
                                     </constraint>
                                 </constraints>
+                                <fontDescription key="fontDescription" name="ProximaNova-Semibold" family="Proxima Nova" pointSize="16"/>
                                 <color key="tintColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
-                                <state key="normal" title="Add to Safari" backgroundImage="AddToSafariBackground">
+                                <state key="normal" title="Add DuckDuckGo to Safari" backgroundImage="AddToSafariBackground">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
@@ -152,7 +153,7 @@
                                 <rect key="frame" x="98" y="25" width="206" height="55"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="We don't follow you around with ads" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hgM-zL-1yd">
-                                        <rect key="frame" x="0.0" y="0.0" width="206" height="17"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="134" height="17"/>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="17" id="CkY-Z4-0rM"/>
@@ -172,7 +173,7 @@
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="hgM-zL-1yd" secondAttribute="trailing" id="0xq-Eq-8Qf"/>
+                                    <constraint firstAttribute="trailing" secondItem="hgM-zL-1yd" secondAttribute="trailing" constant="72" id="0xq-Eq-8Qf"/>
                                     <constraint firstItem="Xm8-7V-I4X" firstAttribute="leading" secondItem="oON-4l-PgQ" secondAttribute="leading" id="6YW-RP-IAD"/>
                                     <constraint firstItem="hgM-zL-1yd" firstAttribute="top" secondItem="oON-4l-PgQ" secondAttribute="top" id="Cby-u9-ZjN"/>
                                     <constraint firstAttribute="height" constant="55" id="TiI-OI-pjQ"/>
