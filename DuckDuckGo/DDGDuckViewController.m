@@ -245,6 +245,7 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
         self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
         self.onboarding.dismissHandler = ^{
             [NSUserDefaults.standardUserDefaults setBool:FALSE forKey:kDDGMiniOnboardingName];
+            [NSUserDefaults.standardUserDefaults synchronize];
             [[NSNotificationCenter defaultCenter] postNotificationName:kDDGMiniOnboardingName object:nil];
         };
         [self addChildViewController:self.onboarding];

@@ -152,11 +152,12 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
 -(void)setShowsOnboarding:(BOOL)showOnboarding {
     BOOL showingOnboarding = self.onboarding!=nil;
     if(showOnboarding==showingOnboarding) return;
-
+    
     if(showOnboarding) {
         self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
         self.onboarding.dismissHandler = ^{
             [NSUserDefaults.standardUserDefaults setBool:FALSE forKey:kDDGMiniOnboardingName];
+            [NSUserDefaults.standardUserDefaults synchronize];
             [[NSNotificationCenter defaultCenter] postNotificationName:kDDGMiniOnboardingName object:nil];
         };
         [self addChildViewController:self.onboarding];
