@@ -14,8 +14,8 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     static var performAnimations = true
     
     @IBOutlet weak var pageControl: UIPageControl!
-    @IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint!
-    @IBOutlet weak var addToSafariButton: UIButton?
+    @IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint?
+    @IBOutlet weak var addToSafariButton: UIButton!
     
     private weak var pageController: UIPageViewController!
     private var pageFlipFimer: Timer?
@@ -46,7 +46,7 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if self.pageFlipFimer==nil && MiniOnboardingViewController.performAnimations {
-            self.pageFlipFimer = Timer.scheduledTimer(timeInterval: 5, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+            self.pageFlipFimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
         }
     }
     
@@ -57,15 +57,17 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     }
     
     func timerFired(timer:Timer) {
-        var nextPage = self.pageControl.currentPage + 1
-        if nextPage >= self.pageControl.numberOfPages {
-            nextPage = 0
+        if let pageControl = pageControl {
+            var nextPage = pageControl.currentPage + 1
+            if nextPage >= pageControl.numberOfPages {
+                nextPage = 0
+            }
+            
+            // skip to the next controller...
+            let controllers = [dataSource.controller(forIndex: nextPage)]
+            pageController.setViewControllers(controllers, direction: .forward, animated: true, completion: nil)
+            configureDisplay(forPage: nextPage)
         }
-        
-        // skip to the next controller...
-        let controllers = [dataSource.controller(forIndex: nextPage)]
-        pageController.setViewControllers(controllers, direction: .forward, animated: true, completion: nil)
-        configureDisplay(forPage: nextPage)
     }
     
     @objc func stopAnimating(timer:Timer) {
