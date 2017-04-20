@@ -393,7 +393,10 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
 {
     if(self.underPopoverMode) return 0;
     switch (section) {
-        case ONBOARDING_SECTION: return self.showsOnboarding ? 1 : 0;
+        case ONBOARDING_SECTION: {
+            if(self.showsOnboarding && self.suggestions.count + self.history.count + self.favorites.count <= 0) return 1; // don't show onboarding row if there are any values in the other sections
+            else return 0;
+        }
         case RECENTS_SECTION: return self.history.count;
         case FAVORITES_SECTION: return self.favorites.count;
         case SUGGESTION_SECTION: return self.suggestions.count;
