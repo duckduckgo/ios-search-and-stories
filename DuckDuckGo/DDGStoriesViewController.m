@@ -492,6 +492,7 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
     [self.storyView setNeedsLayout];
 }
 
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     [self saveScrollPosition];
@@ -510,6 +511,7 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
 
 -(void)viewDidLayoutSubviews {
     CGFloat onboardHeight = 0;
+    [self updateOnboardingState];
     if(self.showsOnboarding) {
         onboardHeight = self.view.frame.size.width <= 480 ? 210 : 165;
     }
@@ -522,6 +524,8 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
 
 -(void)updateOnboardingState {
     BOOL showIt = [NSUserDefaults.standardUserDefaults boolForKey:kDDGMiniOnboardingName defaultValue:TRUE];
+    // hide the banner if we're on an iPad or landscape.  In other words, if the width is not "compact"
+    showIt &= self.view.frame.size.width <= 480;
     self.showsOnboarding = showIt;
 }
 

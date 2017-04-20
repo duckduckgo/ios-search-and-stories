@@ -172,6 +172,8 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
 
 -(void)updateOnboardingState {
     BOOL showIt = [NSUserDefaults.standardUserDefaults boolForKey:kDDGMiniOnboardingName defaultValue:TRUE];
+    // hide the banner if we're on an iPad or landscape.  In other words, if the width is not "compact"
+    showIt &= self.view.frame.size.width <= 480;
     self.showsOnboarding = showIt;
 }
 
@@ -203,6 +205,11 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
     
     [self.imageRequestQueue cancelAllOperations];
     self.imageRequestQueue = nil;
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self updateOnboardingState];
 }
 
 
@@ -254,7 +261,6 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
         self.onboarding.dismissHandler = nil;
         [self.onboarding removeFromParentViewController];
         self.onboarding = nil;
-        [self.tableView deleteRowsAtIndexPaths:@[ [NSIndexPath indexPathForRow:0 inSection:0] ] withRowAnimation:UITableViewRowAnimationAutomatic];
         [self.tableView reloadData];
     }
     //[self.view setNeedsLayout];
