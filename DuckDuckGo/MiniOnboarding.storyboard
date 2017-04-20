@@ -80,21 +80,26 @@
                                     <action selector="onPageSelected:" destination="jGy-gB-XA1" eventType="valueChanged" id="kcE-DH-iIe"/>
                                 </connections>
                             </pageControl>
-                            <view opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fEH-r6-x5m" userLabel="bottomShadow">
+                            <view opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fEH-r6-x5m" userLabel="bottomShadow">
                                 <rect key="frame" x="0.0" y="165" width="320" height="0.5"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.14999999999999999" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="0.5" id="v2l-Bd-CEF"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.93333333333333335" green="0.93333333333333335" blue="0.93333333333333335" alpha="1" colorSpace="calibratedRGB"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="PeQ-fD-Ep2" firstAttribute="bottom" secondItem="yNS-a2-Ooa" secondAttribute="bottom" constant="-20" id="7ev-QK-SHe"/>
+                            <constraint firstItem="fEH-r6-x5m" firstAttribute="leading" secondItem="bOv-vd-VY9" secondAttribute="leading" id="Asp-ah-d3c"/>
+                            <constraint firstItem="fEH-r6-x5m" firstAttribute="bottom" secondItem="yNS-a2-Ooa" secondAttribute="bottom" id="CMA-vL-ch4"/>
                             <constraint firstItem="f0x-Ee-GDm" firstAttribute="centerY" secondItem="HWa-ia-3xF" secondAttribute="centerY" id="KmV-H4-MOz"/>
                             <constraint firstItem="yNS-a2-Ooa" firstAttribute="top" secondItem="bOv-vd-VY9" secondAttribute="top" id="OcK-Ty-q6G"/>
                             <constraint firstAttribute="trailing" secondItem="yNS-a2-Ooa" secondAttribute="trailing" id="R8k-Tv-S6m"/>
                             <constraint firstAttribute="trailing" secondItem="PeQ-fD-Ep2" secondAttribute="trailing" constant="18" id="VGT-nV-DfE"/>
-                            <constraint firstItem="48G-w4-Xuh" firstAttribute="top" secondItem="PeQ-fD-Ep2" secondAttribute="bottom" constant="30" id="aE0-Kt-Yd0"/>
                             <constraint firstItem="HWa-ia-3xF" firstAttribute="top" secondItem="5rJ-Ro-JUk" secondAttribute="bottom" id="f5R-wz-Ghx"/>
+                            <constraint firstAttribute="trailing" secondItem="fEH-r6-x5m" secondAttribute="trailing" id="jYo-FJ-zU4"/>
                             <constraint firstItem="HWa-ia-3xF" firstAttribute="leading" secondItem="f0x-Ee-GDm" secondAttribute="trailing" constant="1" id="kYp-ch-7aQ"/>
                             <constraint firstItem="48G-w4-Xuh" firstAttribute="top" secondItem="yNS-a2-Ooa" secondAttribute="bottom" constant="10" id="lDS-mA-Boo"/>
                             <constraint firstItem="yNS-a2-Ooa" firstAttribute="leading" secondItem="bOv-vd-VY9" secondAttribute="leading" id="n2u-k4-OI3"/>
@@ -107,6 +112,7 @@
                     <size key="freeformSize" width="320" height="175"/>
                     <connections>
                         <outlet property="addToSafariButton" destination="PeQ-fD-Ep2" id="ngr-rS-qa1"/>
+                        <outlet property="bottomBorderHeightConstraint" destination="lDS-mA-Boo" id="Aha-Ke-M7U"/>
                         <outlet property="pageControl" destination="f0x-Ee-GDm" id="NhF-R1-gRH"/>
                     </connections>
                 </viewController>
@@ -143,7 +149,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="OnboardingRealPrivacy" translatesAutoresizingMaskIntoConstraints="NO" id="9WE-Tj-PRw">
-                                <rect key="frame" x="18" y="17.5" width="70" height="70"/>
+                                <rect key="frame" x="18" y="18" width="70" height="70"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="70" id="5Yk-0p-pdG"/>
                                     <constraint firstAttribute="height" constant="70" id="wK5-J8-PP1"/>

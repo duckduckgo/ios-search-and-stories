@@ -525,6 +525,7 @@ NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
 -(void)updateOnboardingState {
     BOOL showIt = [NSUserDefaults.standardUserDefaults boolForKey:kDDGMiniOnboardingName defaultValue:TRUE];
     // hide the banner if we're on an iPad or landscape.  In other words, if the width is not "compact"
+    showIt &= self.storiesMode==DDGStoriesListModeNormal;
     showIt &= self.view.frame.size.width <= 480;
     self.showsOnboarding = showIt;
 }

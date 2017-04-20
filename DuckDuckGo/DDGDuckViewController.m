@@ -173,7 +173,7 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
 -(void)updateOnboardingState {
     BOOL showIt = [NSUserDefaults.standardUserDefaults boolForKey:kDDGMiniOnboardingName defaultValue:TRUE];
     // hide the banner if we're on an iPad or landscape.  In other words, if the width is not "compact"
-    showIt &= self.view.frame.size.width <= 480;
+    showIt &= self.onboardingShouldBeVisible;
     self.showsOnboarding = showIt;
 }
 
@@ -241,6 +241,10 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
 }
 
 
+-(BOOL)onboardingShouldBeVisible {
+    return self.view.frame.size.width <= 480;
+}
+
 -(BOOL)showsOnboarding {
     return self.onboarding!=nil;
 }
@@ -250,6 +254,7 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
     
     if(showOnboarding) {
         self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
+        self.onboarding.bottomBorderHidden = TRUE;
         self.onboarding.dismissHandler = ^{
             [NSUserDefaults.standardUserDefaults setBool:FALSE forKey:kDDGMiniOnboardingName];
             [NSUserDefaults.standardUserDefaults synchronize];
@@ -378,7 +383,7 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
                 headerHeight = 0.01; // no header ever for the onboarding section
                 break;
             case RECENTS_SECTION:
-                headerHeight = historyCount<=0 ? 0.01 : (self.showsOnboarding ? 0.01 : 25.0); // only show header if the onboarding bottom border isn't visible
+                headerHeight = historyCount<=0 ? 0.01 : ((self.showsOnboarding && self.onboardingShouldBeVisible) ? 0.01 : 25.0); // only show header if the onboarding bottom border isn't visible
                 break;
             case FAVORITES_SECTION:
                 headerHeight = favCount<=0 ? 0.01 : 25.0;
@@ -507,7 +512,7 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
         case ONBOARDING_SECTION: {
             CGFloat onboardHeight = 0;
             if(self.showsOnboarding) {
-                onboardHeight = self.view.frame.size.width <= 480 ? 210 : 165;
+                onboardHeight = self.view.frame.size.width <= 480 ? 200 : 155;
             }
             return onboardHeight;
         }

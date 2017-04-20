@@ -16,6 +16,7 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     @IBOutlet weak var pageControl: UIPageControl!
     @IBOutlet weak var bottomMarginConstraint: NSLayoutConstraint?
     @IBOutlet weak var addToSafariButton: UIButton!
+    @IBOutlet weak var bottomBorderHeightConstraint: NSLayoutConstraint?
     
     private weak var pageController: UIPageViewController!
     private var pageFlipFimer: Timer?
@@ -23,7 +24,15 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     private var transitioningToPage: OnboardingPageViewController?
     fileprivate var dataSource: OnboardingDataSource!
     var dismissHandler: (() -> Void)?
-  
+    
+    public var bottomBorderHidden = false {
+        didSet {
+            self.loadViewIfNeeded()
+            self.bottomBorderHeightConstraint?.constant = self.bottomBorderHidden ? 0 : 10
+            self.view.setNeedsLayout()
+        }
+    }
+    
     static func loadFromStoryboard() -> MiniOnboardingViewController {
         let storyboard = UIStoryboard.init(name: "MiniOnboarding", bundle: nil)
         let controller = storyboard.instantiateViewController(withIdentifier: "MiniOnboardingViewController") as! MiniOnboardingViewController
