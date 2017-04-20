@@ -70,6 +70,12 @@ class OnboardingViewController: UIViewController, UIPageViewControllerDelegate {
         }
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        get {
+            return .portrait
+        }
+    }
+    
     private func prepare(forPageControllerSegue controller: UIPageViewController) {
         pageController = controller
         controller.dataSource = dataSource

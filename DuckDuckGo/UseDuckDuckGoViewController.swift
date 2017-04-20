@@ -29,7 +29,13 @@ class UseDuckDuckGoViewController: UIViewController {
     private func configureViews() {
         descriptionText.adjustPlainTextLineHeight(descriptionLineHeight)
     }
-    
+
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        get {
+            return .portrait
+        }
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if onboardingSettings.instructionsFirstLaunch {
