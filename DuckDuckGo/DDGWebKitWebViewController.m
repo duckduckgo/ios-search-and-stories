@@ -259,9 +259,9 @@
             return;
         }
         
-        if ([[[webView.URL scheme] lowercaseString] isEqualToString:@"mailto"]) {
+        if ([[[navigationAction.request.URL scheme] lowercaseString] isEqualToString:@"mailto"]) {
             // user is interested in mailing so use the internal mail API
-            [self performSelector:@selector(internalMailAction:) withObject:webView.URL afterDelay:0.005];
+            [self performSelector:@selector(internalMailAction:) withObject:navigationAction.request.URL afterDelay:0.05];
             decisionHandler(WKNavigationActionPolicyCancel);
             return;
         }
