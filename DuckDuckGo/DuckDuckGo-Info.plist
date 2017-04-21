@@ -40,9 +40,15 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>794</string>
+	<string>795</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>telprompt</string>
+		<string>mailto</string>
+		<string>tel</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppTransportSecurity</key>
@@ -51,7 +57,7 @@
 		<true/>
 	</dict>
 	<key>NSHumanReadableCopyright</key>
-	<string>© 2015 DuckDuckGo, Inc. All Rights Reserved.</string>
+	<string>© 2017 DuckDuckGo, Inc. All Rights Reserved.</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>

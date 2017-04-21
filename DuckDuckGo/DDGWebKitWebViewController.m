@@ -258,12 +258,35 @@
             decisionHandler(WKNavigationActionPolicyCancel);
             return;
         }
+
+        UIApplication* app = UIApplication.sharedApplication;
+        NSURL* url = navigationAction.request.URL;
         
-        if ([[[navigationAction.request.URL scheme] lowercaseString] isEqualToString:@"mailto"]) {
+        if (!navigationAction.targetFrame) {
+            if ([app canOpenURL:url]) {
+                [app openURL:url];
+                decisionHandler(WKNavigationActionPolicyCancel);
+                return;
+            }
+        }
+        NSString* scheme = url.scheme.lowercaseString;
+        if([scheme isEqualToString:@"tel"]) { // if it's a tel: URL, then replace it with "telprompt:" to avoid initiating a call someone without confirmation!
+            scheme = @"telprompt";
+            url = [NSURL URLWithString:[url.absoluteString stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:scheme]];
+        }
+        if ([scheme isEqualToString:@"mailto"]) {
             // user is interested in mailing so use the internal mail API
             [self performSelector:@selector(internalMailAction:) withObject:navigationAction.request.URL afterDelay:0.05];
             decisionHandler(WKNavigationActionPolicyCancel);
             return;
+        }
+        
+        if([url.scheme isEqualToString:@"telprompt"] || [url.scheme isEqualToString:@"tel"]) {
+            if ([app canOpenURL:url]) {
+                [app openURL:url];
+                decisionHandler(WKNavigationActionPolicyCancel);
+                return;
+            }
         }
     }
     [self updateBarWithRequest:[NSURLRequest requestWithURL:webView.URL]];
