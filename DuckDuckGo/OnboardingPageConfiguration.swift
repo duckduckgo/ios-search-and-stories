@@ -17,7 +17,11 @@ class OnboardingPageConfiguration {
     
     static func adjustDescription(title:String, minify:Bool) -> String {
         if(minify) {
-            return title.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(of: "  ", with: " ")
+            var tweakedTitle = title.replacingOccurrences(of: "\n", with: " ").replacingOccurrences(of: "  ", with: " ") // strip hard-coded newlines
+            if let lastSpaceRange = tweakedTitle.range(of: " ", options: .backwards, range: nil, locale: nil) {
+                tweakedTitle = tweakedTitle.replacingCharacters(in: lastSpaceRange, with: "\u{2060} \u{2060}")
+            }
+            return tweakedTitle
         } else {
             return title;
         }
