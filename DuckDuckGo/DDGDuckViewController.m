@@ -164,6 +164,10 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
                                                  name:kDDGMiniOnboardingName object:nil];
     
     //self.view = self.tableView;
+    if(self.popoverMode) {
+        self.tableView.layer.cornerRadius = 4.0;
+    }
+
     [self.view addSubview:self.tableView];
     self.imageCache = [NSCache new];
     
