@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 public class OnboardingSettings: NSObject {
     
@@ -35,6 +36,10 @@ public class OnboardingSettings: NSObject {
         set(newValue) {
             userDefaults()?.set(newValue, forKey: Keys.instructionsFirstLaunch)
         }
+    }
+    
+    public func shouldShowOnboardingUponLaunch() -> Bool {
+        return UIDevice.current.userInterfaceIdiom != .pad
     }
     
     private func userDefaults() -> UserDefaults? {

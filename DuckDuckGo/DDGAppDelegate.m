@@ -215,7 +215,7 @@ continueUserActivity:(NSUserActivity *)userActivity
 #pragma mark - Onboarding Flow
 - (void)startOnboardingFlowIfNotSeen {
     OnboardingSettings *settings = [OnboardingSettings new];
-    if (!settings.hasSeenOnboarding) {
+    if (!settings.hasSeenOnboarding && settings.shouldShowOnboardingUponLaunch) {
         settings.hasSeenOnboarding = YES;
         [self startOnboardingFlow];
     }
