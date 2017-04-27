@@ -39,14 +39,14 @@ class UseDuckDuckGoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         if onboardingSettings.instructionsFirstLaunch {
-            disableDoneButtonForFiveSeconds()
+            disableDoneButtonForOneSecond()
             onboardingSettings.instructionsFirstLaunch = false
         }
     }
     
-    private func disableDoneButtonForFiveSeconds() {
+    private func disableDoneButtonForOneSecond() {
         doneButton.isEnabled = false
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
             self?.doneButton.isEnabled = true
         }
     }

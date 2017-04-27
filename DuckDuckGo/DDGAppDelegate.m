@@ -217,8 +217,15 @@ continueUserActivity:(NSUserActivity *)userActivity
     OnboardingSettings *settings = [OnboardingSettings new];
     if (!settings.hasSeenOnboarding && settings.shouldShowOnboardingUponLaunch) {
         settings.hasSeenOnboarding = YES;
-        [self startOnboardingFlow];
+        //[self startOnboardingFlow];
+        [self showAddToSafariPopup];
     }
+}
+
+-(void)showAddToSafariPopup {
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:nil];
+    UseDuckDuckGoViewController* useDDGController = [storyboard instantiateViewControllerWithIdentifier:@"UseDuckDuckGoViewController"];
+    [self.homeController presentViewController:useDDGController animated:TRUE completion:NULL];
 }
     
 - (void)startOnboardingFlow {
