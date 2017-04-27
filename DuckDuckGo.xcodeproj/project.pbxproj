@@ -333,6 +333,7 @@
 		C1A97EE6176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */; };
 		C1A97EE8176BD7AB0099EDA1 /* btn-bg_bang-default.png in Resources */ = {isa = PBXBuildFile; fileRef = C1A97EE7176BD7AB0099EDA1 /* btn-bg_bang-default.png */; };
 		C1EA87BE179EF07500A6A2A9 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */; };
+		D3EB24D21D92D90A0080900C /* DDGLocalStorage.m in Sources */ = {isa = PBXBuildFile; fileRef = D3EB24D11D92D90A0080900C /* DDGLocalStorage.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1033,6 +1034,8 @@
 		C1A97EE4176BD3560099EDA1 /* btn-bg_bang_example_query@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang_example_query@2x.png"; sourceTree = "<group>"; };
 		C1A97EE7176BD7AB0099EDA1 /* btn-bg_bang-default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn-bg_bang-default.png"; sourceTree = "<group>"; };
 		C1EA87BD179EF07500A6A2A9 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		D3EB24D01D92D90A0080900C /* DDGLocalStorage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDGLocalStorage.h; sourceTree = "<group>"; };
+		D3EB24D11D92D90A0080900C /* DDGLocalStorage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDGLocalStorage.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1770,6 +1773,7 @@
 		83F32262149290EF00A61BC5 /* DuckDuckGo */ = {
 			isa = PBXGroup;
 			children = (
+				D3EB24CF1D92D8F50080900C /* Local Storage */,
 				4C6AC43514DDA95500A1ACA1 /* 3rd Party */,
 				5B7C3BD9170B092D00B9E009 /* App */,
 				5B7C3BDA170B093300B9E009 /* Main Menu */,
@@ -1837,6 +1841,15 @@
 				84E722F41B90907B00CA0198 /* DDGSegmentedControl.m */,
 			);
 			name = "Custom Views";
+			sourceTree = "<group>";
+		};
+		D3EB24CF1D92D8F50080900C /* Local Storage */ = {
+			isa = PBXGroup;
+			children = (
+				D3EB24D01D92D90A0080900C /* DDGLocalStorage.h */,
+				D3EB24D11D92D90A0080900C /* DDGLocalStorage.m */,
+			);
+			name = "Local Storage";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2201,6 +2214,7 @@
 				7B09EDEB18E45F1D0042BB27 /* DDGMenuItemCell.m in Sources */,
 				5BA321BC16C904BA0066BCB0 /* AFHTTPClient.m in Sources */,
 				846D6B9A1BA4BE7A00EB16BC /* DDGChooseHomeViewController.m in Sources */,
+				D3EB24D21D92D90A0080900C /* DDGLocalStorage.m in Sources */,
 				5BA321BD16C904BA0066BCB0 /* AFHTTPRequestOperation.m in Sources */,
 				5BA321BE16C904BA0066BCB0 /* AFImageRequestOperation.m in Sources */,
 				8410AD551BB7353500CC83DB /* DDGImageActivityItemProvider.m in Sources */,
