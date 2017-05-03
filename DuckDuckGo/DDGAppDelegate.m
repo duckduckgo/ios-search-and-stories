@@ -208,16 +208,15 @@ continueUserActivity:(NSUserActivity *)userActivity
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [self.homeController checkAndRefreshSettings];
-    [self startOnboardingFlowIfNotSeen];
+    [self showSafariPopupIfNotSeen];
 }
  
 
 #pragma mark - Onboarding Flow
-- (void)startOnboardingFlowIfNotSeen {
+- (void)showSafariPopupIfNotSeen {
     OnboardingSettings *settings = [OnboardingSettings new];
     if (!settings.hasSeenOnboarding && settings.shouldShowOnboardingUponLaunch) {
         settings.hasSeenOnboarding = YES;
-        //[self startOnboardingFlow];
         [self showAddToSafariPopup];
     }
 }
@@ -227,12 +226,6 @@ continueUserActivity:(NSUserActivity *)userActivity
     UseDuckDuckGoViewController* useDDGController = [storyboard instantiateViewControllerWithIdentifier:@"UseDuckDuckGoViewController"];
     [self.homeController presentViewController:useDDGController animated:TRUE completion:NULL];
 }
-    
-- (void)startOnboardingFlow {
-    OnboardingViewController* controller = [OnboardingViewController loadFromStoryboard];
-    [self.homeController presentViewController:controller animated:YES completion:nil];
-}
-
 
 #pragma mark - 3DTouch Shortcuts
 -(void)updateShortcuts {

@@ -86,32 +86,6 @@
 
 @implementation DDGWebViewController
 
-#pragma mark - View lifecycle
-
-- (void)loadView {
-    [super loadView];
-    
-    if (SYSTEM_VERSION_MAJOR_AS_INT <= 7) {
-        CGRect viewFrame = self.view.frame;
-        viewFrame.origin = CGPointMake(0, 0);
-        DDGWebView* webView = [[DDGWebView alloc] initWithFrame:viewFrame];
-        webView.webController = self;
-        self.webView = webView;
-        self.webView.autoresizingMask = (UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight);
-        self.webView.delegate = self;
-        self.webView.scalesPageToFit = YES;
-        
-        _webViewLoadingDepth = 0;
-        self.webView.backgroundColor = [UIColor duckNoContentColor];        
-        
-        [self.view addSubview:self.webView];
-        
-        [self setUpWebToolBar];
-        
-        [self updateButtons];
-    }
-}
-
 -(UIView*)alternateToolbar {
     if([self view]) return self.toolbar;
     return nil;

@@ -159,9 +159,6 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
     
     // show the mini banner and register for updates to further show or hide it
     [self updateOnboardingState];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateOnboardingState)
-                                                 name:kDDGMiniOnboardingName object:nil];
     
     //self.view = self.tableView;
     if(self.popoverMode) {
@@ -257,6 +254,7 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
     if(showOnboarding==self.showsOnboarding) return;
     
     if(showOnboarding) {
+        
         self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
         self.onboarding.bottomBorderHidden = TRUE;
         self.onboarding.dismissHandler = ^{
@@ -266,13 +264,18 @@ NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCe
         };
         [self addChildViewController:self.onboarding];
         [self.tableView reloadData];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateOnboardingState)
+                                                     name:kDDGMiniOnboardingName object:nil];
     } else {
         self.onboarding.dismissHandler = nil;
         [self.onboarding removeFromParentViewController];
         self.onboarding = nil;
         [self.tableView reloadData];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kDDGMiniOnboardingName object:nil];
     }
-    //[self.view setNeedsLayout];
 }
 
 

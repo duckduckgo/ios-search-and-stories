@@ -19,7 +19,7 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     @IBOutlet weak var bottomBorderHeightConstraint: NSLayoutConstraint?
     
     private weak var pageController: UIPageViewController!
-    private var pageFlipFimer: Timer?
+    private var pageFlipTimer: Timer?
     
     private var transitioningToPage: OnboardingPageViewController?
     fileprivate var dataSource: OnboardingDataSource!
@@ -54,15 +54,15 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if self.pageFlipFimer==nil && MiniOnboardingViewController.performAnimations {
-            self.pageFlipFimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+        if self.pageFlipTimer == nil && MiniOnboardingViewController.performAnimations {
+            self.pageFlipTimer = Timer.scheduledTimer(timeInterval: 10, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
         }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        self.pageFlipFimer?.invalidate()
-        self.pageFlipFimer = nil
+        self.pageFlipTimer?.invalidate()
+        self.pageFlipTimer = nil
     }
     
     func timerFired(timer:Timer) {
@@ -81,7 +81,7 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     
     @objc func stopAnimating(timer:Timer) {
         MiniOnboardingViewController.performAnimations = false
-        self.pageFlipFimer?.invalidate()
+        self.pageFlipTimer?.invalidate()
     }
     
     private func configurePageControl() {
@@ -114,8 +114,8 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
     
     func pageViewController(_ pageViewController: UIPageViewController, willTransitionTo pendingViewControllers: [UIViewController]) {
         // the user swiped to a different page, so let's cancel the rotation timer, and fire a notification so that any others do the same
-        self.pageFlipFimer?.invalidate()
-        self.pageFlipFimer = nil
+        self.pageFlipTimer?.invalidate()
+        self.pageFlipTimer = nil
         MiniOnboardingViewController.performAnimations = false
         
         guard let next = pendingViewControllers.first as? OnboardingPageViewController else { return }
@@ -143,11 +143,6 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
         currentPageController().resetImage()
     }
     
-    fileprivate func transition(withRatio ratio: CGFloat) {
-//        transitionBackgroundColor(withRatio: ratio)
-//        shrinkImages(withRatio: ratio)
-    }
-    
     private func shrinkImages(withRatio ratio: CGFloat) {
         let currentImageScale = 1 - (0.2 * (1 - ratio))
         currentPageController().scaleImage(currentImageScale)
@@ -170,10 +165,6 @@ class MiniOnboardingViewController: UIViewController, UIPageViewControllerDelega
       if let dismissHandler = self.dismissHandler {
         dismissHandler()
       }
-    }
-    
-    @IBAction func onLastPageSwiped(_ sender: Any) {
-//        finishOnboardingFlow()
     }
     
     fileprivate func currentPageController() -> OnboardingPageViewController {
