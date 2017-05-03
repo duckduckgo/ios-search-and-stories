@@ -1,5 +1,5 @@
 language: objective-c
 osx_image: xcode8.3
 script:
-  - ./run_build.sh
+  - ./run_tests.sh
 
