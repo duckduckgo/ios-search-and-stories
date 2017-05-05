@@ -881,6 +881,12 @@ NSString * const emailRegEx =
             [self.autocompleteNavigationController viewWillDisappear:animated];
         }
         
+        if(reveal) {
+            [self.autocompleteNavigationController viewWillAppear:animated];
+        } else {
+            [self.autocompleteNavigationController viewWillDisappear:animated];
+        }
+        
         if(animated) {
             [UIView animateWithDuration:0.25 animations:^{
                 _background.alpha = (reveal ? 1.0 : 0.0);
@@ -1180,7 +1186,7 @@ NSString * const emailRegEx =
 
 #pragma mark == Get Web Controller For Version ==
 - (DDGWebViewController*)newWebViewController {
-    if (SYSTEM_VERSION_GREATER_THAN_OR_EQUAL_TO(@"8")) {
+    if (SYSTEM_VERSION_MAJOR_AS_INT >= 8) {
         return [DDGWebKitWebViewController new];
     } else {
         return [[DDGWebViewController alloc] initWithNibName:nil bundle:nil];

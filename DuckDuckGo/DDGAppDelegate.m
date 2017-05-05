@@ -21,6 +21,7 @@
 #import "NSString+URLEncodingDDG.h"
 #import "DDGURLProtocol.h"
 #import "DDGHomeViewController.h"
+#import "DuckDuckGo-Swift.h"
 
 @import UIKit;
 
@@ -207,8 +208,24 @@ continueUserActivity:(NSUserActivity *)userActivity
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     [self.homeController checkAndRefreshSettings];
+    [self showSafariPopupIfNotSeen];
+}
+ 
+
+#pragma mark - Onboarding Flow
+- (void)showSafariPopupIfNotSeen {
+    OnboardingSettings *settings = [OnboardingSettings new];
+    if (!settings.hasSeenOnboarding && settings.shouldShowOnboardingUponLaunch) {
+        settings.hasSeenOnboarding = YES;
+        [self showAddToSafariPopup];
+    }
 }
 
+-(void)showAddToSafariPopup {
+    UIStoryboard* storyboard = [UIStoryboard storyboardWithName:@"Onboarding" bundle:nil];
+    UseDuckDuckGoViewController* useDDGController = [storyboard instantiateViewControllerWithIdentifier:@"UseDuckDuckGoViewController"];
+    [self.homeController presentViewController:useDDGController animated:TRUE completion:NULL];
+}
 
 #pragma mark - 3DTouch Shortcuts
 -(void)updateShortcuts {

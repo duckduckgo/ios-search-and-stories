@@ -25,10 +25,13 @@
 #import "DDGCollectionView.h"
 #import "DDGStoriesLayout.h"
 #import "DDGConstraintHelper.h"
+#import "DuckDuckGo-Swift.h"
 
 NSTimeInterval const DDGMinimumRefreshInterval = 30;
 
 NSInteger const DDGLargeImageViewTag = 1;
+
+NSString* const DDGOnboardingBannerStoryCellIdentifier = @"MiniOnboardingCell";
 
 @class DDGStoriesLayout;
 
@@ -37,8 +40,8 @@ NSInteger const DDGLargeImageViewTag = 1;
     NSMutableArray* _sectionChanges;
     NSMutableArray* _objectChanges;
     BOOL _processCoreDataUpdates;
-    
 }
+
 @property (nonatomic, readwrite, strong) NSManagedObjectContext *managedObjectContext;
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (nonatomic, strong) NSOperationQueue *imageDownloadQueue;
@@ -61,6 +64,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 @property (nonatomic, strong) DDGStoriesLayout* storiesLayout;
 @property (nonatomic, strong) NSNumber* lastStoryIDViewed;
 @property (nonatomic, assign) BOOL ignoreCoreDataUpdates;
+@property (nonatomic, strong) MiniOnboardingViewController* onboarding;
 
 @end
 
@@ -71,7 +75,7 @@ NSInteger const DDGLargeImageViewTag = 1;
 
 @implementation DDGStoriesViewController
 
-#pragma mark - Memory Management
+
 
 - (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 {
@@ -94,18 +98,11 @@ NSInteger const DDGLargeImageViewTag = 1;
     return self;
 }
 
+
 - (void)dealloc
 {
     [self.imageDownloadQueue cancelAllOperations];
     self.imageDownloadQueue = nil;
-}
-
-- (DDGHistoryProvider *)historyProvider {
-    if (nil == _historyProvider) {
-        _historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
-    }
-    
-    return _historyProvider;
 }
 
 - (void)didReceiveMemoryWarning
@@ -135,8 +132,42 @@ NSInteger const DDGLargeImageViewTag = 1;
     }
 }
 
+- (DDGHistoryProvider *)historyProvider {
+    if (nil == _historyProvider) {
+        _historyProvider = [[DDGHistoryProvider alloc] initWithManagedObjectContext:self.managedObjectContext];
+    }
+    
+    return _historyProvider;
+}
+
 - (void)reenableScrollsToTop {
     self.storyView.scrollsToTop = YES;
+}
+
+
+-(BOOL)showsOnboarding {
+    return self.onboarding!=nil;
+}
+
+-(void)setShowsOnboarding:(BOOL)showOnboarding {
+    BOOL showingOnboarding = self.onboarding!=nil;
+    if(showOnboarding==showingOnboarding) return;
+    
+    if(showOnboarding) {
+        self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
+        self.onboarding.dismissHandler = ^{
+            [NSUserDefaults.standardUserDefaults setBool:FALSE forKey:kDDGMiniOnboardingName];
+            [NSUserDefaults.standardUserDefaults synchronize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDDGMiniOnboardingName object:nil];
+        };
+        [self addChildViewController:self.onboarding];
+    } else {
+        self.onboarding.dismissHandler = nil;
+        [self.onboarding removeFromParentViewController];
+        self.onboarding = nil;
+    }
+    [self.storyView reloadData];
+    [self.view setNeedsLayout];
 }
 
 #pragma mark - No Stories
@@ -276,7 +307,7 @@ NSInteger const DDGLargeImageViewTag = 1;
         if(!cellPath) continue;
         CGRect cellRect = [self.storiesLayout frameForStoryAtIndexPath:cellPath];
         CGFloat screenPosition = cellRect.origin.y-scrollOffset.y;
-        if(firstStory==nil || ( screenPosition >= 0 && screenPosition < firstStoryScreenPosition ) ) {
+        if([visibleCell isKindOfClass:DDGStoryCell.class] && (firstStory==nil || ( screenPosition >= 0 && screenPosition < firstStoryScreenPosition ) )) {
             firstStory = visibleCell.story;
             firstStoryIndex = cellPath;
             firstStoryScreenPosition = screenPosition;
@@ -312,11 +343,13 @@ NSInteger const DDGLargeImageViewTag = 1;
     storyView.backgroundColor = [UIColor duckStoriesBackground];
     storyView.dataSource = self;
     storyView.delegate = self;
+    
     [storyView setTranslatesAutoresizingMaskIntoConstraints:NO];
-//    storyView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
-    
-    
     [storyView registerClass:DDGStoryCell.class forCellWithReuseIdentifier:DDGStoryCellIdentifier];
+    [storyView registerClass:OnboardingMiniCollectionViewCell.class
+  forSupplementaryViewOfKind:DDGOnboardingBannerViewKindID
+         withReuseIdentifier:DDGOnboardingBannerStoryCellIdentifier];
+
     
     self.storyView = storyView;
     
@@ -326,6 +359,12 @@ NSInteger const DDGLargeImageViewTag = 1;
         [storyView addSubview:self.refreshControl];
         [self.refreshControl addTarget:self action:@selector(refreshManually) forControlEvents:UIControlEventValueChanged];
         storyView.backgroundView = self.refreshControl;
+
+        // show the mini banner and register for updates to further show or hide it
+        [self updateOnboardingState];
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateOnboardingState)
+                                                     name:kDDGMiniOnboardingName object:nil];
     }
     
     self.noContentView = [[DDGNoContentViewController alloc] init];
@@ -453,6 +492,7 @@ NSInteger const DDGLargeImageViewTag = 1;
     [self.storyView setNeedsLayout];
 }
 
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     [self saveScrollPosition];
@@ -470,10 +510,25 @@ NSInteger const DDGLargeImageViewTag = 1;
 }
 
 -(void)viewDidLayoutSubviews {
+    CGFloat onboardHeight = 0;
+    [self updateOnboardingState];
+    if(self.showsOnboarding) {
+        onboardHeight = self.view.frame.size.width <= 480 ? 210 : 165;
+    }
+    self.storiesLayout.bannerHeight = onboardHeight;
+    
     self.storyView.contentSize = self.storiesLayout.collectionViewContentSize;
     [self.storyView layoutSubviews];
 }
 
+
+-(void)updateOnboardingState {
+    BOOL showIt = [NSUserDefaults.standardUserDefaults boolForKey:kDDGMiniOnboardingName defaultValue:TRUE];
+    // hide the banner if we're on an iPad or landscape.  In other words, if the width is not "compact"
+    showIt &= self.storiesMode==DDGStoriesListModeNormal;
+    showIt &= self.view.frame.size.width <= 480;
+    self.showsOnboarding = showIt;
+}
 
 
 #pragma mark - Filtering
@@ -663,6 +718,19 @@ NSInteger const DDGLargeImageViewTag = 1;
     [cell setNeedsLayout];
     return cell;
 }
+
+
+- (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
+           viewForSupplementaryElementOfKind:(NSString *)kind
+           atIndexPath:(NSIndexPath *)indexPath
+{
+    OnboardingMiniCollectionViewCell* cell = [collectionView dequeueReusableSupplementaryViewOfKind:kind
+                                                                                withReuseIdentifier:DDGOnboardingBannerStoryCellIdentifier
+                                                                                       forIndexPath:indexPath];
+    cell.onboarder = self.onboarding;
+    return cell;
+}
+
 
 #pragma  mark - collection view delegate
 

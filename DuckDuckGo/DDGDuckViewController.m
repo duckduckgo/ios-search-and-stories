@@ -22,12 +22,14 @@
 #import "DDGAutocompleteHeaderView.h"
 #import "DDGBookmarksProvider.h"
 #import "DDGUtility.h"
+#import "DuckDuckGo-Swift.h"
 
 #define MAX_FAVORITE_SUGGESTIONS 5
 
-#define SUGGESTION_SECTION 2
-#define RECENTS_SECTION 0
-#define FAVORITES_SECTION 1
+#define ONBOARDING_SECTION 0
+#define RECENTS_SECTION 1
+#define FAVORITES_SECTION 2
+#define SUGGESTION_SECTION 3
 
 @interface DDGDuckViewController () <UITableViewDataSource, UITableViewDelegate, NSFetchedResultsControllerDelegate, DDGHistoryItemCellDelegate> {
     BOOL _underPopoverMode;
@@ -45,6 +47,7 @@
 @property (nonatomic, strong) NSOperationQueue *imageRequestQueue;
 @property (nonatomic, strong) NSCache *imageCache;
 @property (nonatomic, strong) NSString* filterString;
+@property (nonatomic, strong) MiniOnboardingViewController* onboarding;
 @end
 
 @implementation DDGDuckViewController
@@ -52,6 +55,8 @@
 // static NSString *bookmarksCellID = @"BCell";
 static NSString *suggestionCellID = @"SCell";
 static NSString *historyCellID = @"HCell";
+
+NSString* const DDGOnboardingBannerTableCellIdentifier = @"MiniOnboardingTableCell";
 
 #define kCellHeightHistory			44.0
 #define kCellHeightSuggestions		66.0
@@ -140,6 +145,9 @@ static NSString *historyCellID = @"HCell";
     viewFrame.origin = CGPointMake(0, 0);
     self.tableView = [[UITableView alloc] initWithFrame:viewFrame style:UITableViewStyleGrouped];
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleHeight | UIViewAutoresizingFlexibleWidth;
+    [self.tableView registerClass:OnboardingMiniTableViewCell.class
+           forCellReuseIdentifier:DDGOnboardingBannerTableCellIdentifier];
+    
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
@@ -148,16 +156,31 @@ static NSString *historyCellID = @"HCell";
     self.tableView.separatorStyle = UITableViewCellSeparatorStyleSingleLine;
     self.tableView.separatorColor = [UIColor duckTableSeparator];
     self.tableView.separatorInset = UIEdgeInsetsMake(0, 15, 0, 0);
+    
+    // show the mini banner and register for updates to further show or hide it
+    [self updateOnboardingState];
+    
     //self.view = self.tableView;
+    if(self.popoverMode) {
+        self.tableView.layer.cornerRadius = 4.0;
+    }
+
     [self.view addSubview:self.tableView];
     self.imageCache = [NSCache new];
     
     //[self searchFieldDidChange:@""];
 }
 
+-(void)updateOnboardingState {
+    BOOL showIt = [NSUserDefaults.standardUserDefaults boolForKey:kDDGMiniOnboardingName defaultValue:TRUE];
+    // hide the banner if we're on an iPad or landscape.  In other words, if the width is not "compact"
+    showIt &= self.onboardingShouldBeVisible;
+    self.showsOnboarding = showIt;
+}
+
 -(void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
+    [self.onboarding viewWillAppear:animated];
     [self.navigationController setNavigationBarHidden:YES animated:animated];
     
     NSOperationQueue *queue = [NSOperationQueue new];
@@ -183,6 +206,11 @@ static NSString *historyCellID = @"HCell";
     
     [self.imageRequestQueue cancelAllOperations];
     self.imageRequestQueue = nil;
+}
+
+-(void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self updateOnboardingState];
 }
 
 
@@ -212,6 +240,44 @@ static NSString *historyCellID = @"HCell";
     _underPopoverMode = underPopoverMode;
     [self.tableView reloadData];
 }
+
+
+-(BOOL)onboardingShouldBeVisible {
+    return self.view.frame.size.width <= 480;
+}
+
+-(BOOL)showsOnboarding {
+    return self.onboarding!=nil;
+}
+
+-(void)setShowsOnboarding:(BOOL)showOnboarding {
+    if(showOnboarding==self.showsOnboarding) return;
+    
+    if(showOnboarding) {
+        
+        self.onboarding = [MiniOnboardingViewController loadFromStoryboard];
+        self.onboarding.bottomBorderHidden = TRUE;
+        self.onboarding.dismissHandler = ^{
+            [NSUserDefaults.standardUserDefaults setBool:FALSE forKey:kDDGMiniOnboardingName];
+            [NSUserDefaults.standardUserDefaults synchronize];
+            [[NSNotificationCenter defaultCenter] postNotificationName:kDDGMiniOnboardingName object:nil];
+        };
+        [self addChildViewController:self.onboarding];
+        [self.tableView reloadData];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(updateOnboardingState)
+                                                     name:kDDGMiniOnboardingName object:nil];
+    } else {
+        self.onboarding.dismissHandler = nil;
+        [self.onboarding removeFromParentViewController];
+        self.onboarding = nil;
+        [self.tableView reloadData];
+        
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:kDDGMiniOnboardingName object:nil];
+    }
+}
+
 
 
 - (void)setSuggestions:(NSArray *)suggestions {
@@ -271,12 +337,14 @@ static NSString *historyCellID = @"HCell";
 
 -(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     if(self.underPopoverMode) return 0;
-    return 3;
+    return 4;
 }
 
 - (UIView*)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
     switch(section) {
+        case ONBOARDING_SECTION:
+            return nil;
         case RECENTS_SECTION:
             if(self.history.count<=0) return nil;
             break;
@@ -303,8 +371,11 @@ static NSString *historyCellID = @"HCell";
     if(self.popoverMode) {
         // if we're in popover mode, we only show a section header if there is a non-empty section above us
         switch(section) {
+            case ONBOARDING_SECTION:
+                headerHeight = 0.01; // the onboarding section never has another section above it
+                break;
             case RECENTS_SECTION:
-                headerHeight = 0.01;  // the history section never has another section above it
+                headerHeight = 0.01; // the recents/history section never has another section above it
                 break;
             case FAVORITES_SECTION:
                 headerHeight = favCount<=0 ? 0.01 : (historyCount>0 ? 25.0 : 0.01f);
@@ -315,8 +386,11 @@ static NSString *historyCellID = @"HCell";
         }
     } else {
         switch(section) {
+            case ONBOARDING_SECTION:
+                headerHeight = 0.01; // no header ever for the onboarding section
+                break;
             case RECENTS_SECTION:
-                headerHeight = historyCount<=0 ? 0.01 : 25.0;
+                headerHeight = historyCount<=0 ? 0.01 : ((self.showsOnboarding && self.onboardingShouldBeVisible) ? 0.01 : 25.0); // only show header if the onboarding bottom border isn't visible
                 break;
             case FAVORITES_SECTION:
                 headerHeight = favCount<=0 ? 0.01 : 25.0;
@@ -337,6 +411,10 @@ static NSString *historyCellID = @"HCell";
 {
     if(self.underPopoverMode) return 0;
     switch (section) {
+        case ONBOARDING_SECTION: {
+            if(self.showsOnboarding && self.suggestions.count + self.history.count + self.favorites.count <= 0) return 1; // don't show onboarding row if there are any values in the other sections
+            else return 0;
+        }
         case RECENTS_SECTION: return self.history.count;
         case FAVORITES_SECTION: return self.favorites.count;
         case SUGGESTION_SECTION: return self.suggestions.count;
@@ -349,6 +427,11 @@ static NSString *historyCellID = @"HCell";
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch(indexPath.section) {
+        case ONBOARDING_SECTION: {
+            OnboardingMiniTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:DDGOnboardingBannerTableCellIdentifier forIndexPath:indexPath];
+            cell.onboarder = self.onboarding;
+            return cell;
+        }
         case RECENTS_SECTION: {
             DDGMenuHistoryItemCell* cell = [tableView dequeueReusableCellWithIdentifier:@"DDGMenuHistoryItemCell"];
             if(cell==nil) {
@@ -433,6 +516,13 @@ static NSString *historyCellID = @"HCell";
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     switch(indexPath.section) {
+        case ONBOARDING_SECTION: {
+            CGFloat onboardHeight = 0;
+            if(self.showsOnboarding) {
+                onboardHeight = self.view.frame.size.width <= 480 ? 200 : 155;
+            }
+            return onboardHeight;
+        }
         case SUGGESTION_SECTION: {
             return 50.0f;
         }

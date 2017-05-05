@@ -11,8 +11,8 @@
 
 #pragma mark DDGStoriesLayout
 
-static NSString * const DDGStoriesLayoutKind = @"PhotoCell";
-
+NSString* const DDGStoriesLayoutKind = @"PhotoCell";
+NSString* const DDGOnboardingBannerViewKindID = @"OnboardBanner";
 
 @implementation DDGStoriesLayout
 
@@ -87,7 +87,7 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     CGFloat rowHeight = DDG_rowHeightWithContainerSize(size) + DDGStoriesBetweenItemsSpacing;
     NSUInteger numRows = numStories/cellsPerRow;
     if(numStories%cellsPerRow!=0) numRows++;
-    size.height = rowHeight * numRows;
+    size.height = rowHeight * numRows + self.bannerHeight;
     return size;
 }
 
@@ -98,7 +98,18 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     NSMutableArray* elementAttributes = [NSMutableArray new];
     CGSize size = self.collectionView.frame.size;
     BOOL mosaicMode = size.width >= DDGStoriesMulticolumnWidthThreshold;
+    NSUInteger bannerHeight = self.bannerHeight;
     CGFloat rowHeight = DDG_rowHeightWithContainerSize(size) + DDGStoriesBetweenItemsSpacing;
+    
+    if(rect.origin.y <= bannerHeight && bannerHeight>0) {
+        // add attributes for the banner...
+        UICollectionViewLayoutAttributes *bannerAttributes =
+        [UICollectionViewLayoutAttributes layoutAttributesForSupplementaryViewOfKind:DDGOnboardingBannerViewKindID
+                                                                       withIndexPath:[NSIndexPath indexPathForItem:0
+                                                                                                         inSection:0]];
+        bannerAttributes.frame = CGRectMake(0, 0, size.width, bannerHeight);
+        [elementAttributes addObject:bannerAttributes];
+    }
     
     NSUInteger cellsPerRow = mosaicMode ? 3 : 1;
     NSUInteger rowsBeforeRect = floor(rect.origin.y / rowHeight);
@@ -138,9 +149,8 @@ CGFloat DDG_rowHeightWithContainerSize(CGSize size) {
     CGFloat rowHeight = DDG_rowHeightWithContainerSize(frameSize);
     CGFloat rowWidth = frameSize.width;
     BOOL oddRow = (row % 2) == 1;
-    
-    CGRect storyRect = CGRectMake(0, row * (rowHeight + DDGStoriesBetweenItemsSpacing),
-                                  rowWidth, rowHeight);
+    CGFloat cellY = self.bannerHeight + (row * (rowHeight + DDGStoriesBetweenItemsSpacing));
+    CGRect storyRect = CGRectMake(0, cellY, rowWidth, rowHeight);
     if(self.mosaicMode) {
         if(oddRow) {
             if(column==0) { // top left of three

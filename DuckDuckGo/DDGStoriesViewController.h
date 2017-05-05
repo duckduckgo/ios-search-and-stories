@@ -40,6 +40,7 @@ typedef enum : NSUInteger {
 @property (nonatomic, readonly, strong) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic) DDGStoriesListMode storiesMode;
 @property (nonatomic, strong) UIImage *searchControllerBackButtonIconDDG;
+@property BOOL showsOnboarding;
 
 - (id)initWithSearchHandler:(id <DDGSearchHandler>)searchHandler managedObjectContext:(NSManagedObjectContext *)managedObjectContext;
 
