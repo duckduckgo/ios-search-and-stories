@@ -40,7 +40,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>800</string>
+	<string>801</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationQueriesSchemes</key>
@@ -56,8 +56,16 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Allows you to upload photographs and videos</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>© 2017 DuckDuckGo, Inc. All Rights Reserved.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Allows you to share your location</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Allows you to share recordings</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allows you to upload photographs and videos</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
@@ -100,13 +108,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>Allows you to upload photographs and videos</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Allows you to upload photographs and videos</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Allows you to share your location</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Allows you to share recordings</string>
 </dict>
 </plist>
