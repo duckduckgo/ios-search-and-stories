@@ -270,6 +270,11 @@
             return;
         }
         
+        if([scheme isEqualToString:@"tel"]) { // if it's a tel: URL, then replace it with "telprompt:" to avoid initiating a call without confirmation!
+            scheme = @"telprompt";
+            url = [NSURL URLWithString:[url.absoluteString stringByReplacingCharactersInRange:NSMakeRange(0, 3) withString:scheme]];
+        }
+        
         if([url.scheme isEqualToString:@"telprompt"] || [url.scheme isEqualToString:@"tel"]) {
             if ([app canOpenURL:url]) {
                 [app openURL:url];
